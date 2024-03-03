@@ -56,7 +56,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\BuildSettings.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
+    <Compile Include="Enums\CosmeticType.cs" />
+    <Compile Include="Enums\IdType.cs" />
+    <Compile Include="Enums\SSEUnlockStage.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
