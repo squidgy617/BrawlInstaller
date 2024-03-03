@@ -8,6 +8,7 @@ using System.ComponentModel.Composition;
 using System.Windows.Input;
 using BrawlLib.SSBB.ResourceNodes;
 using System.Diagnostics;
+using BrawlInstaller.Services;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -21,7 +22,12 @@ namespace BrawlInstaller.ViewModels
     [Export(typeof(IMainViewModel))]
     internal class MainViewModel : ViewModelBase, IMainViewModel
     {
-        public ICommand ButtonCommand {
+        // Services
+        IFileService _fileService { get; }
+
+        // Commands
+        public ICommand ButtonCommand
+        {
             get
             {
                 var buttonCommand = new RelayCommand(param => this.Button());
@@ -29,20 +35,23 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
-        public void Button()
-        {
-            var rootNode = NodeFactory.FromFile(null, "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\pf\\menu2\\sc_selcharacter.pac");
-            var testName = rootNode.Children.Last().Name;
-            Debug.Print(testName);
-        }
-
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public MainViewModel()
+        public MainViewModel(IFileService fileService)
         {
+            _fileService = fileService;
             Title = "Test title";
         }
 
+        // Properties
         public string Title { get; }
+
+        // Methods
+        public void Button()
+        {
+            var rootNode = _fileService.OpenFile("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\pf\\menu2\\sc_selcharacter.pac");
+            var testName = rootNode.Children.Last().Name;
+            Debug.Print(testName);
+        }
     }
 }

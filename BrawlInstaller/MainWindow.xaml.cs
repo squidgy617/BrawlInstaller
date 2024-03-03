@@ -27,7 +27,12 @@ namespace BrawlInstaller
     {
         public MainWindow()
         {
+            CompositionBootstrapper.InitializeContainer(this);
             InitializeComponent();
+            DataContext = this;
         }
+
+        [Import]
+        public IMainViewModel MainViewModel { get; set; }
     }
 }

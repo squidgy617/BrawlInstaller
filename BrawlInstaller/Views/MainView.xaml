@@ -7,9 +7,6 @@
         xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels"
         mc:Ignorable="d"
         Height="450" Width="800">
-    <UserControl.DataContext>
-        <viewModels:MainViewModel/>
-    </UserControl.DataContext>
     <Grid>
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="368,245,0,0" VerticalAlignment="Top" Command="{Binding ButtonCommand}"/>
         <Label x:Name="label" Content="{Binding Title}" HorizontalAlignment="Left" Margin="327,166,0,0" VerticalAlignment="Top" Height="33" Width="108"/>
