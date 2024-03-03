@@ -24,6 +24,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Services
         IFileService _fileService { get; }
+        ISettingsService _settingsService { get; }
 
         // Commands
         public ICommand ButtonCommand
@@ -37,9 +38,10 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public MainViewModel(IFileService fileService)
+        public MainViewModel(IFileService fileService, ISettingsService settingsService)
         {
             _fileService = fileService;
+            _settingsService = settingsService;
             Title = "Test title";
         }
 
@@ -49,11 +51,24 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void Button()
         {
+            //TestFiles();
+            TestJson();
+        }
+
+        public void TestFiles()
+        {
             var rootNode = _fileService.OpenFile("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\pf\\menu2\\sc_selcharacter.pac");
             var testName = rootNode.Children.Last().Name;
             rootNode.Children.Last().MoveUp();
             _fileService.SaveFile(rootNode);
             Debug.Print(testName);
+        }
+
+        public void TestJson()
+        {
+            var buildSettings = _settingsService.GetDefaultSettings();
+            _settingsService.SaveSettings(buildSettings, "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
+            _settingsService.LoadSettings("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
         }
     }
 }

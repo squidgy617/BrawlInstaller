@@ -39,6 +39,7 @@ namespace BrawlInstaller.Classes
 
     public class CosmeticSettings
     {
+        public List<CosmeticDefinition> CSPs { get; set; }
         public List<CosmeticDefinition> CSSIcons { get; set; } = null;
         public List<CosmeticDefinition> BPs { get; set; } = null;
         public List<CosmeticDefinition> PortraitNames { get; set; } = null;
@@ -67,8 +68,8 @@ namespace BrawlInstaller.Classes
     public class SoundSettings
     {
         public string SoundbankStyle { get; set; }
-        public string IncrementSoundbankIds { get; set; }
-        public string IncrementSoundbankNames { get; set; }
+        public bool IncrementSoundbankIds { get; set; }
+        public bool IncrementSoundbankNames { get; set; }
     }
 
     public class MiscSettings
