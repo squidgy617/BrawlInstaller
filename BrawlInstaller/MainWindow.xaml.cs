@@ -21,20 +21,13 @@ using System.Windows.Shapes;
 namespace BrawlInstaller
 {
     /// <summary>
-    /// TODO: do we need this?
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ViewModelBase _currentViewModel;
         public MainWindow()
         {
-            //CompositionBootstrapper.InitializeContainer(this);
             InitializeComponent();
-            //DataContext = this;
         }
-
-        [Import]
-        IMainViewModel MainViewModel { get; set; }
     }
 }
