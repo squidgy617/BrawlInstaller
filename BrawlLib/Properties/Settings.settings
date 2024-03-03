@@ -1,0 +1,78 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"
+              GeneratedClassNamespace="BrawlLib.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Codes" Type="System.Collections.Generic.List&lt;BrawlLib.SSBB.ResourceNodes.CodeStorage&gt;"
+             Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SaveGCTWithInfo" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ColladaImportOptions" Type="BrawlLib.Modeling.Collada.Collada.ImportOptions" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CompatibilityMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HideMDL0Errors" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AudioVolumePercent" Type="System.Nullable&lt;System.Double&gt;" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="AutoDecompressFighterPAC" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AutoCompressFighterPCS" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AutoCompressStages" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AutoCompressModules" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AutoPlayAudio" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ContextualLoopAudio" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ContextualLoopAnimation" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ParseMoveDef" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CameraControlMode" Type="BrawlLib.Internal.Windows.Controls.Model_Panel.ModelPanelViewport.CameraControlMode" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CameraRightMouse" Type="BrawlLib.Internal.Windows.Controls.Model_Panel.ModelPanelViewport.CameraDragAction" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CameraMiddleMouse" Type="BrawlLib.Internal.Windows.Controls.Model_Panel.ModelPanelViewport.CameraDragAction" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CameraCtrlRMB" Type="BrawlLib.Internal.Windows.Controls.Model_Panel.ModelPanelViewport.CameraDragAction" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CameraCtrlAltRMB" Type="BrawlLib.Internal.Windows.Controls.Model_Panel.ModelPanelViewport.CameraDragAction" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CameraPanInvertX" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CameraPanInvertY" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CameraRotateInvertX" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CameraRotateInvertY" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

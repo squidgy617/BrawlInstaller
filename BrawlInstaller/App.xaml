@@ -1,0 +1,15 @@
+﻿<Application x:Class="BrawlInstaller.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BrawlInstaller"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Resources defined here will be global for the whole application -->
+                <!-- TODO: do we need this?-->
+                <ResourceDictionary Source="Resources/ViewModelViewMapping.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

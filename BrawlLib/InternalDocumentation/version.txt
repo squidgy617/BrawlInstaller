@@ -1,0 +1,234 @@
+Documentation_v0.39
+
+ =============================================================
+|************ BrawlCrate Documentation Change Log ************|
+ =============================================================
+ 
+ Current BrawlCrate Documentation contributors: soopercool101, Syvkal, MarioDox, Pyro, HyperL!nk, Cahalan, Eon, WTails358, RedipsTheCooler, Escope12
+ 
+ - Documentation v0.39
+ . Added module annotations for Pit (Section [1])
+ 
+ - Documentation v0.38
+ . Added module annotations for Diddy Kong (Section [1])
+ . Added module annotations for Lucario (Section [1])
+ . Added module annotations for Olimar (Section [1])
+ . Added module annotations for Peach (Section [1])
+ . Added module annotations for Snake (Section [1])
+ . Added module annotations for Green Greens (Section [4])
+ . Added module annotations for New Pork City (Section [5])
+ . Added module annotations for Skyworld (Section [4])
+ . Added module annotations for Spear Pillar (Section [4])
+ . Added module annotations for Summit (Section [1])
+ . Jungle Japes Section [4] documentation updated to latest understanding:
+   - 0x04C -> Klaptrap SFX Timer (Jump SFX)
+   - 0x050 -> Klaptrap SFX Timer (Going Back Into Water SFX)
+ . Jungle Japes STDT documentation updated to latest understanding:
+   - 0x028 -> Klap Trap X-Axis Position
+ 
+ - Documentation v0.37
+ . Added module annotations for Jungle Japes (Section [1])
+ 
+ - Documentation v0.36c
+ . Added STDT documentaion for Pirate Ship
+ . Added module annotations for Hanenbow (Section [4])
+ . Added module annotations for Frigate Orpheon (Section [4])
+ . Added module annotations for Summit (Section [4])
+ . Added module annotations for Jungle Japes (Section [4])
+ . Pokémon Stadium 2 STDT documentaion updated to latest understanding:
+   - 0x050 -> Transformation Swap Timer
+ . Pokémon Stadium 2 Section [4] documentaion updated to latest understanding:
+   - 0x004 -> Scale Factor
+   - 0x024 -> Monitor Update Duration
+   - 0x028 -> Stage Update Duration
+   - 0x03C -> Monitor Swap SFX Frequency
+   - 0x044 -> Pokémon Minimum Scale
+   - 0x048 -> Transformation Camera Distance
+   - 0x04C -> Stage Minimum Scale
+   - 0x054 -> Monitor Camera X-Position
+   - 0x058 -> Monitor Camera Distance
+   - 0x05C -> Transformation Delay Multiplier (Inverse; 1/2)
+   - 0x060 -> Transformation Delay Multiplier (Inverse; 2/2)
+   - 0x064 -> Monitor Camera Zoom?
+ 
+ - Documentation v0.36
+ . Onett STDT documentation updated to latest understanding:
+   - 0x014 -> Smoke Min Timer
+   - 0x018 -> Smoke Max Timer
+   - 0x01C -> Smoke Min Timer 2
+   - 0x020 -> Smoke Max Timer 2
+   - 0x024 -> Canopies Landing Amount
+     > Type changed from Unknown to Bytes
+   - 0x028 -> Canopies Min Respawn Timer
+   - 0x02C -> Canopies Max Respawn Timer
+   - 0x030 -> Car Speed
+   - 0x034 -> Car Speed while going to the right?
+   - Car Timer -> Car Timer Max
+   - 0x03C -> Car Timer Min
+   - 0x048 -> Car Speed Multiplier on hit
+   - 0x04C -> Car Chance to spin
+   - 0x050 -> Smoke Spawn Chance?
+   - 0x054 -> Car Spin Speed
+   - 0x05C -> Car Honk SFX Distance
+ . Skyworld STDT documentation updated to latest understanding:
+   - 0x03C -> Platform Respawn Timer
+   - 0x040 -> Platform Stretch Timer
+   - 0x044 -> Chained Platform Outward Timer
+   - 0x048 -> Chained Platform Inward Timer
+   - 0x04C -> Chained Platform Move Chance
+   - 0x078 -> Bottom Platform Min Respawn Timer
+   - Platform Respawn Timer -> Bottom Platform Max Respawn Timer
+   - 0x080 -> Bottom Platform Right Spawn Chance
+   - 0x084 -> Bottom Platform Moving Speed
+ . Summit STDT documentaion updated to latest understanding:
+   - 0x03C -> Icicle Initial Min Timer
+   - 0x040 -> Icicle Initial Max Timer
+   - 0x044 -> Redo Min Timer
+   - 0x048 -> Redo Max Timer
+   - 0x04C -> Icicle Damage?
+   - 0x050 -> Falling Platform Timer
+   - 0x054 -> Tipping Speed
+   - 0x05C -> Turnaround Angle of Tipping Platform
+   - 0x060 -> Tipping Platform Deceleration
+   - 0x064 -> Tipping Platform Respawn Time
+   - 0x068 -> Tipping Platform Return Speed
+   - 0x06C -> Food Spawn Min Timer
+   - 0x070 -> Food Spawn Max Timer
+   - 0x074 -> Food Spawn Chance
+   - 0x088 -> Cloud Platform Spawn Min Timer
+   - 0x08C -> Cloud Platform Spawn Max Timer
+   - 0x090 -> Speed of Cloud Platform
+   - 0x094 -> Chance of Fish some more?
+   - 0x098 -> Max Frames of Fish Lockout?
+   - 0x09C -> Chance of Fish?
+   - 0x0A4 -> Polar Bear Jump Min Timer
+   - 0x0A8 -> Polar Bear Jump Max Timer
+   - 0x0AC -> Polar Bear Jump Chance
+   - 0x0B0 -> Polar Bear Jump Magnitude Min
+   - 0x0B4 -> Polar Bear Jump Magnitude Max
+   - 0x0B8 -> Mountain Sink Acceleration
+   - 0x0BC -> Mountain Sink Max Speed
+   - 0x0C0 -> Mountain Minimum Sunk Timer
+   - 0x0C4 -> Mountain Maximum Sunk Timer
+   - 0x0C8 -> Mountain Float Speed
+   - 0x0CC -> Time Grounded Min
+   - 0x0D0 -> Time Grounded Max
+   - 0x0D4 -> Speed of Ascent?
+   - 0x0D8 -> Ice Floating Platform Tilt Speed
+   - 0x0E0 -> Ice Floating Platform Fast Speed
+   - 0x0E8 -> Ice Floating Platform Sinking Speed?
+ 
+ - Documentation v0.35
+ . Added STDT documentation for Flat Zone 2
+ . Main Menu Section [5] documentation updated to include Records submenu values
+
+ - Documentation v0.32.1
+ . Menu Main Section [5] documentation updated to include all known menu values
+
+ - Documentation v0.30.6
+ . Mario Circuit documentation updated to latest understanding:
+   - 0x050 -> Number of Karts
+ . Added STDT documentation for Distant Planet
+ . Added module annotations for Distant Planet (Section [4])
+ . Added module annotations for Menu Main (Section [5])
+ 
+ - Documentation v0.30.0
+ . Big Blue STDT documentation updated to latest understanding:
+   - 0x038 -> Car Speed
+ . Green Greens STDT documentation updated to latest understanding:
+   - 0x03C -> Blocks Maximum Speed
+   - 0x040 -> Blocks Acceleration
+   - 0x050 -> Wind Area Width (Removal)
+   - 0x07C -> Apples Min Spawn Height
+   - 0x080 -> Apples Max Spawn Height
+ . Added module annotations for:
+   - Link (Section [1])
+   - Wario (Section [1])
+   - Halberd (Section [4])
+ . Added STDT documentation for:
+   - Mario Circuit
+   - Port Town: Aero Dive
+   - Summit
+ 
+ - Documentation v0.23.1 - (3/8/2019)
+ . Yoshi's Island (Brawl) STDT documentation updated to latest understanding:
+   - 0x014 -> Platform Timer 1
+   - 0x018 -> Platform Timer 2
+   - 0x01C -> Platform Timer 3
+ . Skyworld STDT documentation updated to latest understanding:
+   - 0x07C -> Platform Respawn Timer
+
+ - Documentation v0.23.0 - (3/7/2019)
+ . Big Blue STDT documentation updated to latest understanding:
+   - 0x80 -> Track Speed
+   - 0x88 -> Car Leave Timer
+   - 0x8C -> Track Landing Timer
+ 
+ - Documentation v0.21.0 - (2/1/2019)
+ . Added module annotations for stage loading in Mushroomy Kingdom Section [1]
+
+ - Documentation v0.17.0 - (11/19/2018)
+ . Added module annotations for Hanenbow Section [1]
+ 
+ - Documentation v0.14.3 - (10/28/2018)
+ . Added module annotations for Mario Bros. Section [1]
+ . Fixed missing default from 75m Section [1] annotation
+ 
+ - Documentation v0.14.0 - (10/26/2018)
+ . Added STDT documentation for Big Blue
+ . Fixed incorrect default in Spear Pillar Section [1] annotation
+ . Spear Pillar STDT documentation updated to latest understanding:
+   - Removed speculated values that were incorrect
+   - 0x1C -> Platform Pause Chance
+   - Added descriptions to Platform Pause timers
+   - Pokémon (Re)Spawn Check Timer -> Pokémon Action Minimum Timer
+   - Pokémon Attack Check Timer -> Pokémon Action Maximum Timer
+   - 0x5C -> Lake Guardians Minimum Timer
+   - 0x60 -> Lake Guardians Maximum Timer
+   - 0x64 -> No Lake Guardian Chance
+   - 0x68 -> Mespirit Spawn Chance
+   - 0x6C -> Uxie Spawn Chance
+   - 0x70 -> Azelf Spawn Chance
+   - 0x74 -> Mespirit Minimum Frames
+   - 0x78 -> Mespirit Maximum Frames
+   - Lake Guardians Minimum Frames -> Azelf and Uxie Minimum Frames
+   - Lake Guardians Maximum Frames -> Azelf and Uxie Maximum Frames
+   - Added descriptions to Camera tilts
+   - Improved description for Camera Tilt Reduction Speed
+   - 0x90 -> Stage Break Rumble Duration
+   - 0x94 -> Stage Break Minimum Delay
+   - 0x98 -> Stage Break Maximum Delay
+ 
+ - Documentation v0.13.1 - (10/18/2018)
+ . Added module annotations for:
+   - Brinstar (Section [1])
+   - Rainbow Cruise (Section [3])
+   - Target Test (Section [1]
+ 
+ - Documentation v0.13.0 - (10/18/2018)
+ . Documentation system introduced
+ . Added module annotations for:
+   - 75m (Section [1] and [4])
+   - Pokémon Stadium (Section [4])
+   - Target Test (Section [4])
+ . Added STDT documentation for:
+   - 75m
+   - Delfino Island
+   - Green Greens
+   - Green Hill Zone
+   - Halberd
+   - Hanenbow
+   - Home Run Contest
+   - Jungle Japes
+   - Luigi's Mansion
+   - Mario Bros.
+   - Mushroomy Kingdom
+   - Norfair
+   - Onett
+   - Pictochat
+   - Pokémon Stadium 2
+   - Shadow Moses Island
+   - Skyworld
+   - Smashville
+   - Spear Pillar
+   - Yoshi's Island (Brawl)

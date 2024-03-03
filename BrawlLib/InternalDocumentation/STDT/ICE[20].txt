@@ -1,0 +1,311 @@
+Arrow Warning Start
+(Float) How many frames to wait to start arrow warning effect (starting from the summit get up sequence)
+
+Default (Float): 300 (0x43960000)
+	/EndDescription
+0
+
+Arrow Warning End
+(Float) How many frames to wait to end arrow warning effect (starting from the summit get up sequence)
+
+Default (Float): 300 (0x43960000)
+	/EndDescription
+0
+
+~0x01C
+Default (Unknown Type): (0x04060406)
+	/EndDescription
+4
+
+Ice Platform Health
+(Float) The amount of damage that the ice platform can take before breaking
+
+Default (Float): 30 (0x41F00000)
+	/EndDescription
+0
+
+Ice Platform Damage Taken Multiplier
+(Float) How much the damage taken will be multiplied by. Health can be calculated by Health divided by this value.
+
+Default (Float): 1 (0x3F800000)
+	/EndDescription
+0
+
+0x028
+Default (Float): 2 (0x40000000)
+	/EndDescription
+0
+
+0x02C
+Default (Float): 60 (0x42700000)
+	/EndDescription
+0
+
+0x030
+Default (Float): 0.5 (0x3F000000)
+	/EndDescription
+0
+
+0x034
+Default (Float): 0.3 (0x3E99999A)
+	/EndDescription
+0
+
+Ice Platform Respawn Time
+(Float) How many frames to wait until platform respawns
+
+Default (Float): 600 (0x44160000)
+	/EndDescription
+0
+
+Icicle Initial Min Timer
+Default (Float): 300 (0x43960000)
+	/EndDescription
+0
+
+Icicle Initial Max Timer
+Default (Float): 600 (0x44160000)
+	/EndDescription
+0
+
+Redo Min Timer
+Default (Float): 120 (0x42F00000)
+	/EndDescription
+0
+
+Redo Max Timer
+Default (Float): 180 (0x43340000)
+	/EndDescription
+0
+
+Icicle Damage?
+Default (Float): 10 (0x41200000)
+	/EndDescription
+0
+
+Falling Platform Timer
+Default (Float): 120 (0x42F00000)
+	/EndDescription
+0
+
+Tipping Speed 
+Default (Float): 1 (0x3F800000)
+	/EndDescription
+0
+
+Initial Tipping Speed
+Default (Float): 4 (0x40800000)
+	/EndDescription
+0
+
+Turnaround Angle of Tipping Platform
+Default (Float): 100 (0x42C80000)
+	/EndDescription
+0
+
+Tipping Platform Deceleration
+(Float) Deceleration of tipping platform once past max angle.
+
+Default (Float): 0.8 (0x3F4CCCCD)
+	/EndDescription
+0
+
+Tipping Platform Respawn Time
+(Float) Time to respawn the tipping platform after fully stablizing.
+
+Default (Float): 150 (0x43160000)
+	/EndDescription
+0
+
+Tipping Platform Return Speed
+(Float) Speed at which tipping platform returns to an upright position.
+
+Default (Float): 0.5 (0x3F000000)
+	/EndDescription
+0
+
+Food Spawn Min Timer
+(Float) Minimum timer before custom food items can be spawned.
+
+Default (Float): 1800 (0x44E10000)
+	/EndDescription
+0
+
+Food Spawn Max Timer
+(Float) Maximum timer before custom food items will be spawned.
+
+Default (Float): 2700 (0x4528C000)
+	/EndDescription
+0
+
+Food Spawn Chance
+Default (Float): 0.25 (0x3E800000)
+	/EndDescription
+0
+
+0x078
+Default (Float): 3 (0x40400000)
+	/EndDescription
+0
+
+0x07C
+Default (Float): 500 (0x43FA0000)
+	/EndDescription
+0
+
+0x080
+Default (Float): 4 (0x40800000)
+	/EndDescription
+0
+
+0x084
+Default (Float): 0.5 (0x3F000000)
+	/EndDescription
+0
+
+Cloud Platform Spawn Min Timer
+(Float) Minimum frames before cloud platform can be spawned.
+
+Default (Float): 600 (0x44160000)
+	/EndDescription
+0
+
+Cloud Platform Spawn Max Timer
+(Float) Maximum frames before cloud platform will be spawned.
+
+Default (Float): 900 (0x44610000)
+	/EndDescription
+0
+
+Speed of Cloud Platform
+Default (Float): 0.7 (0x3F333333)
+	/EndDescription
+0
+
+Chance of Fish some more?
+Default: 0 (Could be int or float - be careful)
+	/EndDescription
+0
+
+Max Frames of Fish Lockout?
+Default (Float): 45 (0x42340000)
+	/EndDescription
+0
+
+Chance of Fish?
+Default (Float): 1 (0x3F800000)
+	/EndDescription
+0
+
+0x0A0
+Default (Float): 2 (0x40000000)
+	/EndDescription
+0
+
+Polar Bear Jump Min Timer
+(Float) Minimum frames before Polar Bear can jump.
+
+Default (Float): 240 (0x43700000)
+	/EndDescription
+0
+
+Polar Bear Jump Max Timer
+(Float) Maximum frames before Polar Bear will jump.
+
+Default (Float): 660 (0x44250000)
+	/EndDescription
+0
+
+Polar Bear Jump Chance
+Default (Float): 0.25 (0x3E800000)
+	/EndDescription
+0
+
+Polar Bear Jump Magnitude Min
+(Float) The minimum depth the platform will drop when the polar bear lands from its jump.
+
+Default (Float): 10 (0x41200000)
+	/EndDescription
+0
+
+Polar Bear Jump Magnitude Max
+(Float) The maximum depth the platform will drop when the polar bear lands from its jump.
+
+Default (Float): 22 (0x41B00000)
+	/EndDescription
+0
+
+Mountain Sink Acceleration
+(Float) Rate at which platform will accelerate downward when polar bear lands from its jump.
+
+Default (Float): 0.1 (0x3DCCCCCD)
+	/EndDescription
+0
+
+Mountain Sink Max Speed
+(Float) Max speed at which platform will plunge downward when polar bear lands from its jump.
+
+Default (Float): 2.5 (0x40200000)
+	/EndDescription
+0
+
+Mountain Minimum Sunk Timer
+(Float) Minimum frames the mountain will remain submerged after being sunk.
+
+Default (Float): 240 (0x43700000)
+	/EndDescription
+0
+
+Mountain Maximum Sunk Timer
+(Float) Maximum frames the mountain will remain submerged after being sunk.
+
+Default (Float): 420 (0x43D20000)
+	/EndDescription
+0
+
+Mountain Float Speed
+(Float) The speed at which the mountain will return to the surface after being sunk.
+
+Default (Float): 0.2 (0x3E4CCCCD)
+	/EndDescription
+0
+
+Time Grounded Min
+Default (Float): 240 (0x43700000)
+	/EndDescription
+0
+
+Time Grounded Max
+Default (Float): 600 (0x44160000)
+	/EndDescription
+0
+
+Speed Of Ascent?
+Default (Float): 0.3 (0x3E99999A)
+	/EndDescription
+0
+
+Ice Floating Platform Tilt Speed
+Default (Float): 0.25 (0x3E800000)
+	/EndDescription
+0
+
+0x0DC
+Default (Float): 60 (0x42700000)
+	/EndDescription
+0
+
+Ice Floating Platform Fast Speed
+Default (Float): 0.45 (0x3EE66666)
+	/EndDescription
+0
+
+0x0E4
+Default (Float): 30 (0x41F00000)
+	/EndDescription
+0
+
+Ice Floating Platform Sinking Speed?
+Default (Float): 0.2 (0x3E4CCCCD)
+	/EndDescription
+0
