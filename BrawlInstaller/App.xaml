@@ -7,7 +7,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- Resources defined here will be global for the whole application -->
-                <!-- TODO: do we need this?-->
                 <ResourceDictionary Source="Resources/ViewModelViewMapping.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
