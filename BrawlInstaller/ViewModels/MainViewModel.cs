@@ -51,6 +51,8 @@ namespace BrawlInstaller.ViewModels
         {
             var rootNode = _fileService.OpenFile("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\pf\\menu2\\sc_selcharacter.pac");
             var testName = rootNode.Children.Last().Name;
+            rootNode.Children.Last().MoveUp();
+            _fileService.SaveFile(rootNode);
             Debug.Print(testName);
         }
     }
