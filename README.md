@@ -1,0 +1,2 @@
+# BrawlInstaller
+BrawlInstaller rewrite.
