@@ -29,7 +29,7 @@ namespace BrawlInstaller.Classes
         public string TypeName { get; set; }
         public string Style { get; set; }
         public InstallLocation InstallLocation { get; set; }
-        public string PatPath { get; set; } = string.Empty;
+        public PatSettings PatSettings { get; set; } = null;
         public string Prefix { get; set; }
         public IdType IdType { get; set; }
         public bool FiftyCC { get; set; }
@@ -48,6 +48,13 @@ namespace BrawlInstaller.Classes
         public List<CosmeticDefinition> ReplayIcons { get; set; } = null;
         public List<CosmeticDefinition> FranchiseIcons { get; set; } = null;
         public List<CosmeticDefinition> StockIcons { get; set; } = null;
+    }
+
+    public class PatSettings
+    {
+        public string Path { get; set; }
+        public int FrameCountOffset { get; set; } = 0;
+        public int FrameCountOverride { get; set; } = 0;
     }
 
     public class ToolPathSettings

@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\BuildSettings.cs" />
+    <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
     <Compile Include="Enums\CosmeticType.cs" />
     <Compile Include="Enums\IdType.cs" />
