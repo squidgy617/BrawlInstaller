@@ -40,14 +40,14 @@ namespace BrawlInstaller.Classes
     public class CosmeticSettings
     {
         public List<CosmeticDefinition> CSPs { get; set; }
-        public List<CosmeticDefinition> CSSIcons { get; set; } = null;
-        public List<CosmeticDefinition> BPs { get; set; } = null;
-        public List<CosmeticDefinition> PortraitNames { get; set; } = null;
-        public List<CosmeticDefinition> BPNames { get; set; } = null;
-        public List<CosmeticDefinition> CSSIconNames { get; set; } = null;
-        public List<CosmeticDefinition> ReplayIcons { get; set; } = null;
-        public List<CosmeticDefinition> FranchiseIcons { get; set; } = null;
-        public List<CosmeticDefinition> StockIcons { get; set; } = null;
+        public List<CosmeticDefinition> CSSIcons { get; set; }
+        public List<CosmeticDefinition> BPs { get; set; }
+        public List<CosmeticDefinition> PortraitNames { get; set; }
+        public List<CosmeticDefinition> BPNames { get; set; }
+        public List<CosmeticDefinition> CSSIconNames { get; set; }
+        public List<CosmeticDefinition> ReplayIcons { get; set; }
+        public List<CosmeticDefinition> FranchiseIcons { get; set; }
+        public List<CosmeticDefinition> StockIcons { get; set; }
     }
 
     public class PatSettings
@@ -84,6 +84,6 @@ namespace BrawlInstaller.Classes
         public bool InstallToSse { get; set; }
         public SSEUnlockStage SSEUnlockStage { get; set; }
         public bool InstallTrophies { get; set; }
-        public List<string> CustomStageLists { get; set; } = null;
+        public List<string> CustomStageLists { get; set; }
     }
 }
