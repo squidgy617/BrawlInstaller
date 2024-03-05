@@ -14,6 +14,12 @@ namespace BrawlInstaller.Services
 {
     public interface ISettingsService
     {
+        // Properties
+        // Should be accessible from any ViewModel implementing the service
+        BuildSettings BuildSettings { get; set; }
+        string BuildPath { get; set; }
+
+        // Methods
         void SaveSettings(BuildSettings buildSettings, string path);
         BuildSettings LoadSettings(string path);
         BuildSettings GetDefaultSettings();
@@ -26,6 +32,10 @@ namespace BrawlInstaller.Services
         {
 
         }
+
+        // Properties
+        public BuildSettings BuildSettings { get; set; } = null;
+        public string BuildPath { get; set; } = "";
 
         // Methods
         public void SaveSettings(BuildSettings buildSettings, string path)
