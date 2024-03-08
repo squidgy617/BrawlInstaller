@@ -60,11 +60,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\BuildSettings.cs" />
+    <Compile Include="Classes\FighterIDs.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
     <Compile Include="Enums\CosmeticType.cs" />
     <Compile Include="Enums\IdType.cs" />
     <Compile Include="Enums\SSEUnlockStage.cs" />
+    <Compile Include="Services\ExtractService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

@@ -26,12 +26,11 @@ namespace BrawlInstaller.Classes
 
     public class CosmeticDefinition
     {
-        public string TypeName { get; set; }
+        public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
         public InstallLocation InstallLocation { get; set; }
         public PatSettings PatSettings { get; set; } = null;
         public string Prefix { get; set; }
-        public IdType IdType { get; set; }
         public bool FiftyCC { get; set; }
         public Size? Size { get; set; } = null;
         public bool FirstOnly { get; set; } = false;

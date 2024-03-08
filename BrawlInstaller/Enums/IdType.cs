@@ -8,10 +8,11 @@ namespace BrawlInstaller.Enums
 {
     public enum IdType
     {
-        Fighter,
+        FighterConfig,
+        CosmeticConfig,
+        CSSSlotConfig,
+        SlotConfig,
         Cosmetic,
-        CSSSlot,
-        Slot,
         Franchise
     }
 }

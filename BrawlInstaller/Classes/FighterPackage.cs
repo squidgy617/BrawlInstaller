@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BrawlLib.Internal;
+using BrawlLib.SSBB.ResourceNodes;
 
 namespace BrawlInstaller.Classes
 {
@@ -40,10 +41,14 @@ namespace BrawlInstaller.Classes
         public string Style { get; set; }
         public string Image { get; set; }
         public string HDImage { get; set; }
+        public TEX0Node Texture { get; set; } = null;
+        public PLT0Node Palette { get; set; } = null;
         public string NameImage { get; set; }
         public string HDNameImage { get; set; }
-        public int? ColorSmashGroup { get; set; }
-        public int? InternalOrder { get; set; }
+        public TEX0Node NameTexture { get; set; } = null;
+        public PLT0Node NamePalette { get; set; } = null;
+        public bool? SharesData { get; set; }
+        public int? InternalIndex { get; set; }
     }
 
     public class FranchiseIcon

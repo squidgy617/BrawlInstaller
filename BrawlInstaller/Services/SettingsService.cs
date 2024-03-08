@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Windows;
 
 namespace BrawlInstaller.Services
 {
@@ -55,7 +56,41 @@ namespace BrawlInstaller.Services
         {
             var buildSettings = new BuildSettings
             {
-                CosmeticSettings = new CosmeticSettings(),
+                CosmeticSettings = new CosmeticSettings
+                {
+                    CSPs = new List<CosmeticDefinition> 
+                    { 
+                        new CosmeticDefinition
+                        {
+                            CosmeticType = Enums.CosmeticType.CSP,
+                            Style = "vBrawl",
+                            InstallLocation = new InstallLocation
+                            {
+                                FilePath = "pf\\menu\\common\\char_bust_tex\\",
+                                NodePath = "",
+                                FilExtension = "brres"
+                            },
+                            Prefix = "MenSelchrFaceB",
+                            FiftyCC = false,
+                            Size = new Size(48, 56),
+                            FirstOnly = false
+                        }
+                    },
+                    BPs = new List<CosmeticDefinition> 
+                    {
+                        new CosmeticDefinition
+                        {
+                            CosmeticType = Enums.CosmeticType.BP,
+                            Style = "vBrawl",
+                            InstallLocation = new InstallLocation
+                            {
+                                FilePath = "pf\\info\\portrite\\",
+                                NodePath = "",
+                                FilExtension = "brres"
+                            }
+                        }   
+                    }
+                },
                 ToolPathSettings = new ToolPathSettings
                 {
                     AssemblyFunctionsExe = "",

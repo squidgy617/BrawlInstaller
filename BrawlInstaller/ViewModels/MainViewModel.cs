@@ -9,6 +9,7 @@ using System.Windows.Input;
 using BrawlLib.SSBB.ResourceNodes;
 using System.Diagnostics;
 using BrawlInstaller.Services;
+using BrawlInstaller.Classes;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -25,6 +26,7 @@ namespace BrawlInstaller.ViewModels
         // Services
         IFileService _fileService { get; }
         ISettingsService _settingsService { get; }
+        IExtractService _extractService { get; }
 
         // Commands
         public ICommand ButtonCommand
@@ -38,10 +40,11 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public MainViewModel(IFileService fileService, ISettingsService settingsService)
+        public MainViewModel(IFileService fileService, ISettingsService settingsService, IExtractService extractService)
         {
             _fileService = fileService;
             _settingsService = settingsService;
+            _extractService = extractService;
             Title = "Test title";
         }
 
@@ -52,7 +55,8 @@ namespace BrawlInstaller.ViewModels
         public void Button()
         {
             //TestFiles();
-            TestJson();
+            //TestJson();
+            TestExtract();
         }
 
         public void TestFiles()
@@ -69,6 +73,16 @@ namespace BrawlInstaller.ViewModels
             var buildSettings = _settingsService.GetDefaultSettings();
             _settingsService.SaveSettings(buildSettings, "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
             _settingsService.LoadSettings("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
+        }
+
+        public void TestExtract()
+        {
+            _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
+            _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
+            _extractService.ExtractFighter(new Classes.FighterIds
+            {
+                CosmeticId = 1
+            });
         }
     }
 }
