@@ -35,7 +35,7 @@ namespace BrawlInstaller.Services
         {
             var fighterPackage = new FighterPackage();
             var settings = _settingsService.BuildSettings;
-            foreach (var CSP in settings.CosmeticSettings.CSPs)
+            foreach (var CSP in settings.CosmeticSettings.CSPs.GroupBy(c => c.Style).Select(g => g.First()).ToList())
             {
                 var rootNode = _fileService.OpenFile(_cosmeticService.GetCosmeticPath(CSP, fighterIds.CosmeticId));
                 var textures = _cosmeticService.GetCosmetics(CSP, rootNode, fighterIds.CosmeticId, false);
