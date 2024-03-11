@@ -70,6 +70,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenSelchrFaceB",
                         FiftyCC = false,
+                        IdType = Enums.IdType.Cosmetic,
                         Size = new Size(48, 56),
                         FirstOnly = false
                     },
@@ -85,6 +86,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "InfFace",
                         FiftyCC = true,
+                        IdType = Enums.IdType.Cosmetic,
                         Size = new Size(48, 56),
                         FirstOnly = false,
                         MultiFile = true

@@ -129,10 +129,11 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             foreach (var cosmetic in settings.CosmeticSettings.GroupBy(c => new { c.CosmeticType, c.Style }).Select(g => g.First()).ToList())
             {
-                foreach (var path in GetCosmeticPaths(cosmetic, fighterIds.CosmeticId))
+                var id = fighterIds.Ids.First(x => x.Type == cosmetic.IdType).Id;
+                foreach (var path in GetCosmeticPaths(cosmetic, id))
                 {
                     var rootNode = _fileService.OpenFile(path);
-                    cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, fighterIds.CosmeticId, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
+                    cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, id, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
                     rootNode.Dispose();
                 }
             }

@@ -9,11 +9,32 @@ namespace BrawlInstaller.Classes
 {
     public class FighterIds
     {
-        public int FighterConfigId { get; set; }
-        public int CosmeticConfigId { get; set; }
-        public int SlotConfigId { get; set; }
-        public int CSSSlotConfigId { get; set; }
-        public int CosmeticId { get; set; }
-        public int FranchiseId { get; set; }
+        public List<FighterId> Ids { get; set; } = new List<FighterId>();
+        public int FighterConfigId { get => GetId(IdType.FighterConfig); set => SetId(IdType.FighterConfig, value); }
+        public int CosmeticConfigId { get => GetId(IdType.CosmeticConfig); set => SetId(IdType.CosmeticConfig, value); }
+        public int SlotConfigId { get => GetId(IdType.SlotConfig); set => SetId(IdType.SlotConfig, value); }
+        public int CSSSlotConfigId { get => GetId(IdType.CSSSlotConfig); set => SetId(IdType.CSSSlotConfig, value); }
+        public int CosmeticId { get => GetId(IdType.Cosmetic); set => SetId(IdType.Cosmetic, value); }
+        public int FranchiseId { get => GetId(IdType.Franchise); set => SetId(IdType.Franchise, value); }
+
+        private int GetId(IdType type)
+        {
+            return Ids.Any() ? Ids.First(x => x.Type == type).Id : 0;
+        }
+
+        private void SetId(IdType type, int newId)
+        {
+            var match = Ids.Any() ? Ids.First(x => x.Type == type) : null;
+            if (match != null)
+                match.Id = newId;
+            else
+                Ids.Add(new FighterId { Id = newId, Type = type });
+        }
+    }
+
+    public class FighterId
+    {
+        public IdType Type { get; set; }
+        public int Id { get; set; }
     }
 }
