@@ -35,7 +35,7 @@ namespace BrawlInstaller.Services
         public FighterPackage ExtractFighter(FighterIds fighterIds)
         {
             var fighterPackage = new FighterPackage();
-            var cosmetics = _cosmeticService.GetAllCosmetics(fighterIds);
+            var cosmetics = _cosmeticService.GetFighterCosmetics(fighterIds);
             foreach (var cosmetic in cosmetics)
             {
                 Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);

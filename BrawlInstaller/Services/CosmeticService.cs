@@ -15,7 +15,7 @@ namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
-        List<Cosmetic> GetAllCosmetics(FighterIds fighterIds);
+        List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
@@ -123,11 +123,11 @@ namespace BrawlInstaller.Services
             return cosmetics;
         }
 
-        public List<Cosmetic> GetAllCosmetics(FighterIds fighterIds)
+        public List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds)
         {
             var cosmetics = new List<Cosmetic>();
             var settings = _settingsService.BuildSettings;
-            foreach (var cosmetic in settings.CosmeticSettings.GroupBy(c => new { c.Style, c.CosmeticType }).Select(g => g.First()).ToList())
+            foreach (var cosmetic in settings.CosmeticSettings.GroupBy(c => new { c.CosmeticType, c.Style }).Select(g => g.First()).ToList())
             {
                 foreach (var path in GetCosmeticPaths(cosmetic, fighterIds.CosmeticId))
                 {
