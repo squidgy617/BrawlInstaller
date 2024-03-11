@@ -33,6 +33,7 @@ namespace BrawlInstaller.Classes
         public List<Cosmetic> Cosmetics { get; set; }
         public List<string> PacFiles { get; set; }
         public BrawlExColorID Color { get; set; }
+        public int CostumeId { get; set; }
     }
 
     public class Cosmetic
@@ -45,6 +46,7 @@ namespace BrawlInstaller.Classes
         public PLT0Node Palette { get; set; } = null;
         public bool? SharesData { get; set; }
         public int? InternalIndex { get; set; }
+        public int? CostumeIndex { get; set; }
     }
 
     public class FranchiseIcon

@@ -10,7 +10,7 @@ namespace BrawlInstaller.Classes
 {
     public class BuildSettings
     {
-        public CosmeticSettings CosmeticSettings { get; set; }
+        public List<CosmeticDefinition> CosmeticSettings { get; set; }
         public ToolPathSettings ToolPathSettings { get; set; }
         public KirbyHatSettings KirbyHatSettings { get; set; }
         public SoundSettings SoundSettings { get; set; }
@@ -21,7 +21,7 @@ namespace BrawlInstaller.Classes
     {
         public string FilePath { get; set; }
         public string NodePath { get; set; } = string.Empty;
-        public string FilExtension { get; set; } = string.Empty;
+        public string FileExtension { get; set; } = string.Empty;
     }
 
     public class CosmeticDefinition
@@ -29,24 +29,13 @@ namespace BrawlInstaller.Classes
         public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
         public InstallLocation InstallLocation { get; set; }
+        public InstallLocation ModelLocation { get; set; } = null;
         public PatSettings PatSettings { get; set; } = null;
         public string Prefix { get; set; }
         public bool FiftyCC { get; set; }
         public Size? Size { get; set; } = null;
         public bool FirstOnly { get; set; } = false;
-    }
-
-    public class CosmeticSettings
-    {
-        public List<CosmeticDefinition> CSPs { get; set; }
-        public List<CosmeticDefinition> CSSIcons { get; set; }
-        public List<CosmeticDefinition> BPs { get; set; }
-        public List<CosmeticDefinition> PortraitNames { get; set; }
-        public List<CosmeticDefinition> BPNames { get; set; }
-        public List<CosmeticDefinition> CSSIconNames { get; set; }
-        public List<CosmeticDefinition> ReplayIcons { get; set; }
-        public List<CosmeticDefinition> FranchiseIcons { get; set; }
-        public List<CosmeticDefinition> StockIcons { get; set; }
+        public bool MultiFile { get; set; } = false;
     }
 
     public class PatSettings

@@ -79,9 +79,9 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
             _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
-            _extractService.ExtractFighter(new Classes.FighterIds
+            _extractService.ExtractFighter(new FighterIds
             {
-                CosmeticId = 1
+                CosmeticId = 36
             });
         }
     }

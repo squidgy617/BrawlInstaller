@@ -56,40 +56,39 @@ namespace BrawlInstaller.Services
         {
             var buildSettings = new BuildSettings
             {
-                CosmeticSettings = new CosmeticSettings
+                CosmeticSettings = new List<CosmeticDefinition>
                 {
-                    CSPs = new List<CosmeticDefinition> 
-                    { 
-                        new CosmeticDefinition
-                        {
-                            CosmeticType = Enums.CosmeticType.CSP,
-                            Style = "vBrawl",
-                            InstallLocation = new InstallLocation
-                            {
-                                FilePath = "pf\\menu\\common\\char_bust_tex\\",
-                                NodePath = "",
-                                FilExtension = "brres"
-                            },
-                            Prefix = "MenSelchrFaceB",
-                            FiftyCC = false,
-                            Size = new Size(48, 56),
-                            FirstOnly = false
-                        }
-                    },
-                    BPs = new List<CosmeticDefinition> 
+                    new CosmeticDefinition
                     {
-                        new CosmeticDefinition
+                        CosmeticType = Enums.CosmeticType.CSP,
+                        Style = "vBrawl",
+                        InstallLocation = new InstallLocation
                         {
-                            CosmeticType = Enums.CosmeticType.BP,
-                            Style = "vBrawl",
-                            InstallLocation = new InstallLocation
-                            {
-                                FilePath = "pf\\info\\portrite\\",
-                                NodePath = "",
-                                FilExtension = "brres"
-                            }
-                        }   
-                    }
+                            FilePath = "pf\\menu\\common\\char_bust_tex\\",
+                            NodePath = "",
+                            FileExtension = "brres"
+                        },
+                        Prefix = "MenSelchrFaceB",
+                        FiftyCC = false,
+                        Size = new Size(48, 56),
+                        FirstOnly = false
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.BP,
+                        Style = "vBrawl",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\info\\portrite\\",
+                            NodePath = "",
+                            FileExtension = "brres"
+                        },
+                        Prefix = "InfFace",
+                        FiftyCC = true,
+                        Size = new Size(48, 56),
+                        FirstOnly = false,
+                        MultiFile = true
+                    }   
                 },
                 ToolPathSettings = new ToolPathSettings
                 {

@@ -3,15 +3,18 @@ using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
-        string GetCosmeticPath(CosmeticDefinition definition, int id);
+        List<string> GetCosmeticPaths(CosmeticDefinition definition, int id);
         List<Cosmetic> GetCosmetics(CosmeticDefinition definition, ResourceNode node, int id, bool restrictRange);
     }
     [Export(typeof(ICosmeticService))]
@@ -33,32 +36,50 @@ namespace BrawlInstaller.Services
             return id;
         }
 
-        public string GetCosmeticPath(CosmeticDefinition definition, int id)
+        public List<string> GetCosmeticPaths(CosmeticDefinition definition, int id)
         {
             var buildPath = _settingsService.BuildPath;
-            string path = "";
+            var paths = new List<string>();
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
                 var formattedId = FormatCosmeticId(definition.FiftyCC, id);
-                path = buildPath + definition.InstallLocation.FilePath + definition.Prefix + formattedId + "." + definition.InstallLocation.FilExtension;
+                var directoryInfo = new DirectoryInfo(buildPath + definition.InstallLocation.FilePath);
+                var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
+                paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
             }
             else
-                path = buildPath + definition.InstallLocation.FilePath;
-            return path;
+                paths.Add(buildPath + definition.InstallLocation.FilePath);
+            return paths;
         }
 
-        public bool CheckIdRange(bool fiftyCC, int id, string name)
+        public bool CheckIdRange(bool fiftyCC, int id, string name, string prefix)
         {
-            var suffix = name.Substring(name.LastIndexOf('.') + 1);
+            var suffix = name.Replace(prefix, "").Replace(".", "");
             if (suffix != "")
             {
                 var minRange = fiftyCC ? id * 50 : id * 10;
                 var maxRange = fiftyCC ? minRange + 50 : minRange + 10;
                 var numToCheck = Convert.ToInt32(suffix);
-                if (numToCheck < maxRange && numToCheck >= minRange)
+                if (numToCheck <= maxRange && numToCheck > minRange)
                     return true;
             }
             return false;
+        }
+
+        public int GetCostumeIndex(TEX0Node node, CosmeticDefinition definition, int id)
+        {
+            string suffix;
+            if (definition.MultiFile)
+                suffix = node.RootNode.FileName.Replace(definition.Prefix, "").Replace("." + definition.InstallLocation.FileExtension, "");
+            else
+                suffix = node.Name.Replace(definition.Prefix, "").Replace(".", "");
+            var isNumeric = int.TryParse(suffix, out int index);
+            if (isNumeric)
+            {
+                index = (definition.FiftyCC ? index - (id * 50) : index - (id * 10)) - 1;
+                return index;
+            }
+            return 0;
         }
 
         public List<TEX0Node> GetTextures(CosmeticDefinition definition, ResourceNode node, int id, bool restrictRange)
@@ -70,7 +91,7 @@ namespace BrawlInstaller.Services
             {
                 foreach (var child in folder.Children)
                 {
-                    if (child.GetType() == typeof(TEX0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition.FiftyCC, id, child.Name)))
+                    if (child.GetType() == typeof(TEX0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, child.Name, definition.Prefix))))
                         nodes.Add((TEX0Node) child);
                 }
             }
@@ -90,7 +111,8 @@ namespace BrawlInstaller.Services
                     Texture = texture,
                     Palette = texture.GetPaletteNode(),
                     SharesData = texture.SharesData,
-                    InternalIndex = cosmetics.Count()
+                    InternalIndex = cosmetics.Count(),
+                    CostumeIndex = GetCostumeIndex(texture, definition, id)
                 });
             }
             return cosmetics;
