@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BrawlLib.BrawlManagerLib.TextureContainer;
 
 namespace BrawlInstaller.Services
 {
@@ -34,19 +35,10 @@ namespace BrawlInstaller.Services
         public FighterPackage ExtractFighter(FighterIds fighterIds)
         {
             var fighterPackage = new FighterPackage();
-            var settings = _settingsService.BuildSettings;
-            foreach (var cosmetic in settings.CosmeticSettings.GroupBy(c => new { c.Style, c.CosmeticType }).Select(g => g.First()).ToList())
+            var cosmetics = _cosmeticService.GetAllCosmetics(fighterIds);
+            foreach (var cosmetic in cosmetics)
             {
-                foreach (var path in _cosmeticService.GetCosmeticPaths(cosmetic, fighterIds.CosmeticId))
-                {
-                    var rootNode = _fileService.OpenFile(path);
-                    var textures = _cosmeticService.GetCosmetics(cosmetic, rootNode, fighterIds.CosmeticId, !cosmetic.InstallLocation.FilePath.EndsWith("\\"));
-                    foreach (var texture in textures)
-                    {
-                        Debug.Print(texture.Texture.Name + " " + texture.InternalIndex.ToString() + " " + texture.CostumeIndex);
-                    }
-                    rootNode.Dispose();
-                }
+                Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
             }
             return fighterPackage;
         }

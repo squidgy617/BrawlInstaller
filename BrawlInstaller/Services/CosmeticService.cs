@@ -3,6 +3,7 @@ using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,19 +15,20 @@ namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
-        List<string> GetCosmeticPaths(CosmeticDefinition definition, int id);
-        List<Cosmetic> GetCosmetics(CosmeticDefinition definition, ResourceNode node, int id, bool restrictRange);
+        List<Cosmetic> GetAllCosmetics(FighterIds fighterIds);
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
     {
         // Services
         ISettingsService _settingsService { get; }
+        IFileService _fileService { get; }
 
         [ImportingConstructor]
-        public CosmeticService(ISettingsService settingsService) 
+        public CosmeticService(ISettingsService settingsService, IFileService fileService) 
         {
             _settingsService = settingsService;
+            _fileService = fileService;
         }
 
         // Methods
@@ -45,7 +47,10 @@ namespace BrawlInstaller.Services
                 var formattedId = FormatCosmeticId(definition.FiftyCC, id);
                 var directoryInfo = new DirectoryInfo(buildPath + definition.InstallLocation.FilePath);
                 var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
-                paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
+                if (definition.MultiFile)
+                    paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
+                else
+                    paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition.FiftyCC, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
             }
             else
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
@@ -114,6 +119,22 @@ namespace BrawlInstaller.Services
                     InternalIndex = cosmetics.Count(),
                     CostumeIndex = GetCostumeIndex(texture, definition, id)
                 });
+            }
+            return cosmetics;
+        }
+
+        public List<Cosmetic> GetAllCosmetics(FighterIds fighterIds)
+        {
+            var cosmetics = new List<Cosmetic>();
+            var settings = _settingsService.BuildSettings;
+            foreach (var cosmetic in settings.CosmeticSettings.GroupBy(c => new { c.Style, c.CosmeticType }).Select(g => g.First()).ToList())
+            {
+                foreach (var path in GetCosmeticPaths(cosmetic, fighterIds.CosmeticId))
+                {
+                    var rootNode = _fileService.OpenFile(path);
+                    cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, fighterIds.CosmeticId, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
+                    rootNode.Dispose();
+                }
             }
             return cosmetics;
         }
