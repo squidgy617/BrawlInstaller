@@ -106,6 +106,25 @@ namespace BrawlInstaller.Services
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(32,32),
                         FirstOnly = false
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.CSSIcon,
+                        Style = "P+",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu2\\sc_selcharacter.pac",
+                            NodePath = "Misc Data [70]",
+                            FileExtension = "pac"
+                        },
+                        PatSettings = new PatSettings
+                        {
+                            Path = "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0"
+                        },
+                        Prefix = "MenSelchrChrFace",
+                        FiftyCC = false,
+                        IdType = Enums.IdType.Cosmetic,
+                        Size = new Size(64,64)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings

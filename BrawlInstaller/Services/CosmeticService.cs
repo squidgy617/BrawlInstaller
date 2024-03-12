@@ -71,6 +71,15 @@ namespace BrawlInstaller.Services
             return false;
         }
 
+        public bool CheckIdRangeIndex(bool fiftyCC, int id, int index)
+        {
+            var minRange = fiftyCC ? id * 50 : id * 10;
+            var maxRange = fiftyCC ? minRange + 50 : minRange + 10;
+            if (index <= maxRange && index > minRange)
+                return true;
+            return false;
+        }
+
         public int GetCostumeIndex(TEX0Node node, CosmeticDefinition definition, int id)
         {
             string suffix;
@@ -87,9 +96,29 @@ namespace BrawlInstaller.Services
             return 0;
         }
 
-        public List<TEX0Node> GetTextures(CosmeticDefinition definition, ResourceNode node, int id, bool restrictRange)
+        public int GetCostumeIndex(int index, CosmeticDefinition definition, int id)
         {
-            var nodes = new List<TEX0Node>();
+            index = (definition.FiftyCC ? index - (id * 50) : index - (id * 10)) - 1;
+            return index;
+        }
+
+        public List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, int id, bool restrictRange)
+        {
+            var nodes = new List<CosmeticTexture>();
+            if (definition.PatSettings != null)
+            {
+                var pat = node.FindChild(definition.PatSettings.Path);
+                if (pat != null)
+                {
+                    var patEntries = pat.Children.Where(x => !restrictRange || CheckIdRangeIndex(definition.FiftyCC, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex)));
+                    foreach (PAT0TextureEntryNode patEntry in patEntries)
+                    {
+                        patEntry.GetImage(0);
+                        nodes.Add(new CosmeticTexture { Texture = patEntry._textureNode, CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), definition, id) });
+                    }
+                    return nodes;
+                }
+            }
             var start = definition.InstallLocation.NodePath != "" ? node.FindChild(definition.InstallLocation.NodePath) : node;
             if (start.GetType() == typeof(ARCNode))
                 start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
@@ -99,7 +128,7 @@ namespace BrawlInstaller.Services
                 foreach (var child in folder.Children)
                 {
                     if (child.GetType() == typeof(TEX0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, child.Name, definition.Prefix))))
-                        nodes.Add((TEX0Node) child);
+                        nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id) });
                 }
             }
             return nodes;
@@ -115,12 +144,12 @@ namespace BrawlInstaller.Services
                 {
                     CosmeticType = definition.CosmeticType,
                     Style = definition.Style,
-                    Image = texture.GetImage(0),
-                    Texture = texture,
-                    Palette = texture.GetPaletteNode(),
-                    SharesData = texture.SharesData,
+                    Image = texture.Texture.GetImage(0),
+                    Texture = texture.Texture,
+                    Palette = texture.Texture.GetPaletteNode(),
+                    SharesData = texture.Texture.SharesData,
                     InternalIndex = cosmetics.Count(),
-                    CostumeIndex = GetCostumeIndex(texture, definition, id)
+                    CostumeIndex = texture.CostumeIndex
                 });
             }
             return cosmetics;

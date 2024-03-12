@@ -61,6 +61,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\BuildSettings.cs" />
+    <Compile Include="Classes\CosmeticTexture.cs" />
     <Compile Include="Classes\FighterIDs.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
