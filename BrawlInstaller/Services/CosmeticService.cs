@@ -115,6 +115,7 @@ namespace BrawlInstaller.Services
                 {
                     CosmeticType = definition.CosmeticType,
                     Style = definition.Style,
+                    Image = texture.GetImage(0),
                     Texture = texture,
                     Palette = texture.GetPaletteNode(),
                     SharesData = texture.SharesData,

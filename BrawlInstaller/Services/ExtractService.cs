@@ -1,9 +1,11 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +40,7 @@ namespace BrawlInstaller.Services
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterIds);
             foreach (var cosmetic in cosmetics)
             {
+                cosmetic.Image.Save(cosmetic.CosmeticType.GetDisplayName() + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
                 Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
             }
             return fighterPackage;
