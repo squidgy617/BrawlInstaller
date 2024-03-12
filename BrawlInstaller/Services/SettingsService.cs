@@ -90,7 +90,23 @@ namespace BrawlInstaller.Services
                         Size = new Size(48, 56),
                         FirstOnly = false,
                         SeparateFiles = true
-                    }   
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.StockIcon,
+                        Style = "P+",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu\\common\\StockFaceTex.brres",
+                            NodePath = "",
+                            FileExtension = "brres"
+                        },
+                        Prefix = "InfStc",
+                        FiftyCC = true,
+                        IdType = Enums.IdType.Cosmetic,
+                        Size = new Size(32,32),
+                        FirstOnly = false
+                    }
                 },
                 ToolPathSettings = new ToolPathSettings
                 {
