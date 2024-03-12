@@ -47,7 +47,7 @@ namespace BrawlInstaller.Services
                 var formattedId = FormatCosmeticId(definition.FiftyCC, id);
                 var directoryInfo = new DirectoryInfo(buildPath + definition.InstallLocation.FilePath);
                 var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
-                if (definition.MultiFile)
+                if (definition.SeparateFiles)
                     paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
                 else
                     paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition.FiftyCC, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
@@ -74,7 +74,7 @@ namespace BrawlInstaller.Services
         public int GetCostumeIndex(TEX0Node node, CosmeticDefinition definition, int id)
         {
             string suffix;
-            if (definition.MultiFile)
+            if (definition.SeparateFiles)
                 suffix = node.RootNode.FileName.Replace(definition.Prefix, "").Replace("." + definition.InstallLocation.FileExtension, "");
             else
                 suffix = node.Name.Replace(definition.Prefix, "").Replace(".", "");

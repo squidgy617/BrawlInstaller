@@ -89,7 +89,7 @@ namespace BrawlInstaller.Services
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(48, 56),
                         FirstOnly = false,
-                        MultiFile = true
+                        SeparateFiles = true
                     }   
                 },
                 ToolPathSettings = new ToolPathSettings

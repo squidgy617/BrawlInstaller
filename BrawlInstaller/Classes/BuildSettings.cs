@@ -36,7 +36,7 @@ namespace BrawlInstaller.Classes
         public IdType IdType { get; set; }
         public Size? Size { get; set; } = null;
         public bool FirstOnly { get; set; } = false;
-        public bool MultiFile { get; set; } = false;
+        public bool SeparateFiles { get; set; } = false;
     }
 
     public class PatSettings
