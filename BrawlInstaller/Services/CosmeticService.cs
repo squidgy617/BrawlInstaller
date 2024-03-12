@@ -91,6 +91,8 @@ namespace BrawlInstaller.Services
         {
             var nodes = new List<TEX0Node>();
             var start = definition.InstallLocation.NodePath != "" ? node.FindChild(definition.InstallLocation.NodePath) : node;
+            if (start.GetType() == typeof(ARCNode))
+                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
             var folder = start.FindChild("Textures(NW4R)");
             if (folder != null)
             {
