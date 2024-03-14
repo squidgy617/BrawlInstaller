@@ -48,7 +48,7 @@ namespace BrawlInstaller.Services
                 var directoryInfo = new DirectoryInfo(buildPath + definition.InstallLocation.FilePath);
                 var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
                 if (definition.SeparateFiles)
-                    paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.Multiplier, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
+                    paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
                 else
                     paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
             }
@@ -57,21 +57,24 @@ namespace BrawlInstaller.Services
             return paths;
         }
 
-        public bool CheckIdRange(int multiplier, int id, string name, string prefix)
+        public bool CheckIdRange(CosmeticDefinition definition, int id, string name, string prefix)
         {
             var suffix = name.Replace(prefix, "").Replace(".", "");
             if (suffix != "" && int.TryParse(suffix, out int index))
             {
                 index = Convert.ToInt32(suffix);
-                return CheckIdRange(multiplier, id, index);
+                return CheckIdRange(definition, id, index);
             }
             return false;
         }
 
-        public bool CheckIdRange(int multiplier, int id, int index)
+        public bool CheckIdRange(CosmeticDefinition definition, int id, int index)
         {
-            var minRange = id * multiplier;
-            var maxRange = multiplier > 1 ? minRange + multiplier : id;
+            // TODO: Do we really only check this for cosmetic IDs?
+            if (definition.IdType == Enums.IdType.Cosmetic && index == id)
+                return true;
+            var minRange = id * definition.Multiplier;
+            var maxRange = definition.Multiplier > 1 ? minRange + definition.Multiplier : id;
             if (index <= maxRange && index > minRange)
                 return true;
             return false;
@@ -87,14 +90,15 @@ namespace BrawlInstaller.Services
             var isNumeric = int.TryParse(suffix, out int index);
             if (isNumeric)
             {
-                index = index - (id * definition.Multiplier);
-                return index;
+                return GetCostumeIndex(index, definition, id);
             }
             return 0;
         }
 
         public int GetCostumeIndex(int index, CosmeticDefinition definition, int id)
         {
+            if (definition.Multiplier <= 1)
+                return 0;
             index = index - (id * definition.Multiplier);
             return index;
         }
@@ -107,7 +111,7 @@ namespace BrawlInstaller.Services
                 var pat = node.FindChild(definition.PatSettings.Path);
                 if (pat != null)
                 {
-                    var patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.Multiplier, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex)));
+                    var patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex)));
                     foreach (PAT0TextureEntryNode patEntry in patEntries)
                     {
                         patEntry.GetImage(0);
@@ -124,7 +128,7 @@ namespace BrawlInstaller.Services
             {
                 foreach (var child in folder.Children)
                 {
-                    if (child.GetType() == typeof(TEX0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.Multiplier, id, child.Name, definition.Prefix))))
+                    if (child.GetType() == typeof(TEX0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, id, child.Name, definition.Prefix))))
                         nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id) });
                 }
             }
