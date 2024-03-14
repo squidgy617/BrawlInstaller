@@ -60,9 +60,9 @@ namespace BrawlInstaller.Services
         public bool CheckIdRange(int multiplier, int id, string name, string prefix)
         {
             var suffix = name.Replace(prefix, "").Replace(".", "");
-            if (suffix != "")
+            if (suffix != "" && int.TryParse(suffix, out int index))
             {
-                var index = Convert.ToInt32(suffix);
+                index = Convert.ToInt32(suffix);
                 return CheckIdRange(multiplier, id, index);
             }
             return false;
