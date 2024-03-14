@@ -127,6 +127,25 @@ namespace BrawlInstaller.Services
                         Multiplier = 10,
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(64,64)
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.ReplayIcon,
+                        Style = "P+",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu\\collection\\Replay.brres",
+                            NodePath = "",
+                            FileExtension = "brres"
+                        },
+                        PatSettings = new PatSettings
+                        {
+                            Path = "AnmTexPat(NW4R)/MenReplayPreview2_TopN__0/lambert78/Texture1"
+                        },
+                        Prefix = "MenReplayChr",
+                        Multiplier = 10,
+                        IdType= Enums.IdType.Cosmetic,
+                        Size = new Size(64,24)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings
