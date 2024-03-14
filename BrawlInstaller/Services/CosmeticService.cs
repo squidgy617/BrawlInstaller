@@ -87,7 +87,7 @@ namespace BrawlInstaller.Services
             var isNumeric = int.TryParse(suffix, out int index);
             if (isNumeric)
             {
-                index = (index - (id * definition.Multiplier)) - 1;
+                index = index - (id * definition.Multiplier);
                 return index;
             }
             return 0;
@@ -95,7 +95,7 @@ namespace BrawlInstaller.Services
 
         public int GetCostumeIndex(int index, CosmeticDefinition definition, int id)
         {
-            index = (index - (id * definition.Multiplier)) - 1;
+            index = index - (id * definition.Multiplier);
             return index;
         }
 
