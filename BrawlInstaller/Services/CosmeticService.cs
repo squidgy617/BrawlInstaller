@@ -158,7 +158,7 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             foreach (var cosmetic in settings.CosmeticSettings.GroupBy(c => new { c.CosmeticType, c.Style }).Select(g => g.First()).ToList())
             {
-                var id = fighterIds.Ids.First(x => x.Type == cosmetic.IdType).Id;
+                var id = fighterIds.Ids.First(x => x.Type == cosmetic.IdType).Id + cosmetic.Offset;
                 foreach (var path in GetCosmeticPaths(cosmetic, id))
                 {
                     var rootNode = _fileService.OpenFile(path);
