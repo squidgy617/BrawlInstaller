@@ -32,7 +32,7 @@ namespace BrawlInstaller.Classes
         public InstallLocation ModelLocation { get; set; } = null;
         public PatSettings PatSettings { get; set; } = null;
         public string Prefix { get; set; }
-        public bool FiftyCC { get; set; }
+        public int Multiplier { get; set; } = 1;
         public IdType IdType { get; set; }
         public Size? Size { get; set; } = null;
         public bool FirstOnly { get; set; } = false;

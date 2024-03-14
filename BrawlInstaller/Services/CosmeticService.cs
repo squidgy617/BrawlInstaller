@@ -32,9 +32,9 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
-        public string FormatCosmeticId(bool fiftyCC, int cosmeticId)
+        public string FormatCosmeticId(int multiplier, int cosmeticId)
         {
-            var id = fiftyCC ? (cosmeticId * 50).ToString("D4") : (cosmeticId * 10).ToString("D3");
+            var id = multiplier > 10 ? (cosmeticId * multiplier).ToString("D4") : (cosmeticId * multiplier).ToString("D3");
             return id;
         }
 
@@ -44,37 +44,34 @@ namespace BrawlInstaller.Services
             var paths = new List<string>();
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
-                var formattedId = FormatCosmeticId(definition.FiftyCC, id);
+                var formattedId = FormatCosmeticId(definition.Multiplier, id);
                 var directoryInfo = new DirectoryInfo(buildPath + definition.InstallLocation.FilePath);
                 var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
                 if (definition.SeparateFiles)
-                    paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
+                    paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.Multiplier, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
                 else
-                    paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition.FiftyCC, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
+                    paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition.Multiplier, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
             }
             else
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
             return paths;
         }
 
-        public bool CheckIdRange(bool fiftyCC, int id, string name, string prefix)
+        public bool CheckIdRange(int multiplier, int id, string name, string prefix)
         {
             var suffix = name.Replace(prefix, "").Replace(".", "");
             if (suffix != "")
             {
-                var minRange = fiftyCC ? id * 50 : id * 10;
-                var maxRange = fiftyCC ? minRange + 50 : minRange + 10;
-                var numToCheck = Convert.ToInt32(suffix);
-                if (numToCheck <= maxRange && numToCheck > minRange)
-                    return true;
+                var index = Convert.ToInt32(suffix);
+                return CheckIdRange(multiplier, id, index);
             }
             return false;
         }
 
-        public bool CheckIdRangeIndex(bool fiftyCC, int id, int index)
+        public bool CheckIdRange(int multiplier, int id, int index)
         {
-            var minRange = fiftyCC ? id * 50 : id * 10;
-            var maxRange = fiftyCC ? minRange + 50 : minRange + 10;
+            var minRange = id * multiplier;
+            var maxRange = multiplier > 1 ? minRange + multiplier : id;
             if (index <= maxRange && index > minRange)
                 return true;
             return false;
@@ -90,7 +87,7 @@ namespace BrawlInstaller.Services
             var isNumeric = int.TryParse(suffix, out int index);
             if (isNumeric)
             {
-                index = (definition.FiftyCC ? index - (id * 50) : index - (id * 10)) - 1;
+                index = (index - (id * definition.Multiplier)) - 1;
                 return index;
             }
             return 0;
@@ -98,7 +95,7 @@ namespace BrawlInstaller.Services
 
         public int GetCostumeIndex(int index, CosmeticDefinition definition, int id)
         {
-            index = (definition.FiftyCC ? index - (id * 50) : index - (id * 10)) - 1;
+            index = (index - (id * definition.Multiplier)) - 1;
             return index;
         }
 
@@ -110,7 +107,7 @@ namespace BrawlInstaller.Services
                 var pat = node.FindChild(definition.PatSettings.Path);
                 if (pat != null)
                 {
-                    var patEntries = pat.Children.Where(x => !restrictRange || CheckIdRangeIndex(definition.FiftyCC, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex)));
+                    var patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.Multiplier, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex)));
                     foreach (PAT0TextureEntryNode patEntry in patEntries)
                     {
                         patEntry.GetImage(0);
@@ -127,7 +124,7 @@ namespace BrawlInstaller.Services
             {
                 foreach (var child in folder.Children)
                 {
-                    if (child.GetType() == typeof(TEX0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.FiftyCC, id, child.Name, definition.Prefix))))
+                    if (child.GetType() == typeof(TEX0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.Multiplier, id, child.Name, definition.Prefix))))
                         nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id) });
                 }
             }

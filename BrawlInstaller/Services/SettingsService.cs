@@ -69,7 +69,7 @@ namespace BrawlInstaller.Services
                             FileExtension = "brres"
                         },
                         Prefix = "MenSelchrFaceB",
-                        FiftyCC = false,
+                        Multiplier = 10,
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(48, 56),
                         FirstOnly = false
@@ -85,7 +85,7 @@ namespace BrawlInstaller.Services
                             FileExtension = "brres"
                         },
                         Prefix = "InfFace",
-                        FiftyCC = true,
+                        Multiplier = 50,
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(48, 56),
                         FirstOnly = false,
@@ -102,7 +102,7 @@ namespace BrawlInstaller.Services
                             FileExtension = "brres"
                         },
                         Prefix = "InfStc",
-                        FiftyCC = true,
+                        Multiplier = 50,
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(32,32),
                         FirstOnly = false
@@ -122,7 +122,7 @@ namespace BrawlInstaller.Services
                             Path = "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0"
                         },
                         Prefix = "MenSelchrChrFace",
-                        FiftyCC = false,
+                        Multiplier = 10,
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(64,64)
                     }
