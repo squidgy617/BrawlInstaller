@@ -108,7 +108,7 @@ namespace BrawlInstaller.Services
             var nodes = new List<CosmeticTexture>();
             if (definition.PatSettings != null)
             {
-                var pat = node.FindChild(definition.PatSettings.Path);
+                var pat = node.FindChild(definition.PatSettings.Paths.First());
                 if (pat != null)
                 {
                     var patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex)));

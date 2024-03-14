@@ -76,6 +76,30 @@ namespace BrawlInstaller.Services
                     },
                     new CosmeticDefinition
                     {
+                        CosmeticType = Enums.CosmeticType.PortraitName,
+                        Style = "PM",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu2\\sc_selcharacter.pac",
+                            NodePath = "Misc Data [30]",
+                            FileExtension = "pac"
+                        },
+                        PatSettings = new PatSettings
+                        {
+                            Paths = new List<string>
+                            {
+                                "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card010/Texture0",
+                                "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card011/Texture0"
+                            }
+                        },
+                        Prefix = "MenSelchrChrNm",
+                        Multiplier = 10,
+                        IdType = Enums.IdType.Cosmetic,
+                        Size = new Size(144, 32),
+                        FirstOnly = false
+                    },
+                    new CosmeticDefinition
+                    {
                         CosmeticType = Enums.CosmeticType.BP,
                         Style = "vBrawl",
                         InstallLocation = new InstallLocation
@@ -121,7 +145,7 @@ namespace BrawlInstaller.Services
                         },
                         PatSettings = new PatSettings
                         {
-                            Path = "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0"
+                            Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0" }
                         },
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 10,
@@ -140,7 +164,7 @@ namespace BrawlInstaller.Services
                         },
                         PatSettings = new PatSettings
                         {
-                            Path = "AnmTexPat(NW4R)/MenReplayPreview2_TopN__0/lambert78/Texture1"
+                            Paths = new List<string> { "AnmTexPat(NW4R)/MenReplayPreview2_TopN__0/lambert78/Texture1" }
                         },
                         Prefix = "MenReplayChr",
                         Multiplier = 10,
