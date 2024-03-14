@@ -71,8 +71,8 @@ namespace BrawlInstaller.Services
         public bool CheckIdRange(CosmeticDefinition definition, int id, int index)
         {
             // TODO: Do we really only check this for cosmetic IDs?
-            if (definition.IdType == Enums.IdType.Cosmetic && index == id)
-                return true;
+            if (definition.IdType == Enums.IdType.Cosmetic)
+                return index == id;
             var minRange = id * definition.Multiplier;
             var maxRange = definition.Multiplier > 1 ? minRange + definition.Multiplier : id;
             if (index <= maxRange && index > minRange)
