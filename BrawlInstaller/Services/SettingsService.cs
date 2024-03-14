@@ -86,6 +86,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "InfFace",
                         Multiplier = 50,
+                        SuffixDigits = 4,
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(48, 56),
                         FirstOnly = false,
@@ -103,6 +104,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "InfStc",
                         Multiplier = 50,
+                        SuffixDigits = 4,
                         IdType = Enums.IdType.Cosmetic,
                         Size = new Size(32,32),
                         FirstOnly = false

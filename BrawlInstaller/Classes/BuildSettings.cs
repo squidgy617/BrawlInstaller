@@ -33,6 +33,8 @@ namespace BrawlInstaller.Classes
         public PatSettings PatSettings { get; set; } = null;
         public string Prefix { get; set; }
         public int Multiplier { get; set; } = 1;
+        public int Offset { get; set; } = 0;
+        public int SuffixDigits { get; set; } = 3; // TODO: instead of displaying this on the interface, automatically fill this in based on IdType and Multiplier? Most cosmetics use 2, any that use cosmetic ID use 3 (10CC) or 4 (50CC)
         public IdType IdType { get; set; }
         public Size? Size { get; set; } = null;
         public bool FirstOnly { get; set; } = false;

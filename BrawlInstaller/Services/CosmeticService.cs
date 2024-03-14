@@ -32,9 +32,9 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
-        public string FormatCosmeticId(int multiplier, int cosmeticId)
+        public string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId)
         {
-            var id = multiplier > 10 ? (cosmeticId * multiplier).ToString("D4") : (cosmeticId * multiplier).ToString("D3");
+            var id = (cosmeticId * definition.Multiplier).ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -44,13 +44,13 @@ namespace BrawlInstaller.Services
             var paths = new List<string>();
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
-                var formattedId = FormatCosmeticId(definition.Multiplier, id);
+                var formattedId = FormatCosmeticId(definition, id);
                 var directoryInfo = new DirectoryInfo(buildPath + definition.InstallLocation.FilePath);
                 var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
                 if (definition.SeparateFiles)
                     paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition.Multiplier, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
                 else
-                    paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition.Multiplier, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
+                    paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
             }
             else
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
