@@ -151,8 +151,29 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 1,
-                        IdType = Enums.IdType.CosmeticConfig,
+                        IdType = Enums.IdType.Cosmetic,
                         Size = new Size(64,64)
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.CSSIcon,
+                        Style = "vBrawl",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu\\adventure\\selchrcd_common.brres",
+                            NodePath = "",
+                            FileExtension = "brres"
+                        },
+                        PatSettings = new PatSettings
+                        {
+                            Paths = new List<string> { "AnmTexPat(NW4R)/MenAdvChrCd0001_TopN__0/Face02/Texture0" },
+                            Multiplier = 10,
+                            IdType= Enums.IdType.Cosmetic
+                        },
+                        Prefix = "MenSelchrChrFace",
+                        Multiplier = 1,
+                        IdType = Enums.IdType.Cosmetic,
+                        Size = new Size(80,56)
                     },
                     new CosmeticDefinition
                     {
