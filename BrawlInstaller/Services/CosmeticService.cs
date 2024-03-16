@@ -189,8 +189,8 @@ namespace BrawlInstaller.Services
                     CosmeticType = definition.CosmeticType,
                     Style = definition.Style,
                     Image = texture.Texture.GetImage(0),
-                    Texture = texture.Texture,
-                    Palette = texture.Texture.GetPaletteNode(),
+                    Texture = (TEX0Node)_fileService.CopyNode(texture.Texture),
+                    Palette = texture.Texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.Texture.GetPaletteNode()) : null,
                     SharesData = texture.Texture.SharesData,
                     InternalIndex = cosmetics.Count(),
                     CostumeIndex = texture.CostumeIndex
