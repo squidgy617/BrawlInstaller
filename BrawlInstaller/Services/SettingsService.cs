@@ -145,11 +145,13 @@ namespace BrawlInstaller.Services
                         },
                         PatSettings = new PatSettings
                         {
-                            Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0" }
+                            Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0" },
+                            Multiplier = 10,
+                            IdType = Enums.IdType.Cosmetic
                         },
                         Prefix = "MenSelchrChrFace",
-                        Multiplier = 10,
-                        IdType = Enums.IdType.Cosmetic,
+                        Multiplier = 1,
+                        IdType = Enums.IdType.CosmeticConfig,
                         Size = new Size(64,64)
                     },
                     new CosmeticDefinition

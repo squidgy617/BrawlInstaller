@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Enums;
 using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
@@ -63,18 +64,23 @@ namespace BrawlInstaller.Services
             if (suffix != "" && int.TryParse(suffix, out int index))
             {
                 index = Convert.ToInt32(suffix);
-                return CheckIdRange(definition, id, index);
+                return CheckIdRange(definition.IdType, definition.Multiplier, id, index);
             }
             return false;
         }
 
-        public bool CheckIdRange(CosmeticDefinition definition, int id, int index)
+        public bool CheckIdRange(PatSettings patSettings, int id, int index)
+        {
+            return CheckIdRange(idType: patSettings.IdType ?? IdType.Cosmetic, multiplier: patSettings.Multiplier ?? 1, id, index);
+        }
+
+        public bool CheckIdRange(IdType idType, int multiplier, int id, int index)
         {
             // TODO: Do we really only check this for cosmetic IDs?
-            if (definition.IdType == Enums.IdType.Cosmetic)
+            if (idType != IdType.Cosmetic)
                 return index == id;
-            var minRange = id * definition.Multiplier;
-            var maxRange = definition.Multiplier > 1 ? minRange + definition.Multiplier : id;
+            var minRange = id * multiplier;
+            var maxRange = multiplier > 1 ? minRange + multiplier : id;
             if (index <= maxRange && index > minRange)
                 return true;
             return false;
@@ -103,15 +109,23 @@ namespace BrawlInstaller.Services
             return index;
         }
 
-        public List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, int id, bool restrictRange)
+        public List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             var nodes = new List<CosmeticTexture>();
+            var id = fighterIds.GetIdOfType(definition.IdType) + definition.Offset;
             if (definition.PatSettings != null)
             {
                 var pat = node.FindChild(definition.PatSettings.Paths.First());
                 if (pat != null)
                 {
-                    var patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex)));
+                    var patEntries = new List<ResourceNode>();
+                    if (definition.PatSettings.IdType != null)
+                    {
+                        id = fighterIds.GetIdOfType(definition.PatSettings.IdType ?? definition.IdType) + (definition.PatSettings.Offset ?? definition.Offset);
+                        patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.PatSettings, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
+                    }
+                    else
+                        patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.IdType, definition.Multiplier, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
                     foreach (PAT0TextureEntryNode patEntry in patEntries)
                     {
                         patEntry.GetImage(0);
@@ -135,10 +149,10 @@ namespace BrawlInstaller.Services
             return nodes;
         }
 
-        public List<Cosmetic> GetCosmetics(CosmeticDefinition definition, ResourceNode node, int id, bool restrictRange)
+        public List<Cosmetic> GetCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             var cosmetics = new List<Cosmetic>();
-            var textures = GetTextures(definition, node, id, restrictRange);
+            var textures = GetTextures(definition, node, fighterIds, restrictRange);
             foreach(var texture in textures)
             {
                 cosmetics.Add(new Cosmetic
@@ -162,11 +176,11 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             foreach (var cosmetic in settings.CosmeticSettings.GroupBy(c => new { c.CosmeticType, c.Style }).Select(g => g.First()).ToList())
             {
-                var id = fighterIds.Ids.First(x => x.Type == cosmetic.IdType).Id + cosmetic.Offset;
+                var id = fighterIds.GetIdOfType(cosmetic.IdType) + cosmetic.Offset;
                 foreach (var path in GetCosmeticPaths(cosmetic, id))
                 {
                     var rootNode = _fileService.OpenFile(path);
-                    cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, id, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
+                    cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, fighterIds, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
                     rootNode.Dispose();
                 }
             }

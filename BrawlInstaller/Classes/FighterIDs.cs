@@ -30,6 +30,11 @@ namespace BrawlInstaller.Classes
             else
                 Ids.Add(new FighterId { Id = newId, Type = type });
         }
+
+        public int GetIdOfType(IdType type)
+        {
+            return Ids.FirstOrDefault(x => x.Type == type)?.Id ?? 0;
+        }
     }
 
     public class FighterId
