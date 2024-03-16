@@ -187,6 +187,24 @@ namespace BrawlInstaller.Services
                         IdType = Enums.IdType.CosmeticConfig,
                         Offset = 1,
                         Size = new Size(128, 160)
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.FranchiseIcon,
+                        Style = "Icon",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu2\\sc_selcharacter.pac",
+                            NodePath = "Misc Data [30]",
+                            FileExtension = "pac"
+                        },
+                        PatSettings = new PatSettings
+                        {
+                            Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCmark4_TopN__0/Card04/Texture0" }
+                        },
+                        Prefix = "MenSelchrMark",
+                        IdType = Enums.IdType.Franchise,
+                        Size = new Size(128,128)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings

@@ -82,7 +82,8 @@ namespace BrawlInstaller.ViewModels
             _extractService.ExtractFighter(new FighterIds
             {
                 CosmeticId = 19,
-                CosmeticConfigId = 19
+                CosmeticConfigId = 19,
+                FranchiseId = 3
             });
         }
     }
