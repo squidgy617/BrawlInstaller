@@ -241,6 +241,20 @@ namespace BrawlInstaller.Services
                         Prefix = "InfResultMark",
                         IdType = Enums.IdType.Franchise,
                         Size = new Size(80,80)
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.TrophyThumbnail,
+                        Style = "vBrawl",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu\\collection\\Figure.brres",
+                            NodePath = "",
+                            FileExtension = "brres"
+                        },
+                        Prefix = "MenCollDisply01",
+                        IdType = Enums.IdType.Thumbnail,
+                        Size = new Size(56,48)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings

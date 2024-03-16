@@ -13,6 +13,8 @@ namespace BrawlInstaller.Enums
         CSSSlotConfig,
         SlotConfig,
         Cosmetic,
-        Franchise
+        Franchise,
+        Trophy,
+        Thumbnail
     }
 }

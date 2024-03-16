@@ -16,6 +16,7 @@ namespace BrawlInstaller.Classes
         public int CSSSlotConfigId { get => GetId(IdType.CSSSlotConfig); set => SetId(IdType.CSSSlotConfig, value); }
         public int CosmeticId { get => GetId(IdType.Cosmetic); set => SetId(IdType.Cosmetic, value); }
         public int FranchiseId { get => GetId(IdType.Franchise); set => SetId(IdType.Franchise, value); }
+        public int TrophyThumbnailId { get => GetId(IdType.Thumbnail); set => SetId(IdType.Thumbnail, value); }
 
         private int GetId(IdType type)
         {

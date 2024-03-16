@@ -17,6 +17,7 @@ namespace BrawlInstaller.Enums
         ReplayIcon,
         FranchiseIcon,
         StockIcon,
-        CreditsIcon
+        CreditsIcon,
+        TrophyThumbnail
     }
 }
