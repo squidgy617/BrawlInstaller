@@ -155,6 +155,28 @@ namespace BrawlInstaller.Services
             return nodes;
         }
 
+        public List<MDL0Node> GetModels(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        {
+            // Try to get all models for cosmetic definition
+            var nodes = new List<MDL0Node>();
+            var id = fighterIds.GetIdOfType(definition.IdType) + definition.Offset;
+            var start = definition.ModelPath != null ? node.FindChild(definition.ModelPath) : node;
+            // If the node path is an ARC node, search for a matching BRRES first
+            if (start.GetType() == typeof(ARCNode))
+                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+            var folder = start.FindChild("3DModels(NW4R)");
+            if (folder != null)
+            {
+                foreach (var child in folder.Children)
+                {
+                    // Get models that match definition
+                    if (child.GetType() == typeof(MDL0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, id, child.Name.Replace("_TopN", ""), definition.Prefix))))
+                        nodes.Add((MDL0Node)child);
+                }
+            }
+            return nodes;
+        }
+
         public List<Cosmetic> GetCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             // Get textures for provided definition and IDs
@@ -173,6 +195,19 @@ namespace BrawlInstaller.Services
                     InternalIndex = cosmetics.Count(),
                     CostumeIndex = texture.CostumeIndex
                 });
+            }
+            if (definition.ModelPath != null)
+            {
+                var models = GetModels(definition, node, fighterIds, restrictRange);
+                foreach (var model in models)
+                {
+                    cosmetics.Add(new Cosmetic
+                    {
+                        CosmeticType = definition.CosmeticType,
+                        Style = definition.Style,
+                        Model = (MDL0Node)_fileService.CopyNode(model)
+                    });
+                }
             }
             return cosmetics;
         }

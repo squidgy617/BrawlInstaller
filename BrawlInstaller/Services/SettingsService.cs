@@ -226,6 +226,21 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrMark",
                         IdType = Enums.IdType.Franchise,
                         Size = new Size(128,128)
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.FranchiseIcon,
+                        Style = "Model",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\stage\\melee\\STGRESULT.pac",
+                            NodePath = "2/Misc Data [110]",
+                            FileExtension = "pac"
+                        },
+                        ModelPath = "2/Misc Data [110]",
+                        Prefix = "InfResultMark",
+                        IdType = Enums.IdType.Franchise,
+                        Size = new Size(80,80)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings

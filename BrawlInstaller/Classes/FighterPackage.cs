@@ -41,10 +41,11 @@ namespace BrawlInstaller.Classes
     {
         public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
-        public Bitmap Image { get; set; }
-        public Bitmap HDImage { get; set; }
+        public Bitmap Image { get; set; } = null;
+        public Bitmap HDImage { get; set; } = null;
         public TEX0Node Texture { get; set; } = null;
         public PLT0Node Palette { get; set; } = null;
+        public MDL0Node Model { get; set; } = null;
         public bool? SharesData { get; set; }
         public int? InternalIndex { get; set; }
         public int? CostumeIndex { get; set; }

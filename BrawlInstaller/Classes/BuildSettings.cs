@@ -29,7 +29,7 @@ namespace BrawlInstaller.Classes
         public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
         public InstallLocation InstallLocation { get; set; }
-        public InstallLocation ModelLocation { get; set; } = null;
+        public string ModelPath { get; set; } = null;
         public PatSettings PatSettings { get; set; } = null;
         public string Prefix { get; set; }
         public int Multiplier { get; set; } = 1;

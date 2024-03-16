@@ -40,8 +40,12 @@ namespace BrawlInstaller.Services
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterIds);
             foreach (var cosmetic in cosmetics)
             {
-                cosmetic.Image.Save(cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
-                Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
+                if (cosmetic.Image != null)
+                    cosmetic.Image.Save(cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
+                if (cosmetic.Model != null)
+                    cosmetic.Model.Export(cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
+                if (cosmetic.Texture != null)
+                    Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
             }
             return fighterPackage;
         }

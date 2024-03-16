@@ -83,7 +83,7 @@ namespace BrawlInstaller.ViewModels
             {
                 CosmeticId = 19,
                 CosmeticConfigId = 19,
-                FranchiseId = 3
+                FranchiseId = 38
             });
         }
     }
