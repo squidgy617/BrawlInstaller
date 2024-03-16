@@ -16,6 +16,7 @@ namespace BrawlInstaller.Enums
         CSSIconName,
         ReplayIcon,
         FranchiseIcon,
-        StockIcon
+        StockIcon,
+        CreditsIcon
     }
 }

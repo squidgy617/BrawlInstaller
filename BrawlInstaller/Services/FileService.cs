@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace BrawlInstaller.Services
         // Methods
         public ResourceNode OpenFile(string path)
         {
+            if (!File.Exists(path))
+                return null;
             var rootNode = NodeFactory.FromFile(null, path);
             return rootNode;
         }

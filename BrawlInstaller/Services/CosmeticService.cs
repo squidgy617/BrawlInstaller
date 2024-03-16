@@ -197,8 +197,11 @@ namespace BrawlInstaller.Services
                     foreach (var path in GetCosmeticPaths(cosmetic, id))
                     {
                         var rootNode = _fileService.OpenFile(path);
-                        cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, fighterIds, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
-                        rootNode.Dispose();
+                        if (rootNode != null)
+                        {
+                            cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, fighterIds, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
+                            rootNode.Dispose();
+                        }
                     }
                     // If we found cosmetics, don't bother checking the other definitions in the group - proceed to the next group
                     if (cosmetics.Count > 0)

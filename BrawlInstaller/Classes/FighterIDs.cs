@@ -24,7 +24,7 @@ namespace BrawlInstaller.Classes
 
         private void SetId(IdType type, int newId)
         {
-            var match = Ids.Any() ? Ids.First(x => x.Type == type) : null;
+            var match = Ids.Any() ? Ids.FirstOrDefault(x => x.Type == type) : null;
             if (match != null)
                 match.Id = newId;
             else

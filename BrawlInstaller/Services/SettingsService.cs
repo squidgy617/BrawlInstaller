@@ -172,6 +172,21 @@ namespace BrawlInstaller.Services
                         Multiplier = 10,
                         IdType= Enums.IdType.Cosmetic,
                         Size = new Size(64,24)
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = Enums.CosmeticType.CreditsIcon,
+                        Style = "vBrawl",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\stage\\melee\\STGCHARAROLL.PAC",
+                            NodePath = "2/Texture Data [0]",
+                            FileExtension = "pac"
+                        },
+                        Prefix = "ChrRollFighter",
+                        IdType = Enums.IdType.CosmeticConfig,
+                        Offset = 1,
+                        Size = new Size(128, 160)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings
