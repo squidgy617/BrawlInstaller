@@ -53,7 +53,7 @@ namespace BrawlInstaller.Services
                 else
                     paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
             }
-            else
+            else if (File.Exists(buildPath + definition.InstallLocation.FilePath))
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
             return paths;
         }
