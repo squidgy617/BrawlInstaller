@@ -22,6 +22,7 @@ namespace BrawlInstaller.Services
         ISettingsService _settingsService { get; }
         IFileService _fileService { get; }
 
+        [ImportingConstructor]
         public FighterService(ISettingsService settingsService, IFileService fileService)
         {
             _settingsService = settingsService;
@@ -52,7 +53,7 @@ namespace BrawlInstaller.Services
             var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
             if (Directory.Exists(directory))
             {
-                var config = $"{directory}\\{prefix}{id:D2}.dat";
+                var config = $"{directory}\\{prefix}{id:X2}.dat";
                 if (File.Exists(config))
                     return config;
             }
@@ -108,6 +109,7 @@ namespace BrawlInstaller.Services
                     fighterInfo.InternalName = fighterNode.InternalFighterName;
                 rootNode.Dispose();
             }
+            fighterInfo.Ids = fighterIds;
             return fighterInfo;
         }
     }

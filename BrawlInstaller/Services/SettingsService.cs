@@ -282,6 +282,10 @@ namespace BrawlInstaller.Services
                     SSEUnlockStage = Enums.SSEUnlockStage.End,
                     InstallTrophies = false,
                     CustomStageLists = null
+                },
+                FilePathSettings = new FilePathSettings
+                {
+                    BrawlEx = "pf\\BrawlEx"
                 }
             };
             return buildSettings;

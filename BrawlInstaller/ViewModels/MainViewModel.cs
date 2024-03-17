@@ -81,10 +81,11 @@ namespace BrawlInstaller.ViewModels
             _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
             _extractService.ExtractFighter(new FighterIds
             {
-                CosmeticId = 19,
-                CosmeticConfigId = 19,
-                FranchiseId = 38,
-                TrophyThumbnailId = 39
+                //CosmeticId = 19,
+                //CosmeticConfigId = 19,
+                //FranchiseId = 38,
+                //TrophyThumbnailId = 39
+                CosmeticConfigId = 50
             });
         }
     }

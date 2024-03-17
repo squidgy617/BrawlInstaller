@@ -24,20 +24,23 @@ namespace BrawlInstaller.Services
         IFileService _fileService { get; }
         ISettingsService _settingsService { get; }
         ICosmeticService _cosmeticService { get; }
+        IFighterService _fighterService { get; }
 
         [ImportingConstructor]
-        public ExtractService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService) 
+        public ExtractService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService) 
         {
             _fileService = fileService;
             _settingsService = settingsService;
             _cosmeticService = cosmeticService;
+            _fighterService = fighterService;
         }
 
         // Methods
         public FighterPackage ExtractFighter(FighterIds fighterIds)
         {
             var fighterPackage = new FighterPackage();
-            var cosmetics = _cosmeticService.GetFighterCosmetics(fighterIds);
+            var fighterInfo = _fighterService.GetFighterInfo(fighterIds);
+            var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
             foreach (var cosmetic in cosmetics)
             {
                 if (cosmetic.Image != null)
