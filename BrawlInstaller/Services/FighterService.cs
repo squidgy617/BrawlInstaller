@@ -106,6 +106,7 @@ namespace BrawlInstaller.Services
                 var fighterNode = (FCFGNode)rootNode;
                 if (fighterInfo.InternalName == null)
                     fighterInfo.InternalName = fighterNode.InternalFighterName;
+                rootNode.Dispose();
             }
             return fighterInfo;
         }
