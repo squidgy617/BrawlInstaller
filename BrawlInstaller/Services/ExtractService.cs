@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,10 +44,12 @@ namespace BrawlInstaller.Services
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
             foreach (var cosmetic in cosmetics)
             {
+                if (!Directory.Exists("Cosmetics"))
+                    Directory.CreateDirectory("Cosmetics");
                 if (cosmetic.Image != null)
-                    cosmetic.Image.Save(cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
+                    cosmetic.Image.Save("Cosmetics\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
                 if (cosmetic.Model != null)
-                    cosmetic.Model.Export(cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
+                    cosmetic.Model.Export("Cosmetics\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
                 if (cosmetic.Texture != null)
                     Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
             }
