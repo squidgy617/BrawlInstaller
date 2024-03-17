@@ -85,7 +85,10 @@ namespace BrawlInstaller.ViewModels
                 //CosmeticConfigId = 19,
                 //FranchiseId = 38,
                 //TrophyThumbnailId = 39
-                CosmeticConfigId = 50
+                FighterConfigId = 42,
+                SlotConfigId = 56,
+                CosmeticConfigId = 50,
+                CSSSlotConfigId = 50
             });
         }
     }

@@ -15,6 +15,6 @@ namespace BrawlInstaller.Classes
         public string CosmeticConfig { get; set; }
         public string CSSSlotConfig { get; set; }
         public string SlotConfig { get; set; }
-        public uint VictoryTheme { get; set; }
+        public uint VictoryThemeId { get; set; }
     }
 }
