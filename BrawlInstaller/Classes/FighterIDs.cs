@@ -20,7 +20,7 @@ namespace BrawlInstaller.Classes
 
         private int GetId(IdType type)
         {
-            return Ids.Any() ? Ids.First(x => x.Type == type).Id : 0;
+            return Ids.Any() ? Ids.First(x => x.Type == type).Id : -1;
         }
 
         private void SetId(IdType type, int newId)

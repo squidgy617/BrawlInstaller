@@ -17,6 +17,7 @@ namespace BrawlInstaller.Classes
         public List<Costume> Costumes { get; set; }
         public List<Cosmetic> CSSIcons { get; set; }
         public List<Cosmetic> ReplayIcons { get; set; }
+        public List<Cosmetic> CreditsIcons { get; set; }
         public FranchiseIcon FranchiseIcon { get; set; }
         public List<string> FighterFiles { get; set; }
         public List<string> ItemFiles { get; set; }

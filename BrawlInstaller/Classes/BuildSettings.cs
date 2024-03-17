@@ -15,6 +15,7 @@ namespace BrawlInstaller.Classes
         public KirbyHatSettings KirbyHatSettings { get; set; }
         public SoundSettings SoundSettings { get; set; }
         public MiscSettings MiscSettings { get; set; }
+        public FilePathSettings FilePathSettings { get; set; }
     }
 
     public class InstallLocation
@@ -79,5 +80,11 @@ namespace BrawlInstaller.Classes
         public SSEUnlockStage SSEUnlockStage { get; set; }
         public bool InstallTrophies { get; set; }
         public List<string> CustomStageLists { get; set; }
+    }
+
+    public class FilePathSettings
+    {
+        public string FighterFiles { get; set; }
+        public string BrawlEx { get; set; }
     }
 }
