@@ -42,7 +42,24 @@ namespace BrawlInstaller.Services
             var fighterPackage = new FighterPackage();
             var fighterInfo = _fighterService.GetFighterInfo(fighterIds);
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
-            foreach (var cosmetic in cosmetics)
+            var costumes = _fighterService.GetFighterCostumes(fighterInfo);
+            costumes = _fighterService.GetCostumeCosmetics(costumes, cosmetics);
+            foreach (var costume in costumes )
+            {
+                foreach (var cosmetic in costume.Cosmetics)
+                {
+                    var costumePath = $"Cosmetics\\Costume{costume.CostumeId:D2}";
+                    if (!Directory.Exists(costumePath))
+                        Directory.CreateDirectory(costumePath);
+                    if (cosmetic.Image != null)
+                        cosmetic.Image.Save(costumePath + "\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
+                    if (cosmetic.Model != null)
+                        cosmetic.Model.Export(costumePath + "\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
+                    if (cosmetic.Texture != null)
+                        Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
+                }
+            }
+            foreach (var cosmetic in cosmetics.Where(x => x.CostumeIndex < 1))
             {
                 if (!Directory.Exists("Cosmetics"))
                     Directory.CreateDirectory("Cosmetics");

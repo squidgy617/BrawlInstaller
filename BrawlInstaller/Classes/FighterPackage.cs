@@ -34,7 +34,7 @@ namespace BrawlInstaller.Classes
     {
         public List<Cosmetic> Cosmetics { get; set; }
         public List<string> PacFiles { get; set; }
-        public BrawlExColorID Color { get; set; }
+        public byte Color { get; set; }
         public int CostumeId { get; set; }
     }
 

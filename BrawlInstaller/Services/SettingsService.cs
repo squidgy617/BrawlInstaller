@@ -130,7 +130,7 @@ namespace BrawlInstaller.Services
                         Multiplier = 50,
                         SuffixDigits = 4,
                         IdType = Enums.IdType.Cosmetic,
-                        Size = new Size(32,32),
+                        Size = new Size(32, 32),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
@@ -152,7 +152,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 1,
                         IdType = Enums.IdType.Cosmetic,
-                        Size = new Size(64,64)
+                        Size = new Size(64, 64)
                     },
                     new CosmeticDefinition
                     {
@@ -168,12 +168,12 @@ namespace BrawlInstaller.Services
                         {
                             Paths = new List<string> { "AnmTexPat(NW4R)/MenAdvChrCd0001_TopN__0/Face02/Texture0" },
                             Multiplier = 10,
-                            IdType= Enums.IdType.Cosmetic
+                            IdType = Enums.IdType.Cosmetic
                         },
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 1,
                         IdType = Enums.IdType.Cosmetic,
-                        Size = new Size(80,56)
+                        Size = new Size(80, 56)
                     },
                     new CosmeticDefinition
                     {
@@ -191,8 +191,8 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenReplayChr",
                         Multiplier = 10,
-                        IdType= Enums.IdType.Cosmetic,
-                        Size = new Size(64,24)
+                        IdType = Enums.IdType.Cosmetic,
+                        Size = new Size(64, 24)
                     },
                     new CosmeticDefinition
                     {
@@ -225,7 +225,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenSelchrMark",
                         IdType = Enums.IdType.Franchise,
-                        Size = new Size(128,128)
+                        Size = new Size(128, 128)
                     },
                     new CosmeticDefinition
                     {
@@ -240,7 +240,7 @@ namespace BrawlInstaller.Services
                         ModelPath = "2/Misc Data [110]",
                         Prefix = "InfResultMark",
                         IdType = Enums.IdType.Franchise,
-                        Size = new Size(80,80)
+                        Size = new Size(80, 80)
                     },
                     new CosmeticDefinition
                     {
@@ -254,7 +254,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenCollDisply01",
                         IdType = Enums.IdType.Thumbnail,
-                        Size = new Size(56,48)
+                        Size = new Size(56, 48)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings
@@ -285,6 +285,7 @@ namespace BrawlInstaller.Services
                 },
                 FilePathSettings = new FilePathSettings
                 {
+                    FighterFiles = "pf\\fighter",
                     BrawlEx = "pf\\BrawlEx"
                 }
             };

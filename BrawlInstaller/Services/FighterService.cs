@@ -14,6 +14,8 @@ namespace BrawlInstaller.Services
     public interface IFighterService
     {
         FighterInfo GetFighterInfo(FighterIds fighterIds);
+        List<Costume> GetFighterCostumes(FighterInfo fighterInfo);
+        List<Costume> GetCostumeCosmetics(List<Costume> costumes, List<Cosmetic> cosmetics);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -218,6 +220,59 @@ namespace BrawlInstaller.Services
             }
             fighterInfo.Ids = fighterIds;
             return fighterInfo;
+        }
+
+        public List<string> GetFighterFiles(string internalName)
+        {
+            var files = new List<string>();
+            var settings = _settingsService.BuildSettings;
+            var fighterPath = $"{settings.FilePathSettings.FighterFiles}\\{internalName}";
+            if (Directory.Exists(fighterPath))
+                files = Directory.GetFiles(fighterPath, $"Fit{internalName}*.pac").ToList();
+            return files;
+        }
+
+        public List<Costume> GetFighterCostumes(FighterInfo fighterInfo)
+        {
+            var costumes = new List<Costume>();
+            if (fighterInfo.CSSSlotConfig != null)
+            {
+                var buildPath = _settingsService.BuildPath;
+                var settings = _settingsService.BuildSettings;
+                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig";
+                var fighterPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.InternalName}";
+                ResourceNode rootNode = null;
+
+                if (Directory.Exists(configPath))
+                    rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
+                if (rootNode != null)
+                {
+                    foreach (CSSCEntryNode entry in rootNode.Children)
+                    {
+                        var costume = new Costume
+                        {
+                            Color = entry.Color,
+                            CostumeId = entry.CostumeID
+                        };
+                        if (Directory.Exists(fighterPath))
+                        {
+                            costume.PacFiles = GetFighterFiles(fighterInfo.InternalName)
+                                .Where(x => Path.GetFileNameWithoutExtension(x).EndsWith(costume.CostumeId.ToString("D2"))).ToList();
+                        }
+                        costumes.Add(costume);
+                    }
+                }
+            }
+            return costumes;
+        }
+
+        public List<Costume> GetCostumeCosmetics(List<Costume> costumes, List<Cosmetic> cosmetics)
+        {
+            foreach (var costume in costumes)
+            {
+                costume.Cosmetics = cosmetics.Where(x => x.CostumeIndex - 1 == costume.CostumeId).ToList();
+            }
+            return costumes;
         }
     }
 }
