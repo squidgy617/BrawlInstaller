@@ -225,10 +225,11 @@ namespace BrawlInstaller.Services
         public List<string> GetFighterFiles(string internalName)
         {
             var files = new List<string>();
+            var buildPath = _settingsService.BuildPath;
             var settings = _settingsService.BuildSettings;
-            var fighterPath = $"{settings.FilePathSettings.FighterFiles}\\{internalName}";
+            var fighterPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}";
             if (Directory.Exists(fighterPath))
-                files = Directory.GetFiles(fighterPath, $"Fit{internalName}*.pac").ToList();
+                files = Directory.GetFiles(fighterPath, "*.pac").Where(x => Path.GetFileName(x).StartsWith($"Fit{internalName}", StringComparison.InvariantCultureIgnoreCase)).ToList();
             return files;
         }
 

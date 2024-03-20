@@ -46,9 +46,9 @@ namespace BrawlInstaller.Services
             costumes = _fighterService.GetCostumeCosmetics(costumes, cosmetics);
             foreach (var costume in costumes )
             {
+                var costumePath = $"Cosmetics\\Costume{costume.CostumeId:D2}";
                 foreach (var cosmetic in costume.Cosmetics)
                 {
-                    var costumePath = $"Cosmetics\\Costume{costume.CostumeId:D2}";
                     if (!Directory.Exists(costumePath))
                         Directory.CreateDirectory(costumePath);
                     if (cosmetic.Image != null)
@@ -58,6 +58,11 @@ namespace BrawlInstaller.Services
                     if (cosmetic.Texture != null)
                         Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
                 }
+                if (costume.PacFiles != null)
+                    foreach(var file in costume.PacFiles)
+                    {
+                        File.Copy(file, $"{costumePath}\\{Path.GetFileName(file)}");
+                    }
             }
             foreach (var cosmetic in cosmetics.Where(x => x.CostumeIndex < 1))
             {
