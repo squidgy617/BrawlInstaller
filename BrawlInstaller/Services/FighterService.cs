@@ -16,6 +16,7 @@ namespace BrawlInstaller.Services
         FighterInfo GetFighterInfo(FighterIds fighterIds);
         List<Costume> GetFighterCostumes(FighterInfo fighterInfo);
         List<Costume> GetCostumeCosmetics(List<Costume> costumes, List<Cosmetic> cosmetics);
+        string GetModule(string internalName);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -274,6 +275,18 @@ namespace BrawlInstaller.Services
                 costume.Cosmetics = cosmetics.Where(x => x.CostumeIndex - 1 == costume.CostumeId).ToList();
             }
             return costumes;
+        }
+
+        public string GetModule(string internalName)
+        {
+            var buildPath = _settingsService.BuildPath;
+            var settings = _settingsService.BuildSettings;
+            var moduleFolder = $"{buildPath}\\{settings.FilePathSettings.Modules}";
+            var module = $"{moduleFolder}\\ft_{internalName.ToLower()}.rel";
+            if (Directory.Exists(moduleFolder))
+                if (File.Exists(module))
+                    return module;
+            return null;
         }
     }
 }

@@ -286,7 +286,8 @@ namespace BrawlInstaller.Services
                 FilePathSettings = new FilePathSettings
                 {
                     FighterFiles = "pf\\fighter",
-                    BrawlEx = "pf\\BrawlEx"
+                    BrawlEx = "pf\\BrawlEx",
+                    Modules = "pf\\module"
                 }
             };
             return buildSettings;

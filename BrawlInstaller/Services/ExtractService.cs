@@ -85,6 +85,11 @@ namespace BrawlInstaller.Services
                 File.Copy(fighterInfo.CSSSlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.CSSSlotConfig)}");
             if (fighterInfo.SlotConfig != null)
                 File.Copy(fighterInfo.SlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.SlotConfig)}");
+            if (!Directory.Exists("Module"))
+                Directory.CreateDirectory("Module");
+            var module = _fighterService.GetModule(fighterInfo.InternalName);
+            if (module != null)
+                File.Copy(module, $"Module\\{Path.GetFileName(module)}");
             return fighterPackage;
         }
     }
