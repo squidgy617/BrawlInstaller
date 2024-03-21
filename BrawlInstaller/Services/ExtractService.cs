@@ -75,6 +75,16 @@ namespace BrawlInstaller.Services
                 if (cosmetic.Texture != null)
                     Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
             }
+            if (!Directory.Exists("ExConfigs"))
+                Directory.CreateDirectory("ExConfigs");
+            if (fighterInfo.FighterConfig != null)
+                File.Copy(fighterInfo.FighterConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.FighterConfig)}");
+            if (fighterInfo.CosmeticConfig != null)
+                File.Copy(fighterInfo.CosmeticConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.CosmeticConfig)}");
+            if (fighterInfo.CSSSlotConfig != null)
+                File.Copy(fighterInfo.CSSSlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.CSSSlotConfig)}");
+            if (fighterInfo.SlotConfig != null)
+                File.Copy(fighterInfo.SlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.SlotConfig)}");
             return fighterPackage;
         }
     }
