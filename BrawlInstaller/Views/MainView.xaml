@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrawlInstaller.Views"
-        xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels"
-        mc:Ignorable="d"
+        xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
+             mc:Ignorable="d"
         Height="450" Width="800">
     <Grid>
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="368,245,0,0" VerticalAlignment="Top" Command="{Binding ButtonCommand}"/>

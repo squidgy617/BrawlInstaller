@@ -44,52 +44,53 @@ namespace BrawlInstaller.Services
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
             var costumes = _fighterService.GetFighterCostumes(fighterInfo);
             costumes = _fighterService.GetCostumeCosmetics(costumes, cosmetics);
-            foreach (var costume in costumes )
-            {
-                var costumePath = $"Cosmetics\\Costume{costume.CostumeId:D2}";
-                foreach (var cosmetic in costume.Cosmetics)
-                {
-                    if (!Directory.Exists(costumePath))
-                        Directory.CreateDirectory(costumePath);
-                    if (cosmetic.Image != null)
-                        cosmetic.Image.Save(costumePath + "\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
-                    if (cosmetic.Model != null)
-                        cosmetic.Model.Export(costumePath + "\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
-                    if (cosmetic.Texture != null)
-                        Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
-                }
-                if (costume.PacFiles != null)
-                    foreach(var file in costume.PacFiles)
-                    {
-                        File.Copy(file, $"{costumePath}\\{Path.GetFileName(file)}");
-                    }
-            }
-            foreach (var cosmetic in cosmetics.Where(x => x.CostumeIndex < 1))
-            {
-                if (!Directory.Exists("Cosmetics"))
-                    Directory.CreateDirectory("Cosmetics");
-                if (cosmetic.Image != null)
-                    cosmetic.Image.Save("Cosmetics\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
-                if (cosmetic.Model != null)
-                    cosmetic.Model.Export("Cosmetics\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
-                if (cosmetic.Texture != null)
-                    Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
-            }
-            if (!Directory.Exists("ExConfigs"))
-                Directory.CreateDirectory("ExConfigs");
-            if (fighterInfo.FighterConfig != null)
-                File.Copy(fighterInfo.FighterConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.FighterConfig)}");
-            if (fighterInfo.CosmeticConfig != null)
-                File.Copy(fighterInfo.CosmeticConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.CosmeticConfig)}");
-            if (fighterInfo.CSSSlotConfig != null)
-                File.Copy(fighterInfo.CSSSlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.CSSSlotConfig)}");
-            if (fighterInfo.SlotConfig != null)
-                File.Copy(fighterInfo.SlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.SlotConfig)}");
-            if (!Directory.Exists("Module"))
-                Directory.CreateDirectory("Module");
-            var module = _fighterService.GetModule(fighterInfo.InternalName);
-            if (module != null)
-                File.Copy(module, $"Module\\{Path.GetFileName(module)}");
+            //foreach (var costume in costumes )
+            //{
+            //    var costumePath = $"Cosmetics\\Costume{costume.CostumeId:D2}";
+            //    foreach (var cosmetic in costume.Cosmetics)
+            //    {
+            //        if (!Directory.Exists(costumePath))
+            //            Directory.CreateDirectory(costumePath);
+            //        if (cosmetic.Image != null)
+            //            cosmetic.Image.Save(costumePath + "\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
+            //        if (cosmetic.Model != null)
+            //            cosmetic.Model.Export(costumePath + "\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
+            //        if (cosmetic.Texture != null)
+            //            Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
+            //    }
+            //    if (costume.PacFiles != null)
+            //        foreach(var file in costume.PacFiles)
+            //        {
+            //            File.Copy(file, $"{costumePath}\\{Path.GetFileName(file)}");
+            //        }
+            //}
+            //foreach (var cosmetic in cosmetics.Where(x => x.CostumeIndex < 1))
+            //{
+            //    if (!Directory.Exists("Cosmetics"))
+            //        Directory.CreateDirectory("Cosmetics");
+            //    if (cosmetic.Image != null)
+            //        cosmetic.Image.Save("Cosmetics\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + cosmetic.CostumeIndex.ToString() + ".png", ImageFormat.Png);
+            //    if (cosmetic.Model != null)
+            //        cosmetic.Model.Export("Cosmetics\\" + cosmetic.CosmeticType.GetDisplayName() + cosmetic.Style + ".mdl0");
+            //    if (cosmetic.Texture != null)
+            //        Debug.Print(cosmetic.Texture.Name + " " + cosmetic.InternalIndex.ToString() + " " + cosmetic.CostumeIndex);
+            //}
+            //if (!Directory.Exists("ExConfigs"))
+            //    Directory.CreateDirectory("ExConfigs");
+            //if (fighterInfo.FighterConfig != null)
+            //    File.Copy(fighterInfo.FighterConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.FighterConfig)}");
+            //if (fighterInfo.CosmeticConfig != null)
+            //    File.Copy(fighterInfo.CosmeticConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.CosmeticConfig)}");
+            //if (fighterInfo.CSSSlotConfig != null)
+            //    File.Copy(fighterInfo.CSSSlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.CSSSlotConfig)}");
+            //if (fighterInfo.SlotConfig != null)
+            //    File.Copy(fighterInfo.SlotConfig, $"ExConfigs\\{Path.GetFileName(fighterInfo.SlotConfig)}");
+            //if (!Directory.Exists("Module"))
+            //    Directory.CreateDirectory("Module");
+            //var module = _fighterService.GetModule(fighterInfo.InternalName);
+            //if (module != null)
+            //    File.Copy(module, $"Module\\{Path.GetFileName(module)}");
+            fighterPackage.Costumes = costumes;
             return fighterPackage;
         }
     }
