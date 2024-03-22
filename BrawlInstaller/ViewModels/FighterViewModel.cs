@@ -19,6 +19,7 @@ namespace BrawlInstaller.ViewModels
         void LoadFighter();
         FighterPackage FighterPackage { get; }
         List<Costume> Costumes { get; }
+        Costume SelectedCostume { get; set; }
     }
 
     [Export(typeof(IFighterViewModel))]
@@ -26,6 +27,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private List<Costume> _costumes;
+        private Costume _selectedCostume;
 
         // Services
         IExtractService _extractService { get; }
@@ -50,7 +52,8 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get; set; }
-        public List<Costume> Costumes { get { return _costumes; } set { _costumes = value; OnPropertyChanged(); } }
+        public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); } }
+        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); } }
 
         // Methods
         public void LoadFighter()

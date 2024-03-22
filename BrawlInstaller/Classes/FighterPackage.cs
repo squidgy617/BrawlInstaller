@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Classes
 {
@@ -42,7 +43,7 @@ namespace BrawlInstaller.Classes
     {
         public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
-        public Bitmap Image { get; set; } = null;
+        public BitmapImage Image { get; set; } = null;
         public Bitmap HDImage { get; set; } = null;
         public TEX0Node Texture { get; set; } = null;
         public PLT0Node Palette { get; set; } = null;
