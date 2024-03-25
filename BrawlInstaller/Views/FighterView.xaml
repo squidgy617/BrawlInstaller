@@ -10,8 +10,8 @@
     <Grid>
         <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" DisplayMemberPath="CostumeId" Margin="204,120,372,200" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}"/>
         <Button x:Name="loadButton" Content="Button" HorizontalAlignment="Left" Margin="296,346,0,0" VerticalAlignment="Top" Command="{Binding LoadCommand}"/>
-        <Image x:Name="cspImage" HorizontalAlignment="Left" Height="100" Margin="571,250,0,0" VerticalAlignment="Top" Width="100" Source="{Binding SelectedCostume.CosmeticViewModels[0].Cosmetics[0].Image}"/>
-        <Image x:Name="bpImage" HorizontalAlignment="Left" Height="100" Margin="487,131,0,0" VerticalAlignment="Top" Width="100" Source="{Binding SelectedCostume.CosmeticViewModels[1].Cosmetics[0].Image}"/>
+        <Image x:Name="cspImage" HorizontalAlignment="Left" Height="100" Margin="571,250,0,0" VerticalAlignment="Top" Width="100" Source="{Binding SelectedCosmetic.Image}"/>
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="628,48,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}"/>
 
     </Grid>
 </UserControl>

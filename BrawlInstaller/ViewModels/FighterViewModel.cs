@@ -12,6 +12,8 @@ using BrawlInstaller.Services;
 using BrawlInstaller.Classes;
 using static BrawlInstaller.ViewModels.FighterViewModel;
 using BrawlInstaller.Enums;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -20,16 +22,21 @@ namespace BrawlInstaller.ViewModels
         ICommand LoadCommand { get; }
         void LoadFighter();
         FighterPackage FighterPackage { get; }
-        List<CostumeViewModel> Costumes { get; }
-        CostumeViewModel SelectedCostume { get; set; }
+        List<Costume> Costumes { get; }
+        Costume SelectedCostume { get; set; }
+        List<CosmeticType> CosmeticOptions { get; }
+        CosmeticType SelectedCosmeticOption { get; set; }
+        Cosmetic SelectedCosmetic { get; }
     }
 
     [Export(typeof(IFighterViewModel))]
     internal class FighterViewModel : ViewModelBase, IFighterViewModel
     {
         // Private properties
-        private List<CostumeViewModel> _costumes;
-        private CostumeViewModel _selectedCostume;
+        private List<Costume> _costumes;
+        private Costume _selectedCostume;
+        private List<CosmeticType> _cosmeticOptions;
+        private CosmeticType _selectedCosmeticOption;
 
         // Services
         IExtractService _extractService { get; }
@@ -50,12 +57,21 @@ namespace BrawlInstaller.ViewModels
         {
             _extractService = extractService;
             _settingsService = settingsService;
+
+            CosmeticOptions = new List<CosmeticType>();
+            foreach (var option in Enum.GetValues(typeof(CosmeticType)))
+            {
+                CosmeticOptions.Add((CosmeticType)option);
+            }
         }
 
         // Properties
         public FighterPackage FighterPackage { get; set; }
-        public List<CostumeViewModel> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); } }
-        public CostumeViewModel SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); } }
+        public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); } }
+        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged("SelectedCosmetic"); } }
+        public List<CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); } }
+        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged("SelectedCosmetic"); } }
+        public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption); }
 
         // Methods
         public void LoadFighter()
@@ -69,50 +85,8 @@ namespace BrawlInstaller.ViewModels
                 CosmeticConfigId = 35,
                 CSSSlotConfigId = 35
             });
-            Costumes = new List<CostumeViewModel>();
-            foreach(var costume in FighterPackage.Costumes)
-            {
-                Costumes.Add(new CostumeViewModel
-                {
-                    CosmeticViewModels = new List<CosmeticViewModel> 
-                    {
-                        new CosmeticViewModel
-                        {
-                            AvailableStyles = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.CSP).Select(x => x.Style).Distinct().ToList(),
-                            SelectedStyle = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.CSP).Select(x => x.Style).Distinct().ToList().First(),
-                            Cosmetics = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.CSP).ToList(),
-                            SelectedCosmetic = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.CSP).ToList().First()
-                        },
-                        new CosmeticViewModel
-                        {
-                            AvailableStyles = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.BP).Select(x => x.Style).Distinct().ToList(),
-                            SelectedStyle = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.BP).Select(x => x.Style).Distinct().ToList().First(),
-                            Cosmetics = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.BP).ToList(),
-                            SelectedCosmetic = costume.Cosmetics.Where(x => x.CosmeticType == CosmeticType.BP).ToList().First()
-                        }
-                    },
-                    PacFiles = costume.PacFiles,
-                    Color = costume.Color,
-                    CostumeId = costume.CostumeId
-                });
-            }
+            Costumes = FighterPackage.Costumes;
+            SelectedCostume = Costumes.FirstOrDefault();
         }
-    }
-
-    // Mappings
-    public class CostumeViewModel : ViewModelBase
-    {
-        public List<CosmeticViewModel> CosmeticViewModels { get; set; }
-        public List<string> PacFiles { get; set; }
-        public byte Color { get; set; }
-        public int CostumeId { get; set; }
-    }
-
-    public class CosmeticViewModel : ViewModelBase
-    {
-        public List<string> AvailableStyles { get; set; }
-        public string SelectedStyle { get; set; }
-        public List<Cosmetic> Cosmetics { get; set; }
-        public Cosmetic SelectedCosmetic { get; set; }
     }
 }
