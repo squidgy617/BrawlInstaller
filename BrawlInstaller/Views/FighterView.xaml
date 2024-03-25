@@ -12,6 +12,7 @@
         <Button x:Name="loadButton" Content="Button" HorizontalAlignment="Left" Margin="296,346,0,0" VerticalAlignment="Top" Command="{Binding LoadCommand}"/>
         <Image x:Name="cspImage" HorizontalAlignment="Left" Height="100" Margin="571,250,0,0" VerticalAlignment="Top" Width="100" Source="{Binding SelectedCosmetic.Image}"/>
         <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="628,48,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}"/>
+        <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="667,103,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}"/>
 
     </Grid>
 </UserControl>
