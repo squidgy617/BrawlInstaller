@@ -69,7 +69,7 @@ namespace BrawlInstaller.ViewModels
             //foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
             foreach (CosmeticType option in settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType == IdType.Cosmetic).Select(x => x.CosmeticType).Distinct())
             {
-                CosmeticOptions.Add(new KeyValuePair<string, CosmeticType>(option.GetDescription(), option));
+                CosmeticOptions.Add(option.GetKeyValuePair());
             }
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
         }

@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using BrawlLib.Internal;
 
 namespace BrawlInstaller.Common
 {
@@ -40,6 +41,24 @@ namespace BrawlInstaller.Common
             {
                 encoder.Save(fileStream);
             }
+        }
+    }
+
+    public static class EnumExtensions
+    {
+        public static KeyValuePair<string, T> GetKeyValuePair<T>(this T obj)
+        {
+            return new KeyValuePair<string, T>(obj.GetDescription(), obj);
+        }
+
+        public static List<KeyValuePair<string, T>> GetKeyValueList<T>(this T obj)
+        {
+            var keyValueList = new List<KeyValuePair<string, T>>();
+            foreach(T item in Enum.GetValues(typeof(T)))
+            {
+                keyValueList.Add(item.GetKeyValuePair());
+            }
+            return keyValueList;
         }
     }
 }
