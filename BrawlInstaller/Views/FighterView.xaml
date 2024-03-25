@@ -13,6 +13,7 @@
         <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="100" Margin="571,250,0,0" VerticalAlignment="Top" Width="100" Source="{Binding SelectedCosmetic.Image}"/>
         <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Left" Margin="628,48,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}"/>
         <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" Margin="667,103,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}"/>
+        <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="64,288,597,62"/>
 
     </Grid>
 </UserControl>

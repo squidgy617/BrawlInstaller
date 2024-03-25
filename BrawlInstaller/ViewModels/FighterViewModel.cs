@@ -62,9 +62,9 @@ namespace BrawlInstaller.ViewModels
             _settingsService = settingsService;
 
             CosmeticOptions = new List<CosmeticType>();
-            foreach (var option in Enum.GetValues(typeof(CosmeticType)))
+            foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
             {
-                CosmeticOptions.Add((CosmeticType)option);
+                CosmeticOptions.Add(option);
             }
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault();
         }
@@ -72,7 +72,7 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public FighterPackage FighterPackage { get; set; }
         public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); } }
-        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); } }
+        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
         public List<CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); } }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); } }
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
