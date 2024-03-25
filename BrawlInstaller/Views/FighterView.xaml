@@ -11,8 +11,8 @@
         <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" DisplayMemberPath="CostumeId" Margin="204,120,372,200" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}"/>
         <Button x:Name="loadButton" Content="Button" HorizontalAlignment="Left" Margin="296,346,0,0" VerticalAlignment="Top" Command="{Binding LoadCommand}"/>
         <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="100" Margin="571,250,0,0" VerticalAlignment="Top" Width="100" Source="{Binding SelectedCosmetic.Image}"/>
-        <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Left" Margin="628,48,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}"/>
-        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" Margin="667,103,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}"/>
+        <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Left" Margin="628,48,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" Margin="667,103,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
         <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="64,288,597,62"/>
 
     </Grid>
