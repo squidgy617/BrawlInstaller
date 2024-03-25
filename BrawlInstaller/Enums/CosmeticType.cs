@@ -15,13 +15,21 @@ namespace BrawlInstaller.Enums
         CSP,
         [Description("BP")]
         BP,
+        [Description("CSP Name")]
         PortraitName,
+        [Description("BP Name")]
         BPName,
+        [Description("CSS Icon Name")]
         CSSIconName,
+        [Description("Replay Icon")]
         ReplayIcon,
+        [Description("Franchise Icon")]
         FranchiseIcon,
+        [Description("Stock Icon")]
         StockIcon,
+        [Description("Credits Icon")]
         CreditsIcon,
+        [Description("Trophy Thumbnail")]
         TrophyThumbnail
     }
 }

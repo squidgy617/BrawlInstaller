@@ -14,6 +14,7 @@ using static BrawlInstaller.ViewModels.FighterViewModel;
 using BrawlInstaller.Enums;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BrawlLib.Internal;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -24,7 +25,7 @@ namespace BrawlInstaller.ViewModels
         FighterPackage FighterPackage { get; }
         List<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
-        List<CosmeticType> CosmeticOptions { get; }
+        List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
         List<string> Styles { get; }
@@ -37,7 +38,7 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private List<Costume> _costumes;
         private Costume _selectedCostume;
-        private List<CosmeticType> _cosmeticOptions;
+        private List<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
 
@@ -61,19 +62,23 @@ namespace BrawlInstaller.ViewModels
             _extractService = extractService;
             _settingsService = settingsService;
 
-            CosmeticOptions = new List<CosmeticType>();
-            foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
+            _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
+            _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
+
+            CosmeticOptions = new List<KeyValuePair<string, CosmeticType>>();
+            //foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
+            foreach (CosmeticType option in settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType == IdType.Cosmetic).Select(x => x.CosmeticType).Distinct())
             {
-                CosmeticOptions.Add(option);
+                CosmeticOptions.Add(new KeyValuePair<string, CosmeticType>(option.GetDescription(), option));
             }
-            SelectedCosmeticOption = CosmeticOptions.FirstOrDefault();
+            SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
         }
 
         // Properties
         public FighterPackage FighterPackage { get; set; }
         public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); } }
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
-        public List<CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); } }
+        public List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); } }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); } }
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
         public List<string> Styles { get => Costumes?.FirstOrDefault()?.Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
@@ -82,8 +87,6 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadFighter()
         {
-            _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
-            _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
             FighterPackage = _extractService.ExtractFighter(new FighterIds
             {
                 FighterConfigId = 37,
