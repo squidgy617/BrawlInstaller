@@ -10,7 +10,6 @@ using BrawlLib.SSBB.ResourceNodes;
 using System.Diagnostics;
 using BrawlInstaller.Services;
 using BrawlInstaller.Classes;
-using static BrawlInstaller.ViewModels.FighterViewModel;
 using BrawlInstaller.Enums;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

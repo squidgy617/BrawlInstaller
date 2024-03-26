@@ -22,7 +22,7 @@
         <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="541,59,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
         <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" Margin="0,59,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
         <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" Margin="0,102,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-        <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="340,150,321,225"/>
+        <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="340,150,321,181"/>
 
     </Grid>
 </UserControl>
