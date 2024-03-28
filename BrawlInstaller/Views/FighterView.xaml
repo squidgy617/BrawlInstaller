@@ -46,7 +46,18 @@
         </GroupBox>
         <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0">
             <Grid>
-                <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" Margin="20,20,640,181" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock>
@@ -56,10 +67,13 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="200,66,451,265" Width="120"/>
-                <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" Margin="200,20,0,0" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" VerticalAlignment="Top" Width="50"/>
-                <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Left" Margin="176,16,0,0" VerticalAlignment="Top"/>
-                <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" Margin="394,29,135,96">
+                <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="1"/>
+                <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="2"/>
+                <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
+                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" VerticalAlignment="Top" Width="120" Height="100" Grid.Row="1" Grid.Column="2"/>
+                <Label x:Name="colorLabel" Content="Color:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1"/>
+                <ComboBox x:Name="colorComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Grid.Row="2" Grid.Column="2" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
+                <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" VerticalAlignment="Top" Grid.Row="0" Grid.Column="3" Grid.RowSpan="3">
                     <Grid>
                         <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="64,102,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                         <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" Margin="0,22,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
@@ -68,9 +82,6 @@
                         <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" Margin="0,59,184,0" VerticalAlignment="Top"/>
                     </Grid>
                 </GroupBox>
-                <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Left" Margin="140,66,0,0" VerticalAlignment="Top"/>
-                <ComboBox x:Name="colorComboBox" HorizontalAlignment="Left" Margin="200,180,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
-                <Label x:Name="colorLabel" Content="Color:" HorizontalAlignment="Left" Margin="154,178,0,0" VerticalAlignment="Top"/>
             </Grid>
         </GroupBox>
     </Grid>
