@@ -31,6 +31,8 @@ namespace BrawlInstaller.ViewModels
         Cosmetic SelectedCosmetic { get; }
         List<string> Styles { get; }
         string SelectedStyle { get; }
+        List<BrawlExColorID> Colors { get; }
+        FighterIds FighterIds { get; set; }
     }
 
     [Export(typeof(IFighterViewModel))]
@@ -42,6 +44,8 @@ namespace BrawlInstaller.ViewModels
         private List<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
+        private List<BrawlExColorID> _colors;
+        private FighterIds _fighterIds;
 
         // Services
         IExtractService _extractService { get; }
@@ -75,6 +79,8 @@ namespace BrawlInstaller.ViewModels
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
 
             Colors = BrawlExColorID.Colors.ToList();
+
+            FighterIds = new FighterIds { FighterConfigId = 0, CosmeticConfigId = 0, CSSSlotConfigId = 0, SlotConfigId = 0, CosmeticId = 0 };
         }
 
         // Properties
@@ -86,17 +92,23 @@ namespace BrawlInstaller.ViewModels
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
         public List<string> Styles { get => Costumes?.FirstOrDefault()?.Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
-        public List<BrawlExColorID> Colors { get; set; }
+        public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(); } }
+        public FighterIds FighterIds { get => _fighterIds; set { _fighterIds = value; OnPropertyChanged(); } }
 
         // Methods
         public void LoadFighter()
         {
             FighterPackage = _extractService.ExtractFighter(new FighterIds
             {
-                FighterConfigId = 37,
-                SlotConfigId = 39,
-                CosmeticConfigId = 35,
-                CSSSlotConfigId = 35
+                FighterConfigId = FighterIds.FighterConfigId,
+                CosmeticConfigId = FighterIds.CosmeticConfigId,
+                CSSSlotConfigId = FighterIds.CSSSlotConfigId,
+                SlotConfigId = FighterIds.SlotConfigId,
+                CosmeticId = FighterIds.CosmeticId
+                //FighterConfigId = 37,
+                //SlotConfigId = 39,
+                //CosmeticConfigId = 35,
+                //CSSSlotConfigId = 35
             });
             Costumes = FighterPackage.Costumes;
             SelectedCostume = Costumes.FirstOrDefault();

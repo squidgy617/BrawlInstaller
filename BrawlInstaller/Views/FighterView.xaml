@@ -19,7 +19,29 @@
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="3" Background="Silver" ResizeDirection="Columns"/>
         <GroupBox x:Name="idGroupBox" Header="IDs" Grid.Column="0">
             <Grid>
-                <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="TextBox" Width="50" Height="20"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="fighterIdLabel" Content="Fighter ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
+                <TextBox x:Name="fighterIdTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding FighterIds.FighterConfigId, Mode=TwoWay}" VerticalAlignment="Top" Width="50" Height="20" Grid.Row="0" Grid.Column="1"/>
+                <Label x:Name="cosmeticConfigIdLabel" Content="Cosmetic ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0"/>
+                <TextBox x:Name="cosmeticConfigIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CosmeticConfigId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="1" Grid.Column="1"/>
+                <Label x:Name="cssSlotIdLabel" Content="CSS Slot ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0"/>
+                <TextBox x:Name="cssSlotIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CSSSlotConfigId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="2" Grid.Column="1"/>
+                <Label x:Name="slotIdLabel" Content="Slot ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0"/>
+                <TextBox x:Name="slotIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.SlotConfigId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="3" Grid.Column="1"/>
+                <TextBox x:Name="cosmeticIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CosmeticId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="4" Grid.Column="1"/>
+                <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding LoadCommand}" Grid.Row="5" Grid.Column="0"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0">
@@ -34,8 +56,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button x:Name="loadButton" Content="Button" HorizontalAlignment="Left" Margin="44,354,0,0" VerticalAlignment="Top" Command="{Binding LoadCommand}"/>
-                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="200,66,451,265"/>
+                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="200,66,451,265" Width="120"/>
                 <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" Margin="200,20,0,0" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" VerticalAlignment="Top" Width="50"/>
                 <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Left" Margin="176,16,0,0" VerticalAlignment="Top"/>
                 <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" Margin="394,29,135,96">
