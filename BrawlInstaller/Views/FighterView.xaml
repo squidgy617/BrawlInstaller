@@ -21,11 +21,19 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
                 <Button x:Name="loadButton" Content="Button" HorizontalAlignment="Left" Margin="44,354,0,0" VerticalAlignment="Top" Command="{Binding LoadCommand}"/>
-                <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="352,56,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Left" Margin="181,56,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-                <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" Margin="181,102,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="181,150,487,181"/>
-                <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" Margin="181,20,0,0" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" VerticalAlignment="Top" Width="120"/>
+                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="200,66,451,265"/>
+                <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" Margin="200,20,0,0" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" VerticalAlignment="Top" Width="50"/>
+                <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Left" Margin="176,16,0,0" VerticalAlignment="Top"/>
+                <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" Margin="394,29,135,96">
+                    <Grid>
+                        <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="64,102,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" Margin="0,22,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+                        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" Margin="0,61,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" SelectionChanged="stylesDropDown_SelectionChanged"/>
+                        <Label x:Name="costumeCosmeticTypeLabel" Content="Type:" HorizontalAlignment="Right" Margin="0,20,183,0" VerticalAlignment="Top"/>
+                        <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" Margin="0,59,184,0" VerticalAlignment="Top"/>
+                    </Grid>
+                </GroupBox>
+                <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Left" Margin="140,66,0,0" VerticalAlignment="Top"/>
             </Grid>
         </GroupBox>
     </Grid>

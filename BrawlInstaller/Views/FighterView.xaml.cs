@@ -24,5 +24,10 @@ namespace BrawlInstaller.Views
         {
             InitializeComponent();
         }
+
+        private void stylesDropDown_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
