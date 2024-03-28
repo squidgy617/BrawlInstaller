@@ -14,6 +14,8 @@ using BrawlInstaller.Enums;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BrawlLib.Internal;
+using System.Windows.Data;
+using System.Globalization;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -71,6 +73,8 @@ namespace BrawlInstaller.ViewModels
                 CosmeticOptions.Add(option.GetKeyValuePair());
             }
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
+
+            Colors = BrawlExColorID.Colors.ToList();
         }
 
         // Properties
@@ -82,6 +86,7 @@ namespace BrawlInstaller.ViewModels
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
         public List<string> Styles { get => Costumes?.FirstOrDefault()?.Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
+        public List<BrawlExColorID> Colors { get; set; }
 
         // Methods
         public void LoadFighter()

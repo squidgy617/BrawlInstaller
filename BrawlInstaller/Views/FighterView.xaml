@@ -4,9 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
+             xmlns:converters="clr-namespace:BrawlInstaller.Converters"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:ByteConverter x:Key="byteConverter"/>
+    </UserControl.Resources>
     <Grid>
         <GroupBox x:Name="costumeGroupBox" Header="Costumes">
             <Grid>
@@ -28,12 +32,14 @@
                     <Grid>
                         <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="64,102,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                         <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" Margin="0,22,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-                        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" Margin="0,61,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" SelectionChanged="stylesDropDown_SelectionChanged"/>
+                        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" Margin="0,61,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
                         <Label x:Name="costumeCosmeticTypeLabel" Content="Type:" HorizontalAlignment="Right" Margin="0,20,183,0" VerticalAlignment="Top"/>
                         <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" Margin="0,59,184,0" VerticalAlignment="Top"/>
                     </Grid>
                 </GroupBox>
                 <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Left" Margin="140,66,0,0" VerticalAlignment="Top"/>
+                <ComboBox x:Name="colorComboBox" HorizontalAlignment="Left" Margin="200,180,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
+                <Label x:Name="colorLabel" Content="Color:" HorizontalAlignment="Left" Margin="154,178,0,0" VerticalAlignment="Top"/>
             </Grid>
         </GroupBox>
     </Grid>

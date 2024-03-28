@@ -67,6 +67,7 @@
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
     <Compile Include="Common\ExtensionMethods.cs" />
+    <Compile Include="Converters\Converters.cs" />
     <Compile Include="Enums\CosmeticType.cs" />
     <Compile Include="Enums\IdType.cs" />
     <Compile Include="Enums\SSEUnlockStage.cs" />
