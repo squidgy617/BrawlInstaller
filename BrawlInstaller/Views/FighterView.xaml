@@ -8,21 +8,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" Margin="64,59,512,261" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock>
-                        <Run Text="Costume"/>
-                        <Run Text="{Binding Path=CostumeId}"/>
-                    </TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Button x:Name="loadButton" Content="Button" HorizontalAlignment="Left" Margin="64,0,0,0" VerticalAlignment="Center" Command="{Binding LoadCommand}"/>
-        <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="541,59,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-        <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" Margin="0,59,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" Margin="0,102,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-        <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="340,150,321,181"/>
-
+        <GroupBox x:Name="costumeGroupBox" Header="Costumes">
+            <Grid>
+                <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" Margin="20,20,640,181" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="Costume"/>
+                                <Run Text="{Binding Path=CostumeId}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button x:Name="loadButton" Content="Button" HorizontalAlignment="Left" Margin="44,354,0,0" VerticalAlignment="Top" Command="{Binding LoadCommand}"/>
+                <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="352,56,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Left" Margin="181,56,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+                <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" Margin="181,102,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" Margin="181,150,487,181"/>
+                <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" Margin="181,20,0,0" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" VerticalAlignment="Top" Width="120"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>
