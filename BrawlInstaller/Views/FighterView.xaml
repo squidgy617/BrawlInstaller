@@ -12,7 +12,17 @@
         <converters:ByteConverter x:Key="byteConverter"/>
     </UserControl.Resources>
     <Grid>
-        <GroupBox x:Name="costumeGroupBox" Header="Costumes">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="3" Background="Silver" ResizeDirection="Columns"/>
+        <GroupBox x:Name="idGroupBox" Header="IDs" Grid.Column="0">
+            <Grid>
+                <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="TextBox" Width="50" Height="20"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0">
             <Grid>
                 <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" Margin="20,20,640,181" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
