@@ -146,4 +146,9 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if EXIST "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" (
+  %25windir%25\system32\xcopy "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" "$(TargetDir)" /Y /I
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
