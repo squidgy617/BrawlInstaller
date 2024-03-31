@@ -285,7 +285,7 @@ namespace BrawlInstaller.Services
         {
             foreach (var costume in costumes)
             {
-                costume.Cosmetics = cosmetics.Where(x => x.CostumeIndex - 1 == costume.CostumeId).ToList();
+                costume.Cosmetics = cosmetics.Where(x => x.CostumeIndex - 1 == costumes.IndexOf(costume)).ToList();
             }
             return costumes;
         }
