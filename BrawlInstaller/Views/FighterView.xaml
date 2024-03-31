@@ -75,11 +75,20 @@
                 <ComboBox x:Name="colorComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Grid.Row="2" Grid.Column="2" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
                 <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" VerticalAlignment="Top" Grid.Row="0" Grid.Column="3" Grid.RowSpan="3">
                     <Grid>
-                        <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" Margin="64,102,0,0" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                        <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" Margin="0,22,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-                        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" Margin="0,61,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-                        <Label x:Name="costumeCosmeticTypeLabel" Content="Type:" HorizontalAlignment="Right" Margin="0,20,183,0" VerticalAlignment="Top"/>
-                        <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" Margin="0,59,184,0" VerticalAlignment="Top"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="costumeCosmeticTypeLabel" Content="Type:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
+                        <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
+                        <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
+                        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
+                        <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="1"/>
                     </Grid>
                 </GroupBox>
             </Grid>
