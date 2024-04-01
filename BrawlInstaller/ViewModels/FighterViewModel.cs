@@ -33,7 +33,7 @@ namespace BrawlInstaller.ViewModels
         List<string> Styles { get; }
         string SelectedStyle { get; }
         List<BrawlExColorID> Colors { get; }
-        FighterIds FighterIds { get; set; }
+        FighterIdsViewModel FighterIds { get; set; }
         List<Cosmetic> CosmeticList { get; }
         Cosmetic SelectedCosmeticNode { get; set; }
     }
@@ -48,7 +48,7 @@ namespace BrawlInstaller.ViewModels
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
         private List<BrawlExColorID> _colors;
-        private FighterIds _fighterIds;
+        private FighterIdsViewModel _fighterIds;
         private Cosmetic _selectedCosmeticNode;
 
         // Services
@@ -84,7 +84,7 @@ namespace BrawlInstaller.ViewModels
 
             Colors = BrawlExColorID.Colors.ToList();
 
-            FighterIds = new FighterIds { FighterConfigId = 0, CosmeticConfigId = 0, CSSSlotConfigId = 0, SlotConfigId = 0, CosmeticId = 0 };
+            FighterIds = new FighterIdsViewModel ();
         }
 
         // Properties
@@ -97,7 +97,7 @@ namespace BrawlInstaller.ViewModels
         public List<string> Styles { get => Costumes?.FirstOrDefault()?.Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(CosmeticList)); } }
         public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(); } }
-        public FighterIds FighterIds { get => _fighterIds; set { _fighterIds = value; OnPropertyChanged(); } }
+        public FighterIdsViewModel FighterIds { get => _fighterIds; set { _fighterIds = value; OnPropertyChanged(); } }
         public List<Cosmetic> CosmeticList 
         { 
             get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
@@ -110,11 +110,11 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage = _extractService.ExtractFighter(new FighterIds
             {
-                FighterConfigId = FighterIds.FighterConfigId,
-                CosmeticConfigId = FighterIds.CosmeticConfigId,
-                CSSSlotConfigId = FighterIds.CSSSlotConfigId,
-                SlotConfigId = FighterIds.SlotConfigId,
-                CosmeticId = FighterIds.CosmeticId
+                FighterConfigId = FighterIds.FighterConfigId ?? -1,
+                CosmeticConfigId = FighterIds.CosmeticConfigId ?? -1,
+                CSSSlotConfigId = FighterIds.CSSSlotConfigId ?? -1,
+                SlotConfigId = FighterIds.SlotConfigId ?? -1,
+                CosmeticId = FighterIds.CosmeticId ?? -1
                 //FighterConfigId = 37,
                 //SlotConfigId = 39,
                 //CosmeticConfigId = 35,
@@ -123,5 +123,15 @@ namespace BrawlInstaller.ViewModels
             Costumes = FighterPackage.Costumes;
             SelectedCostume = Costumes.FirstOrDefault();
         }
+    }
+
+    // Mappings
+    public class FighterIdsViewModel
+    {
+        public int? FighterConfigId { get; set; }
+        public int? SlotConfigId { get; set; }
+        public int? CSSSlotConfigId { get; set; }
+        public int? CosmeticConfigId { get; set; }
+        public int? CosmeticId { get; set; }
     }
 }
