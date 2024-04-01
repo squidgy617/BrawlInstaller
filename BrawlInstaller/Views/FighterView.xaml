@@ -7,13 +7,14 @@
              xmlns:converters="clr-namespace:BrawlInstaller.Converters"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1000">
     <UserControl.Resources>
         <converters:ByteConverter x:Key="byteConverter"/>
         <converters:HexConverter x:Key="hexConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
@@ -125,6 +126,16 @@
                         <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                     </Grid>
                 </GroupBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" VerticalAlignment="Top" Grid.Column="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons}" DisplayMemberPath="InternalIndex" SelectedValue="{Binding SelectedFranchiseIcon}" Grid.Column="0"/>
+                <Image x:Name="franchiseIconImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="1"/>
             </Grid>
         </GroupBox>
     </Grid>

@@ -18,6 +18,7 @@ namespace BrawlInstaller.Services
     public interface ICosmeticService
     {
         List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
+        List<Cosmetic> GetFranchiseIcons();
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
@@ -149,7 +150,7 @@ namespace BrawlInstaller.Services
                 foreach (var child in folder.Children)
                 {
                     // Get textures that match definition
-                    if (child.GetType() == typeof(TEX0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, id, child.Name, definition.Prefix))))
+                    if (child.GetType() == typeof(TEX0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
                         nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id) });
                 }
             }
@@ -164,21 +165,21 @@ namespace BrawlInstaller.Services
             var start = definition.ModelPath != null ? node.FindChild(definition.ModelPath) : node;
             // If the node path is an ARC node, search for a matching BRRES first
             if (start.GetType() == typeof(ARCNode))
-                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == id));
             var folder = start.FindChild("3DModels(NW4R)");
             if (folder != null)
             {
                 foreach (var child in folder.Children)
                 {
                     // Get models that match definition
-                    if (child.GetType() == typeof(MDL0Node) && (!restrictRange || (child.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, id, child.Name.Replace("_TopN", ""), definition.Prefix))))
+                    if (child.GetType() == typeof(MDL0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition, id, child.Name.Replace("_TopN", ""), definition.Prefix)))
                         nodes.Add((MDL0Node)child);
                 }
             }
             return nodes;
         }
 
-        public List<Cosmetic> GetCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        public List<Cosmetic> GetDefinitionCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             // Get textures for provided definition and IDs
             var cosmetics = new List<Cosmetic>();
@@ -222,6 +223,9 @@ namespace BrawlInstaller.Services
         // Also, when we import an image for the first time, we set the TEX0 for the class, which allows us to reuse it? (Alternatively we just set up the TEX0s at the start)
         // From the screen, cosmetics can be un-color smashed and reordered (which just changes internal order)
 
+        // TODO: When importing a character, franchise icons with a null ID or an ID greater than any existing franchise icon will be installed as new. Any others
+        // will overwrite existing ones.
+
         /// <summary>
         /// Get a list of all cosmetics for a fighter
         /// </summary>
@@ -229,10 +233,27 @@ namespace BrawlInstaller.Services
         /// <returns></returns>
         public List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds)
         {
-            var cosmetics = new List<Cosmetic>();
             var settings = _settingsService.BuildSettings;
+            var definitions = settings.CosmeticSettings;
+            return GetCosmetics(fighterIds, definitions, true);
+        }
+
+        /// <summary>
+        /// Get a list of all franchise icons
+        /// </summary>
+        /// <returns></returns>
+        public List<Cosmetic> GetFranchiseIcons()
+        {
+            var settings = _settingsService.BuildSettings;
+            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList();
+            return GetCosmetics(new FighterIds(), definitions, false);
+        }
+
+        public List<Cosmetic> GetCosmetics(FighterIds fighterIds, List<CosmeticDefinition> definitions, bool restrictRange)
+        {
+            var cosmetics = new List<Cosmetic>();
             // Get all cosmetic definitions grouped by type and style
-            foreach (var cosmeticGroup in settings.CosmeticSettings.GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
+            foreach (var cosmeticGroup in definitions.GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
             {
                 // Check each definition in the group for cosmetics
                 foreach (var cosmetic in cosmeticGroup)
@@ -244,7 +265,7 @@ namespace BrawlInstaller.Services
                         var rootNode = _fileService.OpenFile(path);
                         if (rootNode != null)
                         {
-                            cosmetics.AddRange(GetCosmetics(cosmetic, rootNode, fighterIds, !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
+                            cosmetics.AddRange(GetDefinitionCosmetics(cosmetic, rootNode, fighterIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
                             rootNode.Dispose();
                         }
                     }
