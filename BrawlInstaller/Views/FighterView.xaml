@@ -99,7 +99,7 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        <Image Grid.Column="0" Width="24" Height="24">
+                                        <Image Grid.Column="0" Width="16" Height="16">
                                             <Image.Style>
                                                 <Style TargetType="{x:Type Image}">
                                                     <Style.Triggers>
