@@ -189,7 +189,7 @@ namespace BrawlInstaller.Services
                 {
                     CosmeticType = definition.CosmeticType,
                     Style = definition.Style,
-                    Image = texture.Texture.GetImage(0).ToBitmapImage(),
+                    Image = texture.Texture?.GetImage(0).ToBitmapImage(),
                     Texture = (TEX0Node)_fileService.CopyNode(texture.Texture),
                     Palette = texture.Texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.Texture.GetPaletteNode()) : null,
                     SharesData = texture.Texture.SharesData,

@@ -35,6 +35,7 @@ namespace BrawlInstaller.ViewModels
         List<BrawlExColorID> Colors { get; }
         FighterIds FighterIds { get; set; }
         List<Cosmetic> CosmeticList { get; }
+        Cosmetic SelectedCosmeticNode { get; set; }
     }
 
     [Export(typeof(IFighterViewModel))]
@@ -48,6 +49,7 @@ namespace BrawlInstaller.ViewModels
         private string _selectedStyle;
         private List<BrawlExColorID> _colors;
         private FighterIds _fighterIds;
+        private Cosmetic _selectedCosmeticNode;
 
         // Services
         IExtractService _extractService { get; }
@@ -101,8 +103,7 @@ namespace BrawlInstaller.ViewModels
             get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
                 .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList();
         }
-        public BitmapImage SharedTEX0Image { get; set; }
-        public BitmapImage TEX0Image { get; set; }
+        public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(); } }
 
         // Methods
         public void LoadFighter()
