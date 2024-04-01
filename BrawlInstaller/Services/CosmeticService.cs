@@ -219,6 +219,7 @@ namespace BrawlInstaller.Services
         // When editing a character, if you change a cosmetic, its TEX0Node is automatically nulled and SharesData is set to False
         // You can then color smash these from the UI, but this will just flip SharesData. Their images will get imported instead of a TEX0
         // This allows us to differentiate between edited cosmetics and ones that should just remain color smashed
+        // Also, when we import an image for the first time, we set the TEX0 for the class, which allows us to reuse it? (Alternatively we just set up the TEX0s at the start)
 
         /// <summary>
         /// Get a list of all cosmetics for a fighter
