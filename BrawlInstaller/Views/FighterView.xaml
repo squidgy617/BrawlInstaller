@@ -83,12 +83,43 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Label x:Name="costumeCosmeticTypeLabel" Content="Type:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
                         <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
                         <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
                         <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
                         <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="1"/>
+                        <ListBox x:Name="cosmeticListBox" VerticalAlignment="Top" Grid.Column="2" Grid.Row="2" ItemsSource="{Binding CosmeticList}" Width="120" Height="100">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image Grid.Column="0" Width="24" Height="24">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=SharesData}" Value="True">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Resources/SharedTEX0.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=SharesData}" Value="False">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Resources/TEX0.png"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <TextBlock Grid.Column="1">
+                                            <Run Text="Cosmetic"/>
+                                            <Run Text="{Binding Path=CostumeIndex}"/>
+                                        </TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </Grid>
                 </GroupBox>
             </Grid>

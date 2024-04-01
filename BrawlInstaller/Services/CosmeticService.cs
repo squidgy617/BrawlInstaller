@@ -213,6 +213,13 @@ namespace BrawlInstaller.Services
             return cosmetics;
         }
 
+        // TODO: Importing cosmetics
+        // Use the Cosmetic class
+        // If the cosmetic has a TEX0Node, you import that. Otherwise, import the image
+        // When editing a character, if you change a cosmetic, its TEX0Node is automatically nulled and SharesData is set to False
+        // You can then color smash these from the UI, but this will just flip SharesData. Their images will get imported instead of a TEX0
+        // This allows us to differentiate between edited cosmetics and ones that should just remain color smashed
+
         /// <summary>
         /// Get a list of all cosmetics for a fighter
         /// </summary>

@@ -16,6 +16,7 @@ using System.Runtime.CompilerServices;
 using BrawlLib.Internal;
 using System.Windows.Data;
 using System.Globalization;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -33,6 +34,7 @@ namespace BrawlInstaller.ViewModels
         string SelectedStyle { get; }
         List<BrawlExColorID> Colors { get; }
         FighterIds FighterIds { get; set; }
+        List<Cosmetic> CosmeticList { get; }
     }
 
     [Export(typeof(IFighterViewModel))]
@@ -88,12 +90,19 @@ namespace BrawlInstaller.ViewModels
         public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); } }
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
         public List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); } }
-        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); } }
+        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
         public List<string> Styles { get => Costumes?.FirstOrDefault()?.Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
-        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
+        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(CosmeticList)); } }
         public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(); } }
         public FighterIds FighterIds { get => _fighterIds; set { _fighterIds = value; OnPropertyChanged(); } }
+        public List<Cosmetic> CosmeticList 
+        { 
+            get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
+                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList();
+        }
+        public BitmapImage SharedTEX0Image { get; set; }
+        public BitmapImage TEX0Image { get; set; }
 
         // Methods
         public void LoadFighter()
