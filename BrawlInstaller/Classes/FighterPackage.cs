@@ -51,6 +51,7 @@ namespace BrawlInstaller.Classes
         public bool? SharesData { get; set; }
         public int? InternalIndex { get; set; }
         public int? CostumeIndex { get; set; }
+        public int? Id { get; set; }
     }
 
     public class FranchiseIcon

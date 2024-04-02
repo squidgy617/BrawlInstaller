@@ -111,6 +111,17 @@ namespace BrawlInstaller.Services
             return index;
         }
 
+        public int? GetCosmeticId(string name, CosmeticDefinition definition)
+        {
+            if (name != null && name.StartsWith(definition.Prefix))
+            {
+                var success = int.TryParse(name.Replace(definition.Prefix, "").Replace(".", ""), System.Globalization.NumberStyles.Integer, null, out int id);
+                if (success)
+                    return id;
+            }
+            return null;
+        }
+
         public List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             // Try to get all textures for cosmetic definition
@@ -135,7 +146,7 @@ namespace BrawlInstaller.Services
                     {
                         // Get the texture from the pat entry
                         patEntry.GetImage(0);
-                        nodes.Add(new CosmeticTexture { Texture = patEntry._textureNode, CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), definition.PatSettings.Multiplier ?? definition.Multiplier, id) });
+                        nodes.Add(new CosmeticTexture { Texture = patEntry._textureNode, CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), definition.PatSettings.Multiplier ?? definition.Multiplier, id), Id = (int)patEntry.FrameIndex });
                     }
                     return nodes;
                 }
@@ -151,7 +162,7 @@ namespace BrawlInstaller.Services
                 {
                     // Get textures that match definition
                     if (child.GetType() == typeof(TEX0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
-                        nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id) });
+                        nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = GetCosmeticId(child.Name, definition) });
                 }
             }
             return nodes;
@@ -195,7 +206,8 @@ namespace BrawlInstaller.Services
                     Palette = texture.Texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.Texture.GetPaletteNode()) : null,
                     SharesData = texture.Texture.SharesData,
                     InternalIndex = cosmetics.Count(),
-                    CostumeIndex = texture.CostumeIndex
+                    CostumeIndex = texture.CostumeIndex,
+                    Id = texture.Id
                 });
             }
             if (definition.ModelPath != null)
@@ -246,7 +258,7 @@ namespace BrawlInstaller.Services
         {
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList();
-            return GetCosmetics(new FighterIds(), definitions, false);
+            return GetCosmetics(new FighterIds(), definitions, false).GroupBy(x => x.Id).Select(x => x.First()).ToList();
         }
 
         public List<Cosmetic> GetCosmetics(FighterIds fighterIds, List<CosmeticDefinition> definitions, bool restrictRange)

@@ -11,5 +11,6 @@ namespace BrawlInstaller.Classes
     {
         public TEX0Node Texture { get; set; }
         public int CostumeIndex { get; set; }
+        public int? Id { get; set; }
     }
 }
