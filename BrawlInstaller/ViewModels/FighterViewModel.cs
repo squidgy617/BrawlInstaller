@@ -133,6 +133,7 @@ namespace BrawlInstaller.ViewModels
             Costumes = FighterPackage.Costumes;
             SelectedCostume = Costumes.FirstOrDefault();
             FranchiseIcons = _cosmeticService.GetFranchiseIcons();
+            SelectedFranchiseIcon = FranchiseIcons.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId);
         }
     }
 

@@ -156,8 +156,7 @@ namespace BrawlInstaller.Services
                 fighterIds.CosmeticConfigId = fighterIds.SlotConfigId;
             if (fighterIds.CSSSlotConfigId <= -1 && (fighterIds.CosmeticConfigId > -1 || fighterIds.SlotConfigId > -1))
                 fighterIds.CSSSlotConfigId = fighterIds.CosmeticConfigId != -1 ? fighterIds.CosmeticConfigId : fighterIds.SlotConfigId;
-            if (fighterIds.CosmeticId <= -1 && fighterIds.CosmeticConfigId > -1)
-                fighterIds.CosmeticId = fighterIds.CosmeticConfigId;
+
             // Clean up nodes
             foreach (var config in fighterConfigs)
                 config.Dispose();

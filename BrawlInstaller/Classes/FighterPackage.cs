@@ -15,6 +15,7 @@ namespace BrawlInstaller.Classes
     //will result in an instance of this class being created. This class is used both when extracting and installing characters.
     public class FighterPackage
     {
+        public FighterInfo FighterInfo { get; set; }
         public List<Costume> Costumes { get; set; }
         public List<Cosmetic> CSSIcons { get; set; }
         public List<Cosmetic> ReplayIcons { get; set; }
