@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:BrawlInstaller.Converters"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1000">
+             d:DesignHeight="450" d:DesignWidth="1200">
     <UserControl.Resources>
         <converters:ByteConverter x:Key="byteConverter"/>
         <converters:HexConverter x:Key="hexConverter"/>
@@ -133,9 +133,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon}" Grid.Column="0"/>
                 <Image x:Name="franchiseIconImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="1"/>
+                <Border Grid.Column="2" Background="Gray">
+                    <Image x:Name="franchiseIconTransparentImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.TransparentImage}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                </Border>
             </Grid>
         </GroupBox>
     </Grid>

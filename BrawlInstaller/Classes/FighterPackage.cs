@@ -17,10 +17,7 @@ namespace BrawlInstaller.Classes
     {
         public FighterInfo FighterInfo { get; set; }
         public List<Costume> Costumes { get; set; }
-        public List<Cosmetic> CSSIcons { get; set; }
-        public List<Cosmetic> ReplayIcons { get; set; }
-        public List<Cosmetic> CreditsIcons { get; set; }
-        public FranchiseIcon FranchiseIcon { get; set; }
+        public FranchiseCosmetic FranchiseIcon { get; set; }
         public List<string> FighterFiles { get; set; }
         public List<string> ItemFiles { get; set; }
         public string FighterConfig { get; set; }
@@ -55,11 +52,11 @@ namespace BrawlInstaller.Classes
         public int? Id { get; set; }
     }
 
-    public class FranchiseIcon
+    public class FranchiseCosmetic : Cosmetic
     {
-        public string Image { get; set; }
-        public string TransparentImage { get; set; }
-        public string Model { get; set; }
+        public BitmapImage TransparentImage { get; set; } = null;
+        public TEX0Node TransparentTexture { get; set; } = null;
+        public string ModelPath { get; set; } = string.Empty;
     }
 
     public class FighterSettings

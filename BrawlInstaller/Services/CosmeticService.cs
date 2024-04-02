@@ -12,13 +12,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using BrawlInstaller.Common;
+using static BrawlLib.BrawlManagerLib.TextureContainer;
 
 namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
         List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
-        List<Cosmetic> GetFranchiseIcons();
+        List<FranchiseCosmetic> GetFranchiseIcons();
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
@@ -115,7 +116,7 @@ namespace BrawlInstaller.Services
         {
             if (name != null && name.StartsWith(definition.Prefix))
             {
-                var success = int.TryParse(name.Replace(definition.Prefix, "").Replace(".", ""), System.Globalization.NumberStyles.Integer, null, out int id);
+                var success = int.TryParse(name.Replace(definition.Prefix, "").Replace(".", "").Replace("_TopN",""), System.Globalization.NumberStyles.Integer, null, out int id);
                 if (success)
                     return id;
             }
@@ -219,7 +220,8 @@ namespace BrawlInstaller.Services
                     {
                         CosmeticType = definition.CosmeticType,
                         Style = definition.Style,
-                        Model = (MDL0Node)_fileService.CopyNode(model)
+                        Model = (MDL0Node)_fileService.CopyNode(model),
+                        Id = GetCosmeticId(model.Name, definition)
                     });
                 }
             }
@@ -254,11 +256,33 @@ namespace BrawlInstaller.Services
         /// Get a list of all franchise icons
         /// </summary>
         /// <returns></returns>
-        public List<Cosmetic> GetFranchiseIcons()
+        public List<FranchiseCosmetic> GetFranchiseIcons()
         {
+            var franchiseIcons = new List<FranchiseCosmetic>();
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList();
-            return GetCosmetics(new FighterIds(), definitions, false).GroupBy(x => x.Id).Select(x => x.First()).ToList();
+            // Get all franchise icons
+            var allIcons = GetCosmetics(new FighterIds(), definitions, false);
+            // Aggregate the models and transparent textures
+            foreach(var icon in allIcons.Where(x => x.Style == "Icon").GroupBy(x => x.Id).Select(x => x.First()).ToList())
+            {
+                franchiseIcons.Add(new FranchiseCosmetic
+                {
+                    CosmeticType = icon.CosmeticType,
+                    Style = icon.Style,
+                    Image = icon.Image,
+                    Texture = icon.Texture,
+                    Palette = icon.Palette,
+                    SharesData = icon.SharesData,
+                    InternalIndex = icon.InternalIndex,
+                    CostumeIndex = icon.CostumeIndex,
+                    Id = icon.Id,
+                    Model = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Model != null)?.Model,
+                    TransparentImage = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Image != null)?.Image,
+                    TransparentTexture = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Texture != null)?.Texture
+                });
+            }
+            return franchiseIcons;
         }
 
         public List<Cosmetic> GetCosmetics(FighterIds fighterIds, List<CosmeticDefinition> definitions, bool restrictRange)

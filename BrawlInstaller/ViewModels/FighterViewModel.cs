@@ -36,8 +36,8 @@ namespace BrawlInstaller.ViewModels
         FighterIdsViewModel FighterIds { get; set; }
         List<Cosmetic> CosmeticList { get; }
         Cosmetic SelectedCosmeticNode { get; set; }
-        List<Cosmetic> FranchiseIcons { get; }
-        Cosmetic SelectedFranchiseIcon { get; set; }
+        List<FranchiseCosmetic> FranchiseIcons { get; }
+        FranchiseCosmetic SelectedFranchiseIcon { get; set; }
     }
 
     [Export(typeof(IFighterViewModel))]
@@ -52,8 +52,8 @@ namespace BrawlInstaller.ViewModels
         private List<BrawlExColorID> _colors;
         private FighterIdsViewModel _fighterIds;
         private Cosmetic _selectedCosmeticNode;
-        private List<Cosmetic> _franchiseIcons;
-        private Cosmetic _selectedFranchiseIcon;
+        private List<FranchiseCosmetic> _franchiseIcons;
+        private FranchiseCosmetic _selectedFranchiseIcon;
 
         // Services
         IExtractService _extractService { get; }
@@ -112,8 +112,8 @@ namespace BrawlInstaller.ViewModels
                 .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList();
         }
         public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(); } }
-        public List<Cosmetic> FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(); } }
-        public Cosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(); } }
+        public List<FranchiseCosmetic> FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(); } }
+        public FranchiseCosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(); } }
 
         // Methods
         public void LoadFighter()
