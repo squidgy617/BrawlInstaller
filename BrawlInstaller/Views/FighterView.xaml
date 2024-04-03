@@ -129,26 +129,7 @@
             </Grid>
         </GroupBox>
         <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" VerticalAlignment="Top" Grid.Column="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Label x:Name="franchiseIconLabel" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="0" Content="Icon:"/>
-                <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon}" Grid.Column="1"/>
-                <Label x:Name="modelLabel" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="0" Content="Model:" Grid.Row="1"/>
-                <TextBox x:Name="modelTextBox" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1" Width="120" Text="{Binding SelectedFranchiseIcon.ModelPath}"/>
-                <Image x:Name="franchiseIconImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="2" Grid.RowSpan="2"/>
-                <Border Grid.Column="3" Background="Gray"  Grid.RowSpan="2">
-                    <Image x:Name="franchiseIconTransparentImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.TransparentImage}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                </Border>
-            </Grid>
+            <ContentControl Content="{Binding FranchiseIconViewModel}"/>
         </GroupBox>
     </Grid>
 </UserControl>

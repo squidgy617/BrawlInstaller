@@ -10,4 +10,7 @@
     <DataTemplate  DataType="{x:Type viewModels:FighterViewModel}">
         <views:FighterView/>
     </DataTemplate>
+    <DataTemplate  DataType="{x:Type viewModels:FranchiseIconViewModel}">
+        <views:FranchiseIconView/>
+    </DataTemplate>
 </ResourceDictionary>
