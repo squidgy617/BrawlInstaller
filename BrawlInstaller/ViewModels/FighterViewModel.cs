@@ -17,6 +17,8 @@ using BrawlLib.Internal;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -130,8 +132,7 @@ namespace BrawlInstaller.ViewModels
             });
             Costumes = FighterPackage.Costumes;
             SelectedCostume = Costumes.FirstOrDefault();
-            FranchiseIconViewModel.FranchiseIcons = _cosmeticService.GetFranchiseIcons();
-            FranchiseIconViewModel.SelectedFranchiseIcon = FranchiseIconViewModel.FranchiseIcons.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId);
+            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
     }
 
@@ -143,5 +144,13 @@ namespace BrawlInstaller.ViewModels
         public int? CSSSlotConfigId { get; set; }
         public int? CosmeticConfigId { get; set; }
         public int? CosmeticId { get; set; }
+    }
+
+    // Messages
+    public class FighterLoadedMessage : ValueChangedMessage<FighterPackage>
+    {
+        public FighterLoadedMessage(FighterPackage fighterPackage) : base(fighterPackage)
+        {
+        }
     }
 }
