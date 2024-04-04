@@ -92,6 +92,7 @@ namespace BrawlInstaller.ViewModels
             SelectedCostume = Costumes.FirstOrDefault();
 
             //foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
+            // Get build setting cosmetics that aren't already in list
             foreach (CosmeticType option in _settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType == IdType.Cosmetic 
             && !CosmeticOptions.Select(y => y.Value).Contains(x.CosmeticType)).Select(x => x.CosmeticType).Distinct())
             {
