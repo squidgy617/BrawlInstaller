@@ -51,11 +51,12 @@ namespace BrawlInstaller.ViewModels
 
             CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>
             {
-                new KeyValuePair<string, CosmeticType>(CosmeticType.CSP.GetDescription(), CosmeticType.CSP),
-                new KeyValuePair<string, CosmeticType>(CosmeticType.PortraitName.GetDescription(), CosmeticType.PortraitName),
-                new KeyValuePair<string, CosmeticType>(CosmeticType.BP.GetDescription(), CosmeticType.BP),
-                new KeyValuePair<string, CosmeticType>(CosmeticType.StockIcon.GetDescription(), CosmeticType.StockIcon),
-                new KeyValuePair<string, CosmeticType>(CosmeticType.CSSIcon.GetDescription(), CosmeticType.CSSIcon)
+                CosmeticType.CSP.GetKeyValuePair(),
+                CosmeticType.PortraitName.GetKeyValuePair(),
+                CosmeticType.BP.GetKeyValuePair(),
+                CosmeticType.StockIcon.GetKeyValuePair(),
+                CosmeticType.CSSIcon.GetKeyValuePair(),
+                CosmeticType.ReplayIcon.GetKeyValuePair()
             };
 
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
