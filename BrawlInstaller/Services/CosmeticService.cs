@@ -162,7 +162,7 @@ namespace BrawlInstaller.Services
                 foreach (var child in folder.Children)
                 {
                     // Get textures that match definition
-                    if (child.GetType() == typeof(TEX0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
+                    if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || child.Name.StartsWith(definition.Prefix)) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
                         nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = GetCosmeticId(child.Name, definition) });
                 }
             }
