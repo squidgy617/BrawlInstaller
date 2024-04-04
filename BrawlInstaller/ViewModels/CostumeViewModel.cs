@@ -6,6 +6,7 @@ using BrawlLib.Internal;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace BrawlInstaller.ViewModels
     {
         List<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
-        List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
+        ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
         List<string> Styles { get; }
@@ -33,7 +34,7 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private List<Costume> _costumes;
         private Costume _selectedCostume;
-        private List<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
+        private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
         private List<BrawlExColorID> _colors;
@@ -48,8 +49,18 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService = settingsService;
 
-            CosmeticOptions = new List<KeyValuePair<string, CosmeticType>>();
+            CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>
+            {
+                new KeyValuePair<string, CosmeticType>(CosmeticType.CSP.GetDescription(), CosmeticType.CSP),
+                new KeyValuePair<string, CosmeticType>(CosmeticType.PortraitName.GetDescription(), CosmeticType.PortraitName),
+                new KeyValuePair<string, CosmeticType>(CosmeticType.BP.GetDescription(), CosmeticType.BP),
+                new KeyValuePair<string, CosmeticType>(CosmeticType.StockIcon.GetDescription(), CosmeticType.StockIcon),
+                new KeyValuePair<string, CosmeticType>(CosmeticType.CSSIcon.GetDescription(), CosmeticType.CSSIcon)
+            };
+
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
+
+            Colors = BrawlExColorID.Colors.ToList();
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
@@ -60,7 +71,7 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
-        public List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
+        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
         public List<string> Styles { get => Costumes?.FirstOrDefault()?.Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
@@ -79,15 +90,13 @@ namespace BrawlInstaller.ViewModels
             Costumes = message.Value.Costumes;
             SelectedCostume = Costumes.FirstOrDefault();
 
-            CosmeticOptions = new List<KeyValuePair<string, CosmeticType>>();
             //foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
-            foreach (CosmeticType option in _settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType == IdType.Cosmetic).Select(x => x.CosmeticType).Distinct())
+            foreach (CosmeticType option in _settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType == IdType.Cosmetic 
+            && !CosmeticOptions.Select(y => y.Value).Contains(x.CosmeticType)).Select(x => x.CosmeticType).Distinct())
             {
                 CosmeticOptions.Add(option.GetKeyValuePair());
             }
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
-
-            Colors = BrawlExColorID.Colors.ToList();
         }
     }
 }
