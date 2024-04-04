@@ -13,4 +13,7 @@
     <DataTemplate  DataType="{x:Type viewModels:FranchiseIconViewModel}">
         <views:FranchiseIconView/>
     </DataTemplate>
+    <DataTemplate  DataType="{x:Type viewModels:CostumeViewModel}">
+        <views:CostumeView/>
+    </DataTemplate>
 </ResourceDictionary>

@@ -7,9 +7,8 @@
              xmlns:converters="clr-namespace:BrawlInstaller.Converters"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1200">
+             d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <converters:ByteConverter x:Key="byteConverter"/>
         <converters:HexConverter x:Key="hexConverter"/>
     </UserControl.Resources>
     <Grid>
@@ -48,84 +47,7 @@
         </GroupBox>
         <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock>
-                                <Run Text="Costume"/>
-                                <Run Text="{Binding Path=CostumeId}"/>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="1"/>
-                <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="2"/>
-                <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
-                <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding SelectedCostume.PacFiles}" VerticalAlignment="Top" Width="120" Height="100" Grid.Row="1" Grid.Column="2"/>
-                <Label x:Name="colorLabel" Content="Color:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1"/>
-                <ComboBox x:Name="colorComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Grid.Row="2" Grid.Column="2" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
-                <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" VerticalAlignment="Top" Grid.Row="0" Grid.Column="3" Grid.RowSpan="3">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label x:Name="costumeCosmeticTypeLabel" Content="Type:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
-                        <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
-                        <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
-                        <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
-                        <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="1"/>
-                        <ListBox x:Name="cosmeticListBox" VerticalAlignment="Top" Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" ItemsSource="{Binding CosmeticList}" SelectedValue="{Binding SelectedCosmeticNode}" Width="120" Height="100">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Image Grid.Column="0" Width="16" Height="16">
-                                            <Image.Style>
-                                                <Style TargetType="{x:Type Image}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Path=SharesData}" Value="True">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Resources/SharedTEX0.png"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=SharesData}" Value="False">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Resources/TEX0.png"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Image.Style>
-                                        </Image>
-                                        <TextBlock Grid.Column="1">
-                                            <Run Text="Cosmetic"/>
-                                            <Run Text="{Binding Path=CostumeIndex}"/>
-                                        </TextBlock>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                    </Grid>
-                </GroupBox>
+                <ContentControl Content="{Binding CostumeViewModel}"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" VerticalAlignment="Top" Grid.Column="2">

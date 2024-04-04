@@ -27,37 +27,19 @@ namespace BrawlInstaller.ViewModels
         ICommand LoadCommand { get; }
         void LoadFighter();
         FighterPackage FighterPackage { get; }
-        List<Costume> Costumes { get; }
-        Costume SelectedCostume { get; set; }
-        List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
-        CosmeticType SelectedCosmeticOption { get; set; }
-        Cosmetic SelectedCosmetic { get; }
-        List<string> Styles { get; }
-        string SelectedStyle { get; }
-        List<BrawlExColorID> Colors { get; }
         FighterIdsViewModel FighterIds { get; set; }
-        List<Cosmetic> CosmeticList { get; }
-        Cosmetic SelectedCosmeticNode { get; set; }
     }
 
     [Export(typeof(IFighterViewModel))]
     internal class FighterViewModel : ViewModelBase, IFighterViewModel
     {
         // Private properties
-        private List<Costume> _costumes;
-        private Costume _selectedCostume;
-        private List<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
-        private CosmeticType _selectedCosmeticOption;
-        private string _selectedStyle;
-        private List<BrawlExColorID> _colors;
         private FighterIdsViewModel _fighterIds;
-        private Cosmetic _selectedCosmeticNode;
 
         // Services
         IExtractService _extractService { get; }
         ISettingsService _settingsService { get; }
         IDialogService _dialogService { get; }
-        ICosmeticService _cosmeticService { get; }
 
         // Commands
         public ICommand LoadCommand
@@ -70,50 +52,27 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public FighterViewModel(IExtractService extractService, ISettingsService settingsService, IDialogService dialogService, ICosmeticService cosmeticService, IFranchiseIconViewModel franchiseIconViewModel)
+        public FighterViewModel(IExtractService extractService, ISettingsService settingsService, IDialogService dialogService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel)
         {
             _extractService = extractService;
             _settingsService = settingsService;
             _dialogService = dialogService;
-            _cosmeticService = cosmeticService;
             FranchiseIconViewModel = franchiseIconViewModel;
+            CostumeViewModel = costumeViewModel;
 
             _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
             _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
-
-            CosmeticOptions = new List<KeyValuePair<string, CosmeticType>>();
-            //foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
-            foreach (CosmeticType option in settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType == IdType.Cosmetic).Select(x => x.CosmeticType).Distinct())
-            {
-                CosmeticOptions.Add(option.GetKeyValuePair());
-            }
-            SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
-
-            Colors = BrawlExColorID.Colors.ToList();
 
             FighterIds = new FighterIdsViewModel ();
         }
 
         // ViewModels
         public IFranchiseIconViewModel FranchiseIconViewModel { get; }
+        public ICostumeViewModel CostumeViewModel { get; }
 
         // Properties
         public FighterPackage FighterPackage { get; set; }
-        public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
-        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
-        public List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); } }
-        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
-        public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
-        public List<string> Styles { get => Costumes?.FirstOrDefault()?.Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
-        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(CosmeticList)); } }
-        public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(); } }
         public FighterIdsViewModel FighterIds { get => _fighterIds; set { _fighterIds = value; OnPropertyChanged(); } }
-        public List<Cosmetic> CosmeticList 
-        { 
-            get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
-                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList();
-        }
-        public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(); } }
 
         // Methods
         public void LoadFighter()
@@ -130,8 +89,6 @@ namespace BrawlInstaller.ViewModels
                 //CosmeticConfigId = 35,
                 //CSSSlotConfigId = 35
             });
-            Costumes = FighterPackage.Costumes;
-            SelectedCostume = Costumes.FirstOrDefault();
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
     }

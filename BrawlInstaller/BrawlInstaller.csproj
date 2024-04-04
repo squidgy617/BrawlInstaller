@@ -78,9 +78,13 @@
     <Compile Include="Services\FighterService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="ViewModels\CostumeViewModel.cs" />
     <Compile Include="ViewModels\FighterViewModel.cs" />
     <Compile Include="ViewModels\FranchiseIconViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\CostumeView.xaml.cs">
+      <DependentUpon>CostumeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FighterView.xaml.cs">
       <DependentUpon>FighterView.xaml</DependentUpon>
     </Compile>
@@ -105,6 +109,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resources\ViewModelViewMapping.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CostumeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
