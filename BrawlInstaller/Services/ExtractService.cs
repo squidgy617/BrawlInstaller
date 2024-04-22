@@ -92,6 +92,7 @@ namespace BrawlInstaller.Services
             //    File.Copy(module, $"Module\\{Path.GetFileName(module)}");
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
+            fighterPackage.Cosmetics = cosmetics;
             return fighterPackage;
         }
     }

@@ -16,4 +16,7 @@
     <DataTemplate  DataType="{x:Type viewModels:CostumeViewModel}">
         <views:CostumeView/>
     </DataTemplate>
+    <DataTemplate  DataType="{x:Type viewModels:CosmeticViewModel}">
+        <views:CosmeticView/>
+    </DataTemplate>
 </ResourceDictionary>

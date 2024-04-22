@@ -16,6 +16,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="3" Background="Silver" ResizeDirection="Columns"/>
         <GroupBox x:Name="idGroupBox" Header="IDs" Grid.Column="0">
@@ -52,6 +53,9 @@
         </GroupBox>
         <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" VerticalAlignment="Top" Grid.Column="2">
             <ContentControl Content="{Binding FranchiseIconViewModel}"/>
+        </GroupBox>
+        <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" VerticalAlignment="Top" Grid.Column="3">
+            <ContentControl Content="{Binding CosmeticViewModel}"/>
         </GroupBox>
     </Grid>
 </UserControl>
