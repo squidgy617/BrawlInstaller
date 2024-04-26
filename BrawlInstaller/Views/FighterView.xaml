@@ -16,6 +16,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -33,6 +34,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -59,6 +61,9 @@
         </GroupBox>
         <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" Margin="3,0,0,0">
             <ContentControl Content="{Binding CosmeticViewModel}"/>
+        </GroupBox>
+        <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files" VerticalAlignment="Top" Grid.Column="3" Grid.Row="0">
+            <ContentControl Content="{Binding FighterFileViewModel}"/>
         </GroupBox>
     </Grid>
 </UserControl>

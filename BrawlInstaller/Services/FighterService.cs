@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Enums;
+using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BrawlInstaller.Services
 {
@@ -17,6 +19,8 @@ namespace BrawlInstaller.Services
         List<Costume> GetFighterCostumes(FighterInfo fighterInfo);
         List<Costume> GetCostumeCosmetics(List<Costume> costumes, List<Cosmetic> cosmetics);
         string GetModule(string internalName);
+        List<string> GetFighterFiles(string internalName);
+        List<string> GetItemFiles(string internalName);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -245,6 +249,17 @@ namespace BrawlInstaller.Services
             var files = new List<string>();
             if (Directory.Exists(path))
                 files = Directory.GetFiles(path, "*.pac").Where(x => Path.GetFileName(x).StartsWith($"Fit{name}", StringComparison.InvariantCultureIgnoreCase)).ToList();
+            return files;
+        }
+
+        public List<string> GetItemFiles(string internalName)
+        {
+            var buildPath = _settingsService.BuildPath;
+            var settings = _settingsService.BuildSettings;
+            var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}\\item";
+            var files = new List<string>();
+            if (Directory.Exists(path))
+                files = Directory.GetFiles(path).ToList();
             return files;
         }
 

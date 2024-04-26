@@ -44,6 +44,24 @@ namespace BrawlInstaller.Services
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
             var costumes = _fighterService.GetFighterCostumes(fighterInfo);
             costumes = _fighterService.GetCostumeCosmetics(costumes, cosmetics);
+
+            var fighterFiles = new List<FighterFiles>{
+                new FighterFiles
+                {
+                    PacFiles = _fighterService.GetFighterFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList(),
+                    Module = _fighterService.GetModule(fighterInfo.InternalName),
+                    ExConfigs = new List<string>(),
+                    ItemFiles = _fighterService.GetItemFiles(fighterInfo.InternalName)
+                } 
+            };
+            if (fighterInfo.FighterConfig != "")
+                fighterFiles.FirstOrDefault().ExConfigs.Add(fighterInfo.FighterConfig);
+            if (fighterInfo.CosmeticConfig != "")
+                fighterFiles.FirstOrDefault().ExConfigs.Add(fighterInfo.CosmeticConfig);
+            if (fighterInfo.CSSSlotConfig != "")
+                fighterFiles.FirstOrDefault().ExConfigs.Add(fighterInfo.CSSSlotConfig);
+            if (fighterInfo.SlotConfig != "")
+                fighterFiles.FirstOrDefault().ExConfigs.Add(fighterInfo.SlotConfig);
             //foreach (var costume in costumes )
             //{
             //    var costumePath = $"Cosmetics\\Costume{costume.CostumeId:D2}";
@@ -93,6 +111,7 @@ namespace BrawlInstaller.Services
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
             fighterPackage.Cosmetics = cosmetics;
+            fighterPackage.FighterFiles = fighterFiles;
             return fighterPackage;
         }
     }

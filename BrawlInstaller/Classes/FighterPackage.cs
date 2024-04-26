@@ -19,14 +19,25 @@ namespace BrawlInstaller.Classes
         public List<Costume> Costumes { get; set; }
         public FranchiseCosmetic FranchiseIcon { get; set; }
         public List<Cosmetic> Cosmetics { get; set; }
-        public List<string> FighterFiles { get; set; }
-        public List<string> ItemFiles { get; set; }
-        public string FighterConfig { get; set; }
-        public string Module { get; set; }
+        public List<FighterFiles> FighterFiles { get; set; }
         public string Soundbank { get; set; }
         public string CreditsTheme { get; set; }
         public string VictoryTheme { get; set; }
         public FighterSettings FighterSettings { get; set; } = null;
+    }
+
+    public class InstallOption
+    {
+        public string Name { get; set; } = "Default";
+        public string Description { get; set; } = "Default option";
+    }
+
+    public class FighterFiles : InstallOption
+    {
+        public List<string> PacFiles { get; set; }
+        public List<string> ItemFiles { get; set; }
+        public List<string> ExConfigs { get; set; }
+        public string Module { get; set; }
     }
 
     // TODO: Order of costumes dictates order on CSS/in Ex Config. Internal order dictates order in BRRES. ColorSmashGroup dictates what cosmetics are color smashed.

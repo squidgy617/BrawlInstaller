@@ -19,4 +19,7 @@
     <DataTemplate  DataType="{x:Type viewModels:CosmeticViewModel}">
         <views:CosmeticView/>
     </DataTemplate>
+    <DataTemplate  DataType="{x:Type viewModels:FighterFileViewModel}">
+        <views:FighterFileView/>
+    </DataTemplate>
 </ResourceDictionary>

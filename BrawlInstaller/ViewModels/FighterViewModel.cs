@@ -52,7 +52,7 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public FighterViewModel(IExtractService extractService, ISettingsService settingsService, IDialogService dialogService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel)
+        public FighterViewModel(IExtractService extractService, ISettingsService settingsService, IDialogService dialogService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel)
         {
             _extractService = extractService;
             _settingsService = settingsService;
@@ -60,6 +60,7 @@ namespace BrawlInstaller.ViewModels
             FranchiseIconViewModel = franchiseIconViewModel;
             CostumeViewModel = costumeViewModel;
             CosmeticViewModel = cosmeticViewmodel;
+            FighterFileViewModel = fighterFileViewModel;
 
             _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
             _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
@@ -71,6 +72,7 @@ namespace BrawlInstaller.ViewModels
         public IFranchiseIconViewModel FranchiseIconViewModel { get; }
         public ICostumeViewModel CostumeViewModel { get; }
         public ICosmeticViewModel CosmeticViewModel { get; }
+        public IFighterFileViewModel FighterFileViewModel { get; }
 
         // Properties
         public FighterPackage FighterPackage { get; set; }
