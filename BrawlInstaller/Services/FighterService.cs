@@ -21,6 +21,7 @@ namespace BrawlInstaller.Services
         string GetModule(string internalName);
         List<string> GetFighterFiles(string internalName);
         List<string> GetItemFiles(string internalName);
+        List<string> GetKirbyFiles(string internalName);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService

@@ -35,6 +35,7 @@ namespace BrawlInstaller.Classes
     public class FighterFiles : InstallOption
     {
         public List<string> PacFiles { get; set; }
+        public List<string> KirbyPacFiles { get; set; }
         public List<string> ItemFiles { get; set; }
         public List<string> ExConfigs { get; set; }
         public string Module { get; set; }

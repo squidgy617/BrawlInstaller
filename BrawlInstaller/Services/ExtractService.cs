@@ -51,7 +51,8 @@ namespace BrawlInstaller.Services
                     PacFiles = _fighterService.GetFighterFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList(),
                     Module = _fighterService.GetModule(fighterInfo.InternalName),
                     ExConfigs = new List<string>(),
-                    ItemFiles = _fighterService.GetItemFiles(fighterInfo.InternalName)
+                    ItemFiles = _fighterService.GetItemFiles(fighterInfo.InternalName),
+                    KirbyPacFiles = _fighterService.GetKirbyFiles(fighterInfo.InternalName)
                 } 
             };
             if (fighterInfo.FighterConfig != "")
