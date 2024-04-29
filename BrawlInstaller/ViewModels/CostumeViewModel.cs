@@ -137,6 +137,7 @@ namespace BrawlInstaller.ViewModels
                 SelectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
                 OnPropertyChanged(nameof(SelectedCosmetic));
                 OnPropertyChanged(nameof(CosmeticList));
+                OnPropertyChanged(nameof(SelectedCosmeticNode));
             }
         }
     }

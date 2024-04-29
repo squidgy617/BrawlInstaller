@@ -14,12 +14,12 @@ using static BrawlLib.BrawlManagerLib.TextureContainer;
 
 namespace BrawlInstaller.Services
 {
-    public interface IExtractService
+    public interface IPackageService
     {
         FighterPackage ExtractFighter(FighterIds fighterIds);
     }
-    [Export(typeof(IExtractService))]
-    internal class ExtractService : IExtractService
+    [Export(typeof(IPackageService))]
+    internal class PackageService : IPackageService
     {
         // Services
         IFileService _fileService { get; }
@@ -28,7 +28,7 @@ namespace BrawlInstaller.Services
         IFighterService _fighterService { get; }
 
         [ImportingConstructor]
-        public ExtractService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService) 
+        public PackageService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService) 
         {
             _fileService = fileService;
             _settingsService = settingsService;
