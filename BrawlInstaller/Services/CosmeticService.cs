@@ -302,7 +302,7 @@ namespace BrawlInstaller.Services
                         if (rootNode != null)
                         {
                             cosmetics.AddRange(GetDefinitionCosmetics(cosmetic, rootNode, fighterIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
-                            rootNode.Dispose();
+                            _fileService.CloseFile(rootNode);
                         }
                     }
                     // If we found cosmetics, don't bother checking the other definitions in the group - proceed to the next group

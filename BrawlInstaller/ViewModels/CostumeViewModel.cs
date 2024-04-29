@@ -8,9 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -26,6 +30,7 @@ namespace BrawlInstaller.ViewModels
         List<BrawlExColorID> Colors { get; }
         List<Cosmetic> CosmeticList { get; }
         Cosmetic SelectedCosmeticNode { get; set; }
+        ICommand ReplaceCosmeticCommand { get; }
     }
 
     [Export(typeof(ICostumeViewModel))]
@@ -42,12 +47,23 @@ namespace BrawlInstaller.ViewModels
 
         // Services
         ISettingsService _settingsService { get; }
+        IDialogService _dialogService { get; }
+
+        // Commands
+        public ICommand ReplaceCosmeticCommand
+        {
+            get
+            {
+                return new RelayCommand(param => ReplaceCosmetic());
+            }
+        }
 
         // Importing constructor
         [ImportingConstructor]
-        public CostumeViewModel(ISettingsService settingsService)
+        public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService)
         {
             _settingsService = settingsService;
+            _dialogService = dialogService;
 
             CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>
             {
@@ -99,6 +115,29 @@ namespace BrawlInstaller.ViewModels
                 CosmeticOptions.Add(option.GetKeyValuePair());
             }
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
+        }
+
+        public void ReplaceCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
+            // Update the image
+            if (image != "")
+            {
+                var bitmap = new Bitmap(image);
+                SelectedCosmetic.Image = bitmap.ToBitmapImage();
+                SelectedCosmetic.Texture = null;
+                SelectedCosmetic.Palette = null;
+                SelectedCosmetic.SharesData = false;
+                // Decrement internal indexes of all cosmetics after this one
+                foreach(var cosmetic in CosmeticList.Where(x => x.InternalIndex > SelectedCosmetic.InternalIndex))
+                {
+                    cosmetic.InternalIndex -= 1;
+                }
+                // Put this image at the end
+                SelectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
+                OnPropertyChanged(nameof(SelectedCosmetic));
+                OnPropertyChanged(nameof(CosmeticList));
+            }
         }
     }
 }

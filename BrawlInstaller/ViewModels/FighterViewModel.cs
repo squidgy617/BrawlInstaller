@@ -25,7 +25,6 @@ namespace BrawlInstaller.ViewModels
     public interface IFighterViewModel
     {
         ICommand LoadCommand { get; }
-        void LoadFighter();
         FighterPackage FighterPackage { get; }
         FighterIdsViewModel FighterIds { get; set; }
     }

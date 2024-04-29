@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="fighterFileOptionLabel" Content="Option:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
-        <ComboBox x:Name="fighterFileOptionDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FighterFiles}" DisplayMemberPath="Name" SelectedValuePath="Value" SelectedValue="{Binding SelectedFighterFiles, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
+        <ComboBox x:Name="fighterFileOptionDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FighterFiles}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedFighterFiles, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
         <Label x:Name="pacFileLabel" Content="Pac Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0"/>
         <ListBox x:Name="pacFileListBox" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding SelectedFighterFiles.PacFiles}" Width="120" Height="100"/>
         <Label x:Name="exConfigsLabel" Content="Ex Configs:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2"/>

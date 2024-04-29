@@ -164,13 +164,13 @@ namespace BrawlInstaller.Services
 
             // Clean up nodes
             foreach (var config in fighterConfigs)
-                config.Dispose();
+                _fileService.CloseFile(config);
             foreach (var config in slotConfigs)
-                config.Dispose();
+                _fileService.CloseFile(config);
             foreach (var config in cosmeticConfigs)
-                config.Dispose();
+                _fileService.CloseFile(config);
             foreach (var config in cssSlotConfigs)
-                config.Dispose();
+                _fileService.CloseFile(config);
             // Return
             return fighterIds;
         }
@@ -192,7 +192,7 @@ namespace BrawlInstaller.Services
                     fighterIds.FranchiseId = coscNode.FranchiseIconID + 1;
                 if (fighterInfo.DisplayName == null)
                     fighterInfo.DisplayName = coscNode.CharacterName;
-                rootNode.Dispose();
+                _fileService.CloseFile(rootNode);
             }
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
             rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
@@ -204,7 +204,7 @@ namespace BrawlInstaller.Services
                     fighterIds.CSSSlotConfigId = csscNode.CharSlot1;
                 if (fighterIds.CosmeticConfigId <= -1 && csscNode.SetCosmeticSlot)
                     fighterIds.CosmeticConfigId = csscNode.CosmeticSlot;
-                rootNode.Dispose();
+                _fileService.CloseFile(rootNode);
             }
             fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
             rootNode = _fileService.OpenFile(fighterInfo.SlotConfig);
@@ -214,7 +214,7 @@ namespace BrawlInstaller.Services
                 if (fighterIds.FighterConfigId <= -1 && slotNode.SetSlot)
                     fighterIds.FighterConfigId = Convert.ToInt32(slotNode.CharSlot1);
                 fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
-                rootNode.Dispose();
+                _fileService.CloseFile(rootNode);
             }
             fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
             rootNode = _fileService.OpenFile(fighterInfo.FighterConfig);
@@ -223,7 +223,7 @@ namespace BrawlInstaller.Services
                 var fighterNode = (FCFGNode)rootNode;
                 if (fighterInfo.InternalName == null)
                     fighterInfo.InternalName = fighterNode.InternalFighterName;
-                rootNode.Dispose();
+                _fileService.CloseFile(rootNode);
             }
             fighterInfo.Ids = fighterIds;
             return fighterInfo;

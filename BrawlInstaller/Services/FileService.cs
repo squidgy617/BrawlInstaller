@@ -14,6 +14,7 @@ namespace BrawlInstaller.Services
         ResourceNode OpenFile(string path);
         void SaveFile(ResourceNode node);
         void SaveFileAs(ResourceNode node, string path);
+        void CloseFile(ResourceNode node);
         ResourceNode CopyNode(ResourceNode node);
     }
     [Export(typeof(IFileService))]
@@ -43,6 +44,11 @@ namespace BrawlInstaller.Services
         {
             node.Export(path);
             node.IsDirty = false;
+        }
+
+        public void CloseFile(ResourceNode node)
+        {
+            node.Dispose();
         }
 
         public ResourceNode CopyNode(ResourceNode node)
