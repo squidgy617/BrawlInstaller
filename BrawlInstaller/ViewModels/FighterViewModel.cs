@@ -25,6 +25,7 @@ namespace BrawlInstaller.ViewModels
     public interface IFighterViewModel
     {
         ICommand LoadCommand { get; }
+        ICommand SaveCommand { get; }
         FighterPackage FighterPackage { get; }
         FighterIdsViewModel FighterIds { get; set; }
     }
@@ -46,6 +47,14 @@ namespace BrawlInstaller.ViewModels
             get
             {
                 return new RelayCommand(param => LoadFighter());
+            }
+        }
+
+        public ICommand SaveCommand
+        {
+            get
+            {
+                return new RelayCommand(param => SaveFighter());
             }
         }
 
@@ -93,6 +102,12 @@ namespace BrawlInstaller.ViewModels
                 //CSSSlotConfigId = 35
             });
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+        }
+
+        public void SaveFighter()
+        {
+            _packageService.SaveFighter(FighterPackage);
+            Debug.WriteLine("test");
         }
     }
 

@@ -56,6 +56,8 @@ namespace BrawlInstaller.Classes
         public string Style { get; set; }
         public BitmapImage Image { get; set; } = null;
         public BitmapImage HDImage { get; set; } = null;
+        public string ImagePath { get; set; } = string.Empty;
+        public string HDImagePath { get; set; } = string.Empty;
         public TEX0Node Texture { get; set; } = null;
         public PLT0Node Palette { get; set; } = null;
         public MDL0Node Model { get; set; } = null;

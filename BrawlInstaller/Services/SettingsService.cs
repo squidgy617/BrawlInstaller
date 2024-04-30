@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Windows;
+using System.Drawing;
 
 namespace BrawlInstaller.Services
 {
@@ -71,7 +71,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrFaceB",
                         Multiplier = 10,
                         IdType = Enums.IdType.Cosmetic,
-                        Size = new Size(48, 56),
+                        Size = new Size(128, 160),
                         FirstOnly = false
                     },
                     new CosmeticDefinition

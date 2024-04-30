@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using BrawlInstaller.Common;
 using static BrawlLib.BrawlManagerLib.TextureContainer;
+using BrawlLib.Wii.Textures;
+using System.Drawing;
+using BrawlLib.Internal.Windows.Forms;
+using System.Windows;
 
 namespace BrawlInstaller.Services
 {
@@ -20,6 +24,7 @@ namespace BrawlInstaller.Services
     {
         List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
         List<FranchiseCosmetic> GetFranchiseIcons();
+        void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id);
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
@@ -36,9 +41,103 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
+        public TEX0Node ImportTexture(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, System.Drawing.Size size)
+        {
+            var dialog = new TextureConverterDialog();
+            dialog.ImageSource = imageSource;
+            dialog.InitialFormat = format;
+            dialog.Automatic = true;
+            dialog.InitialSize = size;
+            dialog.ShowDialog(destinationNode);
+            var node = dialog.TEX0TextureNode;
+            dialog.Dispose();
+            return node;
+        }
+
+        public TEX0Node ImportTexture(BRRESNode destinationNode, TEX0Node texture)
+        {
+            destinationNode.GetOrCreateFolder<TEX0Node>()?.AddChild(texture);
+            return texture;
+        }
+
+        public PLT0Node ImportPalette(BRRESNode destinationNode, PLT0Node palette)
+        {
+            destinationNode.GetOrCreateFolder<PLT0Node>()?.AddChild(palette);
+            return palette;
+        }
+
+        public void RemoveTextures(BRRESNode parentNode)
+        {
+            var folder = parentNode.GetFolder<TEX0Node>();
+            if (folder != null)
+            {
+                folder.Children.RemoveAll(x => x.Parent == folder);
+            }
+            RemovePalettes(parentNode);
+        }
+
+        public void RemovePalettes(BRRESNode parentNode)
+        {
+            var folder = parentNode.GetFolder<PLT0Node>();
+            if (folder != null)
+            {
+                folder.Children.RemoveAll(x => x.Parent == folder);
+            }
+        }
+
+        public Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, BRRESNode parentNode)
+        {
+            if (cosmetic.ImagePath != "")
+            {
+                var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
+                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
+                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                cosmetic.ImagePath = "";
+                return cosmetic;
+            }
+            else if (cosmetic.Texture != null)
+            {
+                var texture = ImportTexture(parentNode, cosmetic.Texture);
+                if (cosmetic.Palette != null)
+                    ImportPalette(parentNode, cosmetic.Palette);
+                return cosmetic;
+            }
+            return null;
+        }
+
+        public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id)
+        {
+            var paths = GetCosmeticPaths(definition, id);
+            foreach (var path in paths)
+            {
+                var rootNode = _fileService.OpenFile(path);
+                if (rootNode != null)
+                {
+                    var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+                    if (parentNode != null)
+                    {
+                        RemoveTextures((BRRESNode)parentNode);
+                        foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                        {
+                            ImportCosmetic(definition, cosmetic, id, (BRRESNode)parentNode);
+                        }
+                        _fileService.SaveFile(rootNode);
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+        }
+
         public string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId)
         {
             var id = (cosmeticId * definition.Multiplier).ToString("D" + definition.SuffixDigits);
+            return id;
+        }
+
+        public string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
+        {
+            var id = ((cosmeticId * definition.Multiplier) + costumeIndex ?? 0).ToString("D" + definition.SuffixDigits);
             return id;
         }
 

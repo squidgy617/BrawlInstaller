@@ -125,6 +125,7 @@ namespace BrawlInstaller.ViewModels
             {
                 var bitmap = new Bitmap(image);
                 SelectedCosmetic.Image = bitmap.ToBitmapImage();
+                SelectedCosmetic.ImagePath = image;
                 SelectedCosmetic.Texture = null;
                 SelectedCosmetic.Palette = null;
                 SelectedCosmetic.SharesData = false;

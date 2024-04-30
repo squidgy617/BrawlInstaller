@@ -1,10 +1,11 @@
 ﻿using BrawlInstaller.Enums;
+using BrawlLib.Wii.Textures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Drawing;
 
 namespace BrawlInstaller.Classes
 {
@@ -38,6 +39,7 @@ namespace BrawlInstaller.Classes
         public int SuffixDigits { get; set; } = 3; // TODO: instead of displaying this on the interface, automatically fill this in based on IdType and Multiplier? Most cosmetics use 2, any that use cosmetic ID use 3 (10CC) or 4 (50CC)
         public IdType IdType { get; set; }
         public Size? Size { get; set; } = null;
+        public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
         public bool FirstOnly { get; set; } = false;
         public bool SeparateFiles { get; set; } = false;
     }

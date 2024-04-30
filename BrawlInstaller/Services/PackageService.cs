@@ -17,6 +17,7 @@ namespace BrawlInstaller.Services
     public interface IPackageService
     {
         FighterPackage ExtractFighter(FighterIds fighterIds);
+        void SaveFighter(FighterPackage fighterPackage);
     }
     [Export(typeof(IPackageService))]
     internal class PackageService : IPackageService
@@ -114,6 +115,19 @@ namespace BrawlInstaller.Services
             fighterPackage.Cosmetics = cosmetics;
             fighterPackage.FighterFiles = fighterFiles;
             return fighterPackage;
+        }
+
+        public void SaveFighter(FighterPackage fighterPackage)
+        {
+            var buildPath = _settingsService.BuildPath;
+            foreach(var definition in _settingsService.BuildSettings.CosmeticSettings)
+            {
+                var cosmetics = fighterPackage.Cosmetics.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
+                if (cosmetics.Any(x => x.ImagePath != ""))
+                {
+                    _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.CosmeticId);
+                }
+            }
         }
     }
 }

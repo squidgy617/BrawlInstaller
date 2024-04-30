@@ -49,6 +49,7 @@
                 <TextBox x:Name="cosmeticConfigIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CosmeticConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" Width="50" Height="20" Grid.Row="3" Grid.Column="1"/>
                 <TextBox x:Name="cosmeticIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CosmeticId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="4" Grid.Column="1"/>
                 <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding LoadCommand}" Grid.Row="5" Grid.Column="0"/>
+                <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveCommand}" Grid.Row="5" Grid.Column="1"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0" Grid.ColumnSpan="2">
