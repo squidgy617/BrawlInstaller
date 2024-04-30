@@ -161,19 +161,6 @@ namespace BrawlLib.Internal.Windows.Forms
 
         public bool Automatic;
 
-        public DialogResult ShowDialog(BRRESNode parent)
-        {
-            _bresParent = parent;
-            try
-            {
-                return base.ShowDialog();
-            }
-            finally
-            {
-                DisposeImages();
-            }
-        }
-
         public DialogResult ShowDialog(IWin32Window owner, BRRESNode parent)
         {
             _bresParent = parent;

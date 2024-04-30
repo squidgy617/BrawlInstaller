@@ -48,7 +48,7 @@ namespace BrawlInstaller.Services
             dialog.InitialFormat = format;
             dialog.Automatic = true;
             dialog.InitialSize = size;
-            dialog.ShowDialog(destinationNode);
+            dialog.ShowDialog(null, destinationNode);
             var node = dialog.TEX0TextureNode;
             dialog.Dispose();
             return node;
