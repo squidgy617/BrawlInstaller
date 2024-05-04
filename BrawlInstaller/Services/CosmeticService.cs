@@ -66,6 +66,54 @@ namespace BrawlInstaller.Services
             return palette;
         }
 
+        public PAT0TextureEntryNode CreatePatEntry(ResourceNode destinationNode, int frameIndex, string texture="", string palette="")
+        {
+            if (destinationNode != null)
+            {
+                var node = new PAT0TextureEntryNode
+                {
+                    FrameIndex = frameIndex,
+                    Texture = texture,
+                    Palette = palette
+                };
+                destinationNode.AddChild(node);
+                return node;
+            }
+            return null;
+        }
+
+        public void RemovePatEntries(ResourceNode rootNode, CosmeticDefinition definition, int id)
+        {
+            var pat0s = GetPatNodes(rootNode, definition, id);
+            foreach (var pat0 in pat0s)
+            {
+                var patEntries = pat0.Children.Where(x => CheckIdRange(definition.PatSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
+                foreach(var patEntry in patEntries)
+                {
+                    ((PAT0TextureEntryNode)patEntry).GetImage(0);
+                    ((PAT0TextureEntryNode)patEntry)._textureNode?.Remove(true);
+                }
+                patEntries.RemoveAll(x => x.Parent == pat0);
+            }
+        }
+
+        public List<ResourceNode> GetPatNodes(ResourceNode rootnode, CosmeticDefinition definition, int id)
+        {
+            var pat0s = new List<ResourceNode>();
+            if (definition.PatSettings != null)
+            {
+                foreach (var path in definition.PatSettings.Paths)
+                {
+                    var pat0 = rootnode.FindChild(path);
+                    if (pat0 != null)
+                    {
+                        pat0s.Add(pat0);
+                    }
+                }
+            }
+            return pat0s;
+        }
+
         public void RemoveTextures(BRRESNode parentNode, CosmeticDefinition definition, int id)
         {
             var folder = parentNode.GetFolder<TEX0Node>();
@@ -87,6 +135,7 @@ namespace BrawlInstaller.Services
 
         public Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, BRRESNode parentNode)
         {
+            id = definition.Offset + id;
             if (cosmetic.ImagePath != "")
             {
                 var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
@@ -104,9 +153,10 @@ namespace BrawlInstaller.Services
                     ImportPalette(parentNode, cosmetic.Palette);
                 return cosmetic;
             }
-            return null;
+            return cosmetic;
         }
 
+        // TODO: Get parentNode in functions instead of here?
         public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id)
         {
             var paths = GetCosmeticPaths(definition, id);
@@ -118,6 +168,10 @@ namespace BrawlInstaller.Services
                     var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
                     if (parentNode != null)
                     {
+                        if (definition.PatSettings != null)
+                        {
+                            RemovePatEntries(rootNode, definition, id);
+                        }
                         RemoveTextures((BRRESNode)parentNode, definition, id);
                         foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                         {
@@ -172,9 +226,9 @@ namespace BrawlInstaller.Services
             return false;
         }
 
-        public bool CheckIdRange(PatSettings patSettings, int id, int index)
+        public bool CheckIdRange(PatSettings patSettings, CosmeticDefinition definition, int id, int index)
         {
-            return CheckIdRange(idType: patSettings.IdType ?? IdType.Cosmetic, multiplier: patSettings.Multiplier ?? 1, id, index);
+            return CheckIdRange(idType: patSettings.IdType ?? definition.IdType, multiplier: patSettings.Multiplier ?? definition.Multiplier, id, index);
         }
 
         public bool CheckIdRange(IdType idType, int multiplier, int id, int index)
@@ -235,14 +289,8 @@ namespace BrawlInstaller.Services
                 if (pat != null)
                 {
                     var patEntries = new List<ResourceNode>();
-                    // If PatSettings have their own IdType and Offset, use those instead of the base definition values
-                    if (definition.PatSettings.IdType != null)
-                    {
-                        id = fighterIds.GetIdOfType(definition.PatSettings.IdType ?? definition.IdType) + (definition.PatSettings.Offset ?? definition.Offset);
-                        patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.PatSettings, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
-                    }
-                    else
-                        patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.IdType, definition.Multiplier, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
+                    id = fighterIds.GetIdOfType(definition.PatSettings.IdType ?? definition.IdType) + (definition.PatSettings.Offset ?? definition.Offset);
+                    patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.PatSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
                     foreach (PAT0TextureEntryNode patEntry in patEntries)
                     {
                         // Get the texture from the pat entry
