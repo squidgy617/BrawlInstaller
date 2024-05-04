@@ -133,8 +133,10 @@ namespace BrawlInstaller.Services
             }
         }
 
-        public Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, BRRESNode parentNode)
+        public Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
         {
+            var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
             if (cosmetic.ImagePath != "")
             {
@@ -156,7 +158,19 @@ namespace BrawlInstaller.Services
             return cosmetic;
         }
 
-        // TODO: Get parentNode in functions instead of here?
+        public void RemoveCosmetics(ResourceNode rootNode, CosmeticDefinition definition, int id)
+        {
+            if (definition.PatSettings != null)
+            {
+                RemovePatEntries(rootNode, definition, id);
+            }
+            var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (parentNode != null)
+            {
+                RemoveTextures((BRRESNode)parentNode, definition, id);
+            }
+        }
+
         public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id)
         {
             var paths = GetCosmeticPaths(definition, id);
@@ -165,20 +179,12 @@ namespace BrawlInstaller.Services
                 var rootNode = _fileService.OpenFile(path);
                 if (rootNode != null)
                 {
-                    var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
-                    if (parentNode != null)
+                    RemoveCosmetics(rootNode, definition, id);
+                    foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                     {
-                        if (definition.PatSettings != null)
-                        {
-                            RemovePatEntries(rootNode, definition, id);
-                        }
-                        RemoveTextures((BRRESNode)parentNode, definition, id);
-                        foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
-                        {
-                            ImportCosmetic(definition, cosmetic, id, (BRRESNode)parentNode);
-                        }
-                        _fileService.SaveFile(rootNode);
+                        ImportCosmetic(definition, cosmetic, id, rootNode);
                     }
+                    _fileService.SaveFile(rootNode);
                     _fileService.CloseFile(rootNode);
                 }
             }
