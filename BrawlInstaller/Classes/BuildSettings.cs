@@ -47,8 +47,7 @@ namespace BrawlInstaller.Classes
     public class PatSettings
     {
         public List<string> Paths { get; set; }
-        public int FrameCountOffset { get; set; } = 0;
-        public int FrameCountOverride { get; set; } = 0;
+        public int FramesPerImage { get; set; } = 1;
         public IdType? IdType { get; set; } = null;
         public int? Multiplier { get; set; } = null;
         public int? Offset { get; set; } = null;

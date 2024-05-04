@@ -120,13 +120,13 @@ namespace BrawlInstaller.Services
         public void SaveFighter(FighterPackage fighterPackage)
         {
             var buildPath = _settingsService.BuildPath;
-            foreach(var definition in _settingsService.BuildSettings.CosmeticSettings)
+            // Only update cosmetics that have changed
+            foreach(var definition in _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.Cosmetics.Any(y => y.CosmeticType == x.CosmeticType
+                && y.Style == x.Style
+                && (y.ImagePath != "" || y.SharesData != y.Texture.SharesData)))) // A cosmetic with an ImagePath or an altered SharesData has changed
             {
                 var cosmetics = fighterPackage.Cosmetics.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
-                if (cosmetics.Any(x => x.ImagePath != ""))
-                {
-                    _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.CosmeticId);
-                }
+                _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.CosmeticId);
             }
         }
     }

@@ -66,22 +66,22 @@ namespace BrawlInstaller.Services
             return palette;
         }
 
-        public void RemoveTextures(BRRESNode parentNode)
+        public void RemoveTextures(BRRESNode parentNode, CosmeticDefinition definition, int id)
         {
             var folder = parentNode.GetFolder<TEX0Node>();
             if (folder != null)
             {
-                folder.Children.RemoveAll(x => x.Parent == folder);
+                folder.Children.RemoveAll(x => CheckIdRange(definition, id, x.Name, definition.Prefix));
             }
-            RemovePalettes(parentNode);
+            RemovePalettes(parentNode, definition, id);
         }
 
-        public void RemovePalettes(BRRESNode parentNode)
+        public void RemovePalettes(BRRESNode parentNode, CosmeticDefinition definition, int id)
         {
             var folder = parentNode.GetFolder<PLT0Node>();
             if (folder != null)
             {
-                folder.Children.RemoveAll(x => x.Parent == folder);
+                folder.Children.RemoveAll(x => CheckIdRange(definition, id, x.Name, definition.Prefix));
             }
         }
 
@@ -93,6 +93,7 @@ namespace BrawlInstaller.Services
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                cosmetic.SharesData = texture.SharesData;
                 cosmetic.ImagePath = "";
                 return cosmetic;
             }
@@ -117,7 +118,7 @@ namespace BrawlInstaller.Services
                     var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
                     if (parentNode != null)
                     {
-                        RemoveTextures((BRRESNode)parentNode);
+                        RemoveTextures((BRRESNode)parentNode, definition, id);
                         foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                         {
                             ImportCosmetic(definition, cosmetic, id, (BRRESNode)parentNode);
@@ -338,6 +339,8 @@ namespace BrawlInstaller.Services
 
         // TODO: When importing a character, franchise icons with a null ID or an ID greater than any existing franchise icon will be installed as new. Any others
         // will overwrite existing ones.
+
+        // TODO: separate RSPs and CSPs so they can be toggled on install
 
         /// <summary>
         /// Get a list of all cosmetics for a fighter
