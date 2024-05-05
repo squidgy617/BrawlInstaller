@@ -104,9 +104,7 @@ namespace BrawlInstaller.Services
                 if (pat0 != null)
                 {
                     pat0.IsDirty = true;
-                    var frameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + definition.PatSettings.FramesPerImage;
-                    if (frameCount > ((PAT0Node)pat0).FrameCount)
-                        ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + definition.PatSettings.FramesPerImage;
+                    ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + definition.PatSettings.FramesPerImage;
                 }
             }
         }
