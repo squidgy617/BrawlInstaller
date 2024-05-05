@@ -128,23 +128,23 @@ namespace BrawlInstaller.Services
         }
 
         // Remove textures based on definition rules
-        public void RemoveTextures(BRRESNode parentNode, CosmeticDefinition definition, int id)
+        public void RemoveTextures(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
         {
             var folder = parentNode.GetFolder<TEX0Node>();
             if (folder != null)
             {
-                folder.Children.RemoveAll(x => CheckIdRange(definition, id, x.Name, definition.Prefix));
+                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
             }
-            RemovePalettes(parentNode, definition, id);
+            RemovePalettes(parentNode, definition, id, restrictRange);
         }
 
         // Remove palettes based on definition rules
-        public void RemovePalettes(BRRESNode parentNode, CosmeticDefinition definition, int id)
+        public void RemovePalettes(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
         {
             var folder = parentNode.GetFolder<PLT0Node>();
             if (folder != null)
             {
-                folder.Children.RemoveAll(x => CheckIdRange(definition, id, x.Name, definition.Prefix));
+                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
             }
         }
 
@@ -167,9 +167,13 @@ namespace BrawlInstaller.Services
             // If we have a texture node, import that instead
             else if (cosmetic.Texture != null)
             {
-                ImportTexture(parentNode, cosmetic.Texture);
+                var texture = ImportTexture(parentNode, cosmetic.Texture);
+                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 if (cosmetic.Palette != null)
-                    ImportPalette(parentNode, cosmetic.Palette);
+                {
+                    var palette = ImportPalette(parentNode, cosmetic.Palette);
+                    palette.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
+                }
             }
             if (definition.PatSettings != null)
             {
@@ -195,7 +199,7 @@ namespace BrawlInstaller.Services
             var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             if (parentNode != null)
             {
-                RemoveTextures((BRRESNode)parentNode, definition, id);
+                RemoveTextures((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && parentNode.GetType() != typeof(ARCNode));
             }
         }
 
@@ -350,9 +354,12 @@ namespace BrawlInstaller.Services
                 }
             }
             var start = definition.InstallLocation.NodePath != "" ? node.FindChild(definition.InstallLocation.NodePath) : node;
-            // If the node path is an ARC node, search for a matching BRRES first
+            // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
             if (start.GetType() == typeof(ARCNode))
+            {
                 start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                restrictRange = false;
+            }
             var folder = start.FindChild("Textures(NW4R)");
             if (folder != null)
             {
@@ -373,9 +380,12 @@ namespace BrawlInstaller.Services
             var nodes = new List<MDL0Node>();
             var id = fighterIds.GetIdOfType(definition.IdType) + definition.Offset;
             var start = definition.ModelPath != null ? node.FindChild(definition.ModelPath) : node;
-            // If the node path is an ARC node, search for a matching BRRES first
+            // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for models
             if (start.GetType() == typeof(ARCNode))
+            {
                 start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == id));
+                restrictRange = false;
+            }
             var folder = start.FindChild("3DModels(NW4R)");
             if (folder != null)
             {

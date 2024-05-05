@@ -20,7 +20,7 @@ namespace BrawlInstaller.ViewModels
 {
     public interface ICostumeViewModel
     {
-        List<Costume> Costumes { get; }
+        ObservableCollection<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
         ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
@@ -31,13 +31,15 @@ namespace BrawlInstaller.ViewModels
         List<Cosmetic> CosmeticList { get; }
         Cosmetic SelectedCosmeticNode { get; set; }
         ICommand ReplaceCosmeticCommand { get; }
+        ICommand CostumeUpCommand { get; }
+        ICommand CostumeDownCommand { get; }
     }
 
     [Export(typeof(ICostumeViewModel))]
     internal class CostumeViewModel : ViewModelBase, ICostumeViewModel
     {
         // Private properties
-        private List<Costume> _costumes;
+        private ObservableCollection<Costume> _costumes;
         private Costume _selectedCostume;
         private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
         private CosmeticType _selectedCosmeticOption;
@@ -55,6 +57,22 @@ namespace BrawlInstaller.ViewModels
             get
             {
                 return new RelayCommand(param => ReplaceCosmetic());
+            }
+        }
+
+        public ICommand CostumeUpCommand
+        {
+            get
+            {
+                return new RelayCommand(param => MoveCostumeUp());
+            }
+        }
+
+        public ICommand CostumeDownCommand
+        {
+            get
+            {
+                return new RelayCommand(param => MoveCostumeDown());
             }
         }
 
@@ -86,7 +104,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public List<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
+        public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
         public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
@@ -104,7 +122,7 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
         {
-            Costumes = message.Value.Costumes;
+            Costumes = new ObservableCollection<Costume>(message.Value.Costumes);
             SelectedCostume = Costumes.FirstOrDefault();
 
             //foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
@@ -140,6 +158,16 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(CosmeticList));
                 OnPropertyChanged(nameof(SelectedCosmeticNode));
             }
+        }
+
+        public void MoveCostumeUp()
+        {
+            Costumes.MoveUp(SelectedCostume);
+        }
+
+        public void MoveCostumeDown()
+        {
+            Costumes.MoveDown(SelectedCostume);
         }
     }
 }

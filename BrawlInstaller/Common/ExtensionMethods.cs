@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,6 +61,56 @@ namespace BrawlInstaller.Common
                 keyValueList.Add(item.GetKeyValuePair());
             }
             return keyValueList;
+        }
+    }
+
+    public static class ObservableCollectionExtensions
+    {
+        public static void Move<T>(this ObservableCollection<T> list, int oldIndex, int newIndex)
+        {
+            var item = list[oldIndex];
+
+            list.RemoveAt(oldIndex);
+
+            if (newIndex > oldIndex) newIndex--;
+            // the actual index could have shifted due to the removal
+
+            list.Insert(newIndex, item);
+        }
+
+        public static void Move<T>(this ObservableCollection<T> list, T item, int newIndex)
+        {
+            if (item != null)
+            {
+                var oldIndex = list.IndexOf(item);
+                if (oldIndex > -1)
+                {
+                    list.RemoveAt(oldIndex);
+
+                    if (newIndex > oldIndex + 1) newIndex--;
+                    // the actual index could have shifted due to the removal
+
+                    list.Insert(newIndex, item);
+                }
+            }
+        }
+
+        public static void MoveUp<T>(this ObservableCollection<T> list, T item)
+        {
+            if (item != null)
+            {
+                var oldIndex = list.IndexOf(item);
+                list.Move(item, oldIndex - 1);
+            }
+        }
+
+        public static void MoveDown<T>(this ObservableCollection<T> list, T item)
+        {
+            if (item != null)
+            {
+                var oldIndex = list.IndexOf(item);
+                list.Move(item, oldIndex + 1);
+            }
         }
     }
 }

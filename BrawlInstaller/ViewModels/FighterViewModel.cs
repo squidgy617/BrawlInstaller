@@ -106,6 +106,14 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveFighter()
         {
+            // Set costume indexes for cosmetics
+            foreach(var costume in FighterPackage.Costumes)
+            {
+                foreach(var cosmetic in costume.Cosmetics)
+                {
+                    cosmetic.CostumeIndex = CostumeViewModel.Costumes.IndexOf(costume) + 1;
+                }
+            }
             _packageService.SaveFighter(FighterPackage);
             Debug.WriteLine("test");
         }
