@@ -203,21 +203,45 @@ namespace BrawlInstaller.Services
             }
         }
 
+        // Remove separate file cosmetics
+        public void RemoveCosmetics(CosmeticDefinition definition, int id)
+        {
+            var files = GetCosmeticPaths(definition, id);
+            files.ForEach(x => File.Delete(x));
+        }
+
         // Import cosmetics based on definition rules
         public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id)
         {
-            var paths = GetCosmeticPaths(definition, id);
-            foreach (var path in paths)
+            // If the definition doesn't use separate files, find the files and update them
+            if (!definition.SeparateFiles)
             {
-                var rootNode = _fileService.OpenFile(path);
-                if (rootNode != null)
+                var paths = GetCosmeticPaths(definition, id);
+                foreach (var path in paths)
                 {
-                    RemoveCosmetics(rootNode, definition, id);
-                    foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                    var rootNode = _fileService.OpenFile(path);
+                    if (rootNode != null)
                     {
-                        ImportCosmetic(definition, cosmetic, id, rootNode);
+                        RemoveCosmetics(rootNode, definition, id);
+                        foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                        {
+                            ImportCosmetic(definition, cosmetic, id, rootNode);
+                        }
+                        _fileService.SaveFile(rootNode);
+                        _fileService.CloseFile(rootNode);
                     }
-                    _fileService.SaveFile(rootNode);
+                }
+            }
+            // If the definition does use separate files, generate new files for each cosmetic
+            else
+            {
+                RemoveCosmetics(definition, id);
+                foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                {
+                    var rootNode = new BRRESNode();
+                    ImportCosmetic(definition, cosmetic, id, rootNode);
+                    _fileService.SaveFileAs(rootNode, $"{_settingsService.BuildPath}{definition.InstallLocation.FilePath}" +
+                        $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}.{definition.InstallLocation.FileExtension}");
                     _fileService.CloseFile(rootNode);
                 }
             }
