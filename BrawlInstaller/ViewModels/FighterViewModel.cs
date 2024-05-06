@@ -115,7 +115,7 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             _packageService.SaveFighter(FighterPackage);
-            Debug.WriteLine("test");
+            FighterPackage.Cosmetics.ForEach(x => x.HasChanged = false);
         }
     }
 

@@ -123,7 +123,7 @@ namespace BrawlInstaller.Services
             // Only update cosmetics that have changed
             foreach(var definition in _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.Cosmetics.Any(y => y.CosmeticType == x.CosmeticType
                 && y.Style == x.Style
-                && (y.ImagePath != "" || y.SharesData != y.Texture.SharesData)))) // A cosmetic with an ImagePath or an altered SharesData has changed
+                && y.HasChanged)))
             {
                 var cosmetics = fighterPackage.Cosmetics.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
                 _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.CosmeticId);

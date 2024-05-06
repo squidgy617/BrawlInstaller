@@ -154,6 +154,7 @@ namespace BrawlInstaller.ViewModels
                 }
                 // Put this image at the end
                 SelectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
+                SelectedCosmetic.HasChanged = true;
                 OnPropertyChanged(nameof(SelectedCosmetic));
                 OnPropertyChanged(nameof(CosmeticList));
                 OnPropertyChanged(nameof(SelectedCosmeticNode));
@@ -162,12 +163,16 @@ namespace BrawlInstaller.ViewModels
 
         public void MoveCostumeUp()
         {
+            var movedCostume = SelectedCostume;
             Costumes.MoveUp(SelectedCostume);
+            movedCostume.Cosmetics.ForEach(x => x.HasChanged = true);
         }
 
         public void MoveCostumeDown()
         {
+            var movedCostume = SelectedCostume;
             Costumes.MoveDown(SelectedCostume);
+            movedCostume.Cosmetics.ForEach(x => x.HasChanged = true);
         }
     }
 }

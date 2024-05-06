@@ -182,7 +182,7 @@ namespace BrawlInstaller.Services
                     node = rootNode.FindChild(path);
                     if (node != null)
                     {
-                        CreatePatEntry(node, GetCosmeticId(definition, id, cosmetic.CostumeIndex), cosmetic?.Texture.Name, cosmetic?.Palette.Name);
+                        CreatePatEntry(node, GetCosmeticId(definition, id, cosmetic.CostumeIndex), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
                     }
                 }
             }
