@@ -161,18 +161,22 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
-        public void MoveCostumeUp()
+        private void MoveCostume()
         {
             var movedCostume = SelectedCostume;
-            Costumes.MoveUp(SelectedCostume);
             movedCostume.Cosmetics.ForEach(x => x.HasChanged = true);
+        }
+
+        public void MoveCostumeUp()
+        {
+            MoveCostume();
+            Costumes.MoveUp(SelectedCostume);
         }
 
         public void MoveCostumeDown()
         {
-            var movedCostume = SelectedCostume;
+            MoveCostume();
             Costumes.MoveDown(SelectedCostume);
-            movedCostume.Cosmetics.ForEach(x => x.HasChanged = true);
         }
     }
 }
