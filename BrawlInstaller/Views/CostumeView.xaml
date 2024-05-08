@@ -93,6 +93,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
                 <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Button x:Name="sharesDataButton" Content="SharesData" Grid.Row="2" Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding UpdateSharesDataCommand}"/>
             </Grid>
         </GroupBox>
     </Grid>

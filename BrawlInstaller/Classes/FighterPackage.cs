@@ -66,6 +66,7 @@ namespace BrawlInstaller.Classes
         public int? CostumeIndex { get; set; }
         public int? Id { get; set; }
         public bool HasChanged { get; set; } = false;
+        public bool ColorSmashChanged { get; set; } = false;
     }
 
     public class FranchiseCosmetic : Cosmetic

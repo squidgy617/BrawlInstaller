@@ -16,6 +16,7 @@ using BrawlLib.Wii.Textures;
 using System.Drawing;
 using BrawlLib.Internal.Windows.Forms;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace BrawlInstaller.Services
 {
@@ -31,12 +32,14 @@ namespace BrawlInstaller.Services
         // Services
         ISettingsService _settingsService { get; }
         IFileService _fileService { get; }
+        IColorSmashService _colorSmashService { get; }
 
         [ImportingConstructor]
-        public CosmeticService(ISettingsService settingsService, IFileService fileService) 
+        public CosmeticService(ISettingsService settingsService, IFileService fileService, IColorSmashService colorSmashService) 
         {
             _settingsService = settingsService;
             _fileService = fileService;
+            _colorSmashService = colorSmashService;
         }
 
         // Methods
@@ -210,6 +213,39 @@ namespace BrawlInstaller.Services
             files.ForEach(x => File.Delete(x));
         }
 
+        // Get color smash groups from a list of cosmetics
+        private List<List<Cosmetic>> GetColorSmashGroups(List<Cosmetic> cosmetics)
+        {
+            var colorSmashGroups = new List<List<Cosmetic>>();
+            var currentGroup = new List<Cosmetic>();
+            foreach (var cosmetic in cosmetics)
+            {
+                currentGroup.Add(cosmetic);
+                if (cosmetic.SharesData == false)
+                {
+                    colorSmashGroups.Add(currentGroup);
+                    currentGroup = new List<Cosmetic>();
+                }
+            }
+            return colorSmashGroups;
+        }
+
+        // Color smash a list of cosmetics in a BRRES
+        public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
+        {
+            // Flip SharesData to false for all that need updating
+            var colorSmashList = cosmetics.Where(x => x.ColorSmashChanged || (cosmetics.IndexOf(x) > 0 && cosmetics[cosmetics.IndexOf(x) - 1].ColorSmashChanged))
+                .ToList();
+            colorSmashList.ForEach(x => x.Texture.SetSharesData(false, false));
+            // Get color smash groups
+            var colorSmashGroups = GetColorSmashGroups(cosmetics);
+            // Color smash groups
+            foreach(var group in colorSmashGroups)
+            {
+                _colorSmashService.ColorSmashCosmetics(group, bres);
+            }
+        }
+
         // Import cosmetics based on definition rules
         public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id)
         {
@@ -227,6 +263,8 @@ namespace BrawlInstaller.Services
                         {
                             ImportCosmetic(definition, cosmetic, id, rootNode);
                         }
+                        if (!definition.FirstOnly && !definition.SeparateFiles)
+                            ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), (BRRESNode)rootNode);
                         _fileService.SaveFile(rootNode);
                         _fileService.CloseFile(rootNode);
                     }
@@ -461,14 +499,7 @@ namespace BrawlInstaller.Services
             return cosmetics;
         }
 
-        // TODO: Importing cosmetics
-        // Use the Cosmetic class
-        // If the cosmetic has a TEX0Node, you import that. Otherwise, import the image
-        // When editing a character, if you change a cosmetic, its TEX0Node is automatically nulled and SharesData is set to False
-        // You can then color smash these from the UI, but this will just flip SharesData. Their images will get imported instead of a TEX0
-        // This allows us to differentiate between edited cosmetics and ones that should just remain color smashed
-        // Also, when we import an image for the first time, we set the TEX0 for the class, which allows us to reuse it? (Alternatively we just set up the TEX0s at the start)
-        // From the screen, cosmetics can be un-color smashed and reordered (which just changes internal order)
+        // TODO: When importing for a FirstOnly/SeparateFiles definition, check if SharesData. If so, save the image and import that instead of importing TEX0.
 
         // TODO: When importing a character, franchise icons with a null ID or an ID greater than any existing franchise icon will be installed as new. Any others
         // will overwrite existing ones.
