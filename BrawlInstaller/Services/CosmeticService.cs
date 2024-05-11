@@ -492,6 +492,7 @@ namespace BrawlInstaller.Services
                         CosmeticType = definition.CosmeticType,
                         Style = definition.Style,
                         Model = (MDL0Node)_fileService.CopyNode(model),
+                        ColorSequence = model.GetColorSequence(),
                         Id = GetCosmeticId(model.Name, definition)
                     });
                 }
@@ -537,6 +538,7 @@ namespace BrawlInstaller.Services
                     CostumeIndex = icon.CostumeIndex,
                     Id = icon.Id,
                     Model = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Model != null)?.Model,
+                    ColorSequence = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.ColorSequence != null)?.ColorSequence,
                     TransparentImage = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Image != null)?.Image,
                     TransparentTexture = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Texture != null)?.Texture
                 });

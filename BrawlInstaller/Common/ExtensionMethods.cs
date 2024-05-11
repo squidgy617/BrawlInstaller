@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using BrawlLib.Internal;
+using BrawlLib.SSBB.ResourceNodes;
 
 namespace BrawlInstaller.Common
 {
@@ -61,6 +62,25 @@ namespace BrawlInstaller.Common
                 keyValueList.Add(item.GetKeyValuePair());
             }
             return keyValueList;
+        }
+    }
+
+    public static class MDL0Extensions
+    {
+        public static CLR0Node GetColorSequence(this MDL0Node model)
+        {
+            var bres = model?.Parent?.Parent;
+            if (bres != null && bres.GetType() == typeof(BRRESNode))
+            {
+                var folder = ((BRRESNode)bres).GetFolder<CLR0Node>();
+                if (folder != null)
+                {
+                    var clr0 = folder.Children.FirstOrDefault(x => x.Name == model.Name);
+                    if (clr0 != null)
+                        return (CLR0Node)clr0;
+                }
+            }
+            return null;
         }
     }
 

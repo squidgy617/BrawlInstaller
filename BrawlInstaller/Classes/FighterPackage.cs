@@ -61,6 +61,7 @@ namespace BrawlInstaller.Classes
         public TEX0Node Texture { get; set; } = null;
         public PLT0Node Palette { get; set; } = null;
         public MDL0Node Model { get; set; } = null;
+        public CLR0Node ColorSequence { get; set; } = null;
         public bool? SharesData { get; set; }
         public int? InternalIndex { get; set; }
         public int? CostumeIndex { get; set; }
