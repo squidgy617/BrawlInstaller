@@ -114,9 +114,24 @@ namespace BrawlInstaller.ViewModels
                     cosmetic.CostumeIndex = CostumeViewModel.Costumes.IndexOf(costume) + 1;
                 }
             }
-            FighterPackage.FranchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
+            // TODO: Possibly a way to improve this?
+            // Set franchise icon up
+            if (FranchiseIconViewModel.SelectedFranchiseIcon?.HasChanged == true)
+            {
+                // Add model for import
+                if (FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath != "")
+                    FighterPackage.Cosmetics.Add(new Cosmetic
+                    {
+                        CosmeticType = CosmeticType.FranchiseIcon,
+                        Style = "Model",
+                        ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath,
+                        Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id,
+                        HasChanged = true
+                    });
+                FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
+            }
             _packageService.SaveFighter(FighterPackage);
-            FighterPackage.Cosmetics.ForEach(x => x.HasChanged = false);
+            FighterPackage.Cosmetics.ForEach(x => { x.HasChanged = false; x.ImagePath = ""; } );
         }
     }
 

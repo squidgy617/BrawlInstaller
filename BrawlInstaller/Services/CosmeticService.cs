@@ -23,7 +23,7 @@ namespace BrawlInstaller.Services
     public interface ICosmeticService
     {
         List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
-        List<FranchiseCosmetic> GetFranchiseIcons();
+        List<Cosmetic> GetFranchiseIcons();
         void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id);
     }
     [Export(typeof(ICosmeticService))]
@@ -201,8 +201,9 @@ namespace BrawlInstaller.Services
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
-            // If we have a texture node, import that
-            if (cosmetic.Texture != null)
+            // If we have a texture node of the same proportions, import that
+            if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
+                (cosmetic.Texture.Width == definition.Size.Value.Width && cosmetic.Texture.Height == definition.Size.Value.Height)))
             {
                 var texture = ImportTexture(parentNode, cosmetic.Texture);
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
@@ -220,7 +221,6 @@ namespace BrawlInstaller.Services
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
                 cosmetic.SharesData = texture.SharesData;
-                cosmetic.ImagePath = "";
             }
             // Create pat entry
             if (definition.PatSettings != null)
@@ -235,8 +235,10 @@ namespace BrawlInstaller.Services
                 }
             }
             // If we have a model node, import that
-            if (cosmetic.Model != null)
+            if (cosmetic.Model != null && definition.ModelPath != null)
             {
+                node = definition.ModelPath != "" ? rootNode.FindChild(definition.ModelPath) : rootNode;
+                parentNode = (BRRESNode)node;
                 var model = ImportModel(parentNode, cosmetic.Model);
                 model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}_TopN";
                 var bone = model.FindBoneByIndex(0);
@@ -249,7 +251,7 @@ namespace BrawlInstaller.Services
                 }
             }
             // Otherwise, import model from filesystem
-            else if (cosmetic.ModelPath != "")
+            else if (cosmetic.ModelPath != "" && definition.ModelPath != null)
             {
                 var model = ImportModel(parentNode, cosmetic.ModelPath);
                 model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}_TopN";
@@ -304,11 +306,13 @@ namespace BrawlInstaller.Services
             foreach (var cosmetic in cosmetics)
             {
                 currentGroup.Add(cosmetic);
-                if (cosmetic.SharesData == false)
+                if (cosmetic.SharesData == false && currentGroup.Count > 1)
                 {
                     colorSmashGroups.Add(currentGroup);
                     currentGroup = new List<Cosmetic>();
                 }
+                else if (cosmetic.SharesData == false && currentGroup.Count <= 1)
+                    currentGroup = new List<Cosmetic>();
             }
             return colorSmashGroups;
         }
@@ -382,7 +386,7 @@ namespace BrawlInstaller.Services
 
         public string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
         {
-            var id = ((cosmeticId * definition.Multiplier) + costumeIndex ?? 0).ToString("D" + definition.SuffixDigits);
+            var id = ((cosmeticId * definition.Multiplier) + (costumeIndex ?? 0)).ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -601,22 +605,22 @@ namespace BrawlInstaller.Services
         public List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds)
         {
             var settings = _settingsService.BuildSettings;
-            var definitions = settings.CosmeticSettings;
+            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType != CosmeticType.FranchiseIcon).ToList();
             return GetCosmetics(fighterIds, definitions, true);
         }
 
         // Get a list of all fighter franchise icons
-        public List<FranchiseCosmetic> GetFranchiseIcons()
+        public List<Cosmetic> GetFranchiseIcons()
         {
-            var franchiseIcons = new List<FranchiseCosmetic>();
+            var franchiseIcons = new List<Cosmetic>();
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList();
             // Get all franchise icons
             var allIcons = GetCosmetics(new FighterIds(), definitions, false);
             // Aggregate the models and transparent textures
-            foreach(var icon in allIcons.Where(x => x.Style == "Icon").GroupBy(x => x.Id).Select(x => x.First()).ToList())
+            foreach(var icon in allIcons.Where(x => x.Texture != null).GroupBy(x => x.Id).Select(x => x.First()).ToList())
             {
-                franchiseIcons.Add(new FranchiseCosmetic
+                franchiseIcons.Add(new Cosmetic
                 {
                     CosmeticType = icon.CosmeticType,
                     Style = icon.Style,
@@ -627,10 +631,8 @@ namespace BrawlInstaller.Services
                     InternalIndex = icon.InternalIndex,
                     CostumeIndex = icon.CostumeIndex,
                     Id = icon.Id,
-                    Model = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Model != null)?.Model,
-                    ColorSequence = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.ColorSequence != null)?.ColorSequence,
-                    TransparentImage = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Image != null)?.Image,
-                    TransparentTexture = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Style == "Model" && x.Texture != null)?.Texture
+                    Model = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.Model != null)?.Model,
+                    ColorSequence = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.ColorSequence != null)?.ColorSequence
                 });
             }
             return franchiseIcons;

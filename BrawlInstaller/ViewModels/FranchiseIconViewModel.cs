@@ -17,8 +17,8 @@ namespace BrawlInstaller.ViewModels
 {
     public interface IFranchiseIconViewModel
     {
-        List<FranchiseCosmetic> FranchiseIcons { get; }
-        FranchiseCosmetic SelectedFranchiseIcon { get; }
+        List<Cosmetic> FranchiseIcons { get; }
+        Cosmetic SelectedFranchiseIcon { get; }
         ICommand SelectModelCommand { get; }
     }
 
@@ -35,8 +35,8 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Private Properties
-        private List<FranchiseCosmetic> _franchiseIcons;
-        private FranchiseCosmetic _selectedFranchiseIcon;
+        private List<Cosmetic> _franchiseIcons;
+        private Cosmetic _selectedFranchiseIcon;
 
         // Services
         ICosmeticService _cosmeticService;
@@ -48,7 +48,7 @@ namespace BrawlInstaller.ViewModels
         {
             _cosmeticService = cosmeticService;
             _dialogService = dialogService;
-            FranchiseIcons = new List<FranchiseCosmetic>();
+            FranchiseIcons = new List<Cosmetic>();
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
@@ -57,8 +57,8 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public List<FranchiseCosmetic> FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(); } }
-        public FranchiseCosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(); } }
+        public List<Cosmetic> FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(); } }
+        public Cosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(); } }
 
         // Methods
         public void LoadIcons(FighterLoadedMessage message)
