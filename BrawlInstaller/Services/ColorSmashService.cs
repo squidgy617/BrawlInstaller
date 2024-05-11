@@ -39,6 +39,7 @@ namespace BrawlInstaller.Services
         // Methods
 
         // Color smash TEX0 nodes
+        // TODO: implement more specifics e.g. get the palette count and whatnot - look at BrawlCrate code
         public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
         {
             var folder = bres.GetFolder<TEX0Node>();
@@ -74,6 +75,8 @@ namespace BrawlInstaller.Services
                     texture.SetSharesData(true, false);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                // Flip ColorSmashChanged so we don't redo color smashing on all files
+                cosmetic.ColorSmashChanged = false;
                 // Set this so it saves properly
                 texture.IsDirty = true;
                 if (texture.HasPalette)

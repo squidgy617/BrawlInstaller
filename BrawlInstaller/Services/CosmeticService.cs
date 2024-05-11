@@ -548,8 +548,9 @@ namespace BrawlInstaller.Services
         public List<Cosmetic> GetCosmetics(FighterIds fighterIds, List<CosmeticDefinition> definitions, bool restrictRange)
         {
             var cosmetics = new List<Cosmetic>();
-            // Get all cosmetic definitions grouped by type and style
-            foreach (var cosmeticGroup in definitions.GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
+            // Order them to ensure that cosmetics with multiple definitions pick the definitions favor definitions that have multiple cosmetics
+            foreach (var cosmeticGroup in definitions.OrderByDescending(x => !x.SeparateFiles).OrderByDescending(x => !x.FirstOnly)
+                .GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
             {
                 // Check each definition in the group for cosmetics
                 foreach (var cosmetic in cosmeticGroup)
