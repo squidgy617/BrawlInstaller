@@ -19,23 +19,35 @@ namespace BrawlInstaller.ViewModels
     {
         List<FranchiseCosmetic> FranchiseIcons { get; }
         FranchiseCosmetic SelectedFranchiseIcon { get; }
+        ICommand SelectModelCommand { get; }
     }
 
     [Export(typeof(IFranchiseIconViewModel))]
     internal class FranchiseIconViewModel : ViewModelBase, IFranchiseIconViewModel
     {
+        // Commands
+        public ICommand SelectModelCommand
+        {
+            get
+            {
+                return new RelayCommand(param => SelectModel());
+            }
+        }
+
         // Private Properties
         private List<FranchiseCosmetic> _franchiseIcons;
         private FranchiseCosmetic _selectedFranchiseIcon;
 
         // Services
         ICosmeticService _cosmeticService;
+        IDialogService _dialogService;
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public FranchiseIconViewModel(ICosmeticService cosmeticService)
+        public FranchiseIconViewModel(ICosmeticService cosmeticService, IDialogService dialogService)
         {
             _cosmeticService = cosmeticService;
+            _dialogService = dialogService;
             FranchiseIcons = new List<FranchiseCosmetic>();
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
@@ -53,6 +65,20 @@ namespace BrawlInstaller.ViewModels
         {
             FranchiseIcons = _cosmeticService.GetFranchiseIcons();
             SelectedFranchiseIcon = FranchiseIcons.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
+        }
+
+        public void SelectModel()
+        {
+            var model = _dialogService.OpenFileDialog("Select a model", "MDL0 files (.mdl0)|*.mdl0");
+            // Update the image
+            if (model != "")
+            {
+                SelectedFranchiseIcon.ModelPath = model;
+                SelectedFranchiseIcon.HasChanged = true;
+                SelectedFranchiseIcon.Model = null;
+                SelectedFranchiseIcon.ColorSequence = null;
+                OnPropertyChanged(nameof(SelectedFranchiseIcon));
+            }
         }
     }
 }

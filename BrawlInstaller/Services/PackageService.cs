@@ -128,6 +128,16 @@ namespace BrawlInstaller.Services
                 var cosmetics = fighterPackage.Cosmetics.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
                 _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.CosmeticId);
             }
+            // TODO: Should this somehow be included in cosmetics? Should we actually treat franchise icons differently at all?
+            if (fighterPackage.FranchiseIcon.HasChanged)
+            {
+                var franchiseIcons = new List<Cosmetic>
+                {
+                    fighterPackage.FranchiseIcon
+                };
+                _cosmeticService.ImportCosmetics(_settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.CosmeticType == Enums.CosmeticType.FranchiseIcon && x.Style == "Model"),
+                    franchiseIcons, fighterPackage.FranchiseIcon.Id ?? -1);
+            }
         }
     }
 }

@@ -58,6 +58,15 @@ namespace BrawlInstaller.Services
             return node;
         }
 
+        public MDL0Node ImportModel(BRRESNode destinationNode, string modelSource)
+        {
+            var node = new MDL0Node();
+            node.Replace(modelSource);
+            var folder = destinationNode.GetOrCreateFolder<MDL0Node>();
+            folder.AddChild(node);
+            return node;
+        }
+
         // Import a texture node
         public TEX0Node ImportTexture(BRRESNode destinationNode, TEX0Node texture)
         {
@@ -70,6 +79,20 @@ namespace BrawlInstaller.Services
         {
             destinationNode.GetOrCreateFolder<PLT0Node>()?.AddChild(palette);
             return palette;
+        }
+
+        // Import a model node
+        public MDL0Node ImportModel(BRRESNode destinationNode, MDL0Node model)
+        {
+            destinationNode.GetOrCreateFolder<MDL0Node>()?.AddChild(model);
+            return model;
+        }
+
+        // Import a color sequence
+        public CLR0Node ImportColorSequence(BRRESNode destinationNode, CLR0Node colorSequence)
+        {
+            destinationNode.GetOrCreateFolder<CLR0Node>()?.AddChild(colorSequence);
+            return colorSequence;
         }
 
         // Create a new pat entry node
@@ -151,14 +174,46 @@ namespace BrawlInstaller.Services
             }
         }
 
+        // Remove models based on definition rules
+        public void RemoveModels(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
+        {
+            var folder = parentNode.GetFolder<MDL0Node>();
+            if (folder != null)
+            {
+                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
+            }
+            RemoveColorSequences(parentNode, definition, id, restrictRange);
+        }
+
+        // Remove color sequences based on definition rules
+        public void RemoveColorSequences(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
+        {
+            var folder = parentNode.GetFolder<CLR0Node>();
+            if (folder != null)
+            {
+                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
+            }
+        }
+
         // Import a single cosmetic based on definition rules
         public Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
-            // Import image from filesystem
-            if (cosmetic.ImagePath != "")
+            // If we have a texture node, import that
+            if (cosmetic.Texture != null)
+            {
+                var texture = ImportTexture(parentNode, cosmetic.Texture);
+                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
+                if (cosmetic.Palette != null)
+                {
+                    var palette = ImportPalette(parentNode, cosmetic.Palette);
+                    palette.Name = texture.Name;
+                }
+            }
+            // Otherwise, import image from filesystem
+            else if (cosmetic.ImagePath != "")
             {
                 var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
@@ -167,17 +222,7 @@ namespace BrawlInstaller.Services
                 cosmetic.SharesData = texture.SharesData;
                 cosmetic.ImagePath = "";
             }
-            // If we have a texture node, import that instead
-            else if (cosmetic.Texture != null)
-            {
-                var texture = ImportTexture(parentNode, cosmetic.Texture);
-                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
-                if (cosmetic.Palette != null)
-                {
-                    var palette = ImportPalette(parentNode, cosmetic.Palette);
-                    palette.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
-                }
-            }
+            // Create pat entry
             if (definition.PatSettings != null)
             {
                 foreach(var path in definition.PatSettings.Paths)
@@ -186,6 +231,43 @@ namespace BrawlInstaller.Services
                     if (node != null)
                     {
                         CreatePatEntry(node, GetCosmeticId(definition, id, cosmetic.CostumeIndex), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
+                    }
+                }
+            }
+            // If we have a model node, import that
+            if (cosmetic.Model != null)
+            {
+                var model = ImportModel(parentNode, cosmetic.Model);
+                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}_TopN";
+                var bone = model.FindBoneByIndex(0);
+                if (bone != null)
+                    bone.Name = model.Name;
+                if (cosmetic.ColorSequence != null)
+                {
+                    var colorSequence = ImportColorSequence(parentNode, cosmetic.ColorSequence);
+                    colorSequence.Name = model.Name;
+                }
+            }
+            // Otherwise, import model from filesystem
+            else if (cosmetic.ModelPath != "")
+            {
+                var model = ImportModel(parentNode, cosmetic.ModelPath);
+                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}_TopN";
+                var bone = model.FindBoneByIndex(0);
+                if (bone != null)
+                    bone.Name = model.Name;
+                cosmetic.Model = model;
+                cosmetic.ModelPath = "";
+                // Generate color sequence
+                var folder = parentNode.GetFolder<CLR0Node>();
+                if (folder != null)
+                {
+                    var clr0 = folder.Children.FirstOrDefault(x => x.Name.StartsWith(definition.Prefix));
+                    if (clr0 != null)
+                    {
+                        cosmetic.ColorSequence = (CLR0Node)_fileService.CopyNode(clr0);
+                        cosmetic.ColorSequence.Name = model.Name;
+                        folder.AddChild(cosmetic.ColorSequence);
                     }
                 }
             }
@@ -203,6 +285,7 @@ namespace BrawlInstaller.Services
             if (parentNode != null)
             {
                 RemoveTextures((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && parentNode.GetType() != typeof(ARCNode));
+                RemoveModels((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && parentNode.GetType() != typeof(ARCNode));
             }
         }
 
@@ -231,18 +314,23 @@ namespace BrawlInstaller.Services
         }
 
         // Color smash a list of cosmetics in a BRRES
-        public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
+        public void ColorSmashCosmetics(List<Cosmetic> cosmetics, ResourceNode rootNode, CosmeticDefinition definition)
         {
-            // Flip SharesData to false for all that need updating
-            var colorSmashList = cosmetics.Where(x => x.ColorSmashChanged || (cosmetics.IndexOf(x) > 0 && cosmetics[cosmetics.IndexOf(x) - 1].ColorSmashChanged))
-                .ToList();
-            colorSmashList.ForEach(x => x.Texture.SetSharesData(false, false));
-            // Get color smash groups
-            var colorSmashGroups = GetColorSmashGroups(cosmetics);
-            // Color smash groups
-            foreach(var group in colorSmashGroups)
+            var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (node != null)
             {
-                _colorSmashService.ColorSmashCosmetics(group, bres);
+                var bres = (BRRESNode)node;
+                // Flip SharesData to false for all that need updating
+                var colorSmashList = cosmetics.Where(x => x.ColorSmashChanged || (cosmetics.IndexOf(x) > 0 && cosmetics[cosmetics.IndexOf(x) - 1].ColorSmashChanged))
+                    .ToList();
+                colorSmashList.ForEach(x => x.Texture.SetSharesData(false, false));
+                // Get color smash groups
+                var colorSmashGroups = GetColorSmashGroups(colorSmashList);
+                // Color smash groups
+                foreach(var group in colorSmashGroups)
+                {
+                    _colorSmashService.ColorSmashCosmetics(group, bres);
+                }
             }
         }
 
@@ -264,7 +352,7 @@ namespace BrawlInstaller.Services
                             ImportCosmetic(definition, cosmetic, id, rootNode);
                         }
                         if (!definition.FirstOnly && !definition.SeparateFiles)
-                            ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), (BRRESNode)rootNode);
+                            ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition);
                         _fileService.SaveFile(rootNode);
                         _fileService.CloseFile(rootNode);
                     }
@@ -321,7 +409,9 @@ namespace BrawlInstaller.Services
         // Check if ID associated with a cosmetic is within the range specified by the cosmetic definition
         public bool CheckIdRange(CosmeticDefinition definition, int id, string name, string prefix)
         {
-            var suffix = name.Replace(prefix, "").Replace(".", "");
+            if (!name.StartsWith(prefix))
+                return false;
+            var suffix = name.Replace(prefix, "").Replace(".", "").Replace("_TopN", "");
             if (suffix != "" && int.TryParse(suffix, out int index))
             {
                 index = Convert.ToInt32(suffix);

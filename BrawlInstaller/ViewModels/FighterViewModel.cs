@@ -114,6 +114,7 @@ namespace BrawlInstaller.ViewModels
                     cosmetic.CostumeIndex = CostumeViewModel.Costumes.IndexOf(costume) + 1;
                 }
             }
+            FighterPackage.FranchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
             _packageService.SaveFighter(FighterPackage);
             FighterPackage.Cosmetics.ForEach(x => x.HasChanged = false);
         }

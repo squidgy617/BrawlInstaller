@@ -240,7 +240,8 @@ namespace BrawlInstaller.Services
                         ModelPath = "2/Misc Data [110]",
                         Prefix = "InfResultMark",
                         IdType = Enums.IdType.Franchise,
-                        Size = new Size(80, 80)
+                        Size = new Size(80, 80),
+                        SuffixDigits = 2
                     },
                     new CosmeticDefinition
                     {

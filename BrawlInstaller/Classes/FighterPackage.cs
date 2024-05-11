@@ -61,6 +61,7 @@ namespace BrawlInstaller.Classes
         public TEX0Node Texture { get; set; } = null;
         public PLT0Node Palette { get; set; } = null;
         public MDL0Node Model { get; set; } = null;
+        public string ModelPath { get; set; } = string.Empty;
         public CLR0Node ColorSequence { get; set; } = null;
         public bool? SharesData { get; set; }
         public int? InternalIndex { get; set; }
@@ -74,7 +75,6 @@ namespace BrawlInstaller.Classes
     {
         public BitmapImage TransparentImage { get; set; } = null;
         public TEX0Node TransparentTexture { get; set; } = null;
-        public string ModelPath { get; set; } = string.Empty;
     }
 
     public class FighterSettings
