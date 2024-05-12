@@ -17,6 +17,7 @@ using System.Drawing;
 using BrawlLib.Internal.Windows.Forms;
 using System.Windows;
 using System.Windows.Forms;
+using static BrawlLib.BrawlManagerLib.TextureContainer;
 
 namespace BrawlInstaller.Services
 {
@@ -343,9 +344,7 @@ namespace BrawlInstaller.Services
                 var sharesDataList = cosmetics.Where(x => x.ColorSmashChanged && x.SharesData == false).ToList();
                 foreach(var cosmetic in sharesDataList)
                 {
-                    var texture = ReimportTexture(bres, cosmetic.Texture, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
-                    cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
-                    cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                    cosmetic.Texture = ReimportTexture(bres, cosmetic.Texture, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
                 }
                 // Get color smash groups
                 var colorSmashGroups = GetColorSmashGroups(cosmetics);
@@ -354,6 +353,11 @@ namespace BrawlInstaller.Services
                 foreach(var group in colorSmashGroups)
                 {
                     _colorSmashService.ColorSmashCosmetics(group, bres);
+                }
+                foreach(var cosmetic in sharesDataList)
+                {
+                    cosmetic.Texture = (TEX0Node)_fileService.CopyNode(cosmetic.Texture);
+                    cosmetic.Palette = cosmetic.Texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(cosmetic.Texture.GetPaletteNode()) : null;
                 }
             }
         }
