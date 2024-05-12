@@ -58,6 +58,20 @@ namespace BrawlInstaller.Services
             return node;
         }
 
+        public TEX0Node ReimportTexture(BRRESNode destinationNode, TEX0Node texture, WiiPixelFormat format, System.Drawing.Size size)
+        {
+            var index = texture.Index;
+            var folder = destinationNode.GetFolder<TEX0Node>();
+            var name = texture.Name;
+            texture.Export($"tempNode.png");
+            texture.Remove(true);
+            var node = ImportTexture(destinationNode, "tempNode.png", format, size);
+            node.Name = name;
+            folder.RemoveChild(node);
+            folder.InsertChild(node, index);
+            return node;
+        }
+
         public MDL0Node ImportModel(BRRESNode destinationNode, string modelSource)
         {
             var node = new MDL0Node();
@@ -326,11 +340,11 @@ namespace BrawlInstaller.Services
             {
                 var bres = (BRRESNode)node;
                 // Flip SharesData to false for all that need updating
-                var colorSmashList = cosmetics.Where(x => x.ColorSmashChanged || (cosmetics.IndexOf(x) > 0 && cosmetics[cosmetics.IndexOf(x) - 1].ColorSmashChanged))
-                    .ToList();
-                colorSmashList.ForEach(x => x.Texture.SetSharesData(false, false));
+                var sharesDataList = cosmetics.Where(x => x.ColorSmashChanged && x.SharesData == false).ToList();
+                sharesDataList.ForEach(x => x.Texture = ReimportTexture(bres, x.Texture, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64)));
                 // Get color smash groups
-                var colorSmashGroups = GetColorSmashGroups(colorSmashList);
+                var colorSmashGroups = GetColorSmashGroups(cosmetics);
+                var changeGroups = colorSmashGroups.Where(x => x.Any(y => y.ColorSmashChanged));
                 // Color smash groups
                 foreach(var group in colorSmashGroups)
                 {
