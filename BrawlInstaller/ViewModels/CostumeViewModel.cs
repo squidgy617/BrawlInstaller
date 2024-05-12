@@ -34,6 +34,8 @@ namespace BrawlInstaller.ViewModels
         ICommand CostumeUpCommand { get; }
         ICommand CostumeDownCommand { get; }
         ICommand UpdateSharesDataCommand { get; }
+        ICommand CosmeticUpCommand { get; }
+        ICommand CosmeticDownCommand { get; }
     }
 
     [Export(typeof(ICostumeViewModel))]
@@ -85,6 +87,22 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
+        public ICommand CosmeticUpCommand
+        {
+            get
+            {
+                return new RelayCommand(param => MoveCosmeticUp());
+            }
+        }
+
+        public ICommand CosmeticDownCommand
+        {
+            get
+            {
+                return new RelayCommand(param => MoveCosmeticDown());
+            }
+        }
+
         // Importing constructor
         [ImportingConstructor]
         public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService)
@@ -121,11 +139,8 @@ namespace BrawlInstaller.ViewModels
         public List<string> Styles { get => Costumes?.SelectMany(x => x.Cosmetics)?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(CosmeticList)); } }
         public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(); } }
-        public List<Cosmetic> CosmeticList
-        {
-            get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
-                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList();
-        }
+        public List<Cosmetic> CosmeticList { get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
+                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList(); }
         public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(); } }
 
         // Methods
@@ -189,12 +204,39 @@ namespace BrawlInstaller.ViewModels
             Costumes.MoveDown(SelectedCostume);
         }
 
+        public void MoveCosmeticUp()
+        {
+            // Swap internal index with cosmetic below
+            if (SelectedCosmeticNode.InternalIndex > 0)
+            {
+                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == SelectedCosmeticNode.InternalIndex - 1);
+                cosmetic.InternalIndex++;
+                SelectedCosmeticNode.InternalIndex = SelectedCosmeticNode.InternalIndex - 1;
+            }
+            OnPropertyChanged(nameof(CosmeticList));
+            OnPropertyChanged(nameof(SelectedCosmeticNode));
+        }
+
+        public void MoveCosmeticDown()
+        {
+            // Swap internal index with cosmetic below
+            if (SelectedCosmeticNode.InternalIndex < CosmeticList.Max(x => x.InternalIndex))
+            {
+                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == SelectedCosmeticNode.InternalIndex + 1);
+                cosmetic.InternalIndex--;
+                SelectedCosmeticNode.InternalIndex = SelectedCosmeticNode.InternalIndex + 1;
+            }
+            OnPropertyChanged(nameof(CosmeticList));
+            OnPropertyChanged(nameof(SelectedCosmeticNode));
+        }
+
         public void UpdateSharesData()
         {
             SelectedCosmeticNode.SharesData = !SelectedCosmeticNode.SharesData;
             SelectedCosmeticNode.ColorSmashChanged = true;
             SelectedCosmeticNode.HasChanged = true;
             OnPropertyChanged(nameof(CosmeticList));
+            OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
     }
 }

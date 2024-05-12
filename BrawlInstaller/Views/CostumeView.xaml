@@ -49,6 +49,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -94,6 +95,8 @@
                 </ListBox>
                 <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                 <Button x:Name="sharesDataButton" Content="SharesData" Grid.Row="2" Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding UpdateSharesDataCommand}"/>
+                <Button x:Name="cosmeticUpButton" Content="Up" Grid.Row="3" Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticUpCommand}"/>
+                <Button x:Name="cosmeticDownButton" Content="Down" Grid.Row="4" Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticDownCommand}"/>
             </Grid>
         </GroupBox>
     </Grid>
