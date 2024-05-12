@@ -201,9 +201,10 @@ namespace BrawlInstaller.Services
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
-            // If we have a texture node of the same proportions, import that
+            // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
-                (cosmetic.Texture.Width == definition.Size.Value.Width && cosmetic.Texture.Height == definition.Size.Value.Height)))
+                (cosmetic.Texture.Width == definition.Size.Value.Width && cosmetic.Texture.Height == definition.Size.Value.Height 
+                && cosmetic.Texture.Format == definition.Format)))
             {
                 var texture = ImportTexture(parentNode, cosmetic.Texture);
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
