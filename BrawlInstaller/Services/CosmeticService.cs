@@ -59,13 +59,16 @@ namespace BrawlInstaller.Services
             return node;
         }
 
-        public TEX0Node ReimportTexture(BRRESNode destinationNode, TEX0Node texture, WiiPixelFormat format, System.Drawing.Size size)
+        public TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, System.Drawing.Size size)
         {
+            var texture = cosmetic.Texture;
+            var palette = cosmetic.Palette;
             var index = texture.Index;
             var folder = destinationNode.GetFolder<TEX0Node>();
             var name = texture.Name;
-            texture.Export($"tempNode.png");
+            cosmetic.Image.Save("tempNode.png");
             texture.Remove(true);
+            palette?.Remove();
             var node = ImportTexture(destinationNode, "tempNode.png", format, size);
             node.Name = name;
             folder.RemoveChild(node);
@@ -344,7 +347,7 @@ namespace BrawlInstaller.Services
                 var sharesDataList = cosmetics.Where(x => x.ColorSmashChanged && x.SharesData == false).ToList();
                 foreach(var cosmetic in sharesDataList)
                 {
-                    cosmetic.Texture = ReimportTexture(bres, cosmetic.Texture, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
+                    cosmetic.Texture = ReimportTexture(bres, cosmetic, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
                 }
                 // Get color smash groups
                 var colorSmashGroups = GetColorSmashGroups(cosmetics);
