@@ -171,7 +171,6 @@ namespace BrawlInstaller.ViewModels
                 SelectedCosmetic.Texture = null;
                 SelectedCosmetic.Palette = null;
                 SelectedCosmetic.SharesData = false;
-                SelectedCosmetic.ColorSmashChanged = true;
                 // Decrement internal indexes of all cosmetics after this one
                 foreach(var cosmetic in CosmeticList.Where(x => x.InternalIndex > SelectedCosmetic.InternalIndex))
                 {

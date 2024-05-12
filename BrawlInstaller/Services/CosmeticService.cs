@@ -351,9 +351,9 @@ namespace BrawlInstaller.Services
                 }
                 // Get color smash groups
                 var colorSmashGroups = GetColorSmashGroups(cosmetics);
-                var changeGroups = colorSmashGroups.Where(x => x.Any(y => y.ColorSmashChanged));
+                var changeGroups = colorSmashGroups.Where(x => x.Any(y => y.ColorSmashChanged)).ToList();
                 // Color smash groups
-                foreach(var group in colorSmashGroups)
+                foreach(var group in changeGroups)
                 {
                     _colorSmashService.ColorSmashCosmetics(group, bres);
                 }
