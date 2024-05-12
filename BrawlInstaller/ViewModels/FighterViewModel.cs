@@ -120,14 +120,25 @@ namespace BrawlInstaller.ViewModels
             {
                 // Add model for import
                 if (FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath != "")
-                    FighterPackage.Cosmetics.Add(new Cosmetic
-                    {
-                        CosmeticType = CosmeticType.FranchiseIcon,
-                        Style = "Model",
-                        ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath,
-                        Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id,
-                        HasChanged = true
-                    });
+                {
+                    var franchiseModels = FighterPackage.Cosmetics.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
+                    if (franchiseModels.Count >= 1)
+                        franchiseModels.ForEach(x =>
+                        {
+                            x.ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath;
+                            x.Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id;
+                            x.HasChanged = true;
+                        });
+                    else
+                        FighterPackage.Cosmetics.Add(new Cosmetic
+                        {
+                            CosmeticType = CosmeticType.FranchiseIcon,
+                            Style = "Model",
+                            ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath,
+                            Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id,
+                            HasChanged = true
+                        });
+                }
                 FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
             }
             _packageService.SaveFighter(FighterPackage);
