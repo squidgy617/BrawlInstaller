@@ -142,7 +142,7 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
             }
             _packageService.SaveFighter(FighterPackage);
-            FighterPackage.Cosmetics.ForEach(x => { x.HasChanged = false; x.ImagePath = ""; } );
+            FighterPackage.Cosmetics.ForEach(x => { x.HasChanged = false; x.ImagePath = ""; x.ColorSmashChanged = false; } );
         }
     }
 
