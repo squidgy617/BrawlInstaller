@@ -221,8 +221,9 @@ namespace BrawlInstaller.Services
             id = definition.Offset + id;
             // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
-                (cosmetic.Texture.Width == definition.Size.Value.Width && cosmetic.Texture.Height == definition.Size.Value.Height 
-                && cosmetic.Texture.Format == definition.Format)))
+                (cosmetic.Texture.Width == definition.Size.Value.Width && cosmetic.Texture.Height == definition.Size.Value.Height
+                && cosmetic.Texture.Format == definition.Format
+                && (!cosmetic.Texture.SharesData && !definition.FirstOnly && !definition.SeparateFiles))))
             {
                 var texture = ImportTexture(parentNode, cosmetic.Texture);
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
@@ -232,10 +233,23 @@ namespace BrawlInstaller.Services
                     palette.Name = texture.Name;
                 }
             }
-            // Otherwise, import image from filesystem
+            // If we have an image from filesystem, import that
             else if (cosmetic.ImagePath != "")
             {
                 var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
+                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
+                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                // We do this so the referenced (copied) texture is what's stored in the BRRES, instead of the original
+                texture.Remove(true);
+                ImportTexture(parentNode, cosmetic.Texture);
+                ImportPalette(parentNode, cosmetic.Palette);
+            }
+            // TODO: Verify this actually works
+            // If we should only import one cosmetic and it's a color smashed texture, reimport
+            else if (cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles))
+            {
+                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
