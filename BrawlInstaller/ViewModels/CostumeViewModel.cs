@@ -209,7 +209,8 @@ namespace BrawlInstaller.ViewModels
             if (SelectedCosmeticNode.InternalIndex > 0)
             {
                 var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == SelectedCosmeticNode.InternalIndex - 1);
-                cosmetic.InternalIndex++;
+                if (cosmetic != null)
+                    cosmetic.InternalIndex++;
                 SelectedCosmeticNode.InternalIndex = SelectedCosmeticNode.InternalIndex - 1;
             }
             OnPropertyChanged(nameof(CosmeticList));
@@ -222,7 +223,8 @@ namespace BrawlInstaller.ViewModels
             if (SelectedCosmeticNode.InternalIndex < CosmeticList.Max(x => x.InternalIndex))
             {
                 var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == SelectedCosmeticNode.InternalIndex + 1);
-                cosmetic.InternalIndex--;
+                if (cosmetic != null)
+                    cosmetic.InternalIndex--;
                 SelectedCosmeticNode.InternalIndex = SelectedCosmeticNode.InternalIndex + 1;
             }
             OnPropertyChanged(nameof(CosmeticList));

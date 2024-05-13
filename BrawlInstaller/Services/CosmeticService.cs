@@ -239,7 +239,10 @@ namespace BrawlInstaller.Services
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
-                cosmetic.SharesData = texture.SharesData;
+                // We do this so the referenced (copied) texture is what's stored in the BRRES, instead of the original
+                texture.Remove(true);
+                ImportTexture(parentNode, cosmetic.Texture);
+                ImportPalette(parentNode, cosmetic.Palette);
             }
             // Create pat entry
             if (definition.PatSettings != null)
