@@ -88,5 +88,6 @@ namespace BrawlInstaller.Classes
         public string FighterFiles { get; set; }
         public string BrawlEx { get; set; }
         public string Modules { get; set; }
+        public string HDTextures { get; set; }
     }
 }

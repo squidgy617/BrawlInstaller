@@ -18,6 +18,7 @@ using BrawlLib.Internal.Windows.Forms;
 using System.Windows;
 using System.Windows.Forms;
 using static BrawlLib.BrawlManagerLib.TextureContainer;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Services
 {
@@ -30,6 +31,9 @@ namespace BrawlInstaller.Services
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
     {
+        // Properties
+        private List<string> HDImages { get; set; } = new List<string>();
+
         // Services
         ISettingsService _settingsService { get; }
         IFileService _fileService { get; }
@@ -599,6 +603,39 @@ namespace BrawlInstaller.Services
             return nodes;
         }
 
+        // Loads a list of all HD textures so we can more easily search for texture matches
+        public List<string> PreloadHDTextures()
+        {
+            var directories = Directory.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
+            HDImages = new List<string>();
+            Parallel.ForEach(directories, directory =>
+            {
+                var images = Directory.GetFiles(directory, "*.png").ToList();
+                Parallel.ForEach(images, image =>
+                {
+                    HDImages.Add(image);
+                });
+            });
+            return HDImages;
+        }
+
+        // Get HD texture by Dolphin texture name
+        public string GetHDTexture(string textureName)
+        {
+            return HDImages.AsParallel().FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == textureName);
+        }
+
+        // Get BitmapImage of HD texture by Dolphin name
+        public BitmapImage GetHDImage(string textureName)
+        {
+            var file = GetHDTexture(textureName);
+            if (!string.IsNullOrEmpty(file))
+            {
+                return new BitmapImage(new Uri(file));
+            }
+            return null;
+        }
+
         // Get cosmetics associated with provided cosmetic definition and IDs
         public List<Cosmetic> GetDefinitionCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
@@ -612,6 +649,7 @@ namespace BrawlInstaller.Services
                     CosmeticType = definition.CosmeticType,
                     Style = definition.Style,
                     Image = texture.Texture?.GetImage(0).ToBitmapImage(),
+                    HDImage = GetHDImage(texture.Texture?.DolphinTextureName),
                     Texture = (TEX0Node)_fileService.CopyNode(texture.Texture),
                     Palette = texture.Texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.Texture.GetPaletteNode()) : null,
                     SharesData = texture.Texture.SharesData,
@@ -650,6 +688,8 @@ namespace BrawlInstaller.Services
         {
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType != CosmeticType.FranchiseIcon).ToList();
+            // Load HD textures in advance
+            PreloadHDTextures();
             return GetCosmetics(fighterIds, definitions, true);
         }
 

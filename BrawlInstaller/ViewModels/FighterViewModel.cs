@@ -106,6 +106,7 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveFighter()
         {
+            // TODO: Need a way to track if costumes/cosmetics were modified if one is removed, HasChanged on whole list?
             // Set costume indexes for cosmetics
             foreach(var costume in FighterPackage.Costumes)
             {
