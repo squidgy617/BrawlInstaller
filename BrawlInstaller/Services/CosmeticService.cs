@@ -19,6 +19,7 @@ using System.Windows;
 using System.Windows.Forms;
 using static BrawlLib.BrawlManagerLib.TextureContainer;
 using System.Windows.Media.Imaging;
+using System.Collections.Concurrent;
 
 namespace BrawlInstaller.Services
 {
@@ -607,15 +608,16 @@ namespace BrawlInstaller.Services
         public List<string> PreloadHDTextures()
         {
             var directories = Directory.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
-            HDImages = new List<string>();
+            var hdImages = new ConcurrentBag<string>();
             Parallel.ForEach(directories, directory =>
             {
                 var images = Directory.GetFiles(directory, "*.png").ToList();
                 Parallel.ForEach(images, image =>
                 {
-                    HDImages.Add(image);
+                    hdImages.Add(image);
                 });
             });
+            HDImages = hdImages.ToList();
             return HDImages;
         }
 

@@ -3,8 +3,10 @@ using BrawlInstaller.Enums;
 using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -81,20 +83,20 @@ namespace BrawlInstaller.Services
         }
         public List<ResourceNode> GetExConfigs(IdType type)
         {
-            var configs = new List<ResourceNode>();
+            var configs = new ConcurrentBag<ResourceNode>();
             var buildPath = _settingsService.BuildPath;
             var settings = _settingsService.BuildSettings;
             var prefix = GetConfigPrefix(type);
             var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
             if (Directory.Exists(directory))
             {
-                var files = Directory.GetFiles(directory, $"{prefix}*.dat").ToList();
-                foreach (var file in files)
+                var files = Directory.GetFiles(directory, $"{prefix}*.dat").AsParallel().ToList();
+                Parallel.ForEach(files, file =>
                 {
                     configs.Add(_fileService.OpenFile(file));
-                }
+                });
             }
-            return configs;
+            return configs.ToList();
         }
         public FighterIds LinkExConfigs(FighterIds fighterIds)
         {
