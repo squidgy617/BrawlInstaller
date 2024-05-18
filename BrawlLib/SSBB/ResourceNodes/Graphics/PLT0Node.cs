@@ -2,9 +2,11 @@
 using BrawlLib.Internal;
 using BrawlLib.SSBB.Types;
 using BrawlLib.Wii.Textures;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace BrawlLib.SSBB.ResourceNodes
 {
@@ -65,7 +67,7 @@ namespace BrawlLib.SSBB.ResourceNodes
 
             if (_version == 3)
             {
-                (_userEntries = new UserDataCollection()).Read(Header3->UserData, WorkingUncompressed);
+                (_userEntries = new UserDataCollection()).Read(Header3->UserData, RootNode.WorkingUncompressed);
             }
 
             return false;
@@ -84,6 +86,17 @@ namespace BrawlLib.SSBB.ResourceNodes
             {
                 table.Add(_originalPath);
             }
+        }
+
+        public ReadOnlySpan<byte> GetRawData()
+        {
+            // Get header size
+            var offset = (WorkingUncompressed.Address + 0x10).Int;
+            var length = WorkingUncompressed.Length - offset;
+            // Get raw palette data
+            byte[] paletteData = new byte[length];
+            Marshal.Copy(WorkingUncompressed.Address + offset, paletteData, 0, length);
+            return paletteData;
         }
 
         public override int OnCalculateSize(bool force)

@@ -221,12 +221,12 @@ namespace BrawlLib.SSBB.ResourceNodes
         }
 
         [Category("Unknown")]
-        public byte Unknown0a
+        public byte SpawnPosition
         {
-            get => data._unknown0a;
+            get => data._spawnPosition;
             set
             {
-                data._unknown0a = value;
+                data._spawnPosition = value;
                 SignalPropertyChange();
             }
         }
@@ -2252,8 +2252,8 @@ namespace BrawlLib.SSBB.ResourceNodes
             }
         }
 
-        [Category("Unknown")]
-        public bool UnknownFlag_40_80000000
+        [Category("Event Match")]
+        public bool DisableStarKO
         {
             get => (_header._flags40 & 0x80000000) != 0;
             set
@@ -2272,6 +2272,7 @@ namespace BrawlLib.SSBB.ResourceNodes
 
         [Category("Event Match")]
         [DisplayName("Song ID")]
+        [TypeConverter(typeof(HexIntConverter))]
         public int SongID
         {
             get => _header._songID;
