@@ -65,6 +65,7 @@
                 <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="1"/>
                 <Image x:Name="cosmeticHDImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="2"/>
                 <Button x:Name="replaceCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Replace" Command="{Binding ReplaceCosmeticCommand}" Grid.Row="3" Grid.Column="1"/>
+                <Button x:Name="replaceHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Replace" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Row="3" Grid.Column="2"/>
                 <ListBox x:Name="cosmeticListBox" VerticalAlignment="Top" Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" ItemsSource="{Binding CosmeticList}" SelectedValue="{Binding SelectedCosmeticNode}" Width="120" Height="100">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

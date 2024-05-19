@@ -407,6 +407,16 @@ namespace BrawlInstaller.Services
                         if (!definition.FirstOnly && !definition.SeparateFiles)
                             ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition);
                         _fileService.SaveFile(rootNode);
+                        // Save HD cosmetics if they exist
+                        foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                        {
+                            if (!string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(cosmetic.Texture?.DolphinTextureName))
+                            {
+                                _fileService.CopyFile(cosmetic.HDImagePath,
+                                    $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}" +
+                                    $"\\{cosmetic.Texture?.DolphinTextureName}.png");
+                            }
+                        }
                         _fileService.CloseFile(rootNode);
                     }
                 }

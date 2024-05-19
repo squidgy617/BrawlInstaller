@@ -63,6 +63,14 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
+        public ICommand ReplaceHDCosmeticCommand
+        {
+            get
+            {
+                return new RelayCommand(param => ReplaceHDCosmetic());
+            }
+        }
+
         public ICommand CostumeUpCommand
         {
             get
@@ -182,6 +190,21 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(SelectedCosmetic));
                 OnPropertyChanged(nameof(CosmeticList));
                 OnPropertyChanged(nameof(SelectedCosmeticNode));
+            }
+        }
+
+        public void ReplaceHDCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
+            // Update the image
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = new Bitmap(image);
+                SelectedCosmetic.HDImage = bitmap.ToBitmapImage();
+                SelectedCosmetic.HDImagePath = image;
+                SelectedCosmetic.HasChanged = true;
+                OnPropertyChanged(nameof(SelectedCosmetic));
+                OnPropertyChanged(nameof(CosmeticList));
             }
         }
 

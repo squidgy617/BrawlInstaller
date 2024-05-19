@@ -16,6 +16,7 @@ namespace BrawlInstaller.Services
         void SaveFileAs(ResourceNode node, string path);
         void CloseFile(ResourceNode node);
         ResourceNode CopyNode(ResourceNode node);
+        void CopyFile(string inFile, string outFile);
     }
     [Export(typeof(IFileService))]
     internal class FileService : IFileService
@@ -57,6 +58,12 @@ namespace BrawlInstaller.Services
             var newNode = NodeFactory.FromFile(null, "tempNode");
             File.Delete("tempNode");
             return newNode;
+        }
+
+        public void CopyFile(string inFile, string outFile)
+        {
+            if (File.Exists(inFile))
+                File.Copy(inFile, outFile, true);
         }
     }
 }
