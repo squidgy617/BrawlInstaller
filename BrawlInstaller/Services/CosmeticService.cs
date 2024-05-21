@@ -97,6 +97,29 @@ namespace BrawlInstaller.Services
             return texture;
         }
 
+        // Get texture node matching what's stored in cosmetic to guarantee accuracy
+        public TEX0Node GetTexture(ResourceNode rootNode, CosmeticDefinition definition, string name)
+        {
+            var parentNode = !string.IsNullOrEmpty(definition.InstallLocation.NodePath) ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (parentNode != null)
+            {
+                return GetTexture((BRRESNode)parentNode, name);
+            }
+            return null;
+        }
+
+        public TEX0Node GetTexture(BRRESNode parentNode, string name)
+        {
+            var folder = parentNode.GetFolder<TEX0Node>();
+            if (folder != null)
+            {
+                var node = folder.FindChild(name);
+                if (node != null)
+                    return (TEX0Node)node;
+            }
+            return null;
+        }
+
         // Import a palette node
         public PLT0Node ImportPalette(BRRESNode destinationNode, PLT0Node palette)
         {
@@ -419,10 +442,11 @@ namespace BrawlInstaller.Services
                         // Save HD cosmetics if they exist
                         foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                         {
-                            if (!string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(cosmetic.Texture?.DolphinTextureName))
+                            var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
+                            if (!string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
                             {
                                 var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}" +
-                                    $"\\{cosmetic.Texture?.DolphinTextureName}.png";
+                                    $"\\{texture?.DolphinTextureName}.png";
                                 cosmetic.HDImage.Save(imagePath);
                                 cosmetic.HDImagePath = imagePath;
                             }
