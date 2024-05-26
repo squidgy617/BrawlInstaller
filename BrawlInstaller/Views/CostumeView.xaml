@@ -24,19 +24,30 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock>
-                                <Run Text="Costume"/>
-                                <Run Text="{Binding Path=CostumeId}"/>
-                    </TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Button x:Name="costumeAddButton" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddCostumeCommand}" Grid.Row="2" Grid.Column="0"/>
-        <Button x:Name="costumeUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeUpCommand}" Grid.Row="0" Grid.Column="1"/>
-        <Button x:Name="costumeDownButton" Content="↓" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1"/>
+        <Grid x:Name="costumeGrid" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="Costume"/>
+                            <Run Text="{Binding Path=CostumeId}"/>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button x:Name="costumeAddButton" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddCostumeCommand}" Grid.Row="2" Grid.Column="0"/>
+            <Button x:Name="costumeUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeUpCommand}" Grid.Row="0" Grid.Column="1"/>
+            <Button x:Name="costumeDownButton" Content="↓" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1"/>
+        </Grid>
         <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="2"/>
         <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="3"/>
         <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2"/>
