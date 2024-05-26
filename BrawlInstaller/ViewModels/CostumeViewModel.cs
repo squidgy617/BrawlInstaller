@@ -36,6 +36,7 @@ namespace BrawlInstaller.ViewModels
         ICommand UpdateSharesDataCommand { get; }
         ICommand CosmeticUpCommand { get; }
         ICommand CosmeticDownCommand { get; }
+        ICommand AddCostumeCommand { get; }
     }
 
     [Export(typeof(ICostumeViewModel))]
@@ -111,6 +112,14 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
+        public ICommand AddCostumeCommand
+        {
+            get
+            {
+                return new RelayCommand(param => AddCostume());
+            }
+        }
+
         // Importing constructor
         [ImportingConstructor]
         public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService)
@@ -167,6 +176,16 @@ namespace BrawlInstaller.ViewModels
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
         }
 
+        public void AddCosmetic()
+        {
+            SelectedCostume.Cosmetics.Add(new Cosmetic
+            {
+                CostumeIndex = Costumes.IndexOf(SelectedCostume) + 1,
+                CosmeticType = SelectedCosmeticOption,
+                Style = SelectedStyle
+            });
+        }
+
         public void ReplaceCosmetic()
         {
             var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
@@ -174,6 +193,8 @@ namespace BrawlInstaller.ViewModels
             if (image != "")
             {
                 var bitmap = new Bitmap(image);
+                if (SelectedCosmetic == null)
+                    AddCosmetic();
                 SelectedCosmetic.Image = bitmap.ToBitmapImage();
                 SelectedCosmetic.ImagePath = image;
                 SelectedCosmetic.Texture = null;
@@ -200,6 +221,8 @@ namespace BrawlInstaller.ViewModels
             if (!string.IsNullOrEmpty(image))
             {
                 var bitmap = new Bitmap(image);
+                if (SelectedCosmetic == null)
+                    AddCosmetic();
                 SelectedCosmetic.HDImage = bitmap.ToBitmapImage();
                 SelectedCosmetic.HDImagePath = image;
                 SelectedCosmetic.HasChanged = true;
@@ -261,6 +284,22 @@ namespace BrawlInstaller.ViewModels
             SelectedCosmeticNode.HasChanged = true;
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
+        }
+
+        public void AddCostume()
+        {
+            var costumeId = 0;
+            while (Costumes.Select(x => x.CostumeId).Contains(costumeId))
+                costumeId++;
+            var newCostume = new Costume
+            {
+                Color = 0x00,
+                CostumeId = costumeId,
+                PacFiles = new List<string>(),
+                Cosmetics = new List<Cosmetic>()
+            };
+            Costumes.Add(newCostume);
+            SelectedCostume = newCostume;
         }
     }
 }
