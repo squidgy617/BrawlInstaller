@@ -22,6 +22,7 @@ namespace BrawlInstaller.ViewModels
     {
         ObservableCollection<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
+        ObservableCollection<string> PacFiles { get; }
         ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
@@ -37,6 +38,7 @@ namespace BrawlInstaller.ViewModels
         ICommand CosmeticUpCommand { get; }
         ICommand CosmeticDownCommand { get; }
         ICommand AddCostumeCommand { get; }
+        ICommand AddPacFilesCommand { get; }
     }
 
     [Export(typeof(ICostumeViewModel))]
@@ -56,69 +58,15 @@ namespace BrawlInstaller.ViewModels
         IDialogService _dialogService { get; }
 
         // Commands
-        public ICommand ReplaceCosmeticCommand
-        {
-            get
-            {
-                return new RelayCommand(param => ReplaceCosmetic());
-            }
-        }
-
-        public ICommand ReplaceHDCosmeticCommand
-        {
-            get
-            {
-                return new RelayCommand(param => ReplaceHDCosmetic());
-            }
-        }
-
-        public ICommand CostumeUpCommand
-        {
-            get
-            {
-                return new RelayCommand(param => MoveCostumeUp());
-            }
-        }
-
-        public ICommand CostumeDownCommand
-        {
-            get
-            {
-                return new RelayCommand(param => MoveCostumeDown());
-            }
-        }
-
-        public ICommand UpdateSharesDataCommand
-        {
-            get
-            {
-                return new RelayCommand(param => UpdateSharesData());
-            }
-        }
-
-        public ICommand CosmeticUpCommand
-        {
-            get
-            {
-                return new RelayCommand(param => MoveCosmeticUp());
-            }
-        }
-
-        public ICommand CosmeticDownCommand
-        {
-            get
-            {
-                return new RelayCommand(param => MoveCosmeticDown());
-            }
-        }
-
-        public ICommand AddCostumeCommand
-        {
-            get
-            {
-                return new RelayCommand(param => AddCostume());
-            }
-        }
+        public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
+        public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic());
+        public ICommand CostumeUpCommand => new RelayCommand(param => MoveCostumeUp());
+        public ICommand CostumeDownCommand => new RelayCommand(param => MoveCostumeDown());
+        public ICommand UpdateSharesDataCommand => new RelayCommand(param => UpdateSharesData());
+        public ICommand CosmeticUpCommand => new RelayCommand(param => MoveCosmeticUp());
+        public ICommand CosmeticDownCommand => new RelayCommand(param => MoveCosmeticDown());
+        public ICommand AddCostumeCommand => new RelayCommand(param => AddCostume());
+        public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
 
         // Importing constructor
         [ImportingConstructor]
@@ -149,7 +97,8 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
-        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(SelectedCosmeticOption)); OnPropertyChanged(nameof(Styles)); } }
+        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(SelectedCosmeticOption)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(PacFiles)); } }
+        public ObservableCollection<string> PacFiles { get => SelectedCostume != null ? new ObservableCollection<string>(SelectedCostume?.PacFiles) : new ObservableCollection<string>(); }
         public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
@@ -184,6 +133,13 @@ namespace BrawlInstaller.ViewModels
                 CosmeticType = SelectedCosmeticOption,
                 Style = SelectedStyle
             });
+        }
+
+        public void AddPacFiles()
+        {
+            var files = _dialogService.OpenMultiFileDialog("Select pac files", "PAC files (.pac)|*.pac");
+            SelectedCostume.PacFiles.AddRange(files);
+            OnPropertyChanged(nameof(PacFiles));
         }
 
         public void ReplaceCosmetic()

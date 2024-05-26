@@ -13,6 +13,7 @@ namespace BrawlInstaller.Services
     {
         bool ShowMessage(string text, string caption, MessageBoxImage image);
         string OpenFileDialog(string title, string filter);
+        List<string> OpenMultiFileDialog(string title, string filter);
     }
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
@@ -42,6 +43,21 @@ namespace BrawlInstaller.Services
                 return dialog.FileName;
             }
             return "";
+        }
+
+        public List<string> OpenMultiFileDialog(string title = "Select a file", string filter = "")
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Title = title;
+            dialog.Filter = filter;
+            dialog.Multiselect = true;
+
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                return dialog.FileNames.ToList();
+            }
+            return new List<string>();
         }
     }
 }
