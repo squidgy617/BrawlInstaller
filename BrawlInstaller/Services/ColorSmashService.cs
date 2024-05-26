@@ -39,7 +39,7 @@ namespace BrawlInstaller.Services
         // Methods
 
         // Color smash TEX0 nodes
-        // TODO: implement more specifics e.g. get the palette count and whatnot - look at BrawlCrate code
+        // TODO: handle errors
         public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
         {
             var folder = bres.GetFolder<TEX0Node>();
@@ -52,8 +52,14 @@ namespace BrawlInstaller.Services
             {
                 cosmetic.Image.Save($"{ColorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
             }
+            // Get palette count
+            var paletteCount = 0;
+            paletteCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).GetPaletteNode().Palette.Entries.Length).Max();
+            paletteCount = Math.Min(paletteCount, 256);
+            // Get mip count
+            var mipCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).LevelOfDetail).Max();
             // Color smash
-            ColorSmasher(256);
+            ColorSmasher(paletteCount);
             foreach(var cosmetic in cosmetics)
             {
                 var index = cosmetic.Texture.Index;
@@ -64,7 +70,7 @@ namespace BrawlInstaller.Services
                 cosmetic.Palette?.Dispose();
                 // Import color smashed image
                 var file = $"{ColorSmashOutDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png";
-                var texture = ColorSmashTextureImport(bres, file, WiiPixelFormat.CI8);
+                var texture = ColorSmashTextureImport(bres, file, WiiPixelFormat.CI8, mipCount);
                 // Update and move texture node
                 texture.OriginalPath = "";
                 texture.Name = name;
@@ -86,18 +92,41 @@ namespace BrawlInstaller.Services
                 Directory.Delete(ColorSmashDirectory, true);
         }
 
-        public TEX0Node ColorSmashTextureImport(BRRESNode destinationNode, string imageSource, WiiPixelFormat format)
+        public TEX0Node ColorSmashTextureImport(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, int mipCount = 1)
         {
             var dialog = new TextureConverterDialog();
             dialog.ImageSource = imageSource;
             dialog.InitialFormat = format;
             dialog.ChkImportPalette.Checked = true;
             dialog.Automatic = true;
-            dialog.numLOD.Value = 1;
+            dialog.numLOD.Value = mipCount;
             dialog.ShowDialog(null, destinationNode);
             var node = dialog.TEX0TextureNode;
             dialog.Dispose();
             return node;
+        }
+
+        // GetTexture reimplemented from CosmeticService
+        public TEX0Node GetTexture(ResourceNode rootNode, CosmeticDefinition definition, string name)
+        {
+            var parentNode = !string.IsNullOrEmpty(definition.InstallLocation.NodePath) ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (parentNode != null)
+            {
+                return GetTexture((BRRESNode)parentNode, name);
+            }
+            return null;
+        }
+
+        public TEX0Node GetTexture(BRRESNode parentNode, string name)
+        {
+            var folder = parentNode.GetFolder<TEX0Node>();
+            if (folder != null)
+            {
+                var node = folder.FindChild(name);
+                if (node != null)
+                    return (TEX0Node)node;
+            }
+            return null;
         }
 
         public void ColorSmasher(int paletteCount)
