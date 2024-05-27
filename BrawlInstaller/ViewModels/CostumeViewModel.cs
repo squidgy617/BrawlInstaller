@@ -5,6 +5,7 @@ using BrawlInstaller.Services;
 using BrawlLib.Internal;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
@@ -63,7 +64,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic());
         public ICommand CostumeUpCommand => new RelayCommand(param => MoveCostumeUp());
         public ICommand CostumeDownCommand => new RelayCommand(param => MoveCostumeDown());
-        public ICommand UpdateSharesDataCommand => new RelayCommand(param => UpdateSharesData());
+        public ICommand UpdateSharesDataCommand => new RelayCommand(param => UpdateSharesData(param));
         public ICommand CosmeticUpCommand => new RelayCommand(param => MoveCosmeticUp());
         public ICommand CosmeticDownCommand => new RelayCommand(param => MoveCosmeticDown());
         public ICommand AddCostumeCommand => new RelayCommand(param => AddCostume());
@@ -239,11 +240,15 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
-        public void UpdateSharesData()
+        public void UpdateSharesData(object selectedItems)
         {
-            SelectedCosmeticNode.SharesData = !SelectedCosmeticNode.SharesData;
-            SelectedCosmeticNode.ColorSmashChanged = true;
-            SelectedCosmeticNode.HasChanged = true;
+            var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().ToList();
+            foreach (var item in nodes)
+            {
+                item.SharesData = !item.SharesData;
+                item.ColorSmashChanged = true;
+                item.HasChanged = true;
+            }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
