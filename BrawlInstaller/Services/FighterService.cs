@@ -25,6 +25,7 @@ namespace BrawlInstaller.Services
         List<string> GetItemFiles(string internalName);
         List<string> GetKirbyFiles(string internalName);
         void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo);
+        void UpdateCostumeConfig(FighterInfo fighterInfo, List<Costume> costumes);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -235,7 +236,7 @@ namespace BrawlInstaller.Services
         }
 
         // Get name for fighter PAC file based on fighter info and costume ID
-        public string GetFighterPacName(ResourceNode node, FighterInfo fighterInfo, int costumeId = -1)
+        private string GetFighterPacName(ResourceNode node, FighterInfo fighterInfo, int costumeId = -1)
         {
             // List of strings that can be found in pac file names
             var modifierStrings = new List<string>
@@ -357,6 +358,34 @@ namespace BrawlInstaller.Services
             if (Directory.Exists(path))
                 files = Directory.GetFiles(path).ToList();
             return files;
+        }
+
+        public void UpdateCostumeConfig(FighterInfo fighterInfo, List<Costume> costumes)
+        {
+            if (fighterInfo.CSSSlotConfig != null)
+            {
+                var buildPath = _settingsService.BuildPath;
+                var settings = _settingsService.BuildSettings;
+                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig";
+                ResourceNode rootNode = null;
+
+                if (Directory.Exists(configPath))
+                    rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
+                if (rootNode != null)
+                {
+                    rootNode.Children.RemoveAll(x => x != null);
+                    foreach(var costume in costumes)
+                    {
+                        var newNode = new CSSCEntryNode
+                        {
+                            Parent = rootNode,
+                            CostumeID = (byte)costume.CostumeId,
+                            Color = costume.Color
+                        };
+                    }
+                    _fileService.SaveFile(rootNode);
+                }
+            }
         }
 
         public List<Costume> GetFighterCostumes(FighterInfo fighterInfo)

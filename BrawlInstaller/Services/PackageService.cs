@@ -131,6 +131,9 @@ namespace BrawlInstaller.Services
             // Update pac files
             // TODO: only update pac files that have changed, use selected FighterFiles option
             _fighterService.ImportFighterFiles(fighterPackage.FighterFiles.FirstOrDefault().PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
+            // Update config
+            // TODO: only update if costumes changed
+            _fighterService.UpdateCostumeConfig(fighterPackage.FighterInfo, fighterPackage.Costumes);
         }
     }
 }

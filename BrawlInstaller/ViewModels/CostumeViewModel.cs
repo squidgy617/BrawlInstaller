@@ -45,6 +45,7 @@ namespace BrawlInstaller.ViewModels
     internal class CostumeViewModel : ViewModelBase, ICostumeViewModel
     {
         // Private properties
+        private FighterPackage _fighterPackage;
         private ObservableCollection<Costume> _costumes;
         private Costume _selectedCostume;
         private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
@@ -96,6 +97,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
+        public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(); } }
         public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(SelectedCosmeticOption)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(PacFiles)); } }
         public ObservableCollection<string> PacFiles { get => SelectedCostume != null ? new ObservableCollection<string>(SelectedCostume?.PacFiles) : new ObservableCollection<string>(); }
@@ -112,6 +114,7 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
         {
+            FighterPackage = message.Value;
             Costumes = new ObservableCollection<Costume>(message.Value.Costumes);
             SelectedCostume = Costumes.FirstOrDefault();
 
@@ -127,12 +130,15 @@ namespace BrawlInstaller.ViewModels
 
         public void AddCosmetic()
         {
-            SelectedCostume.Cosmetics.Add(new Cosmetic
+            var cosmetic = new Cosmetic
             {
                 CostumeIndex = Costumes.IndexOf(SelectedCostume) + 1,
                 CosmeticType = SelectedCosmeticOption,
-                Style = SelectedStyle
-            });
+                Style = SelectedStyle,
+                HasChanged = true
+            };
+            SelectedCostume.Cosmetics.Add(cosmetic);
+            FighterPackage.Cosmetics.Add(cosmetic);
         }
 
         public void AddPacFiles()
@@ -255,6 +261,7 @@ namespace BrawlInstaller.ViewModels
                 Cosmetics = new List<Cosmetic>()
             };
             Costumes.Add(newCostume);
+            FighterPackage.Costumes.Add(newCostume);
             SelectedCostume = newCostume;
         }
     }
