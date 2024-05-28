@@ -65,8 +65,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand CostumeUpCommand => new RelayCommand(param => MoveCostumeUp());
         public ICommand CostumeDownCommand => new RelayCommand(param => MoveCostumeDown());
         public ICommand UpdateSharesDataCommand => new RelayCommand(param => UpdateSharesData(param));
-        public ICommand CosmeticUpCommand => new RelayCommand(param => MoveCosmeticUp());
-        public ICommand CosmeticDownCommand => new RelayCommand(param => MoveCosmeticDown());
+        public ICommand CosmeticUpCommand => new RelayCommand(param => MoveCosmeticUp(param));
+        public ICommand CosmeticDownCommand => new RelayCommand(param => MoveCosmeticDown(param));
         public ICommand AddCostumeCommand => new RelayCommand(param => AddCostume());
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
 
@@ -212,29 +212,39 @@ namespace BrawlInstaller.ViewModels
             Costumes.MoveDown(SelectedCostume);
         }
 
-        public void MoveCosmeticUp()
+        public void MoveCosmeticUp(object selectedItems)
         {
-            // Swap internal index with cosmetic below
-            if (SelectedCosmeticNode.InternalIndex > 0)
+            var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().ToList();
+            if (nodes.FirstOrDefault()?.InternalIndex > 0)
             {
-                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == SelectedCosmeticNode.InternalIndex - 1);
+                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.FirstOrDefault()?.InternalIndex - 1);
+                // Move selected nodes down
+                foreach (var item in nodes)
+                {
+                    item.InternalIndex--;
+                }
+                // Move node after selected to before them
                 if (cosmetic != null)
-                    cosmetic.InternalIndex++;
-                SelectedCosmeticNode.InternalIndex = SelectedCosmeticNode.InternalIndex - 1;
+                    cosmetic.InternalIndex += nodes.Count;
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
-        public void MoveCosmeticDown()
+        public void MoveCosmeticDown(object selectedItems)
         {
-            // Swap internal index with cosmetic below
-            if (SelectedCosmeticNode.InternalIndex < CosmeticList.Max(x => x.InternalIndex))
+            var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().ToList();
+            if (nodes.LastOrDefault()?.InternalIndex < CosmeticList.Max(x => x.InternalIndex))
             {
-                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == SelectedCosmeticNode.InternalIndex + 1);
+                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.LastOrDefault()?.InternalIndex + 1);
+                // Move selected nodes down
+                foreach (var item in nodes)
+                {
+                    item.InternalIndex++;
+                }
+                // Move node after selected to before them
                 if (cosmetic != null)
-                    cosmetic.InternalIndex--;
-                SelectedCosmeticNode.InternalIndex = SelectedCosmeticNode.InternalIndex + 1;
+                    cosmetic.InternalIndex -= nodes.Count;
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
