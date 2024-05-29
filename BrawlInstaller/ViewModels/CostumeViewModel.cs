@@ -58,6 +58,7 @@ namespace BrawlInstaller.ViewModels
         // Services
         ISettingsService _settingsService { get; }
         IDialogService _dialogService { get; }
+        ICosmeticService _cosmeticService { get; }
 
         // Commands
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
@@ -65,17 +66,18 @@ namespace BrawlInstaller.ViewModels
         public ICommand CostumeUpCommand => new RelayCommand(param => MoveCostumeUp());
         public ICommand CostumeDownCommand => new RelayCommand(param => MoveCostumeDown());
         public ICommand UpdateSharesDataCommand => new RelayCommand(param => UpdateSharesData(param));
-        public ICommand CosmeticUpCommand => new RelayCommand(param => MoveCosmeticUp(param));
-        public ICommand CosmeticDownCommand => new RelayCommand(param => MoveCosmeticDown(param));
+        public ICommand CosmeticUpCommand => new RelayCommand(param => MoveCosmeticUp());
+        public ICommand CosmeticDownCommand => new RelayCommand(param => MoveCosmeticDown());
         public ICommand AddCostumeCommand => new RelayCommand(param => AddCostume());
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
 
         // Importing constructor
         [ImportingConstructor]
-        public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService)
+        public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService, ICosmeticService cosmeticService)
         {
             _settingsService = settingsService;
             _dialogService = dialogService;
+            _cosmeticService = cosmeticService;
 
             CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>
             {
@@ -212,39 +214,67 @@ namespace BrawlInstaller.ViewModels
             Costumes.MoveDown(SelectedCostume);
         }
 
-        public void MoveCosmeticUp(object selectedItems)
+        public void MoveCosmeticUp()
         {
-            var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().ToList();
-            if (nodes.FirstOrDefault()?.InternalIndex > 0)
+            // Get node groups
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
+            var selectedNodes = new List<Cosmetic>();
+            var nodesToMove = new List<Cosmetic>();
+            // Select related nodes if this is the root of a color smash group
+            if (SelectedCosmeticNode.SharesData == false)
+                selectedNodes = nodeGroups.FirstOrDefault(x => x.Contains(SelectedCosmeticNode)) ?? selectedNodes;
+            else
+                selectedNodes.Add(SelectedCosmeticNode);
+            // Get nodes to move past
+            var prevNode = CosmeticList.FirstOrDefault(x => x.InternalIndex == selectedNodes.FirstOrDefault()?.InternalIndex - 1);
+            if (SelectedCosmeticNode.SharesData == false && prevNode != null)
+                nodesToMove = nodeGroups.FirstOrDefault(x => x.Contains(prevNode)) ?? nodesToMove;
+            else if (prevNode != null)
+                nodesToMove.Add(prevNode);
+            if (selectedNodes.FirstOrDefault()?.InternalIndex > 0 
+                && !(selectedNodes.LastOrDefault()?.SharesData == true && nodesToMove.LastOrDefault()?.SharesData == false))
             {
-                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.FirstOrDefault()?.InternalIndex - 1);
                 // Move selected nodes down
-                foreach (var item in nodes)
+                foreach (var item in selectedNodes)
                 {
-                    item.InternalIndex--;
+                    item.InternalIndex -= nodesToMove.Count;
                 }
                 // Move node after selected to before them
-                if (cosmetic != null)
-                    cosmetic.InternalIndex += nodes.Count;
+                foreach (var node in nodesToMove)
+                    node.InternalIndex += selectedNodes.Count;
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
-        public void MoveCosmeticDown(object selectedItems)
+        public void MoveCosmeticDown()
         {
-            var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().ToList();
-            if (nodes.LastOrDefault()?.InternalIndex < CosmeticList.Max(x => x.InternalIndex))
+            // Get node groups
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
+            var selectedNodes = new List<Cosmetic>();
+            var nodesToMove = new List<Cosmetic>();
+            // Select related nodes if this is the root of a color smash group
+            if (SelectedCosmeticNode.SharesData == false)
+                selectedNodes = nodeGroups.FirstOrDefault(x => x.Contains(SelectedCosmeticNode)) ?? selectedNodes;
+            else
+                selectedNodes.Add(SelectedCosmeticNode);
+            // Get nodes to move past
+            var nextNode = CosmeticList.FirstOrDefault(x => x.InternalIndex == selectedNodes.LastOrDefault()?.InternalIndex + 1);
+            if (SelectedCosmeticNode.SharesData == false && nextNode != null)
+                nodesToMove = nodeGroups.FirstOrDefault(x => x.Contains(nextNode)) ?? nodesToMove;
+            else if (nextNode != null)
+                nodesToMove.Add(nextNode);
+            if (selectedNodes.LastOrDefault()?.InternalIndex < CosmeticList.Max(x => x.InternalIndex)
+                && !(selectedNodes.LastOrDefault()?.SharesData == true && nodesToMove.FirstOrDefault()?.SharesData == false))
             {
-                var cosmetic = CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.LastOrDefault()?.InternalIndex + 1);
                 // Move selected nodes down
-                foreach (var item in nodes)
+                foreach (var item in selectedNodes)
                 {
-                    item.InternalIndex++;
+                    item.InternalIndex += nodesToMove.Count;
                 }
                 // Move node after selected to before them
-                if (cosmetic != null)
-                    cosmetic.InternalIndex -= nodes.Count;
+                foreach(var node in nodesToMove)
+                    node.InternalIndex -= selectedNodes.Count;
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));

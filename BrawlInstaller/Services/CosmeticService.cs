@@ -28,6 +28,7 @@ namespace BrawlInstaller.Services
         List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
         List<Cosmetic> GetFranchiseIcons();
         void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id);
+        List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
@@ -388,6 +389,23 @@ namespace BrawlInstaller.Services
                     currentGroup = new List<Cosmetic>();
             }
             return colorSmashGroups;
+        }
+
+        // Get shares data groups for a list of cosmetics
+        public List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics)
+        {
+            var sharesDataGroups = new List<List<Cosmetic>>();
+            var currentGroup = new List<Cosmetic>();
+            foreach (var cosmetic in cosmetics)
+            {
+                currentGroup.Add(cosmetic);
+                if (cosmetic.SharesData == false)
+                {
+                    sharesDataGroups.Add(currentGroup);
+                    currentGroup = new List<Cosmetic>();
+                }
+            }
+            return sharesDataGroups;
         }
 
         // Color smash a list of cosmetics in a BRRES
