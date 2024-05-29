@@ -117,8 +117,8 @@
                 </ListBox>
                 <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                 <Button x:Name="sharesDataButton" Content="SharesData" Grid.Row="2" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" CommandParameter="{Binding ElementName=cosmeticListBox, Path=SelectedItems}" Command="{Binding UpdateSharesDataCommand}"/>
-                <Button x:Name="cosmeticUpButton" Content="Up" Grid.Row="3" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticUpCommand}"/>
-                <Button x:Name="cosmeticDownButton" Content="Down" Grid.Row="4" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticDownCommand}"/>
+                <Button x:Name="cosmeticUpButton" Content="Up" Grid.Row="3" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" CommandParameter="{Binding ElementName=cosmeticListBox, Path=SelectedItems}" Command="{Binding CosmeticUpCommand}"/>
+                <Button x:Name="cosmeticDownButton" Content="Down" Grid.Row="4" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" CommandParameter="{Binding ElementName=cosmeticListBox, Path=SelectedItems}" Command="{Binding CosmeticDownCommand}"/>
             </Grid>
         </GroupBox>
     </Grid>
