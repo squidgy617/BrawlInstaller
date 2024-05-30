@@ -154,6 +154,14 @@ namespace BrawlInstaller.ViewModels
         public void ReplaceCosmetic()
         {
             var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
+            // Don't allow replacing root or last color smashed cosmetic in a group
+            var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(SelectedCosmetic));
+            if (group.Count > 1 && SelectedCosmetic.SharesData == false || group.Count == 2 && SelectedCosmetic.SharesData == true)
+            {
+                _dialogService.ShowMessage("This cosmetic either contains image data for a color smash group or is the last color smashed texture in a group. " +
+                    "Undo color smashing on the cosmetic to replace it.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
+                return;
+            }
             // Update the image
             if (image != "")
             {
