@@ -280,7 +280,6 @@ namespace BrawlInstaller.ViewModels
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
-
         }
 
         private void MoveCosmeticToEnd(Cosmetic selectedCosmetic)
