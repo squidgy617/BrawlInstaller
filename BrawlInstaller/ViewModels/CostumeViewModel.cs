@@ -329,7 +329,12 @@ namespace BrawlInstaller.ViewModels
             // Check if operation can be performed
             var valid = ValidateSharesData(nodes);
             if (!valid)
+            {
+                _dialogService.ShowMessage("Color smashing could not be changed. If color smashing, ensure more than one cosmetic is selected. " +
+                    "If undoing color smashing, all cosmetics must be from the same color smash group. All selected cosmetics must be sequential.", "Color Smash Error",
+                    System.Windows.MessageBoxImage.Stop);
                 return;
+            }
             // Get groups
             var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
             var nodeGroup = nodeGroups.FirstOrDefault(x => x.Contains(nodes.LastOrDefault())) ?? nodes;
