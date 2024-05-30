@@ -165,13 +165,7 @@ namespace BrawlInstaller.ViewModels
                 SelectedCosmetic.Texture = null;
                 SelectedCosmetic.Palette = null;
                 SelectedCosmetic.SharesData = false;
-                // Decrement internal indexes of all cosmetics after this one
-                foreach(var cosmetic in CosmeticList.Where(x => x.InternalIndex > SelectedCosmetic.InternalIndex))
-                {
-                    cosmetic.InternalIndex -= 1;
-                }
-                // Put this image at the end
-                SelectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
+                MoveCosmeticToEnd(SelectedCosmetic);
                 SelectedCosmetic.HasChanged = true;
                 OnPropertyChanged(nameof(SelectedCosmetic));
                 OnPropertyChanged(nameof(CosmeticList));
@@ -280,12 +274,74 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
+        private void MoveCosmeticToEnd(Cosmetic selectedCosmetic)
+        {
+            // Decrement internal indexes of all cosmetics after this one
+            foreach (var cosmetic in CosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex))
+            {
+                cosmetic.InternalIndex -= 1;
+            }
+            // Put this image at the end
+            selectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
+            selectedCosmetic.HasChanged = true;
+        }
+
+        private bool ValidateSharesData(List<Cosmetic> nodes)
+        {
+            var startingNode = nodes.FirstOrDefault();
+            var index = startingNode?.InternalIndex;
+            var sharesData = startingNode?.SharesData;
+            var groupCount = 0;
+            // Trying to color smash a single node, not valid
+            if (nodes.Count == 1 && startingNode.SharesData == false)
+                return false;
+            foreach(var node in nodes)
+            {
+                // If nodes are not sequential, not valid
+                if (index != node.InternalIndex)
+                    return false;
+                index++;
+                // If nodes from more than one shared data group are selected, not valid
+                if (node.SharesData != sharesData)
+                    groupCount++;
+                sharesData = node.SharesData;
+                if (groupCount > 1)
+                    return false;
+            }
+            // If first node is from a different group, not valid
+            if (startingNode.SharesData == false && sharesData == true)
+                return false;
+            return true;
+        }
+
+
         public void UpdateSharesData(object selectedItems)
         {
-            var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().ToList();
+            var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().OrderBy(x => x.InternalIndex).ToList();
+            // Check if operation can be performed
+            var valid = ValidateSharesData(nodes);
+            if (!valid)
+                return;
+            // Get groups
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
+            var nodeGroup = nodeGroups.FirstOrDefault(x => x.Contains(nodes.LastOrDefault())) ?? nodes;
+            // If a group's root is selected, the entire group will be affected
+            var mixedGroup = nodes.Any(x => x.SharesData == false) && nodes.Any(x => x.SharesData == true);
+            if (mixedGroup)
+                nodes = nodeGroup;
+            // If we are changing all but the root, root will be affected too
+            if (!mixedGroup && nodeGroup.Count == nodes.Count + 1)
+                nodes.Add(CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.LastOrDefault()?.InternalIndex + 1));
+            // Update color smashing for all nodes
             foreach (var item in nodes)
             {
-                item.SharesData = !item.SharesData;
+                // The root will not be flipped
+                if (item.SharesData == true || item != nodes.LastOrDefault())
+                {
+                    item.SharesData = !item.SharesData;
+                    if (item.SharesData == false)
+                        MoveCosmeticToEnd(item);
+                }
                 item.ColorSmashChanged = true;
                 item.HasChanged = true;
             }
