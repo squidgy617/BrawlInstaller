@@ -156,7 +156,7 @@ namespace BrawlInstaller.ViewModels
             var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
             // Don't allow replacing root or last color smashed cosmetic in a group
             var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(SelectedCosmetic));
-            if (group.Count > 1 && SelectedCosmetic.SharesData == false || group.Count == 2 && SelectedCosmetic.SharesData == true)
+            if (group != null && ((group.Count > 1 && SelectedCosmetic?.SharesData == false) || (group.Count == 2 && SelectedCosmetic?.SharesData == true)))
             {
                 _dialogService.ShowMessage("This cosmetic either contains image data for a color smash group or is the last color smashed texture in a group. " +
                     "Undo color smashing on the cosmetic to replace it.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
@@ -200,20 +200,27 @@ namespace BrawlInstaller.ViewModels
 
         private void MoveCostume()
         {
-            var movedCostume = SelectedCostume;
-            movedCostume.Cosmetics.ForEach(x => x.HasChanged = true);
+            if (SelectedCostume != null)
+            {
+                var movedCostume = SelectedCostume;
+                movedCostume.Cosmetics.ForEach(x => x.HasChanged = true);
+            }
         }
 
         public void MoveCostumeUp()
         {
             MoveCostume();
+            var selectedCostume = SelectedCostume;
             Costumes.MoveUp(SelectedCostume);
+            SelectedCostume = selectedCostume;
         }
 
         public void MoveCostumeDown()
         {
             MoveCostume();
+            var selectedCostume = SelectedCostume;
             Costumes.MoveDown(SelectedCostume);
+            SelectedCostume = selectedCostume;
         }
 
         public void MoveCosmeticUp()
