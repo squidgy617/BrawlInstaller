@@ -76,6 +76,8 @@ namespace BrawlInstaller.Services
             texture.Remove(true);
             palette?.Remove();
             var node = ImportTexture(destinationNode, "tempNode.png", format, size);
+            if (node.GetPaletteNode() != null)
+                node.GetPaletteNode().Name = name;
             node.Name = name;
             folder.RemoveChild(node);
             folder.InsertChild(node, index);
@@ -211,9 +213,12 @@ namespace BrawlInstaller.Services
                 {
                     var texNode = (TEX0Node)node;
                     var name = texNode.DolphinTextureName;
-                    var deleteFile = HDImages.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
-                    _fileService.DeleteFile(deleteFile);
-                    HDImages.Remove(deleteFile);
+                    if (_settingsService.BuildSettings.HDTextures)
+                    {
+                        var deleteFile = HDImages.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
+                        _fileService.DeleteFile(deleteFile);
+                        HDImages.Remove(deleteFile);
+                    }
                 };
                 folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
             }
@@ -261,14 +266,14 @@ namespace BrawlInstaller.Services
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
                 (cosmetic.Texture.Width == definition.Size.Value.Width && cosmetic.Texture.Height == definition.Size.Value.Height
                 && cosmetic.Texture.Format == definition.Format
-                && (!cosmetic.Texture.SharesData && !definition.FirstOnly && !definition.SeparateFiles))))
+                && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
             {
+                cosmetic.Texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 var texture = ImportTexture(parentNode, cosmetic.Texture);
-                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 if (cosmetic.Palette != null)
                 {
+                    cosmetic.Palette.Name = texture.Name;
                     var palette = ImportPalette(parentNode, cosmetic.Palette);
-                    palette.Name = texture.Name;
                 }
             }
             // If we have an image from filesystem, import that
@@ -369,6 +374,16 @@ namespace BrawlInstaller.Services
         public void RemoveCosmetics(CosmeticDefinition definition, int id)
         {
             var files = GetCosmeticPaths(definition, id);
+            // This is just to remove HD textures
+            foreach(var file in files)
+            {
+                var rootNode = _fileService.OpenFile(file);
+                if (rootNode != null)
+                {
+                    RemoveTextures((BRRESNode)rootNode, definition, id, false);
+                }
+                _fileService.CloseFile(rootNode);
+            }
             files.ForEach(x => File.Delete(x));
         }
 
@@ -458,17 +473,18 @@ namespace BrawlInstaller.Services
                             ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition);
                         _fileService.SaveFile(rootNode);
                         // Save HD cosmetics if they exist
-                        foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
-                        {
-                            var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
-                            if (!string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
+                        if (_settingsService.BuildSettings.HDTextures)
+                            foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                             {
-                                var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}" +
-                                    $"\\{texture?.DolphinTextureName}.png";
-                                cosmetic.HDImage.Save(imagePath);
-                                cosmetic.HDImagePath = imagePath;
+                                var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
+                                if (!string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
+                                {
+                                    var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}" +
+                                        $"\\{texture?.DolphinTextureName}.png";
+                                    cosmetic.HDImage.Save(imagePath);
+                                    cosmetic.HDImagePath = imagePath;
+                                }
                             }
-                        }
                         _fileService.CloseFile(rootNode);
                     }
                 }
@@ -483,6 +499,15 @@ namespace BrawlInstaller.Services
                     ImportCosmetic(definition, cosmetic, id, rootNode);
                     _fileService.SaveFileAs(rootNode, $"{_settingsService.BuildPath}{definition.InstallLocation.FilePath}" +
                         $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}.{definition.InstallLocation.FileExtension}");
+                    // Save HD cosmetic if it exists
+                    var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
+                    if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
+                    {
+                        var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}" +
+                            $"\\{texture?.DolphinTextureName}.png";
+                        cosmetic.HDImage.Save(imagePath);
+                        cosmetic.HDImagePath = imagePath;
+                    }
                     _fileService.CloseFile(rootNode);
                 }
             }
@@ -670,6 +695,7 @@ namespace BrawlInstaller.Services
         public List<string> PreloadHDTextures()
         {
             var directories = Directory.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
+            directories = directories.Append(_settingsService.BuildSettings.FilePathSettings.HDTextures).ToArray();
             var hdImages = new ConcurrentBag<string>();
             Parallel.ForEach(directories, directory =>
             {

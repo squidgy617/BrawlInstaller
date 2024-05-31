@@ -24,6 +24,7 @@ namespace BrawlInstaller.ViewModels
         ObservableCollection<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
         ObservableCollection<string> PacFiles { get; }
+        string SelectedPacFile { get; set; }
         ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
@@ -40,6 +41,7 @@ namespace BrawlInstaller.ViewModels
         ICommand CosmeticDownCommand { get; }
         ICommand AddCostumeCommand { get; }
         ICommand AddPacFilesCommand { get; }
+        ICommand RemovePacFileCommand { get; }
     }
 
     [Export(typeof(ICostumeViewModel))]
@@ -49,6 +51,7 @@ namespace BrawlInstaller.ViewModels
         private FighterPackage _fighterPackage;
         private ObservableCollection<Costume> _costumes;
         private Costume _selectedCostume;
+        private string _selectedPacFile;
         private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
@@ -61,8 +64,8 @@ namespace BrawlInstaller.ViewModels
         ICosmeticService _cosmeticService { get; }
 
         // Commands
-        public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
-        public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic());
+        public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic(param));
+        public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic(param));
         public ICommand CostumeUpCommand => new RelayCommand(param => MoveCostumeUp());
         public ICommand CostumeDownCommand => new RelayCommand(param => MoveCostumeDown());
         public ICommand UpdateSharesDataCommand => new RelayCommand(param => UpdateSharesData(param));
@@ -70,6 +73,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand CosmeticDownCommand => new RelayCommand(param => MoveCosmeticDown());
         public ICommand AddCostumeCommand => new RelayCommand(param => AddCostume());
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
+        public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
 
         // Importing constructor
         [ImportingConstructor]
@@ -104,6 +108,7 @@ namespace BrawlInstaller.ViewModels
         public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(SelectedCosmeticOption)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(PacFiles)); } }
         public ObservableCollection<string> PacFiles { get => SelectedCostume != null ? new ObservableCollection<string>(SelectedCostume?.PacFiles) : new ObservableCollection<string>(); }
+        public string SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(); } }
         public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
@@ -131,17 +136,20 @@ namespace BrawlInstaller.ViewModels
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
         }
 
-        public void AddCosmetic()
+        public Cosmetic AddCosmetic(Costume costume)
         {
             var cosmetic = new Cosmetic
             {
-                CostumeIndex = Costumes.IndexOf(SelectedCostume) + 1,
+                CostumeIndex = Costumes.IndexOf(costume) + 1,
                 CosmeticType = SelectedCosmeticOption,
+                InternalIndex = Costumes.SelectMany(x => x.Cosmetics).Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle)
+                    .Max(x => x.InternalIndex) + 1,
                 Style = SelectedStyle,
                 HasChanged = true
             };
-            SelectedCostume.Cosmetics.Add(cosmetic);
+            costume.Cosmetics.Add(cosmetic);
             FighterPackage.Cosmetics.Add(cosmetic);
+            return cosmetic;
         }
 
         public void AddPacFiles()
@@ -151,50 +159,82 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(PacFiles));
         }
 
-        public void ReplaceCosmetic()
+        public void RemovePacFile()
         {
-            var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
-            // Don't allow replacing root or last color smashed cosmetic in a group
-            var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(SelectedCosmetic));
-            if (group != null && ((group.Count > 1 && SelectedCosmetic?.SharesData == false) || (group.Count == 2 && SelectedCosmetic?.SharesData == true)))
+            SelectedCostume.PacFiles.Remove(SelectedPacFile);
+            OnPropertyChanged(nameof(PacFiles));
+        }
+
+        public void ReplaceCosmetic(object selectedItems)
+        {
+            var costumes = ((IEnumerable)selectedItems).Cast<Costume>().ToList();
+            var images = _dialogService.OpenMultiFileDialog("Select an image", "PNG images (.png)|*.png");
+            if (costumes.Count != images.Count)
             {
-                _dialogService.ShowMessage("This cosmetic either contains image data for a color smash group or is the last color smashed texture in a group. " +
-                    "Undo color smashing on the cosmetic to replace it.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
+                _dialogService.ShowMessage("Number of images and number of costumes selected must be equal!", "Import Error", System.Windows.MessageBoxImage.Stop);
                 return;
             }
-            // Update the image
-            if (image != "")
+            // Don't allow replacing root or last color smashed cosmetic in a group
+            foreach(var costume in costumes)
             {
-                var bitmap = new Bitmap(image);
-                if (SelectedCosmetic == null)
-                    AddCosmetic();
-                SelectedCosmetic.Image = bitmap.ToBitmapImage();
-                SelectedCosmetic.ImagePath = image;
-                SelectedCosmetic.Texture = null;
-                SelectedCosmetic.Palette = null;
-                SelectedCosmetic.SharesData = false;
-                MoveCosmeticToEnd(SelectedCosmetic);
-                SelectedCosmetic.HasChanged = true;
-                OnPropertyChanged(nameof(SelectedCosmetic));
-                OnPropertyChanged(nameof(CosmeticList));
-                OnPropertyChanged(nameof(SelectedCosmeticNode));
+                var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
+                var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(cosmetic));
+                if (group != null && ((group.Count > 1 && cosmetic?.SharesData == false) || (group.Count == 2 && cosmetic?.SharesData == true)))
+                {
+                    _dialogService.ShowMessage("This cosmetic either contains image data for a color smash group or is the last color smashed texture in a group. " +
+                        "Undo color smashing on the cosmetic to replace it.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
+                    return;
+                }
+            }
+            // Update the image
+            foreach(var image in images)
+            {
+                var currentCostume = costumes[images.IndexOf(image)];
+                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
+                if (!string.IsNullOrEmpty(image))
+                {
+                    var bitmap = new Bitmap(image);
+                    if (currentCosmetic == null)
+                        currentCosmetic = AddCosmetic(currentCostume);
+                    currentCosmetic.Image = bitmap.ToBitmapImage();
+                    currentCosmetic.ImagePath = image;
+                    currentCosmetic.Texture = null;
+                    currentCosmetic.Palette = null;
+                    currentCosmetic.SharesData = false;
+                    MoveCosmeticToEnd(currentCosmetic);
+                    currentCosmetic.HasChanged = true;
+                    OnPropertyChanged(nameof(SelectedCosmetic));
+                    OnPropertyChanged(nameof(CosmeticList));
+                    OnPropertyChanged(nameof(SelectedCosmeticNode));
+                }
             }
         }
 
-        public void ReplaceHDCosmetic()
+        public void ReplaceHDCosmetic(object selectedItems)
         {
-            var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
-            // Update the image
-            if (!string.IsNullOrEmpty(image))
+            var costumes = ((IEnumerable)selectedItems).Cast<Costume>().ToList();
+            var images = _dialogService.OpenMultiFileDialog("Select an image", "PNG images (.png)|*.png");
+            if (costumes.Count != images.Count)
             {
-                var bitmap = new Bitmap(image);
-                if (SelectedCosmetic == null)
-                    AddCosmetic();
-                SelectedCosmetic.HDImage = bitmap.ToBitmapImage();
-                SelectedCosmetic.HDImagePath = image;
-                SelectedCosmetic.HasChanged = true;
-                OnPropertyChanged(nameof(SelectedCosmetic));
-                OnPropertyChanged(nameof(CosmeticList));
+                _dialogService.ShowMessage("Number of images and number of costumes selected must be equal!", "Import Error", System.Windows.MessageBoxImage.Stop);
+                return;
+            }
+            // Update the image
+            foreach (var image in images)
+            {
+                var currentCostume = costumes[images.IndexOf(image)];
+                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
+                if (!string.IsNullOrEmpty(image))
+                {
+                    var bitmap = new Bitmap(image);
+                    if (currentCosmetic == null)
+                        AddCosmetic(currentCostume);
+                    currentCosmetic.HDImage = bitmap.ToBitmapImage();
+                    currentCosmetic.HDImagePath = image;
+                    currentCosmetic.HasChanged = true;
+                    OnPropertyChanged(nameof(SelectedCosmetic));
+                    OnPropertyChanged(nameof(CosmeticList));
+                }
             }
         }
 
@@ -211,7 +251,8 @@ namespace BrawlInstaller.ViewModels
         {
             MoveCostume();
             var selectedCostume = SelectedCostume;
-            Costumes.MoveUp(SelectedCostume);
+            Costumes.MoveUp(selectedCostume);
+            FighterPackage.Costumes.MoveUp(selectedCostume);
             SelectedCostume = selectedCostume;
         }
 
@@ -219,7 +260,8 @@ namespace BrawlInstaller.ViewModels
         {
             MoveCostume();
             var selectedCostume = SelectedCostume;
-            Costumes.MoveDown(SelectedCostume);
+            Costumes.MoveDown(selectedCostume);
+            FighterPackage.Costumes.MoveDown(selectedCostume);
             SelectedCostume = selectedCostume;
         }
 
@@ -291,14 +333,18 @@ namespace BrawlInstaller.ViewModels
 
         private void MoveCosmeticToEnd(Cosmetic selectedCosmetic)
         {
-            // Decrement internal indexes of all cosmetics after this one
-            foreach (var cosmetic in CosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex))
+            var cosmeticsToMove = CosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex);
+            if (cosmeticsToMove.Any())
             {
-                cosmetic.InternalIndex -= 1;
+                // Decrement internal indexes of all cosmetics after this one
+                foreach (var cosmetic in CosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex))
+                {
+                    cosmetic.InternalIndex -= 1;
+                }
+                // Put this image at the end
+                selectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
+                selectedCosmetic.HasChanged = true;
             }
-            // Put this image at the end
-            selectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
-            selectedCosmetic.HasChanged = true;
         }
 
         private bool ValidateSharesData(List<Cosmetic> nodes)
@@ -352,16 +398,16 @@ namespace BrawlInstaller.ViewModels
             // If we are changing all but the root, root will be affected too
             if (!mixedGroup && nodeGroup.Count == nodes.Count + 1)
                 nodes.Add(CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.LastOrDefault()?.InternalIndex + 1));
+            var moveToEnd = nodes.Any(x => x.SharesData == true);
             // Update color smashing for all nodes
             foreach (var item in nodes)
             {
                 // The root will not be flipped
                 if (item.SharesData == true || item != nodes.LastOrDefault())
-                {
                     item.SharesData = !item.SharesData;
-                    if (item.SharesData == false)
-                        MoveCosmeticToEnd(item);
-                }
+                // Move all to end if unsmashing
+                if (moveToEnd)
+                    MoveCosmeticToEnd(item);
                 item.ColorSmashChanged = true;
                 item.HasChanged = true;
             }

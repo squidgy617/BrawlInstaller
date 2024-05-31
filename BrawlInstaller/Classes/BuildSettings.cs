@@ -17,6 +17,7 @@ namespace BrawlInstaller.Classes
         public SoundSettings SoundSettings { get; set; }
         public MiscSettings MiscSettings { get; set; }
         public FilePathSettings FilePathSettings { get; set; }
+        public bool HDTextures { get; set; } = true;
     }
 
     public class InstallLocation

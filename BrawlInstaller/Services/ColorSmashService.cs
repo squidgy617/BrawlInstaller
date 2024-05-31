@@ -73,6 +73,8 @@ namespace BrawlInstaller.Services
                 var texture = ColorSmashTextureImport(bres, file, WiiPixelFormat.CI8, mipCount);
                 // Update and move texture node
                 texture.OriginalPath = "";
+                if (texture.GetPaletteNode() != null)
+                    texture.GetPaletteNode().Name = name;
                 texture.Name = name;
                 folder.RemoveChild(texture);
                 folder.InsertChild(texture, index);

@@ -34,7 +34,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
+            <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" SelectionMode="Extended" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
@@ -55,9 +55,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding PacFiles}" VerticalAlignment="Top" Width="120" Height="100" Grid.Row="0"/>
+            <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding PacFiles}" SelectedValue="{Binding SelectedPacFile, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="100" Grid.Row="0"/>
             <Button x:Name="addPacFilesButton" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddPacFilesCommand}" Grid.Row="1"/>
+            <Button x:Name="removePacFilesButton" Content="Remove" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding RemovePacFileCommand}" Grid.Row="2"/>
         </Grid>
         <Label x:Name="colorLabel" Content="Color:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="2"/>
         <ComboBox x:Name="colorComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Grid.Row="2" Grid.Column="3" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
@@ -83,8 +85,8 @@
                 <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
                 <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="1"/>
                 <Image x:Name="cosmeticHDImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="2"/>
-                <Button x:Name="replaceCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Replace" Command="{Binding ReplaceCosmeticCommand}" Grid.Row="3" Grid.Column="1"/>
-                <Button x:Name="replaceHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Replace" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Row="3" Grid.Column="2"/>
+                <Button x:Name="replaceCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Replace" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding ReplaceCosmeticCommand}" Grid.Row="3" Grid.Column="1"/>
+                <Button x:Name="replaceHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Replace" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Row="3" Grid.Column="2"/>
                 <ListBox x:Name="cosmeticListBox" VerticalAlignment="Top" Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" SelectionMode="Extended" ItemsSource="{Binding CosmeticList}" SelectedValue="{Binding SelectedCosmeticNode}" Width="120" Height="100">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
