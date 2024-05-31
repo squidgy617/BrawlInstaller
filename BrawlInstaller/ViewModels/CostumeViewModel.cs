@@ -168,7 +168,7 @@ namespace BrawlInstaller.ViewModels
         public void ReplaceCosmetic(object selectedItems)
         {
             var costumes = ((IEnumerable)selectedItems).Cast<Costume>().ToList();
-            var images = _dialogService.OpenMultiFileDialog("Select an image", "PNG images (.png)|*.png");
+            var images = _dialogService.OpenMultiFileDialog("Select images", "PNG images (.png)|*.png");
             if (costumes.Count != images.Count)
             {
                 if (images.Count > 0)
@@ -182,8 +182,8 @@ namespace BrawlInstaller.ViewModels
                 var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(cosmetic));
                 if (group != null && ((group.Count > 1 && cosmetic?.SharesData == false) || (group.Count == 2 && cosmetic?.SharesData == true)))
                 {
-                    _dialogService.ShowMessage("This cosmetic either contains image data for a color smash group or is the last color smashed texture in a group. " +
-                        "Undo color smashing on the cosmetic to replace it.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
+                    _dialogService.ShowMessage("Selected cosmetics contain either image data for a color smash group or the last color smashed texture in a group. " +
+                        "Undo color smashing on the cosmetics to replace them.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
                     return;
                 }
             }
