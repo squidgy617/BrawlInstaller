@@ -171,7 +171,8 @@ namespace BrawlInstaller.ViewModels
             var images = _dialogService.OpenMultiFileDialog("Select an image", "PNG images (.png)|*.png");
             if (costumes.Count != images.Count)
             {
-                _dialogService.ShowMessage("Number of images and number of costumes selected must be equal!", "Import Error", System.Windows.MessageBoxImage.Stop);
+                if (images.Count > 0)
+                    _dialogService.ShowMessage("Number of images and number of costumes selected must be equal!", "Import Error", System.Windows.MessageBoxImage.Stop);
                 return;
             }
             // Don't allow replacing root or last color smashed cosmetic in a group
@@ -216,7 +217,8 @@ namespace BrawlInstaller.ViewModels
             var images = _dialogService.OpenMultiFileDialog("Select an image", "PNG images (.png)|*.png");
             if (costumes.Count != images.Count)
             {
-                _dialogService.ShowMessage("Number of images and number of costumes selected must be equal!", "Import Error", System.Windows.MessageBoxImage.Stop);
+                if (images.Count > 0)
+                    _dialogService.ShowMessage("Number of images and number of costumes selected must be equal!", "Import Error", System.Windows.MessageBoxImage.Stop);
                 return;
             }
             // Update the image
