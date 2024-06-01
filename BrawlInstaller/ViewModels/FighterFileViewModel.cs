@@ -34,7 +34,9 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public List<FighterFiles> FighterFiles { get => _fighterFiles; set {  _fighterFiles = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedFighterFiles)); } }
+        public List<FighterFiles> FighterFiles { get => _fighterFiles; set {  _fighterFiles = value; OnPropertyChanged(nameof(FighterFiles)); } }
+
+        [DependsUpon(nameof(FighterFiles))]
         public FighterFiles SelectedFighterFiles { get => _selectedFighterFiles; set { _selectedFighterFiles = value; OnPropertyChanged(); } }
 
         // Methods

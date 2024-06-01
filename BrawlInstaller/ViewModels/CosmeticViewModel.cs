@@ -55,12 +55,20 @@ namespace BrawlInstaller.ViewModels
         }
 
         //Properties
-        public List<Cosmetic> Cosmetics { get => _cosmetics; set { _cosmetics = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(SelectedCosmetic)); } }
-        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); } }
-        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(Styles)); } }
+        public List<Cosmetic> Cosmetics { get => _cosmetics; set { _cosmetics = value; OnPropertyChanged(nameof(Cosmetics)); } }
+
+        [DependsUpon(nameof(Cosmetics))]
+        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
+
+        [DependsUpon(nameof(Cosmetics))]
+        [DependsUpon(nameof(SelectedStyle))]
         public Cosmetic SelectedCosmetic { get => Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
+
+        [DependsUpon(nameof(Cosmetics))]
+        [DependsUpon(nameof(SelectedCosmeticOption))]
         public List<string> Styles { get => Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
-        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); } }
+        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
 
         // Methods
         public void LoadCosmetics(FighterLoadedMessage message)
