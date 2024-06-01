@@ -49,7 +49,7 @@
             <Button x:Name="costumeDownButton" Content="↓" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1"/>
         </Grid>
         <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="2"/>
-        <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="3"/>
+        <TextBox x:Name="costumeIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="3"/>
         <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2"/>
         <Grid x:Name="pacFilesGrid" Grid.Row="1" Grid.Column="3">
             <Grid.RowDefinitions>

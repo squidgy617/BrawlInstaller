@@ -23,6 +23,7 @@ namespace BrawlInstaller.ViewModels
     {
         ObservableCollection<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
+        int? CostumeId { get; set; }
         ObservableCollection<string> PacFiles { get; }
         string SelectedPacFile { get; set; }
         ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
@@ -104,20 +105,48 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(); } }
-        public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(); OnPropertyChanged(nameof(CosmeticOptions)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
-        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(SelectedCosmeticOption)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(PacFiles)); } }
+        public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
+        
+        public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(nameof(Costumes)); } }
+        
+        public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(nameof(SelectedCostume)); } }
+        
+        [DependsUpon(nameof(SelectedCostume))]
+        public int? CostumeId { get => SelectedCostume?.CostumeId; set { UpdateCostumeId(value); OnPropertyChanged(nameof(CostumeId)); } }
+
+        [DependsUpon(nameof(SelectedCostume))]
         public ObservableCollection<string> PacFiles { get => SelectedCostume != null ? new ObservableCollection<string>(SelectedCostume?.PacFiles) : new ObservableCollection<string>(); }
-        public string SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(); } }
-        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
-        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(Styles)); OnPropertyChanged(nameof(CosmeticList)); } }
+        
+        public string SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
+
+        [DependsUpon(nameof(Costumes))]
+        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+
+        [DependsUpon(nameof(SelectedCostume))]
+        [DependsUpon(nameof(CosmeticOptions))]
+        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
+
+        [DependsUpon(nameof(SelectedCostume))]
+        [DependsUpon(nameof(SelectedCosmeticOption))]
+        [DependsUpon(nameof(SelectedStyle))]
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
+
+        [DependsUpon(nameof(Costumes))]
+        [DependsUpon(nameof(SelectedCostume))]
+        [DependsUpon(nameof(SelectedCosmeticOption))]
         public List<string> Styles { get => Costumes?.SelectMany(x => x.Cosmetics)?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
-        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedCosmetic)); OnPropertyChanged(nameof(CosmeticList)); } }
-        public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(); } }
+        
+        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
+        
+        public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(nameof(Colors)); } }
+
+        [DependsUpon(nameof(Costumes))]
+        [DependsUpon(nameof(SelectedCosmeticOption))]
+        [DependsUpon(nameof(SelectedStyle))]
         public List<Cosmetic> CosmeticList { get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
                 .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList(); }
-        public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(); } }
+        
+        public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(nameof(SelectedCosmeticNode)); } }
 
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
@@ -432,6 +461,17 @@ namespace BrawlInstaller.ViewModels
             Costumes.Add(newCostume);
             FighterPackage.Costumes.Add(newCostume);
             SelectedCostume = newCostume;
+        }
+
+        public void UpdateCostumeId(int? costumeId)
+        {
+            if (Costumes.Any(x => x.CostumeId == costumeId))
+            {
+                _dialogService.ShowMessage("You cannot set a costume ID to an ID that is already in use.", "Costume ID Already in Use", System.Windows.MessageBoxImage.Stop);
+                return;
+            }
+            if (costumeId != null)
+                SelectedCostume.CostumeId = (int)costumeId;
         }
     }
 }
