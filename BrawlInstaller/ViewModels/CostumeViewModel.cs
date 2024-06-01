@@ -453,7 +453,7 @@ namespace BrawlInstaller.ViewModels
                 costumeId++;
             var newCostume = new Costume
             {
-                Color = 0x00,
+                Color = 0x0B,
                 CostumeId = costumeId,
                 PacFiles = new List<string>(),
                 Cosmetics = new List<Cosmetic>()
