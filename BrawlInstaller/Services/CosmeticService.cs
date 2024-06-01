@@ -735,7 +735,7 @@ namespace BrawlInstaller.Services
             var textures = GetTextures(definition, node, fighterIds, restrictRange);
             foreach(var texture in textures)
             {
-                var hdTexture = GetHDTexture(texture.Texture?.DolphinTextureName);
+                var hdTexture = _settingsService.BuildSettings.HDTextures ? GetHDTexture(texture.Texture?.DolphinTextureName) : "";
                 cosmetics.Add(new Cosmetic
                 {
                     CosmeticType = definition.CosmeticType,
@@ -782,7 +782,8 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType != CosmeticType.FranchiseIcon).ToList();
             // Load HD textures in advance
-            PreloadHDTextures();
+            if (_settingsService.BuildSettings.HDTextures)
+                PreloadHDTextures();
             return GetCosmetics(fighterIds, definitions, true);
         }
 
