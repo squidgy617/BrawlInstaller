@@ -196,7 +196,7 @@ namespace BrawlInstaller.ViewModels
 
         public void ReplaceCosmetic(object selectedItems)
         {
-            var costumes = ((IEnumerable)selectedItems).Cast<Costume>().ToList();
+            var costumes = ((IEnumerable)selectedItems).Cast<Costume>().OrderBy(x => Costumes.IndexOf(x)).ToList();
             var images = _dialogService.OpenMultiFileDialog("Select images", "PNG images (.png)|*.png");
             if (costumes.Count != images.Count)
             {
@@ -242,7 +242,7 @@ namespace BrawlInstaller.ViewModels
 
         public void ReplaceHDCosmetic(object selectedItems)
         {
-            var costumes = ((IEnumerable)selectedItems).Cast<Costume>().ToList();
+            var costumes = ((IEnumerable)selectedItems).Cast<Costume>().OrderBy(x => Costumes.IndexOf(x)).ToList();
             var images = _dialogService.OpenMultiFileDialog("Select an image", "PNG images (.png)|*.png");
             if (costumes.Count != images.Count)
             {
