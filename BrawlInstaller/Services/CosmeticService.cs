@@ -51,8 +51,15 @@ namespace BrawlInstaller.Services
 
         // Methods
 
-        // Import a texture from an image path
-        public TEX0Node ImportTexture(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, System.Drawing.Size size)
+        /// <summary>
+        /// Import a texture from an image path
+        /// </summary>
+        /// <param name="destinationNode">Destination for imported texture node</param>
+        /// <param name="imageSource">Path containing image source</param>
+        /// <param name="format">Encoding format to use</param>
+        /// <param name="size">Dimensions to scale image to</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node ImportTexture(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, System.Drawing.Size size)
         {
             var dialog = new TextureConverterDialog();
             dialog.ImageSource = imageSource;
@@ -65,7 +72,15 @@ namespace BrawlInstaller.Services
             return node;
         }
 
-        public TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, System.Drawing.Size size)
+        /// <summary>
+        /// Reimport a texture that is already imported
+        /// </summary>
+        /// <param name="destinationNode">Destination for imported texture node</param>
+        /// <param name="cosmetic">Cosmetic to reimport</param>
+        /// <param name="format">Encoding format to use</param>
+        /// <param name="size">Dimensions to scale image to</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, System.Drawing.Size size)
         {
             var texture = cosmetic.Texture;
             var palette = cosmetic.Palette;
@@ -84,7 +99,13 @@ namespace BrawlInstaller.Services
             return node;
         }
 
-        public MDL0Node ImportModel(BRRESNode destinationNode, string modelSource)
+        /// <summary>
+        /// Import a model
+        /// </summary>
+        /// <param name="destinationNode">Destination for model node</param>
+        /// <param name="modelSource">Path to model</param>
+        /// <returns>MDL0Node</returns>
+        private MDL0Node ImportModel(BRRESNode destinationNode, string modelSource)
         {
             var node = new MDL0Node();
             node.Replace(modelSource);
@@ -93,15 +114,26 @@ namespace BrawlInstaller.Services
             return node;
         }
 
-        // Import a texture node
-        public TEX0Node ImportTexture(BRRESNode destinationNode, TEX0Node texture)
+        /// <summary>
+        /// Import a texture node
+        /// </summary>
+        /// <param name="destinationNode">Destination to import texture node</param>
+        /// <param name="texture">Texture node to import</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node ImportTexture(BRRESNode destinationNode, TEX0Node texture)
         {
             destinationNode.GetOrCreateFolder<TEX0Node>()?.AddChild(texture);
             return texture;
         }
 
-        // Get texture node matching what's stored in cosmetic to guarantee accuracy
-        public TEX0Node GetTexture(ResourceNode rootNode, CosmeticDefinition definition, string name)
+        /// <summary>
+        /// Get texture node matching what's stored in cosmetic to guarantee accuracy
+        /// </summary>
+        /// <param name="rootNode">Root node of file to get texture from</param>
+        /// <param name="definition">Cosmetic definition for texture</param>
+        /// <param name="name">Name of texture</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node GetTexture(ResourceNode rootNode, CosmeticDefinition definition, string name)
         {
             var parentNode = !string.IsNullOrEmpty(definition.InstallLocation.NodePath) ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             if (parentNode != null)
@@ -111,7 +143,13 @@ namespace BrawlInstaller.Services
             return null;
         }
 
-        public TEX0Node GetTexture(BRRESNode parentNode, string name)
+        /// <summary>
+        /// Get texture node matching what's stored in cosmetic to guarantee accuracy
+        /// </summary>
+        /// <param name="parentNode">Parent node of texture to get</param>
+        /// <param name="name">Name of texture</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node GetTexture(BRRESNode parentNode, string name)
         {
             var folder = parentNode.GetFolder<TEX0Node>();
             if (folder != null)
@@ -123,29 +161,51 @@ namespace BrawlInstaller.Services
             return null;
         }
 
-        // Import a palette node
-        public PLT0Node ImportPalette(BRRESNode destinationNode, PLT0Node palette)
+        /// <summary>
+        /// Import a palette node
+        /// </summary>
+        /// <param name="destinationNode">Destination to import node to</param>
+        /// <param name="palette">Palette node to import</param>
+        /// <returns>PLT0Node</returns>
+        private PLT0Node ImportPalette(BRRESNode destinationNode, PLT0Node palette)
         {
             destinationNode.GetOrCreateFolder<PLT0Node>()?.AddChild(palette);
             return palette;
         }
 
-        // Import a model node
-        public MDL0Node ImportModel(BRRESNode destinationNode, MDL0Node model)
+        /// <summary>
+        /// Import a model node
+        /// </summary>
+        /// <param name="destinationNode">Destination to import node to</param>
+        /// <param name="model">Model node</param>
+        /// <returns>MDL0Node</returns>
+        private MDL0Node ImportModel(BRRESNode destinationNode, MDL0Node model)
         {
             destinationNode.GetOrCreateFolder<MDL0Node>()?.AddChild(model);
             return model;
         }
 
-        // Import a color sequence
-        public CLR0Node ImportColorSequence(BRRESNode destinationNode, CLR0Node colorSequence)
+        /// <summary>
+        /// Import a color sequence node
+        /// </summary>
+        /// <param name="destinationNode">Destination to import color sequence to</param>
+        /// <param name="colorSequence">Color sequence to import</param>
+        /// <returns>CLR0Node</returns>
+        private CLR0Node ImportColorSequence(BRRESNode destinationNode, CLR0Node colorSequence)
         {
             destinationNode.GetOrCreateFolder<CLR0Node>()?.AddChild(colorSequence);
             return colorSequence;
         }
 
-        // Create a new pat entry node
-        public PAT0TextureEntryNode CreatePatEntry(ResourceNode destinationNode, int frameIndex, string texture="", string palette="")
+        /// <summary>
+        /// Create a new PAT0 entry node
+        /// </summary>
+        /// <param name="destinationNode">Destination to create PAT0 entry</param>
+        /// <param name="frameIndex">Frame index to assign PAT0 entry</param>
+        /// <param name="texture">Texture to assign PAT0 entry</param>
+        /// <param name="palette">Palette to assign PAT0 entry</param>
+        /// <returns>PAT0TextureEntryNode</returns>
+        private PAT0TextureEntryNode CreatePatEntry(ResourceNode destinationNode, int frameIndex, string texture="", string palette="")
         {
             if (destinationNode != null)
             {
@@ -159,8 +219,13 @@ namespace BrawlInstaller.Services
             return null;
         }
 
-        // Remove texture pattern entries based on definition rules
-        public void RemovePatEntries(ResourceNode rootNode, CosmeticDefinition definition, int id)
+        /// <summary>
+        /// Remove texture pattern entries based on definition rules
+        /// </summary>
+        /// <param name="rootNode">Root node of file to remove textures from</param>
+        /// <param name="definition">Cosmetic definition for textures</param>
+        /// <param name="id">ID associated with cosmetics</param>
+        private void RemovePatEntries(ResourceNode rootNode, CosmeticDefinition definition, int id)
         {
             var patTextures = GetPatTextureNodes(rootNode, definition);
             foreach (var patTexture in patTextures)
@@ -184,8 +249,13 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // Get texture pattern nodes based on definition rules
-        public List<ResourceNode> GetPatTextureNodes(ResourceNode rootnode, CosmeticDefinition definition)
+        /// <summary>
+        /// Get texture pattern nodes based on definition rules
+        /// </summary>
+        /// <param name="rootnode">Root node of file to get texture pattern nodes from</param>
+        /// <param name="definition">Cosmetic definition for texture pattern nodes</param>
+        /// <returns>List of ResourceNode</returns>
+        private List<ResourceNode> GetPatTextureNodes(ResourceNode rootnode, CosmeticDefinition definition)
         {
             var pat0s = new List<ResourceNode>();
             if (definition.PatSettings != null)
@@ -202,8 +272,14 @@ namespace BrawlInstaller.Services
             return pat0s;
         }
 
-        // Remove textures based on definition rules
-        public void RemoveTextures(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
+        /// <summary>
+        /// Remove textures based on definition rules
+        /// </summary>
+        /// <param name="parentNode">Parent node to remove textures from</param>
+        /// <param name="definition">Cosmetic definition of textures</param>
+        /// <param name="id">ID associated with textures</param>
+        /// <param name="restrictRange">Whether to restrict range of textures based on ID</param>
+        private void RemoveTextures(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
         {
             var folder = parentNode.GetFolder<TEX0Node>();
             if (folder != null)
@@ -225,8 +301,14 @@ namespace BrawlInstaller.Services
             RemovePalettes(parentNode, definition, id, restrictRange);
         }
 
-        // Remove palettes based on definition rules
-        public void RemovePalettes(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
+        /// <summary>
+        /// Remove palettes based on definition rules
+        /// </summary>
+        /// <param name="parentNode">Parent node to remove palettes from</param>
+        /// <param name="definition">Cosmetic definition associated with palettes</param>
+        /// <param name="id">ID associated with palettes</param>
+        /// <param name="restrictRange">Whether to restrict range of palettes based on ID</param>
+        private void RemovePalettes(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
         {
             var folder = parentNode.GetFolder<PLT0Node>();
             if (folder != null)
@@ -235,8 +317,14 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // Remove models based on definition rules
-        public void RemoveModels(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
+        /// <summary>
+        /// Remove models based on definition rules
+        /// </summary>
+        /// <param name="parentNode">Parent node to remove models from</param>
+        /// <param name="definition">Cosmetic definition for models</param>
+        /// <param name="id">ID associated with models</param>
+        /// <param name="restrictRange">Whether to restrict range of models based on ID</param>
+        private void RemoveModels(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
         {
             var folder = parentNode.GetFolder<MDL0Node>();
             if (folder != null)
@@ -246,8 +334,14 @@ namespace BrawlInstaller.Services
             RemoveColorSequences(parentNode, definition, id, restrictRange);
         }
 
-        // Remove color sequences based on definition rules
-        public void RemoveColorSequences(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
+        /// <summary>
+        /// Remove color sequences based on definition rules
+        /// </summary>
+        /// <param name="parentNode">Parent node to remove color sequences from</param>
+        /// <param name="definition">Cosmetic definition for color sequences</param>
+        /// <param name="id">ID associated with color sequences</param>
+        /// <param name="restrictRange">Whether to restrict range of color sequences based on ID</param>
+        private void RemoveColorSequences(BRRESNode parentNode, CosmeticDefinition definition, int id, bool restrictRange)
         {
             var folder = parentNode.GetFolder<CLR0Node>();
             if (folder != null)
@@ -256,8 +350,15 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // Import a single cosmetic based on definition rules
-        public Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
+        /// <summary>
+        /// Import a single cosmetic based on definition rules
+        /// </summary>
+        /// <param name="definition">Cosmetic definition for cosmetic</param>
+        /// <param name="cosmetic">Cosmetic to import</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <param name="rootNode">Root node of file to import cosmetic to</param>
+        /// <returns></returns>
+        private Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             var parentNode = (BRRESNode)node;
@@ -355,8 +456,13 @@ namespace BrawlInstaller.Services
             return cosmetic;
         }
 
-        // Remove cosmetics based on definition rules
-        public void RemoveCosmetics(ResourceNode rootNode, CosmeticDefinition definition, int id)
+        /// <summary>
+        /// Remove cosmetics based on definition rules
+        /// </summary>
+        /// <param name="rootNode">Root node of file to remove cosmetics from</param>
+        /// <param name="definition">Cosmetic definition for cosmetics to remove</param>
+        /// <param name="id">ID associated with cosmetics</param>
+        private void RemoveCosmetics(ResourceNode rootNode, CosmeticDefinition definition, int id)
         {
             if (definition.PatSettings != null)
             {
@@ -370,8 +476,12 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // Remove separate file cosmetics
-        public void RemoveCosmetics(CosmeticDefinition definition, int id)
+        /// <summary>
+        /// Remove cosmetics that are in separate files
+        /// </summary>
+        /// <param name="definition">Cosmetic definition associated with cosmetics to remove</param>
+        /// <param name="id">ID associated with cosmetics</param>
+        private void RemoveCosmetics(CosmeticDefinition definition, int id)
         {
             var files = GetCosmeticPaths(definition, id);
             // This is just to remove HD textures
@@ -387,7 +497,11 @@ namespace BrawlInstaller.Services
             files.ForEach(x => File.Delete(x));
         }
 
-        // Get color smash groups from a list of cosmetics
+        /// <summary>
+        /// Get color smash groups from a list of cosmetics
+        /// </summary>
+        /// <param name="cosmetics">Cosmetics to get color smash groups from</param>
+        /// <returns>List of color smash groups</returns>
         private List<List<Cosmetic>> GetColorSmashGroups(List<Cosmetic> cosmetics)
         {
             var colorSmashGroups = new List<List<Cosmetic>>();
@@ -406,7 +520,11 @@ namespace BrawlInstaller.Services
             return colorSmashGroups;
         }
 
-        // Get shares data groups for a list of cosmetics
+        /// <summary>
+        /// Get groups that share data from a list of cosmetics
+        /// </summary>
+        /// <param name="cosmetics">Cosmetics to get groups from</param>
+        /// <returns>List of shared data groups</returns>
         public List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics)
         {
             var sharesDataGroups = new List<List<Cosmetic>>();
@@ -423,8 +541,13 @@ namespace BrawlInstaller.Services
             return sharesDataGroups;
         }
 
-        // Color smash a list of cosmetics in a BRRES
-        public void ColorSmashCosmetics(List<Cosmetic> cosmetics, ResourceNode rootNode, CosmeticDefinition definition)
+        /// <summary>
+        /// Color smash a list of cosmetics in a BRRES
+        /// </summary>
+        /// <param name="cosmetics">Cosmetics to color smash</param>
+        /// <param name="rootNode">Root node of file to color smash cosmetics in</param>
+        /// <param name="definition">Cosmetic definition for cosmetics</param>
+        private void ColorSmashCosmetics(List<Cosmetic> cosmetics, ResourceNode rootNode, CosmeticDefinition definition)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             if (node != null)
@@ -452,6 +575,13 @@ namespace BrawlInstaller.Services
             }
         }
 
+        /// <summary>
+        /// Import an HD texture from a cosmetic
+        /// </summary>
+        /// <param name="rootNode">Root node of file where texture is located</param>
+        /// <param name="definition">Definition of cosmetic</param>
+        /// <param name="cosmetic">Cosmetic to import texture from</param>
+        /// <param name="name">Name associated with character cosmetic belongs to</param>
         private void ImportHDTexture(ResourceNode rootNode, CosmeticDefinition definition, Cosmetic cosmetic, string name=null)
         {
             // Save HD cosmetic if it exists
@@ -470,7 +600,13 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // Import cosmetics based on definition rules
+        /// <summary>
+        /// Import cosmetics based on definition rules
+        /// </summary>
+        /// <param name="definition">Definition for cosmetics</param>
+        /// <param name="cosmetics">List of cosmetics to import</param>
+        /// <param name="id">ID associated with cosmetics</param>
+        /// <param name="name">Name of character for HD textures</param>
         public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null)
         {
             // If the definition doesn't use separate files, find the files and update them
@@ -521,21 +657,38 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // Format cosmetic ID to string based on definition
-        public string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId)
+        /// <summary>
+        /// Format cosmetic ID to string based on definition
+        /// </summary>
+        /// <param name="definition">Definition for cosmetic</param>
+        /// <param name="cosmeticId">ID associated with cosmetic</param>
+        /// <returns></returns>
+        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId)
         {
             var id = (cosmeticId * definition.Multiplier).ToString("D" + definition.SuffixDigits);
             return id;
         }
 
-        public string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
+        /// <summary>
+        /// Format cosmetic ID to string based on definition
+        /// </summary>
+        /// <param name="definition">Definition for cosmetic</param>
+        /// <param name="cosmeticId">ID associated with cosmetic</param>
+        /// <param name="costumeIndex">Costume index associated with cosmetic</param>
+        /// <returns></returns>
+        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
         {
             var id = ((cosmeticId * definition.Multiplier) + (costumeIndex ?? 0)).ToString("D" + definition.SuffixDigits);
             return id;
         }
 
-        // Get all files containing cosmetics specified by the cosmetic definition
-        public List<string> GetCosmeticPaths(CosmeticDefinition definition, int id)
+        /// <summary>
+        /// Get all files containing cosmetics specified by the cosmetic definition
+        /// </summary>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="id">ID associated with cosmetics</param>
+        /// <returns>List of files containing cosmetics</returns>
+        private List<string> GetCosmeticPaths(CosmeticDefinition definition, int id)
         {
             var buildPath = _settingsService.BuildPath;
             var paths = new List<string>();
@@ -554,8 +707,15 @@ namespace BrawlInstaller.Services
             return paths;
         }
 
-        // Check if ID associated with a cosmetic is within the range specified by the cosmetic definition
-        public bool CheckIdRange(CosmeticDefinition definition, int id, string name, string prefix)
+        /// <summary>
+        /// Check if ID associated with a cosmetic is within the range specified by the cosmetic definition
+        /// </summary>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <param name="name">Name of texture to check ID range on</param>
+        /// <param name="prefix">Prefix of cosmetic name</param>
+        /// <returns>Whether cosmetic is within the ID range</returns>
+        private bool CheckIdRange(CosmeticDefinition definition, int id, string name, string prefix)
         {
             if (!name.StartsWith(prefix))
                 return false;
@@ -568,12 +728,28 @@ namespace BrawlInstaller.Services
             return false;
         }
 
-        public bool CheckIdRange(PatSettings patSettings, CosmeticDefinition definition, int id, int index)
+        /// <summary>
+        /// Check if ID associated with a cosmetic is within the range specified by the cosmetic definition
+        /// </summary>
+        /// <param name="patSettings">Settings for texture pattern nodes</param>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <param name="index">Frame index of PAT0</param>
+        /// <returns>Whether cosmetic is within the ID range</returns>
+        private bool CheckIdRange(PatSettings patSettings, CosmeticDefinition definition, int id, int index)
         {
             return CheckIdRange(idType: patSettings.IdType ?? definition.IdType, multiplier: patSettings.Multiplier ?? definition.Multiplier, id, index);
         }
 
-        public bool CheckIdRange(IdType idType, int multiplier, int id, int index)
+        /// <summary>
+        /// Check if ID associated with a cosmetic is within range based on multiplier and ID
+        /// </summary>
+        /// <param name="idType">Type of ID associated with cosmetic</param>
+        /// <param name="multiplier">Multiplier used for IDs</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <param name="index">Number to check is within range</param>
+        /// <returns>Whether cosmetic is within the ID range</returns>
+        private bool CheckIdRange(IdType idType, int multiplier, int id, int index)
         {
             // TODO: Do we really only check this for cosmetic IDs?
             if (idType != IdType.Cosmetic)
@@ -585,8 +761,14 @@ namespace BrawlInstaller.Services
             return false;
         }
 
-        // Get costume index from node name
-        public int GetCostumeIndex(TEX0Node node, CosmeticDefinition definition, int id)
+        /// <summary>
+        /// Get costume index from node name
+        /// </summary>
+        /// <param name="node">Texture to get costume index from</param>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <returns>Costume index of cosmetic</returns>
+        private int GetCostumeIndex(TEX0Node node, CosmeticDefinition definition, int id)
         {
             string suffix;
             if (definition.SeparateFiles)
@@ -601,8 +783,14 @@ namespace BrawlInstaller.Services
             return 0;
         }
 
-        // Calculate costume index
-        public int GetCostumeIndex(int index, int multiplier, int id)
+        /// <summary>
+        /// Calculate costume index from parameters
+        /// </summary>
+        /// <param name="index">Full ID (with costume index) of texture</param>
+        /// <param name="multiplier">Multiplier used for IDs</param>
+        /// <param name="id">ID associated with texture</param>
+        /// <returns></returns>
+        private int GetCostumeIndex(int index, int multiplier, int id)
         {
             if (multiplier <= 1)
                 return 0;
@@ -610,8 +798,13 @@ namespace BrawlInstaller.Services
             return index;
         }
 
-        // Get ID from name string
-        public int? GetCosmeticId(string name, CosmeticDefinition definition)
+        /// <summary>
+        /// Get ID from cosmetic name string
+        /// </summary>
+        /// <param name="name">Name of cosmetic node</param>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <returns>ID of cosmetic</returns>
+        private int? GetCosmeticId(string name, CosmeticDefinition definition)
         {
             if (name != null && name.StartsWith(definition.Prefix))
             {
@@ -622,15 +815,28 @@ namespace BrawlInstaller.Services
             return null;
         }
 
-        // Get ID from definition
-        public int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
+        /// <summary>
+        /// Get ID from cosmetic definition
+        /// </summary>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="cosmeticId">ID associated with cosmetic</param>
+        /// <param name="costumeIndex">Costume index for cosmetic</param>
+        /// <returns>Full ID of cosmetic</returns>
+        private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
         {
             var id = (cosmeticId * definition.Multiplier) + costumeIndex ?? 0;
             return id;
         }
 
-        // Get textures associated with provided cosmetic definition and IDs
-        public List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        /// <summary>
+        /// Get textures associated with provided cosmetic definition and IDs
+        /// </summary>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="node">Root node of file to retrieve textures from</param>
+        /// <param name="fighterIds">IDs to use for getting cosmetics</param>
+        /// <param name="restrictRange">Whether to restrict the range of cosmetics based on ID</param>
+        /// <returns>List of textures</returns>
+        private List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             // Try to get all textures for cosmetic definition
             var nodes = new List<CosmeticTexture>();
@@ -673,8 +879,15 @@ namespace BrawlInstaller.Services
             return nodes;
         }
 
-        // Get models associated with provided cosmetic definition and IDs
-        public List<MDL0Node> GetModels(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        /// <summary>
+        /// Get models associated with provided cosmetic definition and IDs
+        /// </summary>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="node">Root node of file to retrieve cosmetics from</param>
+        /// <param name="fighterIds">IDs to use for getting cosmetics</param>
+        /// <param name="restrictRange">Whether to restrict range based on ID</param>
+        /// <returns>List of models</returns>
+        private List<MDL0Node> GetModels(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             // Try to get all models for cosmetic definition
             var nodes = new List<MDL0Node>();
@@ -699,8 +912,11 @@ namespace BrawlInstaller.Services
             return nodes;
         }
 
-        // Loads a list of all HD textures so we can more easily search for texture matches
-        public List<string> PreloadHDTextures()
+        /// <summary>
+        /// Loads and caches a list of all HD textures so we can more easily search for texture matches
+        /// </summary>
+        /// <returns>List of HD textures</returns>
+        private List<string> PreloadHDTextures()
         {
             var directories = Directory.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
             directories = directories.Append(_settingsService.BuildSettings.FilePathSettings.HDTextures).ToArray();
@@ -717,14 +933,22 @@ namespace BrawlInstaller.Services
             return HDImages;
         }
 
-        // Get HD texture by Dolphin texture name
-        public string GetHDTexture(string textureName)
+        /// <summary>
+        /// Get HD texture by Dolphin texture name
+        /// </summary>
+        /// <param name="textureName">Name of HD texture</param>
+        /// <returns>HD texture path</returns>
+        private string GetHDTexture(string textureName)
         {
             return HDImages.AsParallel().FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == textureName);
         }
 
-        // Get BitmapImage of HD texture by Dolphin name
-        public BitmapImage GetHDImage(string fileName)
+        /// <summary>
+        /// Get BitmapImage of HD texture by Dolphin name
+        /// </summary>
+        /// <param name="fileName">Filename of HD texture</param>
+        /// <returns>BitmapImage of texture</returns>
+        private BitmapImage GetHDImage(string fileName)
         {
             var file = GetHDTexture(fileName);
             if (!string.IsNullOrEmpty(file))
@@ -735,8 +959,15 @@ namespace BrawlInstaller.Services
             return null;
         }
 
-        // Get cosmetics associated with provided cosmetic definition and IDs
-        public List<Cosmetic> GetDefinitionCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        /// <summary>
+        /// Get cosmetics associated with provided cosmetic definition and IDs
+        /// </summary>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="node">Root node of file to retrieve cosmetics from</param>
+        /// <param name="fighterIds">IDs to use for getting cosmetics</param>
+        /// <param name="restrictRange">Whether to restrict range based on IDs</param>
+        /// <returns>List of cosmetics</returns>
+        private List<Cosmetic> GetDefinitionCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
         {
             // Get textures for provided definition and IDs
             var cosmetics = new List<Cosmetic>();
@@ -784,7 +1015,11 @@ namespace BrawlInstaller.Services
 
         // TODO: separate RSPs and CSPs so they can be toggled on install
 
-        // Get a list of fighter cosmetics
+        /// <summary>
+        /// Get a list of fighter cosmetics
+        /// </summary>
+        /// <param name="fighterIds">Fighter IDs to retrieve cosmetics for</param>
+        /// <returns>List of cosmetics</returns>
         public List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds)
         {
             var settings = _settingsService.BuildSettings;
@@ -795,7 +1030,10 @@ namespace BrawlInstaller.Services
             return GetCosmetics(fighterIds, definitions, true);
         }
 
-        // Get a list of all fighter franchise icons
+        /// <summary>
+        /// Get a list of all fighter franchise icons
+        /// </summary>
+        /// <returns>List of franchise icons</returns>
         public List<Cosmetic> GetFranchiseIcons()
         {
             var franchiseIcons = new List<Cosmetic>();
@@ -824,8 +1062,14 @@ namespace BrawlInstaller.Services
             return franchiseIcons;
         }
 
-        // Get a list of cosmetics associated with provided IDs
-        public List<Cosmetic> GetCosmetics(FighterIds fighterIds, List<CosmeticDefinition> definitions, bool restrictRange)
+        /// <summary>
+        /// Get a list of cosmetics associated with provided IDs
+        /// </summary>
+        /// <param name="fighterIds">IDs to retrieve cosmetics for</param>
+        /// <param name="definitions">List of cosmetic definitions to retrieve cosmetics for</param>
+        /// <param name="restrictRange">Whether to restrict range of cosmetics based on ID</param>
+        /// <returns>List of cosmetics</returns>
+        private List<Cosmetic> GetCosmetics(FighterIds fighterIds, List<CosmeticDefinition> definitions, bool restrictRange)
         {
             var cosmetics = new List<Cosmetic>();
             // Order them to ensure that cosmetics with multiple definitions pick the definitions favor definitions that have multiple cosmetics
