@@ -38,6 +38,12 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
+
+        /// <summary>
+        /// Generate fighter package from build
+        /// </summary>
+        /// <param name="fighterIds">IDs of fighter</param>
+        /// <returns>Fighter package</returns>
         public FighterPackage ExtractFighter(FighterIds fighterIds)
         {
             var fighterPackage = new FighterPackage();
@@ -117,6 +123,10 @@ namespace BrawlInstaller.Services
             return fighterPackage;
         }
 
+        /// <summary>
+        /// Save fighter to build
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to save</param>
         public void SaveFighter(FighterPackage fighterPackage)
         {
             var buildPath = _settingsService.BuildPath;

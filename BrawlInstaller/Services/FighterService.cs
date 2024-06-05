@@ -42,7 +42,13 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
-        public string GetConfigPrefix(IdType type)
+
+        /// <summary>
+        /// Get prefix of Ex configs associated with ID type
+        /// </summary>
+        /// <param name="type">Type of Ex config ID</param>
+        /// <returns>Prefix for config name</returns>
+        private string GetConfigPrefix(IdType type)
         {
             string prefix = "";
             switch (type)
@@ -62,14 +68,28 @@ namespace BrawlInstaller.Services
             }
             return prefix;
         }
-        public int GetConfigId(string name, IdType type)
+
+        /// <summary>
+        /// Get ID from config name
+        /// </summary>
+        /// <param name="name">Ex config name</param>
+        /// <param name="type">ID type used by config</param>
+        /// <returns>Ex config ID</returns>
+        private int GetConfigId(string name, IdType type)
         {
             var prefix = GetConfigPrefix(type);
             if (int.TryParse(name.Replace(prefix, ""), System.Globalization.NumberStyles.HexNumber, null, out int id))
                 return id;
             return -1;
         }
-        public string GetExConfig(int id, IdType type)
+
+        /// <summary>
+        /// Get Ex config from ID
+        /// </summary>
+        /// <param name="id">ID of config</param>
+        /// <param name="type">Type of ID</param>
+        /// <returns>Path to Ex config</returns>
+        private string GetExConfig(int id, IdType type)
         {
             var buildPath = _settingsService.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -83,7 +103,13 @@ namespace BrawlInstaller.Services
             }
             return "";
         }
-        public List<ResourceNode> GetExConfigs(IdType type)
+
+        /// <summary>
+        /// Get all configs of type
+        /// </summary>
+        /// <param name="type">Type of configs to retrieve</param>
+        /// <returns>List of configs as nodes</returns>
+        private List<ResourceNode> GetExConfigs(IdType type)
         {
             var configs = new ConcurrentBag<ResourceNode>();
             var buildPath = _settingsService.BuildPath;
@@ -100,7 +126,13 @@ namespace BrawlInstaller.Services
             }
             return configs.ToList();
         }
-        public FighterIds LinkExConfigs(FighterIds fighterIds)
+
+        /// <summary>
+        /// Link Ex configs based on data and IDs
+        /// </summary>
+        /// <param name="fighterIds">Fighter IDs for configs</param>
+        /// <returns>All IDs for a fighter</returns>
+        private FighterIds LinkExConfigs(FighterIds fighterIds)
         {
             var fighterConfigs = GetExConfigs(IdType.FighterConfig);
             var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig);
@@ -178,6 +210,12 @@ namespace BrawlInstaller.Services
             // Return
             return fighterIds;
         }
+
+        /// <summary>
+        /// Get fighter info from IDs
+        /// </summary>
+        /// <param name="fighterIds">Fighter IDs</param>
+        /// <returns>Fighter information</returns>
         // TODO: get way more info
         public FighterInfo GetFighterInfo(FighterIds fighterIds)
         {
@@ -235,7 +273,13 @@ namespace BrawlInstaller.Services
             return fighterInfo;
         }
 
-        // Get name for fighter PAC file based on fighter info and costume ID
+        /// <summary>
+        /// Get name for fighter PAC file based on fighter info and costume ID
+        /// </summary>
+        /// <param name="node">Root node of PAC file</param>
+        /// <param name="fighterInfo">Fighter info</param>
+        /// <param name="costumeId">Costume ID for PAC file</param>
+        /// <returns>Name to use for fighter PAC file</returns>
         private string GetFighterPacName(ResourceNode node, FighterInfo fighterInfo, int costumeId = -1)
         {
             // List of strings that can be found in pac file names
@@ -278,6 +322,12 @@ namespace BrawlInstaller.Services
             return name;
         }
 
+        /// <summary>
+        /// Import fighter PAC files
+        /// </summary>
+        /// <param name="pacFiles">PAC files to import</param>
+        /// <param name="costumes">Costumes to import PAC files for</param>
+        /// <param name="fighterInfo">Fighter info</param>
         public void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo)
         {
             var buildPath = _settingsService.BuildPath;
@@ -308,7 +358,11 @@ namespace BrawlInstaller.Services
             }
         }
 
-        public void RemoveFighterFiles(string internalName)
+        /// <summary>
+        /// Remove fighter files for specified fighter
+        /// </summary>
+        /// <param name="internalName">Internal name of fighter</param>
+        private void RemoveFighterFiles(string internalName)
         {
             var buildPath = _settingsService.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -316,6 +370,11 @@ namespace BrawlInstaller.Services
             RemovePacFiles(internalName, path);
         }
 
+        /// <summary>
+        /// Get PAC files associated with fighter
+        /// </summary>
+        /// <param name="internalName">Internal name of fighter</param>
+        /// <returns>List of PAC files</returns>
         public List<string> GetFighterFiles(string internalName)
         {
             var buildPath = _settingsService.BuildPath;
@@ -324,6 +383,11 @@ namespace BrawlInstaller.Services
             return GetPacFiles(internalName, path);
         }
 
+        /// <summary>
+        /// Get Kirby PAC files associated with fighter
+        /// </summary>
+        /// <param name="internalName">Internal name of fighter</param>
+        /// <returns>List of Kirby PAC files</returns>
         public List<string> GetKirbyFiles(string internalName)
         {
             var buildPath = _settingsService.BuildPath;
@@ -332,7 +396,12 @@ namespace BrawlInstaller.Services
             return GetPacFiles("Kirby" + internalName, path);
         }
 
-        public void RemovePacFiles(string name, string path)
+        /// <summary>
+        /// Remove PAC files associated with fighter
+        /// </summary>
+        /// <param name="name">Internal name of fighter</param>
+        /// <param name="path">Path to remove PAC files from</param>
+        private void RemovePacFiles(string name, string path)
         {
             var files = GetPacFiles(name, path);
             foreach(var file in files)
@@ -341,7 +410,13 @@ namespace BrawlInstaller.Services
             }
         }
 
-        public List<string> GetPacFiles(string name, string path)
+        /// <summary>
+        /// Get Kirby and fighter PAC files for fighter
+        /// </summary>
+        /// <param name="name">Internal name of fighter</param>
+        /// <param name="path">Path to retrive files from</param>
+        /// <returns>List of PAC files</returns>
+        private List<string> GetPacFiles(string name, string path)
         {
             var files = new List<string>();
             if (Directory.Exists(path))
@@ -349,6 +424,11 @@ namespace BrawlInstaller.Services
             return files;
         }
 
+        /// <summary>
+        /// Get item files for fighter
+        /// </summary>
+        /// <param name="internalName">Internal name of fighter</param>
+        /// <returns>List of item files</returns>
         public List<string> GetItemFiles(string internalName)
         {
             var buildPath = _settingsService.BuildPath;
@@ -360,6 +440,11 @@ namespace BrawlInstaller.Services
             return files;
         }
 
+        /// <summary>
+        /// Update CSSSlotConfig for fighter
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info</param>
+        /// <param name="costumes">Costumes to place in config</param>
         public void UpdateCostumeConfig(FighterInfo fighterInfo, List<Costume> costumes)
         {
             if (fighterInfo.CSSSlotConfig != null)
@@ -388,6 +473,11 @@ namespace BrawlInstaller.Services
             }
         }
 
+        /// <summary>
+        /// Get fighter costumes
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info</param>
+        /// <returns>List of costumes</returns>
         public List<Costume> GetFighterCostumes(FighterInfo fighterInfo)
         {
             var costumes = new List<Costume>();
@@ -422,6 +512,12 @@ namespace BrawlInstaller.Services
             return costumes;
         }
 
+        /// <summary>
+        /// Associate cosmetics with costumes
+        /// </summary>
+        /// <param name="costumes">Costumes</param>
+        /// <param name="cosmetics">Cosmetics</param>
+        /// <returns>List of costumes with cosmetics associated</returns>
         public List<Costume> GetCostumeCosmetics(List<Costume> costumes, List<Cosmetic> cosmetics)
         {
             foreach (var costume in costumes)
@@ -431,6 +527,11 @@ namespace BrawlInstaller.Services
             return costumes;
         }
 
+        /// <summary>
+        /// Get module for fighter
+        /// </summary>
+        /// <param name="internalName">Internal name for fighter</param>
+        /// <returns>Fighter module</returns>
         public string GetModule(string internalName)
         {
             var buildPath = _settingsService.BuildPath;

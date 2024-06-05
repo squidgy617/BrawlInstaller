@@ -29,6 +29,12 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
+
+        /// <summary>
+        /// Open a BrawlLib-compatible file
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <returns>Root node of file</returns>
         public ResourceNode OpenFile(string path)
         {
             if (!File.Exists(path))
@@ -37,22 +43,40 @@ namespace BrawlInstaller.Services
             return rootNode;
         }
 
+        /// <summary>
+        /// Save a BrawlLib-compatible file
+        /// </summary>
+        /// <param name="node">Root node of file</param>
         public void SaveFile(ResourceNode node)
         {
             SaveFileAs(node, node.FilePath);
         }
 
+        /// <summary>
+        /// Save a BrawlLib-compatible file to a specified path
+        /// </summary>
+        /// <param name="node">Root node of file</param>
+        /// <param name="path">Path to save file to</param>
         public void SaveFileAs(ResourceNode node, string path)
         {
             node.Export(path);
             node.IsDirty = false;
         }
 
+        /// <summary>
+        /// Close a BrawlLib-compatible file
+        /// </summary>
+        /// <param name="node">Root node of file to close</param>
         public void CloseFile(ResourceNode node)
         {
             node.Dispose();
         }
 
+        /// <summary>
+        /// Create a duplicate of a ResourceNode
+        /// </summary>
+        /// <param name="node">ResourceNode to copy</param>
+        /// <returns>Copy of node</returns>
         public ResourceNode CopyNode(ResourceNode node)
         {
             node.Export("tempNode");
@@ -61,12 +85,21 @@ namespace BrawlInstaller.Services
             return newNode;
         }
 
+        /// <summary>
+        /// Copy a file
+        /// </summary>
+        /// <param name="inFile">Filepath to copy</param>
+        /// <param name="outFile">New file path</param>
         public void CopyFile(string inFile, string outFile)
         {
             if (File.Exists(inFile))
                 File.Copy(inFile, outFile, true);
         }
 
+        /// <summary>
+        /// Delete file
+        /// </summary>
+        /// <param name="file">File to delete</param>
         public void DeleteFile(string file)
         {
             if (File.Exists(file))

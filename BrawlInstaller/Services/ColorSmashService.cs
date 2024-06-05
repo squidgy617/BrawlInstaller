@@ -38,7 +38,11 @@ namespace BrawlInstaller.Services
 
         // Methods
 
-        // Color smash TEX0 nodes
+        /// <summary>
+        /// Color smash provided cosmetics
+        /// </summary>
+        /// <param name="cosmetics">Cosmetics to color smash</param>
+        /// <param name="bres">Parent BRRES for textures</param>
         // TODO: handle errors
         public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
         {
@@ -94,7 +98,15 @@ namespace BrawlInstaller.Services
                 Directory.Delete(ColorSmashDirectory, true);
         }
 
-        public TEX0Node ColorSmashTextureImport(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, int mipCount = 1)
+        /// <summary>
+        /// Import color smashed texture
+        /// </summary>
+        /// <param name="destinationNode">Destination node to import textures to</param>
+        /// <param name="imageSource">Source of image to import</param>
+        /// <param name="format">Encoding format</param>
+        /// <param name="mipCount">Mipmap count</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node ColorSmashTextureImport(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, int mipCount = 1)
         {
             var dialog = new TextureConverterDialog();
             dialog.ImageSource = imageSource;
@@ -108,18 +120,13 @@ namespace BrawlInstaller.Services
             return node;
         }
 
-        // GetTexture reimplemented from CosmeticService
-        public TEX0Node GetTexture(ResourceNode rootNode, CosmeticDefinition definition, string name)
-        {
-            var parentNode = !string.IsNullOrEmpty(definition.InstallLocation.NodePath) ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
-            if (parentNode != null)
-            {
-                return GetTexture((BRRESNode)parentNode, name);
-            }
-            return null;
-        }
-
-        public TEX0Node GetTexture(BRRESNode parentNode, string name)
+        /// <summary>
+        /// Get texture by name
+        /// </summary>
+        /// <param name="parentNode">Parent node of texture</param>
+        /// <param name="name">Name of texture</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node GetTexture(BRRESNode parentNode, string name)
         {
             var folder = parentNode.GetFolder<TEX0Node>();
             if (folder != null)
@@ -131,7 +138,11 @@ namespace BrawlInstaller.Services
             return null;
         }
 
-        public void ColorSmasher(int paletteCount)
+        /// <summary>
+        /// Run color smasher on textures
+        /// </summary>
+        /// <param name="paletteCount">Palette count to use</param>
+        private void ColorSmasher(int paletteCount)
         {
             var directory = Directory.CreateDirectory(ColorSmashDirectory);
             var outDirectory = Directory.CreateDirectory(ColorSmashOutDirectory);

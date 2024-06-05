@@ -22,6 +22,14 @@ namespace BrawlInstaller.Services
         public DialogService() { }
 
         // Methods
+
+        /// <summary>
+        /// Show generic message dialog
+        /// </summary>
+        /// <param name="text">Text to display in message</param>
+        /// <param name="caption">Caption to display in title bar</param>
+        /// <param name="image">Image to show on dialog</param>
+        /// <returns>Whether user gave a positive response to message</returns>
         public bool ShowMessage(string text, string caption, MessageBoxImage image=MessageBoxImage.Information)
         {
             var result = MessageBox.Show(text, caption, MessageBoxButton.OK, image);
@@ -31,6 +39,12 @@ namespace BrawlInstaller.Services
                 return false;
         }
 
+        /// <summary>
+        /// Open file dialog
+        /// </summary>
+        /// <param name="title">Title to display on dialog</param>
+        /// <param name="filter">File extension filter</param>
+        /// <returns>File chosen by user</returns>
         public string OpenFileDialog(string title="Select a file", string filter = "")
         {
             var dialog = new OpenFileDialog();
@@ -45,6 +59,12 @@ namespace BrawlInstaller.Services
             return "";
         }
 
+        /// <summary>
+        /// Open multi-file dialog
+        /// </summary>
+        /// <param name="title">Title to display on dialog</param>
+        /// <param name="filter">File extension filter</param>
+        /// <returns>Files chosen by user</returns>
         public List<string> OpenMultiFileDialog(string title = "Select a file", string filter = "")
         {
             var dialog = new OpenFileDialog();

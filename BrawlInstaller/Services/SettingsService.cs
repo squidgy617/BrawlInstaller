@@ -39,12 +39,23 @@ namespace BrawlInstaller.Services
         public string BuildPath { get; set; } = "";
 
         // Methods
+
+        /// <summary>
+        /// Save build settings
+        /// </summary>
+        /// <param name="buildSettings">Build settings</param>
+        /// <param name="path">Path to save to</param>
         public void SaveSettings(BuildSettings buildSettings, string path)
         {
             var jsonString = JsonConvert.SerializeObject(buildSettings);
             File.WriteAllText(path, jsonString);
         }
 
+        /// <summary>
+        /// Load build settings
+        /// </summary>
+        /// <param name="path">Path to load from</param>
+        /// <returns>Build settings</returns>
         public BuildSettings LoadSettings(string path)
         {
             var text = File.ReadAllText(path);
@@ -52,6 +63,10 @@ namespace BrawlInstaller.Services
             return buildSettings;
         }
 
+        /// <summary>
+        /// Get default build settings
+        /// </summary>
+        /// <returns>Default build settings</returns>
         public BuildSettings GetDefaultSettings()
         {
             var buildSettings = new BuildSettings
