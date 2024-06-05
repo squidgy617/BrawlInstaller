@@ -122,7 +122,7 @@ namespace BrawlInstaller.ViewModels
                 // Add model for import
                 if (FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath != "")
                 {
-                    var franchiseModels = FighterPackage.CosmeticList.Items.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
+                    var franchiseModels = FighterPackage.Cosmetics.Items.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
                     if (franchiseModels.Count >= 1)
                         franchiseModels.ForEach(x =>
                         {
@@ -139,14 +139,13 @@ namespace BrawlInstaller.ViewModels
                             ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath,
                             Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id
                         };
-                        FighterPackage.CosmeticList.Items.Add(newCosmetic);
-                        FighterPackage.CosmeticList.ItemChanged(newCosmetic);
+                        FighterPackage.Cosmetics.Add(newCosmetic);
                     }
                 }
                 FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
             }
             _packageService.SaveFighter(FighterPackage);
-            FighterPackage.CosmeticList.Items.ForEach(x => { FighterPackage.CosmeticList.ClearChanges(); x.ImagePath = ""; x.ColorSmashChanged = false; } );
+            FighterPackage.Cosmetics.Items.ForEach(x => { FighterPackage.Cosmetics.ClearChanges(); x.ImagePath = ""; x.ColorSmashChanged = false; } );
         }
     }
 

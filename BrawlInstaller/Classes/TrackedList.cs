@@ -25,5 +25,11 @@ namespace BrawlInstaller.Classes
                 return true;
             return false;
         }
+        public void Add(T item, bool change=true)
+        {
+            Items.Add(item);
+            if (change)
+                ItemChanged(item);
+        }
     }
 }

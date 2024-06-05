@@ -17,7 +17,7 @@ namespace BrawlInstaller.Classes
     {
         public FighterInfo FighterInfo { get; set; }
         public List<Costume> Costumes { get; set; }
-        public TrackedList<Cosmetic> CosmeticList { get; set; } = new TrackedList<Cosmetic>();
+        public TrackedList<Cosmetic> Cosmetics { get; set; } = new TrackedList<Cosmetic>();
         public List<FighterFiles> FighterFiles { get; set; }
         public string Soundbank { get; set; }
         public string CreditsTheme { get; set; }

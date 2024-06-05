@@ -118,7 +118,7 @@ namespace BrawlInstaller.Services
             //    File.Copy(module, $"Module\\{Path.GetFileName(module)}");
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
-            fighterPackage.CosmeticList.Items = cosmetics;
+            fighterPackage.Cosmetics.Items = cosmetics;
             fighterPackage.FighterFiles = fighterFiles;
             return fighterPackage;
         }
@@ -131,10 +131,10 @@ namespace BrawlInstaller.Services
         {
             var buildPath = _settingsService.BuildPath;
             // Only update cosmetics that have changed
-            foreach(var definition in _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.CosmeticList.ChangedItems
+            foreach(var definition in _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.Cosmetics.ChangedItems
             .Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)))
             {
-                var cosmetics = fighterPackage.CosmeticList.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
+                var cosmetics = fighterPackage.Cosmetics.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
                 _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, fighterPackage.FighterInfo.DisplayName);
             }
             // Update pac files
