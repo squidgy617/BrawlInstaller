@@ -126,7 +126,7 @@ namespace BrawlInstaller.Services
                 && y.HasChanged)))
             {
                 var cosmetics = fighterPackage.Cosmetics.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
-                _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1);
+                _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, fighterPackage.FighterInfo.DisplayName);
             }
             // Update pac files
             // TODO: only update pac files that have changed, use selected FighterFiles option

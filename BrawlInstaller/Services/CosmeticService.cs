@@ -27,7 +27,7 @@ namespace BrawlInstaller.Services
     {
         List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
         List<Cosmetic> GetFranchiseIcons();
-        void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id);
+        void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null);
         List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
     }
     [Export(typeof(ICosmeticService))]
@@ -452,8 +452,26 @@ namespace BrawlInstaller.Services
             }
         }
 
+        private void ImportHDTexture(ResourceNode rootNode, CosmeticDefinition definition, Cosmetic cosmetic, string name=null)
+        {
+            // Save HD cosmetic if it exists
+            var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
+            if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
+            {
+                var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}";
+                if (!string.IsNullOrEmpty(name) && (cosmetic.CosmeticType == CosmeticType.CSP || cosmetic.CosmeticType == CosmeticType.BP
+                    || cosmetic.CosmeticType == CosmeticType.StockIcon))
+                    imagePath += $"\\{name}";
+                if (!Directory.Exists(imagePath))
+                    Directory.CreateDirectory(imagePath);
+                imagePath += $"\\{texture?.DolphinTextureName}.png";
+                cosmetic.HDImage.Save(imagePath);
+                cosmetic.HDImagePath = imagePath;
+            }
+        }
+
         // Import cosmetics based on definition rules
-        public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id)
+        public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null)
         {
             // If the definition doesn't use separate files, find the files and update them
             if (!definition.SeparateFiles)
@@ -476,14 +494,7 @@ namespace BrawlInstaller.Services
                         if (_settingsService.BuildSettings.HDTextures)
                             foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                             {
-                                var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
-                                if (!string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
-                                {
-                                    var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}" +
-                                        $"\\{texture?.DolphinTextureName}.png";
-                                    cosmetic.HDImage.Save(imagePath);
-                                    cosmetic.HDImagePath = imagePath;
-                                }
+                                ImportHDTexture(rootNode, definition, cosmetic, name);
                             }
                         _fileService.CloseFile(rootNode);
                     }
@@ -503,10 +514,7 @@ namespace BrawlInstaller.Services
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
                     if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
                     {
-                        var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}" +
-                            $"\\{texture?.DolphinTextureName}.png";
-                        cosmetic.HDImage.Save(imagePath);
-                        cosmetic.HDImagePath = imagePath;
+                        ImportHDTexture(rootNode, definition, cosmetic, name);
                     }
                     _fileService.CloseFile(rootNode);
                 }
