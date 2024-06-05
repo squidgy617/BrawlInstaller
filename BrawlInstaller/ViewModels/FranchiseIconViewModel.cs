@@ -17,7 +17,7 @@ namespace BrawlInstaller.ViewModels
 {
     public interface IFranchiseIconViewModel
     {
-        List<Cosmetic> FranchiseIcons { get; }
+        CosmeticList FranchiseIcons { get; }
         Cosmetic SelectedFranchiseIcon { get; }
         ICommand SelectModelCommand { get; }
     }
@@ -35,7 +35,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Private Properties
-        private List<Cosmetic> _franchiseIcons;
+        private CosmeticList _franchiseIcons;
         private Cosmetic _selectedFranchiseIcon;
 
         // Services
@@ -48,7 +48,7 @@ namespace BrawlInstaller.ViewModels
         {
             _cosmeticService = cosmeticService;
             _dialogService = dialogService;
-            FranchiseIcons = new List<Cosmetic>();
+            FranchiseIcons = new CosmeticList();
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
@@ -57,14 +57,14 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public List<Cosmetic> FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(nameof(FranchiseIcons)); } }
+        public CosmeticList FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(nameof(FranchiseIcons)); } }
         public Cosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(nameof(SelectedFranchiseIcon)); } }
 
         // Methods
         public void LoadIcons(FighterLoadedMessage message)
         {
             FranchiseIcons = _cosmeticService.GetFranchiseIcons();
-            SelectedFranchiseIcon = FranchiseIcons.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
+            SelectedFranchiseIcon = FranchiseIcons.Cosmetics.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
         }
 
         public void SelectModel()
@@ -74,7 +74,7 @@ namespace BrawlInstaller.ViewModels
             if (model != "")
             {
                 SelectedFranchiseIcon.ModelPath = model;
-                SelectedFranchiseIcon.HasChanged = true;
+                FranchiseIcons.CosmeticChanged(SelectedFranchiseIcon);
                 SelectedFranchiseIcon.Model = null;
                 SelectedFranchiseIcon.ColorSequence = null;
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));

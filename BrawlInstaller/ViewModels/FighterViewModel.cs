@@ -117,33 +117,36 @@ namespace BrawlInstaller.ViewModels
             }
             // TODO: Possibly a way to improve this?
             // Set franchise icon up
-            if (FranchiseIconViewModel.SelectedFranchiseIcon?.HasChanged == true)
+            if (FranchiseIconViewModel.FranchiseIcons.HasChanged(FranchiseIconViewModel.SelectedFranchiseIcon))
             {
                 // Add model for import
                 if (FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath != "")
                 {
-                    var franchiseModels = FighterPackage.Cosmetics.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
+                    var franchiseModels = FighterPackage.CosmeticList.Cosmetics.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
                     if (franchiseModels.Count >= 1)
                         franchiseModels.ForEach(x =>
                         {
                             x.ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath;
                             x.Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id;
-                            x.HasChanged = true;
+                            FranchiseIconViewModel.FranchiseIcons.CosmeticChanged(x);
                         });
                     else
-                        FighterPackage.Cosmetics.Add(new Cosmetic
+                    {
+                        var newCosmetic = new Cosmetic
                         {
                             CosmeticType = CosmeticType.FranchiseIcon,
                             Style = "Model",
                             ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath,
-                            Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id,
-                            HasChanged = true
-                        });
+                            Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id
+                        };
+                        FighterPackage.CosmeticList.Cosmetics.Add(newCosmetic);
+                        FighterPackage.CosmeticList.CosmeticChanged(newCosmetic);
+                    }
                 }
                 FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
             }
             _packageService.SaveFighter(FighterPackage);
-            FighterPackage.Cosmetics.ForEach(x => { x.HasChanged = false; x.ImagePath = ""; x.ColorSmashChanged = false; } );
+            FighterPackage.CosmeticList.Cosmetics.ForEach(x => { FighterPackage.CosmeticList.CosmeticChanged(x); x.ImagePath = ""; x.ColorSmashChanged = false; } );
         }
     }
 

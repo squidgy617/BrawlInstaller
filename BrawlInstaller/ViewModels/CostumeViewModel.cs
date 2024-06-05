@@ -173,11 +173,11 @@ namespace BrawlInstaller.ViewModels
                 CosmeticType = SelectedCosmeticOption,
                 InternalIndex = Costumes.SelectMany(x => x.Cosmetics).Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle)
                     .Max(x => x.InternalIndex) + 1,
-                Style = SelectedStyle,
-                HasChanged = true
+                Style = SelectedStyle
             };
             costume.Cosmetics.Add(cosmetic);
-            FighterPackage.Cosmetics.Add(cosmetic);
+            FighterPackage.CosmeticList.Cosmetics.Add(cosmetic);
+            FighterPackage.CosmeticList.CosmeticChanged(cosmetic);
             return cosmetic;
         }
 
@@ -232,7 +232,7 @@ namespace BrawlInstaller.ViewModels
                     currentCosmetic.Palette = null;
                     currentCosmetic.SharesData = false;
                     MoveCosmeticToEnd(currentCosmetic);
-                    currentCosmetic.HasChanged = true;
+                    FighterPackage.CosmeticList.CosmeticChanged(currentCosmetic);
                     OnPropertyChanged(nameof(SelectedCosmetic));
                     OnPropertyChanged(nameof(CosmeticList));
                     OnPropertyChanged(nameof(SelectedCosmeticNode));
@@ -262,7 +262,7 @@ namespace BrawlInstaller.ViewModels
                         AddCosmetic(currentCostume);
                     currentCosmetic.HDImage = bitmap.ToBitmapImage();
                     currentCosmetic.HDImagePath = image;
-                    currentCosmetic.HasChanged = true;
+                    FighterPackage.CosmeticList.CosmeticChanged(currentCosmetic);
                     OnPropertyChanged(nameof(SelectedCosmetic));
                     OnPropertyChanged(nameof(CosmeticList));
                 }
@@ -274,7 +274,7 @@ namespace BrawlInstaller.ViewModels
             if (SelectedCostume != null)
             {
                 var movedCostume = SelectedCostume;
-                movedCostume.Cosmetics.ForEach(x => x.HasChanged = true);
+                movedCostume.Cosmetics.ForEach(x => FighterPackage.CosmeticList.CosmeticChanged(x));
             }
         }
 
@@ -374,7 +374,7 @@ namespace BrawlInstaller.ViewModels
                 }
                 // Put this image at the end
                 selectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
-                selectedCosmetic.HasChanged = true;
+                FighterPackage.CosmeticList.CosmeticChanged(selectedCosmetic);
             }
         }
 
@@ -440,7 +440,7 @@ namespace BrawlInstaller.ViewModels
                 if (moveToEnd)
                     MoveCosmeticToEnd(item);
                 item.ColorSmashChanged = true;
-                item.HasChanged = true;
+                FighterPackage.CosmeticList.CosmeticChanged(item);
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));

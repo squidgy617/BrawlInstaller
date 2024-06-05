@@ -17,7 +17,7 @@ namespace BrawlInstaller.Classes
     {
         public FighterInfo FighterInfo { get; set; }
         public List<Costume> Costumes { get; set; }
-        public List<Cosmetic> Cosmetics { get; set; }
+        public CosmeticList CosmeticList { get; set; } = new CosmeticList();
         public List<FighterFiles> FighterFiles { get; set; }
         public string Soundbank { get; set; }
         public string CreditsTheme { get; set; }
@@ -49,6 +49,30 @@ namespace BrawlInstaller.Classes
         public int CostumeId { get; set; }
     }
 
+    public class CosmeticList
+    {
+        public List<(CosmeticType cosmeticType, string style)> ChangedCosmetics { get; } = new List<(CosmeticType cosmeticType, string style)>();
+        public List<Cosmetic> Cosmetics { get; set; }
+
+        public void CosmeticChanged(Cosmetic cosmetic)
+        {
+            if (!ChangedCosmetics.Any(x => x.cosmeticType == cosmetic.CosmeticType && x.style == cosmetic.Style))
+                ChangedCosmetics.Add((cosmetic.CosmeticType, cosmetic.Style));
+        }
+
+        public void ClearChangedCosmetics()
+        {
+            ChangedCosmetics.Clear();
+        }
+
+        public bool HasChanged(Cosmetic cosmetic)
+        {
+            if (ChangedCosmetics.Any(x => x.cosmeticType == cosmetic.CosmeticType && x.style == cosmetic.Style))
+                return true;
+            return false;
+        }
+    }
+
     public class Cosmetic
     {
         public CosmeticType CosmeticType { get; set; }
@@ -66,7 +90,6 @@ namespace BrawlInstaller.Classes
         public int? InternalIndex { get; set; }
         public int? CostumeIndex { get; set; }
         public int? Id { get; set; }
-        public bool HasChanged { get; set; } = false;
         public bool ColorSmashChanged { get; set; } = false;
     }
 

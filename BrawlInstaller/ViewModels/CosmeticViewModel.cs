@@ -73,7 +73,7 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadCosmetics(FighterLoadedMessage message)
         {
-            Cosmetics = message.Value.Cosmetics;
+            Cosmetics = message.Value.CosmeticList.Cosmetics;
             foreach (CosmeticType option in _settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType != IdType.Cosmetic && x.IdType != IdType.Franchise
             && x.IdType != IdType.Thumbnail && !CosmeticOptions.Select(y => y.Value).Contains(x.CosmeticType)).Select(x => x.CosmeticType).Distinct())
             {
