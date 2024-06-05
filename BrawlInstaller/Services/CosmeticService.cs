@@ -26,7 +26,7 @@ namespace BrawlInstaller.Services
     public interface ICosmeticService
     {
         List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
-        CosmeticList GetFranchiseIcons();
+        TrackedList<Cosmetic> GetFranchiseIcons();
         void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null);
         List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
     }
@@ -1034,7 +1034,7 @@ namespace BrawlInstaller.Services
         /// Get a list of all fighter franchise icons
         /// </summary>
         /// <returns>List of franchise icons</returns>
-        public CosmeticList GetFranchiseIcons()
+        public TrackedList<Cosmetic> GetFranchiseIcons()
         {
             var franchiseIcons = new List<Cosmetic>();
             var settings = _settingsService.BuildSettings;
@@ -1059,9 +1059,9 @@ namespace BrawlInstaller.Services
                     ColorSequence = allIcons.FirstOrDefault(x => x.Id == icon.Id && x.ColorSequence != null)?.ColorSequence
                 });
             }
-            var franchiseIconList = new CosmeticList
+            var franchiseIconList = new TrackedList<Cosmetic>
             {
-                Cosmetics = franchiseIcons
+                Items = franchiseIcons
             };
             return franchiseIconList;
         }

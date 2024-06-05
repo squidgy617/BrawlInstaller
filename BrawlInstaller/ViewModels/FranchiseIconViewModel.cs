@@ -17,7 +17,7 @@ namespace BrawlInstaller.ViewModels
 {
     public interface IFranchiseIconViewModel
     {
-        CosmeticList FranchiseIcons { get; }
+        TrackedList<Cosmetic> FranchiseIcons { get; }
         Cosmetic SelectedFranchiseIcon { get; }
         ICommand SelectModelCommand { get; }
     }
@@ -35,7 +35,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Private Properties
-        private CosmeticList _franchiseIcons;
+        private TrackedList<Cosmetic> _franchiseIcons;
         private Cosmetic _selectedFranchiseIcon;
 
         // Services
@@ -48,7 +48,7 @@ namespace BrawlInstaller.ViewModels
         {
             _cosmeticService = cosmeticService;
             _dialogService = dialogService;
-            FranchiseIcons = new CosmeticList();
+            FranchiseIcons = new TrackedList<Cosmetic>();
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
@@ -57,14 +57,14 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public CosmeticList FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(nameof(FranchiseIcons)); } }
+        public TrackedList<Cosmetic> FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(nameof(FranchiseIcons)); } }
         public Cosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(nameof(SelectedFranchiseIcon)); } }
 
         // Methods
         public void LoadIcons(FighterLoadedMessage message)
         {
             FranchiseIcons = _cosmeticService.GetFranchiseIcons();
-            SelectedFranchiseIcon = FranchiseIcons.Cosmetics.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
+            SelectedFranchiseIcon = FranchiseIcons.Items.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
         }
 
         public void SelectModel()
@@ -74,7 +74,7 @@ namespace BrawlInstaller.ViewModels
             if (model != "")
             {
                 SelectedFranchiseIcon.ModelPath = model;
-                FranchiseIcons.CosmeticChanged(SelectedFranchiseIcon);
+                FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
                 SelectedFranchiseIcon.Model = null;
                 SelectedFranchiseIcon.ColorSequence = null;
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));

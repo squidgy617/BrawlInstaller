@@ -122,13 +122,13 @@ namespace BrawlInstaller.ViewModels
                 // Add model for import
                 if (FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath != "")
                 {
-                    var franchiseModels = FighterPackage.CosmeticList.Cosmetics.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
+                    var franchiseModels = FighterPackage.CosmeticList.Items.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
                     if (franchiseModels.Count >= 1)
                         franchiseModels.ForEach(x =>
                         {
                             x.ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath;
                             x.Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id;
-                            FranchiseIconViewModel.FranchiseIcons.CosmeticChanged(x);
+                            FranchiseIconViewModel.FranchiseIcons.ItemChanged(x);
                         });
                     else
                     {
@@ -139,14 +139,14 @@ namespace BrawlInstaller.ViewModels
                             ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath,
                             Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id
                         };
-                        FighterPackage.CosmeticList.Cosmetics.Add(newCosmetic);
-                        FighterPackage.CosmeticList.CosmeticChanged(newCosmetic);
+                        FighterPackage.CosmeticList.Items.Add(newCosmetic);
+                        FighterPackage.CosmeticList.ItemChanged(newCosmetic);
                     }
                 }
                 FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
             }
             _packageService.SaveFighter(FighterPackage);
-            FighterPackage.CosmeticList.Cosmetics.ForEach(x => { FighterPackage.CosmeticList.CosmeticChanged(x); x.ImagePath = ""; x.ColorSmashChanged = false; } );
+            FighterPackage.CosmeticList.Items.ForEach(x => { FighterPackage.CosmeticList.ClearChanges(); x.ImagePath = ""; x.ColorSmashChanged = false; } );
         }
     }
 

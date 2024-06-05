@@ -17,7 +17,7 @@ namespace BrawlInstaller.Classes
     {
         public FighterInfo FighterInfo { get; set; }
         public List<Costume> Costumes { get; set; }
-        public CosmeticList CosmeticList { get; set; } = new CosmeticList();
+        public TrackedList<Cosmetic> CosmeticList { get; set; } = new TrackedList<Cosmetic>();
         public List<FighterFiles> FighterFiles { get; set; }
         public string Soundbank { get; set; }
         public string CreditsTheme { get; set; }
@@ -49,25 +49,22 @@ namespace BrawlInstaller.Classes
         public int CostumeId { get; set; }
     }
 
-    public class CosmeticList
+    public class TrackedList<T>
     {
-        public List<(CosmeticType cosmeticType, string style)> ChangedCosmetics { get; } = new List<(CosmeticType cosmeticType, string style)>();
-        public List<Cosmetic> Cosmetics { get; set; }
-
-        public void CosmeticChanged(Cosmetic cosmetic)
+        public List<T> ChangedItems { get; } = new List<T>();
+        public List<T> Items { get; set; } = new List<T>();
+        public void ItemChanged(T item)
         {
-            if (!ChangedCosmetics.Any(x => x.cosmeticType == cosmetic.CosmeticType && x.style == cosmetic.Style))
-                ChangedCosmetics.Add((cosmetic.CosmeticType, cosmetic.Style));
+            if (!ChangedItems.Contains(item)) 
+                ChangedItems.Add(item);
         }
-
-        public void ClearChangedCosmetics()
+        public void ClearChanges()
         {
-            ChangedCosmetics.Clear();
+            ChangedItems.Clear();
         }
-
-        public bool HasChanged(Cosmetic cosmetic)
+        public bool HasChanged(T item)
         {
-            if (ChangedCosmetics.Any(x => x.cosmeticType == cosmetic.CosmeticType && x.style == cosmetic.Style))
+            if (ChangedItems.Contains(item)) 
                 return true;
             return false;
         }
