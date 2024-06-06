@@ -23,7 +23,7 @@ namespace BrawlInstaller.ViewModels
     {
         ObservableCollection<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
-        int? CostumeId { get; set; }
+        List<int> AvailableCostumeIds { get; }
         ObservableCollection<string> PacFiles { get; }
         string SelectedPacFile { get; set; }
         ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
@@ -110,9 +110,10 @@ namespace BrawlInstaller.ViewModels
         public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(nameof(Costumes)); } }
         
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(nameof(SelectedCostume)); } }
-        
+
         [DependsUpon(nameof(SelectedCostume))]
-        public int? CostumeId { get => SelectedCostume?.CostumeId; set { UpdateCostumeId(value); OnPropertyChanged(nameof(CostumeId)); } }
+        [DependsUpon(nameof(Costumes))]
+        public List<int> AvailableCostumeIds { get => GetCostumeIds(); }
 
         [DependsUpon(nameof(SelectedCostume))]
         public ObservableCollection<string> PacFiles { get => SelectedCostume != null ? new ObservableCollection<string>(SelectedCostume?.PacFiles) : new ObservableCollection<string>(); }
@@ -462,15 +463,20 @@ namespace BrawlInstaller.ViewModels
             SelectedCostume = newCostume;
         }
 
-        public void UpdateCostumeId(int? costumeId)
+        private List<int> GetCostumeIds()
         {
-            if (Costumes.Any(x => x.CostumeId == costumeId))
+            var ids = new List<int>();
+            if (Costumes != null && SelectedCostume != null)
             {
-                _dialogService.ShowMessage("You cannot set a costume ID to an ID that is already in use.", "Costume ID Already in Use", System.Windows.MessageBoxImage.Stop);
-                return;
+                for (int i = 0; i < 50; i++)
+                {
+                    if (!Costumes.Select(x => x.CostumeId).Contains(i) || SelectedCostume?.CostumeId == i)
+                    {
+                        ids.Add(i);
+                    }
+                }
             }
-            if (costumeId != null)
-                SelectedCostume.CostumeId = (int)costumeId;
+            return ids;
         }
     }
 }
