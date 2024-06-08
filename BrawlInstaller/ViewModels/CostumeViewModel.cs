@@ -67,6 +67,7 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic(param));
         public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic(param));
+        public ICommand RemoveCostumesCommand => new RelayCommand(param => RemoveCostumes(param));
         public ICommand ClearCosmeticCommand => new RelayCommand(param => ClearCosmetic());
         public ICommand ClearHDCosmeticCommand => new RelayCommand(param => ClearHDCosmetic());
         public ICommand CostumeUpCommand => new RelayCommand(param => MoveCostumeUp());
@@ -516,6 +517,37 @@ namespace BrawlInstaller.ViewModels
             Costumes.Add(newCostume);
             FighterPackage.Costumes.Add(newCostume);
             SelectedCostume = newCostume;
+        }
+
+        public void RemoveCostumes(object selectedItems)
+        {
+            var costumes = ((IEnumerable)selectedItems).Cast<Costume>().OrderBy(x => Costumes.IndexOf(x)).ToList();
+            // Don't allow removing costumes with cosmetics that are the root or last color smashed cosmetic in a group
+            foreach (var costume in costumes)
+            {
+                foreach (var cosmetic in costume.Cosmetics)
+                {
+                    var valid = CanChangeCosmetic(cosmetic);
+                    if (!valid)
+                    {
+                        _dialogService.ShowMessage("A selected costume contains cosmetics that contain either image data for a color smash group or are the last color smashed texture in a group. " +
+                            "Undo color smashing on the cosmetics to remove them.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
+                        return;
+                    }
+                }
+            }
+            foreach (var costume in costumes)
+            {
+                foreach (var cosmetic in costume.Cosmetics)
+                {
+                    FighterPackage.Cosmetics.Remove(cosmetic);
+                }
+                FighterPackage.Costumes.Remove(costume);
+                Costumes.Remove(costume);
+            }
+            OnPropertyChanged(nameof(SelectedCosmetic));
+            OnPropertyChanged(nameof(CosmeticList));
+            OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
         private List<int> GetCostumeIds()

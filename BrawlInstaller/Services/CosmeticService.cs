@@ -285,7 +285,7 @@ namespace BrawlInstaller.Services
             if (folder != null)
             {
                 // Remove all HD textures
-                foreach(var node in folder.Children)
+                foreach(var node in folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)))
                 {
                     var texNode = (TEX0Node)node;
                     var name = texNode.DolphinTextureName;

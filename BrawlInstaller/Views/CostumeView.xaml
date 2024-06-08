@@ -29,6 +29,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -45,6 +46,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Button x:Name="costumeAddButton" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddCostumeCommand}" Grid.Row="2" Grid.Column="0"/>
+            <Button x:Name="costumeRemoveButton" Content="Remove" HorizontalAlignment="Left" VerticalAlignment="Top" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding RemoveCostumesCommand}" Grid.Row="3" Grid.Column="0"/>
             <Button x:Name="costumeUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeUpCommand}" Grid.Row="0" Grid.Column="1"/>
             <Button x:Name="costumeDownButton" Content="↓" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1"/>
         </Grid>
