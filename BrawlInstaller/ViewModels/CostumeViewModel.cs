@@ -67,6 +67,8 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic(param));
         public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic(param));
+        public ICommand ClearCosmeticCommand => new RelayCommand(param => ClearCosmetic());
+        public ICommand ClearHDCosmeticCommand => new RelayCommand(param => ClearHDCosmetic());
         public ICommand CostumeUpCommand => new RelayCommand(param => MoveCostumeUp());
         public ICommand CostumeDownCommand => new RelayCommand(param => MoveCostumeDown());
         public ICommand UpdateSharesDataCommand => new RelayCommand(param => UpdateSharesData(param));
@@ -194,6 +196,16 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(PacFiles));
         }
 
+        private bool CanChangeCosmetic(Cosmetic cosmetic)
+        {
+            var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(cosmetic));
+            if (group != null && ((group.Count > 1 && cosmetic?.SharesData == false) || (group.Count == 2 && cosmetic?.SharesData == true)))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public void ReplaceCosmetic(object selectedItems)
         {
             var costumes = ((IEnumerable)selectedItems).Cast<Costume>().OrderBy(x => Costumes.IndexOf(x)).ToList();
@@ -208,8 +220,8 @@ namespace BrawlInstaller.ViewModels
             foreach(var costume in costumes)
             {
                 var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
-                var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(cosmetic));
-                if (group != null && ((group.Count > 1 && cosmetic?.SharesData == false) || (group.Count == 2 && cosmetic?.SharesData == true)))
+                var valid = CanChangeCosmetic(cosmetic);
+                if (!valid)
                 {
                     _dialogService.ShowMessage("Selected cosmetics contain either image data for a color smash group or the last color smashed texture in a group. " +
                         "Undo color smashing on the cosmetics to replace them.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
@@ -267,6 +279,49 @@ namespace BrawlInstaller.ViewModels
                     OnPropertyChanged(nameof(CosmeticList));
                 }
             }
+        }
+
+        public void ClearCosmetic()
+        {
+            var valid = CanChangeCosmetic(SelectedCosmetic);
+            if (!valid)
+            {
+                _dialogService.ShowMessage("Selected cosmetic contains either image data for a color smash group or is the last color smashed texture in a group. " +
+                        "Undo color smashing on the cosmetic to remove it.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
+                return;
+            }
+            if (SelectedCosmetic.HDImage == null)
+            {
+                FighterPackage.Cosmetics.Remove(SelectedCosmetic);
+                SelectedCostume.Cosmetics.Remove(SelectedCosmetic);
+            }
+            else
+            {
+                SelectedCosmetic.Image = null;
+                SelectedCosmetic.ImagePath = "";
+                FighterPackage.Cosmetics.ItemChanged(SelectedCosmetic);
+            }
+            OnPropertyChanged(nameof(SelectedCosmetic));
+            OnPropertyChanged(nameof(CosmeticList));
+            OnPropertyChanged(nameof(SelectedCosmeticNode));
+        }
+
+        public void ClearHDCosmetic()
+        {
+            if (SelectedCosmetic.Image == null)
+            {
+                FighterPackage.Cosmetics.Remove(SelectedCosmetic);
+                SelectedCostume.Cosmetics.Remove(SelectedCosmetic);
+            }
+            else
+            {
+                SelectedCosmetic.HDImage = null;
+                SelectedCosmetic.HDImagePath = "";
+                FighterPackage.Cosmetics.ItemChanged(SelectedCosmetic);
+            }
+            OnPropertyChanged(nameof(SelectedCosmetic));
+            OnPropertyChanged(nameof(CosmeticList));
+            OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
         private void MoveCostume()
