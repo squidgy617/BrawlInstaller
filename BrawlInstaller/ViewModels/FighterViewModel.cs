@@ -89,7 +89,7 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadFighter()
         {
-            FighterPackage = _packageService.ExtractFighter(new FighterIds
+            FighterPackage = _packageService.ExtractFighter(new BrawlIds
             {
                 FighterConfigId = FighterIds.FighterConfigId ?? -1,
                 CosmeticConfigId = FighterIds.CosmeticConfigId ?? -1,

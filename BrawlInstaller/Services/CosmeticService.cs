@@ -25,7 +25,7 @@ namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
-        List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds);
+        List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds);
         TrackedList<Cosmetic> GetFranchiseIcons();
         void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null);
         List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
@@ -833,14 +833,14 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="definition">Cosmetic definition</param>
         /// <param name="node">Root node of file to retrieve textures from</param>
-        /// <param name="fighterIds">IDs to use for getting cosmetics</param>
+        /// <param name="brawlIds">IDs to use for getting cosmetics</param>
         /// <param name="restrictRange">Whether to restrict the range of cosmetics based on ID</param>
         /// <returns>List of textures</returns>
-        private List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        private List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, BrawlIds brawlIds, bool restrictRange)
         {
             // Try to get all textures for cosmetic definition
             var nodes = new List<CosmeticTexture>();
-            var id = fighterIds.GetIdOfType(definition.IdType) + definition.Offset;
+            var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
             // If the definition contains PatSettings, check the PAT0 first
             if (definition.PatSettings != null)
             {
@@ -848,7 +848,7 @@ namespace BrawlInstaller.Services
                 if (pat != null)
                 {
                     var patEntries = new List<ResourceNode>();
-                    id = fighterIds.GetIdOfType(definition.PatSettings.IdType ?? definition.IdType) + (definition.PatSettings.Offset ?? definition.Offset);
+                    id = brawlIds.GetIdOfType(definition.PatSettings.IdType ?? definition.IdType) + (definition.PatSettings.Offset ?? definition.Offset);
                     patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.PatSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
                     foreach (PAT0TextureEntryNode patEntry in patEntries)
                     {
@@ -884,14 +884,14 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="definition">Cosmetic definition</param>
         /// <param name="node">Root node of file to retrieve cosmetics from</param>
-        /// <param name="fighterIds">IDs to use for getting cosmetics</param>
+        /// <param name="brawlIds">IDs to use for getting cosmetics</param>
         /// <param name="restrictRange">Whether to restrict range based on ID</param>
         /// <returns>List of models</returns>
-        private List<MDL0Node> GetModels(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        private List<MDL0Node> GetModels(CosmeticDefinition definition, ResourceNode node, BrawlIds brawlIds, bool restrictRange)
         {
             // Try to get all models for cosmetic definition
             var nodes = new List<MDL0Node>();
-            var id = fighterIds.GetIdOfType(definition.IdType) + definition.Offset;
+            var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
             var start = definition.ModelPath != null ? node.FindChild(definition.ModelPath) : node;
             // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for models
             if (start.GetType() == typeof(ARCNode))
@@ -964,14 +964,14 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="definition">Cosmetic definition</param>
         /// <param name="node">Root node of file to retrieve cosmetics from</param>
-        /// <param name="fighterIds">IDs to use for getting cosmetics</param>
+        /// <param name="brawlIds">IDs to use for getting cosmetics</param>
         /// <param name="restrictRange">Whether to restrict range based on IDs</param>
         /// <returns>List of cosmetics</returns>
-        private List<Cosmetic> GetDefinitionCosmetics(CosmeticDefinition definition, ResourceNode node, FighterIds fighterIds, bool restrictRange)
+        private List<Cosmetic> GetDefinitionCosmetics(CosmeticDefinition definition, ResourceNode node, BrawlIds brawlIds, bool restrictRange)
         {
             // Get textures for provided definition and IDs
             var cosmetics = new List<Cosmetic>();
-            var textures = GetTextures(definition, node, fighterIds, restrictRange);
+            var textures = GetTextures(definition, node, brawlIds, restrictRange);
             foreach(var texture in textures)
             {
                 var hdTexture = _settingsService.BuildSettings.HDTextures ? GetHDTexture(texture.Texture?.DolphinTextureName) : "";
@@ -992,7 +992,7 @@ namespace BrawlInstaller.Services
             }
             if (definition.ModelPath != null)
             {
-                var models = GetModels(definition, node, fighterIds, restrictRange);
+                var models = GetModels(definition, node, brawlIds, restrictRange);
                 foreach (var model in models)
                 {
                     cosmetics.Add(new Cosmetic
@@ -1020,7 +1020,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fighterIds">Fighter IDs to retrieve cosmetics for</param>
         /// <returns>List of cosmetics</returns>
-        public List<Cosmetic> GetFighterCosmetics(FighterIds fighterIds)
+        public List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds)
         {
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType != CosmeticType.FranchiseIcon).ToList();
@@ -1040,7 +1040,7 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList();
             // Get all franchise icons
-            var allIcons = GetCosmetics(new FighterIds(), definitions, false);
+            var allIcons = GetCosmetics(new BrawlIds(), definitions, false);
             // Aggregate the models and transparent textures
             foreach(var icon in allIcons.Where(x => x.Texture != null).GroupBy(x => x.Id).Select(x => x.First()).ToList())
             {
@@ -1069,11 +1069,11 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Get a list of cosmetics associated with provided IDs
         /// </summary>
-        /// <param name="fighterIds">IDs to retrieve cosmetics for</param>
+        /// <param name="brawlIds">IDs to retrieve cosmetics for</param>
         /// <param name="definitions">List of cosmetic definitions to retrieve cosmetics for</param>
         /// <param name="restrictRange">Whether to restrict range of cosmetics based on ID</param>
         /// <returns>List of cosmetics</returns>
-        private List<Cosmetic> GetCosmetics(FighterIds fighterIds, List<CosmeticDefinition> definitions, bool restrictRange)
+        private List<Cosmetic> GetCosmetics(BrawlIds brawlIds, List<CosmeticDefinition> definitions, bool restrictRange)
         {
             var cosmetics = new List<Cosmetic>();
             // Order them to ensure that cosmetics with multiple definitions pick the definitions favor definitions that have multiple cosmetics
@@ -1083,14 +1083,14 @@ namespace BrawlInstaller.Services
                 // Check each definition in the group for cosmetics
                 foreach (var cosmetic in cosmeticGroup)
                 {
-                    var id = fighterIds.GetIdOfType(cosmetic.IdType) + cosmetic.Offset;
+                    var id = brawlIds.GetIdOfType(cosmetic.IdType) + cosmetic.Offset;
                     // Check all paths for the cosmetic definition
                     foreach (var path in GetCosmeticPaths(cosmetic, id))
                     {
                         var rootNode = _fileService.OpenFile(path);
                         if (rootNode != null)
                         {
-                            cosmetics.AddRange(GetDefinitionCosmetics(cosmetic, rootNode, fighterIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
+                            cosmetics.AddRange(GetDefinitionCosmetics(cosmetic, rootNode, brawlIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
                             _fileService.CloseFile(rootNode);
                         }
                     }

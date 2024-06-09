@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BrawlInstaller.Classes
 {
-    public class FighterIds
+    public class BrawlIds
     {
-        public List<FighterId> Ids { get; set; } = new List<FighterId>();
+        public List<BrawlId> Ids { get; set; } = new List<BrawlId>();
         public int FighterConfigId { get => GetId(IdType.FighterConfig); set => SetId(IdType.FighterConfig, value); }
         public int CosmeticConfigId { get => GetId(IdType.CosmeticConfig); set => SetId(IdType.CosmeticConfig, value); }
         public int SlotConfigId { get => GetId(IdType.SlotConfig); set => SetId(IdType.SlotConfig, value); }
@@ -29,7 +29,7 @@ namespace BrawlInstaller.Classes
             if (match != null)
                 match.Id = newId;
             else
-                Ids.Add(new FighterId { Id = newId, Type = type });
+                Ids.Add(new BrawlId { Id = newId, Type = type });
         }
 
         public int GetIdOfType(IdType type)
@@ -38,7 +38,7 @@ namespace BrawlInstaller.Classes
         }
     }
 
-    public class FighterId
+    public class BrawlId
     {
         public IdType Type { get; set; }
         public int Id { get; set; }

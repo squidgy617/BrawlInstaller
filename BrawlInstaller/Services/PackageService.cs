@@ -16,7 +16,7 @@ namespace BrawlInstaller.Services
 {
     public interface IPackageService
     {
-        FighterPackage ExtractFighter(FighterIds fighterIds);
+        FighterPackage ExtractFighter(BrawlIds fighterIds);
         void SaveFighter(FighterPackage fighterPackage);
     }
     [Export(typeof(IPackageService))]
@@ -44,7 +44,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fighterIds">IDs of fighter</param>
         /// <returns>Fighter package</returns>
-        public FighterPackage ExtractFighter(FighterIds fighterIds)
+        public FighterPackage ExtractFighter(BrawlIds fighterIds)
         {
             var fighterPackage = new FighterPackage();
             var fighterInfo = _fighterService.GetFighterInfo(fighterIds);

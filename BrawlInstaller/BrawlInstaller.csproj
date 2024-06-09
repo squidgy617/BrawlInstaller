@@ -64,7 +64,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\BuildSettings.cs" />
     <Compile Include="Classes\CosmeticTexture.cs" />
-    <Compile Include="Classes\FighterIDs.cs" />
+    <Compile Include="Classes\BrawlIds.cs" />
     <Compile Include="Classes\FighterInfo.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Classes\TrackedList.cs" />

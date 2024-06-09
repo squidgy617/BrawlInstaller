@@ -10,7 +10,7 @@ namespace BrawlInstaller.Classes
     {
         public string InternalName { get; set; }
         public string DisplayName { get; set; }
-        public FighterIds Ids { get; set; }
+        public BrawlIds Ids { get; set; }
         public string FighterConfig { get; set; }
         public string CosmeticConfig { get; set; }
         public string CSSSlotConfig { get; set; }

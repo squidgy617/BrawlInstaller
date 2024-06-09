@@ -17,7 +17,7 @@ namespace BrawlInstaller.Services
 {
     public interface IFighterService
     {
-        FighterInfo GetFighterInfo(FighterIds fighterIds);
+        FighterInfo GetFighterInfo(BrawlIds fighterIds);
         List<Costume> GetFighterCostumes(FighterInfo fighterInfo);
         List<Costume> GetCostumeCosmetics(List<Costume> costumes, List<Cosmetic> cosmetics);
         string GetModule(string internalName);
@@ -132,7 +132,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fighterIds">Fighter IDs for configs</param>
         /// <returns>All IDs for a fighter</returns>
-        private FighterIds LinkExConfigs(FighterIds fighterIds)
+        private BrawlIds LinkExConfigs(BrawlIds fighterIds)
         {
             var fighterConfigs = GetExConfigs(IdType.FighterConfig);
             var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig);
@@ -217,7 +217,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterIds">Fighter IDs</param>
         /// <returns>Fighter information</returns>
         // TODO: get way more info
-        public FighterInfo GetFighterInfo(FighterIds fighterIds)
+        public FighterInfo GetFighterInfo(BrawlIds fighterIds)
         {
             var fighterInfo = new FighterInfo();
             fighterIds = LinkExConfigs(fighterIds);
