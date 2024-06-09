@@ -197,14 +197,22 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(PacFiles));
         }
 
-        private bool CanChangeCosmetic(Cosmetic cosmetic)
+        private void FlipColorSmashedCosmetics(Cosmetic cosmetic)
         {
             var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(cosmetic));
             if (group != null && ((group.Count > 1 && cosmetic?.SharesData == false) || (group.Count == 2 && cosmetic?.SharesData == true)))
             {
-                return false;
+                group.ForEach(x => { x.SharesData = false; x.ColorSmashChanged = true; MoveCosmeticToEnd(x); });
             }
-            return true;
+            else
+            {
+                if (cosmetic.SharesData == true)
+                {
+                    MoveCosmeticToEnd(cosmetic);
+                }
+                cosmetic.SharesData = false;
+                cosmetic.ColorSmashChanged = true;
+            }
         }
 
         public void ReplaceCosmetic(object selectedItems)
@@ -221,13 +229,7 @@ namespace BrawlInstaller.ViewModels
             foreach(var costume in costumes)
             {
                 var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
-                var valid = CanChangeCosmetic(cosmetic);
-                if (!valid)
-                {
-                    _dialogService.ShowMessage("Selected cosmetics contain either image data for a color smash group or the last color smashed texture in a group. " +
-                        "Undo color smashing on the cosmetics to replace them.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
-                    return;
-                }
+                FlipColorSmashedCosmetics(cosmetic);
             }
             // Update the image
             foreach(var image in images)
@@ -243,8 +245,6 @@ namespace BrawlInstaller.ViewModels
                     currentCosmetic.ImagePath = image;
                     currentCosmetic.Texture = null;
                     currentCosmetic.Palette = null;
-                    currentCosmetic.SharesData = false;
-                    MoveCosmeticToEnd(currentCosmetic);
                     FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
                     OnPropertyChanged(nameof(SelectedCosmetic));
                     OnPropertyChanged(nameof(CosmeticList));
@@ -253,6 +253,8 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
+        // TODO: Don't allow adding HD cosmetics if there is no corresponding regular texture? And always remove HD textures with regular ones?
+        // Or some validation when trying to save with HD textures with no match
         public void ReplaceHDCosmetic(object selectedItems)
         {
             var costumes = ((IEnumerable)selectedItems).Cast<Costume>().OrderBy(x => Costumes.IndexOf(x)).ToList();
@@ -272,7 +274,7 @@ namespace BrawlInstaller.ViewModels
                 {
                     var bitmap = new Bitmap(image);
                     if (currentCosmetic == null)
-                        AddCosmetic(currentCostume);
+                        currentCosmetic = AddCosmetic(currentCostume);
                     currentCosmetic.HDImage = bitmap.ToBitmapImage();
                     currentCosmetic.HDImagePath = image;
                     FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
@@ -284,13 +286,7 @@ namespace BrawlInstaller.ViewModels
 
         public void ClearCosmetic()
         {
-            var valid = CanChangeCosmetic(SelectedCosmetic);
-            if (!valid)
-            {
-                _dialogService.ShowMessage("Selected cosmetic contains either image data for a color smash group or is the last color smashed texture in a group. " +
-                        "Undo color smashing on the cosmetic to remove it.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
-                return;
-            }
+            FlipColorSmashedCosmetics(SelectedCosmetic);
             if (SelectedCosmetic.HDImage == null)
             {
                 FighterPackage.Cosmetics.Remove(SelectedCosmetic);
@@ -527,13 +523,7 @@ namespace BrawlInstaller.ViewModels
             {
                 foreach (var cosmetic in costume.Cosmetics)
                 {
-                    var valid = CanChangeCosmetic(cosmetic);
-                    if (!valid)
-                    {
-                        _dialogService.ShowMessage("A selected costume contains cosmetics that contain either image data for a color smash group or are the last color smashed texture in a group. " +
-                            "Undo color smashing on the cosmetics to remove them.", "Color Smash Error", System.Windows.MessageBoxImage.Stop);
-                        return;
-                    }
+                    FlipColorSmashedCosmetics(cosmetic);
                 }
             }
             foreach (var costume in costumes)
