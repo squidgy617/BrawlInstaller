@@ -235,6 +235,8 @@ namespace BrawlInstaller.Services
                     fighterIds.FranchiseId = coscNode.FranchiseIconID + 1;
                 if (fighterInfo.DisplayName == null)
                     fighterInfo.DisplayName = coscNode.CharacterName;
+                if (fighterInfo.EntryName == null)
+                    fighterInfo.EntryName = coscNode.CharacterName;
                 _fileService.CloseFile(rootNode);
             }
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
