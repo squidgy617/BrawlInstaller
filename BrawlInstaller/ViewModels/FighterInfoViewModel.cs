@@ -34,6 +34,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand RefreshFightersCommand => new RelayCommand(param => GetFighters());
         public ICommand LoadFightersCommand => new RelayCommand(param => LoadFighters());
         public ICommand SaveFightersCommand => new RelayCommand(param => SaveFighters());
+        public ICommand MoveUpCommand => new RelayCommand(param => MoveUp());
+        public ICommand MoveDownCommand => new RelayCommand(param => MoveDown());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -96,6 +98,22 @@ namespace BrawlInstaller.ViewModels
         private void SaveFighters() 
         {
             _settingsService.SaveFighterInfoSettings(FighterInfoList.ToList());
+        }
+
+        private void MoveUp()
+        {
+            var selected = SelectedFighterInfo;
+            FighterInfoList.MoveUp(SelectedFighterInfo);
+            SelectedFighterInfo = selected;
+            OnPropertyChanged(nameof(FighterInfoList));
+        }
+
+        private void MoveDown()
+        {
+            var selected = SelectedFighterInfo;
+            FighterInfoList.MoveDown(SelectedFighterInfo);
+            SelectedFighterInfo = selected;
+            OnPropertyChanged(nameof(FighterInfoList));
         }
     }
 }
