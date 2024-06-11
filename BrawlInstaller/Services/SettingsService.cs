@@ -24,6 +24,8 @@ namespace BrawlInstaller.Services
         void SaveSettings(BuildSettings buildSettings, string path);
         BuildSettings LoadSettings(string path);
         BuildSettings GetDefaultSettings();
+        void SaveFighterInfoSettings(List<FighterInfo> fighterInfoList);
+        List<FighterInfo> LoadFighterInfoSettings();
     }
     [Export(typeof(ISettingsService))]
     internal class SettingsService : ISettingsService
@@ -61,6 +63,32 @@ namespace BrawlInstaller.Services
             var text = File.ReadAllText(path);
             var buildSettings = JsonConvert.DeserializeObject<BuildSettings>(text);
             return buildSettings;
+        }
+
+        /// <summary>
+        /// Save list of fighters to build
+        /// </summary>
+        /// <param name="fighterInfoList">List of fighters to save</param>
+        public void SaveFighterInfoSettings(List<FighterInfo> fighterInfoList)
+        {
+            var fighterInfoSettings = JsonConvert.SerializeObject(fighterInfoList);
+            File.WriteAllText($"{BuildPath}\\FighterList.json", fighterInfoSettings);
+        }
+
+        /// <summary>
+        /// Load list of fighters in build
+        /// </summary>
+        /// <returns>Information for all fighters in build</returns>
+        public List<FighterInfo> LoadFighterInfoSettings()
+        {
+            var fighterList = new List<FighterInfo>();
+            var path = $"{BuildPath}\\FighterList.json";
+            if (File.Exists(path))
+            {
+                var text = File.ReadAllText(path);
+                fighterList = JsonConvert.DeserializeObject<List<FighterInfo>>(text);
+            }
+            return fighterList;
         }
 
         /// <summary>

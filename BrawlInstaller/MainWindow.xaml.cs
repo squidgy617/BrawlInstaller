@@ -37,5 +37,8 @@ namespace BrawlInstaller
 
         [Import]
         public IFighterViewModel FighterViewModel { get; set; }
+
+        [Import]
+        public IFighterInfoViewModel FighterInfoViewModel { get; set; }
     }
 }

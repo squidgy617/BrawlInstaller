@@ -26,6 +26,7 @@ namespace BrawlInstaller.Services
         List<string> GetKirbyFiles(string internalName);
         void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo);
         void UpdateCostumeConfig(FighterInfo fighterInfo, List<Costume> costumes);
+        List<FighterInfo> GetAllFighterInfo();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -270,6 +271,27 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(rootNode);
             }
             fighterInfo.Ids = fighterIds;
+            return fighterInfo;
+        }
+
+        public List<FighterInfo> GetAllFighterInfo()
+        {
+            var fighterInfo = new List<FighterInfo>();
+            var fighterIds = new List<BrawlIds>();
+            var fighterConfigs = GetExConfigs(IdType.FighterConfig);
+            Parallel.ForEach(fighterConfigs, fighterConfig =>
+            {
+                var id = GetConfigId(fighterConfig.Name, IdType.FighterConfig);
+                if (id > -1)
+                {
+                    fighterIds.Add(new BrawlIds { FighterConfigId = id });
+                }
+                _fileService.CloseFile(fighterConfig);
+            });
+            Parallel.ForEach(fighterIds, fighterId =>
+            {
+                fighterInfo.Add(GetFighterInfo(fighterId));
+            });
             return fighterInfo;
         }
 

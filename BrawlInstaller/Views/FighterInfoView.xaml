@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="BrawlInstaller.Views.FighterInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BrawlInstaller.Views"
+             xmlns:converters="clr-namespace:BrawlInstaller.Converters"
+             xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterInfoViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:HexConverter x:Key="hexConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="fighterListGrid" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="fighterListLabel" Content="Fighters:" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"/>
+            <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" VerticalAlignment="Top" Grid.Row="1" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="120"/>
+            <Button x:Name="addButton" Content="Add" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="2" Command="{Binding AddFighterCommand}"/>
+            <Button x:Name="loadButton" Content="Load" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="3" Command="{Binding LoadFightersCommand}"/>
+            <Button x:Name="saveButton" Content="Save" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="4" Command="{Binding SaveFightersCommand}"/>
+        </Grid>
+        <Grid x:Name="boxesGrid" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="entryNameLabel" Content="Entry Name:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
+            <TextBox x:Name="entryNameTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.EntryName, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="20" Grid.Row="0" Grid.Column="1"/>
+            <Label x:Name="displayNameLabel" Content="Name:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0"/>
+            <TextBox x:Name="displayNameTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.DisplayName, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="20" Grid.Row="1" Grid.Column="1"/>
+            <Label x:Name="internalNameLabel" Content="Internal Name:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0"/>
+            <TextBox x:Name="internalNameTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.InternalName, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="20" Grid.Row="2" Grid.Column="1"/>
+            <Label x:Name="fighterIdLabel" Content="Fighter ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0"/>
+            <TextBox x:Name="fighterIdTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.FighterConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" VerticalAlignment="Top" Width="50" Height="20" Grid.Row="3" Grid.Column="1"/>
+            <Label x:Name="slotIdLabel" Content="Slot ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
+            <TextBox x:Name="slotIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.SlotConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" Width="50" Height="20" Grid.Row="4" Grid.Column="1"/>
+            <Label x:Name="cssSlotIdLabel" Content="CSS Slot ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="5" Grid.Column="0"/>
+            <TextBox x:Name="cssSlotIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.CSSSlotConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" Width="50" Height="20" Grid.Row="5" Grid.Column="1"/>
+            <Label x:Name="cosmeticConfigIdLabel" Content="Cosmetic ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="6" Grid.Column="0"/>
+            <TextBox x:Name="cosmeticConfigIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.CosmeticConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" Width="50" Height="20" Grid.Row="6" Grid.Column="1"/>
+            <Label x:Name="cosmeticId" Content="Cosmetic ID 2:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="7" Grid.Column="0"/>
+            <TextBox x:Name="cosmeticIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.CosmeticId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="7" Grid.Column="1"/>
+            <Label x:Name="franchiseIdLabel" Content="Franchise ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="8" Grid.Column="0"/>
+            <TextBox x:Name="franchiseIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.FranchiseId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="8" Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</UserControl>

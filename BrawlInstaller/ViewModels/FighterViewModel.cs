@@ -27,14 +27,14 @@ namespace BrawlInstaller.ViewModels
         ICommand LoadCommand { get; }
         ICommand SaveCommand { get; }
         FighterPackage FighterPackage { get; }
-        FighterIdsViewModel FighterIds { get; set; }
     }
 
     [Export(typeof(IFighterViewModel))]
     internal class FighterViewModel : ViewModelBase, IFighterViewModel
     {
         // Private properties
-        private FighterIdsViewModel _fighterIds;
+        private List<FighterInfo> _fighterList;
+        private FighterInfo _selectedFighter;
 
         // Services
         IPackageService _packageService { get; }
@@ -73,7 +73,8 @@ namespace BrawlInstaller.ViewModels
             _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
             _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
 
-            FighterIds = new FighterIdsViewModel ();
+            var list = _settingsService.LoadFighterInfoSettings();
+            FighterList = list;
         }
 
         // ViewModels
@@ -84,23 +85,15 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get; set; }
-        public FighterIdsViewModel FighterIds { get => _fighterIds; set { _fighterIds = value; OnPropertyChanged(nameof(FighterIds)); } }
+        public List<FighterInfo> FighterList { get => _fighterList; set { _fighterList = value; OnPropertyChanged(nameof(FighterList)); } }
+        public FighterInfo SelectedFighter { get => _selectedFighter; set { _selectedFighter = value; OnPropertyChanged(nameof(SelectedFighter)); } }
 
         // Methods
         public void LoadFighter()
         {
-            FighterPackage = _packageService.ExtractFighter(new BrawlIds
-            {
-                FighterConfigId = FighterIds.FighterConfigId ?? -1,
-                CosmeticConfigId = FighterIds.CosmeticConfigId ?? -1,
-                CSSSlotConfigId = FighterIds.CSSSlotConfigId ?? -1,
-                SlotConfigId = FighterIds.SlotConfigId ?? -1,
-                CosmeticId = FighterIds.CosmeticId ?? -1
-                //FighterConfigId = 37,
-                //SlotConfigId = 39,
-                //CosmeticConfigId = 35,
-                //CSSSlotConfigId = 35
-            });
+            FighterPackage = new FighterPackage();
+            FighterPackage.FighterInfo = SelectedFighter;
+            FighterPackage = _packageService.ExtractFighter(SelectedFighter.Ids);
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
@@ -147,16 +140,6 @@ namespace BrawlInstaller.ViewModels
             _packageService.SaveFighter(FighterPackage);
             FighterPackage.Cosmetics.Items.ForEach(x => { FighterPackage.Cosmetics.ClearChanges(); x.ImagePath = ""; x.HDImagePath = ""; x.ColorSmashChanged = false; } );
         }
-    }
-
-    // Mappings
-    public class FighterIdsViewModel
-    {
-        public int? FighterConfigId { get; set; }
-        public int? SlotConfigId { get; set; }
-        public int? CSSSlotConfigId { get; set; }
-        public int? CosmeticConfigId { get; set; }
-        public int? CosmeticId { get; set; }
     }
 
     // Messages

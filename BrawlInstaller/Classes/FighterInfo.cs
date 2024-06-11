@@ -8,6 +8,7 @@ namespace BrawlInstaller.Classes
 {
     public class FighterInfo
     {
+        public string EntryName { get; set; }
         public string InternalName { get; set; }
         public string DisplayName { get; set; }
         public BrawlIds Ids { get; set; }

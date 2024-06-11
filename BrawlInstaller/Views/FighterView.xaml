@@ -29,27 +29,15 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="fighterIdLabel" Content="Fighter ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
-                <TextBox x:Name="fighterIdTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding FighterIds.FighterConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" VerticalAlignment="Top" Width="50" Height="20" Grid.Row="0" Grid.Column="1"/>
-                <Label x:Name="slotIdLabel" Content="Slot ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0"/>
-                <TextBox x:Name="slotIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.SlotConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" Width="50" Height="20" Grid.Row="1" Grid.Column="1"/>
-                <Label x:Name="cssSlotIdLabel" Content="CSS Slot ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0"/>
-                <TextBox x:Name="cssSlotIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CSSSlotConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" Width="50" Height="20" Grid.Row="2" Grid.Column="1"/>
-                <Label x:Name="cosmeticConfigIdLabel" Content="Cosmetic ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0"/>
-                <TextBox x:Name="cosmeticConfigIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CosmeticConfigId, Mode=TwoWay, Converter={StaticResource hexConverter}}" Width="50" Height="20" Grid.Row="3" Grid.Column="1"/>
-                <TextBox x:Name="cosmeticIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding FighterIds.CosmeticId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="4" Grid.Column="1"/>
-                <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding LoadCommand}" Grid.Row="5" Grid.Column="0"/>
-                <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveCommand}" Grid.Row="5" Grid.Column="1"/>
+                <Label x:Name="fighterListLabel" Content="Fighters:" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"/>
+                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="120"/>
+                <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding LoadCommand}" Grid.Row="2" Grid.Column="0"/>
+                <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveCommand}" Grid.Row="2" Grid.Column="1"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0" Grid.ColumnSpan="2">

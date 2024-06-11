@@ -8,6 +8,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280">
     <Grid>
-        <ContentControl x:Name="MainView" Content="{Binding FighterViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
+        <TabControl x:Name="MainView">
+            <TabItem Header="Fighter">
+                <ContentControl x:Name="FighterView" Content="{Binding FighterViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
+            </TabItem>
+            <TabItem Header="Fighter Info">
+                <ContentControl x:Name="FighterInfoView" Content="{Binding FighterInfoViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
