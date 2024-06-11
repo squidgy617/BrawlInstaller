@@ -25,7 +25,7 @@
         <TextBox x:Name="modelTextBox" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1" Width="120" Text="{Binding SelectedFranchiseIcon.ModelPath}"/>
         <Button x:Name="modelButton" Content="Browse..." VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="1" Command="{Binding SelectModelCommand}"/>
         <Image x:Name="franchiseIconImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="3" Grid.RowSpan="2"/>
-        <Border Grid.Column="4" Background="Gray"  Grid.RowSpan="2">
+        <Border Grid.Column="4" Background="Gray"  Grid.RowSpan="2" Height="64" Width="64">
             <Image x:Name="franchiseIconTransparentImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
         </Border>
     </Grid>
