@@ -30,6 +30,7 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand AddFighterCommand => new RelayCommand(param => AddFighter());
+        public ICommand RemoveFighterCommand => new RelayCommand(param => RemoveFighter());
         public ICommand LoadFightersCommand => new RelayCommand(param => LoadFighters());
         public ICommand SaveFightersCommand => new RelayCommand(param => SaveFighters());
 
@@ -68,6 +69,13 @@ namespace BrawlInstaller.ViewModels
             };
             FighterInfoList.Add(newFighter);
             SelectedFighterInfo = newFighter;
+            OnPropertyChanged(nameof(FighterInfoList));
+            OnPropertyChanged(nameof(SelectedFighterInfo));
+        }
+
+        private void RemoveFighter()
+        {
+            FighterInfoList.Remove(SelectedFighterInfo);
             OnPropertyChanged(nameof(FighterInfoList));
             OnPropertyChanged(nameof(SelectedFighterInfo));
         }
