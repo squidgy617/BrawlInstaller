@@ -35,7 +35,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="fighterListLabel" Content="Fighters:" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"/>
-                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="120"/>
+                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
                 <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding LoadCommand}" Grid.Row="2" Grid.Column="0"/>
                 <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveCommand}" Grid.Row="2" Grid.Column="1"/>
             </Grid>

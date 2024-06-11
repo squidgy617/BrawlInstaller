@@ -25,7 +25,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="fighterListLabel" Content="Fighters:" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"/>
-            <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" VerticalAlignment="Top" Grid.Row="1" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="120"/>
+            <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" VerticalAlignment="Top" Grid.Row="1" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
             <Button x:Name="addButton" Content="Add" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="2" Command="{Binding AddFighterCommand}"/>
             <Button x:Name="loadButton" Content="Load" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="3" Command="{Binding LoadFightersCommand}"/>
             <Button x:Name="saveButton" Content="Save" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="4" Command="{Binding SaveFightersCommand}"/>

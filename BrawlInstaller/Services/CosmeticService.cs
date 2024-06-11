@@ -854,7 +854,10 @@ namespace BrawlInstaller.Services
                     {
                         // Get the texture from the pat entry
                         patEntry.GetImage(0);
-                        nodes.Add(new CosmeticTexture { Texture = patEntry._textureNode, CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), definition.PatSettings.Multiplier ?? definition.Multiplier, id), Id = (int)patEntry.FrameIndex });
+                        if (patEntry._textureNode != null)
+                        {
+                            nodes.Add(new CosmeticTexture { Texture = patEntry._textureNode, CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), definition.PatSettings.Multiplier ?? definition.Multiplier, id), Id = (int)patEntry.FrameIndex });
+                        }
                     }
                     return nodes;
                 }
