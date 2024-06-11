@@ -71,7 +71,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterInfoList">List of fighters to save</param>
         public void SaveFighterInfoSettings(List<FighterInfo> fighterInfoList)
         {
-            var fighterInfoSettings = JsonConvert.SerializeObject(fighterInfoList);
+            var fighterInfoSettings = JsonConvert.SerializeObject(fighterInfoList, Formatting.Indented);
             File.WriteAllText($"{BuildPath}\\FighterList.json", fighterInfoSettings);
         }
 

@@ -36,9 +36,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Button x:Name="addButton" Content="+" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding AddFighterCommand}" Height="16" Width="16"/>
                 <Button x:Name="removeButton" Content="-" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RemoveFighterCommand}" Grid.Row="1" Height="16" Width="16"/>
+                <Button x:Name="refreshButton" Content="⟳" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RefreshFightersCommand}" Grid.Row="2" Height="16" Width="16"/>
             </Grid>
             
         </Grid>

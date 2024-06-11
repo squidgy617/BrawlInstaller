@@ -274,6 +274,10 @@ namespace BrawlInstaller.Services
             return fighterInfo;
         }
 
+        /// <summary>
+        /// Get all fighter info in build
+        /// </summary>
+        /// <returns>List of all fighter info in build</returns>
         public List<FighterInfo> GetAllFighterInfo()
         {
             var fighterInfo = new List<FighterInfo>();
