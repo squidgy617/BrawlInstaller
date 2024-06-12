@@ -2,6 +2,7 @@
 using BrawlInstaller.Enums;
 using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
+using BrawlLib.SSBB.Types;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -374,6 +375,13 @@ namespace BrawlInstaller.Services
                 {
                     var file = _fileService.OpenFile(path);
                     var name = GetFighterPacName(file, fighterInfo, costume.CostumeId);
+                    // Update GFX if they are per-costume
+                    var efNode = file.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
+                    && ((ARCNode)x).FileType == ARCFileType.EffectData && int.TryParse(x.Name.Substring(x.Name.Length - 2), out int costumeId));
+                    if (efNode != null)
+                    {
+                        efNode.Name = efNode.Name.Substring(0, efNode.Name.Length - 2) + costume.CostumeId.ToString("D2");
+                    }
                     // Add file to list
                     if (file != null)
                         files.Add((file, name));
