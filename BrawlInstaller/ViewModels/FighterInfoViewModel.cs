@@ -91,7 +91,29 @@ namespace BrawlInstaller.ViewModels
 
         private void LoadFighters()
         {
-            FighterInfoList = new ObservableCollection<FighterInfo>(_fighterService.GetAllFighterInfo());
+            var newFighterList = FighterInfoList.ToList();
+            var fighterList = _fighterService.GetAllFighterInfo();
+            // Get only fighters where all configs could be found
+            var completeFighters = fighterList.Where(x => x.FighterConfig != "" && x.CosmeticConfig != "" && x.CSSSlotConfig != "" && x.SlotConfig != "").ToList();
+            foreach (var fighter in completeFighters)
+            {
+                // Only add fighters if there is no entry with the exact same IDs
+                var fighterMatch = newFighterList.FirstOrDefault(x => x.Ids.FighterConfigId == fighter.Ids.FighterConfigId
+                && x.Ids.SlotConfigId == fighter.Ids.SlotConfigId && x.Ids.CSSSlotConfigId == fighter.Ids.CSSSlotConfigId
+                && x.Ids.CosmeticConfigId == fighter.Ids.CosmeticConfigId);
+
+                if (fighterMatch == null)
+                {
+                    newFighterList.Add(fighter);
+                }
+                // Otherwise, replace the match
+                else
+                {
+                    newFighterList.Insert(newFighterList.IndexOf(fighterMatch), fighter);
+                    newFighterList.Remove(fighterMatch);
+                }
+            }
+            FighterInfoList = new ObservableCollection<FighterInfo>(newFighterList);
         }
 
         // TODO: Include default fighter info stuff, make another pass at IDs that differ between builds
