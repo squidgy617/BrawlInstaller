@@ -134,12 +134,8 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fighterIds">Fighter IDs for configs</param>
         /// <returns>All IDs for a fighter</returns>
-        private BrawlIds LinkExConfigs(BrawlIds fighterIds)
+        private BrawlIds LinkExConfigs(BrawlIds fighterIds, List<ResourceNode> cosmeticConfigs, List<ResourceNode> cssSlotConfigs, List<ResourceNode> slotConfigs)
         {
-            var fighterConfigs = GetExConfigs(IdType.FighterConfig);
-            var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig);
-            var cssSlotConfigs = GetExConfigs(IdType.CSSSlotConfig);
-            var slotConfigs = GetExConfigs(IdType.SlotConfig);
             // Find slot config ID if missing
             if (fighterIds.FighterConfigId > -1 && fighterIds.SlotConfigId <= -1)
             {
@@ -192,15 +188,33 @@ namespace BrawlInstaller.Services
                 if (foundConfig != null)
                     fighterIds.FighterConfigId = Convert.ToInt32(((SLTCNode)foundConfig).CharSlot1);
             }
-            // If any IDs are still missing, set them equal to other configs
-            if (fighterIds.SlotConfigId <= -1 && fighterIds.FighterConfigId > -1)
+            // If any IDs are still missing, set them equal to other configs that use EX IDs
+            if (fighterIds.SlotConfigId <= -1 && fighterIds.FighterConfigId >= 0x3F)
                 fighterIds.SlotConfigId = fighterIds.FighterConfigId;
-            if (fighterIds.CosmeticConfigId <= -1 && fighterIds.SlotConfigId > -1)
+            if (fighterIds.CosmeticConfigId <= -1 && fighterIds.SlotConfigId >= 0x3F)
                 fighterIds.CosmeticConfigId = fighterIds.SlotConfigId;
-            if (fighterIds.CSSSlotConfigId <= -1 && (fighterIds.CosmeticConfigId > -1 || fighterIds.SlotConfigId > -1))
+            if (fighterIds.CSSSlotConfigId <= -1 && (fighterIds.CosmeticConfigId >= 0x3F || fighterIds.SlotConfigId >= 0x3F))
                 fighterIds.CSSSlotConfigId = fighterIds.CosmeticConfigId != -1 ? fighterIds.CosmeticConfigId : fighterIds.SlotConfigId;
 
-            // Clean up nodes
+            // Return
+            return fighterIds;
+        }
+
+        /// <summary>
+        /// Get fighter info for a specific fighter
+        /// </summary>
+        /// <param name="fighterIds">Fighter IDs</param>
+        /// <returns>Fighter information</returns>
+        public FighterInfo GetFighterInfo(BrawlIds fighterIds)
+        {
+            // Open configs
+            var fighterConfigs = GetExConfigs(IdType.FighterConfig);
+            var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig);
+            var cssSlotConfigs = GetExConfigs(IdType.CSSSlotConfig);
+            var slotConfigs = GetExConfigs(IdType.SlotConfig);
+            // Get fighter info
+            var fighterInfo = GetFighterInfo(fighterIds, fighterConfigs, cosmeticConfigs, cssSlotConfigs, slotConfigs);
+            // Close configs
             foreach (var config in fighterConfigs)
                 _fileService.CloseFile(config);
             foreach (var config in slotConfigs)
@@ -209,22 +223,25 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(config);
             foreach (var config in cssSlotConfigs)
                 _fileService.CloseFile(config);
-            // Return
-            return fighterIds;
+            return fighterInfo;
         }
 
         /// <summary>
-        /// Get fighter info from IDs
+        /// Get fighter info based on supplied configs
         /// </summary>
         /// <param name="fighterIds">Fighter IDs</param>
-        /// <returns>Fighter information</returns>
+        /// <param name="fighterConfigs">All fighter configs to use</param>
+        /// <param name="cosmeticConfigs">All cosmetic configs to use</param>
+        /// <param name="cssSlotConfigs">All CSSslot configs to use</param>
+        /// <param name="slotConfigs">All slot configs to use</param>
+        /// <returns>Fighter info</returns>
         // TODO: get way more info
-        public FighterInfo GetFighterInfo(BrawlIds fighterIds)
+        private FighterInfo GetFighterInfo(BrawlIds fighterIds, List<ResourceNode> fighterConfigs, List<ResourceNode> cosmeticConfigs, List<ResourceNode> cssSlotConfigs, List<ResourceNode> slotConfigs)
         {
             var fighterInfo = new FighterInfo();
-            fighterIds = LinkExConfigs(fighterIds);
+            fighterIds = LinkExConfigs(fighterIds, cosmeticConfigs, cssSlotConfigs, slotConfigs);
             fighterInfo.CosmeticConfig = GetExConfig(fighterIds.CosmeticConfigId, IdType.CosmeticConfig);
-            var rootNode = _fileService.OpenFile(fighterInfo.CosmeticConfig);
+            var rootNode = cosmeticConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CosmeticConfig);
             if (rootNode != null)
             {
                 var coscNode = (COSCNode)rootNode;
@@ -238,10 +255,9 @@ namespace BrawlInstaller.Services
                     fighterInfo.DisplayName = coscNode.CharacterName;
                 if (fighterInfo.EntryName == null)
                     fighterInfo.EntryName = coscNode.CharacterName;
-                _fileService.CloseFile(rootNode);
             }
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
-            rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
+            rootNode = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig);
             // TODO: Get costumes?
             if (rootNode != null)
             {
@@ -250,20 +266,18 @@ namespace BrawlInstaller.Services
                     fighterIds.CSSSlotConfigId = csscNode.CharSlot1;
                 if (fighterIds.CosmeticConfigId <= -1 && csscNode.SetCosmeticSlot)
                     fighterIds.CosmeticConfigId = csscNode.CosmeticSlot;
-                _fileService.CloseFile(rootNode);
             }
             fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
-            rootNode = _fileService.OpenFile(fighterInfo.SlotConfig);
+            rootNode = slotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.SlotConfig);
             if (rootNode != null)
             {
                 var slotNode = (SLTCNode)rootNode;
                 if (fighterIds.FighterConfigId <= -1 && slotNode.SetSlot)
                     fighterIds.FighterConfigId = Convert.ToInt32(slotNode.CharSlot1);
                 fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
-                _fileService.CloseFile(rootNode);
             }
             fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
-            rootNode = _fileService.OpenFile(fighterInfo.FighterConfig);
+            rootNode = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig);
             if (rootNode != null)
             {
                 var fighterNode = (FCFGNode)rootNode;
@@ -271,7 +285,6 @@ namespace BrawlInstaller.Services
                 {
                     fighterInfo.InternalName = fighterNode.InternalFighterName;
                 }
-                _fileService.CloseFile(rootNode);
             }
             fighterInfo.Ids = fighterIds;
             return fighterInfo;
@@ -283,9 +296,14 @@ namespace BrawlInstaller.Services
         /// <returns>List of all fighter info in build</returns>
         public List<FighterInfo> GetAllFighterInfo()
         {
-            var fighterInfo = new List<FighterInfo>();
-            var fighterIds = new List<BrawlIds>();
+            var fighterInfo = new ConcurrentBag<FighterInfo>();
+            var fighterIds = new ConcurrentBag<BrawlIds>();
+            // Get configs
             var fighterConfigs = GetExConfigs(IdType.FighterConfig);
+            var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig);
+            var cssSlotConfigs = GetExConfigs(IdType.CSSSlotConfig);
+            var slotConfigs = GetExConfigs(IdType.SlotConfig);
+            // Get fighter IDs
             Parallel.ForEach(fighterConfigs, fighterConfig =>
             {
                 var id = GetConfigId(fighterConfig.Name, IdType.FighterConfig);
@@ -293,13 +311,22 @@ namespace BrawlInstaller.Services
                 {
                     fighterIds.Add(new BrawlIds { FighterConfigId = id });
                 }
-                _fileService.CloseFile(fighterConfig);
             });
+            // Get fighter info for each fighter
             Parallel.ForEach(fighterIds, fighterId =>
             {
-                fighterInfo.Add(GetFighterInfo(fighterId));
+                fighterInfo.Add(GetFighterInfo(fighterId, fighterConfigs, cosmeticConfigs, cssSlotConfigs, slotConfigs));
             });
-            return fighterInfo;
+            // Close configs
+            foreach (var config in fighterConfigs)
+                _fileService.CloseFile(config);
+            foreach (var config in slotConfigs)
+                _fileService.CloseFile(config);
+            foreach (var config in cosmeticConfigs)
+                _fileService.CloseFile(config);
+            foreach (var config in cssSlotConfigs)
+                _fileService.CloseFile(config);
+            return fighterInfo.ToList();
         }
 
         /// <summary>
@@ -391,6 +418,7 @@ namespace BrawlInstaller.Services
             foreach(var file in files)
             {
                 _fileService.SaveFileAs(file.node, $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.InternalName}\\{file.name}");
+                _fileService.CloseFile(file.node);
             }
         }
 
@@ -505,6 +533,7 @@ namespace BrawlInstaller.Services
                         };
                     }
                     _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
                 }
             }
         }
@@ -543,6 +572,7 @@ namespace BrawlInstaller.Services
                         }
                         costumes.Add(costume);
                     }
+                    _fileService.CloseFile(rootNode);
                 }
             }
             return costumes;

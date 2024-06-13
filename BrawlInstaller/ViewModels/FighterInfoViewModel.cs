@@ -97,7 +97,7 @@ namespace BrawlInstaller.ViewModels
             var completeFighters = fighterList.Where(x => x.FighterConfig != "" && x.CosmeticConfig != "" && x.CSSSlotConfig != "" && x.SlotConfig != "").ToList();
             foreach (var fighter in completeFighters)
             {
-                // Only add fighters if there is no entry with the exact same IDs
+                // Only add fighters if there is no entry with the same fighter ID
                 var fighterMatch = newFighterList.FirstOrDefault(x => x.Ids.FighterConfigId == fighter.Ids.FighterConfigId
                 && x.Ids.SlotConfigId == fighter.Ids.SlotConfigId && x.Ids.CSSSlotConfigId == fighter.Ids.CSSSlotConfigId
                 && x.Ids.CosmeticConfigId == fighter.Ids.CosmeticConfigId);
