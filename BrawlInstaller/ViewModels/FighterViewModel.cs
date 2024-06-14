@@ -19,6 +19,7 @@ using System.Globalization;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using System.Collections.ObjectModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -42,21 +43,9 @@ namespace BrawlInstaller.ViewModels
         IDialogService _dialogService { get; }
 
         // Commands
-        public ICommand LoadCommand
-        {
-            get
-            {
-                return new RelayCommand(param => LoadFighter());
-            }
-        }
-
-        public ICommand SaveCommand
-        {
-            get
-            {
-                return new RelayCommand(param => SaveFighter());
-            }
-        }
+        public ICommand LoadCommand => new RelayCommand(param => LoadFighter());
+        public ICommand SaveCommand => new RelayCommand(param => SaveFighter());
+        public ICommand RefreshFightersCommand => new RelayCommand(param => GetFighters());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -139,6 +128,14 @@ namespace BrawlInstaller.ViewModels
             }
             _packageService.SaveFighter(FighterPackage);
             FighterPackage.Cosmetics.Items.ForEach(x => { FighterPackage.Cosmetics.ClearChanges(); x.ImagePath = ""; x.HDImagePath = ""; x.ColorSmashChanged = false; } );
+        }
+
+        private void GetFighters()
+        {
+            var list = _settingsService.LoadFighterInfoSettings();
+            FighterList = new List<FighterInfo>(list);
+            OnPropertyChanged(nameof(FighterList));
+            OnPropertyChanged(nameof(SelectedFighter));
         }
     }
 
