@@ -436,6 +436,7 @@ namespace BrawlInstaller.ViewModels
             var index = startingNode?.InternalIndex;
             var sharesData = startingNode?.SharesData;
             var groupCount = 0;
+            var prevNode = CosmeticList.IndexOf(startingNode) > 0 ? CosmeticList[CosmeticList.IndexOf(startingNode) - 1] : null;
             // Trying to color smash a single node, not valid
             if (nodes.Count == 1 && startingNode.SharesData == false)
                 return false;
@@ -453,7 +454,8 @@ namespace BrawlInstaller.ViewModels
                     return false;
             }
             // If first node is from a different group, not valid
-            if (startingNode.SharesData == false && sharesData == true)
+            if ((startingNode.SharesData == false && sharesData == true) 
+                || (startingNode.SharesData == false && prevNode != null && prevNode.SharesData == true))
                 return false;
             return true;
         }
@@ -462,15 +464,6 @@ namespace BrawlInstaller.ViewModels
         public void UpdateSharesData(object selectedItems)
         {
             var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().OrderBy(x => x.InternalIndex).ToList();
-            // Check if operation can be performed
-            var valid = ValidateSharesData(nodes);
-            if (!valid)
-            {
-                _dialogService.ShowMessage("Color smashing could not be changed. If color smashing, ensure more than one cosmetic is selected. " +
-                    "If undoing color smashing, all cosmetics must be from the same color smash group. All selected cosmetics must be sequential.", "Color Smash Error",
-                    System.Windows.MessageBoxImage.Stop);
-                return;
-            }
             // Get groups
             var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
             var nodeGroup = nodeGroups.FirstOrDefault(x => x.Contains(nodes.LastOrDefault())) ?? nodes;
@@ -482,6 +475,15 @@ namespace BrawlInstaller.ViewModels
             if (!mixedGroup && nodeGroup.Count == nodes.Count + 1)
                 nodes.Add(CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.LastOrDefault()?.InternalIndex + 1));
             var moveToEnd = nodes.Any(x => x.SharesData == true);
+            // Check if operation can be performed
+            var valid = ValidateSharesData(nodes);
+            if (!valid)
+            {
+                _dialogService.ShowMessage("Color smashing could not be changed. If color smashing, ensure more than one cosmetic is selected. " +
+                    "If undoing color smashing, all cosmetics must be from the same color smash group. All selected cosmetics must be sequential.", "Color Smash Error",
+                    System.Windows.MessageBoxImage.Stop);
+                return;
+            }
             // Update color smashing for all nodes
             foreach (var item in nodes)
             {

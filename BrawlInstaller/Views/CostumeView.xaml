@@ -145,7 +145,7 @@
                         </Grid.ColumnDefinitions>
                         <Button x:Name="cosmeticUpButton" Content="↑" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticUpCommand}" Width="16" Height="32" Margin="2"/>
                         <Button x:Name="cosmeticDownButton" Content="↓" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticDownCommand}" Width="16" Height="32" Margin="2"/>
-                        <Button x:Name="sharesDataButton" Content="Color Smash" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Left" CommandParameter="{Binding ElementName=cosmeticListBox, Path=SelectedItems}" Command="{Binding UpdateSharesDataCommand}" Margin="2"/>
+                        <Button x:Name="sharesDataButton" Content="Toggle CS" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Left" CommandParameter="{Binding ElementName=cosmeticListBox, Path=SelectedItems}" Command="{Binding UpdateSharesDataCommand}" Margin="2"/>
                         <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                     </Grid>
                 </Grid>
