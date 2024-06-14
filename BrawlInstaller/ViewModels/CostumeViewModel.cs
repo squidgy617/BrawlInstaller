@@ -225,12 +225,6 @@ namespace BrawlInstaller.ViewModels
                     _dialogService.ShowMessage("Number of images and number of costumes selected must be equal!", "Import Error", System.Windows.MessageBoxImage.Stop);
                 return;
             }
-            // Don't allow replacing root or last color smashed cosmetic in a group
-            foreach(var costume in costumes)
-            {
-                var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
-                FlipColorSmashedCosmetics(cosmetic);
-            }
             // Update the image
             foreach(var image in images)
             {
@@ -250,6 +244,12 @@ namespace BrawlInstaller.ViewModels
                     OnPropertyChanged(nameof(CosmeticList));
                     OnPropertyChanged(nameof(SelectedCosmeticNode));
                 }
+            }
+            // Adjust color smashing based on cosmetics replaced
+            foreach (var costume in costumes)
+            {
+                var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
+                FlipColorSmashedCosmetics(cosmetic);
             }
         }
 

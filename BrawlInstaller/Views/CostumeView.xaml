@@ -98,40 +98,57 @@
                 <Button x:Name="clearCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Clear" Command="{Binding ClearCosmeticCommand}" Grid.Row="4" Grid.Column="1"/>
                 <Button x:Name="replaceHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Replace" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Row="3" Grid.Column="2"/>
                 <Button x:Name="clearHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Clear" Command="{Binding ClearHDCosmeticCommand}" Grid.Row="4" Grid.Column="2"/>
-                <ListBox x:Name="cosmeticListBox" VerticalAlignment="Top" Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" SelectionMode="Extended" ItemsSource="{Binding CosmeticList}" SelectedValue="{Binding SelectedCosmeticNode}" Width="120" Height="100">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Width="16" Height="16">
-                                    <Image.Style>
-                                        <Style TargetType="{x:Type Image}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=SharesData}" Value="True">
-                                                    <Setter Property="Source" Value="pack://application:,,,/Resources/SharedTEX0.png"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=SharesData}" Value="False">
-                                                    <Setter Property="Source" Value="pack://application:,,,/Resources/TEX0.png"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                </Image>
-                                <TextBlock Grid.Column="1">
-                                            <Run Text="Cosmetic"/>
-                                            <Run Text="{Binding Path=CostumeIndex}"/>
-                                </TextBlock>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                <Button x:Name="sharesDataButton" Content="SharesData" Grid.Row="2" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" CommandParameter="{Binding ElementName=cosmeticListBox, Path=SelectedItems}" Command="{Binding UpdateSharesDataCommand}"/>
-                <Button x:Name="cosmeticUpButton" Content="Up" Grid.Row="3" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticUpCommand}"/>
-                <Button x:Name="cosmeticDownButton" Content="Down" Grid.Row="4" Grid.Column="4" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticDownCommand}"/>
+                <Grid x:Name="cosmeticListGrid" Grid.Column="3" Grid.RowSpan="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox x:Name="cosmeticListBox" VerticalAlignment="Top" SelectionMode="Extended" ItemsSource="{Binding CosmeticList}" SelectedValue="{Binding SelectedCosmeticNode}" Width="120" Height="220">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Width="16" Height="16">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=SharesData}" Value="True">
+                                                        <Setter Property="Source" Value="pack://application:,,,/Resources/SharedTEX0.png"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=SharesData}" Value="False">
+                                                        <Setter Property="Source" Value="pack://application:,,,/Resources/TEX0.png"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <TextBlock Grid.Column="1">
+                                                <Run Text="Cosmetic"/>
+                                                <Run Text="{Binding Path=CostumeIndex}"/>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Grid x:Name="cosmeticListButtonGrid" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="cosmeticUpButton" Content="↑" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticUpCommand}" Width="16" Height="32" Margin="2"/>
+                        <Button x:Name="cosmeticDownButton" Content="↓" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding CosmeticDownCommand}" Width="16" Height="32" Margin="2"/>
+                        <Button x:Name="sharesDataButton" Content="Color Smash" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Left" CommandParameter="{Binding ElementName=cosmeticListBox, Path=SelectedItems}" Command="{Binding UpdateSharesDataCommand}" Margin="2"/>
+                        <Image x:Name="cosmeticNodeImage" Source="{Binding SelectedCosmeticNode.Image}" Height="64" Width="64" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    </Grid>
+                </Grid>
             </Grid>
         </GroupBox>
     </Grid>

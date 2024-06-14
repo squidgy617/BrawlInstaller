@@ -23,10 +23,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="3" Background="Silver" ResizeDirection="Columns" Grid.RowSpan="2"/>
-        <GroupBox x:Name="idGroupBox" Header="IDs" Grid.Column="0" Grid.RowSpan="2">
+        <GroupBox x:Name="idGroupBox" Header="Fighters" Grid.Column="0" Grid.RowSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -35,11 +34,10 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="fighterListLabel" Content="Fighters:" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"/>
-                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
-                <Button x:Name="refreshButton" Content="⟳" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="3" Height="16" Width="16" Margin="2"/>
-                <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding LoadCommand}" Grid.Row="2" Grid.Column="0"/>
-                <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveCommand}" Grid.Row="2" Grid.Column="1"/>
+                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
+                <Button x:Name="refreshButton" Content="⟳" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding RefreshFightersCommand}" Grid.Row="0" Grid.Column="3" Height="16" Width="16" Margin="2"/>
+                <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding LoadCommand}" Grid.Row="1" Grid.Column="0"/>
+                <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveCommand}" Grid.Row="1" Grid.Column="1"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0" Grid.ColumnSpan="2">
