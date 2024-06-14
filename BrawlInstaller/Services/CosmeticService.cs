@@ -597,6 +597,11 @@ namespace BrawlInstaller.Services
                 imagePath += $"\\{texture?.DolphinTextureName}.png";
                 cosmetic.HDImage.Save(imagePath);
                 cosmetic.HDImagePath = imagePath;
+                // Cache HD image if it is not cached
+                if (!HDImages.AsParallel().Any(x => x == imagePath))
+                {
+                    HDImages.Add(imagePath);
+                }
             }
         }
 
