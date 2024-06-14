@@ -24,12 +24,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="costumeGrid" Grid.RowSpan="2">
+        <Grid x:Name="costumeGrid" Grid.RowSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" SelectionMode="Extended" VerticalAlignment="Top" Grid.Row="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
+            <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" SelectionMode="Extended" VerticalAlignment="Top" Grid.Row="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="240">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
@@ -56,14 +56,19 @@
         <ComboBox x:Name="costumeIdComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding AvailableCostumeIds}" SelectedItem="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="3"/>
         <Label x:Name="pacFilesLabel" Content="PAC Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2"/>
         <Grid x:Name="pacFilesGrid" Grid.Row="1" Grid.Column="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding PacFiles}" SelectedValue="{Binding SelectedPacFile, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="100" Grid.Row="0"/>
-            <Button x:Name="addPacFilesButton" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddPacFilesCommand}" Grid.Row="1"/>
-            <Button x:Name="removePacFilesButton" Content="Remove" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding RemovePacFileCommand}" Grid.Row="2"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding PacFiles}" SelectedValue="{Binding SelectedPacFile, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="100"/>
+            <Grid x:Name="pacFilesButtonGrid" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="addPacFilesButton" Content="+" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddPacFilesCommand}" Grid.Row="0" Height="16" Width="16" Margin="2"/>
+                <Button x:Name="removePacFilesButton" Content="-" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding RemovePacFileCommand}" Grid.Row="1" Height="16" Width="16" Margin="2"/>
+            </Grid>
         </Grid>
         <Label x:Name="colorLabel" Content="Color:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="2"/>
         <ComboBox x:Name="colorComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Grid.Row="2" Grid.Column="3" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
