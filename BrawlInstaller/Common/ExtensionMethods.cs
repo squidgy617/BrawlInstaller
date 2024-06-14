@@ -117,7 +117,7 @@ namespace BrawlInstaller.Common
 
         public static void MoveUp<T>(this ObservableCollection<T> list, T item)
         {
-            if (item != null)
+            if (item != null && list.IndexOf(item) != 0)
             {
                 var oldIndex = list.IndexOf(item);
                 list.Move(item, oldIndex - 1);
@@ -126,7 +126,7 @@ namespace BrawlInstaller.Common
 
         public static void MoveDown<T>(this ObservableCollection<T> list, T item)
         {
-            if (item != null)
+            if (item != null && list.IndexOf(item) != list.Count - 1)
             {
                 var oldIndex = list.IndexOf(item);
                 list.Move(item, oldIndex + 1);
@@ -167,7 +167,7 @@ namespace BrawlInstaller.Common
 
         public static void MoveUp<T>(this List<T> list, T item)
         {
-            if (item != null)
+            if (item != null && list.IndexOf(item) != 0)
             {
                 var oldIndex = list.IndexOf(item);
                 list.Move(item, oldIndex - 1);
@@ -176,7 +176,7 @@ namespace BrawlInstaller.Common
 
         public static void MoveDown<T>(this List<T> list, T item)
         {
-            if (item != null)
+            if (item != null && list.IndexOf(item) != list.Count - 1)
             {
                 var oldIndex = list.IndexOf(item);
                 list.Move(item, oldIndex + 1);

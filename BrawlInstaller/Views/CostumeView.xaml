@@ -25,17 +25,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid x:Name="costumeGrid" Grid.RowSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" SelectionMode="Extended" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
+            <ListBox x:Name="costumeListBox" ItemsSource="{Binding Costumes}" SelectionMode="Extended" VerticalAlignment="Top" Grid.Row="0" SelectedValue="{Binding SelectedCostume, Mode=TwoWay}" Width="120" Height="120">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
@@ -45,10 +39,18 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Button x:Name="costumeAddButton" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddCostumeCommand}" Grid.Row="2" Grid.Column="0"/>
-            <Button x:Name="costumeRemoveButton" Content="Remove" HorizontalAlignment="Left" VerticalAlignment="Top" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding RemoveCostumesCommand}" Grid.Row="3" Grid.Column="0"/>
-            <Button x:Name="costumeUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeUpCommand}" Grid.Row="0" Grid.Column="1"/>
-            <Button x:Name="costumeDownButton" Content="↓" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1"/>
+            <Grid x:Name="costumeButtonGrid" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="costumeUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeUpCommand}" Grid.Row="0" Grid.Column="1" Width="16" Height="32" Margin="2"/>
+                <Button x:Name="costumeDownButton" Content="↓" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1" Width="16" Height="32" Margin="2"/>
+                <Button x:Name="costumeAddButton" Content="+" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding AddCostumeCommand}" Grid.Row="2" Grid.Column="1" Width="16" Height="16" Margin="2"/>
+                <Button x:Name="costumeRemoveButton" Content="-" HorizontalAlignment="Left" VerticalAlignment="Top" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding RemoveCostumesCommand}" Grid.Row="3" Grid.Column="1" Width="16" Height="16" Margin="2"/>
+            </Grid>
         </Grid>
         <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="2"/>
         <ComboBox x:Name="costumeIdComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding AvailableCostumeIds}" SelectedItem="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="3"/>
