@@ -1057,6 +1057,8 @@ namespace BrawlInstaller.Services
                     CosmeticType = icon.CosmeticType,
                     Style = icon.Style,
                     Image = icon.Image,
+                    HDImage = icon.HDImage,
+                    HDImagePath = icon.HDImagePath,
                     Texture = icon.Texture,
                     Palette = icon.Palette,
                     SharesData = icon.SharesData,
