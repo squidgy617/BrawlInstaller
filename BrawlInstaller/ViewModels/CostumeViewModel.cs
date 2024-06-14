@@ -438,7 +438,10 @@ namespace BrawlInstaller.ViewModels
             var groupCount = 0;
             var prevNode = CosmeticList.IndexOf(startingNode) > 0 ? CosmeticList[CosmeticList.IndexOf(startingNode) - 1] : null;
             // Trying to color smash a single node, not valid
-            if (nodes.Count == 1 && startingNode.SharesData == false)
+            if (nodes.Count == 1 && startingNode.SharesData == false && (prevNode == null || prevNode.SharesData == false))
+                return false;
+            // If any nodes are color smashed and there are multiple un-color smashed nodes, not valid
+            if (nodes.Any(x => x.SharesData == true) && nodes.Count(x => x.SharesData == false) > 1)
                 return false;
             foreach(var node in nodes)
             {
@@ -455,7 +458,7 @@ namespace BrawlInstaller.ViewModels
             }
             // If first node is from a different group, not valid
             if ((startingNode.SharesData == false && sharesData == true) 
-                || (startingNode.SharesData == false && prevNode != null && prevNode.SharesData == true))
+                || (nodes.Count > 1 && startingNode.SharesData == false && prevNode != null && prevNode.SharesData == true))
                 return false;
             return true;
         }
@@ -464,16 +467,6 @@ namespace BrawlInstaller.ViewModels
         public void UpdateSharesData(object selectedItems)
         {
             var nodes = ((IEnumerable)selectedItems).Cast<Cosmetic>().OrderBy(x => x.InternalIndex).ToList();
-            // Get groups
-            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
-            var nodeGroup = nodeGroups.FirstOrDefault(x => x.Contains(nodes.LastOrDefault())) ?? nodes;
-            // If a group's root is selected, the entire group will be affected
-            var mixedGroup = nodes.Any(x => x.SharesData == false) && nodes.Any(x => x.SharesData == true);
-            if (mixedGroup)
-                nodes = nodeGroup;
-            // If we are changing all but the root, root will be affected too
-            if (!mixedGroup && nodeGroup.Count == nodes.Count + 1)
-                nodes.Add(CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.LastOrDefault()?.InternalIndex + 1));
             var moveToEnd = nodes.Any(x => x.SharesData == true);
             // Check if operation can be performed
             var valid = ValidateSharesData(nodes);
@@ -484,6 +477,16 @@ namespace BrawlInstaller.ViewModels
                     System.Windows.MessageBoxImage.Stop);
                 return;
             }
+            // Get groups
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
+            var nodeGroup = nodeGroups.FirstOrDefault(x => x.Contains(nodes.LastOrDefault())) ?? nodes;
+            // If a group's root is selected, the entire group will be affected
+            var mixedGroup = nodeGroup.Any(x => x.SharesData == false) && nodeGroup.Any(x => x.SharesData == true);
+            if (mixedGroup)
+                nodes = nodeGroup;
+            // If we are changing all but the root, root will be affected too
+            if (!mixedGroup && nodeGroup.Count == nodes.Count + 1)
+                nodes.Add(CosmeticList.FirstOrDefault(x => x.InternalIndex == nodes.LastOrDefault()?.InternalIndex + 1));
             // Update color smashing for all nodes
             foreach (var item in nodes)
             {
