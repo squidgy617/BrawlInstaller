@@ -96,37 +96,51 @@ namespace BrawlInstaller.ViewModels
                     cosmetic.CostumeIndex = CostumeViewModel.Costumes.IndexOf(costume) + 1;
                 }
             }
-            // TODO: Possibly a way to improve this?
             // Set franchise icon up
-            if (FranchiseIconViewModel.FranchiseIcons.HasChanged(FranchiseIconViewModel.SelectedFranchiseIcon))
+            foreach(var icon in FranchiseIconViewModel.FranchiseIcons.ChangedItems)
             {
-                // Add model for import
-                if (FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath != "")
+                var newIcon = new Cosmetic
                 {
-                    var franchiseModels = FighterPackage.Cosmetics.Items.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Style == "Model").ToList();
-                    if (franchiseModels.Count >= 1)
-                        franchiseModels.ForEach(x =>
-                        {
-                            x.ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath;
-                            x.Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id;
-                            FranchiseIconViewModel.FranchiseIcons.ItemChanged(x);
-                        });
-                    else
+                    CosmeticType = CosmeticType.FranchiseIcon,
+                    Style = "Icon",
+                    Image = icon.Image,
+                    ImagePath = icon.ImagePath,
+                    HDImage = icon.HDImage,
+                    HDImagePath = icon.HDImagePath,
+                    Texture = icon.Texture,
+                    Palette = icon.Palette,
+                    Id = icon.Id
+                };
+                // Only add it to cosmetic list if it is actually in the list
+                if (FranchiseIconViewModel.FranchiseIcons.Items.Contains(icon))
+                    FighterPackage.Cosmetics.Add(newIcon);
+                // If it was removed, just add it to the change list
+                else
+                    FighterPackage.Cosmetics.ItemChanged(newIcon);
+                if (!string.IsNullOrEmpty(icon.ModelPath))
+                {
+                    var newModel = new Cosmetic
                     {
-                        var newCosmetic = new Cosmetic
-                        {
-                            CosmeticType = CosmeticType.FranchiseIcon,
-                            Style = "Model",
-                            ModelPath = FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath,
-                            Id = FranchiseIconViewModel.SelectedFranchiseIcon.Id
-                        };
-                        FighterPackage.Cosmetics.Add(newCosmetic);
-                    }
+                        CosmeticType = CosmeticType.FranchiseIcon,
+                        Style = "Model",
+                        Model = icon.Model,
+                        ModelPath = icon.ModelPath,
+                        ColorSequence = icon.ColorSequence,
+                        Id = icon.Id
+                    };
+                    if (FranchiseIconViewModel.FranchiseIcons.Items.Contains(icon))
+                        FighterPackage.Cosmetics.Add(newModel);
+                    else
+                        FighterPackage.Cosmetics.ItemChanged(newModel);
                 }
-                FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
             }
+            FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon.Id ?? -1;
             _packageService.SaveFighter(FighterPackage);
-            FighterPackage.Cosmetics.Items.ForEach(x => { FighterPackage.Cosmetics.ClearChanges(); x.ImagePath = ""; x.HDImagePath = ""; x.ColorSmashChanged = false; } );
+            // Remove added franchise icons from package
+            FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
+            // Clear changes on all cosmetics
+            FighterPackage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.HDImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; } );
+            FighterPackage.Cosmetics.ClearChanges();
         }
 
         private void GetFighters()

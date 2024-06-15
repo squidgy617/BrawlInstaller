@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Drawing;
+using BrawlLib.Wii.Textures;
+using BrawlInstaller.Enums;
 
 namespace BrawlInstaller.Services
 {
@@ -103,7 +105,7 @@ namespace BrawlInstaller.Services
                 {
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.CSP,
+                        CosmeticType = CosmeticType.CSP,
                         Style = "vBrawl",
                         InstallLocation = new InstallLocation
                         {
@@ -113,13 +115,13 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenSelchrFaceB",
                         Multiplier = 10,
-                        IdType = Enums.IdType.Cosmetic,
+                        IdType = IdType.Cosmetic,
                         Size = new Size(128, 160),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.PortraitName,
+                        CosmeticType = CosmeticType.PortraitName,
                         Style = "PM",
                         InstallLocation = new InstallLocation
                         {
@@ -137,13 +139,13 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenSelchrChrNm",
                         Multiplier = 10,
-                        IdType = Enums.IdType.Cosmetic,
+                        IdType = IdType.Cosmetic,
                         Size = new Size(144, 32),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.BP,
+                        CosmeticType = CosmeticType.BP,
                         Style = "vBrawl",
                         InstallLocation = new InstallLocation
                         {
@@ -154,14 +156,14 @@ namespace BrawlInstaller.Services
                         Prefix = "InfFace",
                         Multiplier = 50,
                         SuffixDigits = 4,
-                        IdType = Enums.IdType.Cosmetic,
+                        IdType = IdType.Cosmetic,
                         Size = new Size(48, 56),
                         FirstOnly = false,
                         SeparateFiles = true
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.StockIcon,
+                        CosmeticType = CosmeticType.StockIcon,
                         Style = "P+",
                         InstallLocation = new InstallLocation
                         {
@@ -172,13 +174,13 @@ namespace BrawlInstaller.Services
                         Prefix = "InfStc",
                         Multiplier = 50,
                         SuffixDigits = 4,
-                        IdType = Enums.IdType.Cosmetic,
+                        IdType = IdType.Cosmetic,
                         Size = new Size(32, 32),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.CSSIcon,
+                        CosmeticType = CosmeticType.CSSIcon,
                         Style = "P+",
                         InstallLocation = new InstallLocation
                         {
@@ -190,16 +192,16 @@ namespace BrawlInstaller.Services
                         {
                             Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0" },
                             Multiplier = 10,
-                            IdType = Enums.IdType.Cosmetic
+                            IdType = IdType.Cosmetic
                         },
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 1,
-                        IdType = Enums.IdType.Cosmetic,
+                        IdType = IdType.Cosmetic,
                         Size = new Size(64, 64)
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.CSSIcon,
+                        CosmeticType = CosmeticType.CSSIcon,
                         Style = "vBrawl",
                         InstallLocation = new InstallLocation
                         {
@@ -211,16 +213,16 @@ namespace BrawlInstaller.Services
                         {
                             Paths = new List<string> { "AnmTexPat(NW4R)/MenAdvChrCd0001_TopN__0/Face02/Texture0" },
                             Multiplier = 10,
-                            IdType = Enums.IdType.Cosmetic
+                            IdType = IdType.Cosmetic
                         },
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 1,
-                        IdType = Enums.IdType.Cosmetic,
+                        IdType = IdType.Cosmetic,
                         Size = new Size(80, 56)
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.ReplayIcon,
+                        CosmeticType = CosmeticType.ReplayIcon,
                         Style = "P+",
                         InstallLocation = new InstallLocation
                         {
@@ -234,12 +236,12 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenReplayChr",
                         Multiplier = 10,
-                        IdType = Enums.IdType.Cosmetic,
+                        IdType = IdType.Cosmetic,
                         Size = new Size(64, 24)
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.CreditsIcon,
+                        CosmeticType = CosmeticType.CreditsIcon,
                         Style = "vBrawl",
                         InstallLocation = new InstallLocation
                         {
@@ -248,13 +250,13 @@ namespace BrawlInstaller.Services
                             FileExtension = "pac"
                         },
                         Prefix = "ChrRollFighter",
-                        IdType = Enums.IdType.CosmeticConfig,
+                        IdType = IdType.CosmeticConfig,
                         Offset = 1,
                         Size = new Size(128, 160)
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.FranchiseIcon,
+                        CosmeticType = CosmeticType.FranchiseIcon,
                         Style = "Icon",
                         InstallLocation = new InstallLocation
                         {
@@ -267,12 +269,14 @@ namespace BrawlInstaller.Services
                             Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCmark4_TopN__0/Card04/Texture0" }
                         },
                         Prefix = "MenSelchrMark",
-                        IdType = Enums.IdType.Franchise,
+                        IdType = IdType.Franchise,
+                        Format = WiiPixelFormat.I4,
+                        SuffixDigits = 2,
                         Size = new Size(128, 128)
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.FranchiseIcon,
+                        CosmeticType = CosmeticType.FranchiseIcon,
                         Style = "Model",
                         InstallLocation = new InstallLocation
                         {
@@ -282,13 +286,13 @@ namespace BrawlInstaller.Services
                         },
                         ModelPath = "2/Misc Data [110]",
                         Prefix = "InfResultMark",
-                        IdType = Enums.IdType.Franchise,
+                        IdType = IdType.Franchise,
                         Size = new Size(80, 80),
                         SuffixDigits = 2
                     },
                     new CosmeticDefinition
                     {
-                        CosmeticType = Enums.CosmeticType.TrophyThumbnail,
+                        CosmeticType = CosmeticType.TrophyThumbnail,
                         Style = "vBrawl",
                         InstallLocation = new InstallLocation
                         {
@@ -297,7 +301,7 @@ namespace BrawlInstaller.Services
                             FileExtension = "brres"
                         },
                         Prefix = "MenCollDisply01",
-                        IdType = Enums.IdType.Thumbnail,
+                        IdType = IdType.Thumbnail,
                         Size = new Size(56, 48)
                     }
                 },
@@ -323,7 +327,7 @@ namespace BrawlInstaller.Services
                 MiscSettings = new MiscSettings
                 {
                     InstallToSse = false,
-                    SSEUnlockStage = Enums.SSEUnlockStage.End,
+                    SSEUnlockStage = SSEUnlockStage.End,
                     InstallTrophies = false,
                     CustomStageLists = null
                 },

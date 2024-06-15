@@ -387,11 +387,12 @@ namespace BrawlInstaller.Services
                 // We do this so the referenced (copied) texture is what's stored in the BRRES, instead of the original
                 texture.Remove(true);
                 ImportTexture(parentNode, cosmetic.Texture);
-                ImportPalette(parentNode, cosmetic.Palette);
+                if (cosmetic.Palette != null)
+                    ImportPalette(parentNode, cosmetic.Palette);
             }
             // TODO: Verify this actually works
             // If we should only import one cosmetic and it's a color smashed texture, reimport
-            else if (cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles))
+            else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
             {
                 var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
@@ -400,7 +401,8 @@ namespace BrawlInstaller.Services
                 // We do this so the referenced (copied) texture is what's stored in the BRRES, instead of the original
                 texture.Remove(true);
                 ImportTexture(parentNode, cosmetic.Texture);
-                ImportPalette(parentNode, cosmetic.Palette);
+                if (cosmetic.Palette != null)
+                    ImportPalette(parentNode, cosmetic.Palette);
             }
             // Create pat entry
             if (definition.PatSettings != null)
@@ -829,7 +831,7 @@ namespace BrawlInstaller.Services
         /// <returns>Full ID of cosmetic</returns>
         private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
         {
-            var id = (cosmeticId * definition.Multiplier) + costumeIndex ?? 0;
+            var id = (cosmeticId * definition.Multiplier) + (costumeIndex ?? 0);
             return id;
         }
 
