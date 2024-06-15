@@ -26,13 +26,8 @@ namespace BrawlInstaller.ViewModels
     internal class FranchiseIconViewModel : ViewModelBase, IFranchiseIconViewModel
     {
         // Commands
-        public ICommand SelectModelCommand
-        {
-            get
-            {
-                return new RelayCommand(param => SelectModel());
-            }
-        }
+        public ICommand SelectModelCommand => new RelayCommand(param => SelectModel());
+        public ICommand ClearModelCommand => new RelayCommand(param => ClearModel());
 
         // Private Properties
         private TrackedList<Cosmetic> _franchiseIcons;
@@ -79,6 +74,15 @@ namespace BrawlInstaller.ViewModels
                 SelectedFranchiseIcon.ColorSequence = null;
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));
             }
+        }
+
+        public void ClearModel()
+        {
+            SelectedFranchiseIcon.ModelPath = "";
+            SelectedFranchiseIcon.Model = null;
+            SelectedFranchiseIcon.ColorSequence = null;
+            FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+            OnPropertyChanged(nameof(SelectedFranchiseIcon));
         }
     }
 }
