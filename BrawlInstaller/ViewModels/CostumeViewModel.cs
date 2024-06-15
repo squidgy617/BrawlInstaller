@@ -265,7 +265,7 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
-        // TODO: Don't allow adding HD cosmetics if there is no corresponding regular texture? And always remove HD textures with regular ones?
+        // TODO: Don't allow adding HD cosmetics if there is no corresponding regular texture?
         // Or some validation when trying to save with HD textures with no match
         public void ReplaceHDCosmetic(object selectedItems)
         {
@@ -299,17 +299,8 @@ namespace BrawlInstaller.ViewModels
         public void ClearCosmetic()
         {
             FlipColorSmashedCosmetics(SelectedCosmetic);
-            if (SelectedCosmetic.HDImage == null)
-            {
-                FighterPackage.Cosmetics.Remove(SelectedCosmetic);
-                SelectedCostume.Cosmetics.Remove(SelectedCosmetic);
-            }
-            else
-            {
-                SelectedCosmetic.Image = null;
-                SelectedCosmetic.ImagePath = "";
-                FighterPackage.Cosmetics.ItemChanged(SelectedCosmetic);
-            }
+            FighterPackage.Cosmetics.Remove(SelectedCosmetic);
+            SelectedCostume.Cosmetics.Remove(SelectedCosmetic);
             OnPropertyChanged(nameof(SelectedCosmetic));
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
