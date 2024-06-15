@@ -152,6 +152,18 @@ namespace BrawlInstaller.ViewModels
         
         public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(nameof(SelectedCosmeticNode)); } }
 
+        [DependsUpon(nameof(SelectedCosmeticNode))]
+        public string ColorSmashText { get => 
+                SelectedCosmeticNode != null &&
+                (
+                    SelectedCosmeticNode.SharesData == true || 
+                    (
+                        CosmeticList.IndexOf(SelectedCosmeticNode) > 0 && CosmeticList[CosmeticList.IndexOf(SelectedCosmeticNode) - 1].SharesData == true
+                    )
+                )
+                ? "Undo Color Smash" : "Color Smash";
+        }
+
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
         {
@@ -481,7 +493,7 @@ namespace BrawlInstaller.ViewModels
             var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
             var nodeGroup = nodeGroups.FirstOrDefault(x => x.Contains(nodes.LastOrDefault())) ?? nodes;
             // If a group's root is selected, the entire group will be affected
-            var mixedGroup = nodeGroup.Any(x => x.SharesData == false) && nodeGroup.Any(x => x.SharesData == true);
+            var mixedGroup = nodes.Any(x => x.SharesData == false) && nodeGroup.Any(x => x.SharesData == true);
             if (mixedGroup)
                 nodes = nodeGroup;
             // If we are changing all but the root, root will be affected too
