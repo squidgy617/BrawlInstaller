@@ -86,6 +86,7 @@ namespace BrawlInstaller.ViewModels
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
+        // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
         public void SaveFighter()
         {
             // Set costume indexes for cosmetics
