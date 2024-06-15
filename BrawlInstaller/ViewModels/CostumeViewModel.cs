@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.ViewModels
 {
+    // TODO: Moving costumes or changing their colors should mark them as changed
     public interface ICostumeViewModel
     {
         ObservableCollection<Costume> Costumes { get; }

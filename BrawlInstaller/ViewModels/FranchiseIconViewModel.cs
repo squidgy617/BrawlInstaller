@@ -12,6 +12,7 @@ using BrawlInstaller.Services;
 using BrawlInstaller.Classes;
 using BrawlLib.Internal;
 using CommunityToolkit.Mvvm.Messaging;
+using System.Drawing;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -28,6 +29,9 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand SelectModelCommand => new RelayCommand(param => SelectModel());
         public ICommand ClearModelCommand => new RelayCommand(param => ClearModel());
+        public ICommand ReplaceIconCommand => new RelayCommand(param => ReplaceIcon());
+        public ICommand ReplaceHDIconCommand => new RelayCommand(param => ReplaceHDIcon());
+        public ICommand ClearHDIconCommand => new RelayCommand(param => ClearHDIcon());
 
         // Private Properties
         private TrackedList<Cosmetic> _franchiseIcons;
@@ -65,8 +69,8 @@ namespace BrawlInstaller.ViewModels
         public void SelectModel()
         {
             var model = _dialogService.OpenFileDialog("Select a model", "MDL0 files (.mdl0)|*.mdl0");
-            // Update the image
-            if (model != "")
+            // Update the mode
+            if (!string.IsNullOrEmpty(model))
             {
                 SelectedFranchiseIcon.ModelPath = model;
                 FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
@@ -81,6 +85,45 @@ namespace BrawlInstaller.ViewModels
             SelectedFranchiseIcon.ModelPath = "";
             SelectedFranchiseIcon.Model = null;
             SelectedFranchiseIcon.ColorSequence = null;
+            FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+            OnPropertyChanged(nameof(SelectedFranchiseIcon));
+        }
+
+        // TODO: maybe we add cosmetics to the fighter package on change here instead of on install?
+        public void ReplaceIcon()
+        {
+            var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
+            // Update the image
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = new Bitmap(image);
+                SelectedFranchiseIcon.Image = bitmap.ToBitmapImage();
+                SelectedFranchiseIcon.ImagePath = image;
+                SelectedFranchiseIcon.Texture = null;
+                SelectedFranchiseIcon.Palette = null;
+                FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+                OnPropertyChanged(nameof(SelectedFranchiseIcon));
+            }
+        }
+
+        public void ReplaceHDIcon()
+        {
+            var image = _dialogService.OpenFileDialog("Select an image", "PNG images (.png)|*.png");
+            // Update the image
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = new Bitmap(image);
+                SelectedFranchiseIcon.HDImage = bitmap.ToBitmapImage();
+                SelectedFranchiseIcon.HDImagePath = image;
+                FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+                OnPropertyChanged(nameof(SelectedFranchiseIcon));
+            }
+        }
+
+        public void ClearHDIcon()
+        {
+            SelectedFranchiseIcon.HDImage = null;
+            SelectedFranchiseIcon.HDImagePath = "";
             FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
             OnPropertyChanged(nameof(SelectedFranchiseIcon));
         }
