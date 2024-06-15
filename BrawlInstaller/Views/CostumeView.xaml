@@ -10,6 +10,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:ByteConverter x:Key="byteConverter"/>
+        <converters:FilePathConverter x:Key="filePathConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -60,7 +61,13 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding PacFiles}" SelectedValue="{Binding SelectedPacFile, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="100"/>
+            <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding PacFiles}" SelectedValue="{Binding SelectedPacFile, Mode=TwoWay}" VerticalAlignment="Top" Width="120" Height="100">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <Grid x:Name="pacFilesButtonGrid" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

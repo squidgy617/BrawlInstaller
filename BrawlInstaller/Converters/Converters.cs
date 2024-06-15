@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,24 @@ namespace BrawlInstaller.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (int)value;
+        }
+    }
+
+    [ValueConversion(typeof(string), typeof(string))]
+    public class FilePathConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo cultur)
+        {
+            if (value != null)
+                return Path.GetFileName((string)value);
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo cultur)
+        {
+            if (value != null)
+                return (string)value;
+            return null;
         }
     }
 
