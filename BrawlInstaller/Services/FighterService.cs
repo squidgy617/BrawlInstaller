@@ -258,7 +258,6 @@ namespace BrawlInstaller.Services
             }
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
             rootNode = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig);
-            // TODO: Get costumes?
             if (rootNode != null)
             {
                 var csscNode = (CSSCNode)rootNode;

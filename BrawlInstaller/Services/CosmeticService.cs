@@ -1016,8 +1016,6 @@ namespace BrawlInstaller.Services
             return cosmetics;
         }
 
-        // TODO: When importing for a FirstOnly/SeparateFiles definition, check if SharesData. If so, save the image and import that instead of importing TEX0.
-
         // TODO: When importing a character, franchise icons with a null ID or an ID greater than any existing franchise icon will be installed as new. Any others
         // will overwrite existing ones.
 

@@ -11,8 +11,6 @@ using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Classes
 {
-    // TODO: This class does NOT contain options. We will use a different class to store selected options when installing a character package, and their choices
-    //will result in an instance of this class being created. This class is used both when extracting and installing characters.
     public class FighterPackage
     {
         public FighterInfo FighterInfo { get; set; }
@@ -40,7 +38,6 @@ namespace BrawlInstaller.Classes
         public string Module { get; set; }
     }
 
-    // TODO: Order of costumes dictates order on CSS/in Ex Config. Internal order dictates order in BRRES. ColorSmashGroup dictates what cosmetics are color smashed.
     public class Costume
     {
         public List<Cosmetic> Cosmetics { get; set; }
