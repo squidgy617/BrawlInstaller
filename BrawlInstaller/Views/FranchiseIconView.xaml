@@ -11,23 +11,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <validationRules:FranchiseIdRule x:Key="franchiseIdRule"/>
-        <Style x:Key="errorText" TargetType="Label">
-            <Setter Property="Visibility" Value="Collapsed"/>
-            <Setter Property="Foreground" Value="DarkRed"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Label}">
-                        <TextBlock TextWrapping="Wrap" Text="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type Label}}, 
-                        Path=Target.(Validation.Errors)/ErrorContent}"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Target.(Validation.HasError)}" Value="True">
-                    <Setter Property="Visibility" Value="Visible" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
