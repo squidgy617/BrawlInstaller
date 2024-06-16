@@ -41,7 +41,7 @@
                     <Binding.ValidationRules>
                         <validationRules:FranchiseIdRule>
                             <validationRules:FranchiseIdRule.Wrapper>
-                                <validationRules:FranchiseIconsWrapper FranchiseIcons="{Binding Data.FranchiseIcons, Source={StaticResource proxy}}"/>
+                                <validationRules:FranchiseIconsWrapper FranchiseIcons="{Binding Data.FranchiseIcons, Source={StaticResource proxy}}" OldId="{Binding Data.SelectedFranchiseIcon.Id, Source={StaticResource proxy}}"/>
                             </validationRules:FranchiseIdRule.Wrapper>
                         </validationRules:FranchiseIdRule>
                     </Binding.ValidationRules>

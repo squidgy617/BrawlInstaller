@@ -15,10 +15,19 @@ namespace BrawlInstaller.Validation
         public static readonly DependencyProperty FranchiseIconsProperty = 
             DependencyProperty.Register(nameof(FranchiseIcons), typeof(TrackedList<Cosmetic>), typeof(FranchiseIconsWrapper), new FrameworkPropertyMetadata(new TrackedList<Cosmetic>()));
 
+        public static readonly DependencyProperty OldIdProperty =
+            DependencyProperty.Register(nameof(OldId), typeof(int?), typeof(FranchiseIconsWrapper), new FrameworkPropertyMetadata(0));
+
         public TrackedList<Cosmetic> FranchiseIcons
         {
             get { return (TrackedList<Cosmetic>)GetValue(FranchiseIconsProperty); }
             set { SetValue(FranchiseIconsProperty, value); }
+        }
+
+        public int? OldId
+        {
+            get { return (int?)GetValue(OldIdProperty); }
+            set { SetValue(OldIdProperty, value); }
         }
     }
     public class FranchiseIdRule : ValidationRule
@@ -33,7 +42,7 @@ namespace BrawlInstaller.Validation
         {
             var valid = int.TryParse((string)value, out int id);
 
-            if (!valid || Wrapper.FranchiseIcons.Items.Any(x => x.Id == id))
+            if (!valid || (Wrapper.FranchiseIcons.Items.Any(x => x.Id == id) && Wrapper.OldId != id))
             {
                 return new ValidationResult(false, "Franchise icon ID already in use!");
             }
