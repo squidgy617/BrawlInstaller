@@ -47,7 +47,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="modelTextBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Text="{Binding SelectedFranchiseIcon.ModelPath}"/>
+            <TextBox x:Name="modelTextBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Text="{Binding SelectedFranchiseIcon.ModelPath}" IsReadOnly="True"/>
             <Label x:Name="hasModelLabel" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Content="{Binding SelectedFranchiseIcon.Model.Name}" Grid.Row="1"/>
         </Grid>
         <Grid x:Name="modelButtonGrid" Grid.Column="2" Grid.Row="1">
