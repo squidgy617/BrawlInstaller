@@ -11,6 +11,23 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <validationRules:FranchiseIdRule x:Key="franchiseIdRule"/>
+        <Style x:Key="errorText" TargetType="Label">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="Foreground" Value="DarkRed"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <TextBlock TextWrapping="Wrap" Text="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type Label}}, 
+                        Path=Target.(Validation.Errors)/ErrorContent}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Target.(Validation.HasError)}" Value="True">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -24,7 +41,14 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="franchiseIconLabel" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="0" Content="Icon:"/>
-        <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons.Items}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon, Mode=TwoWay}" Grid.Column="1"/>
+        <Grid x:Name="franchiseIconIdGrid" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons.Items}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon, Mode=TwoWay}"/>
+            <Label Target="{Binding ElementName=franchiseIconIdTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="1"/>
+        </Grid>
         <TextBox x:Name="franchiseIconIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,0,0,0" Grid.Column="2" Width="60">
             <TextBox.Resources>
                 <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>

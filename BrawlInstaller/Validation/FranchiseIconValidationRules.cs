@@ -33,7 +33,7 @@ namespace BrawlInstaller.Validation
         {
             var valid = int.TryParse((string)value, out int id);
 
-            if (!valid || this.Wrapper.FranchiseIcons.Items.Any(x => x.Id == id))
+            if (!valid || Wrapper.FranchiseIcons.Items.Any(x => x.Id == id))
             {
                 return new ValidationResult(false, "Franchise icon ID already in use!");
             }
