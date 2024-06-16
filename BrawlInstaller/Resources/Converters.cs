@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace BrawlInstaller.Converters
+namespace BrawlInstaller.Resources
 {
     [ValueConversion(typeof(int), typeof(byte))]
     public class ByteConverter : IValueConverter

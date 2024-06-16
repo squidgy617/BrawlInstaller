@@ -9,6 +9,7 @@
                 <!-- Resources defined here will be global for the whole application -->
                 <ResourceDictionary Source="Resources/ViewModelViewMapping.xaml"/>
                 <ResourceDictionary Source="Resources/Styles.xaml"/>
+                <ResourceDictionary Source="Resources/Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

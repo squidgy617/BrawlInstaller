@@ -70,7 +70,7 @@
     <Compile Include="Classes\TrackedList.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
     <Compile Include="Common\ExtensionMethods.cs" />
-    <Compile Include="Converters\Converters.cs" />
+    <Compile Include="Resources\Converters.cs" />
     <Compile Include="Enums\CosmeticType.cs" />
     <Compile Include="Enums\IdType.cs" />
     <Compile Include="Enums\SSEUnlockStage.cs" />
@@ -125,6 +125,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
