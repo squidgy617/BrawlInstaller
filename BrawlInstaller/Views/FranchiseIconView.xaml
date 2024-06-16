@@ -5,8 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FranchiseIconViewModel}"
+             xmlns:validationRules="clr-namespace:BrawlInstaller.Validation"
+             xmlns:resources="clr-namespace:BrawlInstaller.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <validationRules:FranchiseIdRule x:Key="franchiseIdRule"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -20,6 +25,22 @@
         </Grid.RowDefinitions>
         <Label x:Name="franchiseIconLabel" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="0" Content="Icon:"/>
         <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons.Items}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon, Mode=TwoWay}" Grid.Column="1"/>
+        <TextBox x:Name="franchiseIconIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,0,0,0" Grid.Column="2" Width="60">
+            <TextBox.Resources>
+                <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+            </TextBox.Resources>
+            <TextBox.Text>
+                <Binding Path="SelectedFranchiseIcon.Id">
+                    <Binding.ValidationRules>
+                        <validationRules:FranchiseIdRule>
+                            <validationRules:FranchiseIdRule.Wrapper>
+                                <validationRules:FranchiseIconsWrapper FranchiseIcons="{Binding Data.FranchiseIcons, Source={StaticResource proxy}}"/>
+                            </validationRules:FranchiseIdRule.Wrapper>
+                        </validationRules:FranchiseIdRule>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
         <Label x:Name="modelLabel" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="0" Content="Model:" Grid.Row="1"/>
         <Grid x:Name="modelGrid" Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>

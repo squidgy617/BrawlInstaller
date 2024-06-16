@@ -74,6 +74,7 @@
     <Compile Include="Enums\CosmeticType.cs" />
     <Compile Include="Enums\IdType.cs" />
     <Compile Include="Enums\SSEUnlockStage.cs" />
+    <Compile Include="Resources\BindingProxy.cs" />
     <Compile Include="Services\ColorSmashService.cs" />
     <Compile Include="Services\CosmeticService.cs" />
     <Compile Include="Services\DialogService.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Services\FighterService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Validation\FranchiseIconValidationRules.cs" />
     <Compile Include="ViewModels\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\CostumeViewModel.cs" />
     <Compile Include="ViewModels\FighterFileViewModel.cs" />
