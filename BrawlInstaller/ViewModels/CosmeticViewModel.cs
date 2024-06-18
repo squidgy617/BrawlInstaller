@@ -43,7 +43,7 @@ namespace BrawlInstaller.ViewModels
 
             CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>
             {
-                CosmeticType.CreditsIcon.GetKeyValuePair()
+                CosmeticType.RecordsIcon.GetKeyValuePair()
             };
 
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
