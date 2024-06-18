@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace BrawlInstaller.Classes
 {
     public class BrawlIds
     {
+        [JsonIgnore]
         public List<BrawlId> Ids { get; set; } = new List<BrawlId>();
         public int FighterConfigId { get => GetId(IdType.FighterConfig); set => SetId(IdType.FighterConfig, value); }
         public int CosmeticConfigId { get => GetId(IdType.CosmeticConfig); set => SetId(IdType.CosmeticConfig, value); }

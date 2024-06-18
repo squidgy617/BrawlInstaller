@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,13 @@ namespace BrawlInstaller.Classes
         public string InternalName { get; set; }
         public string DisplayName { get; set; }
         public BrawlIds Ids { get; set; }
+        [JsonIgnore]
         public string FighterConfig { get; set; }
+        [JsonIgnore]
         public string CosmeticConfig { get; set; }
+        [JsonIgnore]
         public string CSSSlotConfig { get; set; }
+        [JsonIgnore]
         public string SlotConfig { get; set; }
         public uint VictoryThemeId { get; set; }
     }
