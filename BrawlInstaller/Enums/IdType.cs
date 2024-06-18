@@ -15,6 +15,7 @@ namespace BrawlInstaller.Enums
         Cosmetic,
         Franchise,
         Trophy,
-        Thumbnail
+        Thumbnail,
+        RecordsIcon
     }
 }

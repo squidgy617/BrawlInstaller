@@ -303,6 +303,20 @@ namespace BrawlInstaller.Services
                         Prefix = "MenCollDisply01",
                         IdType = IdType.Thumbnail,
                         Size = new Size(56, 48)
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = CosmeticType.RecordsIcon,
+                        Style = "vBrawl",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu2\\mu_menumain.pac",
+                            NodePath = "MenuMain_en/Texture Data [11]",
+                            FileExtension = "pac"
+                        },
+                        Prefix = "MenWifiListIcn",
+                        IdType = IdType.RecordsIcon,
+                        Size = new Size(48, 48)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings

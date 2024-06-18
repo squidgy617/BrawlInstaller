@@ -30,6 +30,8 @@ namespace BrawlInstaller.Enums
         [Description("Credits Icon")]
         CreditsIcon,
         [Description("Trophy Thumbnail")]
-        TrophyThumbnail
+        TrophyThumbnail,
+        [Description("Records Icon")]
+        RecordsIcon
     }
 }
