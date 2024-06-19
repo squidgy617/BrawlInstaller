@@ -48,7 +48,7 @@ namespace BrawlLib.SSBB.ResourceNodes
 
         // Could improve performance by caching, and making sure to clear the cache when needed.
         // For now, prefer the simplicity of not identifying every situation where clearing the cache would be needed.
-        private TEX0Node SourceNode => FindSourceNode();
+        public TEX0Node SourceNode => FindSourceNode();
 
         [Category("G3D Node")]
         public bool SharesData
@@ -109,6 +109,8 @@ namespace BrawlLib.SSBB.ResourceNodes
         [Category("G3D Texture")] public int LevelOfDetail => SharesData ? SourceNode.LevelOfDetail : _lod;
         [Category("G3D Texture")] public bool HasPalette => SharesData ? SourceNode.HasPalette : _hasPalette;
         [Category("Dolphin")] public string DolphinTextureName => BuildDolphinTextureName();
+        [Browsable(false)] public string TextureHash => _textureHash;
+        [Browsable(false)] public string PaletteHash => _paletteHash;
 
         public PLT0Node GetPaletteNode()
         {
@@ -149,12 +151,11 @@ namespace BrawlLib.SSBB.ResourceNodes
 
         private ReadOnlySpan<byte> GetRawData()
         {
-            var offset = OffsetToData();
             // Get size for first mip only
             var length = TextureConverter.Get(Format).GetMipOffset(Width, Height, 2);
             // Get raw pixel data
             byte[] pixelData = new byte[length];
-            Marshal.Copy(WorkingUncompressed.Address + offset, pixelData, 0, length);
+            Marshal.Copy(SourceNode.WorkingUncompressed.Address + HeaderSize(), pixelData, 0, length);
             return pixelData;
         }
 
