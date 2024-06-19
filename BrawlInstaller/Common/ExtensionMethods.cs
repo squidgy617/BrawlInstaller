@@ -28,6 +28,7 @@ namespace BrawlInstaller.Common
                 bitmapImage.StreamSource = memory;
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.EndInit();
+                bitmapImage.Freeze();
                 return bitmapImage;
             }
         }

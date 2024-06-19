@@ -14,12 +14,25 @@ namespace BrawlInstaller.Services
 {
     public interface IFileService
     {
+        /// <inheritdoc cref="FileService.OpenFile(string)"/>
         ResourceNode OpenFile(string path);
+
+        /// <inheritdoc cref="FileService.SaveFile(ResourceNode)"/>
         void SaveFile(ResourceNode node);
+
+        /// <inheritdoc cref="FileService.SaveFileAs(ResourceNode, string)"/>
         void SaveFileAs(ResourceNode node, string path);
+
+        /// <inheritdoc cref="FileService.CloseFile(ResourceNode)"/>
         void CloseFile(ResourceNode node);
+
+        /// <inheritdoc cref="FileService.CopyNode(ResourceNode)"/>
         ResourceNode CopyNode(ResourceNode node);
+
+        /// <inheritdoc cref="FileService.CopyFile(string, string)"/>
         void CopyFile(string inFile, string outFile);
+
+        /// <inheritdoc cref="FileService.DeleteFile(string)"/>
         void DeleteFile(string file);
     }
     [Export(typeof(IFileService))]

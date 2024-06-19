@@ -1085,13 +1085,12 @@ namespace BrawlInstaller.Services
         /// <returns>List of cosmetics</returns>
         private List<Cosmetic> GetCosmetics(BrawlIds brawlIds, List<CosmeticDefinition> definitions, bool restrictRange)
         {
-            var cosmetics = new List<Cosmetic>();
-            // Order them to ensure that cosmetics with multiple definitions pick the definitions favor definitions that have multiple cosmetics
-            foreach (var cosmeticGroup in definitions.OrderByDescending(x => !x.SeparateFiles).OrderByDescending(x => !x.FirstOnly)
-                .GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
+            var cosmetics = new ConcurrentBag<Cosmetic>();
+            Parallel.ForEach(definitions.GroupBy(c => new { c.CosmeticType, c.Style }).ToList(), cosmeticGroup =>
             {
                 // Check each definition in the group for cosmetics
-                foreach (var cosmetic in cosmeticGroup)
+                // Order them to ensure that cosmetics with multiple definitions favor definitions that have multiple cosmetics
+                foreach (var cosmetic in cosmeticGroup.OrderByDescending(x => !x.SeparateFiles).OrderByDescending(x => !x.FirstOnly))
                 {
                     var id = brawlIds.GetIdOfType(cosmetic.IdType) + cosmetic.Offset;
                     // Check all paths for the cosmetic definition
@@ -1100,7 +1099,8 @@ namespace BrawlInstaller.Services
                         var rootNode = _fileService.OpenFile(path);
                         if (rootNode != null)
                         {
-                            cosmetics.AddRange(GetDefinitionCosmetics(cosmetic, rootNode, brawlIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\")));
+                            foreach (var foundCosmetics in GetDefinitionCosmetics(cosmetic, rootNode, brawlIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\")))
+                                cosmetics.Add(foundCosmetics);
                             _fileService.CloseFile(rootNode);
                         }
                     }
@@ -1108,8 +1108,8 @@ namespace BrawlInstaller.Services
                     if (cosmetics.Count > 0)
                         break;
                 }
-            }
-            return cosmetics;
+            });
+            return cosmetics.ToList();
         }
     }
 }

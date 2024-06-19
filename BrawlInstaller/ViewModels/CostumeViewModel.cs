@@ -253,9 +253,6 @@ namespace BrawlInstaller.ViewModels
                     currentCosmetic.Texture = null;
                     currentCosmetic.Palette = null;
                     FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
-                    OnPropertyChanged(nameof(SelectedCosmetic));
-                    OnPropertyChanged(nameof(CosmeticList));
-                    OnPropertyChanged(nameof(SelectedCosmeticNode));
                 }
             }
             // Adjust color smashing based on cosmetics replaced
@@ -264,6 +261,9 @@ namespace BrawlInstaller.ViewModels
                 var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
                 FlipColorSmashedCosmetics(cosmetic);
             }
+            OnPropertyChanged(nameof(SelectedCosmetic));
+            OnPropertyChanged(nameof(CosmeticList));
+            OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
         // TODO: Don't allow adding HD cosmetics if there is no corresponding regular texture?
@@ -291,10 +291,10 @@ namespace BrawlInstaller.ViewModels
                     currentCosmetic.HDImage = bitmap.ToBitmapImage();
                     currentCosmetic.HDImagePath = image;
                     FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
-                    OnPropertyChanged(nameof(SelectedCosmetic));
-                    OnPropertyChanged(nameof(CosmeticList));
                 }
             }
+            OnPropertyChanged(nameof(SelectedCosmetic));
+            OnPropertyChanged(nameof(CosmeticList));
         }
 
         public void ClearCosmetic()
