@@ -11,8 +11,13 @@ namespace BrawlInstaller.Services
 {
     public interface IDialogService
     {
+        /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxImage)"/>
         bool ShowMessage(string text, string caption, MessageBoxImage image);
+
+        /// <inheritdoc cref="DialogService.OpenFileDialog(string, string)"/>
         string OpenFileDialog(string title, string filter);
+
+        /// <inheritdoc cref="DialogService.OpenMultiFileDialog(string, string)"/>
         List<string> OpenMultiFileDialog(string title, string filter);
     }
     [Export(typeof(IDialogService))]

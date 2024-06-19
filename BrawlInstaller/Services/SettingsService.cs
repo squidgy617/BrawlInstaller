@@ -23,10 +23,20 @@ namespace BrawlInstaller.Services
         string BuildPath { get; set; }
 
         // Methods
+
+        /// <inheritdoc cref="SettingsService.SaveSettings(BuildSettings, string)"/>
         void SaveSettings(BuildSettings buildSettings, string path);
+
+        /// <inheritdoc cref="SettingsService.LoadSettings(string)"/>
         BuildSettings LoadSettings(string path);
+
+        /// <inheritdoc cref="SettingsService.GetDefaultSettings()"/>
         BuildSettings GetDefaultSettings();
+
+        /// <inheritdoc cref="SettingsService.SaveFighterInfoSettings(List{FighterInfo})"/>
         void SaveFighterInfoSettings(List<FighterInfo> fighterInfoList);
+
+        /// <inheritdoc cref="SettingsService.LoadFighterInfoSettings()"/>
         List<FighterInfo> LoadFighterInfoSettings();
     }
     [Export(typeof(ISettingsService))]

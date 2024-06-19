@@ -18,6 +18,7 @@ namespace BrawlInstaller.Services
 {
     public interface IColorSmashService
     {
+        /// <inheritdoc cref="ColorSmashService.ColorSmashCosmetics(List{Cosmetic}, BRRESNode)"/>
         void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres);
     }
     [Export(typeof(IColorSmashService))]

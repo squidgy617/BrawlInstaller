@@ -16,7 +16,10 @@ namespace BrawlInstaller.Services
 {
     public interface IPackageService
     {
+        /// <inheritdoc cref="PackageService.ExtractFighter(BrawlIds)"/>
         FighterPackage ExtractFighter(BrawlIds fighterIds);
+
+        /// <inheritdoc cref="PackageService.SaveFighter(FighterPackage)"/>
         void SaveFighter(FighterPackage fighterPackage);
     }
     [Export(typeof(IPackageService))]

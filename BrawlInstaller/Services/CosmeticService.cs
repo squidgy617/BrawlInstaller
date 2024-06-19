@@ -25,9 +25,16 @@ namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
+        /// <inheritdoc cref="CosmeticService.GetFighterCosmetics(BrawlIds)"/>
         List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds);
+
+        /// <inheritdoc cref="CosmeticService.GetFranchiseIcons()"/>
         TrackedList<Cosmetic> GetFranchiseIcons();
+
+        /// <inheritdoc cref="CosmeticService.ImportCosmetics(CosmeticDefinition, List{Cosmetic}, int, string)"/>
         void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null);
+
+        /// <inheritdoc cref="CosmeticService.GetSharesDataGroups(List{Cosmetic})"/>
         List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
     }
     [Export(typeof(ICosmeticService))]

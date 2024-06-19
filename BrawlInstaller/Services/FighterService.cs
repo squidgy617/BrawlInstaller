@@ -18,15 +18,34 @@ namespace BrawlInstaller.Services
 {
     public interface IFighterService
     {
+        /// <inheritdoc cref="FighterService.GetFighterInfo(BrawlIds)"/>
         FighterInfo GetFighterInfo(BrawlIds fighterIds);
+
+        /// <inheritdoc cref="FighterService.GetFighterCostumes(FighterInfo)"/>
         List<Costume> GetFighterCostumes(FighterInfo fighterInfo);
+
+        /// <inheritdoc cref="FighterService.GetCostumeCosmetics(List{Costume}, List{Cosmetic})"/>
         List<Costume> GetCostumeCosmetics(List<Costume> costumes, List<Cosmetic> cosmetics);
+
+        /// <inheritdoc cref="FighterService.GetModule(string)"/>
         string GetModule(string internalName);
+
+        /// <inheritdoc cref="FighterService.GetFighterFiles(string)"/>
         List<string> GetFighterFiles(string internalName);
+
+        /// <inheritdoc cref="FighterService.GetItemFiles(string)"/>
         List<string> GetItemFiles(string internalName);
+
+        /// <inheritdoc cref="FighterService.GetKirbyFiles(string)"/>
         List<string> GetKirbyFiles(string internalName);
+
+        /// <inheritdoc cref="FighterService.ImportFighterFiles(List{string}, List{Costume}, FighterInfo)"/>
         void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo);
+
+        /// <inheritdoc cref="FighterService.UpdateCostumeConfig(FighterInfo, List{Costume})"/>
         void UpdateCostumeConfig(FighterInfo fighterInfo, List<Costume> costumes);
+
+        /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
     }
     [Export(typeof(IFighterService))]
