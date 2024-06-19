@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace BrawlInstaller.Services
 {
@@ -79,9 +82,7 @@ namespace BrawlInstaller.Services
         /// <returns>Copy of node</returns>
         public ResourceNode CopyNode(ResourceNode node)
         {
-            node.Export("tempNode");
-            var newNode = NodeFactory.FromFile(null, "tempNode");
-            File.Delete("tempNode");
+            var newNode = NodeFactory.FromAddress(node.Parent, node.WorkingSource.Address, node.WorkingSource.Length);
             return newNode;
         }
 
