@@ -41,7 +41,7 @@ namespace BrawlInstaller.Services
     internal class CosmeticService : ICosmeticService
     {
         // Properties
-        private List<string> HDImages { get; set; } = new List<string>();
+        private Dictionary<string, string> HDImages { get; set; } = new Dictionary<string, string>();
 
         // Services
         ISettingsService _settingsService { get; }
@@ -298,9 +298,9 @@ namespace BrawlInstaller.Services
                     var name = texNode.DolphinTextureName;
                     if (_settingsService.BuildSettings.HDTextures)
                     {
-                        var deleteFile = HDImages.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
-                        _fileService.DeleteFile(deleteFile);
-                        HDImages.Remove(deleteFile);
+                        var deleteFile = HDImages.FirstOrDefault(x => x.Key == name);
+                        _fileService.DeleteFile(deleteFile.Value);
+                        HDImages.Remove(name);
                     }
                 };
                 folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
@@ -607,9 +607,9 @@ namespace BrawlInstaller.Services
                 cosmetic.HDImage.Save(imagePath);
                 cosmetic.HDImagePath = imagePath;
                 // Cache HD image if it is not cached
-                if (!HDImages.AsParallel().Any(x => x == imagePath))
+                if (!HDImages.AsParallel().Any(x => x.Key == texture?.DolphinTextureName))
                 {
-                    HDImages.Add(imagePath);
+                    HDImages.Add(texture?.DolphinTextureName, imagePath);
                 }
             }
         }
@@ -933,7 +933,7 @@ namespace BrawlInstaller.Services
         /// Loads and caches a list of all HD textures so we can more easily search for texture matches
         /// </summary>
         /// <returns>List of HD textures</returns>
-        private List<string> PreloadHDTextures()
+        private Dictionary<string, string> PreloadHDTextures()
         {
             var directories = Directory.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
             directories = directories.Append(_settingsService.BuildSettings.FilePathSettings.HDTextures).ToArray();
@@ -946,7 +946,7 @@ namespace BrawlInstaller.Services
                     hdImages.Add(image);
                 });
             });
-            HDImages = hdImages.ToList();
+            HDImages = hdImages.ToDictionary(x => Path.GetFileNameWithoutExtension(x), x => x);
             return HDImages;
         }
 
@@ -957,7 +957,7 @@ namespace BrawlInstaller.Services
         /// <returns>HD texture path</returns>
         private string GetHDTexture(string textureName)
         {
-            return HDImages.AsParallel().FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == textureName);
+            return HDImages.AsParallel().FirstOrDefault(x => x.Key == textureName).Value;
         }
 
         /// <summary>
