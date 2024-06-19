@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System.Collections.ObjectModel;
+using BrawlInstaller.Helpers;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -80,10 +81,13 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadFighter()
         {
-            FighterPackage = new FighterPackage();
-            FighterPackage.FighterInfo = SelectedFighter;
-            FighterPackage = _packageService.ExtractFighter(SelectedFighter.Ids);
-            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+            using (new CursorWait())
+            {
+                FighterPackage = new FighterPackage();
+                FighterPackage.FighterInfo = SelectedFighter;
+                FighterPackage = _packageService.ExtractFighter(SelectedFighter.Ids);
+                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+            }
         }
 
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
