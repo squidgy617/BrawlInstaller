@@ -84,6 +84,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -96,14 +97,15 @@
                 <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
                 <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
                 <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
-                <Label x:Name="cosmeticImageLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Image:" Grid.Row="2" Grid.Column="1"/>
-                <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="3" Grid.Column="1"/>
-                <Label x:Name="cosmeticHDImageLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Content="HD Image:" Grid.Row="2" Grid.Column="2"/>
-                <Image x:Name="cosmeticHDImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="3" Grid.Column="2"/>
-                <Button x:Name="replaceCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Browse..." Width="60" Margin="0,4,0,0" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding ReplaceCosmeticCommand}" Grid.Row="4" Grid.Column="1"/>
-                <Button x:Name="clearCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Clear" Width="60" Margin="0,4,0,0" Command="{Binding ClearCosmeticCommand}" Grid.Row="5" Grid.Column="1"/>
-                <Button x:Name="replaceHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Browse..." Margin="0,4,0,0" Width="60" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Row="4" Grid.Column="2"/>
-                <Button x:Name="clearHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Clear" Width="60" Margin="0,4,0,0" Command="{Binding ClearHDCosmeticCommand}" Grid.Row="5" Grid.Column="2"/>
+                <TextBox x:Name="inheritedStylesDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" Text="{Binding InheritedStyle, Mode=OneWay}" IsReadOnly="True" Grid.Row="2" Grid.Column="1"/>
+                <Label x:Name="cosmeticImageLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Image:" Grid.Row="3" Grid.Column="1"/>
+                <Image x:Name="cosmeticImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="4" Grid.Column="1"/>
+                <Label x:Name="cosmeticHDImageLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Content="HD Image:" Grid.Row="3" Grid.Column="2"/>
+                <Image x:Name="cosmeticHDImage" HorizontalAlignment="Left" Height="128" VerticalAlignment="Top" Width="128" Source="{Binding SelectedCosmetic.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="4" Grid.Column="2"/>
+                <Button x:Name="replaceCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Browse..." Width="60" Margin="0,4,0,0" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding ReplaceCosmeticCommand}" Grid.Row="5" Grid.Column="1"/>
+                <Button x:Name="clearCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Clear" Width="60" Margin="0,4,0,0" Command="{Binding ClearCosmeticCommand}" Grid.Row="6" Grid.Column="1"/>
+                <Button x:Name="replaceHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Browse..." Margin="0,4,0,0" Width="60" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Row="5" Grid.Column="2"/>
+                <Button x:Name="clearHDCosmeticButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Clear" Width="60" Margin="0,4,0,0" Command="{Binding ClearHDCosmeticCommand}" Grid.Row="6" Grid.Column="2"/>
                 <Grid x:Name="cosmeticListGrid" Grid.Column="3" Grid.RowSpan="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

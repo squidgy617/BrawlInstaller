@@ -165,6 +165,26 @@ namespace BrawlInstaller.ViewModels
                 ? "Undo Color Smash" : "Color Smash";
         }
 
+        [DependsUpon(nameof(Styles))]
+        [DependsUpon(nameof(SelectedStyle))]
+        public List<string> InheritedStyles
+        {
+            get
+            {
+                var styles = new List<string> { "" };
+                if (Styles != null)
+                    styles.AddRange(Styles?.Where(x => x != SelectedStyle).ToList());
+                return styles;
+            }
+        }
+
+        [DependsUpon(nameof(InheritedStyles))]
+        public string InheritedStyle 
+        {
+            get => FighterPackage?.Cosmetics?.InheritedStyles?.ContainsKey((SelectedCosmeticOption, SelectedStyle)) == true
+                ? FighterPackage.Cosmetics.InheritedStyles.FirstOrDefault(x => x.Key == (SelectedCosmeticOption, SelectedStyle)).Value : SelectedStyle;
+        }
+
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
         {
