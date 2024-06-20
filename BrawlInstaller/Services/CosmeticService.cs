@@ -614,6 +614,7 @@ namespace BrawlInstaller.Services
             }
         }
 
+        // TODO: Create file if it does not exist
         /// <summary>
         /// Import cosmetics based on definition rules
         /// </summary>
