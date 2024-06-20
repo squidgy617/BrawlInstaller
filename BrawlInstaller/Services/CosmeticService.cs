@@ -94,10 +94,11 @@ namespace BrawlInstaller.Services
             var index = texture.Index;
             var folder = destinationNode.GetFolder<TEX0Node>();
             var name = texture.Name;
-            cosmetic.Image.Save("tempNode.png");
+            _fileService.SaveImage(cosmetic.Image, $"{_settingsService.TempPath}\\tempNode.png");
             texture.Remove(true);
             palette?.Remove();
-            var node = ImportTexture(destinationNode, "tempNode.png", format, size);
+            var node = ImportTexture(destinationNode, $"{_settingsService.TempPath}\\tempNode.png", format, size);
+            _fileService.DeleteFile($"{_settingsService.TempPath}\\tempNode.png");
             if (node.GetPaletteNode() != null)
                 node.GetPaletteNode().Name = name;
             node.Name = name;
@@ -503,7 +504,7 @@ namespace BrawlInstaller.Services
                 }
                 _fileService.CloseFile(rootNode);
             }
-            files.ForEach(x => File.Delete(x));
+            files.ForEach(x => _fileService.DeleteFile(x));
         }
 
         /// <summary>
@@ -604,7 +605,7 @@ namespace BrawlInstaller.Services
                 if (!Directory.Exists(imagePath))
                     Directory.CreateDirectory(imagePath);
                 imagePath += $"\\{texture?.DolphinTextureName}.png";
-                cosmetic.HDImage.Save(imagePath);
+                _fileService.SaveImage(cosmetic.HDImage, imagePath);
                 cosmetic.HDImagePath = imagePath;
                 // Cache HD image if it is not cached
                 if (!HDImages.AsParallel().Any(x => x.Key == texture?.DolphinTextureName))

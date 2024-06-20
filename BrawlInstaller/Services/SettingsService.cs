@@ -21,6 +21,7 @@ namespace BrawlInstaller.Services
         // Should be accessible from any ViewModel implementing the service
         BuildSettings BuildSettings { get; set; }
         string BuildPath { get; set; }
+        string TempPath { get; }
 
         // Methods
 
@@ -51,6 +52,7 @@ namespace BrawlInstaller.Services
         // Properties
         public BuildSettings BuildSettings { get; set; } = null;
         public string BuildPath { get; set; } = "";
+        public string TempPath { get; } = "temp";
 
         // Methods
 

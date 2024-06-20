@@ -36,14 +36,15 @@ namespace BrawlInstaller.Common
 
     public static class BitmapImageExtensions
     {
-        public static void Save(this BitmapImage image, string filePath)
+        public static Bitmap ToBitmap(this BitmapImage image)
         {
-            BitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image));
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            using (MemoryStream outStream = new MemoryStream())
             {
-                encoder.Save(fileStream);
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(image));
+                encoder.Save(outStream);
+                var bitmap = new Bitmap(outStream);
+                return new Bitmap(bitmap);
             }
         }
     }

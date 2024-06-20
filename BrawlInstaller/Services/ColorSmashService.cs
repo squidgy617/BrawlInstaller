@@ -55,7 +55,7 @@ namespace BrawlInstaller.Services
             // Save images to color smash input folder
             foreach(var cosmetic in cosmetics)
             {
-                cosmetic.Image.Save($"{ColorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
+                _fileService.SaveImage(cosmetic.Image, $"{ColorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
             }
             // Get palette count
             var paletteCount = 0;

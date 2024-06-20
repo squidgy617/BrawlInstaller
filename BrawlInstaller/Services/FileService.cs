@@ -9,6 +9,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Windows.Media.Imaging;
+using BrawlInstaller.Common;
 
 namespace BrawlInstaller.Services
 {
@@ -34,14 +37,20 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.DeleteFile(string)"/>
         void DeleteFile(string file);
+
+        /// <inheritdoc cref="FileService.SaveImage(BitmapImage, string)"/>
+        void SaveImage(BitmapImage image, string outPath);
     }
     [Export(typeof(IFileService))]
     internal class FileService : IFileService
     {
-        [ImportingConstructor]
-        public FileService()
-        {
+        // Services
+        ISettingsService _settingsService { get; }
 
+        [ImportingConstructor]
+        public FileService(ISettingsService settingsService)
+        {
+            _settingsService = settingsService;
         }
 
         // Methods
@@ -97,9 +106,11 @@ namespace BrawlInstaller.Services
         {
             //var newNode = NodeFactory.FromAddress(node.Parent, node.WorkingSource.Address, node.WorkingSource.Length);
             var guid = Guid.NewGuid().ToString();
-            node.Export(guid);
-            var newNode = NodeFactory.FromFile(null, guid);
-            File.Delete(guid);
+            var path = $"{_settingsService.TempPath}\\{guid}";
+            CreateDirectory(path);
+            node.Export(path);
+            var newNode = NodeFactory.FromFile(null, path);
+            File.Delete(path);
             return newNode;
         }
 
@@ -111,7 +122,10 @@ namespace BrawlInstaller.Services
         public void CopyFile(string inFile, string outFile)
         {
             if (File.Exists(inFile))
+            {
+                CreateDirectory(outFile);
                 File.Copy(inFile, outFile, true);
+            }
         }
 
         /// <summary>
@@ -122,6 +136,39 @@ namespace BrawlInstaller.Services
         {
             if (File.Exists(file))
                 File.Delete(file);
+        }
+
+        /// <summary>
+        /// Save an image
+        /// </summary>
+        /// <param name="image">BitmapImage to save</param>
+        /// <param name="outFile">Output path of image file</param>
+        public void SaveImage(BitmapImage image, string outFile)
+        {
+            SaveImage(image.ToBitmap(), outFile);
+        }
+
+        /// <summary>
+        /// Save an image
+        /// </summary>
+        /// <param name="image">Bitmap to save</param>
+        /// <param name="outFile">Output path of image file</param>
+        private void SaveImage(Bitmap image, string outFile)
+        {
+            CreateDirectory(outFile);
+            image.Save(outFile);
+        }
+
+        /// <summary>
+        /// Create a directory if it does not exist
+        /// </summary>
+        /// <param name="path">Directory to create</param>
+        private void CreateDirectory(string path)
+        {
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
         }
     }
 }
