@@ -376,10 +376,14 @@ namespace BrawlInstaller.ViewModels
                 foreach (var item in selectedNodes)
                 {
                     item.InternalIndex -= nodesToMove.Count;
+                    FighterPackage.Cosmetics.ItemChanged(item);
                 }
                 // Move node after selected to before them
                 foreach (var node in nodesToMove)
+                {
                     node.InternalIndex += selectedNodes.Count;
+                    FighterPackage.Cosmetics.ItemChanged(node);
+                }
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
@@ -409,10 +413,14 @@ namespace BrawlInstaller.ViewModels
                 foreach (var item in selectedNodes)
                 {
                     item.InternalIndex += nodesToMove.Count;
+                    FighterPackage.Cosmetics.ItemChanged(item);
                 }
                 // Move node after selected to before them
                 foreach(var node in nodesToMove)
+                {
                     node.InternalIndex -= selectedNodes.Count;
+                    FighterPackage.Cosmetics.ItemChanged(node);
+                }
             }
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
