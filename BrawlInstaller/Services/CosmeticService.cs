@@ -882,17 +882,20 @@ namespace BrawlInstaller.Services
             // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
             if (start.GetType() == typeof(ARCNode))
             {
-                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
                 restrictRange = false;
             }
-            var folder = start.FindChild("Textures(NW4R)");
-            if (folder != null)
+            if (start != null)
             {
-                foreach (var child in folder.Children)
+                var folder = start.FindChild("Textures(NW4R)");
+                if (folder != null)
                 {
-                    // Get textures that match definition
-                    if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || child.Name.StartsWith(definition.Prefix)) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
-                        nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = GetCosmeticId(child.Name, definition) });
+                    foreach (var child in folder.Children)
+                    {
+                        // Get textures that match definition
+                        if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || child.Name.StartsWith(definition.Prefix)) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
+                            nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = GetCosmeticId(child.Name, definition) });
+                    }
                 }
             }
             return nodes;
