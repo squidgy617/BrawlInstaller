@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Enums;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using System;
@@ -50,11 +51,33 @@ namespace BrawlInstaller.Services
         public FighterPackage ExtractFighter(BrawlIds fighterIds)
         {
             var fighterPackage = new FighterPackage();
+            // Get fighter info
             var fighterInfo = _fighterService.GetFighterInfo(fighterIds);
+
+            // Get cosmetics
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
+
+            // Get costumes
             var costumes = _fighterService.GetFighterCostumes(fighterInfo);
             costumes = _fighterService.GetCostumeCosmetics(costumes, cosmetics);
 
+            // Set up inheritance for styles
+            var inheritedStyles = new Dictionary<(CosmeticType, string), string>();
+            foreach(var cosmeticType in cosmetics.GroupBy(x => x.CosmeticType).Select(x => x.Key))
+            {
+                var typedCosmetics = cosmetics.Where(x => x.CosmeticType == cosmeticType);
+                var groups = typedCosmetics.GroupBy(x => x.Style);
+                foreach (var group in groups)
+                {
+                    var match = groups.Where(x => x.Key != group.Key).FirstOrDefault(x => group.Select(y => y.Texture?.MD5Str()).All(x.Select(y => y.Texture?.MD5Str()).Contains) && group.Count() == x.Count());
+                    if (match != null && !inheritedStyles.Any(x => (x.Key == (cosmeticType, group.Key)) || x.Value == group.Key))
+                    {
+                        inheritedStyles.Add((cosmeticType, group.Key), match.Key);
+                    }
+                }
+            }
+
+            // Get fighter files
             var fighterFiles = new List<FighterFiles>{
                 new FighterFiles
                 {
@@ -65,6 +88,8 @@ namespace BrawlInstaller.Services
                     KirbyPacFiles = _fighterService.GetKirbyFiles(fighterInfo.InternalName)
                 } 
             };
+
+            // Set fighter info
             if (fighterInfo.FighterConfig != "")
                 fighterFiles.FirstOrDefault().ExConfigs.Add(fighterInfo.FighterConfig);
             if (fighterInfo.CosmeticConfig != "")
@@ -122,6 +147,7 @@ namespace BrawlInstaller.Services
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
             fighterPackage.Cosmetics.Items = cosmetics;
+            fighterPackage.Cosmetics.InheritedStyles = inheritedStyles;
             fighterPackage.FighterFiles = fighterFiles;
             return fighterPackage;
         }

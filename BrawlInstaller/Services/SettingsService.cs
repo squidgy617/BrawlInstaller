@@ -118,7 +118,23 @@ namespace BrawlInstaller.Services
                     new CosmeticDefinition
                     {
                         CosmeticType = CosmeticType.CSP,
-                        Style = "vBrawl",
+                        Style = "CSS",
+                        InstallLocation = new InstallLocation
+                        {
+                            FilePath = "pf\\menu2\\sc_selcharacter.pac",
+                            NodePath = "char_bust_tex_lz77",
+                            FileExtension = "pac"
+                        },
+                        Prefix = "MenSelchrFaceB",
+                        Multiplier = 10,
+                        IdType = IdType.Cosmetic,
+                        Size = new Size(128, 160),
+                        FirstOnly = false
+                    },
+                    new CosmeticDefinition
+                    {
+                        CosmeticType = CosmeticType.CSP,
+                        Style = "Result",
                         InstallLocation = new InstallLocation
                         {
                             FilePath = "pf\\menu\\common\\char_bust_tex\\",

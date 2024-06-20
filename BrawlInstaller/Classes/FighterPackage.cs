@@ -15,7 +15,7 @@ namespace BrawlInstaller.Classes
     {
         public FighterInfo FighterInfo { get; set; }
         public List<Costume> Costumes { get; set; }
-        public TrackedList<Cosmetic> Cosmetics { get; set; } = new TrackedList<Cosmetic>();
+        public CosmeticList Cosmetics { get; set; } = new CosmeticList();
         public List<FighterFiles> FighterFiles { get; set; }
         public string Soundbank { get; set; }
         public string CreditsTheme { get; set; }
@@ -44,6 +44,11 @@ namespace BrawlInstaller.Classes
         public List<string> PacFiles { get; set; }
         public byte Color { get; set; }
         public int CostumeId { get; set; }
+    }
+
+    public class CosmeticList : TrackedList<Cosmetic>
+    {
+        public Dictionary<(CosmeticType, string), string> InheritedStyles { get; set; } = new Dictionary<(CosmeticType, string), string>();
     }
 
     public class Cosmetic

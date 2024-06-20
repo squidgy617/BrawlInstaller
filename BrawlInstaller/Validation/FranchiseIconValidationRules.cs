@@ -13,14 +13,14 @@ namespace BrawlInstaller.Validation
     public class FranchiseIconsWrapper : DependencyObject
     {
         public static readonly DependencyProperty FranchiseIconsProperty = 
-            DependencyProperty.Register(nameof(FranchiseIcons), typeof(TrackedList<Cosmetic>), typeof(FranchiseIconsWrapper), new FrameworkPropertyMetadata(new TrackedList<Cosmetic>()));
+            DependencyProperty.Register(nameof(FranchiseIcons), typeof(CosmeticList), typeof(FranchiseIconsWrapper), new FrameworkPropertyMetadata(new CosmeticList()));
 
         public static readonly DependencyProperty OldIdProperty =
             DependencyProperty.Register(nameof(OldId), typeof(int?), typeof(FranchiseIconsWrapper), new FrameworkPropertyMetadata(0));
 
-        public TrackedList<Cosmetic> FranchiseIcons
+        public CosmeticList FranchiseIcons
         {
-            get { return (TrackedList<Cosmetic>)GetValue(FranchiseIconsProperty); }
+            get { return (CosmeticList)GetValue(FranchiseIconsProperty); }
             set { SetValue(FranchiseIconsProperty, value); }
         }
 
