@@ -95,7 +95,11 @@ namespace BrawlInstaller.Services
         /// <returns>Copy of node</returns>
         public ResourceNode CopyNode(ResourceNode node)
         {
-            var newNode = NodeFactory.FromAddress(node.Parent, node.WorkingSource.Address, node.WorkingSource.Length);
+            //var newNode = NodeFactory.FromAddress(node.Parent, node.WorkingSource.Address, node.WorkingSource.Length);
+            var guid = Guid.NewGuid().ToString();
+            node.Export(guid);
+            var newNode = NodeFactory.FromFile(null, guid);
+            File.Delete(guid);
             return newNode;
         }
 
