@@ -134,7 +134,8 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedCostume))]
         [DependsUpon(nameof(SelectedCosmeticOption))]
         [DependsUpon(nameof(SelectedStyle))]
-        public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
+        [DependsUpon(nameof(InheritedStyle))]
+        public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle); }
 
         [DependsUpon(nameof(Costumes))]
         [DependsUpon(nameof(SelectedCostume))]
@@ -148,8 +149,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(Costumes))]
         [DependsUpon(nameof(SelectedCosmeticOption))]
         [DependsUpon(nameof(SelectedStyle))]
+        [DependsUpon(nameof(InheritedStyle))]
         public List<Cosmetic> CosmeticList { get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
-                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList(); }
+                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle).ToList(); }
         
         public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(nameof(SelectedCosmeticNode)); } }
 
@@ -165,24 +167,26 @@ namespace BrawlInstaller.ViewModels
                 ? "Undo Color Smash" : "Color Smash";
         }
 
-        [DependsUpon(nameof(Styles))]
         [DependsUpon(nameof(SelectedStyle))]
-        public List<string> InheritedStyles
-        {
-            get
-            {
-                var styles = new List<string> { "" };
-                if (Styles != null)
-                    styles.AddRange(Styles?.Where(x => x != SelectedStyle).ToList());
-                return styles;
-            }
-        }
-
-        [DependsUpon(nameof(InheritedStyles))]
-        public string InheritedStyle 
+        [DependsUpon(nameof(Styles))]
+        public string InheritedStyle
         {
             get => FighterPackage?.Cosmetics?.InheritedStyles?.ContainsKey((SelectedCosmeticOption, SelectedStyle)) == true
                 ? FighterPackage.Cosmetics.InheritedStyles.FirstOrDefault(x => x.Key == (SelectedCosmeticOption, SelectedStyle)).Value : SelectedStyle;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    var matchKey = (SelectedCosmeticOption, SelectedStyle);
+                    if (FighterPackage?.Cosmetics?.InheritedStyles?.Any(x => x.Key == matchKey) == true)
+                    {
+                        var match = FighterPackage.Cosmetics.InheritedStyles.FirstOrDefault(x => x.Key == (SelectedCosmeticOption, SelectedStyle));
+                        FighterPackage.Cosmetics.InheritedStyles.Remove(matchKey);
+                    }
+                    FighterPackage?.Cosmetics?.InheritedStyles.Add(matchKey, value);
+                    OnPropertyChanged(nameof(InheritedStyle));
+                }
+            }
         }
 
         // Methods
@@ -208,9 +212,9 @@ namespace BrawlInstaller.ViewModels
             {
                 CostumeIndex = Costumes.IndexOf(costume) + 1,
                 CosmeticType = SelectedCosmeticOption,
-                InternalIndex = Costumes.SelectMany(x => x.Cosmetics).Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle)
+                InternalIndex = Costumes.SelectMany(x => x.Cosmetics).Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle)
                     .Max(x => x.InternalIndex) + 1,
-                Style = SelectedStyle
+                Style = InheritedStyle
             };
             costume.Cosmetics.Add(cosmetic);
             FighterPackage.Cosmetics.Add(cosmetic);
@@ -262,7 +266,7 @@ namespace BrawlInstaller.ViewModels
             foreach(var image in images)
             {
                 var currentCostume = costumes[images.IndexOf(image)];
-                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
+                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
                 if (!string.IsNullOrEmpty(image))
                 {
                     var bitmap = new Bitmap(image);
@@ -278,7 +282,7 @@ namespace BrawlInstaller.ViewModels
             // Adjust color smashing based on cosmetics replaced
             foreach (var costume in costumes)
             {
-                var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
+                var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
                 FlipColorSmashedCosmetics(cosmetic);
             }
             OnPropertyChanged(nameof(SelectedCosmetic));
@@ -302,7 +306,7 @@ namespace BrawlInstaller.ViewModels
             foreach (var image in images)
             {
                 var currentCostume = costumes[images.IndexOf(image)];
-                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption);
+                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
                 if (!string.IsNullOrEmpty(image))
                 {
                     var bitmap = new Bitmap(image);
