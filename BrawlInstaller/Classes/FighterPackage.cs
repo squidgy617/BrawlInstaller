@@ -69,6 +69,30 @@ namespace BrawlInstaller.Classes
         public int? CostumeIndex { get; set; }
         public int? Id { get; set; }
         public bool ColorSmashChanged { get; set; } = false;
+
+        public Cosmetic Copy()
+        {
+            var copy = new Cosmetic
+            {
+                CosmeticType = CosmeticType,
+                Style = Style,
+                Image = Image,
+                HDImage = HDImage,
+                ImagePath = ImagePath,
+                HDImagePath = HDImagePath,
+                Texture = Texture,
+                Palette = Palette,
+                Model = Model,
+                ModelPath = ModelPath,
+                ColorSequence = ColorSequence,
+                SharesData = SharesData,
+                InternalIndex = InternalIndex,
+                CostumeIndex = CostumeIndex,
+                Id = Id,
+                ColorSmashChanged = ColorSmashChanged
+            };
+            return copy;
+        }
     }
 
     public class FranchiseCosmetic : Cosmetic

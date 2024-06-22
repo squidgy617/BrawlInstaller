@@ -110,6 +110,10 @@ namespace BrawlInstaller.Services
             CreateDirectory(path);
             node.Export(path);
             var newNode = NodeFactory.FromFile(null, path);
+            if (newNode.GetType().IsAssignableFrom(typeof(BRESEntryNode)))
+            {
+                ((BRESEntryNode)newNode).OriginalPath = "";
+            }
             File.Delete(path);
             return newNode;
         }

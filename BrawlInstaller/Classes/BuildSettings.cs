@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using Newtonsoft.Json;
 
 namespace BrawlInstaller.Classes
 {
@@ -44,6 +45,12 @@ namespace BrawlInstaller.Classes
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
         public bool FirstOnly { get; set; } = false;
         public bool SeparateFiles { get; set; } = false;
+
+        public CosmeticDefinition Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<CosmeticDefinition>(JsonConvert.SerializeObject(this));
+            return copy;
+        }
     }
 
     public class PatSettings

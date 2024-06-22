@@ -160,8 +160,38 @@ namespace BrawlInstaller.Services
         {
             var buildPath = _settingsService.BuildPath;
             // Only update cosmetics that have changed
-            foreach(var definition in _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.Cosmetics.ChangedItems
-            .Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)))
+            var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.Cosmetics.ChangedItems
+            .Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)).ToList();
+
+            var inheritedDefinitions = new List<CosmeticDefinition>();
+
+            // Handle inherited styles
+            foreach (var definition in changedDefinitions)
+            {
+                // If a key is found matching the definition, and it has a value different from the key style, it should be replaced
+                if (fighterPackage.Cosmetics.InheritedStyles.Any(x => x.Key.Item1 == definition.CosmeticType && x.Value == definition.Style))
+                {
+                    var inheritedStyle = fighterPackage.Cosmetics.InheritedStyles.FirstOrDefault(x => x.Key.Item1 == definition.CosmeticType && x.Value == definition.Style).Key.Item2;
+                    if (inheritedStyle != definition.Style)
+                    {
+                        var inheritedDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style == inheritedStyle);
+                        if (inheritedDefinition != null)
+                        {
+                            // Copy the definition
+                            var newDefinition = inheritedDefinition.Copy();
+                            // Change it's style to match the style of the original definition
+                            newDefinition.Style = definition.Style;
+                            // Add it to the change list so it will be detected
+                            inheritedDefinitions.Add(newDefinition);
+                        }
+                    }
+                }
+            }
+
+            changedDefinitions.AddRange(inheritedDefinitions);
+
+            // Import cosmetics
+            foreach (var definition in changedDefinitions)
             {
                 var cosmetics = fighterPackage.Cosmetics.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
                 _cosmeticService.ImportCosmetics(definition, cosmetics, fighterPackage.FighterInfo.Ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, fighterPackage.FighterInfo.DisplayName);

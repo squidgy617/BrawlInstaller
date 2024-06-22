@@ -89,8 +89,8 @@ namespace BrawlInstaller.Services
         /// <returns>TEX0Node</returns>
         private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, System.Drawing.Size size)
         {
-            var texture = cosmetic.Texture;
-            var palette = cosmetic.Palette;
+            var texture = GetTexture(destinationNode, cosmetic.Texture.Name);
+            var palette = texture.GetPaletteNode();
             var index = texture.Index;
             var folder = destinationNode.GetFolder<TEX0Node>();
             var name = texture.Name;
@@ -130,7 +130,7 @@ namespace BrawlInstaller.Services
         /// <returns>TEX0Node</returns>
         private TEX0Node ImportTexture(BRRESNode destinationNode, TEX0Node texture)
         {
-            destinationNode.GetOrCreateFolder<TEX0Node>()?.AddChild(texture);
+            destinationNode.GetOrCreateFolder<TEX0Node>()?.AddChild(_fileService.CopyNode(texture));
             return texture;
         }
 
@@ -141,9 +141,13 @@ namespace BrawlInstaller.Services
         /// <param name="definition">Cosmetic definition for texture</param>
         /// <param name="name">Name of texture</param>
         /// <returns>TEX0Node</returns>
-        private TEX0Node GetTexture(ResourceNode rootNode, CosmeticDefinition definition, string name)
+        private TEX0Node GetTexture(ResourceNode rootNode, CosmeticDefinition definition, string name, int id)
         {
             var parentNode = !string.IsNullOrEmpty(definition.InstallLocation.NodePath) ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (parentNode.GetType() == typeof(ARCNode))
+            {
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+            }
             if (parentNode != null)
             {
                 return GetTexture((BRRESNode)parentNode, name);
@@ -177,7 +181,7 @@ namespace BrawlInstaller.Services
         /// <returns>PLT0Node</returns>
         private PLT0Node ImportPalette(BRRESNode destinationNode, PLT0Node palette)
         {
-            destinationNode.GetOrCreateFolder<PLT0Node>()?.AddChild(palette);
+            destinationNode.GetOrCreateFolder<PLT0Node>()?.AddChild(_fileService.CopyNode(palette));
             return palette;
         }
 
@@ -189,7 +193,7 @@ namespace BrawlInstaller.Services
         /// <returns>MDL0Node</returns>
         private MDL0Node ImportModel(BRRESNode destinationNode, MDL0Node model)
         {
-            destinationNode.GetOrCreateFolder<MDL0Node>()?.AddChild(model);
+            destinationNode.GetOrCreateFolder<MDL0Node>()?.AddChild(_fileService.CopyNode(model));
             return model;
         }
 
@@ -201,7 +205,7 @@ namespace BrawlInstaller.Services
         /// <returns>CLR0Node</returns>
         private CLR0Node ImportColorSequence(BRRESNode destinationNode, CLR0Node colorSequence)
         {
-            destinationNode.GetOrCreateFolder<CLR0Node>()?.AddChild(colorSequence);
+            destinationNode.GetOrCreateFolder<CLR0Node>()?.AddChild(_fileService.CopyNode(colorSequence));
             return colorSequence;
         }
 
@@ -369,6 +373,10 @@ namespace BrawlInstaller.Services
         private Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (node.GetType() == typeof(ARCNode))
+            {
+                node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+            }
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
             // If we have a texture node of the same properties, import that
@@ -392,11 +400,6 @@ namespace BrawlInstaller.Services
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
-                // We do this so the referenced (copied) texture is what's stored in the BRRES, instead of the original
-                texture.Remove(true);
-                ImportTexture(parentNode, cosmetic.Texture);
-                if (cosmetic.Palette != null)
-                    ImportPalette(parentNode, cosmetic.Palette);
             }
             // TODO: Verify this actually works
             // If we should only import one cosmetic and it's a color smashed texture, reimport
@@ -406,11 +409,6 @@ namespace BrawlInstaller.Services
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
-                // We do this so the referenced (copied) texture is what's stored in the BRRES, instead of the original
-                texture.Remove(true);
-                ImportTexture(parentNode, cosmetic.Texture);
-                if (cosmetic.Palette != null)
-                    ImportPalette(parentNode, cosmetic.Palette);
             }
             // Create pat entry
             if (definition.PatSettings != null)
@@ -474,15 +472,21 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID associated with cosmetics</param>
         private void RemoveCosmetics(ResourceNode rootNode, CosmeticDefinition definition, int id)
         {
+            var restrictRange = rootNode.GetType() != typeof(ARCNode);
             if (definition.PatSettings != null)
             {
                 RemovePatEntries(rootNode, definition, id);
             }
+            // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
             var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (rootNode.GetType() == typeof(ARCNode))
+            {
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+            }
             if (parentNode != null)
             {
-                RemoveTextures((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && parentNode.GetType() != typeof(ARCNode));
-                RemoveModels((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && parentNode.GetType() != typeof(ARCNode));
+                RemoveTextures((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
+                RemoveModels((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
             }
         }
 
@@ -557,9 +561,13 @@ namespace BrawlInstaller.Services
         /// <param name="cosmetics">Cosmetics to color smash</param>
         /// <param name="rootNode">Root node of file to color smash cosmetics in</param>
         /// <param name="definition">Cosmetic definition for cosmetics</param>
-        private void ColorSmashCosmetics(List<Cosmetic> cosmetics, ResourceNode rootNode, CosmeticDefinition definition)
+        private void ColorSmashCosmetics(List<Cosmetic> cosmetics, ResourceNode rootNode, CosmeticDefinition definition, int id)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            if (node.GetType() == typeof(ARCNode))
+            {
+                node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+            }
             if (node != null)
             {
                 var bres = (BRRESNode)node;
@@ -579,8 +587,10 @@ namespace BrawlInstaller.Services
                 }
                 foreach(var cosmetic in sharesDataList)
                 {
-                    cosmetic.Texture = (TEX0Node)_fileService.CopyNode(cosmetic.Texture);
-                    cosmetic.Palette = cosmetic.Texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(cosmetic.Texture.GetPaletteNode()) : null;
+                    var texture = GetTexture(bres, cosmetic.Texture.Name);
+                    if (texture != null)
+                        cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                    cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
                 }
             }
         }
@@ -592,10 +602,10 @@ namespace BrawlInstaller.Services
         /// <param name="definition">Definition of cosmetic</param>
         /// <param name="cosmetic">Cosmetic to import texture from</param>
         /// <param name="name">Name associated with character cosmetic belongs to</param>
-        private void ImportHDTexture(ResourceNode rootNode, CosmeticDefinition definition, Cosmetic cosmetic, string name=null)
+        private void ImportHDTexture(ResourceNode rootNode, CosmeticDefinition definition, Cosmetic cosmetic, int id, string name=null)
         {
             // Save HD cosmetic if it exists
-            var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
+            var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
             if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
             {
                 var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}";
@@ -640,13 +650,13 @@ namespace BrawlInstaller.Services
                             ImportCosmetic(definition, cosmetic, id, rootNode);
                         }
                         if (!definition.FirstOnly && !definition.SeparateFiles)
-                            ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition);
+                            ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition, id);
                         _fileService.SaveFile(rootNode);
                         // Save HD cosmetics if they exist
                         if (_settingsService.BuildSettings.HDTextures)
                             foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                             {
-                                ImportHDTexture(rootNode, definition, cosmetic, name);
+                                ImportHDTexture(rootNode, definition, cosmetic, id, name);
                             }
                         _fileService.CloseFile(rootNode);
                     }
@@ -663,10 +673,10 @@ namespace BrawlInstaller.Services
                     _fileService.SaveFileAs(rootNode, $"{_settingsService.BuildPath}{definition.InstallLocation.FilePath}" +
                         $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}.{definition.InstallLocation.FileExtension}");
                     // Save HD cosmetic if it exists
-                    var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name);
+                    var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
                     if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
                     {
-                        ImportHDTexture(rootNode, definition, cosmetic, name);
+                        ImportHDTexture(rootNode, definition, cosmetic, id, name);
                     }
                     _fileService.CloseFile(rootNode);
                 }
