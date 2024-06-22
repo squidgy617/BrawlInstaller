@@ -8,6 +8,7 @@ using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using Newtonsoft.Json;
 
 namespace BrawlInstaller.Classes
 {
@@ -55,44 +56,20 @@ namespace BrawlInstaller.Classes
     {
         public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
-        public BitmapImage Image { get; set; } = null;
-        public BitmapImage HDImage { get; set; } = null;
+        [JsonIgnore] public BitmapImage Image { get; set; } = null;
+        [JsonIgnore] public BitmapImage HDImage { get; set; } = null;
         public string ImagePath { get; set; } = string.Empty;
         public string HDImagePath { get; set; } = string.Empty;
-        public TEX0Node Texture { get; set; } = null;
-        public PLT0Node Palette { get; set; } = null;
-        public MDL0Node Model { get; set; } = null;
+        [JsonIgnore] public TEX0Node Texture { get; set; } = null;
+        [JsonIgnore] public PLT0Node Palette { get; set; } = null;
+        [JsonIgnore] public MDL0Node Model { get; set; } = null;
         public string ModelPath { get; set; } = string.Empty;
-        public CLR0Node ColorSequence { get; set; } = null;
+        [JsonIgnore] public CLR0Node ColorSequence { get; set; } = null;
         public bool? SharesData { get; set; }
         public int? InternalIndex { get; set; }
         public int? CostumeIndex { get; set; }
         public int? Id { get; set; }
         public bool ColorSmashChanged { get; set; } = false;
-
-        public Cosmetic Copy()
-        {
-            var copy = new Cosmetic
-            {
-                CosmeticType = CosmeticType,
-                Style = Style,
-                Image = Image,
-                HDImage = HDImage,
-                ImagePath = ImagePath,
-                HDImagePath = HDImagePath,
-                Texture = Texture,
-                Palette = Palette,
-                Model = Model,
-                ModelPath = ModelPath,
-                ColorSequence = ColorSequence,
-                SharesData = SharesData,
-                InternalIndex = InternalIndex,
-                CostumeIndex = CostumeIndex,
-                Id = Id,
-                ColorSmashChanged = ColorSmashChanged
-            };
-            return copy;
-        }
     }
 
     public class FranchiseCosmetic : Cosmetic
