@@ -169,6 +169,7 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedStyle))]
         [DependsUpon(nameof(Styles))]
+        [DependsUpon(nameof(FighterPackage))]
         public string InheritedStyle
         {
             get => FighterPackage?.Cosmetics?.InheritedStyles?.ContainsKey((SelectedCosmeticOption, SelectedStyle)) == true
