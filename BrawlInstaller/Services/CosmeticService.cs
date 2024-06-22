@@ -625,7 +625,6 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // TODO: Create file if it does not exist
         /// <summary>
         /// Import cosmetics based on definition rules
         /// </summary>
@@ -638,28 +637,24 @@ namespace BrawlInstaller.Services
             // If the definition doesn't use separate files, find the files and update them
             if (!definition.SeparateFiles)
             {
-                var paths = GetCosmeticPaths(definition, id);
-                foreach (var path in paths)
+                var rootNode = GetCosmeticFile(definition, id);
+                if (rootNode != null)
                 {
-                    var rootNode = _fileService.OpenFile(path);
-                    if (rootNode != null)
+                    RemoveCosmetics(rootNode, definition, id);
+                    foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                     {
-                        RemoveCosmetics(rootNode, definition, id);
-                        foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
-                        {
-                            ImportCosmetic(definition, cosmetic, id, rootNode);
-                        }
-                        if (!definition.FirstOnly && !definition.SeparateFiles)
-                            ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition, id);
-                        _fileService.SaveFile(rootNode);
-                        // Save HD cosmetics if they exist
-                        if (_settingsService.BuildSettings.HDTextures)
-                            foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
-                            {
-                                ImportHDTexture(rootNode, definition, cosmetic, id, name);
-                            }
-                        _fileService.CloseFile(rootNode);
+                        ImportCosmetic(definition, cosmetic, id, rootNode);
                     }
+                    if (!definition.FirstOnly && !definition.SeparateFiles)
+                        ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition, id);
+                    _fileService.SaveFile(rootNode);
+                    // Save HD cosmetics if they exist
+                    if (_settingsService.BuildSettings.HDTextures)
+                        foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                        {
+                            ImportHDTexture(rootNode, definition, cosmetic, id, name);
+                        }
+                    _fileService.CloseFile(rootNode);
                 }
             }
             // If the definition does use separate files, generate new files for each cosmetic
@@ -726,11 +721,65 @@ namespace BrawlInstaller.Services
                 if (definition.SeparateFiles)
                     paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
                 else
-                    paths = files.Where(f => f.Name == definition.Prefix + FormatCosmeticId(definition, id) + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
+                    paths = files.Where(f => f.Name == definition.Prefix + formattedId + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
             }
             else if (File.Exists(buildPath + definition.InstallLocation.FilePath))
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
             return paths;
+        }
+
+        /// <summary>
+        /// Generate filepath for cosmetic based on definition
+        /// </summary>
+        /// <param name="definition">Cosmetic definition to use</param>
+        /// <param name="id">ID for cosmetic</param>
+        /// <returns>Filepath for cosmetic</returns>
+        private string BuildCosmeticPath(CosmeticDefinition definition, int id)
+        {
+            var buildPath = _settingsService.BuildPath;
+            if (definition.InstallLocation.FilePath.EndsWith("\\"))
+            {
+                var formattedId = FormatCosmeticId(definition, id);
+                var fileName = $"{definition.Prefix}{formattedId}.{definition.InstallLocation.FileExtension}";
+                return $"{buildPath}\\{definition.InstallLocation.FilePath}{fileName}";
+            }
+            else
+            {
+                return $"{buildPath}\\{definition.InstallLocation.FilePath}";
+            }
+        }
+
+        /// <summary>
+        /// Get or create cosmetic file based on definition
+        /// </summary>
+        /// <param name="definition">Cosmetic definition</param>
+        /// <param name="id">ID for cosmetic file</param>
+        /// <returns>Root node of file</returns>
+        private ResourceNode GetCosmeticFile(CosmeticDefinition definition, int id)
+        {
+            var cosmeticPath = BuildCosmeticPath(definition, id);
+            var node = _fileService.OpenFile(cosmeticPath);
+            if (node != null)
+            {
+                return node;
+            }
+            if(definition.InstallLocation.FileExtension == "pac")
+            {
+                var newNode = new ARCNode();
+                var bresNode = new BRRESNode();
+                bresNode.FileIndex = (short)id;
+                newNode.AddChild(bresNode);
+                newNode._origPath = cosmeticPath;
+                return newNode;
+            }
+            else if (definition.InstallLocation.FileExtension == "brres")
+            {
+                var newNode = new BRRESNode();
+                _fileService.SaveFileAs(newNode, cosmeticPath);
+                newNode._origPath = cosmeticPath;
+                return newNode;
+            }
+            return null;
         }
 
         /// <summary>
