@@ -174,6 +174,9 @@ namespace BrawlInstaller.Services
                 if (foundConfig != null)
                     fighterIds.SlotConfigId = ((CSSCNode)foundConfig).CharSlot1;
             }
+            // If slot config ID is still missing, set it equal to fighter config ID
+            if (fighterIds.SlotConfigId <= -1 && fighterIds.FighterConfigId >= 0x3F)
+                fighterIds.SlotConfigId = fighterIds.FighterConfigId;
             // Find cosmetic config ID if missing
             if (fighterIds.SlotConfigId > -1 && fighterIds.CosmeticConfigId <= -1)
             {
@@ -187,6 +190,9 @@ namespace BrawlInstaller.Services
                 if (foundConfig != null)
                     fighterIds.CosmeticConfigId = ((CSSCNode)foundConfig).CosmeticSlot;
             }
+            // If cosmetic config ID is still missing, set it equal to slot config ID
+            if (fighterIds.CosmeticConfigId <= -1 && fighterIds.SlotConfigId >= 0x3F)
+                fighterIds.CosmeticConfigId = fighterIds.SlotConfigId;
             // Find CSS slot config ID if missing
             if (fighterIds.SlotConfigId > -1 && fighterIds.CSSSlotConfigId <= -1)
             {
@@ -200,6 +206,9 @@ namespace BrawlInstaller.Services
                 if (foundConfig != null)
                     fighterIds.CSSSlotConfigId = ((CSSCNode)foundConfig).CosmeticSlot;
             }
+            // If CSS slot config ID is still missing, set it equal to one of the other IDs
+            if (fighterIds.CSSSlotConfigId <= -1 && (fighterIds.CosmeticConfigId >= 0x3F || fighterIds.SlotConfigId >= 0x3F))
+                fighterIds.CSSSlotConfigId = fighterIds.CosmeticConfigId != -1 ? fighterIds.CosmeticConfigId : fighterIds.SlotConfigId;
             // Find fighter ID if missing
             if (fighterIds.SlotConfigId > -1 && fighterIds.FighterConfigId <= -1)
             {
@@ -207,13 +216,6 @@ namespace BrawlInstaller.Services
                 if (foundConfig != null)
                     fighterIds.FighterConfigId = Convert.ToInt32(((SLTCNode)foundConfig).CharSlot1);
             }
-            // If any IDs are still missing, set them equal to other configs that use EX IDs
-            if (fighterIds.SlotConfigId <= -1 && fighterIds.FighterConfigId >= 0x3F)
-                fighterIds.SlotConfigId = fighterIds.FighterConfigId;
-            if (fighterIds.CosmeticConfigId <= -1 && fighterIds.SlotConfigId >= 0x3F)
-                fighterIds.CosmeticConfigId = fighterIds.SlotConfigId;
-            if (fighterIds.CSSSlotConfigId <= -1 && (fighterIds.CosmeticConfigId >= 0x3F || fighterIds.SlotConfigId >= 0x3F))
-                fighterIds.CSSSlotConfigId = fighterIds.CosmeticConfigId != -1 ? fighterIds.CosmeticConfigId : fighterIds.SlotConfigId;
 
             // Return
             return fighterIds;
