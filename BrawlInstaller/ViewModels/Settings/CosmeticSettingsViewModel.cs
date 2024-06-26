@@ -25,6 +25,7 @@ namespace BrawlInstaller.ViewModels
         private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>();
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
+        private CosmeticDefinition _selectedDefinition;
 
         // Services
 
@@ -51,6 +52,13 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
+
+        [DependsUpon(nameof(SelectedCosmeticOption))]
+        [DependsUpon(nameof(SelectedStyle))]
+        public ObservableCollection<CosmeticDefinition> DefinitionList { get => new ObservableCollection<CosmeticDefinition>(CosmeticSettings.Where(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption)); }
+
+        [DependsUpon(nameof(DefinitionList))]
+        public CosmeticDefinition SelectedDefinition { get => _selectedDefinition; set { _selectedDefinition = value; OnPropertyChanged(nameof(SelectedDefinition)); } }
 
 
         // Methods

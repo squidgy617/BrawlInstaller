@@ -12,6 +12,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -21,6 +22,7 @@
             <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
             <Label x:Name="cosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
             <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
+            <ListBox x:Name="definitionListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Grid.Row="2" Grid.Column="1" Width="120" Height="120"/>
         </Grid>
     </Grid>
 </UserControl>
