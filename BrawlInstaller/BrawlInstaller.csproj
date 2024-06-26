@@ -85,12 +85,12 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
-    <Compile Include="ViewModels\CosmeticViewModel.cs" />
-    <Compile Include="ViewModels\CostumeViewModel.cs" />
-    <Compile Include="ViewModels\FighterFileViewModel.cs" />
+    <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
+    <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
+    <Compile Include="ViewModels\Fighter\FighterFileViewModel.cs" />
     <Compile Include="ViewModels\FighterInfoViewModel.cs" />
-    <Compile Include="ViewModels\FighterViewModel.cs" />
-    <Compile Include="ViewModels\FranchiseIconViewModel.cs" />
+    <Compile Include="ViewModels\Fighter\FighterViewModel.cs" />
+    <Compile Include="ViewModels\Fighter\FranchiseIconViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\CosmeticView.xaml.cs">
       <DependentUpon>CosmeticView.xaml</DependentUpon>
