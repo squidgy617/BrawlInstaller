@@ -14,14 +14,14 @@ namespace BrawlInstaller.ViewModels
 {
     public interface ICosmeticSettingsViewModel
     {
-        BuildSettings BuildSettings { get; }
+        List<CosmeticDefinition> CosmeticSettings { get; }
     }
 
     [Export(typeof(ICosmeticSettingsViewModel))]
     internal class CosmeticSettingsViewModel : ViewModelBase, ICosmeticSettingsViewModel
     {
         // Private properties
-        private BuildSettings _buildSettings;
+        private List<CosmeticDefinition> _cosmeticSettings;
         private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>();
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
@@ -38,7 +38,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
+        public List<CosmeticDefinition> CosmeticSettings { get => _cosmeticSettings; set { _cosmeticSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
 
         [DependsUpon(nameof(BuildSettings))]
         public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
@@ -47,7 +47,7 @@ namespace BrawlInstaller.ViewModels
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public List<string> Styles { get => BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
+        public List<string> Styles { get => CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
 
         [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
@@ -56,8 +56,8 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadSettings(SettingsLoadedMessage message)
         {
-            BuildSettings = message.Value;
-            foreach (CosmeticType option in BuildSettings.CosmeticSettings.Select(x => x.CosmeticType).Distinct())
+            CosmeticSettings = message.Value.CosmeticSettings;
+            foreach (CosmeticType option in CosmeticSettings.Select(x => x.CosmeticType).Distinct())
             {
                 CosmeticOptions.Add(option.GetKeyValuePair());
             }
