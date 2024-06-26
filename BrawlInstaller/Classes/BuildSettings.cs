@@ -10,6 +10,12 @@ using Newtonsoft.Json;
 
 namespace BrawlInstaller.Classes
 {
+    public class AppSettings
+    {
+        public string BuildPath { get; set; } = string.Empty;
+        [JsonIgnore] public string TempPath { get; set; } = "temp";
+    }
+
     public class BuildSettings
     {
         public List<CosmeticDefinition> CosmeticSettings { get; set; }

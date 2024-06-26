@@ -158,7 +158,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to save</param>
         public void SaveFighter(FighterPackage fighterPackage)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             // Only update cosmetics that have changed
             var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.Cosmetics.ChangedItems
             .Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)).ToList();

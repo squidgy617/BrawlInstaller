@@ -106,7 +106,7 @@ namespace BrawlInstaller.Services
         {
             //var newNode = NodeFactory.FromAddress(node.Parent, node.WorkingSource.Address, node.WorkingSource.Length);
             var guid = Guid.NewGuid().ToString();
-            var path = $"{_settingsService.TempPath}\\{guid}";
+            var path = $"{_settingsService.AppSettings.TempPath}\\{guid}";
             CreateDirectory(path);
             node.Export(path);
             var newNode = NodeFactory.FromFile(null, path);

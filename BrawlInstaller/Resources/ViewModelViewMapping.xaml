@@ -25,4 +25,7 @@
     <DataTemplate  DataType="{x:Type viewModels:FighterInfoViewModel}">
         <views:FighterInfoView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:MainControlsViewModel}">
+        <views:MainControlsView/>
+    </DataTemplate>
 </ResourceDictionary>

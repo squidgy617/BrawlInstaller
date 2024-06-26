@@ -60,8 +60,7 @@ namespace BrawlInstaller.ViewModels
             CosmeticViewModel = cosmeticViewmodel;
             FighterFileViewModel = fighterFileViewModel;
 
-            _settingsService.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
-            _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
+            
 
             var list = _settingsService.LoadFighterInfoSettings();
             FighterList = list;

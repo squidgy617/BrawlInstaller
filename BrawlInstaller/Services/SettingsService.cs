@@ -20,8 +20,7 @@ namespace BrawlInstaller.Services
         // Properties
         // Should be accessible from any ViewModel implementing the service
         BuildSettings BuildSettings { get; set; }
-        string BuildPath { get; set; }
-        string TempPath { get; }
+        AppSettings AppSettings { get; set; }
 
         // Methods
 
@@ -51,8 +50,7 @@ namespace BrawlInstaller.Services
 
         // Properties
         public BuildSettings BuildSettings { get; set; } = null;
-        public string BuildPath { get; set; } = "";
-        public string TempPath { get; } = "temp";
+        public AppSettings AppSettings { get; set; } = new AppSettings();
 
         // Methods
 
@@ -86,7 +84,7 @@ namespace BrawlInstaller.Services
         public void SaveFighterInfoSettings(List<FighterInfo> fighterInfoList)
         {
             var fighterInfoSettings = JsonConvert.SerializeObject(fighterInfoList, Formatting.Indented);
-            File.WriteAllText($"{BuildPath}\\FighterList.json", fighterInfoSettings);
+            File.WriteAllText($"{AppSettings.BuildPath}\\FighterList.json", fighterInfoSettings);
         }
 
         /// <summary>
@@ -96,7 +94,7 @@ namespace BrawlInstaller.Services
         public List<FighterInfo> LoadFighterInfoSettings()
         {
             var fighterList = new List<FighterInfo>();
-            var path = $"{BuildPath}\\FighterList.json";
+            var path = $"{AppSettings.BuildPath}\\FighterList.json";
             if (File.Exists(path))
             {
                 var text = File.ReadAllText(path);

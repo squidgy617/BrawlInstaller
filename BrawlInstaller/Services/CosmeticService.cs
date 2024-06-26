@@ -94,11 +94,11 @@ namespace BrawlInstaller.Services
             var index = texture.Index;
             var folder = destinationNode.GetFolder<TEX0Node>();
             var name = texture.Name;
-            _fileService.SaveImage(cosmetic.Image, $"{_settingsService.TempPath}\\tempNode.png");
+            _fileService.SaveImage(cosmetic.Image, $"{_settingsService.AppSettings.TempPath}\\tempNode.png");
             texture.Remove(true);
             palette?.Remove();
-            var node = ImportTexture(destinationNode, $"{_settingsService.TempPath}\\tempNode.png", format, size);
-            _fileService.DeleteFile($"{_settingsService.TempPath}\\tempNode.png");
+            var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size);
+            _fileService.DeleteFile($"{_settingsService.AppSettings.TempPath}\\tempNode.png");
             if (node.GetPaletteNode() != null)
                 node.GetPaletteNode().Name = name;
             node.Name = name;
@@ -665,7 +665,7 @@ namespace BrawlInstaller.Services
                 {
                     var rootNode = new BRRESNode();
                     ImportCosmetic(definition, cosmetic, id, rootNode);
-                    _fileService.SaveFileAs(rootNode, $"{_settingsService.BuildPath}{definition.InstallLocation.FilePath}" +
+                    _fileService.SaveFileAs(rootNode, $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
                         $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}.{definition.InstallLocation.FileExtension}");
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
@@ -711,7 +711,7 @@ namespace BrawlInstaller.Services
         /// <returns>List of files containing cosmetics</returns>
         private List<string> GetCosmeticPaths(CosmeticDefinition definition, int id)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var paths = new List<string>();
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
@@ -736,7 +736,7 @@ namespace BrawlInstaller.Services
         /// <returns>Filepath for cosmetic</returns>
         private string BuildCosmeticPath(CosmeticDefinition definition, int id)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
                 var formattedId = FormatCosmeticId(definition, id);

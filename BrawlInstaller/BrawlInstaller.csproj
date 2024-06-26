@@ -84,6 +84,7 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
+    <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\CostumeViewModel.cs" />
     <Compile Include="ViewModels\FighterFileViewModel.cs" />
@@ -108,6 +109,9 @@
     </Compile>
     <Compile Include="Views\FranchiseIconView.xaml.cs">
       <DependentUpon>FranchiseIconView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainControlsView.xaml.cs">
+      <DependentUpon>MainControlsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -159,6 +163,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FranchiseIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainControlsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

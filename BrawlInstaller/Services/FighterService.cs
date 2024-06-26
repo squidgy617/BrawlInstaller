@@ -112,7 +112,7 @@ namespace BrawlInstaller.Services
         /// <returns>Path to Ex config</returns>
         private string GetExConfig(int id, IdType type)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var prefix = GetConfigPrefix(type);
             var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
@@ -133,7 +133,7 @@ namespace BrawlInstaller.Services
         private List<ResourceNode> GetExConfigs(IdType type)
         {
             var configs = new ConcurrentBag<ResourceNode>();
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var prefix = GetConfigPrefix(type);
             var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
@@ -406,7 +406,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterInfo">Fighter info</param>
         public void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var files = new List<(ResourceNode node, string name)>();
             foreach(var path in pacFiles)
@@ -448,7 +448,7 @@ namespace BrawlInstaller.Services
         /// <param name="internalName">Internal name of fighter</param>
         private void RemoveFighterFiles(string internalName)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}";
             RemovePacFiles(internalName, path);
@@ -461,7 +461,7 @@ namespace BrawlInstaller.Services
         /// <returns>List of PAC files</returns>
         public List<string> GetFighterFiles(string internalName)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}";
             return GetPacFiles(internalName, path);
@@ -474,7 +474,7 @@ namespace BrawlInstaller.Services
         /// <returns>List of Kirby PAC files</returns>
         public List<string> GetKirbyFiles(string internalName)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\kirby";
             return GetPacFiles("Kirby" + internalName, path);
@@ -515,7 +515,7 @@ namespace BrawlInstaller.Services
         /// <returns>List of item files</returns>
         public List<string> GetItemFiles(string internalName)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}\\item";
             var files = new List<string>();
@@ -533,7 +533,7 @@ namespace BrawlInstaller.Services
         {
             if (fighterInfo.CSSSlotConfig != null)
             {
-                var buildPath = _settingsService.BuildPath;
+                var buildPath = _settingsService.AppSettings.BuildPath;
                 var settings = _settingsService.BuildSettings;
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig";
                 ResourceNode rootNode = null;
@@ -568,7 +568,7 @@ namespace BrawlInstaller.Services
             var costumes = new List<Costume>();
             if (fighterInfo.CSSSlotConfig != null)
             {
-                var buildPath = _settingsService.BuildPath;
+                var buildPath = _settingsService.AppSettings.BuildPath;
                 var settings = _settingsService.BuildSettings;
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig";
                 var fighterPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.InternalName}";
@@ -620,7 +620,7 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter module</returns>
         public string GetModule(string internalName)
         {
-            var buildPath = _settingsService.BuildPath;
+            var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var moduleFolder = $"{buildPath}\\{settings.FilePathSettings.Modules}";
             var module = $"{moduleFolder}\\ft_{internalName.ToLower()}.rel";
