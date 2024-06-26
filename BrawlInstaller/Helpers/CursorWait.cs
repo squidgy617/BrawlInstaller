@@ -18,7 +18,7 @@ namespace BrawlInstaller.Helpers
         public void Dispose()
         {
             // Reset
-            Mouse.OverrideCursor = Cursors.Arrow;
+            Mouse.OverrideCursor = null;
         }
     }
 }
