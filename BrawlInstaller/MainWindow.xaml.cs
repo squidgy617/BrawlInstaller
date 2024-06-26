@@ -39,6 +39,9 @@ namespace BrawlInstaller
         public IMainControlsViewModel MainControlsViewModel { get; set; }
 
         [Import]
+        public ISettingsViewModel SettingsViewModel { get; set; }
+
+        [Import]
         public IFighterViewModel FighterViewModel { get; set; }
 
         [Import]

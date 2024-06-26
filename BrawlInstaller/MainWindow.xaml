@@ -20,6 +20,9 @@
             <TabItem Header="Fighter Info">
                 <ContentControl x:Name="FighterInfoView" Content="{Binding FighterInfoViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
             </TabItem>
+            <TabItem Header="Settings">
+                <ContentControl x:Name="SettingsView" Content="{Binding SettingsViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

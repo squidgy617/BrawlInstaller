@@ -28,4 +28,10 @@
     <DataTemplate DataType="{x:Type viewModels:MainControlsViewModel}">
         <views:MainControlsView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+        <views:SettingsView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:CosmeticSettingsViewModel}">
+        <views:CosmeticSettingsView/>
+    </DataTemplate>
 </ResourceDictionary>
