@@ -27,7 +27,7 @@ namespace BrawlInstaller.ViewModels
         List<int> AvailableCostumeIds { get; }
         ObservableCollection<string> PacFiles { get; }
         string SelectedPacFile { get; set; }
-        ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
+        Dictionary<string, CosmeticType> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
         List<string> Styles { get; }
@@ -54,7 +54,7 @@ namespace BrawlInstaller.ViewModels
         private ObservableCollection<Costume> _costumes;
         private Costume _selectedCostume;
         private string _selectedPacFile;
-        private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
+        private Dictionary<string, CosmeticType> _cosmeticOptions = new Dictionary<string, CosmeticType>();
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
         private List<BrawlExColorID> _colors;
@@ -88,7 +88,8 @@ namespace BrawlInstaller.ViewModels
             _dialogService = dialogService;
             _cosmeticService = cosmeticService;
 
-            CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>
+            // TODO: Modify this list
+            var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
             {
                 CosmeticType.CSP.GetKeyValuePair(),
                 CosmeticType.PortraitName.GetKeyValuePair(),
@@ -97,6 +98,11 @@ namespace BrawlInstaller.ViewModels
                 CosmeticType.CSSIcon.GetKeyValuePair(),
                 CosmeticType.ReplayIcon.GetKeyValuePair()
             };
+
+            foreach(var option in cosmeticOptions)
+            {
+                CosmeticOptions.Add(option.Key, option.Value);
+            }
 
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
 
@@ -125,7 +131,7 @@ namespace BrawlInstaller.ViewModels
         public string SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
 
         [DependsUpon(nameof(Costumes))]
-        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+        public Dictionary<string, CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
 
         [DependsUpon(nameof(SelectedCostume))]
         [DependsUpon(nameof(CosmeticOptions))]
@@ -197,13 +203,6 @@ namespace BrawlInstaller.ViewModels
             Costumes = new ObservableCollection<Costume>(message.Value.Costumes);
             SelectedCostume = Costumes.FirstOrDefault();
 
-            //foreach (CosmeticType option in Enum.GetValues(typeof(CosmeticType)))
-            // Get build setting cosmetics that aren't already in list
-            foreach (CosmeticType option in _settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType == IdType.Cosmetic 
-            && !CosmeticOptions.Select(y => y.Value).Contains(x.CosmeticType)).Select(x => x.CosmeticType).Distinct())
-            {
-                CosmeticOptions.Add(option.GetKeyValuePair());
-            }
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
         }
 
