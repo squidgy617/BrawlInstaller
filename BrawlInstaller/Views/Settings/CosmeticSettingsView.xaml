@@ -43,6 +43,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="filePathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Install Location:"/>
             <TextBox x:Name="filePathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.InstallLocation.FilePath}" Grid.Column="1" Width="180"/>
@@ -62,6 +64,8 @@
             <TextBox x:Name="offsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Offset}" Grid.Row="7" Grid.Column="1" Width="60"/>
             <Label x:Name="suffixLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Length:" Grid.Row="8"/>
             <TextBox x:Name="suffixTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="8" Grid.Column="1" Width="60"/>
+            <Label x:Name="formatLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Format:" Grid.Row="9"/>
+            <ComboBox x:Name="formatDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Formats}" Grid.Row="9" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
         </Grid>
     </Grid>
 </UserControl>

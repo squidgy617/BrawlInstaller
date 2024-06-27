@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
+using BrawlLib.Wii.Textures;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace BrawlInstaller.ViewModels
         private CosmeticDefinition _selectedDefinition;
         private List<string> _extensionOptions;
         private Dictionary<string, IdType> _idTypes = new Dictionary<string, IdType>();
+        private Dictionary<string, WiiPixelFormat> _formats = new Dictionary<string, WiiPixelFormat>();
 
         // Services
 
@@ -66,12 +68,15 @@ namespace BrawlInstaller.ViewModels
 
         public Dictionary<string, IdType> IdTypes { get => _idTypes; set { _idTypes = value; OnPropertyChanged(nameof(IdTypes)); } }
 
+        public Dictionary<string, WiiPixelFormat> Formats { get => _formats; set { _formats = value; OnPropertyChanged(nameof(Formats)); } }
+
         // Methods
         public void LoadSettings(SettingsLoadedMessage message)
         {
             CosmeticSettings = message.Value.CosmeticSettings;
             CosmeticOptions = typeof(CosmeticType).GetDictionary<CosmeticType>();
             IdTypes = typeof(IdType).GetDictionary<IdType>();
+            Formats = typeof(WiiPixelFormat).GetDictionary<WiiPixelFormat>();
         }
     }
 }
