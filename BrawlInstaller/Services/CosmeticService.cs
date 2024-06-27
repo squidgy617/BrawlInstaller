@@ -66,13 +66,13 @@ namespace BrawlInstaller.Services
         /// <param name="format">Encoding format to use</param>
         /// <param name="size">Dimensions to scale image to</param>
         /// <returns>TEX0Node</returns>
-        private TEX0Node ImportTexture(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, System.Drawing.Size size)
+        private TEX0Node ImportTexture(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, ImageSize size)
         {
             var dialog = new TextureConverterDialog();
             dialog.ImageSource = imageSource;
             dialog.InitialFormat = format;
             dialog.Automatic = true;
-            dialog.InitialSize = size;
+            dialog.InitialSize = new System.Drawing.Size(size.Width, size.Height);
             dialog.ShowDialog(null, destinationNode);
             var node = dialog.TEX0TextureNode;
             dialog.Dispose();
@@ -87,7 +87,7 @@ namespace BrawlInstaller.Services
         /// <param name="format">Encoding format to use</param>
         /// <param name="size">Dimensions to scale image to</param>
         /// <returns>TEX0Node</returns>
-        private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, System.Drawing.Size size)
+        private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, ImageSize size)
         {
             var texture = GetTexture(destinationNode, cosmetic.Texture.Name);
             var palette = texture.GetPaletteNode();
@@ -381,7 +381,7 @@ namespace BrawlInstaller.Services
             id = definition.Offset + id;
             // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
-                (cosmetic.Texture.Width == definition.Size.Value.Width && cosmetic.Texture.Height == definition.Size.Value.Height
+                (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
                 && cosmetic.Texture.Format == definition.Format
                 && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
             {
@@ -396,7 +396,7 @@ namespace BrawlInstaller.Services
             // If we have an image from filesystem, import that
             else if (cosmetic.ImagePath != "")
             {
-                var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
+                var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(64, 64));
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
@@ -405,7 +405,7 @@ namespace BrawlInstaller.Services
             // If we should only import one cosmetic and it's a color smashed texture, reimport
             else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
             {
-                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
+                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(64, 64));
                 texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
@@ -575,7 +575,7 @@ namespace BrawlInstaller.Services
                 var sharesDataList = cosmetics.Where(x => x.ColorSmashChanged && x.SharesData == false).ToList();
                 foreach(var cosmetic in sharesDataList)
                 {
-                    cosmetic.Texture = ReimportTexture(bres, cosmetic, definition.Format, definition.Size ?? new System.Drawing.Size(64, 64));
+                    cosmetic.Texture = ReimportTexture(bres, cosmetic, definition.Format, definition.Size ?? new ImageSize(64, 64));
                 }
                 // Get color smash groups
                 var colorSmashGroups = GetColorSmashGroups(cosmetics);

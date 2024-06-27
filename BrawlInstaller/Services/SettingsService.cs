@@ -126,7 +126,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrFaceB",
                         Multiplier = 10,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(128, 160),
+                        Size = new ImageSize(128, 160),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
@@ -142,7 +142,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrFaceB",
                         Multiplier = 10,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(128, 160),
+                        Size = new ImageSize(128, 160),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
@@ -166,7 +166,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrChrNm",
                         Multiplier = 10,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(144, 32),
+                        Size = new ImageSize(144, 32),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
@@ -183,7 +183,7 @@ namespace BrawlInstaller.Services
                         Multiplier = 50,
                         SuffixDigits = 4,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(48, 56),
+                        Size = new ImageSize(48, 56),
                         FirstOnly = false,
                         SeparateFiles = true
                     },
@@ -201,7 +201,7 @@ namespace BrawlInstaller.Services
                         Multiplier = 50,
                         SuffixDigits = 4,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(32, 32),
+                        Size = new ImageSize(32, 32),
                         FirstOnly = false
                     },
                     new CosmeticDefinition
@@ -223,7 +223,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 1,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(64, 64)
+                        Size = new ImageSize(64, 64)
                     },
                     new CosmeticDefinition
                     {
@@ -244,7 +244,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 1,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(80, 56)
+                        Size = new ImageSize(80, 56)
                     },
                     new CosmeticDefinition
                     {
@@ -263,7 +263,7 @@ namespace BrawlInstaller.Services
                         Prefix = "MenReplayChr",
                         Multiplier = 10,
                         IdType = IdType.Cosmetic,
-                        Size = new Size(64, 24)
+                        Size = new ImageSize(64, 24)
                     },
                     new CosmeticDefinition
                     {
@@ -278,7 +278,7 @@ namespace BrawlInstaller.Services
                         Prefix = "ChrRollFighter",
                         IdType = IdType.CosmeticConfig,
                         Offset = 1,
-                        Size = new Size(128, 160)
+                        Size = new ImageSize(128, 160)
                     },
                     new CosmeticDefinition
                     {
@@ -298,7 +298,7 @@ namespace BrawlInstaller.Services
                         IdType = IdType.Franchise,
                         Format = WiiPixelFormat.I4,
                         SuffixDigits = 2,
-                        Size = new Size(128, 128)
+                        Size = new ImageSize(128, 128)
                     },
                     new CosmeticDefinition
                     {
@@ -313,7 +313,7 @@ namespace BrawlInstaller.Services
                         ModelPath = "2/Misc Data [110]",
                         Prefix = "InfResultMark",
                         IdType = IdType.Franchise,
-                        Size = new Size(80, 80),
+                        Size = new ImageSize(80, 80),
                         SuffixDigits = 2
                     },
                     new CosmeticDefinition
@@ -328,7 +328,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenCollDisply01",
                         IdType = IdType.Thumbnail,
-                        Size = new Size(56, 48)
+                        Size = new ImageSize(56, 48)
                     },
                     new CosmeticDefinition
                     {
@@ -342,7 +342,7 @@ namespace BrawlInstaller.Services
                         },
                         Prefix = "MenWifiListIcn",
                         IdType = IdType.RecordsIcon,
-                        Size = new Size(48, 48)
+                        Size = new ImageSize(48, 48)
                     }
                 },
                 ToolPathSettings = new ToolPathSettings

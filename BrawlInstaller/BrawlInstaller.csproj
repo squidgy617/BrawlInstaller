@@ -67,6 +67,7 @@
     <Compile Include="Classes\BrawlIds.cs" />
     <Compile Include="Classes\FighterInfo.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
+    <Compile Include="Classes\ImageSize.cs" />
     <Compile Include="Classes\TrackedList.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
     <Compile Include="Common\ExtensionMethods.cs" />
