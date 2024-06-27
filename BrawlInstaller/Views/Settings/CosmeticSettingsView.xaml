@@ -69,9 +69,9 @@
             <Label x:Name="formatLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Format:" Grid.Row="9"/>
             <ComboBox x:Name="formatDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Formats}" Grid.Row="9" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
             <Label x:Name="widthLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Width:" Grid.Row="10"/>
-            <TextBox x:Name="widthTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Value.Width}" Grid.Column="1" Grid.Row="10" Width="60"/>
+            <TextBox x:Name="widthTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Width}" Grid.Column="1" Grid.Row="10" Width="60"/>
             <Label x:Name="heightLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Height:" Grid.Row="11"/>
-            <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Value.Height}" Grid.Column="1" Grid.Row="11" Width="60"/>
+            <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Height}" Grid.Column="1" Grid.Row="11" Width="60"/>
         </Grid>
     </Grid>
 </UserControl>
