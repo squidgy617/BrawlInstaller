@@ -625,6 +625,7 @@ namespace BrawlInstaller.Services
             }
         }
 
+        // TODO: Handle compression
         /// <summary>
         /// Import cosmetics based on definition rules
         /// </summary>

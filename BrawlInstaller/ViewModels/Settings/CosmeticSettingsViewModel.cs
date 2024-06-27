@@ -22,12 +22,12 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private List<CosmeticDefinition> _cosmeticSettings;
-        private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>();
+        private Dictionary<string, CosmeticType> _cosmeticOptions = new Dictionary<string, CosmeticType>();
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
         private CosmeticDefinition _selectedDefinition;
         private List<string> _extensionOptions;
-        private List<KeyValuePair<string, IdType>> _idTypes = new List<KeyValuePair<string, IdType>>();
+        private Dictionary<string, IdType> _idTypes = new Dictionary<string, IdType>();
 
         // Services
 
@@ -44,7 +44,7 @@ namespace BrawlInstaller.ViewModels
         public List<CosmeticDefinition> CosmeticSettings { get => _cosmeticSettings; set { _cosmeticSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
 
         [DependsUpon(nameof(BuildSettings))]
-        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+        public Dictionary<string, CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
 
         [DependsUpon(nameof(CosmeticOptions))]
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
@@ -64,14 +64,14 @@ namespace BrawlInstaller.ViewModels
 
         public List<string> ExtensionOptions { get => new List<string> { "brres", "pac" }; }
 
-        public List<KeyValuePair<string, IdType>> IdTypes { get => _idTypes; set { _idTypes = value; OnPropertyChanged(nameof(IdTypes)); } }
+        public Dictionary<string, IdType> IdTypes { get => _idTypes; set { _idTypes = value; OnPropertyChanged(nameof(IdTypes)); } }
 
         // Methods
         public void LoadSettings(SettingsLoadedMessage message)
         {
             CosmeticSettings = message.Value.CosmeticSettings;
-            CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>(typeof(CosmeticType).GetKeyValueList<CosmeticType>());
-            IdTypes = typeof(IdType).GetKeyValueList<IdType>();
+            CosmeticOptions = typeof(CosmeticType).GetDictionary<CosmeticType>();
+            IdTypes = typeof(IdType).GetDictionary<IdType>();
         }
     }
 }
