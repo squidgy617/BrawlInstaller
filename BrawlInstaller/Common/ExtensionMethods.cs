@@ -56,7 +56,7 @@ namespace BrawlInstaller.Common
             return new KeyValuePair<string, T>(obj.GetDescription(), obj);
         }
 
-        public static List<KeyValuePair<string, T>> GetKeyValueList<T>(this T obj)
+        public static List<KeyValuePair<string, T>> GetKeyValueList<T>(this Type t)
         {
             var keyValueList = new List<KeyValuePair<string, T>>();
             foreach(T item in Enum.GetValues(typeof(T)))

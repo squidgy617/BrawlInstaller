@@ -26,6 +26,8 @@ namespace BrawlInstaller.ViewModels
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
         private CosmeticDefinition _selectedDefinition;
+        private List<string> _extensionOptions;
+        private List<KeyValuePair<string, IdType>> _idTypes = new List<KeyValuePair<string, IdType>>();
 
         // Services
 
@@ -60,15 +62,16 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(DefinitionList))]
         public CosmeticDefinition SelectedDefinition { get => _selectedDefinition; set { _selectedDefinition = value; OnPropertyChanged(nameof(SelectedDefinition)); } }
 
+        public List<string> ExtensionOptions { get => new List<string> { "brres", "pac" }; }
+
+        public List<KeyValuePair<string, IdType>> IdTypes { get => _idTypes; set { _idTypes = value; OnPropertyChanged(nameof(IdTypes)); } }
 
         // Methods
         public void LoadSettings(SettingsLoadedMessage message)
         {
             CosmeticSettings = message.Value.CosmeticSettings;
-            foreach (CosmeticType option in CosmeticSettings.Select(x => x.CosmeticType).Distinct())
-            {
-                CosmeticOptions.Add(option.GetKeyValuePair());
-            }
+            CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>(typeof(CosmeticType).GetKeyValueList<CosmeticType>());
+            IdTypes = typeof(IdType).GetKeyValueList<IdType>();
         }
     }
 }
