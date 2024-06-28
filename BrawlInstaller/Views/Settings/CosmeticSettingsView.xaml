@@ -32,15 +32,12 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -61,20 +58,20 @@
             <TextBox x:Name="hdPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.HDImageLocation}" Grid.Row="4" Grid.Column="1" Width="180"/>
             <Label x:Name="prefixLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Prefix:" Grid.Row="5"/>
             <TextBox x:Name="prefixTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Prefix}" Grid.Row="5" Grid.Column="1" Width="120"/>
-            <Label x:Name="idTypeLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Type:" Grid.Row="6"/>
-            <ComboBox x:Name="idTypeDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding IdTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.IdType}" Grid.Row="6" Grid.Column="1" Width="120"/>
-            <Label x:Name="multiplierLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Multiplier" Grid.Row="7"/>
-            <TextBox x:Name="multiplierTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Multiplier}" Grid.Row="7" Grid.Column="1" Width="60"/>
-            <Label x:Name="offsetLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Offset:" Grid.Row="8"/>
-            <TextBox x:Name="offsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Offset}" Grid.Row="8" Grid.Column="1" Width="60"/>
-            <Label x:Name="suffixLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Length:" Grid.Row="9"/>
-            <TextBox x:Name="suffixTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="9" Grid.Column="1" Width="60"/>
-            <Label x:Name="formatLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Format:" Grid.Row="10"/>
-            <ComboBox x:Name="formatDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Formats}" Grid.Row="10" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
-            <Label x:Name="widthLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Width:" Grid.Row="11"/>
-            <TextBox x:Name="widthTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Width}" Grid.Column="1" Grid.Row="11" Width="60"/>
-            <Label x:Name="heightLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Height:" Grid.Row="12"/>
-            <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Height}" Grid.Column="1" Grid.Row="12" Width="60"/>
+            <Label x:Name="idTypeLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Type:" Grid.Row="0" Grid.Column="2"/>
+            <ComboBox x:Name="idTypeDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding IdTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.IdType}" Grid.Row="0" Grid.Column="3" Width="120"/>
+            <Label x:Name="multiplierLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Multiplier" Grid.Row="1" Grid.Column="2"/>
+            <TextBox x:Name="multiplierTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Multiplier}" Grid.Row="1" Grid.Column="3" Width="60"/>
+            <Label x:Name="offsetLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Offset:" Grid.Row="2" Grid.Column="2"/>
+            <TextBox x:Name="offsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
+            <Label x:Name="suffixLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Length:" Grid.Row="3" Grid.Column="2"/>
+            <TextBox x:Name="suffixTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
+            <Label x:Name="formatLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Format:" Grid.Row="0" Grid.Column="4"/>
+            <ComboBox x:Name="formatDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Formats}" Grid.Row="0" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
+            <Label x:Name="widthLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Width:" Grid.Row="1" Grid.Column="4"/>
+            <TextBox x:Name="widthTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Width}" Grid.Column="5" Grid.Row="1" Width="60"/>
+            <Label x:Name="heightLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Height:" Grid.Row="2" Grid.Column="4"/>
+            <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Height}" Grid.Column="6" Grid.Row="2" Width="60"/>
         </Grid>
     </Grid>
 </UserControl>
