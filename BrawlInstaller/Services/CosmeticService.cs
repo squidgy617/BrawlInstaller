@@ -385,7 +385,7 @@ namespace BrawlInstaller.Services
                 && cosmetic.Texture.Format == definition.Format
                 && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
             {
-                cosmetic.Texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
+                cosmetic.Texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
                 var texture = ImportTexture(parentNode, cosmetic.Texture);
                 if (cosmetic.Palette != null)
                 {
@@ -397,7 +397,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.ImagePath != "")
             {
                 var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(64, 64));
-                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
+                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
@@ -406,7 +406,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
             {
                 var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(64, 64));
-                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}";
+                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
@@ -428,7 +428,7 @@ namespace BrawlInstaller.Services
                 node = definition.ModelPath != "" ? rootNode.FindChild(definition.ModelPath) : rootNode;
                 parentNode = (BRRESNode)node;
                 var model = ImportModel(parentNode, cosmetic.Model);
-                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}_TopN";
+                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}_TopN";
                 var bone = model.FindBoneByIndex(0);
                 if (bone != null)
                     bone.Name = model.Name;
@@ -442,7 +442,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.ModelPath != "" && definition.ModelPath != null)
             {
                 var model = ImportModel(parentNode, cosmetic.ModelPath);
-                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}_TopN";
+                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}_TopN";
                 var bone = model.FindBoneByIndex(0);
                 if (bone != null)
                     bone.Name = model.Name;
@@ -641,7 +641,18 @@ namespace BrawlInstaller.Services
                 var rootNode = GetCosmeticFile(definition, id);
                 if (rootNode != null)
                 {
-                    RemoveCosmetics(rootNode, definition, id);
+                    // If cosmetics are supposed to use their own IDs, remove each one individually instead of removing all
+                    if (!definition.UseIndividualIds)
+                    {
+                        RemoveCosmetics(rootNode, definition, id);
+                    }
+                    else
+                    {
+                        foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                        {
+                            RemoveCosmetics(rootNode, definition, cosmetic.Id ?? -1);
+                        }
+                    }
                     foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                     {
                         ImportCosmetic(definition, cosmetic, id, rootNode);
@@ -667,7 +678,7 @@ namespace BrawlInstaller.Services
                     var rootNode = new BRRESNode();
                     ImportCosmetic(definition, cosmetic, id, rootNode);
                     _fileService.SaveFileAs(rootNode, $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
-                        $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic.CostumeIndex)}.{definition.InstallLocation.FileExtension}");
+                        $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}");
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
                     if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
@@ -698,9 +709,13 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticId">ID associated with cosmetic</param>
         /// <param name="costumeIndex">Costume index associated with cosmetic</param>
         /// <returns></returns>
-        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
+        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, Cosmetic cosmetic)
         {
-            var id = ((cosmeticId * definition.Multiplier) + (costumeIndex ?? 0)).ToString("D" + definition.SuffixDigits);
+            if (definition.UseIndividualIds)
+            {
+                return cosmetic.Id?.ToString("D" + definition.SuffixDigits);
+            }
+            var id = ((cosmeticId * definition.Multiplier) + (cosmetic.CostumeIndex ?? 0)).ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -1143,7 +1158,7 @@ namespace BrawlInstaller.Services
             }
             var franchiseIconList = new CosmeticList
             {
-                Items = franchiseIcons
+                Items = franchiseIcons.OrderBy(x => x.InternalIndex).ToList()
             };
             return franchiseIconList;
         }

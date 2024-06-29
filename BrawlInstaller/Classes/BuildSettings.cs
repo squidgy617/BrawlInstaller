@@ -51,6 +51,7 @@ namespace BrawlInstaller.Classes
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
         public bool FirstOnly { get; set; } = false;
         public bool SeparateFiles { get; set; } = false;
+        public bool UseIndividualIds { get; set; } = false;
 
         public CosmeticDefinition Copy()
         {
