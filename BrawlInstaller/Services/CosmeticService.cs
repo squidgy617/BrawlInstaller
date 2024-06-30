@@ -418,7 +418,7 @@ namespace BrawlInstaller.Services
                     node = rootNode.FindChild(path);
                     if (node != null)
                     {
-                        CreatePatEntry(node, GetCosmeticId(definition, id, cosmetic.CostumeIndex), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
+                        CreatePatEntry(node, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
                     }
                 }
             }
@@ -913,9 +913,13 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticId">ID associated with cosmetic</param>
         /// <param name="costumeIndex">Costume index for cosmetic</param>
         /// <returns>Full ID of cosmetic</returns>
-        private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, int? costumeIndex)
+        private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, Cosmetic cosmetic)
         {
-            var id = (cosmeticId * definition.Multiplier) + (costumeIndex ?? 0);
+            if (definition.UseIndividualIds)
+            {
+                cosmeticId = cosmetic.Id ?? 0;
+            }
+            var id = (cosmeticId * definition.Multiplier) + (cosmetic?.CostumeIndex ?? 0);
             return id;
         }
 

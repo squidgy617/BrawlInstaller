@@ -221,7 +221,8 @@ namespace BrawlInstaller.Services
                             IdType = IdType.Cosmetic
                         },
                         Prefix = "MenSelchrChrFace",
-                        Multiplier = 1,
+                        // The reason we use cosmetic ID is because it corrects inconsistency in vBrawl where fighter ID is used only for CSS icon textures
+                        Multiplier = 10,
                         IdType = IdType.Cosmetic,
                         Size = new ImageSize(64, 64)
                     },
@@ -242,7 +243,7 @@ namespace BrawlInstaller.Services
                             IdType = IdType.Cosmetic
                         },
                         Prefix = "MenSelchrChrFace",
-                        Multiplier = 1,
+                        Multiplier = 10,
                         IdType = IdType.Cosmetic,
                         Size = new ImageSize(80, 56)
                     },

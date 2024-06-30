@@ -64,6 +64,7 @@ namespace BrawlInstaller.Classes
     {
         public List<string> Paths { get; set; }
         public int FramesPerImage { get; set; } = 1;
+        // TODO: Might be able to remove this? CSS icons are the only thing where this differs, and we might *want* those to get normalized
         public IdType? IdType { get; set; } = null;
         public int? Multiplier { get; set; } = null;
         public int? Offset { get; set; } = null;
