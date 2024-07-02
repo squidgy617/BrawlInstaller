@@ -13,12 +13,14 @@ using BrawlInstaller.Classes;
 using BrawlLib.Internal;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Drawing;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace BrawlInstaller.ViewModels
 {
     public interface IFranchiseIconViewModel
     {
-        CosmeticList FranchiseIcons { get; }
+        CosmeticList FranchiseIconList { get; }
         Cosmetic SelectedFranchiseIcon { get; }
         ICommand SelectModelCommand { get; }
     }
@@ -33,9 +35,10 @@ namespace BrawlInstaller.ViewModels
         public ICommand ReplaceIconCommand => new RelayCommand(param => ReplaceIcon());
         public ICommand ReplaceHDIconCommand => new RelayCommand(param => ReplaceHDIcon());
         public ICommand ClearHDIconCommand => new RelayCommand(param => ClearHDIcon());
+        public ICommand RemoveIconCommand => new RelayCommand(param => RemoveIcon());
 
         // Private Properties
-        private CosmeticList _franchiseIcons;
+        private CosmeticList _franchiseIconList;
         private Cosmetic _selectedFranchiseIcon;
 
         // Services
@@ -48,7 +51,7 @@ namespace BrawlInstaller.ViewModels
         {
             _cosmeticService = cosmeticService;
             _dialogService = dialogService;
-            FranchiseIcons = new CosmeticList();
+            FranchiseIconList = new CosmeticList();
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
@@ -57,14 +60,17 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public CosmeticList FranchiseIcons { get => _franchiseIcons; set { _franchiseIcons = value; OnPropertyChanged(nameof(FranchiseIcons)); } }
+        public CosmeticList FranchiseIconList { get => _franchiseIconList; set { _franchiseIconList = value; OnPropertyChanged(nameof(FranchiseIcons)); } }
+
+        [DependsUpon(nameof(FranchiseIconList))]
+        public ObservableCollection<Cosmetic> FranchiseIcons { get => new ObservableCollection<Cosmetic>(FranchiseIconList.Items); }
         public Cosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(nameof(SelectedFranchiseIcon)); } }
 
         // Methods
         public void LoadIcons(FighterLoadedMessage message)
         {
-            FranchiseIcons = _cosmeticService.GetFranchiseIcons();
-            SelectedFranchiseIcon = FranchiseIcons.Items.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
+            FranchiseIconList = _cosmeticService.GetFranchiseIcons();
+            SelectedFranchiseIcon = FranchiseIcons.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
         }
 
         public void SelectModel()
@@ -74,7 +80,7 @@ namespace BrawlInstaller.ViewModels
             if (!string.IsNullOrEmpty(model))
             {
                 SelectedFranchiseIcon.ModelPath = model;
-                FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+                FranchiseIconList.ItemChanged(SelectedFranchiseIcon);
                 SelectedFranchiseIcon.Model = null;
                 SelectedFranchiseIcon.ColorSequence = null;
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));
@@ -86,7 +92,7 @@ namespace BrawlInstaller.ViewModels
             SelectedFranchiseIcon.ModelPath = "";
             SelectedFranchiseIcon.Model = null;
             SelectedFranchiseIcon.ColorSequence = null;
-            FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+            FranchiseIconList.ItemChanged(SelectedFranchiseIcon);
             OnPropertyChanged(nameof(SelectedFranchiseIcon));
         }
 
@@ -102,7 +108,7 @@ namespace BrawlInstaller.ViewModels
                 SelectedFranchiseIcon.ImagePath = image;
                 SelectedFranchiseIcon.Texture = null;
                 SelectedFranchiseIcon.Palette = null;
-                FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+                FranchiseIconList.ItemChanged(SelectedFranchiseIcon);
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));
             }
         }
@@ -116,7 +122,7 @@ namespace BrawlInstaller.ViewModels
                 var bitmap = new Bitmap(image);
                 SelectedFranchiseIcon.HDImage = bitmap.ToBitmapImage();
                 SelectedFranchiseIcon.HDImagePath = image;
-                FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+                FranchiseIconList.ItemChanged(SelectedFranchiseIcon);
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));
             }
         }
@@ -125,8 +131,29 @@ namespace BrawlInstaller.ViewModels
         {
             SelectedFranchiseIcon.HDImage = null;
             SelectedFranchiseIcon.HDImagePath = "";
-            FranchiseIcons.ItemChanged(SelectedFranchiseIcon);
+            FranchiseIconList.ItemChanged(SelectedFranchiseIcon);
             OnPropertyChanged(nameof(SelectedFranchiseIcon));
+        }
+
+        public void RemoveIcon()
+        {
+            var accepted = _dialogService.ShowMessage("Removing a franchise icon will remove it from ANY characters that use it. Are you sure?", "Warning", MessageBoxButton.YesNo);
+            if (accepted)
+            {
+                Cosmetic newSelection;
+                if (FranchiseIcons.IndexOf(SelectedFranchiseIcon) > 0)
+                {
+                    newSelection = FranchiseIcons[FranchiseIcons.IndexOf(SelectedFranchiseIcon) - 1];
+                }
+                else
+                {
+                    newSelection = FranchiseIcons.FirstOrDefault();
+                }
+                FranchiseIconList.Remove(SelectedFranchiseIcon);
+                SelectedFranchiseIcon = newSelection;
+                OnPropertyChanged(nameof(SelectedFranchiseIcon));
+                OnPropertyChanged(nameof(FranchiseIconList));
+            }
         }
     }
 }

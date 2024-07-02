@@ -28,9 +28,18 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons.Items}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon, Mode=TwoWay}"/>
-            <Label Target="{Binding ElementName=franchiseIconIdTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="1"/>
+            <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon, Mode=TwoWay}"/>
+            <Grid x:Name="iconButtonsGrid" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="addIconButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="+" Margin="2"/>
+                <Button x:Name="removeIconButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="-" Grid.Column="1" Margin="2" Command="{Binding RemoveIconCommand}"/>
+            </Grid>
+            <Label Target="{Binding ElementName=franchiseIconIdTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="2"/>
         </Grid>
         <TextBox x:Name="franchiseIconIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,0,0,0" Grid.Column="2" Width="60">
             <TextBox.Resources>

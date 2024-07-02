@@ -101,7 +101,7 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             // Set franchise icon up
-            foreach(var icon in FranchiseIconViewModel.FranchiseIcons.ChangedItems)
+            foreach(var icon in FranchiseIconViewModel.FranchiseIconList.ChangedItems)
             {
                 var newIcon = new Cosmetic
                 {
@@ -116,7 +116,7 @@ namespace BrawlInstaller.ViewModels
                     Id = icon.Id
                 };
                 // Only add it to cosmetic list if it is actually in the list
-                if (FranchiseIconViewModel.FranchiseIcons.Items.Contains(icon))
+                if (FranchiseIconViewModel.FranchiseIconList.Items.Contains(icon))
                     FighterPackage.Cosmetics.Add(newIcon);
                 // If it was removed, just add it to the change list
                 else
@@ -132,7 +132,7 @@ namespace BrawlInstaller.ViewModels
                         ColorSequence = icon.ColorSequence,
                         Id = icon.Id
                     };
-                    if (FranchiseIconViewModel.FranchiseIcons.Items.Contains(icon))
+                    if (FranchiseIconViewModel.FranchiseIconList.Items.Contains(icon))
                         FighterPackage.Cosmetics.Add(newModel);
                     else
                         FighterPackage.Cosmetics.ItemChanged(newModel);

@@ -12,7 +12,10 @@ namespace BrawlInstaller.Services
     public interface IDialogService
     {
         /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxImage)"/>
-        bool ShowMessage(string text, string caption, MessageBoxImage image);
+        bool ShowMessage(string text, string caption, MessageBoxImage image=MessageBoxImage.Information);
+
+        /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxButton, MessageBoxImage)"/>
+        bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information);
 
         /// <inheritdoc cref="DialogService.OpenFileDialog(string, string)"/>
         string OpenFileDialog(string title, string filter);
@@ -37,7 +40,20 @@ namespace BrawlInstaller.Services
         /// <returns>Whether user gave a positive response to message</returns>
         public bool ShowMessage(string text, string caption, MessageBoxImage image=MessageBoxImage.Information)
         {
-            var result = MessageBox.Show(text, caption, MessageBoxButton.OK, image);
+            return ShowMessage(text, caption, MessageBoxButton.OK, image);
+        }
+
+        /// <summary>
+        /// Show configurable message dialog
+        /// </summary>
+        /// <param name="text">Text to display in message</param>
+        /// <param name="caption">Caption to display in title bar</param>
+        /// <param name="buttonType">Type of buttons to use in dialog</param>
+        /// <param name="image">Image to show on dialog</param>
+        /// <returns>Whether user gave a positive response to message</returns>
+        public bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information)
+        {
+            var result = MessageBox.Show(text, caption, buttonType, image);
             if (result == MessageBoxResult.Yes || result == MessageBoxResult.OK || result == MessageBoxResult.None)
                 return true;
             else

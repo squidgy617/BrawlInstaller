@@ -31,8 +31,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CosmeticService.GetFranchiseIcons()"/>
         CosmeticList GetFranchiseIcons();
 
-        /// <inheritdoc cref="CosmeticService.ImportCosmetics(CosmeticDefinition, List{Cosmetic}, int, string)"/>
-        void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null);
+        /// <inheritdoc cref="CosmeticService.ImportCosmetics(CosmeticDefinition, CosmeticList, int, string)"/>
+        void ImportCosmetics(CosmeticDefinition definition, CosmeticList cosmeticList, int id, string name=null);
 
         /// <inheritdoc cref="CosmeticService.GetSharesDataGroups(List{Cosmetic})"/>
         List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
@@ -630,11 +630,13 @@ namespace BrawlInstaller.Services
         /// Import cosmetics based on definition rules
         /// </summary>
         /// <param name="definition">Definition for cosmetics</param>
-        /// <param name="cosmetics">List of cosmetics to import</param>
+        /// <param name="cosmeticList">List to import cosmetics from</param>
         /// <param name="id">ID associated with cosmetics</param>
         /// <param name="name">Name of character for HD textures</param>
-        public void ImportCosmetics(CosmeticDefinition definition, List<Cosmetic> cosmetics, int id, string name=null)
+        public void ImportCosmetics(CosmeticDefinition definition, CosmeticList cosmeticList, int id, string name=null)
         {
+            var cosmetics = cosmeticList.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
+            var changedCosmetics = cosmeticList.ChangedItems.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
             // If the definition doesn't use separate files, find the files and update them
             if (!definition.SeparateFiles)
             {
@@ -648,7 +650,7 @@ namespace BrawlInstaller.Services
                     }
                     else
                     {
-                        foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                        foreach(var cosmetic in changedCosmetics.OrderBy(x => x.InternalIndex))
                         {
                             RemoveCosmetics(rootNode, definition, cosmetic.Id ?? -1);
                         }
