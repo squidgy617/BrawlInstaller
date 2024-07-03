@@ -31,8 +31,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CosmeticService.GetFranchiseIcons()"/>
         CosmeticList GetFranchiseIcons();
 
-        /// <inheritdoc cref="CosmeticService.ImportCosmetics(CosmeticDefinition, CosmeticList, int, string)"/>
-        void ImportCosmetics(CosmeticDefinition definition, CosmeticList cosmeticList, int id, string name=null);
+        /// <inheritdoc cref="CosmeticService.ImportCosmetics(List{CosmeticDefinition}, CosmeticList, BrawlIds, string)"/>
+        void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name=null);
 
         /// <inheritdoc cref="CosmeticService.GetSharesDataGroups(List{Cosmetic})"/>
         List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
@@ -42,6 +42,7 @@ namespace BrawlInstaller.Services
     {
         // Properties
         private Dictionary<string, string> HDImages { get; set; } = new Dictionary<string, string>();
+        private List<ResourceNode> FileCache { get; set; } = new List<ResourceNode>();
 
         // Services
         ISettingsService _settingsService { get; }
@@ -625,6 +626,28 @@ namespace BrawlInstaller.Services
             }
         }
 
+        /// <summary>
+        /// Import cosmetics with file caching based on definition rules
+        /// </summary>
+        /// <param name="definitions">Definitions for cosmetics</param>
+        /// <param name="cosmeticList">List to import cosmetics from</param>
+        /// <param name="ids">IDs associated with cosmetics</param>
+        /// <param name="name">Name of character for HD textures</param>
+        public void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name = null)
+        {
+            foreach(var definition in definitions)
+            {
+                ImportCosmetics(definition, cosmeticList, ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, name);
+            }
+            // Save and close all files
+            foreach (var file in FileCache.ToList())
+            {
+                _fileService.SaveFile(file);
+                FileCache.Remove(file);
+                _fileService.CloseFile(file);
+            }
+        }
+
         // TODO: Handle compression
         /// <summary>
         /// Import cosmetics based on definition rules
@@ -633,7 +656,7 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticList">List to import cosmetics from</param>
         /// <param name="id">ID associated with cosmetics</param>
         /// <param name="name">Name of character for HD textures</param>
-        public void ImportCosmetics(CosmeticDefinition definition, CosmeticList cosmeticList, int id, string name=null)
+        private void ImportCosmetics(CosmeticDefinition definition, CosmeticList cosmeticList, int id, string name=null)
         {
             var cosmetics = cosmeticList.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
             var changedCosmetics = cosmeticList.ChangedItems.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
@@ -661,14 +684,12 @@ namespace BrawlInstaller.Services
                     }
                     if (!definition.FirstOnly && !definition.SeparateFiles)
                         ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition, id);
-                    _fileService.SaveFile(rootNode);
                     // Save HD cosmetics if they exist
                     if (_settingsService.BuildSettings.HDTextures)
                         foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                         {
                             ImportHDTexture(rootNode, definition, cosmetic, id, name);
                         }
-                    _fileService.CloseFile(rootNode);
                 }
             }
             // If the definition does use separate files, generate new files for each cosmetic
@@ -679,15 +700,14 @@ namespace BrawlInstaller.Services
                 {
                     var rootNode = new BRRESNode();
                     ImportCosmetic(definition, cosmetic, id, rootNode);
-                    _fileService.SaveFileAs(rootNode, $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
-                        $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}");
+                    rootNode._origPath = $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
+                        $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
                     if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
                     {
                         ImportHDTexture(rootNode, definition, cosmetic, id, name);
                     }
-                    _fileService.CloseFile(rootNode);
                 }
             }
         }
@@ -776,9 +796,15 @@ namespace BrawlInstaller.Services
         private ResourceNode GetCosmeticFile(CosmeticDefinition definition, int id)
         {
             var cosmeticPath = BuildCosmeticPath(definition, id);
-            var node = _fileService.OpenFile(cosmeticPath);
+            var node = FileCache.FirstOrDefault(x => x.FilePath == cosmeticPath);
             if (node != null)
             {
+                return node;
+            }
+            node = _fileService.OpenFile(cosmeticPath);
+            if (node != null)
+            {
+                FileCache.Add(node);
                 return node;
             }
             if(definition.InstallLocation.FileExtension == "pac")
@@ -788,6 +814,7 @@ namespace BrawlInstaller.Services
                 bresNode.FileIndex = (short)id;
                 newNode.AddChild(bresNode);
                 newNode._origPath = cosmeticPath;
+                FileCache.Add(newNode);
                 return newNode;
             }
             else if (definition.InstallLocation.FileExtension == "brres")
@@ -795,6 +822,7 @@ namespace BrawlInstaller.Services
                 var newNode = new BRRESNode();
                 //_fileService.SaveFileAs(newNode, cosmeticPath);
                 newNode._origPath = cosmeticPath;
+                FileCache.Add(newNode);
                 return newNode;
             }
             return null;

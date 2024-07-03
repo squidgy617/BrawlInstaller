@@ -191,10 +191,7 @@ namespace BrawlInstaller.Services
             changedDefinitions.AddRange(inheritedDefinitions);
 
             // Import cosmetics
-            foreach (var definition in changedDefinitions)
-            {
-                _cosmeticService.ImportCosmetics(definition, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, fighterPackage.FighterInfo.DisplayName);
-            }
+            _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
             // Update pac files
             // TODO: only update pac files that have changed, use selected FighterFiles option
             _fighterService.ImportFighterFiles(fighterPackage.FighterFiles.FirstOrDefault().PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
