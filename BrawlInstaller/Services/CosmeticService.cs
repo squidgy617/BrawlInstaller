@@ -793,7 +793,7 @@ namespace BrawlInstaller.Services
             else if (definition.InstallLocation.FileExtension == "brres")
             {
                 var newNode = new BRRESNode();
-                _fileService.SaveFileAs(newNode, cosmeticPath);
+                //_fileService.SaveFileAs(newNode, cosmeticPath);
                 newNode._origPath = cosmeticPath;
                 return newNode;
             }
