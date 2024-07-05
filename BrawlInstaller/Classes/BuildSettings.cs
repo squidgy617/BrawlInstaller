@@ -53,6 +53,12 @@ namespace BrawlInstaller.Classes
         public bool SeparateFiles { get; set; } = false;
         public bool UseIndividualIds { get; set; } = false;
 
+        public CosmeticDefinition()
+        {
+            // TODO: Also set this for selectible stage cosmetics
+            UseIndividualIds = CosmeticType == CosmeticType.FranchiseIcon;
+        }
+
         public CosmeticDefinition Copy()
         {
             var copy = JsonConvert.DeserializeObject<CosmeticDefinition>(JsonConvert.SerializeObject(this));
@@ -62,9 +68,10 @@ namespace BrawlInstaller.Classes
 
     public class PatSettings
     {
-        public List<string> Paths { get; set; }
+        public List<string> Paths { get; set; } = new List<string>();
         public int FramesPerImage { get; set; } = 1;
         // TODO: Might be able to remove this? CSS icons are the only thing where this differs, and we might *want* those to get normalized
+        // If we do not remove, need to update installation process as it does not respect this at all times
         public IdType? IdType { get; set; } = null;
         public int? Multiplier { get; set; } = null;
         public int? Offset { get; set; } = null;

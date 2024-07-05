@@ -45,6 +45,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="filePathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Install Location:"/>
             <TextBox x:Name="filePathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.InstallLocation.FilePath}" Grid.Column="1" Width="180"/>
@@ -72,6 +74,40 @@
             <TextBox x:Name="widthTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Width}" Grid.Column="5" Grid.Row="1" Width="60"/>
             <Label x:Name="heightLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Height:" Grid.Row="2" Grid.Column="4"/>
             <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Height}" Grid.Column="6" Grid.Row="2" Width="60"/>
+            <Grid x:Name="checkboxesGrid" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox x:Name="firstOnlyCheckBox" Content="Use First Image Only" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding SelectedDefinition.FirstOnly}" Margin="2"/>
+                <CheckBox x:Name="separateFilesCheckBox" Content="Create Separate File for Each Image" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding SelectedDefinition.SeparateFiles}" Grid.Column="1" Margin="2"/>
+            </Grid>
+            <Expander x:Name="patExpander" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="patPathsLabel" Content="Paths:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                    <ListBox x:Name="patPathsListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding SelectedPatPaths}" SelectedValue="{Binding SelectedPatPath}" Width="180" Height="60" Grid.Column="1" Grid.RowSpan="4"/>
+                    <Label x:Name="patIdTypeLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Type:" Grid.Column="2"/>
+                    <ComboBox x:Name="patIdComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedDefinition.PatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="3" Width="120"/>
+                    <Label x:Name="patMultiplierLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Multiplier:" Grid.Column="2" Grid.Row="1"/>
+                    <TextBox x:Name="patMultiplerTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.PatSettings.Multiplier}" Grid.Row="1" Grid.Column="3" Width="60"/>
+                    <Label x:Name="patOffsetLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Offset:" Grid.Column="2" Grid.Row="2"/>
+                    <TextBox x:Name="patOffsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.PatSettings.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
+                    <Label x:Name="framesPerImageLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Frames Per Image:" Grid.Column="2" Grid.Row="3"/>
+                    <TextBox x:Name="framesPerImageTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.PatSettings.FramesPerImage}" Width="60" Grid.Column="3" Grid.Row="3"/>
+                </Grid>
+            </Expander>
         </Grid>
     </Grid>
 </UserControl>

@@ -30,6 +30,7 @@ namespace BrawlInstaller.ViewModels
         private List<string> _extensionOptions;
         private Dictionary<string, IdType> _idTypes = new Dictionary<string, IdType>();
         private Dictionary<string, WiiPixelFormat> _formats = new Dictionary<string, WiiPixelFormat>();
+        private string _selectedPatPath;
 
         // Services
 
@@ -69,6 +70,12 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<string, IdType> IdTypes { get => _idTypes; set { _idTypes = value; OnPropertyChanged(nameof(IdTypes)); } }
 
         public Dictionary<string, WiiPixelFormat> Formats { get => _formats; set { _formats = value; OnPropertyChanged(nameof(Formats)); } }
+
+        [DependsUpon(nameof(SelectedDefinition))]
+        public ObservableCollection<string> SelectedPatPaths { get => SelectedDefinition?.PatSettings?.Paths != null ? new ObservableCollection<string>(SelectedDefinition?.PatSettings?.Paths) : new ObservableCollection<string>(); }
+
+        [DependsUpon(nameof(SelectedPatPaths))]
+        public string SelectedPatPath { get => _selectedPatPath; set { _selectedPatPath = value; OnPropertyChanged(nameof(SelectedPatPath)); } }
 
         // Methods
         public void LoadSettings(SettingsLoadedMessage message)
