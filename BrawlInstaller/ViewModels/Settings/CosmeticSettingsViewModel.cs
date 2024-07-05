@@ -74,6 +74,7 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedDefinition))]
         public ObservableCollection<string> SelectedPatPaths { get => SelectedDefinition?.PatSettings?.Paths != null ? new ObservableCollection<string>(SelectedDefinition?.PatSettings?.Paths) : new ObservableCollection<string>(); }
 
+        // TODO: Change this, this doesn't actually update the source class
         [DependsUpon(nameof(SelectedPatPaths))]
         public string SelectedPatPath { get => _selectedPatPath; set { _selectedPatPath = value; OnPropertyChanged(nameof(SelectedPatPath)); } }
 
