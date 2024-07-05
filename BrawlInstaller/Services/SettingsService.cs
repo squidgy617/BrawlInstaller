@@ -155,12 +155,15 @@ namespace BrawlInstaller.Services
                             NodePath = "Misc Data [30]",
                             FileExtension = "pac"
                         },
-                        PatSettings = new PatSettings
+                        PatSettings = new List<PatSettings>
                         {
-                            Paths = new List<string>
+                            new PatSettings
                             {
-                                "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card010/Texture0",
-                                "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card011/Texture0"
+                                Path = "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card010/Texture0"
+                            },
+                            new PatSettings
+                            {
+                                Path = "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card011/Texture0"
                             }
                         },
                         Prefix = "MenSelchrChrNm",
@@ -214,11 +217,14 @@ namespace BrawlInstaller.Services
                             NodePath = "Misc Data [70]",
                             FileExtension = "pac"
                         },
-                        PatSettings = new PatSettings
+                        PatSettings = new List<PatSettings>
                         {
-                            Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0" },
-                            Multiplier = 10,
-                            IdType = IdType.Cosmetic
+                            new PatSettings
+                            {
+                                Path = "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0",
+                                Multiplier = 10,
+                                IdType = IdType.Cosmetic
+                            }
                         },
                         Prefix = "MenSelchrChrFace",
                         // The reason we use cosmetic ID is because it corrects inconsistency in vBrawl where fighter ID is used only for CSS icon textures
@@ -236,11 +242,14 @@ namespace BrawlInstaller.Services
                             NodePath = "",
                             FileExtension = "brres"
                         },
-                        PatSettings = new PatSettings
+                        PatSettings = new List<PatSettings>
                         {
-                            Paths = new List<string> { "AnmTexPat(NW4R)/MenAdvChrCd0001_TopN__0/Face02/Texture0" },
-                            Multiplier = 10,
-                            IdType = IdType.Cosmetic
+                            new PatSettings
+                            {
+                                Path = "AnmTexPat(NW4R)/MenAdvChrCd0001_TopN__0/Face02/Texture0",
+                                Multiplier = 10,
+                                IdType = IdType.Cosmetic
+                            }
                         },
                         Prefix = "MenSelchrChrFace",
                         Multiplier = 10,
@@ -257,9 +266,12 @@ namespace BrawlInstaller.Services
                             NodePath = "",
                             FileExtension = "brres"
                         },
-                        PatSettings = new PatSettings
+                        PatSettings = new List<PatSettings>
                         {
-                            Paths = new List<string> { "AnmTexPat(NW4R)/MenReplayPreview2_TopN__0/lambert78/Texture1" }
+                            new PatSettings
+                            {
+                                Path = "AnmTexPat(NW4R)/MenReplayPreview2_TopN__0/lambert78/Texture1"
+                            }
                         },
                         Prefix = "MenReplayChr",
                         Multiplier = 10,
@@ -291,9 +303,12 @@ namespace BrawlInstaller.Services
                             NodePath = "Misc Data [30]",
                             FileExtension = "pac"
                         },
-                        PatSettings = new PatSettings
+                        PatSettings = new List<PatSettings>
                         {
-                            Paths = new List<string> { "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCmark4_TopN__0/Card04/Texture0" }
+                            new PatSettings
+                            {
+                                Path = "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCmark4_TopN__0/Card04/Texture0"
+                            }
                         },
                         Prefix = "MenSelchrMark",
                         IdType = IdType.Franchise,

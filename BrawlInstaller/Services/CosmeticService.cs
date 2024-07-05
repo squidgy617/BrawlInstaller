@@ -240,12 +240,12 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID associated with cosmetics</param>
         private void RemovePatEntries(ResourceNode rootNode, CosmeticDefinition definition, int id)
         {
-            var patTextures = GetPatTextureNodes(rootNode, definition);
-            foreach (var patTexture in patTextures)
+            foreach(var patSetting in definition.PatSettings)
             {
-                var patEntries = patTexture.Children.Where(x => CheckIdRange(definition.PatSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
+                var patTexture = GetPatTextureNode(rootNode, patSetting);
+                var patEntries = patTexture.Children.Where(x => CheckIdRange(patSetting, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
                 // Remove texture and palette associated with pat entries
-                foreach(var patEntry in patEntries)
+                foreach (var patEntry in patEntries)
                 {
                     ((PAT0TextureEntryNode)patEntry).GetImage(0);
                     ((PAT0TextureEntryNode)patEntry)._textureNode?.Remove(true);
@@ -257,7 +257,7 @@ namespace BrawlInstaller.Services
                 if (pat0 != null)
                 {
                     pat0.IsDirty = true;
-                    ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + definition.PatSettings.FramesPerImage;
+                    ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
                 }
             }
         }
@@ -268,21 +268,17 @@ namespace BrawlInstaller.Services
         /// <param name="rootnode">Root node of file to get texture pattern nodes from</param>
         /// <param name="definition">Cosmetic definition for texture pattern nodes</param>
         /// <returns>List of ResourceNode</returns>
-        private List<ResourceNode> GetPatTextureNodes(ResourceNode rootnode, CosmeticDefinition definition)
+        private ResourceNode GetPatTextureNode(ResourceNode rootnode, PatSettings patSetting)
         {
-            var pat0s = new List<ResourceNode>();
-            if (definition.PatSettings != null)
+            if (patSetting != null)
             {
-                foreach (var path in definition.PatSettings.Paths)
+                var pat0 = rootnode.FindChild(patSetting.Path);
+                if (pat0 != null)
                 {
-                    var pat0 = rootnode.FindChild(path);
-                    if (pat0 != null)
-                    {
-                        pat0s.Add(pat0);
-                    }
+                    return pat0;
                 }
             }
-            return pat0s;
+            return null;
         }
 
         /// <summary>
@@ -414,8 +410,9 @@ namespace BrawlInstaller.Services
             // Create pat entry
             if (definition.PatSettings != null)
             {
-                foreach(var path in definition.PatSettings.Paths)
+                foreach(var patSetting in definition.PatSettings)
                 {
+                    var path = patSetting.Path;
                     node = rootNode.FindChild(path);
                     if (node != null)
                     {
@@ -967,21 +964,22 @@ namespace BrawlInstaller.Services
             var nodes = new List<CosmeticTexture>();
             var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
             // If the definition contains PatSettings, check the PAT0 first
-            if (definition.PatSettings != null)
+            if (definition.PatSettings != null && definition.PatSettings.Count > 0)
             {
-                var pat = node.FindChild(definition.PatSettings.Paths.First());
+                var patSettings = definition.PatSettings.FirstOrDefault();
+                var pat = node.FindChild(patSettings.Path);
                 if (pat != null)
                 {
                     var patEntries = new List<ResourceNode>();
-                    id = brawlIds.GetIdOfType(definition.PatSettings.IdType ?? definition.IdType) + (definition.PatSettings.Offset ?? definition.Offset);
-                    patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(definition.PatSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
+                    id = brawlIds.GetIdOfType(patSettings.IdType ?? definition.IdType) + (patSettings.Offset ?? definition.Offset);
+                    patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(patSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
                     foreach (PAT0TextureEntryNode patEntry in patEntries)
                     {
                         // Get the texture from the pat entry
                         patEntry.GetImage(0);
                         if (patEntry._textureNode != null)
                         {
-                            nodes.Add(new CosmeticTexture { Texture = patEntry._textureNode, CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), definition.PatSettings.Multiplier ?? definition.Multiplier, id), Id = (int)patEntry.FrameIndex });
+                            nodes.Add(new CosmeticTexture { Texture = patEntry._textureNode, CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), patSettings.Multiplier ?? definition.Multiplier, id), Id = (int)patEntry.FrameIndex });
                         }
                     }
                     return nodes;

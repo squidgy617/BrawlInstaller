@@ -30,7 +30,7 @@ namespace BrawlInstaller.ViewModels
         private List<string> _extensionOptions;
         private Dictionary<string, IdType> _idTypes = new Dictionary<string, IdType>();
         private Dictionary<string, WiiPixelFormat> _formats = new Dictionary<string, WiiPixelFormat>();
-        private string _selectedPatPath;
+        private PatSettings _selectedPatSettings;
 
         // Services
 
@@ -72,11 +72,11 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<string, WiiPixelFormat> Formats { get => _formats; set { _formats = value; OnPropertyChanged(nameof(Formats)); } }
 
         [DependsUpon(nameof(SelectedDefinition))]
-        public ObservableCollection<string> SelectedPatPaths { get => SelectedDefinition?.PatSettings?.Paths != null ? new ObservableCollection<string>(SelectedDefinition?.PatSettings?.Paths) : new ObservableCollection<string>(); }
+        public ObservableCollection<PatSettings> PatSettings { get => SelectedDefinition?.PatSettings != null ? new ObservableCollection<PatSettings>(SelectedDefinition?.PatSettings) : new ObservableCollection<PatSettings>(); }
 
         // TODO: Change this, this doesn't actually update the source class
-        [DependsUpon(nameof(SelectedPatPaths))]
-        public string SelectedPatPath { get => _selectedPatPath; set { _selectedPatPath = value; OnPropertyChanged(nameof(SelectedPatPath)); } }
+        [DependsUpon(nameof(PatSettings))]
+        public PatSettings SelectedPatSettings { get => _selectedPatSettings; set { _selectedPatSettings = value; OnPropertyChanged(nameof(SelectedPatSettings)); } }
 
         // Methods
         public void LoadSettings(SettingsLoadedMessage message)

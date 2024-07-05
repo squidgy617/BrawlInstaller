@@ -41,7 +41,7 @@ namespace BrawlInstaller.Classes
         public InstallLocation InstallLocation { get; set; }
         public string HDImageLocation { get; set; } = "";
         public string ModelPath { get; set; } = null;
-        public PatSettings PatSettings { get; set; } = null;
+        public List<PatSettings> PatSettings { get; set; } = new List<PatSettings>();
         public string Prefix { get; set; }
         public int Multiplier { get; set; } = 1;
         public int Offset { get; set; } = 0;
@@ -68,7 +68,7 @@ namespace BrawlInstaller.Classes
 
     public class PatSettings
     {
-        public List<string> Paths { get; set; } = new List<string>();
+        public string Path { get; set; } = string.Empty;
         public int FramesPerImage { get; set; } = 1;
         // TODO: Might be able to remove this? CSS icons are the only thing where this differs, and we might *want* those to get normalized
         // If we do not remove, need to update installation process as it does not respect this at all times
