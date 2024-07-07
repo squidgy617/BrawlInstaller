@@ -95,18 +95,34 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Label x:Name="patPathsLabel" Content="Paths:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
                     <ListBox x:Name="patPathsListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60" Grid.Column="1" Grid.RowSpan="3"/>
-                    <TextBox x:Name="patPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="3" Grid.Column="1"/>
-                    <Label x:Name="patIdTypeLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Type:" Grid.Column="2"/>
-                    <ComboBox x:Name="patIdComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedPatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="3" Width="120"/>
-                    <Label x:Name="patMultiplierLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Multiplier:" Grid.Column="2" Grid.Row="1"/>
-                    <TextBox x:Name="patMultiplerTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Multiplier}" Grid.Row="1" Grid.Column="3" Width="60"/>
-                    <Label x:Name="patOffsetLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Offset:" Grid.Column="2" Grid.Row="2"/>
-                    <TextBox x:Name="patOffsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
-                    <Label x:Name="framesPerImageLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Frames Per Image:" Grid.Column="2" Grid.Row="3"/>
-                    <TextBox x:Name="framesPerImageTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.FramesPerImage}" Width="60" Grid.Column="3" Grid.Row="3"/>
+                    <TextBox x:Name="patPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="3" Grid.Column="1" Visibility="{Binding SelectedPatSettings, Converter={StaticResource nullVisConverter}}"/>
+                    <Grid Grid.Column="2" Visibility="{Binding SelectedPatSettings, Converter={StaticResource nullVisConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="patIdTypeLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Type:"/>
+                        <ComboBox x:Name="patIdComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedPatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="1" Width="120" IsEnabled="{Binding PatControlsEnabled}"/>
+                        <Label x:Name="patMultiplierLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Multiplier:" Grid.Row="1"/>
+                        <TextBox x:Name="patMultiplerTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Multiplier}" Grid.Row="1" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
+                        <Label x:Name="patOffsetLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Offset:" Grid.Row="2"/>
+                        <TextBox x:Name="patOffsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Offset}" Grid.Row="2" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
+                        <Label x:Name="framesPerImageLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Frames Per Image:" Grid.Row="3"/>
+                        <TextBox x:Name="framesPerImageTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.FramesPerImage}" Width="60" Grid.Column="1" Grid.Row="3"/>
+                        <CheckBox x:Name="copyPatSettingsCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Copy From Cosmetic Settings" IsChecked="{Binding CopyPatSettings, Mode=TwoWay}" Grid.Column="2" Margin="2"/>
+                    </Grid>
+                    
                 </Grid>
             </Expander>
         </Grid>

@@ -4,4 +4,7 @@
     <local:HexConverter x:Key="hexConverter"/>
     <local:ByteConverter x:Key="byteConverter"/>
     <local:FilePathConverter x:Key="filePathConverter"/>
+    <BooleanToVisibilityConverter x:Key="boolVisConverter"/>
+    <local:NullBoolConverter x:Key="nullBoolConverter"/>
+    <local:NullVisibilityConverter x:Key="nullVisConverter"/>
 </ResourceDictionary>

@@ -74,9 +74,37 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedDefinition))]
         public ObservableCollection<PatSettings> PatSettings { get => SelectedDefinition?.PatSettings != null ? new ObservableCollection<PatSettings>(SelectedDefinition?.PatSettings) : new ObservableCollection<PatSettings>(); }
 
-        // TODO: Change this, this doesn't actually update the source class
         [DependsUpon(nameof(PatSettings))]
         public PatSettings SelectedPatSettings { get => _selectedPatSettings; set { _selectedPatSettings = value; OnPropertyChanged(nameof(SelectedPatSettings)); } }
+
+        [DependsUpon(nameof(SelectedPatSettings))]
+        public bool CopyPatSettings 
+        { 
+            get => SelectedPatSettings != null && SelectedPatSettings?.IdType == null && SelectedPatSettings?.Multiplier == null && SelectedPatSettings?.Offset == null; 
+            set 
+            {
+                if (SelectedPatSettings != null)
+                {
+                    if (value)
+                    {
+                        SelectedPatSettings.IdType = null;
+                        SelectedPatSettings.Multiplier = null;
+                        SelectedPatSettings.Offset = null;
+                    }
+                    else
+                    {
+                        SelectedPatSettings.IdType = SelectedDefinition.IdType;
+                        SelectedPatSettings.Multiplier = SelectedDefinition.Multiplier;
+                        SelectedPatSettings.Offset = SelectedDefinition.Offset;
+                    }
+                }
+                OnPropertyChanged(nameof(CopyPatSettings));
+            }
+        }
+
+        [DependsUpon(nameof(CopyPatSettings))]
+        [DependsUpon(nameof(SelectedPatSettings))]
+        public bool PatControlsEnabled { get => SelectedPatSettings != null && !CopyPatSettings; }
 
         // Methods
         public void LoadSettings(SettingsLoadedMessage message)

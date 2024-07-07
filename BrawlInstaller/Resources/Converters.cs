@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BrawlInstaller.Resources
@@ -64,6 +65,50 @@ namespace BrawlInstaller.Resources
             parsed = int.TryParse(((string)value).Replace("0x", ""), NumberStyles.HexNumber, null, out result);
             if (parsed) return result;
             else return null;
+        }
+    }
+
+    [ValueConversion(typeof(object), typeof(bool))]
+    public class  NullBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((bool)value == false)
+            {
+                return null;
+            }
+            return true;
+        }
+    }
+
+    [ValueConversion(typeof(object), typeof(Visibility))]
+    public class NullVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null)
+            {
+                return Visibility.Hidden;
+            }
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((Visibility)value == Visibility.Hidden)
+            {
+                return null;
+            }
+            return true;
         }
     }
 }
