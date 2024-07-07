@@ -28,7 +28,7 @@
             <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
             <ListBox x:Name="definitionListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Grid.Row="2" Grid.Column="1" Width="180" Height="120"/>
         </Grid>
-        <Grid x:Name="definitionSettingsGrid" Grid.Column="1">
+        <Grid x:Name="definitionSettingsGrid" Grid.Column="1" Visibility="{Binding SelectedDefinition, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
