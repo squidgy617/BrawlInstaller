@@ -55,7 +55,14 @@
             <Label x:Name="fileExtensionLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Extension:" Grid.Row="2"/>
             <ComboBox x:Name="fileExtensionDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedDefinition.InstallLocation.FileExtension}" Grid.Row="2" Grid.Column="1" Width="120"/>
             <Label x:Name="modelPathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Model Path:" Grid.Row="3"/>
-            <TextBox x:Name="modelPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.ModelPath}" Grid.Row="3" Grid.Column="1" Width="120"/>
+            <Grid x:Name="modelPathGrid" Grid.Row="3" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="modelPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.ModelPath}" Width="120" IsEnabled="{Binding ElementName=modelPathCheckBox, Path=IsChecked}"/>
+                <CheckBox x:Name="modelPathCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" IsChecked="{Binding SelectedDefinition.ModelPath, Mode=OneWay, Converter={StaticResource nullBoolConverter}}"/>
+            </Grid>
             <Label x:Name="hdPathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="HD Image Path:" Grid.Row="4"/>
             <TextBox x:Name="hdPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.HDImageLocation}" Grid.Row="4" Grid.Column="1" Width="180"/>
             <Label x:Name="prefixLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Prefix:" Grid.Row="5"/>
@@ -87,20 +94,16 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Label x:Name="patPathsLabel" Content="Paths:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
                     <ListBox x:Name="patPathsListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60" Grid.Column="1" Grid.RowSpan="3"/>
-                    <TextBox x:Name="patPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="3" Grid.Column="1" Visibility="{Binding SelectedPatSettings, Converter={StaticResource nullVisConverter}}"/>
-                    <Grid Grid.Column="2" Visibility="{Binding SelectedPatSettings, Converter={StaticResource nullVisConverter}}">
+                    <TextBox x:Name="patPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="3" Grid.Column="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
+                    <Grid Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>

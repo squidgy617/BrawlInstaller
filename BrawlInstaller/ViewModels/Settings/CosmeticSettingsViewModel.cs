@@ -74,6 +74,7 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedDefinition))]
         public ObservableCollection<PatSettings> PatSettings { get => SelectedDefinition?.PatSettings != null ? new ObservableCollection<PatSettings>(SelectedDefinition?.PatSettings) : new ObservableCollection<PatSettings>(); }
 
+        [DependsUpon(nameof(CopyPatSettings))]
         [DependsUpon(nameof(PatSettings))]
         public PatSettings SelectedPatSettings { get => _selectedPatSettings; set { _selectedPatSettings = value; OnPropertyChanged(nameof(SelectedPatSettings)); } }
 
