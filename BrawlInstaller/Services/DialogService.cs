@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using BrawlInstaller.Dialogs;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -22,6 +23,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="DialogService.OpenMultiFileDialog(string, string)"/>
         List<string> OpenMultiFileDialog(string title, string filter);
+
+        /// <inheritdoc cref="DialogService.OpenStringInputDialog(string, string)"/>
+        string OpenStringInputDialog(string title, string caption);
     }
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
@@ -99,6 +103,23 @@ namespace BrawlInstaller.Services
                 return dialog.FileNames.ToList();
             }
             return new List<string>();
+        }
+
+        /// <summary>
+        /// Open dialog that accepts string input
+        /// </summary>
+        /// <returns>User string input</returns>
+        public string OpenStringInputDialog(string title = "String Input", string caption = "Enter a string")
+        {
+            var dialog = new StringInputWindow();
+            dialog.Title = title;
+            dialog.Caption = caption;
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                return dialog.ResponseText;
+            }
+            return null;
         }
     }
 }

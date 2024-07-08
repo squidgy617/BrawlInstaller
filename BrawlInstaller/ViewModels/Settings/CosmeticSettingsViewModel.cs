@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
+using BrawlInstaller.Services;
 using BrawlLib.Wii.Textures;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -10,6 +11,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -33,10 +35,16 @@ namespace BrawlInstaller.ViewModels
         private PatSettings _selectedPatSettings;
 
         // Services
+        IDialogService _dialogService { get; }
+
+        // Commands
+        public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
 
         [ImportingConstructor]
-        public CosmeticSettingsViewModel()
+        public CosmeticSettingsViewModel(IDialogService dialogService)
         {
+            _dialogService = dialogService;
+
             WeakReferenceMessenger.Default.Register<SettingsLoadedMessage>(this, (recipient, message) =>
             {
                 LoadSettings(message);
@@ -44,22 +52,23 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public List<CosmeticDefinition> CosmeticSettings { get => _cosmeticSettings; set { _cosmeticSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
+        public List<CosmeticDefinition> CosmeticSettings { get => _cosmeticSettings; set { _cosmeticSettings = value; OnPropertyChanged(nameof(CosmeticSettings)); } }
 
-        [DependsUpon(nameof(BuildSettings))]
+        [DependsUpon(nameof(CosmeticSettings))]
         public Dictionary<string, CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
 
         [DependsUpon(nameof(CosmeticOptions))]
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public List<string> Styles { get => CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
+        public ObservableCollection<string> Styles { get => new ObservableCollection<string>(CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList()); }
 
         [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
 
         [DependsUpon(nameof(SelectedCosmeticOption))]
         [DependsUpon(nameof(SelectedStyle))]
+        [DependsUpon(nameof(CosmeticSettings))]
         public ObservableCollection<CosmeticDefinition> DefinitionList { get => new ObservableCollection<CosmeticDefinition>(CosmeticSettings.Where(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption)); }
 
         [DependsUpon(nameof(DefinitionList))]
@@ -114,6 +123,23 @@ namespace BrawlInstaller.ViewModels
             CosmeticOptions = typeof(CosmeticType).GetDictionary<CosmeticType>();
             IdTypes = typeof(IdType).GetDictionary<IdType>();
             Formats = typeof(WiiPixelFormat).GetDictionary<WiiPixelFormat>();
+        }
+
+        public void AddStyle()
+        {
+            var styleName = _dialogService.OpenStringInputDialog("Style Name Input", "Enter the name for your new style");
+            if (styleName != null && !CosmeticSettings.Any(x => x.Style == styleName && x.CosmeticType == SelectedCosmeticOption))
+            {
+                var newDef = new CosmeticDefinition
+                {
+                    CosmeticType = SelectedCosmeticOption,
+                    Style = styleName
+                };
+                DefinitionList.Add(newDef);
+                CosmeticSettings.Add(newDef);
+                OnPropertyChanged(nameof(DefinitionList));
+                OnPropertyChanged(nameof(CosmeticSettings));
+            }
         }
     }
 }

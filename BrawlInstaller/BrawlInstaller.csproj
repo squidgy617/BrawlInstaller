@@ -71,6 +71,9 @@
     <Compile Include="Classes\TrackedList.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
     <Compile Include="Common\ExtensionMethods.cs" />
+    <Compile Include="Dialogs\StringInputWindow.xaml.cs">
+      <DependentUpon>StringInputWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\CursorWait.cs" />
     <Compile Include="Resources\Converters.cs" />
     <Compile Include="Enums\CosmeticType.cs" />
@@ -125,6 +128,10 @@
     <Compile Include="Views\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\StringInputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
