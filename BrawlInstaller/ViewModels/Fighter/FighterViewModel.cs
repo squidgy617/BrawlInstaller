@@ -85,6 +85,7 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage = new FighterPackage();
                 FighterPackage.FighterInfo = SelectedFighter;
                 FighterPackage = _packageService.ExtractFighter(SelectedFighter.Ids);
+                OnPropertyChanged(nameof(FighterPackage));
                 WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
         }

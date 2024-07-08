@@ -12,11 +12,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="3" Background="Silver" ResizeDirection="Columns" Grid.RowSpan="2"/>
@@ -37,19 +34,30 @@
                 <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveCommand}" Grid.Row="1" Grid.Column="1"/>
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.Column="1" Margin="3,0,0,0" Grid.ColumnSpan="2">
-            <Grid>
-                <ContentControl Content="{Binding CostumeViewModel}"/>
-            </Grid>
-        </GroupBox>
-        <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" Margin="3,0,0,0">
-            <ContentControl Content="{Binding FranchiseIconViewModel}"/>
-        </GroupBox>
-        <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" Margin="3,0,0,0">
-            <ContentControl Content="{Binding CosmeticViewModel}"/>
-        </GroupBox>
-        <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files" VerticalAlignment="Top" Grid.Column="3" Grid.Row="0">
-            <ContentControl Content="{Binding FighterFileViewModel}"/>
-        </GroupBox>
+        <Grid Grid.Column="1" Visibility="{Binding FighterPackage, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox x:Name="costumeGroupBox" Header="Costumes" Margin="3,0,0,0" Grid.ColumnSpan="2">
+                <Grid>
+                    <ContentControl Content="{Binding CostumeViewModel}"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" VerticalAlignment="Top" Grid.Row="1" Margin="3,0,0,0">
+                <ContentControl Content="{Binding FranchiseIconViewModel}"/>
+            </GroupBox>
+            <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" Margin="3,0,0,0">
+                <ContentControl Content="{Binding CosmeticViewModel}"/>
+            </GroupBox>
+            <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files" VerticalAlignment="Top" Grid.Column="2" Grid.Row="0">
+                <ContentControl Content="{Binding FighterFileViewModel}"/>
+            </GroupBox>
+        </Grid>
     </Grid>
 </UserControl>

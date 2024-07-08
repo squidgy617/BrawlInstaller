@@ -45,7 +45,7 @@
             </Grid>
             
         </Grid>
-        <Grid x:Name="boxesGrid" Grid.Column="1">
+        <Grid x:Name="boxesGrid" Grid.Column="1" Visibility="{Binding SelectedFighterInfo, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
