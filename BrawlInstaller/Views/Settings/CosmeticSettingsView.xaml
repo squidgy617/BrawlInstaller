@@ -33,7 +33,7 @@
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
                 <Button x:Name="stylesAddButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="+" Grid.Column="1" Margin="2" Command="{Binding AddStyleCommand}"/>
-                <Button x:Name="stylesRemoveButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="-" Grid.Column="2" Margin="2"/>
+                <Button x:Name="stylesRemoveButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="-" Grid.Column="2" Margin="2" Command="{Binding RemoveStyleCommand}"/>
             </Grid>
             <ListBox x:Name="definitionListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Grid.Row="2" Grid.Column="1" Width="180" Height="120"/>
         </Grid>

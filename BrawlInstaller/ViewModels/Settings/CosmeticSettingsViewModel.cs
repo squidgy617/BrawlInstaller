@@ -39,6 +39,7 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
+        public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
 
         [ImportingConstructor]
         public CosmeticSettingsViewModel(IDialogService dialogService)
@@ -133,13 +134,28 @@ namespace BrawlInstaller.ViewModels
                 var newDef = new CosmeticDefinition
                 {
                     CosmeticType = SelectedCosmeticOption,
-                    Style = styleName
+                    Style = styleName,
+                    InstallLocation = new InstallLocation { FilePath = "pf" }
                 };
                 DefinitionList.Add(newDef);
                 CosmeticSettings.Add(newDef);
                 OnPropertyChanged(nameof(DefinitionList));
                 OnPropertyChanged(nameof(CosmeticSettings));
             }
+        }
+
+        public void RemoveStyle()
+        {
+            foreach(var definition in DefinitionList.ToList())
+            {
+                if (definition.CosmeticType == SelectedCosmeticOption && definition.Style == SelectedStyle)
+                {
+                    DefinitionList.Remove(definition);
+                    CosmeticSettings.Remove(definition);
+                }
+            }
+            OnPropertyChanged(nameof(DefinitionList));
+            OnPropertyChanged(nameof(CosmeticSettings));
         }
     }
 }
