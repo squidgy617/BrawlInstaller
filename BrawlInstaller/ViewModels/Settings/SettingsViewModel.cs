@@ -9,6 +9,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -26,6 +27,10 @@ namespace BrawlInstaller.ViewModels
         // Services
         ISettingsService _settingsService { get; }
 
+        // Commands
+        public ICommand SaveSettingsCommand => new RelayCommand(param => SaveSettings());
+        public ICommand LoadSettingsCommand => new RelayCommand(param => LoadSettings());
+
         [ImportingConstructor]
         public SettingsViewModel(ISettingsService settingsService, ICosmeticSettingsViewModel cosmeticSettingsViewModel)
         {
@@ -42,6 +47,19 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
+
+        // Methods
+
+        // TODO: Should these save to a different location?
+        private void SaveSettings()
+        {
+            _settingsService.SaveSettings(BuildSettings, $"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+        }
+
+        private void LoadSettings()
+        {
+            BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+        }
     }
 
     // Messages

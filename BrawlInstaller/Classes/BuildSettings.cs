@@ -79,39 +79,41 @@ namespace BrawlInstaller.Classes
 
     public class ToolPathSettings
     {
-        public string KirbyHatExe { get; set; }
-        public string AssemblyFunctionsExe { get; set; }
-        public string SawndReplaceExe { get; set; }
-        public string SfxChangeExe { get; set; }
-        public string GfxChangeExe { get; set; }
+        public string KirbyHatExe { get; set; } = "";
+        public string AssemblyFunctionsExe { get; set; } = "";
+        public string SawndReplaceExe { get; set; } = "";
+        public string SfxChangeExe { get; set; } = "";
+        public string GfxChangeExe { get; set; } = "";
     }
 
     public class KirbyHatSettings
     {
-        public bool InstallKirbyHats { get; set; }
-        public string DefaultKirbyHat { get; set; }
+        public bool InstallKirbyHats { get; set; } = false;
+        public string DefaultKirbyHat { get; set; } = "0x21";
     }
 
     public class SoundSettings
     {
-        public string SoundbankStyle { get; set; }
-        public bool IncrementSoundbankIds { get; set; }
-        public bool IncrementSoundbankNames { get; set; }
+        public string SoundbankStyle { get; set; } = "hex";
+        public bool IncrementSoundbankIds { get; set; } = true;
+        public bool IncrementSoundbankNames { get; set; } = false;
     }
 
     public class MiscSettings
     {
-        public bool InstallToSse { get; set; }
-        public SSEUnlockStage SSEUnlockStage { get; set; }
-        public bool InstallTrophies { get; set; }
-        public List<string> CustomStageLists { get; set; }
+        public bool InstallToSse { get; set; } = false;
+        public SSEUnlockStage SSEUnlockStage { get; set; } = SSEUnlockStage.End;
+        public bool InstallTrophies { get; set; } = false;
+        public List<string> CustomStageLists { get; set; } = new List<string>();
     }
 
     public class FilePathSettings
     {
-        public string FighterFiles { get; set; }
-        public string BrawlEx { get; set; }
-        public string Modules { get; set; }
-        public string HDTextures { get; set; }
+        public string FighterFiles { get; set; } = "pf\\fighter";
+        public string BrawlEx { get; set; } = "pf\\BrawlEx";
+        public string Modules { get; set; } = "pf\\module";
+
+        // TODO: change default on this and make it save to a separate config file
+        public string HDTextures { get; set; } = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01";
     }
 }

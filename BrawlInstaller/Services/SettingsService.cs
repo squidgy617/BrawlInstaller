@@ -54,6 +54,7 @@ namespace BrawlInstaller.Services
 
         // Methods
 
+        // TODO: Should path just be hardcoded into these? Rather than passing it, since it will be same every time?
         /// <summary>
         /// Save build settings
         /// </summary>
@@ -61,7 +62,7 @@ namespace BrawlInstaller.Services
         /// <param name="path">Path to save to</param>
         public void SaveSettings(BuildSettings buildSettings, string path)
         {
-            var jsonString = JsonConvert.SerializeObject(buildSettings);
+            var jsonString = JsonConvert.SerializeObject(buildSettings, Formatting.Indented);
             File.WriteAllText(path, jsonString);
         }
 
@@ -72,8 +73,12 @@ namespace BrawlInstaller.Services
         /// <returns>Build settings</returns>
         public BuildSettings LoadSettings(string path)
         {
-            var text = File.ReadAllText(path);
-            var buildSettings = JsonConvert.DeserializeObject<BuildSettings>(text);
+            var buildSettings = new BuildSettings();
+            if (File.Exists(path))
+            {
+                var text = File.ReadAllText(path);
+                buildSettings = JsonConvert.DeserializeObject<BuildSettings>(text);
+            }
             return buildSettings;
         }
 

@@ -70,7 +70,7 @@ namespace BrawlInstaller.ViewModels
 
         public void TestJson()
         {
-            var buildSettings = _settingsService.GetDefaultSettings();
+            var buildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
             _settingsService.SaveSettings(buildSettings, "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
             _settingsService.LoadSettings("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
         }
@@ -78,7 +78,7 @@ namespace BrawlInstaller.ViewModels
         public void TestExtract()
         {
             _settingsService.AppSettings.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
-            _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
+            _settingsService.BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
             _packageService.ExtractFighter(new BrawlIds
             {
                 //CosmeticId = 19,

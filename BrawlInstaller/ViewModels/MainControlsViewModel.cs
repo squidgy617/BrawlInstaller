@@ -30,7 +30,7 @@ namespace BrawlInstaller.ViewModels
             _settingsService = settingsService;
 
             _settingsService.AppSettings.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
-            _settingsService.BuildSettings = _settingsService.GetDefaultSettings();
+            _settingsService.BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
 
             AppSettings = _settingsService.AppSettings;
         }
