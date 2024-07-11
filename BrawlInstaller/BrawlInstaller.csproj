@@ -80,6 +80,7 @@
     <Compile Include="Enums\IdType.cs" />
     <Compile Include="Enums\SSEUnlockStage.cs" />
     <Compile Include="Resources\BindingProxy.cs" />
+    <Compile Include="Services\CodeService.cs" />
     <Compile Include="Services\ColorSmashService.cs" />
     <Compile Include="Services\CosmeticService.cs" />
     <Compile Include="Services\DialogService.cs" />
