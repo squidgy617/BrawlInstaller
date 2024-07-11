@@ -11,6 +11,7 @@ namespace BrawlInstaller.Services
 {
     public interface ICodeService
     {
+        /// <inheritdoc cref="CodeService.ReadTable(string, string)"/>
         List<string> ReadTable(string fileText, string label);
     }
 
@@ -28,6 +29,12 @@ namespace BrawlInstaller.Services
 
         // Methods
 
+        /// <summary>
+        /// Read an ASM table from text
+        /// </summary>
+        /// <param name="fileText">Text to read table from</param>
+        /// <param name="label">Label of table</param>
+        /// <returns>List of strings found in table</returns>
         public List<string> ReadTable(string fileText, string label)
         {
             var table = new List<string>();

@@ -115,5 +115,6 @@ namespace BrawlInstaller.Classes
 
         // TODO: change default on this and make it save to a separate config file
         public string HDTextures { get; set; } = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01";
+        public string StageTablePath { get; set; } = "Source\\Project+\\StageTable.asm";
     }
 }
