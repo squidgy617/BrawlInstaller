@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -424,10 +425,21 @@ namespace BrawlInstaller.Services
                     var name = GetFighterPacName(file, fighterInfo, costume.CostumeId);
                     // Update GFX if they are per-costume
                     var efNode = file.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
-                    && ((ARCNode)x).FileType == ARCFileType.EffectData && int.TryParse(x.Name.Substring(x.Name.Length - 2), out int costumeId));
+                    && ((ARCNode)x).FileType == ARCFileType.EffectData && Regex.Match(x.Name, ".+[X]\\d{2}$").Success);
                     if (efNode != null)
                     {
                         efNode.Name = efNode.Name.Substring(0, efNode.Name.Length - 2) + costume.CostumeId.ToString("D2");
+                        // Update EFLS and REF nodes
+                        foreach (var node in efNode.Children.Where(x => x.GetType() == typeof(EFLSNode) || x.GetType() == typeof(REFFNode)))
+                        {
+                            foreach(var child in node.Children)
+                            {
+                                if (Regex.Match(child.Name, ".+[X]\\d{2}$").Success)
+                                {
+                                    child.Name = child.Name.Substring(0, child.Name.Length - 2) + costume.CostumeId.ToString("D2");
+                                }
+                            }
+                        }
                     }
                     // Add file to list
                     if (file != null)

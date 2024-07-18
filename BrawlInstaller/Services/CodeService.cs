@@ -39,12 +39,12 @@ namespace BrawlInstaller.Services
         {
             var table = new List<string>();
             // Remove comments
-            var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
+            var cleanText = Regex.Replace(fileText, "([|]|[#]).+(\n|\r)", "");
             // Find table start
             var labelPosition = cleanText.IndexOf(label);
             var workingText = cleanText.Substring(labelPosition, cleanText.Length - labelPosition);
             // Get table length
-            var result = Regex.Match(workingText, "(half|word|byte)[[]\\d*[]]");
+            var result = Regex.Match(workingText, "(half|word|byte)[[]\\d+[]]");
             // If another label appears before the table counter, then it is an empty table
             var nextLabelPosition = workingText.IndexOf(':', label.Length);
             if (result.Success && result.Index < nextLabelPosition)
