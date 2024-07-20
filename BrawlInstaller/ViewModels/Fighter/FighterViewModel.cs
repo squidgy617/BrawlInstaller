@@ -84,7 +84,7 @@ namespace BrawlInstaller.ViewModels
             {
                 FighterPackage = new FighterPackage();
                 FighterPackage.FighterInfo = SelectedFighter;
-                FighterPackage = _packageService.ExtractFighter(SelectedFighter.Ids);
+                FighterPackage = _packageService.ExtractFighter(SelectedFighter);
                 OnPropertyChanged(nameof(FighterPackage));
                 WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
@@ -144,7 +144,7 @@ namespace BrawlInstaller.ViewModels
             // Remove added franchise icons from package
             FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
             // Clear changes on all cosmetics
-            FighterPackage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.HDImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; } );
+            FighterPackage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; } );
             FighterPackage.Cosmetics.ClearChanges();
         }
 

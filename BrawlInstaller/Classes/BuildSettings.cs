@@ -40,6 +40,7 @@ namespace BrawlInstaller.Classes
         public string Style { get; set; }
         public InstallLocation InstallLocation { get; set; } = new InstallLocation();
         public string HDImageLocation { get; set; } = "";
+        public bool CreateHDTextureFolder { get; set; } = false;
         public string ModelPath { get; set; } = null;
         public List<PatSettings> PatSettings { get; set; } = new List<PatSettings>();
         public string Prefix { get; set; } = "";

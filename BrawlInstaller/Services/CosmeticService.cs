@@ -607,8 +607,7 @@ namespace BrawlInstaller.Services
             if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
             {
                 var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}";
-                if (!string.IsNullOrEmpty(name) && (cosmetic.CosmeticType == CosmeticType.CSP || cosmetic.CosmeticType == CosmeticType.BP
-                    || cosmetic.CosmeticType == CosmeticType.StockIcon))
+                if (!string.IsNullOrEmpty(name) && definition.CreateHDTextureFolder == true)
                     imagePath += $"\\{name}";
                 if (!Directory.Exists(imagePath))
                     Directory.CreateDirectory(imagePath);
@@ -701,7 +700,7 @@ namespace BrawlInstaller.Services
                         $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
-                    if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
+                    if (_settingsService.BuildSettings.HDTextures)
                     {
                         ImportHDTexture(rootNode, definition, cosmetic, id, name);
                     }
@@ -1048,6 +1047,7 @@ namespace BrawlInstaller.Services
         private Dictionary<string, string> PreloadHDTextures()
         {
             var directories = Directory.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
+            directories = directories.Where(x => !x.Contains(".git")).ToArray();
             directories = directories.Append(_settingsService.BuildSettings.FilePathSettings.HDTextures).ToArray();
             var hdImages = new ConcurrentBag<string>();
             Parallel.ForEach(directories, directory =>

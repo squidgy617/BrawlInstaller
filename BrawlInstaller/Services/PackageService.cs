@@ -17,8 +17,8 @@ namespace BrawlInstaller.Services
 {
     public interface IPackageService
     {
-        /// <inheritdoc cref="PackageService.ExtractFighter(BrawlIds)"/>
-        FighterPackage ExtractFighter(BrawlIds fighterIds);
+        /// <inheritdoc cref="PackageService.ExtractFighter(FighterInfo)"/>
+        FighterPackage ExtractFighter(FighterInfo fighterInfo);
 
         /// <inheritdoc cref="PackageService.SaveFighter(FighterPackage)"/>
         void SaveFighter(FighterPackage fighterPackage);
@@ -48,11 +48,11 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fighterIds">IDs of fighter</param>
         /// <returns>Fighter package</returns>
-        public FighterPackage ExtractFighter(BrawlIds fighterIds)
+        public FighterPackage ExtractFighter(FighterInfo fighterInfo)
         {
             var fighterPackage = new FighterPackage();
             // Get fighter info
-            var fighterInfo = _fighterService.GetFighterInfo(fighterIds);
+            fighterInfo = _fighterService.GetFighterInfo(fighterInfo);
 
             // Get cosmetics
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);

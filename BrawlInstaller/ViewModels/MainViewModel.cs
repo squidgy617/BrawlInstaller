@@ -79,16 +79,19 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService.AppSettings.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
             _settingsService.BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
-            _packageService.ExtractFighter(new BrawlIds
+            _packageService.ExtractFighter(new FighterInfo
             {
-                //CosmeticId = 19,
-                //CosmeticConfigId = 19,
-                //FranchiseId = 38,
-                //TrophyThumbnailId = 39
-                FighterConfigId = 37,
-                SlotConfigId = 39,
-                CosmeticConfigId = 35,
-                CSSSlotConfigId = 35
+                Ids = new BrawlIds
+                {
+                    //CosmeticId = 19,
+                    //CosmeticConfigId = 19,
+                    //FranchiseId = 38,
+                    //TrophyThumbnailId = 39
+                    FighterConfigId = 37,
+                    SlotConfigId = 39,
+                    CosmeticConfigId = 35,
+                    CSSSlotConfigId = 35
+                }
             });
         }
     }
