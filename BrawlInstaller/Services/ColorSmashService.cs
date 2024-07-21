@@ -48,6 +48,7 @@ namespace BrawlInstaller.Services
         public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
         {
             var folder = bres.GetFolder<TEX0Node>();
+            var paletteFolder = bres.GetFolder<PLT0Node>();
             if (Directory.Exists(ColorSmashDirectory))
                 Directory.Delete(ColorSmashDirectory, true);
             Directory.CreateDirectory(ColorSmashDirectory);
@@ -67,12 +68,15 @@ namespace BrawlInstaller.Services
             ColorSmasher(paletteCount);
             foreach(var cosmetic in cosmetics)
             {
-                var index = cosmetic.Texture.Index;
-                var name = cosmetic.Texture.Name;
+                var currentTexture = GetTexture(bres, cosmetic.Texture.Name);
+                var currentPalette = currentTexture?.GetPaletteNode();
+                var index = currentTexture.Index;
+                var name = currentTexture.Name;
                 // Clean up existing texture
-                cosmetic.Texture?.Remove(true);
-                cosmetic.Texture?.Dispose();
-                cosmetic.Palette?.Dispose();
+                folder.Children.Remove(currentTexture);
+                paletteFolder.Children.Remove(currentPalette);
+                currentTexture?.Dispose();
+                currentPalette?.Dispose();
                 // Import color smashed image
                 var file = $"{ColorSmashOutDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png";
                 var texture = ColorSmashTextureImport(bres, file, WiiPixelFormat.CI8, mipCount);

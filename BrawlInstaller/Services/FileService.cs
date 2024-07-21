@@ -109,12 +109,22 @@ namespace BrawlInstaller.Services
             var path = $"{_settingsService.AppSettings.TempPath}\\{guid}";
             CreateDirectory(path);
             node.Export(path);
-            var newNode = NodeFactory.FromFile(null, path);
+            ResourceNode newNode = null;
+            if (node.GetType() == typeof(TEX0Node) && ((TEX0Node)node).SharesData)
+            {
+                newNode = new TEX0Node();
+                ((TEX0Node)newNode).SharesData = true;
+            }
+            else
+            {
+                newNode = NodeFactory.FromFile(null, path, node.GetType());
+            }
             if (newNode.GetType().IsAssignableFrom(typeof(BRESEntryNode)))
             {
                 ((BRESEntryNode)newNode).OriginalPath = "";
             }
             File.Delete(path);
+            newNode.Name = node.Name;
             return newNode;
         }
 

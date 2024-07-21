@@ -131,8 +131,9 @@ namespace BrawlInstaller.Services
         /// <returns>TEX0Node</returns>
         private TEX0Node ImportTexture(BRRESNode destinationNode, TEX0Node texture)
         {
-            destinationNode.GetOrCreateFolder<TEX0Node>()?.AddChild(_fileService.CopyNode(texture));
-            return texture;
+            var newTexture = _fileService.CopyNode(texture) as TEX0Node;
+            destinationNode.GetOrCreateFolder<TEX0Node>()?.AddChild(newTexture);
+            return newTexture;
         }
 
         /// <summary>
@@ -182,8 +183,9 @@ namespace BrawlInstaller.Services
         /// <returns>PLT0Node</returns>
         private PLT0Node ImportPalette(BRRESNode destinationNode, PLT0Node palette)
         {
-            destinationNode.GetOrCreateFolder<PLT0Node>()?.AddChild(_fileService.CopyNode(palette));
-            return palette;
+            var newPalette = _fileService.CopyNode(palette) as PLT0Node;
+            destinationNode.GetOrCreateFolder<PLT0Node>()?.AddChild(newPalette);
+            return newPalette;
         }
 
         /// <summary>
@@ -194,8 +196,9 @@ namespace BrawlInstaller.Services
         /// <returns>MDL0Node</returns>
         private MDL0Node ImportModel(BRRESNode destinationNode, MDL0Node model)
         {
-            destinationNode.GetOrCreateFolder<MDL0Node>()?.AddChild(_fileService.CopyNode(model));
-            return model;
+            var newModel = _fileService.CopyNode(model) as MDL0Node;
+            destinationNode.GetOrCreateFolder<MDL0Node>()?.AddChild(newModel);
+            return newModel;
         }
 
         /// <summary>
@@ -206,8 +209,9 @@ namespace BrawlInstaller.Services
         /// <returns>CLR0Node</returns>
         private CLR0Node ImportColorSequence(BRRESNode destinationNode, CLR0Node colorSequence)
         {
-            destinationNode.GetOrCreateFolder<CLR0Node>()?.AddChild(_fileService.CopyNode(colorSequence));
-            return colorSequence;
+            var newColorSequence = _fileService.CopyNode(colorSequence) as CLR0Node;
+            destinationNode.GetOrCreateFolder<CLR0Node>()?.AddChild(newColorSequence);
+            return newColorSequence;
         }
 
         /// <summary>
@@ -698,6 +702,7 @@ namespace BrawlInstaller.Services
                     ImportCosmetic(definition, cosmetic, id, rootNode);
                     rootNode._origPath = $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
                         $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
+                    FileCache.Add(rootNode);
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
                     if (_settingsService.BuildSettings.HDTextures)
