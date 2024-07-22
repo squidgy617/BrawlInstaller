@@ -382,7 +382,8 @@ namespace BrawlInstaller.Services
                 "Result",
                 "Entry",
                 "AltR",
-                "AltZ"
+                "AltZ",
+                "Alt"
             };
             var name = Path.GetFileNameWithoutExtension(node.FileName);
             // Get modifiers
