@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -14,9 +15,6 @@ namespace BrawlInstaller.Services
     {
         /// <inheritdoc cref="StageService.GetStageLists()"/>
         List<StageList> GetStageLists();
-
-        /// <inheritdoc cref="StageService.GetStageIds()"/>
-        List<BrawlIds> GetStageIds();
     }
 
     [Export(typeof(IStageService))]
@@ -25,12 +23,14 @@ namespace BrawlInstaller.Services
         // Services
         ICodeService _codeService;
         ISettingsService _settingsService;
+        IFileService _fileService;
 
         [ImportingConstructor]
-        public StageService(ICodeService codeService, ISettingsService settingsService) 
+        public StageService(ICodeService codeService, ISettingsService settingsService, IFileService fileService) 
         {
             _codeService = codeService;
             _settingsService = settingsService;
+            _fileService = fileService;
         }
 
         // Methods
@@ -43,7 +43,7 @@ namespace BrawlInstaller.Services
         {
             var stageLists = new List<StageList>();
             // Get stage table
-            var stageTable = GetStageIds();
+            var stageTable = GetStageSlots();
             // Iterate through each stage list file
             foreach(var stageListFile in _settingsService.BuildSettings.FilePathSettings.StageListPaths)
             {
@@ -67,8 +67,8 @@ namespace BrawlInstaller.Services
                             {
                                 if (result < stageTable.Count && result >= 0)
                                 {
-                                    var ids = stageTable[result];
-                                    page.StageIds.Add(ids);
+                                    var stageSlot = stageTable[result];
+                                    page.StageSlots.Add(stageSlot);
                                 }
                             }
                         }
@@ -82,10 +82,43 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get all stage slots from build
+        /// </summary>
+        /// <returns>List of stage slots</returns>
+        private List<StageSlot> GetStageSlots()
+        {
+            var stageSlots = new List<StageSlot>();
+            var stageIds = GetStageIds();
+            foreach(var idPair in stageIds)
+            {
+                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}\\{idPair.StageId:X2}.asl";
+                var node = _fileService.OpenFile(path);
+                if (node != null)
+                {
+                    var stageSlot = new StageSlot
+                    {
+                        StageIds = idPair,
+                        StageEntries = new List<StageEntry>()
+                    };
+                    foreach(ASLSEntryNode entry in node.Children)
+                    {
+                        stageSlot.StageEntries.Add(new StageEntry
+                        {
+                            Name = entry.Name,
+                            ButtonFlags = entry.ButtonFlags
+                        });
+                    }
+                    stageSlots.Add(stageSlot);
+                }
+            }
+            return stageSlots;
+        }
+
+        /// <summary>
         /// Get all stage IDs from build
         /// </summary>
         /// <returns>List of stage IDs</returns>
-        public List<BrawlIds> GetStageIds()
+        private List<BrawlIds> GetStageIds()
         {
             var stageIds = new List<BrawlIds>();
             var filePath = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageTablePath}";

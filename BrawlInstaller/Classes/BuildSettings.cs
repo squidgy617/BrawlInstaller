@@ -113,10 +113,11 @@ namespace BrawlInstaller.Classes
         public string FighterFiles { get; set; } = "pf\\fighter";
         public string BrawlEx { get; set; } = "pf\\BrawlEx";
         public string Modules { get; set; } = "pf\\module";
+        public string StageSlots { get; set; } = "pf\\stage\\stageslot";
 
         // TODO: change default on this and make it save to a separate config file
         public string HDTextures { get; set; } = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01";
         public string StageTablePath { get; set; } = "Source\\Project+\\StageTable.asm";
-        public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
+        [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
     }
 }
