@@ -65,16 +65,24 @@ namespace BrawlInstaller.Services
                             // Get IDs from index
                             if(int.TryParse(index.Replace("0x", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result))
                             {
-                                if (result < stageTable.Count && result >= 0)
+                                if (result >= 0)
                                 {
-                                    var stageSlot = stageTable[result];
-                                    page.StageSlots.Add(stageSlot);
+                                    var stageSlot = stageTable.FirstOrDefault(x => x.Index == result);
+                                    if (stageSlot != null)
+                                    {
+                                        page.StageSlots.Add(stageSlot);
+                                    }
                                 }
                             }
                         }
                         stageList.Pages.Add(page);
                         pageNumber++;
                     }
+                    // Get unused stages
+                    // TODO: Should this be done in ViewModel instead so it's easier to change?
+                    var stageSlots = stageList.Pages.SelectMany(z => z.StageSlots).ToList();
+                    stageList.UnusedSlots = stageTable.Where(x => !stageSlots.Contains(x)).ToList();
+                    // Add stage list
                     stageLists.Add(stageList);
                 }
             }
@@ -98,7 +106,8 @@ namespace BrawlInstaller.Services
                     var stageSlot = new StageSlot
                     {
                         StageIds = idPair,
-                        StageEntries = new List<StageEntry>()
+                        StageEntries = new List<StageEntry>(),
+                        Index = stageIds.IndexOf(idPair)
                     };
                     foreach(ASLSEntryNode entry in node.Children)
                     {
