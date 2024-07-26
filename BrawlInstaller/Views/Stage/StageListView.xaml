@@ -30,7 +30,14 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Name" Width="120" Height="Auto" MaxHeight="400" MinHeight="240"/>
-                        <Button x:Name="stageUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Width="16" Height="32" Margin="2" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveUpCommand}"/>
+                        <Grid x:Name="stageListButtonsGrid" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Button x:Name="stageUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="32" Margin="2" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveUpCommand}"/>
+                            <Button x:Name="stageDownButton" Content="↓" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="32" Margin="2" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
+                        </Grid>
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
