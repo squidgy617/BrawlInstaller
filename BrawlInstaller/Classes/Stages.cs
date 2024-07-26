@@ -8,6 +8,7 @@ namespace BrawlInstaller.Classes
 {
     public class StageList
     {
+        public string Name { get; set; }
         public List<StagePage> Pages { get; set; } = new List<StagePage>();
         public List<StageSlot> UnusedSlots { get; set; } = new List<StageSlot>();
     }
@@ -23,7 +24,7 @@ namespace BrawlInstaller.Classes
         public BrawlIds StageIds { get; set; } = new BrawlIds();
         public List<StageEntry> StageEntries { get; set; } = new List<StageEntry>();
 
-        public string Name { get => StageEntries.FirstOrDefault()?.Name; }
+        public string Name { get => StageEntries.FirstOrDefault()?.Name ?? "Unknown"; }
         public int Index { get; set; }
     }
 

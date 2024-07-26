@@ -50,7 +50,7 @@ namespace BrawlInstaller.Services
                 var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageListFile}";
                 if (File.Exists(filePath))
                 {
-                    var stageList = new StageList();
+                    var stageList = new StageList { Name = Path.GetFileNameWithoutExtension(stageListFile) };
                     // Read all pages from stage list file
                     var fileText = File.ReadAllText(filePath);
                     var labels = new List<string> { "TABLE_1:", "TABLE_2:", "TABLE_3:", "TABLE_4:", "TABLE_5:" };

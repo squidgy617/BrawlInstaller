@@ -23,6 +23,9 @@
             <TabItem Header="Settings">
                 <ContentControl x:Name="SettingsView" Content="{Binding SettingsViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
             </TabItem>
+            <TabItem Header="Stages">
+                <ContentControl x:Name="StageListView" Content="{Binding StageListViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
