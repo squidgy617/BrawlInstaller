@@ -7,7 +7,8 @@
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:StageListViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Name="userControl">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,7 +24,14 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <ListBox x:Name="stageListBox" ItemsSource="{Binding StageSlots}" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Name" Width="120" Height="Auto" MaxHeight="400" MinHeight="240"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox x:Name="stageListBox" ItemsSource="{Binding StageSlots}" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Name" Width="120" Height="Auto" MaxHeight="400" MinHeight="240"/>
+                        <Button x:Name="stageUpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Width="16" Height="32" Margin="2" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveUpCommand}"/>
+                    </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
