@@ -15,7 +15,17 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" VerticalAlignment="Top" HorizontalAlignment="Left" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
-        <ComboBox x:Name="pageComboBox" ItemsSource="{Binding SelectedStageList.Pages}" VerticalAlignment="Top" HorizontalAlignment="Left" SelectedValue="{Binding SelectedPage, Mode=TwoWay}" Width="120" Grid.Row="1" DisplayMemberPath="PageNumber"/>
-        <ListBox x:Name="stageListBox" ItemsSource="{Binding SelectedPage.StageSlots}" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Name" Width="120" Grid.Row="2" Height="Auto" MaxHeight="400" MinHeight="240"/>
+        <TabControl x:Name="pageTabControl" SelectedIndex="0" ItemsSource="{Binding SelectedStageList.Pages}" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1" Width="Auto" Height="Auto">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding PageNumber}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ListBox x:Name="stageListBox" ItemsSource="{Binding StageSlots}" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Name" Width="120" Height="Auto" MaxHeight="400" MinHeight="240"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </UserControl>

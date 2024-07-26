@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ContentControl x:Name="MainControlsView" Content="{Binding MainControlsViewModel}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="Auto" Height="Auto"/>
-        <TabControl x:Name="MainView" Grid.Row="1">
+        <TabControl x:Name="MainView" Grid.Row="1" SelectedIndex="0">
             <TabItem Header="Fighter">
                 <ContentControl x:Name="FighterView" Content="{Binding FighterViewModel}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
             </TabItem>
