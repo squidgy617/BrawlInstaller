@@ -15,7 +15,7 @@ namespace BrawlInstaller.ViewModels
 {
     public interface IStageListViewModel
     {
-
+        StageSlot SelectedStageSlot { get; }
     }
 
     [Export(typeof(IStageListViewModel))]

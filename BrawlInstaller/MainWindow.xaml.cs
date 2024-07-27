@@ -48,6 +48,6 @@ namespace BrawlInstaller
         public IFighterInfoViewModel FighterInfoViewModel { get; set; }
 
         [Import]
-        public IStageListViewModel StageListViewModel { get; set; }
+        public IStageViewModel StageViewModel { get; set; }
     }
 }

@@ -101,7 +101,9 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Settings\CosmeticSettingsViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\Stage\StageEditorViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageListViewModel.cs" />
+    <Compile Include="ViewModels\Stage\StageViewModel.cs" />
     <Compile Include="Views\Fighter\CosmeticView.xaml.cs">
       <DependentUpon>CosmeticView.xaml</DependentUpon>
     </Compile>
@@ -132,8 +134,14 @@
     <Compile Include="Views\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Stage\StageEditorView.xaml.cs">
+      <DependentUpon>StageEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Stage\StageListView.xaml.cs">
       <DependentUpon>StageListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Stage\StageView.xaml.cs">
+      <DependentUpon>StageView.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\StringInputWindow.xaml">
       <SubType>Designer</SubType>
@@ -205,7 +213,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Stage\StageEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Stage\StageListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Stage\StageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

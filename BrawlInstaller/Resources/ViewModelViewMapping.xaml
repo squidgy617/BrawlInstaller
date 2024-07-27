@@ -34,7 +34,13 @@
     <DataTemplate DataType="{x:Type viewModels:CosmeticSettingsViewModel}">
         <views:CosmeticSettingsView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:StageViewModel}">
+        <views:StageView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:StageListViewModel}">
         <views:StageListView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:StageEditorViewModel}">
+        <views:StageEditorView/>
     </DataTemplate>
 </ResourceDictionary>

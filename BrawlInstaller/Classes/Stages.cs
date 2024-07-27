@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace BrawlInstaller.Classes
 {
+    public class Stage
+    {
+        public StageSlot Slot { get; set; }
+        public CosmeticList Cosmetics { get; set; } = new CosmeticList();
+    }
+
     public class StageList
     {
         public string Name { get; set; }
