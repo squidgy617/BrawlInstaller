@@ -116,8 +116,19 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Label x:Name="patPathsLabel" Content="Paths:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                    <ListBox x:Name="patPathsListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60" Grid.Column="1" Grid.RowSpan="3"/>
-                    <TextBox x:Name="patPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="3" Grid.Column="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
+                    <Grid x:Name="patSettingsGrid" Grid.Column="1" Grid.RowSpan="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox x:Name="patPathsListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60"/>
+                        <Button x:Name="addPatSettingsButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="+" Width="16" Height="16" Margin="2" Grid.Column="1" Command="{Binding AddPatSettingsCommand}"/>
+                        <TextBox x:Name="patPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
+                    </Grid>
                     <Grid Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
