@@ -1158,7 +1158,7 @@ namespace BrawlInstaller.Services
         public List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds)
         {
             var settings = _settingsService.BuildSettings;
-            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType != CosmeticType.FranchiseIcon).ToList();
+            var definitions = settings.CosmeticSettings.Where(x => x.FighterCosmetic).ToList();
             // Load HD textures in advance
             if (_settingsService.BuildSettings.HDTextures)
                 PreloadHDTextures();
@@ -1173,7 +1173,7 @@ namespace BrawlInstaller.Services
         public List<Cosmetic> GetStageCosmetics(BrawlIds stageIds)
         {
             var settings = _settingsService.BuildSettings;
-            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.StagePreview).ToList();
+            var definitions = settings.CosmeticSettings.Where(x => x.StageCosmetic).ToList();
             // Load HD textures in advance
             if (_settingsService.BuildSettings.HDTextures)
                 PreloadHDTextures();
