@@ -15,6 +15,9 @@ namespace BrawlInstaller.Services
     {
         /// <inheritdoc cref="StageService.GetStageLists()"/>
         List<StageList> GetStageLists();
+
+        /// <inheritdoc cref="StageService.GetStageData(Stage)"/>
+        Stage GetStageData(Stage stage);
     }
 
     [Export(typeof(IStageService))]
@@ -24,17 +27,31 @@ namespace BrawlInstaller.Services
         ICodeService _codeService;
         ISettingsService _settingsService;
         IFileService _fileService;
+        ICosmeticService _cosmeticService;
 
         [ImportingConstructor]
-        public StageService(ICodeService codeService, ISettingsService settingsService, IFileService fileService) 
+        public StageService(ICodeService codeService, ISettingsService settingsService, IFileService fileService, ICosmeticService cosmeticService) 
         {
             _codeService = codeService;
             _settingsService = settingsService;
             _fileService = fileService;
+            _cosmeticService = cosmeticService;
         }
 
         // Methods
 
+        /// <summary>
+        /// Get data associated with a specific stage
+        /// </summary>
+        /// <param name="stage">Stage to load data for</param>
+        /// <returns>Stage object with data</returns>
+        public Stage GetStageData(Stage stage)
+        {
+            stage.Cosmetics.Items = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
+            return stage;
+        }
+
+        //TODO: probably split this up, ViewModel should call GetStageSlots first and pass it in here so that we can update both from ViewModel
         /// <summary>
         /// Get stage lists from build
         /// </summary>

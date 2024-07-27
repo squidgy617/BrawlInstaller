@@ -53,6 +53,7 @@ namespace BrawlInstaller.ViewModels
             {
                 var stage = new Stage();
                 stage.Slot = StageListViewModel.SelectedStageSlot;
+                stage = _stageService.GetStageData(stage);
                 WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
             }
         }

@@ -28,6 +28,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CosmeticService.GetFighterCosmetics(BrawlIds)"/>
         List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds);
 
+        /// <inheritdoc cref="CosmeticService.GetStageCosmetics(BrawlIds)"/>
+        List<Cosmetic> GetStageCosmetics(BrawlIds stageIds);
+
         /// <inheritdoc cref="CosmeticService.GetFranchiseIcons()"/>
         CosmeticList GetFranchiseIcons();
 
@@ -1160,6 +1163,21 @@ namespace BrawlInstaller.Services
             if (_settingsService.BuildSettings.HDTextures)
                 PreloadHDTextures();
             return GetCosmetics(fighterIds, definitions, true);
+        }
+
+        /// <summary>
+        /// Get a list of stage cosmetics
+        /// </summary>
+        /// <param name="stageIds">Stage IDs to retrieve cosmetics for</param>
+        /// <returns>List of cosmetics</returns>
+        public List<Cosmetic> GetStageCosmetics(BrawlIds stageIds)
+        {
+            var settings = _settingsService.BuildSettings;
+            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.StagePreview).ToList();
+            // Load HD textures in advance
+            if (_settingsService.BuildSettings.HDTextures)
+                PreloadHDTextures();
+            return GetCosmetics(stageIds, definitions, true);
         }
 
         /// <summary>

@@ -32,6 +32,8 @@ namespace BrawlInstaller.Enums
         [Description("Trophy Thumbnail")]
         TrophyThumbnail,
         [Description("Records Icon")]
-        RecordsIcon
+        RecordsIcon,
+        [Description("Stage Preview")]
+        StagePreview
     }
 }
