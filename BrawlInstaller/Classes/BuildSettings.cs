@@ -55,11 +55,11 @@ namespace BrawlInstaller.Classes
         public bool UseIndividualIds { get; set; } = false;
         [JsonIgnore] public bool FighterCosmetic { get => CosmeticType != CosmeticType.FranchiseIcon && !StageCosmetic; }
         [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon; }
-        [JsonIgnore] public bool Selectible { get => CosmeticType == CosmeticType.StageFranchiseIcon; }
+        [JsonIgnore] public bool Selectable { get => CosmeticType == CosmeticType.StageFranchiseIcon; }
 
         public CosmeticDefinition()
         {
-            // TODO: Also set this for selectible stage cosmetics
+            // TODO: Also set this for selectable stage cosmetics
             UseIndividualIds = CosmeticType == CosmeticType.FranchiseIcon;
         }
 

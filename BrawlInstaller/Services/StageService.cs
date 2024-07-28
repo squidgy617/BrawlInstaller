@@ -49,7 +49,7 @@ namespace BrawlInstaller.Services
         {
             var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             //stage.Cosmetics.Items = cosmetics.Where(x => !x.SelectionOption).ToList();
-            //stage.Cosmetics.SelectibleOptions = cosmetics.Where(x => x.SelectionOption).ToList();
+            //stage.Cosmetics.SelectableOptions = cosmetics.Where(x => x.SelectionOption).ToList();
             stage.Cosmetics.Items = cosmetics;
             return stage;
         }
