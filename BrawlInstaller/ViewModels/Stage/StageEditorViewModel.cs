@@ -27,9 +27,10 @@ namespace BrawlInstaller.ViewModels
         IStageService _stageService { get; }
 
         [ImportingConstructor]
-        public StageEditorViewModel(IStageService stageService)
+        public StageEditorViewModel(IStageService stageService, IStageCosmeticViewModel stageCosmeticViewModel)
         {
             _stageService = stageService;
+            StageCosmeticViewModel = stageCosmeticViewModel;
 
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
             {
@@ -40,8 +41,8 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
 
-        [DependsUpon(nameof(Stage))]
-        public BitmapImage PreviewImage { get => Stage?.Cosmetics?.Items?.FirstOrDefault()?.Image; }
+        // ViewModels
+        public IStageCosmeticViewModel StageCosmeticViewModel { get; }
 
         // Methods
         public void LoadStage(StageLoadedMessage message)

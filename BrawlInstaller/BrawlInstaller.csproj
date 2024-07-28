@@ -135,6 +135,9 @@
     <Compile Include="Views\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Stage\StageCosmeticView.xaml.cs">
+      <DependentUpon>StageCosmeticView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Stage\StageEditorView.xaml.cs">
       <DependentUpon>StageEditorView.xaml</DependentUpon>
     </Compile>
@@ -211,6 +214,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Settings\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Stage\StageCosmeticView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
