@@ -9,6 +9,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.ViewModels
@@ -29,6 +30,9 @@ namespace BrawlInstaller.ViewModels
         private Cosmetic _selectedCosmetic;
 
         // Services
+
+        // Commands
+        public ICommand ChangeCosmeticCommand => new RelayCommand(param => ChangeCosmetic(param));
 
         [ImportingConstructor]
         public StageCosmeticViewModel()
@@ -60,7 +64,7 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedCosmetics))]
         public Cosmetic SelectedCosmetic { 
-            get => SelectedCosmetics?.FirstOrDefault(x => !x.SelectionOption);
+            get => SelectedCosmetics?.FirstOrDefault(x => !x.SelectionOption) ?? SelectedCosmetics?.FirstOrDefault();
         }
 
         [DependsUpon(nameof(SelectedCosmetics))]
@@ -82,6 +86,22 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedCosmeticOption));
             SelectedStyle = Styles.FirstOrDefault();
             OnPropertyChanged(nameof(SelectedStyle));
+        }
+
+        public void ChangeCosmetic(object selectedCosmetic)
+        {
+            // If the user changes the selected cosmetic, flip the old selection to be an option and the new one to be selected
+            var cosmetic = selectedCosmetic as Cosmetic;
+            if (cosmetic != null)
+            {
+                // Only set SelectedCosmetic to an option if it actually exists
+                if (SelectedCosmetic != null && SelectedCosmetic.CosmeticType == cosmetic.CosmeticType && SelectedCosmetic.Style == cosmetic.Style)
+                {
+                    SelectedCosmetic.SelectionOption = true;
+                }
+                cosmetic.SelectionOption = false;
+                OnPropertyChanged(nameof(SelectedCosmetic));
+            }
         }
     }
 }
