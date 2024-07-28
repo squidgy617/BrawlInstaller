@@ -26,6 +26,7 @@ namespace BrawlInstaller.ViewModels
         private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
+        private Cosmetic _selectedCosmetic;
 
         // Services
 
@@ -55,14 +56,23 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedStyle))]
         [DependsUpon(nameof(Stage))]
-        public Cosmetic SelectedCosmetic { get => Stage?.Cosmetics?.Items.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
+        public List<Cosmetic> SelectedCosmetics { get => Stage?.Cosmetics?.Items.Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle).ToList(); }
+
+        [DependsUpon(nameof(SelectedCosmetics))]
+        public Cosmetic SelectedCosmetic { 
+            get => SelectedCosmetics?.FirstOrDefault(x => !x.SelectionOption);
+        }
+
+        [DependsUpon(nameof(SelectedCosmetics))]
+        public bool DisplayCosmeticSelect { get => SelectedCosmetics?.Count > 1; }
 
         // Methods
         public void LoadStage(StageLoadedMessage message)
         {
             var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
             {
-                CosmeticType.StagePreview.GetKeyValuePair()
+                CosmeticType.StagePreview.GetKeyValuePair(),
+                CosmeticType.StageFranchiseIcon.GetKeyValuePair()
             };
             CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>(cosmeticOptions);
             OnPropertyChanged(nameof(CosmeticOptions));

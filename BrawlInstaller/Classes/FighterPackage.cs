@@ -50,6 +50,7 @@ namespace BrawlInstaller.Classes
     public class CosmeticList : TrackedList<Cosmetic>
     {
         public Dictionary<(CosmeticType, string), string> InheritedStyles { get; set; } = new Dictionary<(CosmeticType, string), string>();
+        public List<Cosmetic> SelectibleOptions { get; set; } = new List<Cosmetic>();
     }
 
     public class Cosmetic
@@ -70,6 +71,7 @@ namespace BrawlInstaller.Classes
         public int? CostumeIndex { get; set; }
         public int? Id { get; set; }
         public bool ColorSmashChanged { get; set; } = false;
+        public bool SelectionOption { get; set; } = false;
     }
 
     public class FranchiseCosmetic : Cosmetic

@@ -34,6 +34,8 @@ namespace BrawlInstaller.Enums
         [Description("Records Icon")]
         RecordsIcon,
         [Description("Stage Preview")]
-        StagePreview
+        StagePreview,
+        [Description("Stage Franchise Icon")]
+        StageFranchiseIcon
     }
 }

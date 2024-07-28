@@ -13,9 +13,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="cosmeticTypeDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Key" SelectedValuePath="Value" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" Width="120"/>
-        <ComboBox x:Name="styleDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle}" Grid.Row="1" Width="120"/>
-        <Image x:Name="cosmeticImage" Source="{Binding SelectedCosmetic.Image}" Grid.Row="2"/>
+        <ComboBox x:Name="cosmeticTypeDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Key" SelectedValuePath="Value" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" Width="120" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+        <ComboBox x:Name="styleDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle}" Grid.Row="1" Width="120" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+        <ComboBox x:Name="cosmeticDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, Mode=OneWay}" DisplayMemberPath="Texture.Name" Grid.Row="2" Width="120" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}"/>
+        <Image x:Name="cosmeticImage" Source="{Binding SelectedCosmetic.Image}" Grid.Row="3"/>
     </Grid>
 </UserControl>

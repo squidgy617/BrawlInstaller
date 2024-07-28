@@ -47,7 +47,10 @@ namespace BrawlInstaller.Services
         /// <returns>Stage object with data</returns>
         public StageInfo GetStageData(StageInfo stage)
         {
-            stage.Cosmetics.Items = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
+            var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
+            //stage.Cosmetics.Items = cosmetics.Where(x => !x.SelectionOption).ToList();
+            //stage.Cosmetics.SelectibleOptions = cosmetics.Where(x => x.SelectionOption).ToList();
+            stage.Cosmetics.Items = cosmetics;
             return stage;
         }
 

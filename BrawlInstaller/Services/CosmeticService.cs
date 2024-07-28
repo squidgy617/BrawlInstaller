@@ -1124,7 +1124,9 @@ namespace BrawlInstaller.Services
                     SharesData = texture.Texture.SharesData,
                     InternalIndex = cosmetics.Count(),
                     CostumeIndex = texture.CostumeIndex,
-                    Id = texture.Id
+                    Id = texture.Id,
+                    // TODO: SelectionOption should be set based on the NEAREST ID
+                    SelectionOption = definition.Selectible && texture.Id != brawlIds.Ids.Where(x => x.Type == definition.IdType).FirstOrDefault().Id
                 });
             }
             if (definition.ModelPath != null)
@@ -1138,9 +1140,18 @@ namespace BrawlInstaller.Services
                         Style = definition.Style,
                         Model = (MDL0Node)_fileService.CopyNode(model),
                         ColorSequence = model.GetColorSequence(),
-                        Id = GetCosmeticId(model.Name, definition)
+                        Id = GetCosmeticId(model.Name, definition),
+                        SelectionOption = definition.Selectible && GetCosmeticId(model.Name, definition) != brawlIds.Ids.Where(x => x.Type == definition.IdType).FirstOrDefault().Id
                     });
                 }
+            }
+            // For selectible cosmetics, we only want to get each texture once
+            if (definition.Selectible)
+            {
+                cosmetics = cosmetics.GroupBy(x => x.Texture.Name)
+                    .Select(g => g.FirstOrDefault(x => x.Id == brawlIds.Ids.Where(y => y.Type == definition.IdType).FirstOrDefault().Id) ?? g.First())
+                    .ToList();
+                cosmetics = cosmetics.OrderByDescending(x => x.Texture.Name).ToList();
             }
             return cosmetics;
         }
@@ -1241,7 +1252,7 @@ namespace BrawlInstaller.Services
                         var rootNode = _fileService.OpenFile(path);
                         if (rootNode != null)
                         {
-                            foreach (var foundCosmetics in GetDefinitionCosmetics(cosmetic, rootNode, brawlIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\")))
+                            foreach (var foundCosmetics in GetDefinitionCosmetics(cosmetic, rootNode, brawlIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\") && !cosmetic.Selectible))
                                 cosmetics.Add(foundCosmetics);
                             _fileService.CloseFile(rootNode);
                         }
