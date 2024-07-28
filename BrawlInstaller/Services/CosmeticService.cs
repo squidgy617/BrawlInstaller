@@ -629,6 +629,8 @@ namespace BrawlInstaller.Services
             }
         }
 
+        // TODO: Upon importing selectable cosmetics, filter out cosmetics with "SelectionOption" of true. Also only import the textures if they have a new ID, otherwise,
+        // just update the texture name on the PAT0
         /// <summary>
         /// Import cosmetics with file caching based on definition rules
         /// </summary>
@@ -1126,7 +1128,7 @@ namespace BrawlInstaller.Services
                     CostumeIndex = texture.CostumeIndex,
                     Id = texture.Id,
                     // TODO: SelectionOption should be set based on the NEAREST ID
-                    SelectionOption = definition.Selectable && texture.Id != brawlIds.Ids.Where(x => x.Type == definition.IdType).FirstOrDefault().Id
+                    SelectionOption = definition.Selectable
                 });
             }
             if (definition.ModelPath != null)
@@ -1141,16 +1143,22 @@ namespace BrawlInstaller.Services
                         Model = (MDL0Node)_fileService.CopyNode(model),
                         ColorSequence = model.GetColorSequence(),
                         Id = GetCosmeticId(model.Name, definition),
-                        SelectionOption = definition.Selectable && GetCosmeticId(model.Name, definition) != brawlIds.Ids.Where(x => x.Type == definition.IdType).FirstOrDefault().Id
+                        SelectionOption = definition.Selectable
                     });
                 }
             }
             // For selectable cosmetics, we only want to get each texture once
             if (definition.Selectable)
             {
+                // Get ID of selected cosmetic
+                var cosmeticId = brawlIds.Ids.Where(x => x.Type == definition.IdType).FirstOrDefault().Id;
+                // Get list of only textures, favoring the one closest to our ID
                 cosmetics = cosmetics.GroupBy(x => x.Texture.Name)
-                    .Select(g => g.FirstOrDefault(x => x.Id == brawlIds.Ids.Where(y => y.Type == definition.IdType).FirstOrDefault().Id) ?? g.First())
+                    .Select(g => g.OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId) ?? g.First())
                     .ToList();
+                // Set nearest option to selected
+                cosmetics.OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId).SelectionOption = false;
+                // Order cosmetics
                 cosmetics = cosmetics.OrderByDescending(x => x.Texture.Name).ToList();
             }
             return cosmetics;
