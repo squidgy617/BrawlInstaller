@@ -1,8 +1,10 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
@@ -13,7 +15,7 @@ namespace BrawlInstaller.ViewModels
 {
     public interface IStageCosmeticViewModel
     {
-        BitmapImage Image { get; }
+        Cosmetic SelectedCosmetic { get; }
     }
 
     [Export(typeof(IStageCosmeticViewModel))]
@@ -21,6 +23,9 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private StageInfo _stage;
+        private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
+        private CosmeticType _selectedCosmeticOption;
+        private string _selectedStyle;
 
         // Services
 
@@ -37,13 +42,36 @@ namespace BrawlInstaller.ViewModels
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
 
         [DependsUpon(nameof(Stage))]
-        public BitmapImage Image { get => Stage?.Cosmetics?.Items?.FirstOrDefault()?.Image; }
+        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+
+        [DependsUpon(nameof(CosmeticOptions))]
+        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
+
+        [DependsUpon(nameof(SelectedCosmeticOption))]
+        public List<string> Styles { get => Stage?.Cosmetics?.Items.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
+
+        [DependsUpon(nameof(Styles))]
+        public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
+
+        [DependsUpon(nameof(SelectedStyle))]
+        [DependsUpon(nameof(Stage))]
+        public Cosmetic SelectedCosmetic { get => Stage?.Cosmetics?.Items.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
 
         // Methods
         public void LoadStage(StageLoadedMessage message)
         {
+            var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
+            {
+                CosmeticType.StagePreview.GetKeyValuePair()
+            };
+            CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>(cosmeticOptions);
+            OnPropertyChanged(nameof(CosmeticOptions));
             Stage = message.Value;
             OnPropertyChanged(nameof(Stage));
+            SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
+            OnPropertyChanged(nameof(SelectedCosmeticOption));
+            SelectedStyle = Styles.FirstOrDefault();
+            OnPropertyChanged(nameof(SelectedStyle));
         }
     }
 }
