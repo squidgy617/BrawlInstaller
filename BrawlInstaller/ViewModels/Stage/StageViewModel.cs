@@ -23,7 +23,7 @@ namespace BrawlInstaller.ViewModels
     internal class StageViewModel : ViewModelBase, IStageViewModel
     {
         // Private properties
-        private Stage _stage;
+        private StageInfo _stage;
 
         // Services
         IStageService _stageService { get; }
@@ -44,14 +44,14 @@ namespace BrawlInstaller.ViewModels
         public IStageEditorViewModel StageEditorViewModel { get; }
 
         // Properties
-        public Stage Stage { get =>  _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
+        public StageInfo Stage { get =>  _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
 
         // Methods
         public void LoadStage()
         {
             using (new CursorWait())
             {
-                var stage = new Stage();
+                var stage = new StageInfo();
                 stage.Slot = StageListViewModel.SelectedStageSlot;
                 stage = _stageService.GetStageData(stage);
                 WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
@@ -60,9 +60,9 @@ namespace BrawlInstaller.ViewModels
     }
 
     // Messages
-    public class StageLoadedMessage : ValueChangedMessage<Stage>
+    public class StageLoadedMessage : ValueChangedMessage<StageInfo>
     {
-        public StageLoadedMessage(Stage stage) : base(stage)
+        public StageLoadedMessage(StageInfo stage) : base(stage)
         {
         }
     }

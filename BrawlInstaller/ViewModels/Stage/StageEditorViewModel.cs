@@ -21,7 +21,7 @@ namespace BrawlInstaller.ViewModels
     internal class StageEditorViewModel : ViewModelBase, IStageEditorViewModel
     {
         // Private properties
-        private Stage _stage;
+        private StageInfo _stage;
 
         // Services
         IStageService _stageService { get; }
@@ -38,7 +38,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public Stage Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
+        public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
 
         [DependsUpon(nameof(Stage))]
         public BitmapImage PreviewImage { get => Stage?.Cosmetics?.Items?.FirstOrDefault()?.Image; }

@@ -16,8 +16,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="StageService.GetStageLists()"/>
         List<StageList> GetStageLists();
 
-        /// <inheritdoc cref="StageService.GetStageData(Stage)"/>
-        Stage GetStageData(Stage stage);
+        /// <inheritdoc cref="StageService.GetStageData(StageInfo)"/>
+        StageInfo GetStageData(StageInfo stage);
     }
 
     [Export(typeof(IStageService))]
@@ -45,7 +45,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="stage">Stage to load data for</param>
         /// <returns>Stage object with data</returns>
-        public Stage GetStageData(Stage stage)
+        public StageInfo GetStageData(StageInfo stage)
         {
             stage.Cosmetics.Items = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             return stage;

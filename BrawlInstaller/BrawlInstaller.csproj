@@ -101,6 +101,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Settings\CosmeticSettingsViewModel.cs" />
     <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\Stage\StageCosmeticViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageEditorViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageListViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageViewModel.cs" />
