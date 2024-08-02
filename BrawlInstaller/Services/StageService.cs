@@ -18,6 +18,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="StageService.GetStageData(StageInfo)"/>
         StageInfo GetStageData(StageInfo stage);
+
+        /// <inheritdoc cref="StageService.SaveStage(StageInfo)"/>
+        void SaveStage(StageInfo stage);
     }
 
     [Export(typeof(IStageService))]
@@ -166,6 +169,21 @@ namespace BrawlInstaller.Services
                 }
             }
             return stageIds;
+        }
+
+        /// <summary>
+        /// Save changes to a stage
+        /// </summary>
+        /// <param name="stage">Stage to save</param>
+        public void SaveStage(StageInfo stage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            // Only update cosmetics that have changed
+            var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => stage.Cosmetics.ChangedItems
+            .Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)).ToList();
+
+            // Import cosmetics
+            _cosmeticService.ImportCosmetics(changedDefinitions, stage.Cosmetics, stage.Slot.StageIds);
         }
     }
 }

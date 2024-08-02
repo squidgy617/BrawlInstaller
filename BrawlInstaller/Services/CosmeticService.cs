@@ -654,6 +654,7 @@ namespace BrawlInstaller.Services
         }
 
         // TODO: Handle compression
+        // TODO: Handle selectable cosmetics
         /// <summary>
         /// Import cosmetics based on definition rules
         /// </summary>
@@ -663,8 +664,8 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of character for HD textures</param>
         private void ImportCosmetics(CosmeticDefinition definition, CosmeticList cosmeticList, int id, string name=null)
         {
-            var cosmetics = cosmeticList.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
-            var changedCosmetics = cosmeticList.ChangedItems.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style).ToList();
+            var cosmetics = cosmeticList.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style && !x.SelectionOption).ToList();
+            var changedCosmetics = cosmeticList.ChangedItems.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style && !x.SelectionOption).ToList();
             // If the definition doesn't use separate files, find the files and update them
             if (!definition.SeparateFiles)
             {

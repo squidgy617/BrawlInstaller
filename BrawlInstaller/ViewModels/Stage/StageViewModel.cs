@@ -30,6 +30,7 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand LoadStageCommand => new RelayCommand(param => LoadStage());
+        public ICommand SaveStageCommand => new RelayCommand(param => SaveStage());
 
         [ImportingConstructor]
         public StageViewModel(IStageService stageService, IStageListViewModel stageListViewModel, IStageEditorViewModel stageEditorViewModel)
@@ -52,10 +53,18 @@ namespace BrawlInstaller.ViewModels
             using (new CursorWait())
             {
                 var stage = new StageInfo();
+                Stage = stage;
                 stage.Slot = StageListViewModel.SelectedStageSlot;
                 stage = _stageService.GetStageData(stage);
                 WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
             }
+        }
+
+        public void SaveStage()
+        {
+            _stageService.SaveStage(Stage);
+            Stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
+            Stage.Cosmetics.ClearChanges();
         }
     }
 
