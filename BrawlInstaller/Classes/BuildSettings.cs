@@ -52,9 +52,9 @@ namespace BrawlInstaller.Classes
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
         public bool FirstOnly { get; set; } = false;
         public bool SeparateFiles { get; set; } = false;
-        public bool UseIndividualIds { get => CosmeticType == CosmeticType.FranchiseIcon || Selectable; }
+        [JsonIgnore] public bool UseIndividualIds { get => CosmeticType == CosmeticType.FranchiseIcon || Selectable; }
         [JsonIgnore] public bool FighterCosmetic { get => CosmeticType != CosmeticType.FranchiseIcon && !StageCosmetic; }
-        [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon; }
+        [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon; }
         [JsonIgnore] public bool Selectable { get => CosmeticType == CosmeticType.StageFranchiseIcon; }
 
         public CosmeticDefinition Copy()

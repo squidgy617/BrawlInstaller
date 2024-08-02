@@ -30,18 +30,21 @@ namespace BrawlInstaller.ViewModels
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
         private Cosmetic _selectedCosmetic;
+        private BuildSettings _buildSettings;
 
         // Services
         IDialogService _dialogService { get; }
+        ISettingsService _settingsService { get; }
 
         // Commands
         public ICommand ChangeCosmeticCommand => new RelayCommand(param => ChangeCosmetic(param));
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
 
         [ImportingConstructor]
-        public StageCosmeticViewModel(IDialogService dialogService)
+        public StageCosmeticViewModel(IDialogService dialogService, ISettingsService settingsService)
         {
             _dialogService = dialogService;
+            _settingsService = settingsService;
 
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
             {
@@ -58,8 +61,10 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(CosmeticOptions))]
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
+        // TODO: For everywhere that uses styles and cosmetic types, we should make it so that it reads from your build settings, the game files, and any packages
+        // that are loaded to determine what options to list
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public List<string> Styles { get => Stage?.Cosmetics?.Items.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
+        public List<string> Styles { get => BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
 
         [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
@@ -83,13 +88,19 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedCosmetics))]
         public bool DisplayCosmeticSelect { get => SelectedCosmetics?.Count > 1; }
 
+        [DependsUpon(nameof(Stage))]
+        public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
+
         // Methods
         public void LoadStage(StageLoadedMessage message)
         {
+            BuildSettings = _settingsService.BuildSettings;
+            OnPropertyChanged(nameof(BuildSettings));
             var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
             {
                 CosmeticType.StagePreview.GetKeyValuePair(),
-                CosmeticType.StageFranchiseIcon.GetKeyValuePair()
+                CosmeticType.StageFranchiseIcon.GetKeyValuePair(),
+                CosmeticType.StageIcon.GetKeyValuePair()
             };
             CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>(cosmeticOptions);
             OnPropertyChanged(nameof(CosmeticOptions));

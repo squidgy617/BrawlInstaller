@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using static BrawlLib.BrawlManagerLib.TextureContainer;
 using System.Windows.Media.Imaging;
 using System.Collections.Concurrent;
+using BrawlLib.SSBB.Types.Animations;
 
 namespace BrawlInstaller.Services
 {
@@ -225,15 +226,17 @@ namespace BrawlInstaller.Services
         /// <param name="texture">Texture to assign PAT0 entry</param>
         /// <param name="palette">Palette to assign PAT0 entry</param>
         /// <returns>PAT0TextureEntryNode</returns>
-        private PAT0TextureEntryNode CreatePatEntry(ResourceNode destinationNode, int frameIndex, string texture="", string palette="")
+        private PAT0TextureEntryNode CreatePatEntry(ResourceNode destinationNode, PatSettings patSetting, int frameIndex, string texture="", string palette="")
         {
             if (destinationNode != null)
             {
                 var node = new PAT0TextureEntryNode();
+                var pat0Node = destinationNode?.Parent?.Parent as PAT0Node;
                 destinationNode.AddChild(node);
                 node.FrameIndex = frameIndex;
                 node.Texture = texture;
                 node.Palette = palette;
+                pat0Node.FrameCount = (int)destinationNode.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
                 return node;
             }
             return null;
@@ -427,7 +430,7 @@ namespace BrawlInstaller.Services
                     node = rootNode.FindChild(path);
                     if (node != null)
                     {
-                        CreatePatEntry(node, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
+                        CreatePatEntry(node, patSetting, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
                     }
                 }
             }
