@@ -319,8 +319,7 @@ namespace BrawlInstaller.Services
                         IdType = IdType.Franchise,
                         Format = WiiPixelFormat.I4,
                         SuffixDigits = 2,
-                        Size = new ImageSize(128, 128),
-                        UseIndividualIds = true
+                        Size = new ImageSize(128, 128)
                     },
                     new CosmeticDefinition
                     {
@@ -336,8 +335,7 @@ namespace BrawlInstaller.Services
                         Prefix = "InfResultMark",
                         IdType = IdType.Franchise,
                         Size = new ImageSize(80, 80),
-                        SuffixDigits = 2,
-                        UseIndividualIds = true
+                        SuffixDigits = 2
                     },
                     new CosmeticDefinition
                     {

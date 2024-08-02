@@ -84,7 +84,7 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<string, WiiPixelFormat> Formats { get => _formats; set { _formats = value; OnPropertyChanged(nameof(Formats)); } }
 
         [DependsUpon(nameof(SelectedDefinition))]
-        public ObservableCollection<PatSettings> PatSettings { get => SelectedDefinition?.PatSettings != null ? new ObservableCollection<PatSettings>(SelectedDefinition?.PatSettings) : new ObservableCollection<PatSettings>(); }
+        public ObservableCollection<PatSettings> PatSettings { get => SelectedDefinition?.PatSettings.Count > 0 ? new ObservableCollection<PatSettings>(SelectedDefinition?.PatSettings) : new ObservableCollection<PatSettings>(); }
 
         [DependsUpon(nameof(CopyPatSettings))]
         [DependsUpon(nameof(PatSettings))]

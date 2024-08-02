@@ -111,8 +111,12 @@ namespace BrawlInstaller.ViewModels
                 if (SelectedCosmetic != null && SelectedCosmetic.CosmeticType == cosmetic.CosmeticType && SelectedCosmetic.Style == cosmetic.Style)
                 {
                     SelectedCosmetic.SelectionOption = true;
+                    // Undo changes to cosmetic
+                    Stage.Cosmetics.ChangedItems.Remove(SelectedCosmetic);
                 }
                 cosmetic.SelectionOption = false;
+                // Change the cosmetic so it will save
+                Stage.Cosmetics.ItemChanged(cosmetic);
                 OnPropertyChanged(nameof(SelectedCosmetic));
             }
         }

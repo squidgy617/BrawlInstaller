@@ -72,6 +72,7 @@ namespace BrawlInstaller.Classes
         public int? InternalIndex { get; set; }
         public int? CostumeIndex { get; set; }
         public int? Id { get; set; }
+        public int? TextureId { get; set; }
         public bool ColorSmashChanged { get; set; } = false;
         public bool SelectionOption { get; set; } = false;
     }
