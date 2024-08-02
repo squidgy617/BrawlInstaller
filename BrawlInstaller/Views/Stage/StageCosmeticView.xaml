@@ -15,16 +15,18 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ComboBox x:Name="cosmeticTypeDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" DisplayMemberPath="Key" SelectedValuePath="Value" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
         <ComboBox x:Name="styleDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle}" Grid.Row="1" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-        <ComboBox x:Name="cosmeticDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, Mode=OneWay}" DisplayMemberPath="Texture.Name" Grid.Row="2" Width="140" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}">
+        <ComboBox x:Name="cosmeticDropDown" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, Mode=OneWay}" DisplayMemberPath="Name" Grid.Row="2" Width="140" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction CommandParameter="{Binding ElementName=cosmeticDropDown, Path=SelectedItem}" Command="{Binding ChangeCosmeticCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ComboBox>
-        <Image x:Name="cosmeticImage" Source="{Binding SelectedCosmetic.Image}" Grid.Row="3"/>
+        <Image x:Name="cosmeticImage" Source="{Binding SelectedCosmetic.Image}" Grid.Row="3"  RenderOptions.BitmapScalingMode="NearestNeighbor" Width="312" Height="112" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button x:Name="replaceImageButton" Content="Browse..." VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="4" Command="{Binding ReplaceCosmeticCommand}"/>
     </Grid>
 </UserControl>

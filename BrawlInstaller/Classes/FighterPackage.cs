@@ -9,6 +9,7 @@ using BrawlLib.SSBB.ResourceNodes;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace BrawlInstaller.Classes
 {
@@ -55,6 +56,7 @@ namespace BrawlInstaller.Classes
 
     public class Cosmetic
     {
+        [JsonIgnore] public string Name { get => Texture != null ? Texture.Name : !string.IsNullOrEmpty(ImagePath) ? Path.GetFileNameWithoutExtension(ImagePath) : string.Empty; }
         public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
         [JsonIgnore] public BitmapImage Image { get; set; } = null;

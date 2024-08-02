@@ -1,11 +1,13 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
+using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,13 +32,17 @@ namespace BrawlInstaller.ViewModels
         private Cosmetic _selectedCosmetic;
 
         // Services
+        IDialogService _dialogService { get; }
 
         // Commands
         public ICommand ChangeCosmeticCommand => new RelayCommand(param => ChangeCosmetic(param));
+        public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
 
         [ImportingConstructor]
-        public StageCosmeticViewModel()
+        public StageCosmeticViewModel(IDialogService dialogService)
         {
+            _dialogService = dialogService;
+
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
             {
                 LoadStage(message);
@@ -65,6 +71,13 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedCosmetics))]
         public Cosmetic SelectedCosmetic { 
             get => SelectedCosmetics?.FirstOrDefault(x => !x.SelectionOption) ?? SelectedCosmetics?.FirstOrDefault();
+            set 
+            { 
+                var cosmetic = SelectedCosmetics?.FirstOrDefault(x => !x.SelectionOption) ?? SelectedCosmetics?.FirstOrDefault();
+                cosmetic = value;
+                OnPropertyChanged(nameof(SelectedCosmetic));
+                OnPropertyChanged(nameof(SelectedCosmetics));
+            }
         }
 
         [DependsUpon(nameof(SelectedCosmetics))]
@@ -101,6 +114,39 @@ namespace BrawlInstaller.ViewModels
                 }
                 cosmetic.SelectionOption = false;
                 OnPropertyChanged(nameof(SelectedCosmetic));
+            }
+        }
+
+        private Cosmetic AddCosmetic()
+        {
+            var cosmetic = new Cosmetic
+            {
+                CosmeticType = SelectedCosmeticOption,
+                InternalIndex = Stage.Cosmetics.Items.Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle)
+                    .Max(x => x.InternalIndex) + 1,
+                Style = SelectedStyle
+            };
+            Stage.Cosmetics.Add(cosmetic);
+            return cosmetic;
+        }
+
+        public void ReplaceCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select image", "PNG image (.png)|*.png");
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = new Bitmap(image);
+                if (SelectedCosmetic == null)
+                {
+                    SelectedCosmetic = AddCosmetic();
+                }
+                SelectedCosmetic.Image = bitmap.ToBitmapImage();
+                SelectedCosmetic.ImagePath = image;
+                SelectedCosmetic.Texture = null;
+                SelectedCosmetic.Palette = null;
+                Stage.Cosmetics.ItemChanged(SelectedCosmetic);
+                OnPropertyChanged(nameof(SelectedCosmetic));
+                OnPropertyChanged(nameof(SelectedCosmetics));
             }
         }
     }
