@@ -8,6 +8,7 @@ namespace BrawlInstaller.Classes
 {
     public class StageInfo
     {
+        public string RandomName { get; set; } = string.Empty;
         public StageSlot Slot { get; set; }
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
     }

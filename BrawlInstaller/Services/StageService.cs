@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,15 @@ namespace BrawlInstaller.Services
         public StageInfo GetStageData(StageInfo stage)
         {
             var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
+            var names = GetStageRandomNames();
+            if (names.Count >= stage.Slot.StageIds.StageCosmeticId)
+            {
+                stage.RandomName = names[stage.Slot.StageIds.StageCosmeticId];
+            }
+            else
+            {
+                stage.RandomName = string.Empty;
+            }
             //stage.Cosmetics.Items = cosmetics.Where(x => !x.SelectionOption).ToList();
             //stage.Cosmetics.SelectableOptions = cosmetics.Where(x => x.SelectionOption).ToList();
             stage.Cosmetics.Items = cosmetics;
@@ -171,6 +181,60 @@ namespace BrawlInstaller.Services
             return stageIds;
         }
 
+        private void SaveStageRandomName(StageInfo stage)
+        {
+            // TODO: Load this from code in Random.asm
+            var presetCount = 7;
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var randomStageLocation = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations.FirstOrDefault();
+            var path = $"{buildPath}\\{randomStageLocation.FilePath}";
+            var rootNode = _fileService.OpenFile(path);
+            if (rootNode != null)
+            {
+                var namesNode = rootNode.FindChild(randomStageLocation.NodePath);
+                if (namesNode != null)
+                {
+                    var names = ((MSBinNode)namesNode)._strings;
+                    // If name list is shorter than stage cosmetic ID, fill in missing spots
+                    while (names.Count - presetCount <= stage.Slot.StageIds.StageCosmeticId)
+                    {
+                        names.Add("_");
+                    }
+                    names[stage.Slot.StageIds.StageCosmeticId + presetCount] = stage.RandomName;
+                    ((MSBinNode)namesNode)._strings = names;
+                    namesNode.IsDirty = true;
+                    _fileService.SaveFile(rootNode);
+                }
+                _fileService.CloseFile(rootNode);
+            }
+        }
+
+        /// <summary>
+        /// Get names for stages on RSS
+        /// </summary>
+        /// <returns>List of stage names</returns>
+        private List<string> GetStageRandomNames()
+        {
+            // TODO: Load this from code in Random.asm
+            var presetCount = 7;
+            var names = new List<string>();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var randomStageLocation = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations.FirstOrDefault();
+            var path = $"{buildPath}\\{randomStageLocation.FilePath}";
+            var rootNode = _fileService.OpenFile(path);
+            if (rootNode != null)
+            {
+                var namesNode = rootNode.FindChild(randomStageLocation.NodePath);
+                if (namesNode != null)
+                {
+                    names = ((MSBinNode)namesNode)._strings;
+                    names.RemoveRange(0, presetCount);
+                }
+                _fileService.CloseFile(rootNode);
+            }
+            return names;
+        }
+
         /// <summary>
         /// Save changes to a stage
         /// </summary>
@@ -184,6 +248,10 @@ namespace BrawlInstaller.Services
 
             // Import cosmetics
             _cosmeticService.ImportCosmetics(changedDefinitions, stage.Cosmetics, stage.Slot.StageIds);
+
+            // TODO: only do if name is changed
+            // Save stage random name
+            SaveStageRandomName(stage);
         }
     }
 }

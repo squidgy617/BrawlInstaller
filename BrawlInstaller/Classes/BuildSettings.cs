@@ -116,5 +116,20 @@ namespace BrawlInstaller.Classes
         public string HDTextures { get; set; } = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01";
         public string StageTablePath { get; set; } = "Source\\Project+\\StageTable.asm";
         [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
+        public List<InstallLocation> RandomStageNamesLocations { get; set; } = new List<InstallLocation> 
+        {
+            new InstallLocation
+            {
+                FilePath = "pf\\menu2\\sc_selcharacter2.pac",
+                NodePath = "MenuRule_en/Misc Data [1]",
+                FileExtension = "pac"
+            },
+            new InstallLocation
+            {
+                FilePath = "pf\\menu2\\mu_menumain.pac",
+                NodePath = "MenuRule_en/Misc Data [1]",
+                FileExtension = "pac"
+            }
+        };
     }
 }

@@ -9,6 +9,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
         <ContentControl x:Name="StageCosmeticViewModel" Content="{Binding StageCosmeticViewModel}"/>
+        <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Width="120"/>
     </Grid>
 </UserControl>
