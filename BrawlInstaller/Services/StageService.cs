@@ -181,31 +181,38 @@ namespace BrawlInstaller.Services
             return stageIds;
         }
 
+        /// <summary>
+        /// Update names for stages on RSS
+        /// </summary>
+        /// <param name="stage"></param>
         private void SaveStageRandomName(StageInfo stage)
         {
             // TODO: Load this from code in Random.asm
             var presetCount = 7;
             var buildPath = _settingsService.AppSettings.BuildPath;
-            var randomStageLocation = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations.FirstOrDefault();
-            var path = $"{buildPath}\\{randomStageLocation.FilePath}";
-            var rootNode = _fileService.OpenFile(path);
-            if (rootNode != null)
+            var randomStageLocations = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations;
+            foreach(var location in randomStageLocations)
             {
-                var namesNode = rootNode.FindChild(randomStageLocation.NodePath);
-                if (namesNode != null)
+                var path = $"{buildPath}\\{location.FilePath}";
+                var rootNode = _fileService.OpenFile(path);
+                if (rootNode != null)
                 {
-                    var names = ((MSBinNode)namesNode)._strings;
-                    // If name list is shorter than stage cosmetic ID, fill in missing spots
-                    while (names.Count - presetCount <= stage.Slot.StageIds.StageCosmeticId)
+                    var namesNode = rootNode.FindChild(location.NodePath);
+                    if (namesNode != null)
                     {
-                        names.Add("_");
+                        var names = ((MSBinNode)namesNode)._strings;
+                        // If name list is shorter than stage cosmetic ID, fill in missing spots
+                        while (names.Count - presetCount <= stage.Slot.StageIds.StageCosmeticId)
+                        {
+                            names.Add("_");
+                        }
+                        names[stage.Slot.StageIds.StageCosmeticId + presetCount] = stage.RandomName;
+                        ((MSBinNode)namesNode)._strings = names;
+                        namesNode.IsDirty = true;
+                        _fileService.SaveFile(rootNode);
                     }
-                    names[stage.Slot.StageIds.StageCosmeticId + presetCount] = stage.RandomName;
-                    ((MSBinNode)namesNode)._strings = names;
-                    namesNode.IsDirty = true;
-                    _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
                 }
-                _fileService.CloseFile(rootNode);
             }
         }
 
