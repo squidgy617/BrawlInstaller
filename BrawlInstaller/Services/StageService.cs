@@ -53,7 +53,7 @@ namespace BrawlInstaller.Services
         {
             var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             var names = GetStageRandomNames();
-            if (names.Count >= stage.Slot.StageIds.StageCosmeticId)
+            if (names.Count > stage.Slot.StageIds.StageCosmeticId)
             {
                 stage.RandomName = names[stage.Slot.StageIds.StageCosmeticId];
             }

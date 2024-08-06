@@ -314,8 +314,11 @@ namespace BrawlInstaller.Services
                     var name = texNode.DolphinTextureName;
                     if (_settingsService.BuildSettings.HDTextures)
                     {
-                        var deleteFile = HDImages.FirstOrDefault(x => x.Key == name);
-                        _fileService.DeleteFile(deleteFile.Value);
+                        var deleteFiles = HDImages.Where(x => x.Key == name);
+                        foreach(var deleteFile in deleteFiles)
+                        {
+                            _fileService.DeleteFile(deleteFile.Value);
+                        }
                         HDImages.Remove(name);
                     }
                 };
@@ -374,6 +377,187 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get name for texture node from cosmetic
+        /// </summary>
+        /// <param name="definition">Definition to use</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <param name="cosmetic">Cosmetic</param>
+        /// <returns>Texture node name</returns>
+        private string GetTextureName(CosmeticDefinition definition, int id, Cosmetic cosmetic)
+        {
+            return $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
+        }
+
+        /// <summary>
+        /// Get name for model node from cosmetic
+        /// </summary>
+        /// <param name="definition">Definition to use</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <param name="cosmetic">Cosmetic</param>
+        /// <returns>Model node name</returns>
+        private string GetModelName(CosmeticDefinition definition, int id, Cosmetic cosmetic)
+        {
+            return $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}_TopN";
+        }
+
+        /// <summary>
+        /// Get file name for cosmetics with separate files
+        /// </summary>
+        /// <param name="definition">Definition to use</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <param name="cosmetic">Cosmetic</param>
+        /// <returns>Name of file for cosmetic</returns>
+        private string GetFileName(CosmeticDefinition definition, int id, Cosmetic cosmetic)
+        {
+            return $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
+        }
+
+        /// <summary>
+        /// Get file name for cosmetics with separate files
+        /// </summary>
+        /// <param name="definition">Definition to use</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <returns>Name of file for cosmetic</returns>
+        private string GetFileName(CosmeticDefinition definition, int id)
+        {
+            return $"{definition.Prefix}{FormatCosmeticId(definition, id)}.{definition.InstallLocation.FileExtension}";
+        }
+
+        /// <summary>
+        /// Get cosmetic IDs used by textures in cosmetic definition
+        /// </summary>
+        /// <param name="definition">Definition to use</param>
+        /// <param name="rootNode">Root node of file to check</param>
+        /// <returns>List of used cosmetic IDs</returns>
+        private List<int> GetUsedCosmeticIds(CosmeticDefinition definition, ResourceNode rootNode)
+        {
+            var idList = new List<int>();
+            var node = rootNode.FindChild(definition.InstallLocation.NodePath);
+            if (node != null)
+            {
+                var textureFolder = ((BRRESNode)node).GetFolder<TEX0Node>();
+                // Check each texture in definition for IDs
+                var textures = textureFolder?.Children.Where(x => x.Name.StartsWith(definition.Prefix));
+                foreach (var texture in textures)
+                {
+                    // If the texture ends with a number, add it to the list
+                    var result = int.TryParse(texture.Name.Replace(definition.Prefix + ".", ""), out int id);
+                    if (result && !idList.Contains(id))
+                    {
+                        idList.Add(id);
+                    }
+                }
+            }
+            return idList.OrderBy(x => x).ToList();
+        }
+
+        /// <summary>
+        /// Remove formatting rules from a cosmetic ID
+        /// </summary>
+        /// <param name="definition">Cosmetic definition to use</param>
+        /// <param name="id">ID to remove formatting from</param>
+        /// <returns>ID with formatting removed and costume index</returns>
+        private (int id, int costumeIndex) UnformatCosmeticId(CosmeticDefinition definition, int id)
+        {
+            id = id - definition.Offset;
+            var costumeIndex = id % definition.Multiplier;
+            id = id - costumeIndex;
+            id = id / definition.Multiplier;
+            return (id, costumeIndex);
+        }
+
+        // TODO: Improve this, also maybe implement it as a separate tool you can run
+        /// <summary>
+        /// Renames textures to line up with their PAT animation entries
+        /// </summary>
+        /// <param name="definition">Cosmetic definition to use</param>
+        /// <param name="parentNode">Node containing PAT entries</param>
+        private void NormalizeCosmeticIds(CosmeticDefinition definition, PAT0TextureNode parentNode)
+        {
+            // Only normalize for non-selectable cosmetics
+            if (!definition.UseIndividualIds && !definition.Selectable)
+            {
+                var textureDict = new Dictionary<string, string>();
+                // Give each cosmetic a temp name to avoid issues with palettes
+                var i = 0;
+                foreach (PAT0TextureEntryNode node in parentNode.Children)
+                {
+                    node.GetImage(0);
+                    var texture = node._textureNode;
+                    // If the texture doesn't exist or we've already renamed the texture, skip it
+                    if (texture != null && !textureDict.ContainsKey(node.Texture))
+                    {
+                        // If the texture doesn't end with a number, it's a special case and should be skipped
+                        if (!int.TryParse(texture.Name.Replace(definition.Prefix + ".", ""), out int result))
+                        {
+                            i++;
+                            continue;
+                        }
+                        var palette = node._paletteNode;
+                        texture.Name = $"TEMPNAME{i:D4}";
+                        // Mark the texture as already renamed
+                        textureDict.Add(node.Texture, texture.Name);
+                        node.Texture = texture.Name;
+                        node.Palette = texture.Name;
+                        if (palette != null)
+                        {
+                            palette.Name = texture.Name;
+                        }
+                    }
+                    i++;
+                }
+                var usedIdList = GetUsedCosmeticIds(definition, parentNode.RootNode);
+                // Rename all textures to match the PAT0 frame indexes
+                foreach (PAT0TextureEntryNode node in parentNode.Children)
+                {
+                    node.GetImage(0);
+                    var texture = node._textureNode;
+                    // If texture exists and uses our temp name, rename it
+                    if (texture != null && texture.Name.StartsWith("TEMPNAME"))
+                    {
+                        var palette = node._paletteNode;
+                        var id = 0;
+                        // If the frame index is used by a texture that doesn't appear in the PAT0, use the first unused ID
+                        if (usedIdList.Contains((int)node.FrameIndex))
+                        {
+                            while (usedIdList.Contains(id))
+                            {
+                                id++;
+                            }
+                        }
+                        // Otherwise, use frame index
+                        else
+                        {
+                            id = (int)node.FrameIndex;
+                        }
+                        // Rename texture based on frame index
+                        var unformattedId = UnformatCosmeticId(definition, id);
+                        texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, unformattedId.id, unformattedId.costumeIndex)}";
+                        // Mark the texture as already renamed
+                        textureDict[textureDict.FirstOrDefault(x => x.Value == node.Texture).Key] = texture.Name;
+                        node.Texture = texture.Name;
+                        node.Palette = texture.Name;
+                        if (palette != null)
+                        {
+                            palette.Name = texture.Name;
+                        }
+                    }
+                    // Update dictionary with our new texture name
+                    if (textureDict.ContainsKey(node.Texture) && textureDict[node.Texture].StartsWith("TEMPNAME"))
+                    {
+                        textureDict[textureDict.FirstOrDefault(x => x.Value == node.Texture).Key] = texture.Name;
+                    }
+                    // If dictionary value is already updated, update this entry to use the correct name
+                    else if (textureDict.ContainsKey(node.Texture) && !textureDict[node.Texture].StartsWith("TEMPNAME"))
+                    {
+                        node.Texture = textureDict[node.Texture];
+                        node.Palette = node.Texture;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Import a single cosmetic based on definition rules
         /// </summary>
         /// <param name="definition">Cosmetic definition for cosmetic</param>
@@ -396,7 +580,7 @@ namespace BrawlInstaller.Services
                 && cosmetic.Texture.Format == definition.Format
                 && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
             {
-                cosmetic.Texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
+                cosmetic.Texture.Name = GetTextureName(definition, id, cosmetic);
                 var texture = ImportTexture(parentNode, cosmetic.Texture);
                 if (cosmetic.Palette != null)
                 {
@@ -408,7 +592,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.ImagePath != "")
             {
                 var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(64, 64));
-                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
+                texture.Name = GetTextureName(definition, id, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
@@ -417,7 +601,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
             {
                 var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(64, 64));
-                texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
+                texture.Name = GetTextureName(definition, id, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
@@ -431,6 +615,7 @@ namespace BrawlInstaller.Services
                     if (node != null)
                     {
                         CreatePatEntry(node, patSetting, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
+                        // NormalizeCosmeticIds(definition, (PAT0TextureNode)node);
                     }
                 }
             }
@@ -440,7 +625,7 @@ namespace BrawlInstaller.Services
                 node = definition.ModelPath != "" ? rootNode.FindChild(definition.ModelPath) : rootNode;
                 parentNode = (BRRESNode)node;
                 var model = ImportModel(parentNode, cosmetic.Model);
-                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}_TopN";
+                model.Name = GetModelName(definition, id, cosmetic);
                 var bone = model.FindBoneByIndex(0);
                 if (bone != null)
                     bone.Name = model.Name;
@@ -454,7 +639,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.ModelPath != "" && definition.ModelPath != null)
             {
                 var model = ImportModel(parentNode, cosmetic.ModelPath);
-                model.Name = $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}_TopN";
+                model.Name = GetModelName(definition, id, cosmetic);
                 var bone = model.FindBoneByIndex(0);
                 if (bone != null)
                     bone.Name = model.Name;
@@ -732,7 +917,7 @@ namespace BrawlInstaller.Services
                     var rootNode = new BRRESNode();
                     ImportCosmetic(definition, cosmetic, id, rootNode);
                     rootNode._origPath = $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
-                        $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
+                        GetFileName(definition, id, cosmetic);
                     FileCache.Add(rootNode);
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
@@ -749,10 +934,23 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="definition">Definition for cosmetic</param>
         /// <param name="cosmeticId">ID associated with cosmetic</param>
-        /// <returns></returns>
+        /// <returns>Formatted cosmetic ID</returns>
         private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId)
         {
             var id = (cosmeticId * definition.Multiplier).ToString("D" + definition.SuffixDigits);
+            return id;
+        }
+
+        /// <summary>
+        /// Format cosmetic ID to string based on definition
+        /// </summary>
+        /// <param name="definition">Definition for cosmetic</param>
+        /// <param name="cosmeticId">ID associated with cosmetic</param>
+        /// <param name="costumeIndex">Costume index of cosmetic</param>
+        /// <returns>Formatted cosmetic ID</returns>
+        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, int costumeIndex)
+        {
+            var id = ((cosmeticId * definition.Multiplier) + costumeIndex).ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -789,13 +987,12 @@ namespace BrawlInstaller.Services
             var paths = new List<string>();
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
-                var formattedId = FormatCosmeticId(definition, id);
                 var directoryInfo = new DirectoryInfo(buildPath + definition.InstallLocation.FilePath);
                 var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
                 if (definition.SeparateFiles)
                     paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, id, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
                 else
-                    paths = files.Where(f => f.Name == definition.Prefix + formattedId + "." + definition.InstallLocation.FileExtension).Select(f => f.FullName).ToList();
+                    paths = files.Where(f => f.Name == GetFileName(definition, id)).Select(f => f.FullName).ToList();
             }
             else if (File.Exists(buildPath + definition.InstallLocation.FilePath))
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
@@ -813,8 +1010,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
-                var formattedId = FormatCosmeticId(definition, id);
-                var fileName = $"{definition.Prefix}{formattedId}.{definition.InstallLocation.FileExtension}";
+                var fileName = GetFileName(definition, id);
                 return $"{buildPath}\\{definition.InstallLocation.FilePath}{fileName}";
             }
             else
@@ -1105,7 +1301,7 @@ namespace BrawlInstaller.Services
                     hdImages.Add(image);
                 });
             });
-            HDImages = hdImages.ToDictionary(x => Path.GetFileNameWithoutExtension(x), x => x);
+            HDImages = hdImages.GroupBy(i => Path.GetFileNameWithoutExtension(i)).ToDictionary(x => x.Key, x=> x.First());
             return HDImages;
         }
 
