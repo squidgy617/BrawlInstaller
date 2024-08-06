@@ -423,6 +423,24 @@ namespace BrawlInstaller.Services
             return $"{definition.Prefix}{FormatCosmeticId(definition, id)}.{definition.InstallLocation.FileExtension}";
         }
 
+        // TODO: Use for models too?
+        /// <summary>
+        /// Return the first available cosmetic ID
+        /// </summary>
+        /// <param name="definition"></param>
+        /// <param name="id"></param>
+        /// <param name="rootNode"></param>
+        /// <returns></returns>
+        private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode rootNode)
+        {
+            var usedIds = GetUsedCosmeticIds(definition, rootNode);
+            while (usedIds.Contains(id))
+            {
+                id = id + definition.Multiplier + definition.Offset;
+            }
+            return id;
+        }
+
         /// <summary>
         /// Get cosmetic IDs used by textures in cosmetic definition
         /// </summary>
@@ -574,13 +592,14 @@ namespace BrawlInstaller.Services
             }
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
+            var textureId = GetUnusedCosmeticId(definition, id, rootNode);
             // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
                 (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
                 && cosmetic.Texture.Format == definition.Format
                 && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
             {
-                cosmetic.Texture.Name = GetTextureName(definition, id, cosmetic);
+                cosmetic.Texture.Name = GetTextureName(definition, textureId, cosmetic);
                 var texture = ImportTexture(parentNode, cosmetic.Texture);
                 if (cosmetic.Palette != null)
                 {
@@ -592,7 +611,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.ImagePath != "")
             {
                 var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(64, 64));
-                texture.Name = GetTextureName(definition, id, cosmetic);
+                texture.Name = GetTextureName(definition, textureId, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
@@ -601,7 +620,7 @@ namespace BrawlInstaller.Services
             else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
             {
                 var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(64, 64));
-                texture.Name = GetTextureName(definition, id, cosmetic);
+                texture.Name = GetTextureName(definition, textureId, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
