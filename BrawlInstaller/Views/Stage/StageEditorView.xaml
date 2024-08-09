@@ -9,11 +9,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <ContentControl x:Name="StageCosmeticViewModel" Content="{Binding StageCosmeticViewModel}"/>
-        <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Width="120"/>
+        <Grid x:Name="editorGrid" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="nameLabel" Content="Name:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+            <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Width="120"/>
+            <Label x:Name="entriesLabel" Content="Entries:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1"/>
+            <ListBox x:Name="entriesListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Stage.Slot.StageEntries}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1"/>
+        </Grid>
     </Grid>
 </UserControl>

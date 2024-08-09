@@ -23,7 +23,7 @@
             <ContentControl Content="{Binding StageListViewModel}"/>
         </GroupBox>
         <GroupBox x:Name="stageEditorGroupBox" Header="Editor" Grid.Column="1" Margin="3,0,0,0" Grid.RowSpan="2">
-            <ContentControl Content="{Binding StageEditorViewModel}"/>
+            <ContentControl Content="{Binding StageEditorViewModel}" Visibility="{Binding Stage, Converter={StaticResource nullVisConverter}}"/>
         </GroupBox>
         <Button x:Name="loadStageButton" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Load" Command="{Binding LoadStageCommand}" Grid.Row="1"/>
         <Button x:Name="saveStageButton" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Save" Command="{Binding SaveStageCommand}" Grid.Row="2"/>
