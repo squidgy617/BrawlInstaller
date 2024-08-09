@@ -22,20 +22,20 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label x:Name="cosmeticTypeLabel" Content="Type:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
-            <ComboBox x:Name="cosmeticOptionsDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
-            <Label x:Name="cosmeticStyleLabel" Content="Style:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
+            <Label x:Name="cosmeticTypeLabel" Content="Type:" Grid.Row="0" Grid.Column="0"/>
+            <ComboBox x:Name="cosmeticOptionsDropDown" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
+            <Label x:Name="cosmeticStyleLabel" Content="Style:" Grid.Column="0" Grid.Row="1"/>
             <Grid x:Name="stylesGrid" Grid.Column="1" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="stylesDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-                <Button x:Name="stylesAddButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="+" Grid.Column="1" Margin="2" Command="{Binding AddStyleCommand}"/>
-                <Button x:Name="stylesRemoveButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="-" Grid.Column="2" Margin="2" Command="{Binding RemoveStyleCommand}"/>
+                <ComboBox x:Name="stylesDropDown" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+                <Button x:Name="stylesAddButton" Width="16" Height="16" Content="+" Grid.Column="1" Margin="2" Command="{Binding AddStyleCommand}"/>
+                <Button x:Name="stylesRemoveButton" Width="16" Height="16" Content="-" Grid.Column="2" Margin="2" Command="{Binding RemoveStyleCommand}"/>
             </Grid>
-            <ListBox x:Name="definitionListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Grid.Row="2" Grid.Column="1" Width="180" Height="120"/>
+            <ListBox x:Name="definitionListBox" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Grid.Row="2" Grid.Column="1" Width="180" Height="120"/>
         </Grid>
         <Grid x:Name="definitionSettingsGrid" Grid.Column="1" Visibility="{Binding SelectedDefinition, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
             <Grid.ColumnDefinitions>
@@ -57,39 +57,39 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label x:Name="filePathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Install Location:"/>
-            <TextBox x:Name="filePathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.InstallLocation.FilePath}" Grid.Column="1" Width="180"/>
-            <Label x:Name="nodePathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Node Path:" Grid.Row="1"/>
-            <TextBox x:Name="nodePathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.InstallLocation.NodePath}" Grid.Column="1" Grid.Row="1" Width="120"/>
-            <Label x:Name="fileExtensionLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Extension:" Grid.Row="2"/>
-            <ComboBox x:Name="fileExtensionDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedDefinition.InstallLocation.FileExtension}" Grid.Row="2" Grid.Column="1" Width="120"/>
-            <Label x:Name="modelPathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Model Path:" Grid.Row="3"/>
+            <Label x:Name="filePathLabel" Content="Install Location:"/>
+            <TextBox x:Name="filePathTextBox" Text="{Binding SelectedDefinition.InstallLocation.FilePath}" Grid.Column="1" Width="180"/>
+            <Label x:Name="nodePathLabel" Content="Node Path:" Grid.Row="1"/>
+            <TextBox x:Name="nodePathTextBox" Text="{Binding SelectedDefinition.InstallLocation.NodePath}" Grid.Column="1" Grid.Row="1" Width="120"/>
+            <Label x:Name="fileExtensionLabel" Content="Extension:" Grid.Row="2"/>
+            <ComboBox x:Name="fileExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedDefinition.InstallLocation.FileExtension}" Grid.Row="2" Grid.Column="1" Width="120"/>
+            <Label x:Name="modelPathLabel" Content="Model Path:" Grid.Row="3"/>
             <Grid x:Name="modelPathGrid" Grid.Row="3" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="modelPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.ModelPath}" Width="120" IsEnabled="{Binding ElementName=modelPathCheckBox, Path=IsChecked}"/>
-                <CheckBox x:Name="modelPathCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" IsChecked="{Binding SelectedDefinition.ModelPath, Mode=OneWay, Converter={StaticResource nullBoolConverter}}"/>
+                <TextBox x:Name="modelPathTextBox" Text="{Binding SelectedDefinition.ModelPath}" Width="120" IsEnabled="{Binding ElementName=modelPathCheckBox, Path=IsChecked}"/>
+                <CheckBox x:Name="modelPathCheckBox" Grid.Column="1" IsChecked="{Binding SelectedDefinition.ModelPath, Mode=OneWay, Converter={StaticResource nullBoolConverter}}"/>
             </Grid>
-            <Label x:Name="hdPathLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="HD Image Path:" Grid.Row="4"/>
-            <TextBox x:Name="hdPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.HDImageLocation}" Grid.Row="4" Grid.Column="1" Width="180"/>
-            <Label x:Name="prefixLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Prefix:" Grid.Row="5"/>
-            <TextBox x:Name="prefixTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Prefix}" Grid.Row="5" Grid.Column="1" Width="120"/>
-            <Label x:Name="idTypeLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Type:" Grid.Row="0" Grid.Column="2"/>
-            <ComboBox x:Name="idTypeDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding IdTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.IdType}" Grid.Row="0" Grid.Column="3" Width="120"/>
-            <Label x:Name="multiplierLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Multiplier" Grid.Row="1" Grid.Column="2"/>
-            <TextBox x:Name="multiplierTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Multiplier}" Grid.Row="1" Grid.Column="3" Width="60"/>
-            <Label x:Name="offsetLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Offset:" Grid.Row="2" Grid.Column="2"/>
-            <TextBox x:Name="offsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
-            <Label x:Name="suffixLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Length:" Grid.Row="3" Grid.Column="2"/>
-            <TextBox x:Name="suffixTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
-            <Label x:Name="formatLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Format:" Grid.Row="0" Grid.Column="4"/>
-            <ComboBox x:Name="formatDropDown" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Formats}" Grid.Row="0" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
-            <Label x:Name="widthLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Width:" Grid.Row="1" Grid.Column="4"/>
-            <TextBox x:Name="widthTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Width, Mode=TwoWay}" Grid.Column="5" Grid.Row="1" Width="60"/>
-            <Label x:Name="heightLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Height:" Grid.Row="2" Grid.Column="4"/>
-            <TextBox x:Name="heightTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedDefinition.Size.Height, Mode=TwoWay}" Grid.Column="6" Grid.Row="2" Width="60"/>
+            <Label x:Name="hdPathLabel" Content="HD Image Path:" Grid.Row="4"/>
+            <TextBox x:Name="hdPathTextBox" Text="{Binding SelectedDefinition.HDImageLocation}" Grid.Row="4" Grid.Column="1" Width="180"/>
+            <Label x:Name="prefixLabel" Content="Prefix:" Grid.Row="5"/>
+            <TextBox x:Name="prefixTextBox" Text="{Binding SelectedDefinition.Prefix}" Grid.Row="5" Grid.Column="1" Width="120"/>
+            <Label x:Name="idTypeLabel" Content="ID Type:" Grid.Row="0" Grid.Column="2"/>
+            <ComboBox x:Name="idTypeDropDown" ItemsSource="{Binding IdTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.IdType}" Grid.Row="0" Grid.Column="3" Width="120"/>
+            <Label x:Name="multiplierLabel" Content="ID Multiplier" Grid.Row="1" Grid.Column="2"/>
+            <TextBox x:Name="multiplierTextBox" Text="{Binding SelectedDefinition.Multiplier}" Grid.Row="1" Grid.Column="3" Width="60"/>
+            <Label x:Name="offsetLabel" Content="ID Offset:" Grid.Row="2" Grid.Column="2"/>
+            <TextBox x:Name="offsetTextBox" Text="{Binding SelectedDefinition.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
+            <Label x:Name="suffixLabel" Content="ID Length:" Grid.Row="3" Grid.Column="2"/>
+            <TextBox x:Name="suffixTextBox" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
+            <Label x:Name="formatLabel" Content="Format:" Grid.Row="0" Grid.Column="4"/>
+            <ComboBox x:Name="formatDropDown" ItemsSource="{Binding Formats}" Grid.Row="0" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
+            <Label x:Name="widthLabel" Content="Width:" Grid.Row="1" Grid.Column="4"/>
+            <TextBox x:Name="widthTextBox" Text="{Binding SelectedDefinition.Size.Width, Mode=TwoWay}" Grid.Column="5" Grid.Row="1" Width="60"/>
+            <Label x:Name="heightLabel" Content="Height:" Grid.Row="2" Grid.Column="4"/>
+            <TextBox x:Name="heightTextBox" Text="{Binding SelectedDefinition.Size.Height, Mode=TwoWay}" Grid.Column="6" Grid.Row="2" Width="60"/>
             <Grid x:Name="checkboxesGrid" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -100,9 +100,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <CheckBox x:Name="firstOnlyCheckBox" Content="Use First Image Only" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding SelectedDefinition.FirstOnly}" Margin="2"/>
-                <CheckBox x:Name="separateFilesCheckBox" Content="Create Separate File for Each Image" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding SelectedDefinition.SeparateFiles}" Grid.Column="1" Margin="2"/>
-                <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1" Margin="2"/>
+                <CheckBox x:Name="firstOnlyCheckBox" Content="Use First Image Only" IsChecked="{Binding SelectedDefinition.FirstOnly}"/>
+                <CheckBox x:Name="separateFilesCheckBox" Content="Create Separate File for Each Image" IsChecked="{Binding SelectedDefinition.SeparateFiles}" Grid.Column="1"/>
+                <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1"/>
             </Grid>
             <Expander x:Name="patExpander" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6" IsExpanded="True">
                 <Grid>
@@ -115,7 +115,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="patPathsLabel" Content="Paths:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                    <Label x:Name="patPathsLabel" Content="Paths:"/>
                     <Grid x:Name="patSettingsGrid" Grid.Column="1" Grid.RowSpan="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -125,9 +125,9 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <ListBox x:Name="patPathsListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60"/>
-                        <Button x:Name="addPatSettingsButton" HorizontalAlignment="Left" VerticalAlignment="Top" Content="+" Width="16" Height="16" Margin="2" Grid.Column="1" Command="{Binding AddPatSettingsCommand}"/>
-                        <TextBox x:Name="patPathTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
+                        <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60"/>
+                        <Button x:Name="addPatSettingsButton" Content="+" Style="{StaticResource miniButton}" Grid.Column="1" Command="{Binding AddPatSettingsCommand}"/>
+                        <TextBox x:Name="patPathTextBox" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
                     </Grid>
                     <Grid Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
                         <Grid.ColumnDefinitions>
@@ -141,15 +141,15 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Label x:Name="patIdTypeLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Type:"/>
-                        <ComboBox x:Name="patIdComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedPatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="1" Width="120" IsEnabled="{Binding PatControlsEnabled}"/>
-                        <Label x:Name="patMultiplierLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Multiplier:" Grid.Row="1"/>
-                        <TextBox x:Name="patMultiplerTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Multiplier}" Grid.Row="1" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
-                        <Label x:Name="patOffsetLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="ID Offset:" Grid.Row="2"/>
-                        <TextBox x:Name="patOffsetTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.Offset}" Grid.Row="2" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
-                        <Label x:Name="framesPerImageLabel" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Frames Per Image:" Grid.Row="3"/>
-                        <TextBox x:Name="framesPerImageTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding SelectedPatSettings.FramesPerImage}" Width="60" Grid.Column="1" Grid.Row="3"/>
-                        <CheckBox x:Name="copyPatSettingsCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Copy From Cosmetic Settings" IsChecked="{Binding CopyPatSettings, Mode=TwoWay}" Grid.Column="2" Margin="2"/>
+                        <Label x:Name="patIdTypeLabel" Content="ID Type:"/>
+                        <ComboBox x:Name="patIdComboBox" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedPatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="1" Width="120" IsEnabled="{Binding PatControlsEnabled}"/>
+                        <Label x:Name="patMultiplierLabel" Content="ID Multiplier:" Grid.Row="1"/>
+                        <TextBox x:Name="patMultiplerTextBox" Text="{Binding SelectedPatSettings.Multiplier}" Grid.Row="1" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
+                        <Label x:Name="patOffsetLabel" Content="ID Offset:" Grid.Row="2"/>
+                        <TextBox x:Name="patOffsetTextBox" Text="{Binding SelectedPatSettings.Offset}" Grid.Row="2" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
+                        <Label x:Name="framesPerImageLabel" Content="Frames Per Image:" Grid.Row="3"/>
+                        <TextBox x:Name="framesPerImageTextBox" Text="{Binding SelectedPatSettings.FramesPerImage}" Width="60" Grid.Column="1" Grid.Row="3"/>
+                        <CheckBox x:Name="copyPatSettingsCheckBox" Content="Copy From Cosmetic Settings" IsChecked="{Binding CopyPatSettings, Mode=TwoWay}" Grid.Column="2" Margin="2"/>
                     </Grid>
                     
                 </Grid>

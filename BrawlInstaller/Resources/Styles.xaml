@@ -17,6 +17,21 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="miniButton" TargetType="Button">
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+    <Style x:Key="sideButton" TargetType="Button">
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+    <!--Default styles-->
     <Style TargetType="TextBox">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
@@ -47,7 +62,7 @@
     <Style TargetType="Label">
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Margin" Value="2,0,0,0"/>
     </Style>
     <Style TargetType="CheckBox">
         <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -63,5 +78,11 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="GridSplitter">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="ResizeDirection" Value="Columns"/>
+        <Setter Property="Width" Value="3"/>
+        <Setter Property="Background" Value="Silver"/>
     </Style>
 </ResourceDictionary>

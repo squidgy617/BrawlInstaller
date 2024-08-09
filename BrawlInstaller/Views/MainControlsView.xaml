@@ -12,7 +12,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label x:Name="buildPathLabel" Content="Build Path:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="0"/>
-        <TextBox x:Name="buildPathTextBox" Text="{Binding AppSettings.BuildPath, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="360" Grid.Column="1"/>
+        <Label x:Name="buildPathLabel" Content="Build Path:" Grid.Column="0"/>
+        <TextBox x:Name="buildPathTextBox" Text="{Binding AppSettings.BuildPath, Mode=TwoWay}" Width="360" Grid.Column="1"/>
     </Grid>
 </UserControl>

@@ -23,25 +23,25 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label x:Name="franchiseIconLabel" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="0" Content="Icon:"/>
+        <Label x:Name="franchiseIconLabel" Grid.Column="0" Content="Icon:"/>
         <Grid x:Name="franchiseIconIdGrid" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <ComboBox x:Name="franchiseIconComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FranchiseIcons}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon, Mode=TwoWay}"/>
+            <ComboBox x:Name="franchiseIconComboBox" Width="120" ItemsSource="{Binding FranchiseIcons}" DisplayMemberPath="Id" SelectedValue="{Binding SelectedFranchiseIcon, Mode=TwoWay}"/>
             <Grid x:Name="iconButtonsGrid" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="addIconButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="+" Margin="2"/>
-                <Button x:Name="removeIconButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="16" Height="16" Content="-" Grid.Column="1" Margin="2" Command="{Binding RemoveIconCommand}"/>
+                <Button x:Name="addIconButton" Style="{StaticResource miniButton}" Content="+"/>
+                <Button x:Name="removeIconButton" Style="{StaticResource miniButton}" Content="-" Grid.Column="1" Command="{Binding RemoveIconCommand}"/>
             </Grid>
             <Label Target="{Binding ElementName=franchiseIconIdTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="2"/>
         </Grid>
-        <TextBox x:Name="franchiseIconIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,0,0,0" Grid.Column="2" Width="60">
+        <TextBox x:Name="franchiseIconIdTextBox" Grid.Column="2" Width="60">
             <TextBox.Resources>
                 <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
             </TextBox.Resources>
@@ -57,22 +57,22 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <Label x:Name="modelLabel" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="0" Content="Model:" Grid.Row="1"/>
+        <Label x:Name="modelLabel" Grid.Column="0" Content="Model:" Grid.Row="1"/>
         <Grid x:Name="modelGrid" Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="modelTextBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Text="{Binding SelectedFranchiseIcon.ModelPath}" IsReadOnly="True"/>
-            <Label x:Name="hasModelLabel" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Content="{Binding SelectedFranchiseIcon.Model.Name}" Grid.Row="1"/>
+            <TextBox x:Name="modelTextBox" Width="120" Text="{Binding SelectedFranchiseIcon.ModelPath}" IsReadOnly="True"/>
+            <Label x:Name="hasModelLabel" Width="120" Content="{Binding SelectedFranchiseIcon.Model.Name}" Grid.Row="1"/>
         </Grid>
         <Grid x:Name="modelButtonGrid" Grid.Column="2" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Button x:Name="modelButton" Content="Browse..." VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Margin="4,0,0,0" Command="{Binding SelectModelCommand}"/>
-            <Button x:Name="modelClearButton" Content="Clear" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1" Width="60" Margin="4,4,0,0" Command="{Binding ClearModelCommand}"/>
+            <Button x:Name="modelButton" Content="Browse..." Width="60" Command="{Binding SelectModelCommand}"/>
+            <Button x:Name="modelClearButton" Content="Clear" Grid.Row="1" Width="60" Command="{Binding ClearModelCommand}"/>
         </Grid>
         <Grid x:Name="imageGrid" Grid.Column="3" Grid.RowSpan="2" Margin="8,0,0,0">
             <Grid.ColumnDefinitions>
@@ -85,15 +85,15 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label x:Name="franchiseIconImageLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Image:"/>
-            <Image x:Name="franchiseIconImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="0" Grid.Row="1"/>
-            <Label x:Name="franchiseIconHDImageLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Content="HD Image:" Grid.Column="1" Margin="8,0,0,0"/>
-            <Border Grid.Column="1" Grid.Row="1" Background="Gray" Height="64" Width="64" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,0,0,0">
-                <Image x:Name="franchiseIconTransparentImage" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="{Binding SelectedFranchiseIcon.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            <Label x:Name="franchiseIconImageLabel" HorizontalAlignment="Left" Content="Image:"/>
+            <Image x:Name="franchiseIconImage" Height="64" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="0" Grid.Row="1"/>
+            <Label x:Name="franchiseIconHDImageLabel" HorizontalAlignment="Left" Content="HD Image:" Grid.Column="1" Margin="8,0,0,0"/>
+            <Border Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Gray" Height="64" Width="64" Margin="8,0,0,0">
+                <Image x:Name="franchiseIconTransparentImage" Height="64" Width="64" Source="{Binding SelectedFranchiseIcon.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </Border>
-            <Button x:Name="imageButton" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Content="Browse..." Width="60" Margin="0,4,0,0" Command="{Binding ReplaceIconCommand}"/>
-            <Button x:Name="imageHDButton" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1" Content="Browse..." Width="60" Margin="8,4,0,0" Command="{Binding ReplaceHDIconCommand}"/>
-            <Button x:Name="clearImageHDButton" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Grid.Column="1" Content="Clear" Width="60" Margin="8,4,0,0" Command="{Binding ClearHDIconCommand}"/>
+            <Button x:Name="imageButton" Grid.Row="2" Content="Browse..." Width="60" Margin="0,4,0,0" Command="{Binding ReplaceIconCommand}"/>
+            <Button x:Name="imageHDButton" Grid.Row="2" Grid.Column="1" Content="Browse..." Width="60" Margin="8,4,0,0" Command="{Binding ReplaceHDIconCommand}"/>
+            <Button x:Name="clearImageHDButton" Grid.Row="3" Grid.Column="1" Content="Clear" Width="60" Margin="8,4,0,0" Command="{Binding ClearHDIconCommand}"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -23,10 +23,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label x:Name="nameLabel" Content="Name:" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-            <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Width="120"/>
-            <Label x:Name="entriesLabel" Content="Entries:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1"/>
-            <ListBox x:Name="entriesListBox" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Stage.Slot.StageEntries}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1"/>
+            <Label x:Name="nameLabel" Content="Name:"/>
+            <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" Grid.Column="1" Width="120"/>
+            <Label x:Name="entriesLabel" Content="Entries:" Grid.Row="1"/>
+            <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.Slot.StageEntries}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1"/>
         </Grid>
     </Grid>
 </UserControl>

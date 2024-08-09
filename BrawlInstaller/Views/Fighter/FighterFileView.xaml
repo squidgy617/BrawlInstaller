@@ -20,17 +20,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label x:Name="fighterFileOptionLabel" Content="Option:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
-        <ComboBox x:Name="fighterFileOptionDropDown" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" ItemsSource="{Binding FighterFiles}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedFighterFiles, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
-        <Label x:Name="pacFileLabel" Content="Pac Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0"/>
-        <ListBox x:Name="pacFileListBox" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding SelectedFighterFiles.PacFiles}" Width="120" Height="100"/>
-        <Label x:Name="exConfigsLabel" Content="Ex Configs:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2"/>
-        <ListBox x:Name="exConfigsListBox" VerticalAlignment="Top" Grid.Column="3" Grid.Row="1" ItemsSource="{Binding SelectedFighterFiles.ExConfigs}" Width="120" Height="100"/>
-        <Label x:Name="itemsLabel" Content="Items:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0"/>
-        <ListBox x:Name="itemsListBox" VerticalAlignment="Top" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding SelectedFighterFiles.ItemFiles}" Width="120" Height="100"/>
-        <Label x:Name="kirbyFilesLabel" Content="Kirby Files:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Grid.Column="2"/>
-        <ListBox x:Name="kirbyFilesListBox" VerticalAlignment="Top" Grid.Column="3" Grid.Row="2" ItemsSource="{Binding SelectedFighterFiles.KirbyPacFiles}" Width="120" Height="100"/>
-        <Label x:Name="moduleLabel" Content="Module:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0"/>
+        <Label x:Name="fighterFileOptionLabel" Content="Option:" Grid.Row="0" Grid.Column="0"/>
+        <ComboBox x:Name="fighterFileOptionDropDown" Width="120" ItemsSource="{Binding FighterFiles}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedFighterFiles, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
+        <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Row="1" Grid.Column="0"/>
+        <ListBox x:Name="pacFileListBox" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding SelectedFighterFiles.PacFiles}" Width="120" Height="100"/>
+        <Label x:Name="exConfigsLabel" Content="Ex Configs:" Grid.Row="1" Grid.Column="2"/>
+        <ListBox x:Name="exConfigsListBox" Grid.Column="3" Grid.Row="1" ItemsSource="{Binding SelectedFighterFiles.ExConfigs}" Width="120" Height="100"/>
+        <Label x:Name="itemsLabel" Content="Items:" Grid.Row="2" Grid.Column="0"/>
+        <ListBox x:Name="itemsListBox" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding SelectedFighterFiles.ItemFiles}" Width="120" Height="100"/>
+        <Label x:Name="kirbyFilesLabel" Content="Kirby Files:" Grid.Row="2" Grid.Column="2"/>
+        <ListBox x:Name="kirbyFilesListBox" Grid.Column="3" Grid.Row="2" ItemsSource="{Binding SelectedFighterFiles.KirbyPacFiles}" Width="120" Height="100"/>
+        <Label x:Name="moduleLabel" Content="Module:" Grid.Row="3" Grid.Column="0"/>
         <TextBox x:Name="moduleTextBox" Text="{Binding SelectedFighterFiles.Module, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Width="120"/>
     </Grid>
 </UserControl>

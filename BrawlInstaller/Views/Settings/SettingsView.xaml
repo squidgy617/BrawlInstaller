@@ -17,7 +17,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <ContentControl Content="{Binding CosmeticSettingsViewModel}" Grid.ColumnSpan="2"/>
-        <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Command="{Binding SaveSettingsCommand}"/>
-        <Button x:Name="loadButton" Content="Load" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" Command="{Binding LoadSettingsCommand}"/>
+        <Button x:Name="saveButton" Content="Save" Grid.Row="1" Command="{Binding SaveSettingsCommand}"/>
+        <Button x:Name="loadButton" Content="Load" Grid.Row="1" Grid.Column="1" Command="{Binding LoadSettingsCommand}"/>
     </Grid>
 </UserControl>
