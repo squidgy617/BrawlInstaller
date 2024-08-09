@@ -17,4 +17,51 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    <Style TargetType="TextBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Width" Value="60"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Width" Value="60"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="ComboBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="ListBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="GroupBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="Label">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="CheckBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="TabControl">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style TargetType="Image">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
 </ResourceDictionary>
