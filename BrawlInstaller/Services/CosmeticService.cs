@@ -436,7 +436,7 @@ namespace BrawlInstaller.Services
             var usedIds = GetUsedCosmeticIds(definition, rootNode);
             while (usedIds.Contains(id))
             {
-                id = id + definition.Multiplier + definition.Offset;
+                id = id + definition.Multiplier;
             }
             return id;
         }
@@ -540,7 +540,7 @@ namespace BrawlInstaller.Services
                         {
                             while (usedIdList.Contains(id))
                             {
-                                id++;
+                                id += definition.Multiplier;
                             }
                         }
                         // Otherwise, use frame index
