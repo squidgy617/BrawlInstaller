@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BrawlInstaller.Enums;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -110,6 +111,25 @@ namespace BrawlInstaller.Resources
                 return null;
             }
             return true;
+        }
+    }
+
+    [ValueConversion(typeof(uint), typeof(GameCubeButtons))]
+    public class GameCubeButtonConverter : IValueConverter
+    {
+        private GameCubeButtons target;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            GameCubeButtons mask = (GameCubeButtons)parameter;
+            this.target = (GameCubeButtons)value;
+            return ((mask & this.target) != 0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            this.target ^= (GameCubeButtons)parameter;
+            return (uint)this.target;
         }
     }
 }

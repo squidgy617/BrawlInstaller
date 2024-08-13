@@ -78,6 +78,7 @@
     <Compile Include="Dialogs\StringInputWindow.xaml.cs">
       <DependentUpon>StringInputWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\GamecubeButtons.cs" />
     <Compile Include="Helpers\CursorWait.cs" />
     <Compile Include="Resources\Converters.cs" />
     <Compile Include="Enums\CosmeticType.cs" />

@@ -7,4 +7,5 @@
     <BooleanToVisibilityConverter x:Key="boolVisConverter"/>
     <local:NullBoolConverter x:Key="nullBoolConverter"/>
     <local:NullVisibilityConverter x:Key="nullVisConverter"/>
+    <local:GameCubeButtonConverter x:Key="gameCubeButtonsConverter"/>
 </ResourceDictionary>

@@ -22,6 +22,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private StageInfo _stage;
+        private StageEntry _selectedStageEntry;
 
         // Services
         IStageService _stageService { get; }
@@ -40,6 +41,9 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
+
+        [DependsUpon(nameof(Stage))]
+        public StageEntry SelectedStageEntry { get => _selectedStageEntry; set { _selectedStageEntry = value; OnPropertyChanged(nameof(SelectedStageEntry)); } }
 
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
