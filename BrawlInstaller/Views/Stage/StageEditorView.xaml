@@ -29,90 +29,104 @@
             <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" Grid.Column="1" Width="120"/>
             <Label x:Name="entriesLabel" Content="Entries:" Grid.Row="1"/>
             <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.Slot.StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1"/>
-            <Grid x:Name="buttonsGrid" Grid.Column="2" Grid.Row="1" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
+            <Grid x:Name="altButtonsGrid" Grid.Column="2" Grid.Row="1" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <CheckBox Content="L" 
+                <Grid x:Name="buttonsGrid" Visibility="{Binding ButtonsEnabled, Converter={StaticResource boolVisConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="L" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.L}}"/>
-                <CheckBox Content="R" 
+                    <CheckBox Content="R" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.R}}" Grid.Column="1"/>
-                <CheckBox Content="Z" 
+                    <CheckBox Content="Z" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.Z}}" Grid.Column="2"/>
-                <CheckBox Content="Start" 
+                    <CheckBox Content="Start" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.Start}}" Grid.Column="3"/>
-                <CheckBox Content="A" 
+                    <CheckBox Content="A" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.A}}" Grid.Row="1"/>
-                <CheckBox Content="B" 
+                    <CheckBox Content="B" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.B}}" Grid.Row="1" Grid.Column="1"/>
-                <CheckBox Content="X" 
+                    <CheckBox Content="X" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.X}}" Grid.Row="1" Grid.Column="2"/>
-                <CheckBox Content="Y" 
+                    <CheckBox Content="Y" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.Y}}" Grid.Row="1" Grid.Column="3"/>
-                <CheckBox Content="←" 
+                    <CheckBox Content="←" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.Left}}" Grid.Row="2"/>
-                <CheckBox Content="↑" 
+                    <CheckBox Content="↑" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.Up}}" Grid.Row="2" Grid.Column="1"/>
-                <CheckBox Content="→" 
+                    <CheckBox Content="→" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.Right}}" Grid.Row="2" Grid.Column="2"/>
-                <CheckBox Content="↓" 
+                    <CheckBox Content="↓" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
                     ConverterParameter={x:Static enums:GameCubeButtons.Down}}" Grid.Row="2" Grid.Column="3"/>
-                <CheckBox Content="R-List Alt" 
+                </Grid>
+                <Grid x:Name="listAltsGrid" Grid.Row="1" Visibility="{Binding ListAltsEnabled, Converter={StaticResource boolVisConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Content="R-List Alt" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
-                    ConverterParameter={x:Static enums:GameCubeButtons.Unused0x4000}}" Grid.Row="3" Grid.ColumnSpan="4"/>
-                <CheckBox Content="L-List Alt" 
+                    ConverterParameter={x:Static enums:GameCubeButtons.Unused0x4000}}"
+                              Visibility="{Binding RAltsEnabled, Converter={StaticResource boolVisConverter}}"/>
+                    <CheckBox Content="L-List Alt" 
                           IsChecked="{Binding 
-                    Path=SelectedStageEntry.ButtonFlags, 
+                    Path=SelectedButtonFlags, 
                     Converter={StaticResource gameCubeButtonsConverter}, 
-                    ConverterParameter={x:Static enums:GameCubeButtons.Unused0x8000}}" Grid.Row="4" Grid.ColumnSpan="4"/>
+                    ConverterParameter={x:Static enums:GameCubeButtons.Unused0x8000}}" Grid.Row="1"
+                              Visibility="{Binding LAltsEnabled, Converter={StaticResource boolVisConverter}}"/>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
