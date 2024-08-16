@@ -226,7 +226,7 @@ namespace BrawlInstaller.Services
         /// <param name="texture">Texture to assign PAT0 entry</param>
         /// <param name="palette">Palette to assign PAT0 entry</param>
         /// <returns>PAT0TextureEntryNode</returns>
-        private PAT0TextureEntryNode CreatePatEntry(ResourceNode destinationNode, PatSettings patSetting, int frameIndex, string texture="", string palette="")
+        private PAT0TextureEntryNode CreatePatEntry(ResourceNode destinationNode, PatSettings patSetting, CosmeticDefinition definition, int frameIndex, string texture="", string palette="")
         {
             if (destinationNode != null)
             {
@@ -236,6 +236,20 @@ namespace BrawlInstaller.Services
                 node.FrameIndex = frameIndex;
                 node.Texture = texture;
                 node.Palette = palette;
+                // Add terminator frames for definitions that use them
+                if (patSetting.AddTerminatorFrame)
+                {
+                    // Only add if the next frame isn't already used
+                    var nodeMatch = destinationNode.Children.FirstOrDefault(x => ((PAT0TextureEntryNode)x).FrameIndex == frameIndex + 1);
+                    if (nodeMatch == null)
+                    {
+                        var terminator = new PAT0TextureEntryNode();
+                        destinationNode.AddChild(terminator);
+                        terminator.FrameIndex = frameIndex + 1;
+                        terminator.Texture = GetTextureName(definition, 0);
+                        terminator.Palette = terminator.Texture;
+                    }
+                }
                 pat0Node.FrameCount = (int)destinationNode.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
                 return node;
             }
@@ -386,6 +400,17 @@ namespace BrawlInstaller.Services
         private string GetTextureName(CosmeticDefinition definition, int id, Cosmetic cosmetic)
         {
             return $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
+        }
+
+        /// <summary>
+        /// Get name for texture node from ID
+        /// </summary>
+        /// <param name="definition">Definition to use</param>
+        /// <param name="id">ID associated with cosmetic</param>
+        /// <returns>Texture node name</returns>
+        private string GetTextureName(CosmeticDefinition definition, int id)
+        {
+            return $"{definition.Prefix}.{FormatCosmeticId(definition, id)}";
         }
 
         /// <summary>
@@ -633,7 +658,7 @@ namespace BrawlInstaller.Services
                     node = rootNode.FindChild(path);
                     if (node != null)
                     {
-                        CreatePatEntry(node, patSetting, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
+                        CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
                         // NormalizeCosmeticIds(definition, (PAT0TextureNode)node);
                     }
                 }
