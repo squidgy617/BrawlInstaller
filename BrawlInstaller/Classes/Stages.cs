@@ -50,6 +50,7 @@ namespace BrawlInstaller.Classes
         public string TrackList { get; set; } = string.Empty;
         public string Module { get; set; } = string.Empty;
         public RGBAPixel CharacterOverlay { get; set; } = new RGBAPixel { R = 0, G = 0, B = 0, A = 0 };
+        // TODO: Load soundbank file along with this?
         public ushort SoundBank { get; set; } = 0xFFFF;
         public ushort EffectBank { get; set; } = 0x0032;
         public uint MemoryAllocation { get; set; } = 0x00000000;

@@ -8,4 +8,6 @@
     <local:NullBoolConverter x:Key="nullBoolConverter"/>
     <local:NullVisibilityConverter x:Key="nullVisConverter"/>
     <local:GameCubeButtonConverter x:Key="gameCubeButtonsConverter"/>
+    <local:HexShortConverter x:Key="hexShortConverter"/>
+    <local:HexUIntConverter x:Key="hexUIntConverter"/>
 </ResourceDictionary>
