@@ -1,8 +1,10 @@
-﻿using System;
+﻿using BrawlLib.Imaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 
 namespace BrawlInstaller.Classes
 {
@@ -39,5 +41,26 @@ namespace BrawlInstaller.Classes
     {
         public string Name { get; set; } = "Unknown";
         public ushort ButtonFlags { get; set; } = 0x0000;
+        public StageParams Params { get; set; } = new StageParams();
+    }
+
+    public class StageParams
+    {
+        public string Name { get; set; } = "Unknown";
+        public string TrackList { get; set; } = string.Empty;
+        public string Module { get; set; } = string.Empty;
+        public RGBAPixel CharacterOverlay { get; set; } = new RGBAPixel { R = 0, G = 0, B = 0, A = 0 };
+        public ushort SoundBank { get; set; } = 0xFFFF;
+        public ushort EffectBank { get; set; } = 0x0032;
+        public uint MemoryAllocation { get; set; } = 0x00000000;
+        public float WildSpeed { get; set; } = 0;
+        public bool IsFlat { get; set; } = false;
+        public bool IsFixedCamera { get; set; } = false;
+        public bool IsSlowStart { get; set; } = false;
+        public bool IsDualLoad { get; set; } = false;
+        public bool IsDualShuffle { get; set; } = false;
+        public bool IsOldSubStage { get; set; } = false;
+        public VariantType VariantType { get; set; } = VariantType.None;
+        public byte SubstageRange { get; set; } = 0;
     }
 }

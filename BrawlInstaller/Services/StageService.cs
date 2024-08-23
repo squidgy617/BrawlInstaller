@@ -147,13 +147,48 @@ namespace BrawlInstaller.Services
                         stageSlot.StageEntries.Add(new StageEntry
                         {
                             Name = entry.Name,
-                            ButtonFlags = entry.ButtonFlags
+                            ButtonFlags = entry.ButtonFlags,
+                            Params = GetStageParams(entry.Name)
                         });
                     }
                     stageSlots.Add(stageSlot);
                 }
             }
             return stageSlots;
+        }
+
+        private StageParams GetStageParams(string name)
+        {
+            var stageParams = new StageParams();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var paramPath = _settingsService.BuildSettings.FilePathSettings.StageParamPath;
+            var path = $"{buildPath}\\{paramPath}";
+            var file = Directory.GetFiles(path, $"{name}.param").FirstOrDefault();
+            if (file != null)
+            {
+                var rootNode = _fileService.OpenFile(file);
+                if (rootNode != null)
+                {
+                    var paramNode = (STEXNode)rootNode;
+                    stageParams.Name = paramNode.StageName;
+                    stageParams.TrackList = paramNode.TrackList;
+                    stageParams.EffectBank = paramNode.EffectBank;
+                    stageParams.SoundBank = paramNode.SoundBank;
+                    stageParams.Module = paramNode.Module;
+                    stageParams.CharacterOverlay = paramNode.CharacterOverlay;
+                    stageParams.MemoryAllocation = paramNode.MemoryAllocation;
+                    stageParams.WildSpeed = paramNode.WildSpeed;
+                    stageParams.IsDualLoad = paramNode.IsDualLoad;
+                    stageParams.IsDualShuffle = paramNode.IsDualShuffle;
+                    stageParams.IsOldSubStage = paramNode.IsOldSubstage;
+                    stageParams.VariantType = paramNode.SubstageVarianceType;
+                    stageParams.SubstageRange = paramNode.SubstageRange;
+                    stageParams.IsFlat = paramNode.IsFlat;
+                    stageParams.IsFixedCamera = paramNode.IsFixedCamera;
+                    stageParams.IsSlowStart = paramNode.IsSlowStart;
+                }
+            }
+            return stageParams;
         }
 
         /// <summary>

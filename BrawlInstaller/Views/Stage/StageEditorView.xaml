@@ -24,12 +24,24 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="nameLabel" Content="Name:"/>
             <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" Grid.Column="1" Width="120"/>
             <Label x:Name="entriesLabel" Content="Entries:" Grid.Row="1"/>
-            <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.Slot.StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1"/>
-            <Grid x:Name="altButtonsGrid" Grid.Column="2" Grid.Row="1" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
+            <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.Slot.StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"/>
+            <Grid x:Name="paramsGrid" Grid.Row="1" Grid.Column="2" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="pacNameLabel" Content="PAC Name:"/>
+                <TextBox x:Name="pacNameTextBox" Text="{Binding SelectedStageEntry.Params.Name}" Grid.Column="1" Width="160"/>
+            </Grid>
+            <Grid x:Name="altButtonsGrid" Grid.Column="2" Grid.Row="2" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

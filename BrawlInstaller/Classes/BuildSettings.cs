@@ -134,5 +134,6 @@ namespace BrawlInstaller.Classes
                 FileExtension = "pac"
             }
         };
+        public string StageParamPath { get; set; } = "pf\\stage\\stageinfo";
     }
 }
