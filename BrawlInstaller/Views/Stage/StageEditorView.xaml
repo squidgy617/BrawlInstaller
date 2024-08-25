@@ -40,6 +40,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -57,8 +58,10 @@
                 <TextBox x:Name="effectBankTextBox" Text="{Binding SelectedStageEntry.Params.EffectBank, Converter={StaticResource hexShortConverter}}" Grid.Row="4" Grid.Column="1" Width="60"/>
                 <Label x:Name="memoryAllocationLabel" Content="Memory Allocation:" Grid.Row="5"/>
                 <TextBox x:Name="memoryAllocationTextBox" Text="{Binding SelectedStageEntry.Params.MemoryAllocation, Converter={StaticResource hexUIntConverter}}" Grid.Row="5" Grid.Column="1" Width="80"/>
-                <Label x:Name="characterOverlayLabel" Content="Character Overlay:" Grid.Row="6"/>
-                <colorpicker:PortableColorPicker x:Name="characterOverlayPicker" Grid.Row="6" Grid.Column="1" SelectedColor="{Binding SelectedStageEntry.Params.CharacterOverlay, Mode=TwoWay, Converter={StaticResource colorRGBAConverter}}"/>
+                <Label x:Name="wildSpeedLabel" Content="Wild Speed:" Grid.Row="6"/>
+                <TextBox x:Name="wildSpeedTextBox" Text="{Binding SelectedStageEntry.Params.WildSpeed}" Grid.Row="6" Grid.Column="1"/>
+                <Label x:Name="characterOverlayLabel" Content="Character Overlay:" Grid.Row="7"/>
+                <colorpicker:PortableColorPicker x:Name="characterOverlayPicker" Grid.Row="7" Grid.Column="1" SelectedColor="{Binding SelectedStageEntry.Params.CharacterOverlay, Mode=TwoWay, Converter={StaticResource colorRGBAConverter}}"/>
             </Grid>
             <Grid x:Name="altButtonsGrid" Grid.Column="3" Grid.Row="1" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
                 <Grid.RowDefinitions>
