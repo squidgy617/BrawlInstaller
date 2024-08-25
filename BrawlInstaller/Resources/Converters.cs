@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Enums;
+using BrawlLib.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace BrawlInstaller.Resources
 {
@@ -182,6 +184,36 @@ namespace BrawlInstaller.Resources
         {
             this.target ^= (GameCubeButtons)parameter;
             return (uint)this.target;
+        }
+    }
+
+    [ValueConversion(typeof(Color), typeof(RGBAPixel))]
+    public class ColorRGBAPixelConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var parsed = (RGBAPixel)value;
+            var color = new Color
+            {
+                R = parsed.R,
+                G = parsed.G,
+                B = parsed.B,
+                A = parsed.A
+            };
+            return color;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var parsed = (Color)value;
+            var color = new RGBAPixel
+            {
+                R = parsed.R,
+                G = parsed.G,
+                B = parsed.B,
+                A = parsed.A
+            };
+            return color;
         }
     }
 }

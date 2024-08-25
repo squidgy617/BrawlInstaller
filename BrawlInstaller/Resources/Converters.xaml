@@ -10,4 +10,5 @@
     <local:GameCubeButtonConverter x:Key="gameCubeButtonsConverter"/>
     <local:HexShortConverter x:Key="hexShortConverter"/>
     <local:HexUIntConverter x:Key="hexUIntConverter"/>
+    <local:ColorRGBAPixelConverter x:Key="colorRGBAConverter"/>
 </ResourceDictionary>
