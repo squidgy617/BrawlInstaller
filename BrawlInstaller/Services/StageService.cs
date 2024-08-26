@@ -322,6 +322,11 @@ namespace BrawlInstaller.Services
             // TODO: Make sure to update stage list object to use the correct name if stage entries were renamed
 
             // TODO: When two entries have the same name, update them to use the same data on save
+
+            // TODO: To save params, open the existing ASL file, loop through all params. Open the associated param files.
+            // Gather up names of files that we might want to delete. Then delete each param file and each node in the ASL file and generate new ones with our
+            // changes. Use the names we gathered up to prompt the user on what they might want to delete.
+            // Perhaps could add something to check for unused files too.
         }
     }
 }
