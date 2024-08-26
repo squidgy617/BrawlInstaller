@@ -26,12 +26,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="nameLabel" Content="Name:"/>
             <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" Grid.Column="1" Width="120"/>
             <Label x:Name="entriesLabel" Content="Entries:" Grid.Row="1"/>
-            <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.Slot.StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1"/>
-            <GroupBox x:Name="paramsGroupBox" Header="Parameters" Grid.Row="1" Grid.Column="2" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
+            <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.Slot.StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"/>
+            <GroupBox x:Name="paramsGroupBox" Header="Parameters" Grid.Row="1" Grid.Column="2" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}" Grid.RowSpan="2">
                 <Grid x:Name="paramsGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -174,6 +175,33 @@
                         Converter={StaticResource gameCubeButtonsConverter}, 
                         ConverterParameter={x:Static enums:GameCubeButtons.Unused0x8000}}" Grid.Row="1"
                                   Visibility="{Binding LAltsEnabled, Converter={StaticResource boolVisConverter}}"/>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+            <GroupBox x:Name="substageGroupBox" Header="Substages" Grid.Row="2" Grid.Column="3" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
+                <Grid x:Name="substageGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="varianceTypeLabel" Content="Variance Type:"/>
+                    <ComboBox x:Name="varianceTypeComboBox" ItemsSource="{Binding VariantTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedStageEntry.Params.VariantType}" Width="120" Grid.Column="1"/>
+                    <Label x:Name="substageRangeLabel" Content="Substage Range:" Grid.Row="1"/>
+                    <TextBox x:Name="substageRangeTextBox" Text="{Binding SelectedStageEntry.Params.SubstageRange}" Grid.Row="1" Grid.Column="1"/>
+                    <Grid x:Name="substageFlagGrid" Grid.Row="2" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox x:Name="dualLoadCheckBox" Content="Dual Load" IsChecked="{Binding SelectedStageEntry.Params.IsDualLoad}"/>
+                        <CheckBox x:Name="dualShuffleCheckBox" Content="Dual Shuffle" IsChecked="{Binding SelectedStageEntry.Params.IsDualShuffle}" Grid.Column="1"/>
+                        <CheckBox x:Name="oldSubstageCheckBox" Content="Old Substage" IsChecked="{Binding SelectedStageEntry.Params.IsOldSubStage}" Grid.Column="2"/>
                     </Grid>
                 </Grid>
             </GroupBox>

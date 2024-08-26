@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -60,6 +62,8 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(ListAltsEnabled))]
         public bool RAltsEnabled { get => ListAltsEnabled && ((SelectedButtonFlags >= 0x4000 && SelectedButtonFlags < 0x8000) || SelectedButtonFlags <= 0x4000); }
+
+        public Dictionary<string, VariantType> VariantTypes { get => typeof(VariantType).GetDictionary<VariantType>(); }
 
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }

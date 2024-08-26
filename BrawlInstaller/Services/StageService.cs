@@ -142,6 +142,8 @@ namespace BrawlInstaller.Services
                         StageEntries = new List<StageEntry>(),
                         Index = stageIds.IndexOf(idPair)
                     };
+                    // TODO: Figure something out with button flags and params, right now they are kept even when you load a different stage,
+                    // we may want to load them when we load the stage info
                     foreach(ASLSEntryNode entry in node.Children)
                     {
                         stageSlot.StageEntries.Add(new StageEntry
@@ -157,6 +159,11 @@ namespace BrawlInstaller.Services
             return stageSlots;
         }
 
+        /// <summary>
+        /// Get stage parameters from param file name
+        /// </summary>
+        /// <param name="name">Param file name</param>
+        /// <returns>Stage parameters</returns>
         private StageParams GetStageParams(string name)
         {
             var stageParams = new StageParams();
