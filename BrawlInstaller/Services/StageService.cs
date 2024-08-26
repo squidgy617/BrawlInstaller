@@ -320,6 +320,8 @@ namespace BrawlInstaller.Services
             SaveStageRandomName(stage);
 
             // TODO: Make sure to update stage list object to use the correct name if stage entries were renamed
+
+            // TODO: When two entries have the same name, update them to use the same data on save
         }
     }
 }
