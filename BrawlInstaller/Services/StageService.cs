@@ -51,7 +51,9 @@ namespace BrawlInstaller.Services
         /// <returns>Stage object with data</returns>
         public StageInfo GetStageData(StageInfo stage)
         {
+            // Get cosmetics
             var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
+            // Get name for RSS
             var names = GetStageRandomNames();
             if (names.Count > stage.Slot.StageIds.StageCosmeticId)
             {
@@ -61,8 +63,8 @@ namespace BrawlInstaller.Services
             {
                 stage.RandomName = string.Empty;
             }
-            //stage.Cosmetics.Items = cosmetics.Where(x => !x.SelectionOption).ToList();
-            //stage.Cosmetics.SelectableOptions = cosmetics.Where(x => x.SelectionOption).ToList();
+            // Get parameters and button flags
+            LoadStageEntries(stage);
             stage.Cosmetics.Items = cosmetics;
             return stage;
         }
@@ -140,23 +142,38 @@ namespace BrawlInstaller.Services
                     {
                         StageIds = idPair,
                         StageEntries = new List<StageEntry>(),
-                        Index = stageIds.IndexOf(idPair)
+                        Index = stageIds.IndexOf(idPair),
+                        Name = node.Children.FirstOrDefault()?.Name ?? "Unknown"
                     };
-                    // TODO: Figure something out with button flags and params, right now they are kept even when you load a different stage,
-                    // we may want to load them when we load the stage info
-                    foreach(ASLSEntryNode entry in node.Children)
-                    {
-                        stageSlot.StageEntries.Add(new StageEntry
-                        {
-                            Name = entry.Name,
-                            ButtonFlags = entry.ButtonFlags,
-                            Params = GetStageParams(entry.Name)
-                        });
-                    }
                     stageSlots.Add(stageSlot);
                 }
             }
             return stageSlots;
+        }
+
+        /// <summary>
+        /// Load stage entry parameters and button flags for a given stage
+        /// </summary>
+        /// <param name="stage">Stage to load data for</param>
+        /// <returns>Updated stage data</returns>
+        private StageInfo LoadStageEntries(StageInfo stage)
+        {
+            stage.Slot.StageEntries = new List<StageEntry>();
+            var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}\\{stage.Slot.StageIds.StageId:X2}.asl";
+            var node = _fileService.OpenFile(path);
+            if (node != null)
+            {
+                foreach (ASLSEntryNode entry in node.Children)
+                {
+                    stage.Slot.StageEntries.Add(new StageEntry
+                    {
+                        Name = entry.Name,
+                        ButtonFlags = entry.ButtonFlags,
+                        Params = GetStageParams(entry.Name)
+                    });
+                }
+            }
+            return stage;
         }
 
         /// <summary>
@@ -301,6 +318,8 @@ namespace BrawlInstaller.Services
             // TODO: only do if name is changed
             // Save stage random name
             SaveStageRandomName(stage);
+
+            // TODO: Make sure to update stage list object to use the correct name if stage entries were renamed
         }
     }
 }

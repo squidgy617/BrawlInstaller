@@ -33,7 +33,7 @@ namespace BrawlInstaller.Classes
         public BrawlIds StageIds { get; set; } = new BrawlIds();
         public List<StageEntry> StageEntries { get; set; } = new List<StageEntry>();
 
-        public string Name { get => StageEntries.FirstOrDefault()?.Name ?? "Unknown"; }
+        public string Name { get; set; } = "Unknown";
         public int Index { get; set; }
     }
 
