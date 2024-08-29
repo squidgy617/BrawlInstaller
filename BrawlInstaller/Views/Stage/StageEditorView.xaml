@@ -31,7 +31,7 @@
             <Label x:Name="nameLabel" Content="Name:"/>
             <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" Grid.Column="1" Width="120"/>
             <Label x:Name="entriesLabel" Content="Entries:" Grid.Row="1"/>
-            <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.Slot.StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"/>
+            <ListBox x:Name="entriesListBox" ItemsSource="{Binding Stage.StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Name" Width="120" MinHeight="120" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"/>
             <GroupBox x:Name="paramsGroupBox" Header="Parameters" Grid.Row="1" Grid.Column="2" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}" Grid.RowSpan="2">
                 <Grid x:Name="paramsGrid">
                     <Grid.RowDefinitions>

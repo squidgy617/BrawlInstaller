@@ -13,6 +13,7 @@ namespace BrawlInstaller.Classes
         public string RandomName { get; set; } = string.Empty;
         public StageSlot Slot { get; set; }
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
+        public List<StageEntry> StageEntries { get; set; } = new List<StageEntry>();
     }
 
     public class StageList
@@ -31,8 +32,6 @@ namespace BrawlInstaller.Classes
     public class StageSlot
     {
         public BrawlIds StageIds { get; set; } = new BrawlIds();
-        public List<StageEntry> StageEntries { get; set; } = new List<StageEntry>();
-
         public string Name { get; set; } = "Unknown";
         public int Index { get; set; }
     }

@@ -141,7 +141,6 @@ namespace BrawlInstaller.Services
                     var stageSlot = new StageSlot
                     {
                         StageIds = idPair,
-                        StageEntries = new List<StageEntry>(),
                         Index = stageIds.IndexOf(idPair),
                         Name = node.Children.FirstOrDefault()?.Name ?? "Unknown"
                     };
@@ -158,14 +157,14 @@ namespace BrawlInstaller.Services
         /// <returns>Updated stage data</returns>
         private StageInfo LoadStageEntries(StageInfo stage)
         {
-            stage.Slot.StageEntries = new List<StageEntry>();
+            stage.StageEntries = new List<StageEntry>();
             var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}\\{stage.Slot.StageIds.StageId:X2}.asl";
             var node = _fileService.OpenFile(path);
             if (node != null)
             {
                 foreach (ASLSEntryNode entry in node.Children)
                 {
-                    stage.Slot.StageEntries.Add(new StageEntry
+                    stage.StageEntries.Add(new StageEntry
                     {
                         Name = entry.Name,
                         ButtonFlags = entry.ButtonFlags,
