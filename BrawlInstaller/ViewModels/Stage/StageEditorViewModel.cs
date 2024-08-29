@@ -25,6 +25,7 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private StageInfo _stage;
         private StageEntry _selectedStageEntry;
+        private Substage _selectedSubstage;
 
         // Services
         IStageService _stageService { get; }
@@ -64,6 +65,9 @@ namespace BrawlInstaller.ViewModels
         public bool RAltsEnabled { get => ListAltsEnabled && ((SelectedButtonFlags >= 0x4000 && SelectedButtonFlags < 0x8000) || SelectedButtonFlags <= 0x4000); }
 
         public Dictionary<string, VariantType> VariantTypes { get => typeof(VariantType).GetDictionary<VariantType>(); }
+
+        [DependsUpon(nameof(SelectedStageEntry))]
+        public Substage SelectedSubstage { get => _selectedSubstage; set { _selectedSubstage = value; OnPropertyChanged(nameof(SelectedSubstage)); } }
 
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }

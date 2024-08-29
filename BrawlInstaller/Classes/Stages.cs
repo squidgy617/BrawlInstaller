@@ -62,5 +62,12 @@ namespace BrawlInstaller.Classes
         public bool IsOldSubStage { get; set; } = false;
         public VariantType VariantType { get; set; } = VariantType.None;
         public byte SubstageRange { get; set; } = 0;
+        public List<Substage> Substages { get; set; } = new List<Substage>();
+    }
+
+    public class Substage
+    {
+        public string Name { get; set; } = "00";
+        public string PacFile { get; set; } = null;
     }
 }

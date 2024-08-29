@@ -135,5 +135,6 @@ namespace BrawlInstaller.Classes
             }
         };
         public string StageParamPath { get; set; } = "pf\\stage\\stageinfo";
+        public string StagePacPath { get; set; } = "pf\\stage\\melee";
     }
 }

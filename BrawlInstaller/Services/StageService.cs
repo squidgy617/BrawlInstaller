@@ -209,9 +209,36 @@ namespace BrawlInstaller.Services
                     stageParams.IsFlat = paramNode.IsFlat;
                     stageParams.IsFixedCamera = paramNode.IsFixedCamera;
                     stageParams.IsSlowStart = paramNode.IsSlowStart;
+                    foreach(var substage in rootNode.Children)
+                    {
+                        stageParams.Substages.Add(new Substage
+                        {
+                            Name = substage.Name,
+                            PacFile = GetSubstagePath(paramNode.StageName, substage.Name)
+                        });
+                    }
                 }
             }
             return stageParams;
+        }
+
+        /// <summary>
+        /// Get substage pac path if it exists
+        /// </summary>
+        /// <param name="mainPacName">Name of pac file for main stage</param>
+        /// <param name="suffix">Suffix used for substage</param>
+        /// <returns>Path to substage pac file</returns>
+        private string GetSubstagePath(string mainPacName, string suffix)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var stagePath = _settingsService.BuildSettings.FilePathSettings.StagePacPath;
+            var path = Path.Combine(buildPath, stagePath);
+            var pacPath = $"{path}\\STG{mainPacName.ToUpper()}_{suffix.ToUpper()}.pac";
+            if (File.Exists(pacPath))
+            {
+                return pacPath;
+            }
+            return null;
         }
 
         /// <summary>
