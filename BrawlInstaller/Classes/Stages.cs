@@ -34,6 +34,21 @@ namespace BrawlInstaller.Classes
         public BrawlIds StageIds { get; set; } = new BrawlIds();
         public string Name { get; set; } = "Unknown";
         public int Index { get; set; }
+
+        public StageSlot Copy()
+        {
+            var newStageSlot = new StageSlot
+            {
+                Index = Index,
+                Name = Name,
+                StageIds = new BrawlIds
+                {
+                    StageId = StageIds.StageId,
+                    StageCosmeticId = StageIds.StageCosmeticId
+                }
+            };
+            return newStageSlot;
+        }
     }
 
     public class StageEntry
