@@ -194,6 +194,7 @@ namespace BrawlInstaller.Services
                 var rootNode = _fileService.OpenFile(file);
                 if (rootNode != null)
                 {
+                    // Set params
                     var paramNode = (STEXNode)rootNode;
                     stageParams.Name = paramNode.StageName;
                     stageParams.TrackList = paramNode.TrackList;
@@ -219,6 +220,13 @@ namespace BrawlInstaller.Services
                             PacFile = GetSubstagePath(paramNode.StageName, substage.Name)
                         });
                     }
+                    // Get files
+                    var pacPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath);
+                    var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules);
+                    var tracklistPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath);
+                    stageParams.PacFile = Directory.GetFiles(pacPath, $"STG{paramNode.StageName.ToUpper()}.pac").FirstOrDefault();
+                    stageParams.ModuleFile = Directory.GetFiles(modulePath, $"{paramNode.Module}").FirstOrDefault();
+                    stageParams.TrackListFile = Directory.GetFiles(tracklistPath, $"{paramNode.TrackList}.tlst").FirstOrDefault();
                     _fileService.CloseFile(rootNode);
                 }
             }
@@ -331,11 +339,11 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Save changes to stage entries
+        /// Save changes to stage
         /// </summary>
         /// <param name="stage">The stage to save</param>
         /// <returns>List of files user can choose to delete</returns>
-        public List<string> SaveStageEntries(StageInfo stage)
+        public List<string> SaveStageInfo(StageInfo stage)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             // Get old stage data
@@ -344,12 +352,117 @@ namespace BrawlInstaller.Services
                 Slot = stage.Slot.Copy()
             };
             LoadStageEntries(oldStageData);
+            // Get PAC files for install
+            // We do this before deleting old files in case the user kept an old file
+            var pacFiles = OpenStagePacFiles(stage);
             // Delete old stage data
             var toDelete = DeleteStageEntries(oldStageData);
+            // Generate ASL and param files
+            SaveStageEntries(stage);
+            // Save pac files
+            foreach(var pacFile in pacFiles)
+            {
+                _fileService.SaveFile(pacFile);
+                _fileService.CloseFile(pacFile);
+            }
             // Return optional delete files, only ones that don't still exist in stage entries
             var modules = stage.StageEntries.Select(x => x.Params.Module).ToList();
             var tracklists = stage.StageEntries.Select(x => x.Params.TrackList).ToList();
             return toDelete.Where(x => !modules.Contains(Path.GetFileName(x)) && !tracklists.Contains(Path.GetFileNameWithoutExtension(x))).ToList();
+        }
+
+        /// <summary>
+        /// Save params and ASL for stage
+        /// </summary>
+        /// <param name="stage">Stage to save</param>
+        private void SaveStageEntries(StageInfo stage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            // Generate new ASL
+            var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}\\{stage.Slot.StageIds.StageId:X2}.asl";
+            var node = new ASLSNode();
+            // Add entries to ASL and generate param files
+            foreach (var entry in stage.StageEntries)
+            {
+                var newEntry = new ASLSEntryNode
+                {
+                    ButtonFlags = entry.ButtonFlags,
+                    Name = entry.Name
+                };
+                node.AddChild(newEntry);
+                // Generate param file
+                var newParam = new STEXNode
+                {
+                    IsFlat = entry.Params.IsFlat,
+                    IsFixedCamera = entry.Params.IsFixedCamera,
+                    IsSlowStart = entry.Params.IsSlowStart,
+                    StageName = entry.Params.Name,
+                    TrackList = entry.Params.TrackList,
+                    Module = entry.Params.Module,
+                    CharacterOverlay = entry.Params.CharacterOverlay,
+                    SoundBank = entry.Params.SoundBank,
+                    EffectBank = entry.Params.EffectBank,
+                    MemoryAllocation = entry.Params.MemoryAllocation,
+                    WildSpeed = entry.Params.WildSpeed,
+                    IsDualLoad = entry.Params.IsDualLoad,
+                    IsDualShuffle = entry.Params.IsDualShuffle,
+                    IsOldSubstage = entry.Params.IsOldSubStage,
+                    SubstageVarianceType = entry.Params.VariantType,
+                    SubstageRange = entry.Params.SubstageRange
+                };
+                // Add substages if applicable
+                foreach (var substage in entry.Params.Substages)
+                {
+                    var substageNode = new RawDataNode
+                    {
+                        Name = substage.Name
+                    };
+                    newParam.AddChild(substageNode);
+                }
+                // Save params
+                var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath, $"{entry.Name}.param");
+                _fileService.SaveFileAs(newParam, paramPath);
+                _fileService.CloseFile(newParam);
+            }
+            // Save ASL
+            _fileService.SaveFileAs(node, path);
+            _fileService.CloseFile(node);
+            // TODO: Handle soundbank
+        }
+
+        /// <summary>
+        /// Open all PAC files associated with a stage
+        /// </summary>
+        /// <param name="stage">Stage to open PAC files for</param>
+        /// <returns>List of pac files</returns>
+        private List<ResourceNode> OpenStagePacFiles(StageInfo stage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var pacFiles = new List<ResourceNode>();
+            foreach (var entry in stage.StageEntries)
+            {
+                var pacFile = _fileService.OpenFile(entry.Params.PacFile);
+                if (pacFile != null)
+                {
+                    // Set install path so it will save to the correct location
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath, $"STG{entry.Params.Name.ToUpper()}.pac");
+                    pacFile._origPath = installPath;
+                    pacFiles.Add(pacFile);
+                }
+                // Get substages for install
+                foreach (var substage in entry.Params.Substages)
+                {
+                    var substageFile = _fileService.OpenFile(substage.PacFile);
+                    if (substageFile != null)
+                    {
+                        var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath,
+                            $"STG{entry.Params.Name.ToUpper()}_{substage.Name}.pac");
+                        substageFile._origPath = installPath;
+                        pacFiles.Add(substageFile);
+                    }
+                }
+            }
+            return pacFiles;
         }
 
         /// <summary>
@@ -362,9 +475,7 @@ namespace BrawlInstaller.Services
             var toDelete = new List<string>();
             var buildPath = _settingsService.AppSettings.BuildPath;
             var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath);
-            var pacPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath);
-            var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules);
-            var tracklistPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath);
+            var aslPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageSlots);
             foreach(var stageEntry in stage.StageEntries)
             {
                 // Delete param files
@@ -374,7 +485,7 @@ namespace BrawlInstaller.Services
                     _fileService.DeleteFile(path);
                 }
                 // Delete pac files
-                path = Path.Combine(pacPath, $"STG{stageEntry.Params.Name.ToUpper()}.pac");
+                path = stageEntry.Params.PacFile;
                 if (File.Exists(path))
                 {
                     _fileService.DeleteFile(path);
@@ -382,22 +493,26 @@ namespace BrawlInstaller.Services
                 // Delete substage files
                 foreach(var substage in stageEntry.Params.Substages)
                 {
-                    path = Path.Combine(pacPath, $"STG{stageEntry.Params.Name.ToUpper()}_{substage.Name}.pac");
+                    path = substage.PacFile;
                     if (File.Exists(path))
                     {
                         _fileService.DeleteFile(path);
                     }
                 }
                 // Add modules and tracklists to delete options
-                var module = Directory.GetFiles(modulePath, $"{stageEntry.Params.Module}").FirstOrDefault();
-                if (module != null && File.Exists(module) && !toDelete.Contains(module))
+                if (stageEntry.Params.ModuleFile != null && File.Exists(stageEntry.Params.ModuleFile) && !toDelete.Contains(stageEntry.Params.ModuleFile))
                 {
                     toDelete.Add(stageEntry.Params.Module);
                 }
-                var tracklist = Directory.GetFiles(tracklistPath, $"{stageEntry.Params.TrackList}.tlst").FirstOrDefault();
-                if (tracklist != null && File.Exists(tracklist) && !toDelete.Contains(tracklist))
+                if (stageEntry.Params.TrackListFile != null && File.Exists(stageEntry.Params.TrackListFile) && !toDelete.Contains(stageEntry.Params.TrackListFile))
                 {
                     toDelete.Add(stageEntry.Params.TrackList);
+                }
+                // Delete ASL file
+                path = Path.Combine(aslPath, $"{stage.Slot.StageIds.StageId:X2}.asl");
+                if (File.Exists(path))
+                {
+                    _fileService.DeleteFile(path);
                 }
             }
             return toDelete;
@@ -429,7 +544,7 @@ namespace BrawlInstaller.Services
             // Gather up names of files that we might want to delete. Then delete each param file and each node in the ASL file and generate new ones with our
             // changes. Use the names we gathered up to prompt the user on what they might want to delete.
             // Perhaps could add something to check for unused files too.
-            SaveStageEntries(stage);
+            SaveStageInfo(stage);
         }
     }
 }

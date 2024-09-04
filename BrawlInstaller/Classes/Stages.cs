@@ -61,8 +61,11 @@ namespace BrawlInstaller.Classes
     public class StageParams
     {
         public string Name { get; set; } = "Unknown";
+        public string PacFile { get; set; } = null;
         public string TrackList { get; set; } = string.Empty;
+        public string TrackListFile { get; set; } = null;
         public string Module { get; set; } = string.Empty;
+        public string ModuleFile { get; set; } = null;
         public RGBAPixel CharacterOverlay { get; set; } = new RGBAPixel { R = 0, G = 0, B = 0, A = 0 };
         // TODO: Load soundbank file along with this?
         public ushort SoundBank { get; set; } = 0xFFFF;
