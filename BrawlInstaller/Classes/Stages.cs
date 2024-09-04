@@ -1,4 +1,6 @@
 ﻿using BrawlLib.Imaging;
+using BrawlLib.SSBB.ResourceNodes;
+using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +83,40 @@ namespace BrawlInstaller.Classes
         public VariantType VariantType { get; set; } = VariantType.None;
         public byte SubstageRange { get; set; } = 0;
         public List<Substage> Substages { get; set; } = new List<Substage>();
+
+        public STEXNode ConvertToNode()
+        {
+            // Generate param file
+            var newParam = new STEXNode
+            {
+                IsFlat = IsFlat,
+                IsFixedCamera = IsFixedCamera,
+                IsSlowStart = IsSlowStart,
+                StageName = Name,
+                TrackList = TrackList,
+                Module = Module,
+                CharacterOverlay = CharacterOverlay,
+                SoundBank = SoundBank,
+                EffectBank = EffectBank,
+                MemoryAllocation = MemoryAllocation,
+                WildSpeed = WildSpeed,
+                IsDualLoad = IsDualLoad,
+                IsDualShuffle = IsDualShuffle,
+                IsOldSubstage = IsOldSubStage,
+                SubstageVarianceType =  VariantType,
+                SubstageRange = SubstageRange
+            };
+            // Add substages if applicable
+            foreach (var substage in Substages)
+            {
+                var substageNode = new RawDataNode
+                {
+                    Name = substage.Name
+                };
+                newParam.AddChild(substageNode);
+            }
+            return newParam;
+        }
     }
 
     public class Substage

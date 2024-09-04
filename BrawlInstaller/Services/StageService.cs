@@ -391,34 +391,7 @@ namespace BrawlInstaller.Services
                 };
                 node.AddChild(newEntry);
                 // Generate param file
-                var newParam = new STEXNode
-                {
-                    IsFlat = entry.Params.IsFlat,
-                    IsFixedCamera = entry.Params.IsFixedCamera,
-                    IsSlowStart = entry.Params.IsSlowStart,
-                    StageName = entry.Params.Name,
-                    TrackList = entry.Params.TrackList,
-                    Module = entry.Params.Module,
-                    CharacterOverlay = entry.Params.CharacterOverlay,
-                    SoundBank = entry.Params.SoundBank,
-                    EffectBank = entry.Params.EffectBank,
-                    MemoryAllocation = entry.Params.MemoryAllocation,
-                    WildSpeed = entry.Params.WildSpeed,
-                    IsDualLoad = entry.Params.IsDualLoad,
-                    IsDualShuffle = entry.Params.IsDualShuffle,
-                    IsOldSubstage = entry.Params.IsOldSubStage,
-                    SubstageVarianceType = entry.Params.VariantType,
-                    SubstageRange = entry.Params.SubstageRange
-                };
-                // Add substages if applicable
-                foreach (var substage in entry.Params.Substages)
-                {
-                    var substageNode = new RawDataNode
-                    {
-                        Name = substage.Name
-                    };
-                    newParam.AddChild(substageNode);
-                }
+                var newParam = entry.Params.ConvertToNode();
                 // Save params
                 var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath, $"{entry.Name}.param");
                 _fileService.SaveFileAs(newParam, paramPath);
