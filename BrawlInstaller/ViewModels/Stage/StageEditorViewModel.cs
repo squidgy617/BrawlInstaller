@@ -78,5 +78,8 @@ namespace BrawlInstaller.ViewModels
             Stage = message.Value;
             OnPropertyChanged(nameof(Stage));
         }
+
+        // TODO: Separate the filepath textboxes from the name textboxes for pac files, module, etc - selecting a file updates the file path, changing the name
+        // just sets what the name will be upon save
     }
 }
