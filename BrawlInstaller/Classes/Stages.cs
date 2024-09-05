@@ -16,6 +16,7 @@ namespace BrawlInstaller.Classes
         public StageSlot Slot { get; set; }
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
         public List<StageEntry> StageEntries { get; set; } = new List<StageEntry>();
+        public List<StageParams> AllParams { get; set; } = new List<StageParams>();
     }
 
     public class StageList
@@ -55,7 +56,6 @@ namespace BrawlInstaller.Classes
 
     public class StageEntry
     {
-        public string Name { get; set; } = "Unknown";
         public ushort ButtonFlags { get; set; } = 0x0000;
         public StageParams Params { get; set; } = new StageParams();
     }
@@ -63,6 +63,7 @@ namespace BrawlInstaller.Classes
     public class StageParams
     {
         public string Name { get; set; } = "Unknown";
+        public string PacName { get; set; } = "Unknown";
         public string PacFile { get; set; } = null;
         public string TrackList { get; set; } = string.Empty;
         public string TrackListFile { get; set; } = null;
@@ -89,10 +90,11 @@ namespace BrawlInstaller.Classes
             // Generate param file
             var newParam = new STEXNode
             {
+                Name = Name,
                 IsFlat = IsFlat,
                 IsFixedCamera = IsFixedCamera,
                 IsSlowStart = IsSlowStart,
-                StageName = Name,
+                StageName = PacName,
                 TrackList = TrackList,
                 Module = Module,
                 CharacterOverlay = CharacterOverlay,

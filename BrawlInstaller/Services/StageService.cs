@@ -165,16 +165,40 @@ namespace BrawlInstaller.Services
             {
                 foreach (ASLSEntryNode entry in node.Children)
                 {
-                    stage.StageEntries.Add(new StageEntry
+                    var newEntry = new StageEntry
                     {
-                        Name = entry.Name,
                         ButtonFlags = entry.ButtonFlags,
-                        Params = GetStageParams(entry.Name)
-                    });
+                        Params = GetStageParams(entry.Name, stage.AllParams)
+                    };
+                    // Add params to list if they are not already there
+                    stage.StageEntries.Add(newEntry);
+                    if (!stage.AllParams.Contains(newEntry.Params))
+                    {
+                        stage.AllParams.Add(newEntry.Params);
+                    }
                 }
                 _fileService.CloseFile(node);
             }
             return stage;
+        }
+
+        /// <summary>
+        /// Get stage params from file or list
+        /// </summary>
+        /// <param name="name">Param name to search for</param>
+        /// <param name="paramList">List of params to check</param>
+        /// <returns>Stage parameters</returns>
+        private StageParams GetStageParams(string name, List<StageParams> paramList)
+        {
+            var found = paramList.FirstOrDefault(x => x.Name == name);
+            if (found != null)
+            {
+                return found;
+            }
+            else
+            {
+                return GetStageParams(name);
+            }
         }
 
         /// <summary>
@@ -196,7 +220,8 @@ namespace BrawlInstaller.Services
                 {
                     // Set params
                     var paramNode = (STEXNode)rootNode;
-                    stageParams.Name = paramNode.StageName;
+                    stageParams.Name = paramNode.Name;
+                    stageParams.PacName = paramNode.StageName;
                     stageParams.TrackList = paramNode.TrackList;
                     stageParams.EffectBank = paramNode.EffectBank;
                     stageParams.SoundBank = paramNode.SoundBank;
@@ -381,25 +406,29 @@ namespace BrawlInstaller.Services
             // Generate new ASL
             var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}\\{stage.Slot.StageIds.StageId:X2}.asl";
             var node = new ASLSNode();
-            // Add entries to ASL and generate param files
+            // Add entries to ASL
             foreach (var entry in stage.StageEntries)
             {
                 var newEntry = new ASLSEntryNode
                 {
                     ButtonFlags = entry.ButtonFlags,
-                    Name = entry.Name
+                    Name = entry.Params.Name
                 };
                 node.AddChild(newEntry);
-                // Generate param file
-                var newParam = entry.Params.ConvertToNode();
-                // Save params
-                var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath, $"{entry.Name}.param");
-                _fileService.SaveFileAs(newParam, paramPath);
-                _fileService.CloseFile(newParam);
             }
             // Save ASL
             _fileService.SaveFileAs(node, path);
             _fileService.CloseFile(node);
+            // Generate param files
+            foreach (var param in stage.AllParams)
+            {
+                // Generate param file
+                var newParam = param.ConvertToNode();
+                // Save params
+                var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath, $"{param.Name}.param");
+                _fileService.SaveFileAs(newParam, paramPath);
+                _fileService.CloseFile(newParam);
+            }
             // TODO: Handle soundbank
         }
 
@@ -418,7 +447,7 @@ namespace BrawlInstaller.Services
                 if (pacFile != null)
                 {
                     // Set install path so it will save to the correct location
-                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath, $"STG{entry.Params.Name.ToUpper()}.pac");
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath, $"STG{entry.Params.PacName.ToUpper()}.pac");
                     pacFile._origPath = installPath;
                     pacFiles.Add(pacFile);
                 }
@@ -429,7 +458,7 @@ namespace BrawlInstaller.Services
                     if (substageFile != null)
                     {
                         var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath,
-                            $"STG{entry.Params.Name.ToUpper()}_{substage.Name}.pac");
+                            $"STG{entry.Params.PacName.ToUpper()}_{substage.Name}.pac");
                         substageFile._origPath = installPath;
                         pacFiles.Add(substageFile);
                     }
@@ -452,7 +481,7 @@ namespace BrawlInstaller.Services
             foreach(var stageEntry in stage.StageEntries)
             {
                 // Delete param files
-                var path = Path.Combine(paramPath, $"{stageEntry.Name}.param");
+                var path = Path.Combine(paramPath, $"{stageEntry.Params.Name}.param");
                 if (File.Exists(path))
                 {
                     _fileService.DeleteFile(path);
@@ -517,6 +546,10 @@ namespace BrawlInstaller.Services
             // Gather up names of files that we might want to delete. Then delete each param file and each node in the ASL file and generate new ones with our
             // changes. Use the names we gathered up to prompt the user on what they might want to delete.
             // Perhaps could add something to check for unused files too.
+
+            // Remove all params that aren't used
+            stage.AllParams.RemoveAll(x => !stage.StageEntries.Select(y => y.Params).Contains(x));
+
             SaveStageInfo(stage);
         }
     }
