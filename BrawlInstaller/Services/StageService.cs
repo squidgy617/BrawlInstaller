@@ -249,9 +249,11 @@ namespace BrawlInstaller.Services
                     var pacPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath);
                     var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules);
                     var tracklistPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath);
+                    var soundbankPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath);
                     stageParams.PacFile = Directory.GetFiles(pacPath, $"STG{paramNode.StageName.ToUpper()}.pac").FirstOrDefault();
                     stageParams.ModuleFile = Directory.GetFiles(modulePath, $"{paramNode.Module}").FirstOrDefault();
                     stageParams.TrackListFile = Directory.GetFiles(tracklistPath, $"{paramNode.TrackList}.tlst").FirstOrDefault();
+                    stageParams.SoundBankFile = Directory.GetFiles(soundbankPath, $"{paramNode.SoundBank:X3}_{stageParams.PacName}.sawnd").FirstOrDefault();
                     _fileService.CloseFile(rootNode);
                 }
             }
@@ -380,6 +382,8 @@ namespace BrawlInstaller.Services
             // Get PAC files for install
             // We do this before deleting old files in case the user kept an old file
             var pacFiles = OpenStagePacFiles(stage);
+            // Do the same for soundbanks
+            var soundbanks = OpenStageSoundBankFiles(stage);
             // Delete old stage data
             var toDelete = DeleteStageEntries(oldStageData);
             // Generate ASL and param files
@@ -389,6 +393,12 @@ namespace BrawlInstaller.Services
             {
                 _fileService.SaveFile(pacFile);
                 _fileService.CloseFile(pacFile);
+            }
+            // Save soundbanks
+            foreach(var soundbank in soundbanks)
+            {
+                _fileService.SaveFile(soundbank);
+                _fileService.CloseFile(soundbank);
             }
             // Return optional delete files, only ones that don't still exist in stage entries
             var modules = stage.StageEntries.Select(x => x.Params.Module).ToList();
@@ -468,6 +478,28 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Open all soundbank files associated with a stage
+        /// </summary>
+        /// <param name="stage">Stage to load soundbanks for</param>
+        /// <returns>List of soundbanks</returns>
+        private List<ResourceNode> OpenStageSoundBankFiles(StageInfo stage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var soundbanks = new List<ResourceNode>();
+            foreach(var entry in stage.StageEntries)
+            {
+                var soundbank = _fileService.OpenFile(entry.Params.SoundBankFile);
+                if (soundbank != null)
+                {
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, $"{entry.Params.SoundBank:X3}_{entry.Params.PacName}.sawnd");
+                    soundbank._origPath = installPath;
+                    soundbanks.Add(soundbank);
+                }
+            }
+            return soundbanks;
+        }
+
+        /// <summary>
         /// Delete all stage entries from stage
         /// </summary>
         /// <param name="stage">Stage to remove from</param>
@@ -500,6 +532,12 @@ namespace BrawlInstaller.Services
                     {
                         _fileService.DeleteFile(path);
                     }
+                }
+                // Delete soundbank file
+                path = stageEntry.Params.SoundBankFile;
+                if (File.Exists(path))
+                {
+                    _fileService.DeleteFile(path);
                 }
                 // Add modules and tracklists to delete options
                 if (stageEntry.Params.ModuleFile != null && File.Exists(stageEntry.Params.ModuleFile) && !toDelete.Contains(stageEntry.Params.ModuleFile))
