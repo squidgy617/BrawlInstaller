@@ -21,7 +21,7 @@ namespace BrawlInstaller.Services
         StageInfo GetStageData(StageInfo stage);
 
         /// <inheritdoc cref="StageService.SaveStage(StageInfo)"/>
-        void SaveStage(StageInfo stage);
+        List<string> SaveStage(StageInfo stage);
     }
 
     [Export(typeof(IStageService))]
@@ -379,31 +379,23 @@ namespace BrawlInstaller.Services
                 Slot = stage.Slot.Copy()
             };
             LoadStageEntries(oldStageData);
-            // Get PAC files for install
+            // Get files for install
             // We do this before deleting old files in case the user kept an old file
-            var pacFiles = OpenStagePacFiles(stage);
-            // Do the same for soundbanks
-            var soundbanks = OpenStageSoundBankFiles(stage);
+            var files = OpenStageFiles(stage);
             // Delete old stage data
             var toDelete = DeleteStageEntries(oldStageData);
             // Generate ASL and param files
             SaveStageEntries(stage);
-            // Save pac files
-            foreach(var pacFile in pacFiles)
+            // Save files
+            foreach(var file in files)
             {
-                _fileService.SaveFile(pacFile);
-                _fileService.CloseFile(pacFile);
-            }
-            // Save soundbanks
-            foreach(var soundbank in soundbanks)
-            {
-                _fileService.SaveFile(soundbank);
-                _fileService.CloseFile(soundbank);
+                _fileService.SaveFile(file);
+                _fileService.CloseFile(file);
             }
             // Return optional delete files, only ones that don't still exist in stage entries
             var modules = stage.StageEntries.Select(x => x.Params.Module).ToList();
             var tracklists = stage.StageEntries.Select(x => x.Params.TrackList).ToList();
-            return toDelete.Where(x => !modules.Contains(Path.GetFileName(x)) && !tracklists.Contains(Path.GetFileNameWithoutExtension(x))).ToList();
+            return toDelete.Where(x => !modules.Contains(Path.GetFileName(x), StringComparer.OrdinalIgnoreCase) && !tracklists.Contains(Path.GetFileNameWithoutExtension(x), StringComparer.OrdinalIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -442,23 +434,48 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Open all PAC files associated with a stage
+        /// Open all files associated with a stage
         /// </summary>
-        /// <param name="stage">Stage to open PAC files for</param>
-        /// <returns>List of pac files</returns>
-        private List<ResourceNode> OpenStagePacFiles(StageInfo stage)
+        /// <param name="stage">Stage to open files for</param>
+        /// <returns>List of files</returns>
+        private List<ResourceNode> OpenStageFiles(StageInfo stage)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
-            var pacFiles = new List<ResourceNode>();
+            var files = new List<ResourceNode>();
             foreach (var entry in stage.StageEntries)
             {
+                // Open pac files
                 var pacFile = _fileService.OpenFile(entry.Params.PacFile);
                 if (pacFile != null)
                 {
                     // Set install path so it will save to the correct location
                     var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath, $"STG{entry.Params.PacName.ToUpper()}.pac");
                     pacFile._origPath = installPath;
-                    pacFiles.Add(pacFile);
+                    files.Add(pacFile);
+                }
+                // Open soundbanks
+                var soundbank = _fileService.OpenFile(entry.Params.SoundBankFile);
+                if (soundbank != null)
+                {
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, $"{entry.Params.SoundBank:X3}_{entry.Params.PacName}.sawnd");
+                    soundbank._origPath = installPath;
+                    files.Add(soundbank);
+                }
+                // Open modules
+                var module = _fileService.OpenFile(entry.Params.ModuleFile);
+                if (module != null)
+                {
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules, $"{entry.Params.Module.ToLower()}");
+                    module._origPath = installPath;
+                    files.Add(module);
+                }
+                // Open tracklists
+                var tracklist = _fileService.OpenFile(entry.Params.TrackListFile);
+                if (tracklist != null)
+                {
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath, $"{entry.Params.TrackList}.tlst");
+                    tracklist._origPath = installPath;
+                    files.Add(tracklist);
                 }
                 // Get substages for install
                 foreach (var substage in entry.Params.Substages)
@@ -469,33 +486,11 @@ namespace BrawlInstaller.Services
                         var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath,
                             $"STG{entry.Params.PacName.ToUpper()}_{substage.Name}.pac");
                         substageFile._origPath = installPath;
-                        pacFiles.Add(substageFile);
+                        files.Add(substageFile);
                     }
                 }
             }
-            return pacFiles;
-        }
-
-        /// <summary>
-        /// Open all soundbank files associated with a stage
-        /// </summary>
-        /// <param name="stage">Stage to load soundbanks for</param>
-        /// <returns>List of soundbanks</returns>
-        private List<ResourceNode> OpenStageSoundBankFiles(StageInfo stage)
-        {
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var soundbanks = new List<ResourceNode>();
-            foreach(var entry in stage.StageEntries)
-            {
-                var soundbank = _fileService.OpenFile(entry.Params.SoundBankFile);
-                if (soundbank != null)
-                {
-                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, $"{entry.Params.SoundBank:X3}_{entry.Params.PacName}.sawnd");
-                    soundbank._origPath = installPath;
-                    soundbanks.Add(soundbank);
-                }
-            }
-            return soundbanks;
+            return files;
         }
 
         /// <summary>
@@ -541,11 +536,11 @@ namespace BrawlInstaller.Services
                 // Add modules and tracklists to delete options
                 if (stageEntry.Params.ModuleFile != null && File.Exists(stageEntry.Params.ModuleFile) && !toDelete.Contains(stageEntry.Params.ModuleFile))
                 {
-                    toDelete.Add(stageEntry.Params.Module);
+                    toDelete.Add(stageEntry.Params.ModuleFile);
                 }
                 if (stageEntry.Params.TrackListFile != null && File.Exists(stageEntry.Params.TrackListFile) && !toDelete.Contains(stageEntry.Params.TrackListFile))
                 {
-                    toDelete.Add(stageEntry.Params.TrackList);
+                    toDelete.Add(stageEntry.Params.TrackListFile);
                 }
                 // Delete ASL file
                 path = Path.Combine(aslPath, $"{stage.Slot.StageIds.StageId:X2}.asl");
@@ -561,7 +556,8 @@ namespace BrawlInstaller.Services
         /// Save changes to a stage
         /// </summary>
         /// <param name="stage">Stage to save</param>
-        public void SaveStage(StageInfo stage)
+        /// <returns>List of delete options</returns>
+        public List<string> SaveStage(StageInfo stage)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             // Only update cosmetics that have changed
@@ -585,7 +581,7 @@ namespace BrawlInstaller.Services
             // Remove all params that aren't used
             stage.AllParams.RemoveAll(x => !stage.StageEntries.Select(y => y.Params).Contains(x));
 
-            SaveStageInfo(stage);
+            return SaveStageInfo(stage);
         }
     }
 }

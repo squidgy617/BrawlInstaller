@@ -7,9 +7,11 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
@@ -27,15 +29,19 @@ namespace BrawlInstaller.ViewModels
 
         // Services
         IStageService _stageService { get; }
+        IDialogService _dialogService { get; }
+        IFileService _fileService { get; }
 
         // Commands
         public ICommand LoadStageCommand => new RelayCommand(param => LoadStage());
         public ICommand SaveStageCommand => new RelayCommand(param => SaveStage());
 
         [ImportingConstructor]
-        public StageViewModel(IStageService stageService, IStageListViewModel stageListViewModel, IStageEditorViewModel stageEditorViewModel)
+        public StageViewModel(IStageService stageService, IDialogService dialogService, IFileService fileService, IStageListViewModel stageListViewModel, IStageEditorViewModel stageEditorViewModel)
         {
             _stageService = stageService;
+            _dialogService = dialogService;
+            _fileService = fileService;
             StageListViewModel = stageListViewModel;
             StageEditorViewModel = stageEditorViewModel;
         }
@@ -62,7 +68,19 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveStage()
         {
-            _stageService.SaveStage(Stage);
+            var deleteOptions = new List<string>();
+            deleteOptions = _stageService.SaveStage(Stage);
+
+            // Prompt user for delete options
+            foreach(var item in deleteOptions)
+            {
+                var delete = _dialogService.ShowMessage($"Delete the file {Path.GetFileName(item)}?", "Delete", MessageBoxButton.YesNo);
+                if (delete)
+                {
+                    _fileService.DeleteFile(item);
+                }
+            }
+
             Stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
             Stage.Cosmetics.ClearChanges();
         }
