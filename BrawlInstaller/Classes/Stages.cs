@@ -57,6 +57,7 @@ namespace BrawlInstaller.Classes
     public class StageEntry
     {
         public ushort ButtonFlags { get; set; } = 0x0000;
+        public string BinFileName { get; set; } = "Unknown";
         public StageParams Params { get; set; } = new StageParams();
     }
 

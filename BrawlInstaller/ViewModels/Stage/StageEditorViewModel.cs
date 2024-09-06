@@ -69,6 +69,24 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedStageEntry))]
         public Substage SelectedSubstage { get => _selectedSubstage; set { _selectedSubstage = value; OnPropertyChanged(nameof(SelectedSubstage)); } }
 
+        [DependsUpon(nameof(SelectedButtonFlags))]
+        public bool LListAlt { get => SelectedButtonFlags >= 0x4000 && SelectedButtonFlags < 0x8000; }
+
+        [DependsUpon(nameof(SelectedButtonFlags))]
+        public bool RListAlt { get => SelectedButtonFlags >= 0x8000; }
+
+        [DependsUpon(nameof(LListAlt))]
+        [DependsUpon(nameof(RListAlt))]
+        public bool ListAlt { get => LListAlt || RListAlt; }
+
+        [DependsUpon(nameof(SelectedButtonFlags))]
+        [DependsUpon(nameof(LListAlt))]
+        [DependsUpon(nameof(RListAlt))]
+        public int SelectedListIndex { get => LListAlt ? SelectedButtonFlags - 0x4000 : (RListAlt ? SelectedButtonFlags - 0x8000 : -1); }
+
+        [DependsUpon(nameof(SelectedListIndex))]
+        public string SelectedListIndexString { get => SelectedListIndex > -1 ? $"_{SelectedListIndex:D2}" : string.Empty; }
+
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
 
