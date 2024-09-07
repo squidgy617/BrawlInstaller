@@ -648,6 +648,8 @@ namespace BrawlInstaller.Services
             // Remove all params that aren't used
             stage.AllParams.RemoveAll(x => !stage.StageEntries.Select(y => y.Params).Contains(x));
 
+            // TODO: Update button flags for list alts based on order they are in list
+
             return SaveStageInfo(stage);
         }
     }
