@@ -527,16 +527,19 @@ namespace BrawlInstaller.Services
                     files.Add(tracklist);
                 }
                 // Open bin files
-                var binFile = _fileService.OpenFile(entry.BinFilePath);
-                if (binFile != null)
+                if (entry.IsRAlt || entry.IsLAlt)
                 {
-                    var index = GetButtonFlagIndex(entry);
-                    var fileName = $"st_{index:D2}_{entry.BinFileName}.bin";
-                    var folderLetter = entry.IsRAlt ? "R" : (entry.IsLAlt ? "L" : string.Empty);
-                    var folderName = $"{stage.Slot.StageIds.StageId.ToString("X2")}_{folderLetter}";
-                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageAltListPath, folderName, fileName);
-                    binFile._origPath = installPath;
-                    files.Add(binFile);
+                    var binFile = _fileService.OpenFile(entry.BinFilePath);
+                    if (binFile != null)
+                    {
+                        var index = GetButtonFlagIndex(entry);
+                        var fileName = $"st_{index:D2}_{entry.BinFileName}.bin";
+                        var folderLetter = entry.IsRAlt ? "R" : (entry.IsLAlt ? "L" : string.Empty);
+                        var folderName = $"{stage.Slot.StageIds.StageId.ToString("X2")}_{folderLetter}";
+                        var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageAltListPath, folderName, fileName);
+                        binFile._origPath = installPath;
+                        files.Add(binFile);
+                    }
                 }
                 // Get substages for install
                 foreach (var substage in entry.Params.Substages)
