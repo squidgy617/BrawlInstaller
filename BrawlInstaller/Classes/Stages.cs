@@ -1,4 +1,5 @@
-﻿using BrawlLib.Imaging;
+﻿using BrawlInstaller.Enums;
+using BrawlLib.Imaging;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
@@ -58,6 +59,9 @@ namespace BrawlInstaller.Classes
     {
         public ushort ButtonFlags { get; set; } = 0x0000;
         public string BinFileName { get; set; } = "Unknown";
+        public string BinFilePath { get; set; } = null;
+        public bool IsRAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0; }
+        public bool IsLAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) != 0; }
         public StageParams Params { get; set; } = new StageParams();
     }
 

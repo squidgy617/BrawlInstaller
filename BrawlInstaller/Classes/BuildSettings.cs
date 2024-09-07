@@ -139,5 +139,6 @@ namespace BrawlInstaller.Classes
         // TODO: Allow multiple for netplay?
         public string TracklistPath { get; set; } = "pf\\sound\\tracklist";
         public string SoundbankPath { get; set; } = "pf\\sfx";
+        public string StageAltListPath { get; set; } = "pf\\stage\\stagelist";
     }
 }

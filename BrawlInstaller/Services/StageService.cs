@@ -1,4 +1,6 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Enums;
+using BrawlLib.BrawlManagerLib;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
@@ -8,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BrawlInstaller.Services
@@ -170,6 +173,10 @@ namespace BrawlInstaller.Services
                         ButtonFlags = entry.ButtonFlags,
                         Params = GetStageParams(entry.Name, stage.AllParams)
                     };
+                    // Get bin file
+                    var binFile = GetStageBinFile(stage.Slot.StageIds.StageId, newEntry);
+                    newEntry.BinFilePath = binFile;
+                    newEntry.BinFileName = binFile != null ? Regex.Replace(Path.GetFileNameWithoutExtension(binFile), "st_\\d+_", "") : "Unknown";
                     // Add params to list if they are not already there
                     stage.StageEntries.Add(newEntry);
                     if (!stage.AllParams.Contains(newEntry.Params))
@@ -180,6 +187,48 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(node);
             }
             return stage;
+        }
+
+        /// <summary>
+        /// Get the index of a list alt based on button flags
+        /// </summary>
+        /// <param name="buttonFlags">Button flags of stage entry</param>
+        /// <returns>Index for list alt</returns>
+        private int GetButtonFlagIndex(StageEntry entry)
+        {
+            var subtract = entry.IsRAlt ? 0x4000 : (entry.IsLAlt ? 0x8000 : 0);
+            var result = entry.ButtonFlags - subtract;
+            return result;
+        }
+
+        /// <summary>
+        /// Get bin file associated with a stage entry
+        /// </summary>
+        /// <param name="stageId">ID of stage associated with stage entry</param>
+        /// <param name="buttonFlags">Button flags associated with stage entry</param>
+        /// <returns>Bin file path</returns>
+        private string GetStageBinFile(int stageId, StageEntry entry)
+        {
+            if (entry.IsRAlt || entry.IsLAlt)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var altListPath = _settingsService.BuildSettings.FilePathSettings.StageAltListPath;
+                var directoryPath = Path.Combine(buildPath, altListPath);
+                var folderLetter = entry.IsRAlt ? "R" : (entry.IsLAlt ? "L" : string.Empty);
+                var folderName = $"{stageId.ToString("X2")}_{folderLetter}";
+                var folder = Path.Combine(directoryPath, folderName);
+                if (Directory.Exists(folder))
+                {
+                    // Bin files correspond to button flags in alphabetical order (e.g. the first file in alphabetical order will be attached to button flag ending in 00
+                    var index = GetButtonFlagIndex(entry);
+                    var files = Directory.GetFiles(folder, "*.bin");
+                    string file = null;
+                    if (index < files.Count())
+                        file = files[index];
+                    return file;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -477,6 +526,18 @@ namespace BrawlInstaller.Services
                     tracklist._origPath = installPath;
                     files.Add(tracklist);
                 }
+                // Open bin files
+                var binFile = _fileService.OpenFile(entry.BinFilePath);
+                if (binFile != null)
+                {
+                    var index = GetButtonFlagIndex(entry);
+                    var fileName = $"st_{index:D2}_{entry.BinFileName}.bin";
+                    var folderLetter = entry.IsRAlt ? "R" : (entry.IsLAlt ? "L" : string.Empty);
+                    var folderName = $"{stage.Slot.StageIds.StageId.ToString("X2")}_{folderLetter}";
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageAltListPath, folderName, fileName);
+                    binFile._origPath = installPath;
+                    files.Add(binFile);
+                }
                 // Get substages for install
                 foreach (var substage in entry.Params.Substages)
                 {
@@ -529,6 +590,12 @@ namespace BrawlInstaller.Services
                 }
                 // Delete soundbank file
                 path = stageEntry.Params.SoundBankFile;
+                if (File.Exists(path))
+                {
+                    _fileService.DeleteFile(path);
+                }
+                // Delete bin file
+                path = stageEntry.BinFilePath;
                 if (File.Exists(path))
                 {
                     _fileService.DeleteFile(path);
