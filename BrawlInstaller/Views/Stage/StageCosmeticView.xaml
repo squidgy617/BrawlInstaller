@@ -17,16 +17,39 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="cosmeticTypeDropDown" DisplayMemberPath="Key" SelectedValuePath="Value" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-        <ComboBox x:Name="styleDropDown" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle}" Grid.Row="1" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
-        <ComboBox x:Name="cosmeticDropDown" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, Mode=OneWay}" DisplayMemberPath="Name" Grid.Row="2" Width="140" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction CommandParameter="{Binding ElementName=cosmeticDropDown, Path=SelectedItem}" Command="{Binding ChangeCosmeticCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </ComboBox>
-        <Image x:Name="cosmeticImage" Source="{Binding SelectedCosmetic.Image}" Grid.Row="3"  RenderOptions.BitmapScalingMode="NearestNeighbor" Width="312" Height="112"/>
-        <Button x:Name="replaceImageButton" Content="Browse..." Grid.Row="4" Command="{Binding ReplaceCosmeticCommand}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="cosmeticOptionsGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="cosmeticTypeLabel" Content="Type:"/>
+            <ComboBox x:Name="cosmeticTypeDropDown" DisplayMemberPath="Key" SelectedValuePath="Value" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Column="1"/>
+            <Label x:Name="cosmeticStyleLabel" Content="Style:" Grid.Row="1"/>
+            <ComboBox x:Name="styleDropDown" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle}" Grid.Row="1" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Column="1"/>
+            <Label x:Name="cosmeticSelectionLabel" Content="Option:" Grid.Row="2" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}"/>
+            <ComboBox x:Name="cosmeticDropDown" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, Mode=OneWay}" DisplayMemberPath="Name" Grid.Row="2" Width="140" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}" Grid.Column="1">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction CommandParameter="{Binding ElementName=cosmeticDropDown, Path=SelectedItem}" Command="{Binding ChangeCosmeticCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+        </Grid>
+        <Label x:Name="imageLabel" Content="Image:" Grid.Row="1" HorizontalAlignment="Left"/>
+        <Image x:Name="cosmeticImage" Source="{Binding SelectedCosmetic.Image}" Grid.Row="2"  RenderOptions.BitmapScalingMode="NearestNeighbor" Width="312" Height="112"/>
+        <Button x:Name="replaceImageButton" Content="Browse..." Grid.Row="3" Command="{Binding ReplaceCosmeticCommand}"/>
+        <Button x:Name="clearImageButton" Content="Clear" Grid.Row="4" Command="{Binding ClearCosmeticCommand}"/>
+        <Label x:Name="hdImageLabel" Content="HD Image:" Grid.Row="1" HorizontalAlignment="Left" Grid.Column="1"/>
+        <Image x:Name="hdCosmeticImage" Source="{Binding SelectedCosmetic.HDImage}" Grid.Row="2" RenderOptions.BitmapScalingMode="NearestNeighbor" Width="312" Height="112" Grid.Column="1"/>
+        <Button x:Name="replaceHDImageButton" Content="Browse..." Grid.Row="3" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Column="1"/>
     </Grid>
 </UserControl>

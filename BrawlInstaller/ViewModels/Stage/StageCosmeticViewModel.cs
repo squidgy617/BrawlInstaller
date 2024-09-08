@@ -39,6 +39,8 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand ChangeCosmeticCommand => new RelayCommand(param => ChangeCosmetic(param));
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
+        public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic());
+        public ICommand ClearCosmeticCommand => new RelayCommand(param =>  ClearCosmetic());
 
         [ImportingConstructor]
         public StageCosmeticViewModel(IDialogService dialogService, ISettingsService settingsService)
@@ -163,6 +165,31 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(SelectedCosmetic));
                 OnPropertyChanged(nameof(SelectedCosmetics));
             }
+        }
+
+        public void ReplaceHDCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select HD image", "PNG image (.png)|*.png");
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = new Bitmap(image);
+                if (SelectedCosmetic == null)
+                {
+                    SelectedCosmetic = AddCosmetic();
+                }
+                SelectedCosmetic.HDImage = bitmap.ToBitmapImage();
+                SelectedCosmetic.HDImagePath = image;
+                Stage.Cosmetics.ItemChanged(SelectedCosmetic);
+                OnPropertyChanged(nameof(SelectedCosmetic));
+                OnPropertyChanged(nameof(SelectedCosmetics));
+            }
+        }
+
+        public void ClearCosmetic()
+        {
+            Stage.Cosmetics.Remove(SelectedCosmetic);
+            OnPropertyChanged(nameof(SelectedCosmetic));
+            OnPropertyChanged(nameof(SelectedCosmetics));
         }
     }
 }
