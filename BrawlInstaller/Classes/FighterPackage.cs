@@ -56,7 +56,8 @@ namespace BrawlInstaller.Classes
 
     public class Cosmetic
     {
-        [JsonIgnore] public string Name { get => Texture != null ? Texture.Name : !string.IsNullOrEmpty(ImagePath) ? Path.GetFileNameWithoutExtension(ImagePath) : string.Empty; }
+        [JsonIgnore] public string Name { get => Texture != null ? Texture.Name : !string.IsNullOrEmpty(ImagePath) ? Path.GetFileNameWithoutExtension(ImagePath) : 
+                TextureId != null ? $"Texture {TextureId}" : string.Empty; }
         public CosmeticType CosmeticType { get; set; }
         public string Style { get; set; }
         [JsonIgnore] public BitmapImage Image { get; set; } = null;

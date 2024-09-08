@@ -30,6 +30,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Label x:Name="cosmeticTypeLabel" Content="Type:"/>
             <ComboBox x:Name="cosmeticTypeDropDown" DisplayMemberPath="Key" SelectedValuePath="Value" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Column="1"/>
@@ -43,6 +44,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
+            <Button x:Name="addCosmeticSelectionButton" Style="{StaticResource miniButton}" Content="+" Grid.Column="2" Grid.Row="2" Command="{Binding AddCosmeticOptionCommand}" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}"/>
         </Grid>
         <Label x:Name="imageLabel" Content="Image:" Grid.Row="1" HorizontalAlignment="Left"/>
         <Image x:Name="cosmeticImage" Source="{Binding SelectedCosmetic.Image}" Grid.Row="2"  RenderOptions.BitmapScalingMode="NearestNeighbor" Width="312" Height="112"/>

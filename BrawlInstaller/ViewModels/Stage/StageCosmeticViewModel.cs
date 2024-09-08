@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
         public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic());
         public ICommand ClearCosmeticCommand => new RelayCommand(param =>  ClearCosmetic());
+        public ICommand AddCosmeticOptionCommand => new RelayCommand(param => AddCosmeticOption());
 
         [ImportingConstructor]
         public StageCosmeticViewModel(IDialogService dialogService, ISettingsService settingsService)
@@ -130,6 +132,32 @@ namespace BrawlInstaller.ViewModels
                 cosmetic.SelectionOption = false;
                 // Change the cosmetic so it will save
                 Stage.Cosmetics.ItemChanged(cosmetic);
+                OnPropertyChanged(nameof(SelectedCosmetic));
+            }
+        }
+
+        public void AddCosmeticOption()
+        {
+            if (SelectedCosmetic != null)
+            {
+                SelectedCosmetic.SelectionOption = true;
+                Stage.Cosmetics.ChangedItems.Remove(SelectedCosmetic);
+                // TODO: Move this into a service?
+                var newId = 0;
+                while (Stage.Cosmetics.Items
+                    .Where(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption).Select(y => y.TextureId).ToList().Contains(newId)
+                    || ReservedIds.ReservedStageCosmeticIds.Contains(newId))
+                {
+                    newId++;
+                }
+                var newCosmetic = new Cosmetic
+                {
+                    CosmeticType = SelectedCosmetic.CosmeticType,
+                    Style = SelectedCosmetic.Style,
+                    SelectionOption = false,
+                    TextureId = newId
+                };
+                Stage.Cosmetics.Add(newCosmetic);
                 OnPropertyChanged(nameof(SelectedCosmetic));
             }
         }
