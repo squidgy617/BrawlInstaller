@@ -53,5 +53,6 @@
         <Label x:Name="hdImageLabel" Content="HD Image:" Grid.Row="1" HorizontalAlignment="Left" Grid.Column="1"/>
         <Image x:Name="hdCosmeticImage" Source="{Binding SelectedCosmetic.HDImage}" Grid.Row="2" RenderOptions.BitmapScalingMode="NearestNeighbor" Width="312" Height="112" Grid.Column="1"/>
         <Button x:Name="replaceHDImageButton" Content="Browse..." Grid.Row="3" Command="{Binding ReplaceHDCosmeticCommand}" Grid.Column="1"/>
+        <Button x:Name="clearHDImageButton" Content="Clear" Grid.Row="4" Command="{Binding ClearHDCosmeticCommand}" Grid.Column="2"/>
     </Grid>
 </UserControl>

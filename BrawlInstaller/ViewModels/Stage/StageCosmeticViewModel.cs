@@ -42,6 +42,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
         public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic());
         public ICommand ClearCosmeticCommand => new RelayCommand(param =>  ClearCosmetic());
+        public ICommand ClearHDCosmeticCommand => new RelayCommand(param => ClearHDCosmetic());
         public ICommand AddCosmeticOptionCommand => new RelayCommand(param => AddCosmeticOption());
 
         [ImportingConstructor]
@@ -216,6 +217,22 @@ namespace BrawlInstaller.ViewModels
         public void ClearCosmetic()
         {
             Stage.Cosmetics.Remove(SelectedCosmetic);
+            OnPropertyChanged(nameof(SelectedCosmetic));
+            OnPropertyChanged(nameof(SelectedCosmetics));
+        }
+
+        public void ClearHDCosmetic()
+        {
+            if (SelectedCosmetic.Image == null)
+            {
+                Stage.Cosmetics.Remove(SelectedCosmetic);
+            }
+            else
+            {
+                SelectedCosmetic.HDImage = null;
+                SelectedCosmetic.HDImagePath = "";
+                Stage.Cosmetics.ItemChanged(SelectedCosmetic);
+            }
             OnPropertyChanged(nameof(SelectedCosmetic));
             OnPropertyChanged(nameof(SelectedCosmetics));
         }

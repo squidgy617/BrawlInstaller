@@ -15,7 +15,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ContentControl x:Name="StageCosmeticViewModel" Content="{Binding StageCosmeticViewModel}"/>
+        <GroupBox x:Name="stageCosmeticGroupBox" Header="Cosmetics">
+            <ContentControl x:Name="StageCosmeticViewModel" Content="{Binding StageCosmeticViewModel}"/>
+        </GroupBox>
         <Grid x:Name="editorGrid" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
