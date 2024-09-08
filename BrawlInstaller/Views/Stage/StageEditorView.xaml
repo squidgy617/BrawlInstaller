@@ -78,14 +78,14 @@
                         <Button x:Name="pacFileClearButton" Content="✕" Grid.Row="3" Grid.Column="3" Style="{StaticResource condensedButton}"/>
                         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="4"/>
                         <TextBox x:Name="moduleTextBox" Text="{Binding SelectedStageEntry.Params.Module}" Grid.Column="1" Grid.Row="4" Width="160"/>
-                        <TextBox x:Name="moduleFileTextBox" Text="{Binding SelectedStageEntry.Params.ModuleFile}" Grid.Column="1" Grid.Row="5" Width="160"/>
+                        <TextBox x:Name="moduleFileTextBox" Text="{Binding SelectedStageEntry.Params.ModuleFile}" Grid.Column="1" Grid.Row="5" Width="160" IsReadOnly="True"/>
                         <Button x:Name="moduleFileButton" Content="..." Grid.Row="5" Grid.Column="2" Style="{StaticResource condensedButton}"/>
                         <Button x:Name="moduleFileClearButton" Content="✕" Grid.Row="5" Grid.Column="3" Style="{StaticResource condensedButton}"/>
                         <Label x:Name="tracklistLabel" Content="Tracklist:" Grid.Row="6"/>
                         <TextBox x:Name="tracklistTextBox" Text="{Binding SelectedStageEntry.Params.TrackList}" Grid.Column="1" Grid.Row="6" Width="160"/>
                         <Label x:Name="soundBankLabel" Content="Soundbank:" Grid.Row="7"/>
                         <TextBox x:Name="soundbankTextBox" Text="{Binding SelectedStageEntry.Params.SoundBank, Converter={StaticResource hexShortConverter}}" Grid.Row="7" Grid.Column="1" Width="60"/>
-                        <TextBox x:Name="soundbankFileTextBox" Text="{Binding SelectedStageEntry.Params.SoundBankFile}" Grid.Row="8" Grid.Column="1" Width="160"/>
+                        <TextBox x:Name="soundbankFileTextBox" Text="{Binding SelectedStageEntry.Params.SoundBankFile}" Grid.Row="8" Grid.Column="1" Width="160" IsReadOnly="True"/>
                         <Button x:Name="soundbankFileButton" Content="..." Grid.Row="8" Grid.Column="2" Style="{StaticResource condensedButton}"/>
                         <Button x:Name="soundbankFileClearButton" Content="✕" Grid.Row="8" Grid.Column="3" Style="{StaticResource condensedButton}"/>
                         <Label x:Name="effectBankLabel" Content="Effect Bank:" Grid.Row="9"/>
