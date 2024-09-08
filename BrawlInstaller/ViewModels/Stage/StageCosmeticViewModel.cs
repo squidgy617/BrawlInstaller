@@ -120,14 +120,15 @@ namespace BrawlInstaller.ViewModels
         {
             // If the user changes the selected cosmetic, flip the old selection to be an option and the new one to be selected
             var cosmetic = selectedCosmetic as Cosmetic;
+            var oldCosmetic = SelectedCosmetic;
             if (cosmetic != null)
             {
                 // Only set SelectedCosmetic to an option if it actually exists
-                if (SelectedCosmetic != null && SelectedCosmetic.CosmeticType == cosmetic.CosmeticType && SelectedCosmetic.Style == cosmetic.Style)
+                if (oldCosmetic != null && oldCosmetic.CosmeticType == cosmetic.CosmeticType && oldCosmetic.Style == cosmetic.Style)
                 {
-                    SelectedCosmetic.SelectionOption = true;
+                    oldCosmetic.SelectionOption = true;
                     // Undo changes to cosmetic
-                    Stage.Cosmetics.ChangedItems.Remove(SelectedCosmetic);
+                    Stage.Cosmetics.ChangedItems.Remove(oldCosmetic);
                 }
                 cosmetic.SelectionOption = false;
                 // Change the cosmetic so it will save
@@ -140,8 +141,7 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedCosmetic != null)
             {
-                SelectedCosmetic.SelectionOption = true;
-                Stage.Cosmetics.ChangedItems.Remove(SelectedCosmetic);
+                var selectedCosmetic = SelectedCosmetic;
                 // TODO: Move this into a service?
                 var newId = 0;
                 while (Stage.Cosmetics.Items
@@ -154,10 +154,10 @@ namespace BrawlInstaller.ViewModels
                 {
                     CosmeticType = SelectedCosmetic.CosmeticType,
                     Style = SelectedCosmetic.Style,
-                    SelectionOption = false,
                     TextureId = newId
                 };
                 Stage.Cosmetics.Add(newCosmetic);
+                OnPropertyChanged(nameof(SelectedCosmetics));
                 OnPropertyChanged(nameof(SelectedCosmetic));
             }
         }
