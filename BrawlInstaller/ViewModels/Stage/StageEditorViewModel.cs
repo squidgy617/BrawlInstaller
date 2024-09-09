@@ -5,6 +5,7 @@ using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Drawing;
 using System.Linq;
@@ -58,6 +59,8 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedSubstage));
         });
         public ICommand ClearSubstageFileCommand => new RelayCommand(param => { SelectedSubstage.PacFile = string.Empty; OnPropertyChanged(nameof(SelectedSubstage)); });
+        public ICommand MoveEntryUpCommand => new RelayCommand(param => MoveEntryUp());
+        public ICommand MoveEntryDownCommand => new RelayCommand(param => MoveEntryDown());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -76,6 +79,10 @@ namespace BrawlInstaller.ViewModels
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
 
         [DependsUpon(nameof(Stage))]
+        public ObservableCollection<StageEntry> StageEntries { get => Stage?.StageEntries != null ? new ObservableCollection<StageEntry>(Stage.StageEntries) : new ObservableCollection<StageEntry>(); }
+
+        [DependsUpon(nameof(Stage))]
+        [DependsUpon(nameof(StageEntries))]
         public StageEntry SelectedStageEntry { get => _selectedStageEntry; set { _selectedStageEntry = value; OnPropertyChanged(nameof(SelectedStageEntry)); } }
 
         [DependsUpon(nameof(SelectedStageEntry))]
@@ -127,6 +134,22 @@ namespace BrawlInstaller.ViewModels
                 return file;
             }
             return currentPath;
+        }
+
+        private void MoveEntryUp()
+        {
+            Stage.StageEntries.MoveUp(SelectedStageEntry);
+            StageEntries.MoveUp(SelectedStageEntry);
+            OnPropertyChanged(nameof(SelectedStageEntry));
+            OnPropertyChanged(nameof(StageEntries));
+        }
+
+        private void MoveEntryDown()
+        {
+            Stage.StageEntries.MoveDown(SelectedStageEntry);
+            StageEntries.MoveDown(SelectedStageEntry);
+            OnPropertyChanged(nameof(SelectedStageEntry));
+            OnPropertyChanged(nameof(StageEntries));
         }
     }
 }
