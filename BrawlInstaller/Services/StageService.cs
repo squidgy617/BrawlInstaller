@@ -54,6 +54,7 @@ namespace BrawlInstaller.Services
         /// <returns>Stage object with data</returns>
         public StageInfo GetStageData(StageInfo stage)
         {
+            // TODO: Get list of tracklists and use dropdown to select them?
             // Get cosmetics
             var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             // Get name for RSS

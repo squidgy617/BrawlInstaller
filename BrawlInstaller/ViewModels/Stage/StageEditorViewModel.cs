@@ -6,9 +6,11 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 
@@ -29,11 +31,39 @@ namespace BrawlInstaller.ViewModels
 
         // Services
         IStageService _stageService { get; }
+        IDialogService _dialogService { get; }
+
+        // Commands
+        public ICommand LoadPacFileCommand => new RelayCommand(param => 
+        { 
+            SelectedStageEntry.Params.PacFile = LoadFile(SelectedStageEntry.Params.PacFile, "PAC file (.pac)|*.pac"); 
+            OnPropertyChanged(nameof(SelectedStageEntry)); 
+        } );
+        public ICommand ClearPacFileCommand => new RelayCommand(param => { SelectedStageEntry.Params.PacFile = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); } );
+        public ICommand LoadModuleFileCommand => new RelayCommand(param =>
+        {
+            SelectedStageEntry.Params.ModuleFile = LoadFile(SelectedStageEntry.Params.ModuleFile, "REL file (.rel)|*.rel"); 
+            OnPropertyChanged(nameof(SelectedStageEntry));
+        });
+        public ICommand ClearModuleFileCommand => new RelayCommand(param => { SelectedStageEntry.Params.ModuleFile = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); });
+        public ICommand LoadSoundbankFileCommand => new RelayCommand(param =>
+        {
+            SelectedStageEntry.Params.SoundBankFile = LoadFile(SelectedStageEntry.Params.SoundBankFile, "SAWND file (.sawnd)|*.sawnd"); 
+            OnPropertyChanged(nameof(SelectedStageEntry));
+        });
+        public ICommand ClearSoundbankFileCommand => new RelayCommand(param => { SelectedStageEntry.Params.SoundBankFile = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); });
+        public ICommand LoadSubstageFileCommand => new RelayCommand(param =>
+        {
+            SelectedSubstage.PacFile = LoadFile(SelectedSubstage.PacFile, "PAC file (.pac)|*.pac");
+            OnPropertyChanged(nameof(SelectedSubstage));
+        });
+        public ICommand ClearSubstageFileCommand => new RelayCommand(param => { SelectedSubstage.PacFile = string.Empty; OnPropertyChanged(nameof(SelectedSubstage)); });
 
         [ImportingConstructor]
-        public StageEditorViewModel(IStageService stageService, IStageCosmeticViewModel stageCosmeticViewModel)
+        public StageEditorViewModel(IStageService stageService, IDialogService dialogService, IStageCosmeticViewModel stageCosmeticViewModel)
         {
             _stageService = stageService;
+            _dialogService = dialogService;
             StageCosmeticViewModel = stageCosmeticViewModel;
 
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
@@ -87,6 +117,16 @@ namespace BrawlInstaller.ViewModels
         {
             Stage = message.Value;
             OnPropertyChanged(nameof(Stage));
+        }
+
+        private string LoadFile(string currentPath, string filter)
+        {
+            var file = _dialogService.OpenFileDialog("Select file", filter);
+            if (!string.IsNullOrEmpty(file))
+            {
+                return file;
+            }
+            return currentPath;
         }
 
         // TODO: Separate the filepath textboxes from the name textboxes for pac files, module, etc - selecting a file updates the file path, changing the name
