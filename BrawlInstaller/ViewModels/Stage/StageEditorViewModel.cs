@@ -59,6 +59,12 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedSubstage));
         });
         public ICommand ClearSubstageFileCommand => new RelayCommand(param => { SelectedSubstage.PacFile = string.Empty; OnPropertyChanged(nameof(SelectedSubstage)); });
+        public ICommand LoadBinFileCommand => new RelayCommand(param =>
+        {
+            SelectedStageEntry.BinFilePath = LoadFile(SelectedStageEntry.BinFilePath, "BIN file (.bin)|*.bin");
+            OnPropertyChanged(nameof(SelectedStageEntry));
+        });
+        public ICommand ClearBinFileCommand => new RelayCommand(param => { SelectedStageEntry.BinFilePath = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); });
         public ICommand MoveEntryUpCommand => new RelayCommand(param => MoveEntryUp());
         public ICommand MoveEntryDownCommand => new RelayCommand(param => MoveEntryDown());
 

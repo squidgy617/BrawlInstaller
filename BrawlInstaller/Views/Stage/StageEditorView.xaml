@@ -227,9 +227,18 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label x:Name="binNameLabel" Content="Bin Name:"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="binNameLabel" Content="Bin File:"/>
                             <TextBox x:Name="binNameTextBox" Text="{Binding SelectedStageEntry.BinFileName}" Grid.Column="1"/>
+                            <TextBox x:Name="binFileTextBox" Text="{Binding SelectedStageEntry.BinFilePath}" IsReadOnly="True" Grid.Row="1" Grid.Column="1"/>
+                            <Button x:Name="binFileButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding LoadBinFileCommand}" Grid.Row="1" Grid.Column="2"/>
+                            <Button x:Name="binFileClearButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearBinFileCommand}" Grid.Row="1" Grid.Column="3"/>
                         </Grid>
                     </GroupBox>
                 </StackPanel>
