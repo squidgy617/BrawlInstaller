@@ -67,6 +67,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand ClearBinFileCommand => new RelayCommand(param => { SelectedStageEntry.BinFilePath = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); });
         public ICommand MoveEntryUpCommand => new RelayCommand(param => MoveEntryUp());
         public ICommand MoveEntryDownCommand => new RelayCommand(param => MoveEntryDown());
+        public ICommand MoveSubstageUpCommand => new RelayCommand(param => MoveSubstageUp());
+        public ICommand MoveSubstageDownCommand => new RelayCommand(param => MoveSubstageDown());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -110,6 +112,10 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<string, VariantType> VariantTypes { get => typeof(VariantType).GetDictionary<VariantType>(); }
 
         [DependsUpon(nameof(SelectedStageEntry))]
+        public ObservableCollection<Substage> Substages { get => SelectedStageEntry?.Params?.Substages != null ? new ObservableCollection<Substage>(SelectedStageEntry.Params.Substages) : new ObservableCollection<Substage>(); }
+
+        [DependsUpon(nameof(SelectedStageEntry))]
+        [DependsUpon(nameof(Substages))]
         public Substage SelectedSubstage { get => _selectedSubstage; set { _selectedSubstage = value; OnPropertyChanged(nameof(SelectedSubstage)); } }
 
         [DependsUpon(nameof(SelectedButtonFlags))]
@@ -156,6 +162,22 @@ namespace BrawlInstaller.ViewModels
             StageEntries.MoveDown(SelectedStageEntry);
             OnPropertyChanged(nameof(SelectedStageEntry));
             OnPropertyChanged(nameof(StageEntries));
+        }
+
+        private void MoveSubstageUp()
+        {
+            SelectedStageEntry.Params.Substages.MoveUp(SelectedSubstage);
+            Substages.MoveUp(SelectedSubstage);
+            OnPropertyChanged(nameof(SelectedSubstage));
+            OnPropertyChanged(nameof(Substages));
+        }
+
+        private void MoveSubstageDown()
+        {
+            SelectedStageEntry.Params.Substages.MoveDown(SelectedSubstage);
+            Substages.MoveDown(SelectedSubstage);
+            OnPropertyChanged(nameof(SelectedSubstage));
+            OnPropertyChanged(nameof(Substages));
         }
     }
 }

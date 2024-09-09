@@ -292,9 +292,9 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <ListBox x:Name="substageListBox" ItemsSource="{Binding SelectedStageEntry.Params.Substages}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedSubstage}" Width="120" Height="100" Grid.RowSpan="2"/>
-                                <Button x:Name="substageUpButton" Content="↑" Style="{StaticResource sideButton}" Grid.Column="1" IsEnabled="{Binding SelectedSubstage, Converter={StaticResource nullBoolConverter}}"/>
-                                <Button x:Name="substageDownButton" Content="↓" Style="{StaticResource sideButton}" Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedSubstage, Converter={StaticResource nullBoolConverter}}"/>
+                                <ListBox x:Name="substageListBox" ItemsSource="{Binding Substages}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedSubstage}" Width="120" Height="100" Grid.RowSpan="2"/>
+                                <Button x:Name="substageUpButton" Content="↑" Style="{StaticResource sideButton}" Grid.Column="1" IsEnabled="{Binding SelectedSubstage, Converter={StaticResource nullBoolConverter}}" Command="{Binding MoveSubstageUpCommand}"/>
+                                <Button x:Name="substageDownButton" Content="↓" Style="{StaticResource sideButton}" Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedSubstage, Converter={StaticResource nullBoolConverter}}" Command="{Binding MoveSubstageDownCommand}"/>
                             </Grid>
                             <Label x:Name="substageSuffixLabel" Content="Suffix:" Grid.Column="1" Grid.Row="1"/>
                             <TextBox x:Name="substageSuffixTextBox" Text="{Binding SelectedSubstage.Name}" Grid.Column="2" Width="120" Grid.Row="1"/>
