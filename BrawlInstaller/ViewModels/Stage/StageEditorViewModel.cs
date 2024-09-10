@@ -41,6 +41,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand MoveSubstageDownCommand => new RelayCommand(param => MoveSubstageDown());
         public ICommand AddStageEntryCommand => new RelayCommand(param =>  AddStageEntry());
         public ICommand RemoveStageEntryCommand => new RelayCommand(param => RemoveStageEntry());
+        public ICommand AddStageParamCommand => new RelayCommand(param => AddStageParam());
+        public ICommand RemoveStageParamCommand => new RelayCommand(param => RemoveStageParam());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -64,6 +66,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(Stage))]
         [DependsUpon(nameof(StageEntries))]
         public StageEntry SelectedStageEntry { get => _selectedStageEntry; set { _selectedStageEntry = value; OnPropertyChanged(nameof(SelectedStageEntry)); } }
+
+        [DependsUpon(nameof(Stage))]
+        public ObservableCollection<StageParams> ParamList { get => Stage?.AllParams != null ? new ObservableCollection<StageParams>(Stage.AllParams) :  new ObservableCollection<StageParams>(); }
 
         [DependsUpon(nameof(SelectedStageEntry))]
         public ushort SelectedButtonFlags { get => SelectedStageEntry?.ButtonFlags ?? 0x0; set { SelectedStageEntry.ButtonFlags = value; OnPropertyChanged(nameof(SelectedButtonFlags)); } }
@@ -166,6 +171,31 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(StageEntries));
             OnPropertyChanged(nameof(SelectedStageEntry));
+        }
+
+        private void AddStageParam()
+        {
+            var newParams = new StageParams();
+            Stage.AllParams.Add(newParams);
+            SelectedStageEntry.Params = newParams;
+            OnPropertyChanged(nameof(Stage));
+            OnPropertyChanged(nameof(SelectedStageEntry));
+        }
+
+        private void RemoveStageParam()
+        {
+            if (Stage.AllParams.Count > 1)
+            {
+                var removeParams = SelectedStageEntry.Params;
+                Stage.AllParams.Remove(removeParams);
+                foreach (var stageEntry in Stage.StageEntries.Where(x => x.Params == removeParams))
+                {
+                    stageEntry.Params = Stage.AllParams.FirstOrDefault();
+                }
+                OnPropertyChanged(nameof(Stage));
+                OnPropertyChanged(nameof(SelectedStageEntry));
+                OnPropertyChanged(nameof(StageEntries));
+            }
         }
     }
 }
