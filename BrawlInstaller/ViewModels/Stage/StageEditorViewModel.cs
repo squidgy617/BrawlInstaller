@@ -212,13 +212,10 @@ namespace BrawlInstaller.ViewModels
 
         private void RemoveSubstage()
         {
-            if (SelectedStageEntry.Params.Substages.Count > 1)
-            {
-                SelectedStageEntry.Params.Substages.Remove(SelectedSubstage);
-                OnPropertyChanged(nameof(Stage));
-                OnPropertyChanged(nameof(SelectedStageEntry));
-                OnPropertyChanged(nameof(Substages));
-            }
+            SelectedStageEntry.Params.Substages.Remove(SelectedSubstage);
+            OnPropertyChanged(nameof(Stage));
+            OnPropertyChanged(nameof(SelectedStageEntry));
+            OnPropertyChanged(nameof(Substages));
         }
     }
 }
