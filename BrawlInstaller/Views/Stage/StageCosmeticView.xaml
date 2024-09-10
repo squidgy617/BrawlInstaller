@@ -36,6 +36,7 @@
             <ComboBox x:Name="cosmeticTypeDropDown" DisplayMemberPath="Key" SelectedValuePath="Value" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Column="1"/>
             <Label x:Name="cosmeticStyleLabel" Content="Style:" Grid.Row="1"/>
             <ComboBox x:Name="styleDropDown" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle}" Grid.Row="1" Width="140" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Column="1"/>
+            <Button x:Name="styleAddButton" Content="+" Style="{StaticResource miniButton}" Grid.Row="1" Grid.Column="2" Command="{Binding AddStyleCommand}"/>
             <Label x:Name="cosmeticSelectionLabel" Content="Option:" Grid.Row="2" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}"/>
             <ComboBox x:Name="cosmeticDropDown" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, Mode=OneWay}" DisplayMemberPath="Name" Grid.Row="2" Width="140" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}" Grid.Column="1">
                 <i:Interaction.Triggers>

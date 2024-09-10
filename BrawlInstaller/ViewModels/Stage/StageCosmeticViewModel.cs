@@ -44,6 +44,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ClearCosmeticCommand => new RelayCommand(param =>  ClearCosmetic());
         public ICommand ClearHDCosmeticCommand => new RelayCommand(param => ClearHDCosmetic());
         public ICommand AddCosmeticOptionCommand => new RelayCommand(param => AddCosmeticOption());
+        public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
 
         [ImportingConstructor]
         public StageCosmeticViewModel(IDialogService dialogService, ISettingsService settingsService)
@@ -155,7 +156,8 @@ namespace BrawlInstaller.ViewModels
                 {
                     CosmeticType = SelectedCosmetic.CosmeticType,
                     Style = SelectedCosmetic.Style,
-                    TextureId = newId
+                    TextureId = newId,
+                    SelectionOption = true
                 };
                 Stage.Cosmetics.Add(newCosmetic);
                 OnPropertyChanged(nameof(SelectedCosmetics));
@@ -174,6 +176,23 @@ namespace BrawlInstaller.ViewModels
             };
             Stage.Cosmetics.Add(cosmetic);
             return cosmetic;
+        }
+
+        private void AddStyle()
+        {
+            // TODO: Will have to make this actually work, Styles needs to load from the cosmetic list AND build settings
+            var styleName = _dialogService.OpenStringInputDialog("Style Name Input", "Enter the name for your new style");
+            if (styleName != null && !Stage.Cosmetics.Items.Any(x => x.Style == styleName && x.CosmeticType == SelectedCosmeticOption))
+            {
+                var cosmetic = new Cosmetic
+                {
+                    CosmeticType = SelectedCosmeticOption,
+                    Style = styleName
+                };
+                Stage.Cosmetics.Add(cosmetic);
+                OnPropertyChanged(nameof(Styles));
+                OnPropertyChanged(nameof(Stage));
+            }
         }
 
         public void ReplaceCosmetic()
