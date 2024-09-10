@@ -40,11 +40,15 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <ListBox x:Name="entriesListBox" ItemsSource="{Binding StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Params.Name" Width="120" MinHeight="120" Grid.RowSpan="2"/>
+                <ListBox x:Name="entriesListBox" ItemsSource="{Binding StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Params.Name" Width="120" MinHeight="120" Grid.RowSpan="4"/>
                 <Button x:Name="entryUpButton" Content="↑" Style="{StaticResource sideButton}" Grid.Column="1" IsEnabled="{Binding SelectedStageEntry, Converter={StaticResource nullBoolConverter}}" Command="{Binding MoveEntryUpCommand}"/>
                 <Button x:Name="entryDownButton" Content="↓" Style="{StaticResource sideButton}" Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedStageEntry, Converter={StaticResource nullBoolConverter}}" Command="{Binding MoveEntryDownCommand}"/>
+                <Button x:Name="entryAddButton" Content="+" Style="{StaticResource miniButton}" Grid.Column="1" Grid.Row="2" Command="{Binding AddStageEntryCommand}"/>
+                <Button x:Name="entryRemoveButton" Content="-" Style="{StaticResource miniButton}" Grid.Column="1" Grid.Row="3" IsEnabled="{Binding SelectedStageEntry, Converter={StaticResource nullBoolConverter}}" Command="{Binding RemoveStageEntryCommand}"/>
             </Grid>
             <Grid x:Name="stageOptionsGrid" Grid.RowSpan="3" Grid.Column="2">
                 <Grid.ColumnDefinitions>

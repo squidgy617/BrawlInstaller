@@ -39,6 +39,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand MoveEntryDownCommand => new RelayCommand(param => MoveEntryDown());
         public ICommand MoveSubstageUpCommand => new RelayCommand(param => MoveSubstageUp());
         public ICommand MoveSubstageDownCommand => new RelayCommand(param => MoveSubstageDown());
+        public ICommand AddStageEntryCommand => new RelayCommand(param =>  AddStageEntry());
+        public ICommand RemoveStageEntryCommand => new RelayCommand(param => RemoveStageEntry());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -138,6 +140,32 @@ namespace BrawlInstaller.ViewModels
             Substages.MoveDown(SelectedSubstage);
             OnPropertyChanged(nameof(SelectedSubstage));
             OnPropertyChanged(nameof(Substages));
+        }
+
+        private void AddStageEntry()
+        {
+            var newEntry = new StageEntry();
+            if (Stage.AllParams.Count > 0)
+            {
+                newEntry.Params = Stage.AllParams.FirstOrDefault();
+            }
+            else
+            {
+                Stage.AllParams.Add(newEntry.Params);
+            }
+            Stage.StageEntries.Add(newEntry);
+            SelectedStageEntry = newEntry;
+            OnPropertyChanged(nameof(Stage));
+            OnPropertyChanged(nameof(StageEntries));
+            OnPropertyChanged(nameof(SelectedStageEntry));
+        }
+
+        private void RemoveStageEntry()
+        {
+            Stage.StageEntries.Remove(SelectedStageEntry);
+            OnPropertyChanged(nameof(Stage));
+            OnPropertyChanged(nameof(StageEntries));
+            OnPropertyChanged(nameof(SelectedStageEntry));
         }
     }
 }
