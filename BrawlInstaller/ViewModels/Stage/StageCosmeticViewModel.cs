@@ -45,6 +45,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ClearHDCosmeticCommand => new RelayCommand(param => ClearHDCosmetic());
         public ICommand AddCosmeticOptionCommand => new RelayCommand(param => AddCosmeticOption());
         public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
+        public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
 
         [ImportingConstructor]
         public StageCosmeticViewModel(IDialogService dialogService, ISettingsService settingsService)
@@ -70,7 +71,8 @@ namespace BrawlInstaller.ViewModels
         // TODO: For everywhere that uses styles and cosmetic types, we should make it so that it reads from your build settings, the game files, and any packages
         // that are loaded to determine what options to list
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public List<string> Styles { get => BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
+        public List<string> Styles { get => BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
+                .Concat(Stage?.Cosmetics?.Items?.Where(y => y.CosmeticType == SelectedCosmeticOption)?.Select(y => y.Style) ?? new List<string>()).Distinct().ToList(); }
 
         [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
@@ -180,19 +182,30 @@ namespace BrawlInstaller.ViewModels
 
         private void AddStyle()
         {
-            // TODO: Will have to make this actually work, Styles needs to load from the cosmetic list AND build settings
             var styleName = _dialogService.OpenStringInputDialog("Style Name Input", "Enter the name for your new style");
             if (styleName != null && !Stage.Cosmetics.Items.Any(x => x.Style == styleName && x.CosmeticType == SelectedCosmeticOption))
             {
                 var cosmetic = new Cosmetic
                 {
                     CosmeticType = SelectedCosmeticOption,
-                    Style = styleName
+                    Style = styleName,
+                    // TODO: How to handle selectable cosmetics?
+                    SelectionOption = false
                 };
                 Stage.Cosmetics.Add(cosmetic);
                 OnPropertyChanged(nameof(Styles));
                 OnPropertyChanged(nameof(Stage));
             }
+        }
+
+        private void RemoveStyle()
+        {
+            foreach(var cosmetic in Stage.Cosmetics.Items.Where(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption).ToList())
+            {
+                Stage.Cosmetics.Remove(cosmetic);
+            }
+            OnPropertyChanged(nameof(Styles));
+            OnPropertyChanged(nameof(Stage));
         }
 
         public void ReplaceCosmetic()
