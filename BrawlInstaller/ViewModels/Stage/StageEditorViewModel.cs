@@ -43,6 +43,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveStageEntryCommand => new RelayCommand(param => RemoveStageEntry());
         public ICommand AddStageParamCommand => new RelayCommand(param => AddStageParam());
         public ICommand RemoveStageParamCommand => new RelayCommand(param => RemoveStageParam());
+        public ICommand AddSubstageCommand => new RelayCommand(param => AddSubstage());
+        public ICommand RemoveSubstageCommand => new RelayCommand(param => RemoveSubstage());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -195,6 +197,27 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(Stage));
                 OnPropertyChanged(nameof(SelectedStageEntry));
                 OnPropertyChanged(nameof(StageEntries));
+            }
+        }
+
+        private void AddSubstage()
+        {
+            var newSubstage = new Substage();
+            SelectedStageEntry.Params.Substages.Add(newSubstage);
+            SelectedSubstage = newSubstage;
+            OnPropertyChanged(nameof(Stage));
+            OnPropertyChanged(nameof(SelectedStageEntry));
+            OnPropertyChanged(nameof(Substages));
+        }
+
+        private void RemoveSubstage()
+        {
+            if (SelectedStageEntry.Params.Substages.Count > 1)
+            {
+                SelectedStageEntry.Params.Substages.Remove(SelectedSubstage);
+                OnPropertyChanged(nameof(Stage));
+                OnPropertyChanged(nameof(SelectedStageEntry));
+                OnPropertyChanged(nameof(Substages));
             }
         }
     }
