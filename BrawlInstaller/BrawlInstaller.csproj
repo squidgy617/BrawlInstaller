@@ -98,6 +98,9 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\StageService.cs" />
+    <Compile Include="UserControls\FileBox.xaml.cs">
+      <DependentUpon>FileBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
@@ -182,6 +185,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\ViewModelViewMapping.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\FileBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

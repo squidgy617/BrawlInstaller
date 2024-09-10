@@ -35,36 +35,6 @@ namespace BrawlInstaller.ViewModels
         IDialogService _dialogService { get; }
 
         // Commands
-        public ICommand LoadPacFileCommand => new RelayCommand(param => 
-        { 
-            SelectedStageEntry.Params.PacFile = LoadFile(SelectedStageEntry.Params.PacFile, "PAC file (.pac)|*.pac"); 
-            OnPropertyChanged(nameof(SelectedStageEntry)); 
-        } );
-        public ICommand ClearPacFileCommand => new RelayCommand(param => { SelectedStageEntry.Params.PacFile = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); } );
-        public ICommand LoadModuleFileCommand => new RelayCommand(param =>
-        {
-            SelectedStageEntry.Params.ModuleFile = LoadFile(SelectedStageEntry.Params.ModuleFile, "REL file (.rel)|*.rel"); 
-            OnPropertyChanged(nameof(SelectedStageEntry));
-        });
-        public ICommand ClearModuleFileCommand => new RelayCommand(param => { SelectedStageEntry.Params.ModuleFile = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); });
-        public ICommand LoadSoundbankFileCommand => new RelayCommand(param =>
-        {
-            SelectedStageEntry.Params.SoundBankFile = LoadFile(SelectedStageEntry.Params.SoundBankFile, "SAWND file (.sawnd)|*.sawnd"); 
-            OnPropertyChanged(nameof(SelectedStageEntry));
-        });
-        public ICommand ClearSoundbankFileCommand => new RelayCommand(param => { SelectedStageEntry.Params.SoundBankFile = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); });
-        public ICommand LoadSubstageFileCommand => new RelayCommand(param =>
-        {
-            SelectedSubstage.PacFile = LoadFile(SelectedSubstage.PacFile, "PAC file (.pac)|*.pac");
-            OnPropertyChanged(nameof(SelectedSubstage));
-        });
-        public ICommand ClearSubstageFileCommand => new RelayCommand(param => { SelectedSubstage.PacFile = string.Empty; OnPropertyChanged(nameof(SelectedSubstage)); });
-        public ICommand LoadBinFileCommand => new RelayCommand(param =>
-        {
-            SelectedStageEntry.BinFilePath = LoadFile(SelectedStageEntry.BinFilePath, "BIN file (.bin)|*.bin");
-            OnPropertyChanged(nameof(SelectedStageEntry));
-        });
-        public ICommand ClearBinFileCommand => new RelayCommand(param => { SelectedStageEntry.BinFilePath = string.Empty; OnPropertyChanged(nameof(SelectedStageEntry)); });
         public ICommand MoveEntryUpCommand => new RelayCommand(param => MoveEntryUp());
         public ICommand MoveEntryDownCommand => new RelayCommand(param => MoveEntryDown());
         public ICommand MoveSubstageUpCommand => new RelayCommand(param => MoveSubstageUp());
@@ -136,16 +106,6 @@ namespace BrawlInstaller.ViewModels
         {
             Stage = message.Value;
             OnPropertyChanged(nameof(Stage));
-        }
-
-        private string LoadFile(string currentPath, string filter)
-        {
-            var file = _dialogService.OpenFileDialog("Select file", filter);
-            if (!string.IsNullOrEmpty(file))
-            {
-                return file;
-            }
-            return currentPath;
         }
 
         private void MoveEntryUp()

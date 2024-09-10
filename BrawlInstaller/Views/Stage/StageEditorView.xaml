@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
+             xmlns:userControls="clr-namespace:BrawlInstaller.UserControls"
              xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
              xmlns:enums="clr-namespace:BrawlInstaller.Enums"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:StageEditorViewModel}"
@@ -52,7 +53,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <GroupBox x:Name="paramsGroupBox" Header="Parameters" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}" Grid.RowSpan="2">
                     <Grid x:Name="paramsGrid">
@@ -76,8 +77,6 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Label x:Name="paramLabel" Content="Params:"/>
                         <ComboBox x:Name="paramComboBox" ItemsSource="{Binding Stage.AllParams}" SelectedItem="{Binding SelectedStageEntry.Params}" DisplayMemberPath="Name" Grid.Column="1" Width="160"/>
@@ -85,21 +84,15 @@
                         <TextBox x:Name="entryNameTextBox" Text="{Binding SelectedStageEntry.Params.Name}" Grid.Column="1" Grid.Row="1" Width="160"/>
                         <Label x:Name="pacNameLabel" Content="PAC File:" Grid.Row="2"/>
                         <TextBox x:Name="pacNameTextBox" Text="{Binding SelectedStageEntry.Params.PacName}" Grid.Row="2" Grid.Column="1" Width="160"/>
-                        <TextBox x:Name="pacFileTextBox" Text="{Binding SelectedStageEntry.Params.PacFile}" Grid.Row="3" Grid.Column="1" Width="160" IsReadOnly="True"/>
-                        <Button x:Name="pacFileButton" Content="..." Grid.Row="3" Grid.Column="2" Style="{StaticResource condensedButton}" Command="{Binding LoadPacFileCommand}"/>
-                        <Button x:Name="pacFileClearButton" Content="✕" Grid.Row="3" Grid.Column="3" Style="{StaticResource condensedButton}" Command="{Binding ClearPacFileCommand}"/>
+                        <userControls:FileBox x:Name="pacFileBox" Text="{Binding SelectedStageEntry.Params.PacFile}" Filter="PAC file (.pac)|*.pac" Grid.Row="3" Grid.Column="1" TextBoxWidth="160"/>
                         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="4"/>
                         <TextBox x:Name="moduleTextBox" Text="{Binding SelectedStageEntry.Params.Module}" Grid.Column="1" Grid.Row="4" Width="160"/>
-                        <TextBox x:Name="moduleFileTextBox" Text="{Binding SelectedStageEntry.Params.ModuleFile}" Grid.Column="1" Grid.Row="5" Width="160" IsReadOnly="True"/>
-                        <Button x:Name="moduleFileButton" Content="..." Grid.Row="5" Grid.Column="2" Style="{StaticResource condensedButton}" Command="{Binding LoadModuleFileCommand}"/>
-                        <Button x:Name="moduleFileClearButton" Content="✕" Grid.Row="5" Grid.Column="3" Style="{StaticResource condensedButton}" Command="{Binding ClearModuleFileCommand}"/>
+                        <userControls:FileBox x:Name="moduleFileBox" Text="{Binding SelectedStageEntry.Params.ModuleFile}" Filter="REL file (.rel)|*.rel" Grid.Row="5" Grid.Column="1" TextBoxWidth="160"/>
                         <Label x:Name="tracklistLabel" Content="Tracklist:" Grid.Row="6"/>
                         <TextBox x:Name="tracklistTextBox" Text="{Binding SelectedStageEntry.Params.TrackList}" Grid.Column="1" Grid.Row="6" Width="160"/>
                         <Label x:Name="soundBankLabel" Content="Soundbank:" Grid.Row="7"/>
                         <TextBox x:Name="soundbankTextBox" Text="{Binding SelectedStageEntry.Params.SoundBank, Converter={StaticResource hexShortConverter}}" Grid.Row="7" Grid.Column="1" Width="60"/>
-                        <TextBox x:Name="soundbankFileTextBox" Text="{Binding SelectedStageEntry.Params.SoundBankFile}" Grid.Row="8" Grid.Column="1" Width="160" IsReadOnly="True"/>
-                        <Button x:Name="soundbankFileButton" Content="..." Grid.Row="8" Grid.Column="2" Style="{StaticResource condensedButton}" Command="{Binding LoadSoundbankFileCommand}"/>
-                        <Button x:Name="soundbankFileClearButton" Content="✕" Grid.Row="8" Grid.Column="3" Style="{StaticResource condensedButton}" Command="{Binding ClearSoundbankFileCommand}"/>
+                        <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding SelectedStageEntry.Params.SoundBankFile}" Filter="SAWND file (.sawnd)|*.sawnd" Grid.Row="8" Grid.Column="1" TextBoxWidth="160"/>
                         <Label x:Name="effectBankLabel" Content="Effect Bank:" Grid.Row="9"/>
                         <TextBox x:Name="effectBankTextBox" Text="{Binding SelectedStageEntry.Params.EffectBank, Converter={StaticResource hexShortConverter}}" Grid.Row="9" Grid.Column="1" Width="60"/>
                         <Label x:Name="memoryAllocationLabel" Content="Memory Allocation:" Grid.Row="10"/>
@@ -236,9 +229,7 @@
                             </Grid.RowDefinitions>
                             <Label x:Name="binNameLabel" Content="Bin File:"/>
                             <TextBox x:Name="binNameTextBox" Text="{Binding SelectedStageEntry.BinFileName}" Grid.Column="1"/>
-                            <TextBox x:Name="binFileTextBox" Text="{Binding SelectedStageEntry.BinFilePath}" IsReadOnly="True" Grid.Row="1" Grid.Column="1"/>
-                            <Button x:Name="binFileButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding LoadBinFileCommand}" Grid.Row="1" Grid.Column="2"/>
-                            <Button x:Name="binFileClearButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearBinFileCommand}" Grid.Row="1" Grid.Column="3"/>
+                            <userControls:FileBox x:Name="binFileBox" Text="{Binding SelectedStageEntry.BinFilePath}" Filter="BIN file (.bin)|*.bin" Grid.Row="1" Grid.Column="1" TextBoxWidth="160"/>
                         </Grid>
                     </GroupBox>
                 </StackPanel>
@@ -299,9 +290,7 @@
                             <Label x:Name="substageSuffixLabel" Content="Suffix:" Grid.Column="1" Grid.Row="1"/>
                             <TextBox x:Name="substageSuffixTextBox" Text="{Binding SelectedSubstage.Name}" Grid.Column="2" Width="120" Grid.Row="1"/>
                             <Label x:Name="substageFileLabel" Content="Path:" Grid.Column="1" Grid.Row="2"/>
-                            <TextBox x:Name="substageFileTextBox" Text="{Binding SelectedSubstage.PacFile}" Grid.Column="2" Grid.Row="2" Width="120"/>
-                            <Button x:Name="substageFileButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding LoadSubstageFileCommand}" Grid.Row="2" Grid.Column="3"/>
-                            <Button x:Name="substageFileClearButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearSubstageFileCommand}" Grid.Row="2" Grid.Column="4"/>
+                            <userControls:FileBox x:Name="substageFileBox" Text="{Binding SelectedSubstage.PacFile}" Filter="PAC file (.pac)|*.pac" Grid.Row="2" Grid.Column="2" TextBoxWidth="120"/>
                         </Grid>
                     </Grid>
                 </GroupBox>
