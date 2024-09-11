@@ -63,15 +63,16 @@ namespace BrawlInstaller.ViewModels
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
 
         [DependsUpon(nameof(Stage))]
-        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+        public List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => DefaultCosmetics.DefaultStageCosmetics.Select(x => x.CosmeticType.GetKeyValuePair()).Distinct().ToList(); }
 
         [DependsUpon(nameof(CosmeticOptions))]
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
-        // TODO: For everywhere that uses styles and cosmetic types, we should make it so that it reads from your build settings, the game files, and any packages
-        // that are loaded to determine what options to list
+        // Combines defaults, build settings, and styles found in loaded cosmetics to get all available styles
+        // TODO: Do fighter cosmetics like this, and same with their cosmetic types
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public List<string> Styles { get => BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
+        public List<string> Styles { get => DefaultCosmetics.DefaultStageCosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
+                .Concat(BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style) ?? new List<string>())
                 .Concat(Stage?.Cosmetics?.Items?.Where(y => y.CosmeticType == SelectedCosmeticOption)?.Select(y => y.Style) ?? new List<string>()).Distinct().ToList(); }
 
         [DependsUpon(nameof(Styles))]
@@ -100,17 +101,12 @@ namespace BrawlInstaller.ViewModels
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
 
         // Methods
+        // TODO: New stages still need to load the selectable cosmetic lists. If we're loading a stage package, it would be like a new stage with other stuff
+        // pre-loaded, so it would also load the lists.
         public void LoadStage(StageLoadedMessage message)
         {
             BuildSettings = _settingsService.BuildSettings;
             OnPropertyChanged(nameof(BuildSettings));
-            var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
-            {
-                CosmeticType.StagePreview.GetKeyValuePair(),
-                CosmeticType.StageFranchiseIcon.GetKeyValuePair(),
-                CosmeticType.StageIcon.GetKeyValuePair()
-            };
-            CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>(cosmeticOptions);
             OnPropertyChanged(nameof(CosmeticOptions));
             Stage = message.Value;
             OnPropertyChanged(nameof(Stage));
@@ -189,7 +185,7 @@ namespace BrawlInstaller.ViewModels
                 {
                     CosmeticType = SelectedCosmeticOption,
                     Style = styleName,
-                    // TODO: How to handle selectable cosmetics?
+                    // Added styles are never selectable because there's no point, why would you add multiple selection options when you 
                     SelectionOption = false
                 };
                 Stage.Cosmetics.Add(cosmetic);
