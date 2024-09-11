@@ -171,7 +171,7 @@ namespace BrawlInstaller.Services
                 {
                     var newEntry = new StageEntry
                     {
-                        ButtonFlags = entry.ButtonFlags,
+                        ButtonFlags = (ushort)(entry.ButtonFlags > 0x4000 ? 0x4000 : entry.ButtonFlags > 0x8000 ? 0x8000 : entry.ButtonFlags),
                         Params = GetStageParams(entry.Name, stage.AllParams)
                     };
                     // Get bin file
