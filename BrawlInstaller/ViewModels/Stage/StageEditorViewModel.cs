@@ -29,10 +29,12 @@ namespace BrawlInstaller.ViewModels
         private StageInfo _stage;
         private StageEntry _selectedStageEntry;
         private Substage _selectedSubstage;
+        private List<string> _tracklists;
 
         // Services
         IStageService _stageService { get; }
         IDialogService _dialogService { get; }
+        ITracklistService _tracklistService { get; }
 
         // Commands
         public ICommand MoveEntryUpCommand => new RelayCommand(param => MoveEntryUp());
@@ -47,10 +49,11 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveSubstageCommand => new RelayCommand(param => RemoveSubstage());
 
         [ImportingConstructor]
-        public StageEditorViewModel(IStageService stageService, IDialogService dialogService, IStageCosmeticViewModel stageCosmeticViewModel)
+        public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IStageCosmeticViewModel stageCosmeticViewModel)
         {
             _stageService = stageService;
             _dialogService = dialogService;
+            _tracklistService = tracklistService;
             StageCosmeticViewModel = stageCosmeticViewModel;
 
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
@@ -107,6 +110,8 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(RListAlt))]
         public bool ListAlt { get => LListAlt || RListAlt; }
 
+        public List<string> Tracklists { get => _tracklists; set { _tracklists = value; OnPropertyChanged(nameof(Tracklists)); } }
+
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
 
@@ -114,7 +119,9 @@ namespace BrawlInstaller.ViewModels
         public void LoadStage(StageLoadedMessage message)
         {
             Stage = message.Value;
+            Tracklists = _tracklistService.GetTracklists();
             OnPropertyChanged(nameof(Stage));
+            OnPropertyChanged(nameof(Tracklists));
         }
 
         private void MoveEntryUp()

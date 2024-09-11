@@ -74,6 +74,7 @@
     <Compile Include="Classes\FighterInfo.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Classes\ImageSize.cs" />
+    <Compile Include="Services\TracklistService.cs" />
     <Compile Include="StaticClasses\DefaultCosmetics.cs" />
     <Compile Include="StaticClasses\ReservedIds.cs" />
     <Compile Include="Classes\Stages.cs" />

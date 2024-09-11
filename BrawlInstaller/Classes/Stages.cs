@@ -4,6 +4,7 @@ using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,7 +71,7 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; } = "Unknown";
         public string PacName { get; set; } = "Unknown";
         public string PacFile { get; set; } = null;
-        public string TrackList { get; set; } = string.Empty;
+        public string TrackList { get => TrackListFile != null ? Path.GetFileNameWithoutExtension(TrackListFile) : string.Empty; }
         public string TrackListFile { get; set; } = null;
         public string Module { get; set; } = string.Empty;
         public string ModuleFile { get; set; } = null;

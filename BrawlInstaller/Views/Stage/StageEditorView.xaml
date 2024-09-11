@@ -96,7 +96,13 @@
                         <TextBox x:Name="moduleTextBox" Text="{Binding SelectedStageEntry.Params.Module}" Grid.Column="1" Grid.Row="4" Width="160"/>
                         <userControls:FileBox x:Name="moduleFileBox" Text="{Binding SelectedStageEntry.Params.ModuleFile}" Filter="REL file (.rel)|*.rel" Grid.Row="5" Grid.Column="1" TextBoxWidth="160" Grid.ColumnSpan="3"/>
                         <Label x:Name="tracklistLabel" Content="Tracklist:" Grid.Row="6"/>
-                        <TextBox x:Name="tracklistTextBox" Text="{Binding SelectedStageEntry.Params.TrackList}" Grid.Column="1" Grid.Row="6" Width="160"/>
+                        <ComboBox x:Name="tracklistComboBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedStageEntry.Params.TrackListFile}" Grid.Column="1" Grid.Row="6" Width="160">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource filePathNoExtensionConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <Label x:Name="soundBankLabel" Content="Soundbank:" Grid.Row="7"/>
                         <TextBox x:Name="soundbankTextBox" Text="{Binding SelectedStageEntry.Params.SoundBank, Converter={StaticResource hexShortConverter}}" Grid.Row="7" Grid.Column="1" Width="60"/>
                         <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding SelectedStageEntry.Params.SoundBankFile}" Filter="SAWND file (.sawnd)|*.sawnd" Grid.Row="8" Grid.Column="1" TextBoxWidth="160" Grid.ColumnSpan="3"/>

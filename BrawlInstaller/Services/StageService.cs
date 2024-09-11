@@ -272,7 +272,6 @@ namespace BrawlInstaller.Services
                     var paramNode = (STEXNode)rootNode;
                     stageParams.Name = paramNode.Name;
                     stageParams.PacName = paramNode.StageName;
-                    stageParams.TrackList = paramNode.TrackList;
                     stageParams.EffectBank = paramNode.EffectBank;
                     stageParams.SoundBank = paramNode.SoundBank;
                     stageParams.Module = paramNode.Module;

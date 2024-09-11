@@ -46,6 +46,24 @@ namespace BrawlInstaller.Resources
         }
     }
 
+    [ValueConversion(typeof(string), typeof(string))]
+    public class FilePathNoExtensionConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo cultur)
+        {
+            if (value != null)
+                return Path.GetFileNameWithoutExtension((string)value);
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo cultur)
+        {
+            if (value != null)
+                return (string)value;
+            return null;
+        }
+    }
+
     [ValueConversion(typeof(string), typeof(int))]
     public class HexConverter : IValueConverter
     {
