@@ -35,6 +35,7 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand MoveUpCommand => new RelayCommand(param => MoveStageUp());
         public ICommand MoveDownCommand => new RelayCommand(param => MoveStageDown());
+        public ICommand SaveStageListCommand => new RelayCommand(param => SaveStageList());
 
         [ImportingConstructor]
         public StageListViewModel(IStageService stageService)
@@ -83,6 +84,12 @@ namespace BrawlInstaller.ViewModels
             SelectedPage.StageSlots.MoveDown(SelectedStageSlot);
             StageSlots.MoveDown(SelectedStageSlot);
             OnPropertyChanged(nameof(StageSlots));
+        }
+
+        private void SaveStageList()
+        {
+            // TODO: Create one method to pass in the StageLists and StageTable, save them all in one go
+            _stageService.SaveStageList(SelectedStageList);
         }
     }
 }

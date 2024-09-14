@@ -15,7 +15,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
+        <StackPanel Orientation="Horizontal">
+            <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
+            <Button x:Name="stageListSaveButton" Content="Save" Command="{Binding SaveStageListCommand}"/>
+        </StackPanel>
         <TabControl x:Name="pageTabControl" SelectedItem="{Binding SelectedPage, Mode=TwoWay}" SelectedIndex="0" ItemsSource="{Binding SelectedStageList.Pages}" Grid.Row="1" Width="Auto" Height="Auto">
             <TabControl.ItemTemplate>
                 <DataTemplate>

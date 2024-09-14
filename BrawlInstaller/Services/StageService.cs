@@ -26,6 +26,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="StageService.GetStageData(StageInfo)"/>
         StageInfo GetStageData(StageInfo stage);
 
+        /// <inheritdoc cref="StageService.SaveStageList(StageList)"/>
+        void SaveStageList(StageList stageList);
+
         /// <inheritdoc cref="StageService.SaveStage(StageInfo)"/>
         List<string> SaveStage(StageInfo stage);
     }
@@ -89,7 +92,7 @@ namespace BrawlInstaller.Services
                 var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageListFile}";
                 if (File.Exists(filePath))
                 {
-                    var stageList = new StageList { Name = Path.GetFileNameWithoutExtension(stageListFile) };
+                    var stageList = new StageList { Name = Path.GetFileNameWithoutExtension(stageListFile), FilePath = filePath.Replace(_settingsService.AppSettings.BuildPath, "") };
                     // Read all pages from stage list file
                     var fileText = File.ReadAllText(filePath);
                     var labels = new List<string> { "TABLE_1:", "TABLE_2:", "TABLE_3:", "TABLE_4:", "TABLE_5:" };
@@ -616,6 +619,25 @@ namespace BrawlInstaller.Services
                 }
             }
             return toDelete;
+        }
+
+        /// <summary>
+        /// Save changes to stage list
+        /// </summary>
+        /// <param name="stageList">Stage list to save</param>
+        public void SaveStageList(StageList stageList)
+        {
+            var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageList.FilePath}";
+            var fileText = File.ReadAllText(filePath);
+            foreach (var page in stageList.Pages)
+            {
+                // TODO: Update indexes based on StageTable before saving
+                // TODO: Convert int to hex string in CodeService?
+                var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
+                fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte);
+            }
+            // TODO: Write this in FileService!
+            File.WriteAllText(filePath, fileText);
         }
 
         /// <summary>

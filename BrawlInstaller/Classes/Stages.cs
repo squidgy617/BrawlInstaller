@@ -24,6 +24,7 @@ namespace BrawlInstaller.Classes
     public class StageList
     {
         public string Name { get; set; }
+        public string FilePath { get; set; }
         public List<StagePage> Pages { get; set; } = new List<StagePage>();
     }
 
