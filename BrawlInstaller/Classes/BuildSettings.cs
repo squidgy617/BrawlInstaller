@@ -117,6 +117,8 @@ namespace BrawlInstaller.Classes
 
         // TODO: change default on this and make it save to a separate config file
         public string HDTextures { get; set; } = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01";
+        // This is the source of truth for where the "master" stage table is, there should only ever be one, it will be copied to all stage lists that have their own table
+        // on save
         public string StageTablePath { get; set; } = "Source\\Project+\\StageTable.asm";
         [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
         public List<InstallLocation> RandomStageNamesLocations { get; set; } = new List<InstallLocation> 
