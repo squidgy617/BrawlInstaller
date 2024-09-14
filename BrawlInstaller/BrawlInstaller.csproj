@@ -69,6 +69,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\BuildSettings.cs" />
+    <Compile Include="Classes\Codes.cs" />
     <Compile Include="Classes\CosmeticTexture.cs" />
     <Compile Include="Classes\BrawlIds.cs" />
     <Compile Include="Classes\DataSize.cs" />

@@ -54,6 +54,29 @@ namespace BrawlInstaller.Classes
             };
             return newStageSlot;
         }
+
+        public AsmTableEntry ConvertToAsmTableEntry()
+        {
+            var tableEntry = new AsmTableEntry
+            {
+                Item = $"0x{StageIds.StageId:X2}{(StageIds.StageCosmeticId > -1 ? StageIds.StageCosmeticId.ToString("X2") : string.Empty)}",
+                Comment = Name
+            };
+            return tableEntry;
+        }
+    }
+
+    public static class StageSlotListExtensions
+    {
+        public static List<AsmTableEntry> ConvertToAsmTable(this List<StageSlot> stageSlotList)
+        {
+            var list = new List<AsmTableEntry>();
+            foreach (var slot in stageSlotList)
+            {
+                list.Add(slot.ConvertToAsmTableEntry());
+            }
+            return list;
+        }
     }
 
     public class StageEntry

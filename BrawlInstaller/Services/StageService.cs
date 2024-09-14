@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlLib.BrawlManagerLib;
 using BrawlLib.SSBB.ResourceNodes;
@@ -630,13 +631,12 @@ namespace BrawlInstaller.Services
         public void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable)
         {
             // Update stage table
-            var stageTableText = stageTable.Select(x => $"0x{x.StageIds.StageId:X2}{x.StageIds.StageCosmeticId:X2}").ToList();
-            var stageTableComments = stageTable.Select(x => x.Name).ToList();
+            var stageTableAsm = stageTable.ConvertToAsmTable();
             var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";
             if (File.Exists(tableFilepath))
             {
                 var tableFileText = File.ReadAllText(tableFilepath);
-                tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4, stageTableComments);
+                tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableAsm, DataSize.Halfword, 4);
                 _fileService.SaveTextFile(tableFilepath, tableFileText);
             }
             // Update indexes
@@ -651,11 +651,10 @@ namespace BrawlInstaller.Services
                 foreach (var page in stageList.Pages)
                 {
                     // Update stage table if it exists
-                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4, stageTableComments);
+                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableAsm, DataSize.Halfword, 4);
                     // Update stage list
-                    var pageEntries = page.StageSlots.Select(x => $"0x{x.Index:X2}").ToList();
-                    var pageComments = page.StageSlots.Select(x => x.Name).ToList();
-                    fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte, comments: pageComments);
+                    var pageEntriesAsm = page.StageSlots.ConvertToAsmTable();
+                    fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntriesAsm, DataSize.Byte);
                 }
                 _fileService.SaveTextFile(filePath, fileText);
             }

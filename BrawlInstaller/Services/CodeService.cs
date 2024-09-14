@@ -16,8 +16,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.ReadTable(string, string)"/>
         List<string> ReadTable(string fileText, string label);
 
-        /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{string}, DataSize, int, List{string})"/>
-        string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width = 1, List<string> comments = null);
+        /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{AsmTableEntry}, DataSize, int)"/>
+        string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width = 1);
     }
 
     [Export(typeof(ICodeService))]
@@ -39,16 +39,18 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fileText">Text to replace table in</param>
         /// <param name="label">Label of table to replace</param>
-        /// <param name="table">Table to write</param>
+        /// <param name="table">ASM table to write</param>
+        /// <param name="dataSize">Size of data for table entries</param>
+        /// <param name="width">Columns of table</param>
         /// <returns>Text with table replaced</returns>
-        public string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width=1, List<string> comments=null)
+        public string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width=1)
         {
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
             if (labelPosition > -1)
             {
                 fileText = RemoveTable(fileText, label);
-                fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width, comments);
+                fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width);
             }
             return fileText;
         }
@@ -58,10 +60,12 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fileText">Text to write table to</param>
         /// <param name="label">Label to use for table</param>
-        /// <param name="table">Table to write</param>
-        /// <param name="index">Position in text to start writing</param>
+        /// <param name="table">ASM table to write</param>
+        /// <param name="index">Position to write table to</param>
+        /// <param name="dataSize">Size of data for table entries</param>
+        /// <param name="width">Columns of table</param>
         /// <returns>Text with table added</returns>
-        private string WriteTable(string fileText, string label, List<string> table, int index, DataSize dataSize, int width=1, List<string> comments=null)
+        private string WriteTable(string fileText, string label, List<AsmTableEntry> table, int index, DataSize dataSize, int width=1)
         {
             // Write label
             fileText = fileText.Insert(index, $"{label}\n");
@@ -77,13 +81,13 @@ namespace BrawlInstaller.Services
                 var lineComment = string.Empty;
                 foreach (var item in table)
                 {
-                    formattedTable += item;
+                    formattedTable += item.Item;
                     if (table.LastOrDefault() != item)
                     {
                         formattedTable += ", ";
                     }
                     // Generate comments
-                    if (comments != null && comments.Count > table.IndexOf(item) - (width - 1))
+                    if (item.Comment != string.Empty)
                     {
                         // If start of comment, put comment symbols
                         if (lineComment == string.Empty)
@@ -91,7 +95,7 @@ namespace BrawlInstaller.Services
                             lineComment += " | # ";
                         }
                         // Add comment
-                        lineComment += comments[table.IndexOf(item)];
+                        lineComment += item.Comment;
                         // If not end of line, add a comma 
                         if (!((table.IndexOf(item) + 1) % width == 0) && item != table.LastOrDefault())
                         {
