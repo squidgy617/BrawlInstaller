@@ -40,6 +40,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.SaveImage(BitmapImage, string)"/>
         void SaveImage(BitmapImage image, string outPath);
+
+        /// <inheritdoc cref="FileService.SaveTextFile(string, string)"/>
+        void SaveTextFile(string filePath, string text);
     }
     [Export(typeof(IFileService))]
     internal class FileService : IFileService
@@ -171,6 +174,16 @@ namespace BrawlInstaller.Services
         {
             CreateDirectory(outFile);
             image.Save(outFile);
+        }
+
+        /// <summary>
+        /// Save a text file
+        /// </summary>
+        /// <param name="filePath">Path to save to</param>
+        /// <param name="text">Text to save</param>
+        public void SaveTextFile(string filePath, string text)
+        {
+            File.WriteAllText(filePath, text);
         }
 
         /// <summary>

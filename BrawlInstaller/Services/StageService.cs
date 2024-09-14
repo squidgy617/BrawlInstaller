@@ -649,7 +649,7 @@ namespace BrawlInstaller.Services
                     fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte);
                 }
                 // TODO: Write this in FileService!
-                File.WriteAllText(filePath, fileText);
+                _fileService.SaveTextFile(filePath, fileText);
             }
         }
 
