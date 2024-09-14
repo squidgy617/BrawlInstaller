@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
@@ -26,6 +27,7 @@ namespace BrawlInstaller.ViewModels
         private StageList _selectedStageList;
         private StagePage _selectedPage;
         private StageSlot _selectedStageSlot;
+        private List<StageSlot> _stageTable;
 
         // Services
         IStageService _stageService { get; }
@@ -39,7 +41,9 @@ namespace BrawlInstaller.ViewModels
         {
             _stageService = stageService;
 
-            StageLists = _stageService.GetStageLists();
+            StageTable = _stageService.GetStageSlots();
+
+            StageLists = _stageService.GetStageLists(StageTable);
 
             SelectedStageList = StageLists.FirstOrDefault();
         }
@@ -58,6 +62,13 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(StageSlots))]
         public StageSlot SelectedStageSlot { get => _selectedStageSlot; set { _selectedStageSlot = value; OnPropertyChanged(nameof(SelectedStageSlot)); } }
+
+        [DependsUpon(nameof(StageLists))]
+        public List<StageSlot> StageTable { get => _stageTable; set { _stageTable = value; OnPropertyChanged(nameof(StageTable)); } }
+
+        [DependsUpon(nameof(SelectedStageList))]
+        [DependsUpon(nameof(StageTable))]
+        public List<StageSlot> UnusedSlots { get => StageTable.Where(x => !SelectedStageList.Pages.SelectMany(z => z.StageSlots).ToList().Contains(x)).ToList(); }
 
         // Methods
         public void MoveStageUp()

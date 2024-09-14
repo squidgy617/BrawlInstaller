@@ -17,8 +17,11 @@ namespace BrawlInstaller.Services
 {
     public interface IStageService
     {
-        /// <inheritdoc cref="StageService.GetStageLists()"/>
-        List<StageList> GetStageLists();
+        /// <inheritdoc cref="StageService.GetStageLists(List{StageSlot})"/>
+        List<StageList> GetStageLists(List<StageSlot> stageTable);
+
+        /// <inheritdoc cref="StageService.GetStageSlots()"/>
+        List<StageSlot> GetStageSlots();
 
         /// <inheritdoc cref="StageService.GetStageData(StageInfo)"/>
         StageInfo GetStageData(StageInfo stage);
@@ -73,16 +76,13 @@ namespace BrawlInstaller.Services
             return stage;
         }
 
-        //TODO: probably split this up, ViewModel should call GetStageSlots first and pass it in here so that we can update both from ViewModel
         /// <summary>
         /// Get stage lists from build
         /// </summary>
         /// <returns>List of stage lists in build</returns>
-        public List<StageList> GetStageLists()
+        public List<StageList> GetStageLists(List<StageSlot> stageTable)
         {
             var stageLists = new List<StageList>();
-            // Get stage table
-            var stageTable = GetStageSlots();
             // Iterate through each stage list file
             foreach(var stageListFile in _settingsService.BuildSettings.FilePathSettings.StageListPaths)
             {
@@ -117,10 +117,6 @@ namespace BrawlInstaller.Services
                         stageList.Pages.Add(page);
                         pageNumber++;
                     }
-                    // Get unused stages
-                    // TODO: Should this be done in ViewModel instead so it's easier to change?
-                    var stageSlots = stageList.Pages.SelectMany(z => z.StageSlots).ToList();
-                    stageList.UnusedSlots = stageTable.Where(x => !stageSlots.Contains(x)).ToList();
                     // Add stage list
                     stageLists.Add(stageList);
                 }
@@ -132,7 +128,7 @@ namespace BrawlInstaller.Services
         /// Get all stage slots from build
         /// </summary>
         /// <returns>List of stage slots</returns>
-        private List<StageSlot> GetStageSlots()
+        public List<StageSlot> GetStageSlots()
         {
             var stageSlots = new List<StageSlot>();
             var stageIds = GetStageIds();
