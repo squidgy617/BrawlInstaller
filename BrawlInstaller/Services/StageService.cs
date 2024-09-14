@@ -630,6 +630,11 @@ namespace BrawlInstaller.Services
         public void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable)
         {
             var stageTableText = stageTable.Select(x => $"0x{x.StageIds.StageId:X2}{x.StageIds.StageCosmeticId:X2}").ToList();
+            // Update indexes
+            foreach (var stageSlot in stageTable)
+            {
+                stageSlot.Index = stageTable.IndexOf(stageSlot);
+            }
             foreach(var stageList in stageLists)
             {
                 var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageList.FilePath}";
@@ -638,7 +643,6 @@ namespace BrawlInstaller.Services
                 {
                     // Update stage table
                     fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4);
-                    // TODO: Update indexes based on StageTable before saving
                     // TODO: Convert int to hex string in CodeService?
                     // Update stage list
                     var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
