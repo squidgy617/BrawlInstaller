@@ -16,8 +16,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.ReadTable(string, string)"/>
         List<string> ReadTable(string fileText, string label);
 
-        /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{string}, DataSize, int)"/>
-        string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width = 1);
+        /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{string}, DataSize, int, List{string})"/>
+        string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width = 1, List<string> comments = null);
     }
 
     [Export(typeof(ICodeService))]
@@ -41,14 +41,14 @@ namespace BrawlInstaller.Services
         /// <param name="label">Label of table to replace</param>
         /// <param name="table">Table to write</param>
         /// <returns>Text with table replaced</returns>
-        public string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width=1)
+        public string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width=1, List<string> comments=null)
         {
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
             if (labelPosition > -1)
             {
                 fileText = RemoveTable(fileText, label);
-                fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width);
+                fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width, comments);
             }
             return fileText;
         }
@@ -61,7 +61,7 @@ namespace BrawlInstaller.Services
         /// <param name="table">Table to write</param>
         /// <param name="index">Position in text to start writing</param>
         /// <returns>Text with table added</returns>
-        private string WriteTable(string fileText, string label, List<string> table, int index, DataSize dataSize, int width=1)
+        private string WriteTable(string fileText, string label, List<string> table, int index, DataSize dataSize, int width=1, List<string> comments=null)
         {
             // Write label
             fileText = fileText.Insert(index, $"{label}\n");
@@ -74,16 +74,35 @@ namespace BrawlInstaller.Services
                 index += countLine.Length;
                 // Write table
                 var formattedTable = string.Empty;
-                foreach(var item in table)
+                var lineComment = string.Empty;
+                foreach (var item in table)
                 {
                     formattedTable += item;
                     if (table.LastOrDefault() != item)
                     {
                         formattedTable += ", ";
                     }
-                    if ((table.IndexOf(item) + 1) % width == 0)
+                    // Generate comments
+                    if (comments != null && comments.Count > table.IndexOf(item) - (width - 1))
                     {
-                        formattedTable += "\n";
+                        // If start of comment, put comment symbols
+                        if (lineComment == string.Empty)
+                        {
+                            lineComment += " | # ";
+                        }
+                        // Add comment
+                        lineComment += comments[table.IndexOf(item)];
+                        // If not end of line, add a comma 
+                        if (!((table.IndexOf(item) + 1) % width == 0) && item != table.LastOrDefault())
+                        {
+                            lineComment += ", ";
+                        }
+                    }
+                    // If end of line, add comment and return
+                    if ((table.IndexOf(item) + 1) % width == 0 || item == table.LastOrDefault())
+                    {
+                        formattedTable += $"{lineComment}\n";
+                        lineComment = string.Empty;
                     }
                 }
                 fileText = fileText.Insert(index, formattedTable);

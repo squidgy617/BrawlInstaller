@@ -631,11 +631,13 @@ namespace BrawlInstaller.Services
         {
             // Update stage table
             var stageTableText = stageTable.Select(x => $"0x{x.StageIds.StageId:X2}{x.StageIds.StageCosmeticId:X2}").ToList();
+            var stageTableComments = stageTable.Select(x => x.Name).ToList();
             var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";
             if (File.Exists(tableFilepath))
             {
                 var tableFileText = File.ReadAllText(tableFilepath);
-                tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4);
+                tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4, stageTableComments);
+                _fileService.SaveTextFile(tableFilepath, tableFileText);
             }
             // Update indexes
             foreach (var stageSlot in stageTable)
@@ -649,10 +651,11 @@ namespace BrawlInstaller.Services
                 foreach (var page in stageList.Pages)
                 {
                     // Update stage table if it exists
-                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4);
+                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4, stageTableComments);
                     // Update stage list
-                    var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
-                    fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte);
+                    var pageEntries = page.StageSlots.Select(x => $"0x{x.Index:X2}").ToList();
+                    var pageComments = page.StageSlots.Select(x => x.Name).ToList();
+                    fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte, comments: pageComments);
                 }
                 _fileService.SaveTextFile(filePath, fileText);
             }
