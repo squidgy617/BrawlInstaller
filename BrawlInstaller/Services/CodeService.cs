@@ -64,7 +64,7 @@ namespace BrawlInstaller.Services
             fileText = fileText.Insert(index, $"{label}\n");
             index += label.Length + 1;
             // Write count
-            var countLine = $"\t{dataSize}[{table.Count}] |\n";
+            var countLine = $"\t{dataSize}[{table.Count}]\n";
             fileText = fileText.Insert(index, countLine);
             index += countLine.Length;
             // Write table

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BrawlInstaller.Services
 {
@@ -26,8 +27,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="StageService.GetStageData(StageInfo)"/>
         StageInfo GetStageData(StageInfo stage);
 
-        /// <inheritdoc cref="StageService.SaveStageList(StageList)"/>
-        void SaveStageList(StageList stageList);
+        /// <inheritdoc cref="StageService.SaveStageLists(List{StageList}, List{StageSlot})"/>
+        void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable);
 
         /// <inheritdoc cref="StageService.SaveStage(StageInfo)"/>
         List<string> SaveStage(StageInfo stage);
@@ -622,22 +623,30 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Save changes to stage list
+        /// Save changes to stage lists
         /// </summary>
-        /// <param name="stageList">Stage list to save</param>
-        public void SaveStageList(StageList stageList)
+        /// <param name="stageLists">Stage lists to save</param>
+        /// <param name="stageTable">Stage table to save</param>
+        public void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable)
         {
-            var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageList.FilePath}";
-            var fileText = File.ReadAllText(filePath);
-            foreach (var page in stageList.Pages)
+            var stageTableText = stageTable.Select(x => $"0x{x.StageIds.StageId:X2}{x.StageIds.StageCosmeticId:X2}").ToList();
+            foreach(var stageList in stageLists)
             {
-                // TODO: Update indexes based on StageTable before saving
-                // TODO: Convert int to hex string in CodeService?
-                var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
-                fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte);
+                var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageList.FilePath}";
+                var fileText = File.ReadAllText(filePath);
+                foreach (var page in stageList.Pages)
+                {
+                    // Update stage table
+                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword);
+                    // TODO: Update indexes based on StageTable before saving
+                    // TODO: Convert int to hex string in CodeService?
+                    // Update stage list
+                    var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
+                    fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte);
+                }
+                // TODO: Write this in FileService!
+                File.WriteAllText(filePath, fileText);
             }
-            // TODO: Write this in FileService!
-            File.WriteAllText(filePath, fileText);
         }
 
         /// <summary>

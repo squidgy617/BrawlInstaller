@@ -88,8 +88,7 @@ namespace BrawlInstaller.ViewModels
 
         private void SaveStageList()
         {
-            // TODO: Create one method to pass in the StageLists and StageTable, save them all in one go
-            _stageService.SaveStageList(SelectedStageList);
+            _stageService.SaveStageLists(StageLists, StageTable);
         }
     }
 }
