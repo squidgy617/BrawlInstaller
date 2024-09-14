@@ -648,7 +648,6 @@ namespace BrawlInstaller.Services
                     var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
                     fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte);
                 }
-                // TODO: Write this in FileService!
                 _fileService.SaveTextFile(filePath, fileText);
             }
         }
