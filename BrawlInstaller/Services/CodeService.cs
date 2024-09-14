@@ -16,8 +16,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.ReadTable(string, string)"/>
         List<string> ReadTable(string fileText, string label);
 
-        /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{string}, DataSize)"/>
-        string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize);
+        /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{string}, DataSize, int)"/>
+        string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width = 1);
     }
 
     [Export(typeof(ICodeService))]
@@ -41,12 +41,12 @@ namespace BrawlInstaller.Services
         /// <param name="label">Label of table to replace</param>
         /// <param name="table">Table to write</param>
         /// <returns>Text with table replaced</returns>
-        public string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize)
+        public string ReplaceTable(string fileText, string label, List<string> table, DataSize dataSize, int width=1)
         {
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
             fileText = RemoveTable(fileText, label);
-            fileText = WriteTable(fileText, label, table, labelPosition, dataSize);
+            fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width);
             return fileText;
         }
 
@@ -58,19 +58,34 @@ namespace BrawlInstaller.Services
         /// <param name="table">Table to write</param>
         /// <param name="index">Position in text to start writing</param>
         /// <returns>Text with table added</returns>
-        private string WriteTable(string fileText, string label, List<string> table, int index, DataSize dataSize)
+        private string WriteTable(string fileText, string label, List<string> table, int index, DataSize dataSize, int width=1)
         {
             // Write label
             fileText = fileText.Insert(index, $"{label}\n");
             index += label.Length + 1;
-            // Write count
-            var countLine = $"\t{dataSize}[{table.Count}]\n";
-            fileText = fileText.Insert(index, countLine);
-            index += countLine.Length;
-            // Write table
-            var tableText = string.Join(",\n", table);
-            fileText = fileText.Insert(index, tableText);
-            index += tableText.Length;
+            if (table.Count > 0)
+            {
+                // Write count
+                var countLine = $"\t{dataSize}[{table.Count}] |\n";
+                fileText = fileText.Insert(index, countLine);
+                index += countLine.Length;
+                // Write table
+                var formattedTable = string.Empty;
+                foreach(var item in table)
+                {
+                    formattedTable += item;
+                    if (table.LastOrDefault() != item)
+                    {
+                        formattedTable += ", ";
+                    }
+                    if ((table.IndexOf(item) + 1) % width == 0)
+                    {
+                        formattedTable += "\n";
+                    }
+                }
+                fileText = fileText.Insert(index, formattedTable);
+                index += formattedTable.Length;
+            }
             // Add return
             fileText = fileText.Insert(index, "\n");
             return fileText;
@@ -106,7 +121,7 @@ namespace BrawlInstaller.Services
         {
             var table = new List<string>();
             // Remove comments
-            var cleanText = Regex.Replace(fileText, "([|]|[#]).+(\n|\r)", "");
+            var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
             // Find table start
             var labelPosition = cleanText.IndexOf(label);
             var workingText = cleanText.Substring(labelPosition, cleanText.Length - labelPosition);

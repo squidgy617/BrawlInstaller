@@ -637,7 +637,7 @@ namespace BrawlInstaller.Services
                 foreach (var page in stageList.Pages)
                 {
                     // Update stage table
-                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword);
+                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4);
                     // TODO: Update indexes based on StageTable before saving
                     // TODO: Convert int to hex string in CodeService?
                     // Update stage list
