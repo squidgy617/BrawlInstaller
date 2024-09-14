@@ -45,8 +45,11 @@ namespace BrawlInstaller.Services
         {
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
-            fileText = RemoveTable(fileText, label);
-            fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width);
+            if (labelPosition > -1)
+            {
+                fileText = RemoveTable(fileText, label);
+                fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width);
+            }
             return fileText;
         }
 
@@ -99,15 +102,19 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table removed</returns>
         private string RemoveTable(string fileText, string label)
         {
+            var newText = fileText;
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
-            // Find the end of the next label
-            var nextLabelPosition = fileText.IndexOf(':', labelPosition + label.Length);
-            // Find the start of the next label
-            var nextLabelStart = fileText.LastIndexOf('\n', nextLabelPosition);
-            // Replace all table text with whitespace
-            var tableText = fileText.Substring(labelPosition, nextLabelStart - labelPosition);
-            var newText = fileText.Replace(tableText, string.Empty);
+            if (labelPosition > -1)
+            {
+                // Find the end of the next label
+                var nextLabelPosition = fileText.IndexOf(':', labelPosition + label.Length);
+                // Find the start of the next label
+                var nextLabelStart = fileText.LastIndexOf('\n', nextLabelPosition);
+                // Replace all table text with whitespace
+                var tableText = fileText.Substring(labelPosition, nextLabelStart - labelPosition);
+                newText = fileText.Replace(tableText, string.Empty);
+            }
             return newText;
         }
 

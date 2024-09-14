@@ -629,7 +629,14 @@ namespace BrawlInstaller.Services
         /// <param name="stageTable">Stage table to save</param>
         public void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable)
         {
+            // Update stage table
             var stageTableText = stageTable.Select(x => $"0x{x.StageIds.StageId:X2}{x.StageIds.StageCosmeticId:X2}").ToList();
+            var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";
+            if (File.Exists(tableFilepath))
+            {
+                var tableFileText = File.ReadAllText(tableFilepath);
+                tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4);
+            }
             // Update indexes
             foreach (var stageSlot in stageTable)
             {
@@ -641,7 +648,7 @@ namespace BrawlInstaller.Services
                 var fileText = File.ReadAllText(filePath);
                 foreach (var page in stageList.Pages)
                 {
-                    // Update stage table
+                    // Update stage table if it exists
                     fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4);
                     // Update stage list
                     var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
