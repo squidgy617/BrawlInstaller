@@ -32,6 +32,21 @@ namespace BrawlInstaller.Classes
     {
         public int PageNumber { get; set; }
         public List<StageSlot> StageSlots { get; set; } = new List<StageSlot>();
+
+        public List<AsmTableEntry> ConvertToAsmTable()
+        {
+            var newAsmTable = new List<AsmTableEntry>();
+            foreach(var slot in StageSlots)
+            {
+                var newAsmEntry = new AsmTableEntry
+                {
+                    Item = $"0x{slot.Index:X2}",
+                    Comment = slot.Name
+                };
+                newAsmTable.Add(newAsmEntry);
+            }
+            return newAsmTable;
+        }
     }
 
     public class StageSlot

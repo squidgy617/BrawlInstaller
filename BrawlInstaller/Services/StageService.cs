@@ -653,7 +653,7 @@ namespace BrawlInstaller.Services
                     // Update stage table if it exists
                     fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableAsm, DataSize.Halfword, 4);
                     // Update stage list
-                    var pageEntriesAsm = page.StageSlots.ConvertToAsmTable();
+                    var pageEntriesAsm = page.ConvertToAsmTable();
                     fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntriesAsm, DataSize.Byte);
                 }
                 _fileService.SaveTextFile(filePath, fileText);
