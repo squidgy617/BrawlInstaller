@@ -643,7 +643,6 @@ namespace BrawlInstaller.Services
                 {
                     // Update stage table
                     fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableText, DataSize.Halfword, 4);
-                    // TODO: Convert int to hex string in CodeService?
                     // Update stage list
                     var pageEntries = page.StageSlots.Select(x => $"0x{x.Index.ToString("X2")}").ToList();
                     fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntries, DataSize.Byte);
