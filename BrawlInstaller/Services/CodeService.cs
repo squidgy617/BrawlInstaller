@@ -34,6 +34,12 @@ namespace BrawlInstaller.Services
 
         // Methods
 
+        /// <summary>
+        /// Read a piece of ASM code
+        /// </summary>
+        /// <param name="fileText">Text to read from</param>
+        /// <param name="hookLocation">Address hook is bound to</param>
+        /// <returns>ASM hook with instructions</returns>
         private AsmHook ReadHook(string fileText, string hookLocation)
         {
             var asmHook = new AsmHook();
