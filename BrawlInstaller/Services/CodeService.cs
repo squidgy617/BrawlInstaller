@@ -34,6 +34,51 @@ namespace BrawlInstaller.Services
 
         // Methods
 
+        private AsmHook ReadHook(string fileText, string hookLocation)
+        {
+            var asmHook = new AsmHook();
+            // Remove comments
+            var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
+            // Find hook position
+            var index = cleanText.IndexOf($"${hookLocation}");
+            if (index > -1)
+            {
+                asmHook.HookLocation = hookLocation;
+                // Find the start of the line
+                var hookStart = cleanText.LastIndexOf('\n', index);
+                var header = cleanText.Substring(hookStart, index - hookStart);
+                var atIndex = header.IndexOf('@');
+                var instruction = header.Substring(0, atIndex).Trim();
+                // Single instruction hook
+                if (instruction != "CODE" && instruction != "HOOK")
+                {
+                    asmHook.IsHook = false;
+                    asmHook.Instructions.Add(instruction);
+                }
+                // Multi instruction hook
+                else
+                {
+                    // Find braces
+                    var startingBrace = cleanText.IndexOf('{', index);
+                    if (startingBrace > -1)
+                    {
+                        var endingBrace = cleanText.IndexOf('}', startingBrace);
+                        // Get instructions between braces
+                        if (endingBrace > -1)
+                        {
+                            asmHook.Instructions = cleanText.Substring(startingBrace + 1, endingBrace - startingBrace - 1).Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        }
+                    }
+                }
+                // Indicates if it is a true hook or just code
+                if (instruction == "HOOK")
+                {
+                    asmHook.IsHook = true;
+                }
+            }
+            return asmHook;
+        }
+
         /// <summary>
         /// Replace an ASM table in text
         /// </summary>
