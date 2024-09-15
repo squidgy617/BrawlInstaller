@@ -160,6 +160,7 @@ namespace BrawlInstaller.Services
         /// <returns>ASM hook with instructions</returns>
         private AsmHook ReadHook(string fileText, string address)
         {
+            var newLine = Environment.NewLine;
             var asmHook = new AsmHook();
             // Remove comments
             var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
@@ -169,7 +170,7 @@ namespace BrawlInstaller.Services
             {
                 asmHook.Address = address;
                 // Find the start of the line
-                var hookStart = Math.Max(cleanText.LastIndexOf("\r\n", index), Math.Max(fileText.LastIndexOf('\n', index), cleanText.LastIndexOf('\r', index)));
+                var hookStart = cleanText.LastIndexOf(newLine, index);
                 var header = cleanText.Substring(hookStart, index - hookStart);
                 var atIndex = header.IndexOf('@');
                 var instruction = header.Substring(0, atIndex).Trim();
