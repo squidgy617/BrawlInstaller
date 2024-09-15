@@ -442,6 +442,8 @@ namespace BrawlInstaller.Services
                 _fileService.SaveFile(file);
                 _fileService.CloseFile(file);
             }
+            // Update slot name
+            stage.Slot.Name = stage.StageEntries.FirstOrDefault()?.Params?.Name ?? "Unknown";
             // Return optional delete files, only ones that don't still exist in stage entries
             var modules = stage.StageEntries.Select(x => x.Params.Module).ToList();
             var tracklists = stage.StageEntries.Select(x => x.Params.TrackList).ToList();

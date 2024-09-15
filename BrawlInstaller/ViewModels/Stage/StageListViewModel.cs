@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -47,6 +48,11 @@ namespace BrawlInstaller.ViewModels
             StageLists = _stageService.GetStageLists(StageTable);
 
             SelectedStageList = StageLists.FirstOrDefault();
+
+            WeakReferenceMessenger.Default.Register<StageSavedMessage>(this, (recipient, message) =>
+            {
+                UpdateStageList(message);
+            });
         }
 
         // Properties
@@ -72,6 +78,11 @@ namespace BrawlInstaller.ViewModels
         public List<StageSlot> UnusedSlots { get => StageTable.Where(x => !SelectedStageList.Pages.SelectMany(z => z.StageSlots).ToList().Contains(x)).ToList(); }
 
         // Methods
+        public void UpdateStageList(StageSavedMessage message)
+        {
+            OnPropertyChanged(nameof(StageLists));
+        }
+
         public void MoveStageUp()
         {
             SelectedPage.StageSlots.MoveUp(SelectedStageSlot);

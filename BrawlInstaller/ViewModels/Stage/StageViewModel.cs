@@ -83,6 +83,8 @@ namespace BrawlInstaller.ViewModels
 
             Stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
             Stage.Cosmetics.ClearChanges();
+            // Update stage list
+            WeakReferenceMessenger.Default.Send(new StageSavedMessage(Stage));
         }
     }
 
@@ -90,6 +92,13 @@ namespace BrawlInstaller.ViewModels
     public class StageLoadedMessage : ValueChangedMessage<StageInfo>
     {
         public StageLoadedMessage(StageInfo stage) : base(stage)
+        {
+        }
+    }
+
+    public class StageSavedMessage : ValueChangedMessage<StageInfo>
+    {
+        public StageSavedMessage(StageInfo stage) : base(stage)
         {
         }
     }
