@@ -15,8 +15,9 @@ namespace BrawlInstaller.Classes
 
     public class AsmHook
     {
-        public string HookLocation { get; set; }
+        public string Address { get; set; }
         public bool IsHook { get; set; } = false;
         public List<string> Instructions { get; set; } = new List<string>();
+        public string Comment { get; set; } = string.Empty;
     }
 }

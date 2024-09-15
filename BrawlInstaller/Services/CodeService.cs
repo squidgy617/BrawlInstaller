@@ -18,6 +18,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{AsmTableEntry}, DataSize, int)"/>
         string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width = 1);
+
+        /// <inheritdoc cref="CodeService.ReplaceHook(AsmHook, string)"/>
+        string ReplaceHook(AsmHook hook, string fileText);
     }
 
     [Export(typeof(ICodeService))]
@@ -35,23 +38,120 @@ namespace BrawlInstaller.Services
         // Methods
 
         /// <summary>
+        /// Replace a piece of ASM code
+        /// </summary>
+        /// <param name="hook">Hook to write</param>
+        /// <param name="fileText">Text to replace hook in</param>
+        /// <returns>Text with hook replaced</returns>
+        public string ReplaceHook(AsmHook hook, string fileText)
+        {
+            var result = RemoveHook(fileText, hook.Address);
+            if (result.Index > -1)
+            {
+                fileText = WriteHook(hook, result.FileText, result.Index);
+            }
+            return fileText;
+        }
+
+        /// <summary>
+        /// Write a piece of ASM code
+        /// </summary>
+        /// <param name="hook">ASM hook to write</param>
+        /// <param name="fileText">Text to write hook to</param>
+        /// <param name="index">Location to write hook to</param>
+        /// <returns>Text with hook added</returns>
+        private string WriteHook(AsmHook hook, string fileText, int index)
+        {
+            var hookString = string.Empty;
+            // Single line code
+            if (hook.Instructions.Count == 1)
+            {
+                hookString = $"\n{hook.Instructions.FirstOrDefault().Trim()} @ ${hook.Address}";
+                // Add comment if there is one
+                if (!string.IsNullOrEmpty(hook.Comment))
+                {
+                    hookString += $" # {hook.Comment}";
+                }
+                hookString += "\n";
+            }
+            // Multi line
+            else
+            {
+                hookString = "\n" + (hook.IsHook ? "HOOK" : "CODE") + " @ $" + hook.Address;
+                // Add comment if there is one
+                if (!string.IsNullOrEmpty(hook.Comment))
+                {
+                    hookString += $" # {hook.Comment}";
+                }
+                // Add instructions
+                hookString += "\n{\n";
+                hookString += string.Join("\n", hook.Instructions.Select(s => $"\t{s}"));
+                hookString += "\n}";
+            }
+            fileText = fileText.Insert(index, hookString);
+            return fileText;
+        }
+
+        /// <summary>
+        /// Remove a piece of ASM code
+        /// </summary>
+        /// <param name="fileText">Text to remove from</param>
+        /// <param name="address">Address to remove code from</param>
+        /// <returns>Text with hook removed, index where hook was removed</returns>
+        private (string FileText, int Index) RemoveHook(string fileText, string address)
+        {
+            var hookStart = -1;
+            var index = fileText.IndexOf($"${address}");
+            if (index > -1)
+            {
+                // Find the start of the line
+                hookStart = Math.Max(fileText.LastIndexOf("\r\n", index), Math.Max(fileText.LastIndexOf('\n', index), fileText.LastIndexOf('\r', index)));
+                var header = fileText.Substring(hookStart, index - hookStart);
+                var atIndex = header.IndexOf('@');
+                var instruction = header.Substring(0, atIndex).Trim();
+                var hookEnd = Math.Min(fileText.IndexOf("\r\n", index), Math.Min(fileText.IndexOf('\n', index), fileText.IndexOf('\r', index)));
+                // Single instruction hook
+                fileText = fileText.Remove(hookStart, hookEnd - hookStart);
+                // Multi instruction hook
+                if (instruction == "CODE" || instruction == "HOOK")
+                {
+                    // Find braces
+                    var startingBrace = fileText.IndexOf('{', hookStart);
+                    startingBrace = Math.Max(fileText.LastIndexOf("\r\n", startingBrace), Math.Max(fileText.LastIndexOf('\n', startingBrace), fileText.LastIndexOf('\r', startingBrace)));
+                    if (startingBrace > -1)
+                    {
+                        var endingBrace = fileText.IndexOf('}', startingBrace);
+                        endingBrace = Math.Min(fileText.IndexOf("\r\n", endingBrace), Math.Min(fileText.IndexOf('\n', endingBrace), fileText.IndexOf('\r', endingBrace)));
+                        // Remove instructions between braces
+                        if (endingBrace > -1)
+                        {
+                            var textToReplace = fileText.Substring(startingBrace, endingBrace + 1 - startingBrace);
+                            fileText = fileText.Replace(textToReplace, string.Empty);
+                        }
+                    }
+                }
+            }
+            return (fileText, hookStart);
+        }
+
+        /// <summary>
         /// Read a piece of ASM code
         /// </summary>
         /// <param name="fileText">Text to read from</param>
         /// <param name="hookLocation">Address hook is bound to</param>
         /// <returns>ASM hook with instructions</returns>
-        private AsmHook ReadHook(string fileText, string hookLocation)
+        private AsmHook ReadHook(string fileText, string address)
         {
             var asmHook = new AsmHook();
             // Remove comments
             var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
             // Find hook position
-            var index = cleanText.IndexOf($"${hookLocation}");
+            var index = cleanText.IndexOf($"${address}");
             if (index > -1)
             {
-                asmHook.HookLocation = hookLocation;
+                asmHook.Address = address;
                 // Find the start of the line
-                var hookStart = cleanText.LastIndexOf('\n', index);
+                var hookStart = Math.Max(cleanText.LastIndexOf("\r\n", index), Math.Max(fileText.LastIndexOf('\n', index), cleanText.LastIndexOf('\r', index)));
                 var header = cleanText.Substring(hookStart, index - hookStart);
                 var atIndex = header.IndexOf('@');
                 var instruction = header.Substring(0, atIndex).Trim();
