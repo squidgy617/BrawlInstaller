@@ -681,11 +681,6 @@ namespace BrawlInstaller.Services
                 // Update total stage count
                 var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {stageLists.SelectMany(x => x.Pages.SelectMany(y => y.StageSlots)).Count():D2}" }, Comment = "Stage Count" };
                 fileText = _codeService.ReplaceHook(countHook, fileText);
-                var path = _settingsService.AppSettings.BuildPath + "\\Source\\ProjectM\\CloneEngine.asm";
-                var testText = File.ReadAllText(path);
-                var testHook = new AsmHook { Address = "80AA9D64", Instructions = new List<string> { "test 1", "test 2" }, Comment = "Test" };
-                var testFileText = _codeService.ReplaceHook(testHook, testText);
-                _fileService.SaveTextFile(path, testFileText);
                 _fileService.SaveTextFile(filePath, fileText);
             }
         }
