@@ -21,6 +21,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.ReplaceHook(AsmHook, string)"/>
         string ReplaceHook(AsmHook hook, string fileText);
+
+        /// <inheritdoc cref="CodeService.ReplaceHooks(List{AsmHook}, string)"/>
+        string ReplaceHooks(List<AsmHook> hooks, string fileText);
     }
 
     [Export(typeof(ICodeService))]
@@ -36,6 +39,21 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
+
+        /// <summary>
+        /// Replace multiple pieces of ASM code
+        /// </summary>
+        /// <param name="hooks">List of hooks to replace</param>
+        /// <param name="fileText">Text to replace hooks in</param>
+        /// <returns>Text with hooks replaced</returns>
+        public string ReplaceHooks(List<AsmHook> hooks, string fileText)
+        {
+            foreach(var hook in hooks) 
+            { 
+                fileText = ReplaceHook(hook, fileText);
+            }
+            return fileText;
+        }
 
         /// <summary>
         /// Replace a piece of ASM code
@@ -109,9 +127,10 @@ namespace BrawlInstaller.Services
                 var header = fileText.Substring(hookStart, index - hookStart);
                 var atIndex = header.IndexOf('@');
                 var instruction = header.Substring(0, atIndex).Trim();
-                var hookEnd = Math.Min(fileText.IndexOf("\r\n", index), Math.Min(fileText.IndexOf('\n', index), fileText.IndexOf('\r', index)));
+                var indexList = new List<int> { fileText.IndexOf("\r\n", index), fileText.IndexOf('\n', index), fileText.IndexOf('\r', index) }.Where(x => x != -1);
+                var hookEnd = indexList.Min();
                 // Single instruction hook
-                fileText = fileText.Remove(hookStart, hookEnd - hookStart);
+                fileText = fileText.Remove(hookStart, hookEnd + 1 - hookStart);
                 // Multi instruction hook
                 if (instruction == "CODE" || instruction == "HOOK")
                 {
@@ -121,7 +140,8 @@ namespace BrawlInstaller.Services
                     if (startingBrace > -1)
                     {
                         var endingBrace = fileText.IndexOf('}', startingBrace);
-                        endingBrace = Math.Min(fileText.IndexOf("\r\n", endingBrace), Math.Min(fileText.IndexOf('\n', endingBrace), fileText.IndexOf('\r', endingBrace)));
+                        indexList = new List<int> { fileText.IndexOf("\r\n", endingBrace), fileText.IndexOf('\n', endingBrace), fileText.IndexOf('\r', endingBrace) }.Where(x => x != -1);
+                        endingBrace = indexList.Min();
                         // Remove instructions between braces
                         if (endingBrace > -1)
                         {
