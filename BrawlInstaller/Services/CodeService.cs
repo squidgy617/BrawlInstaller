@@ -80,31 +80,32 @@ namespace BrawlInstaller.Services
         /// <returns>Text with hook added</returns>
         private string WriteHook(AsmHook hook, string fileText, int index)
         {
+            var newLine = Environment.NewLine;
             var hookString = string.Empty;
             // Single line code
             if (hook.Instructions.Count == 1)
             {
-                hookString = $"\n{hook.Instructions.FirstOrDefault().Trim()} @ ${hook.Address}";
+                hookString = $"{newLine}{hook.Instructions.FirstOrDefault().Trim()} @ ${hook.Address}";
                 // Add comment if there is one
                 if (!string.IsNullOrEmpty(hook.Comment))
                 {
                     hookString += $" # {hook.Comment}";
                 }
-                hookString += "\n";
+                hookString += newLine;
             }
             // Multi line
             else
             {
-                hookString = "\n" + (hook.IsHook ? "HOOK" : "CODE") + " @ $" + hook.Address;
+                hookString = newLine + (hook.IsHook ? "HOOK" : "CODE") + " @ $" + hook.Address;
                 // Add comment if there is one
                 if (!string.IsNullOrEmpty(hook.Comment))
                 {
                     hookString += $" # {hook.Comment}";
                 }
                 // Add instructions
-                hookString += "\n{\n";
-                hookString += string.Join("\n", hook.Instructions.Select(s => $"\t{s}"));
-                hookString += "\n}";
+                hookString += newLine + "{" + newLine;
+                hookString += string.Join(newLine, hook.Instructions.Select(s => $"\t{s}"));
+                hookString += newLine + "}" + newLine;
             }
             fileText = fileText.Insert(index, hookString);
             return fileText;
@@ -119,34 +120,31 @@ namespace BrawlInstaller.Services
         private (string FileText, int Index) RemoveHook(string fileText, string address)
         {
             var hookStart = -1;
+            var newLine = Environment.NewLine;
             var index = fileText.IndexOf($"${address}");
             if (index > -1)
             {
                 // Find the start of the line
-                hookStart = Math.Max(fileText.LastIndexOf("\r\n", index), Math.Max(fileText.LastIndexOf('\n', index), fileText.LastIndexOf('\r', index)));
+                hookStart = fileText.LastIndexOf(newLine, index);
                 var header = fileText.Substring(hookStart, index - hookStart);
                 var atIndex = header.IndexOf('@');
                 var instruction = header.Substring(0, atIndex).Trim();
-                var indexList = new List<int> { fileText.IndexOf("\r\n", index), fileText.IndexOf('\n', index), fileText.IndexOf('\r', index) }.Where(x => x != -1);
-                var hookEnd = indexList.Min();
+                var hookEnd = fileText.IndexOf(newLine, index);
                 // Single instruction hook
-                fileText = fileText.Remove(hookStart, hookEnd + 1 - hookStart);
+                fileText = fileText.Remove(hookStart, hookEnd + 2 - hookStart);
                 // Multi instruction hook
                 if (instruction == "CODE" || instruction == "HOOK")
                 {
                     // Find braces
                     var startingBrace = fileText.IndexOf('{', hookStart);
-                    startingBrace = Math.Max(fileText.LastIndexOf("\r\n", startingBrace), Math.Max(fileText.LastIndexOf('\n', startingBrace), fileText.LastIndexOf('\r', startingBrace)));
                     if (startingBrace > -1)
                     {
                         var endingBrace = fileText.IndexOf('}', startingBrace);
-                        indexList = new List<int> { fileText.IndexOf("\r\n", endingBrace), fileText.IndexOf('\n', endingBrace), fileText.IndexOf('\r', endingBrace) }.Where(x => x != -1);
-                        endingBrace = indexList.Min();
+                        endingBrace = fileText.IndexOf(newLine, endingBrace);
                         // Remove instructions between braces
                         if (endingBrace > -1)
                         {
-                            var textToReplace = fileText.Substring(startingBrace, endingBrace + 1 - startingBrace);
-                            fileText = fileText.Replace(textToReplace, string.Empty);
+                            fileText = fileText.Remove(startingBrace, endingBrace + 2 - startingBrace);
                         }
                     }
                 }
