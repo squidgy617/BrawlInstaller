@@ -237,13 +237,14 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table added</returns>
         private string WriteTable(string fileText, string label, List<AsmTableEntry> table, int index, DataSize dataSize, int width=1)
         {
+            var newLine = Environment.NewLine;
             // Write label
-            fileText = fileText.Insert(index, $"{label}\n");
+            fileText = fileText.Insert(index, $"{label}{newLine}");
             index += label.Length + 1;
             if (table.Count > 0)
             {
                 // Write count
-                var countLine = $"\t{dataSize}[{table.Count}] |\n";
+                var countLine = $"\t{dataSize}[{table.Count}] |{newLine}";
                 fileText = fileText.Insert(index, countLine);
                 index += countLine.Length;
                 // Write table
@@ -275,7 +276,7 @@ namespace BrawlInstaller.Services
                     // If end of line, add comment and return
                     if ((table.IndexOf(item) + 1) % width == 0 || item == table.LastOrDefault())
                     {
-                        formattedTable += $"{lineComment}\n";
+                        formattedTable += $"{lineComment}{newLine}";
                         lineComment = string.Empty;
                     }
                 }
@@ -283,7 +284,7 @@ namespace BrawlInstaller.Services
                 index += formattedTable.Length;
             }
             // Add return
-            fileText = fileText.Insert(index, "\n");
+            fileText = fileText.Insert(index, newLine);
             return fileText;
         }
 
@@ -295,6 +296,7 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table removed</returns>
         private string RemoveTable(string fileText, string label)
         {
+            var newLine = Environment.NewLine;
             var newText = fileText;
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
@@ -303,7 +305,7 @@ namespace BrawlInstaller.Services
                 // Find the end of the next label
                 var nextLabelPosition = fileText.IndexOf(':', labelPosition + label.Length);
                 // Find the start of the next label
-                var nextLabelStart = fileText.LastIndexOf('\n', nextLabelPosition);
+                var nextLabelStart = fileText.LastIndexOf(newLine, nextLabelPosition);
                 // Replace all table text with whitespace
                 var tableText = fileText.Substring(labelPosition, nextLabelStart - labelPosition);
                 newText = fileText.Replace(tableText, string.Empty);
