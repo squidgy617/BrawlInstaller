@@ -14,8 +14,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Stretch" Width="3" Grid.RowSpan="3" Background="Silver" ResizeDirection="Columns"/>
         <GroupBox x:Name="stageListGroupBox" Header="Stages" Grid.Column="0">
