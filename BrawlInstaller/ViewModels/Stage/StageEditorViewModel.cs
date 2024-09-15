@@ -3,14 +3,17 @@ using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
@@ -35,8 +38,10 @@ namespace BrawlInstaller.ViewModels
         IStageService _stageService { get; }
         IDialogService _dialogService { get; }
         ITracklistService _tracklistService { get; }
+        IFileService _fileService { get; }
 
         // Commands
+        public ICommand SaveStageCommand => new RelayCommand(param => SaveStage());
         public ICommand MoveEntryUpCommand => new RelayCommand(param => MoveEntryUp());
         public ICommand MoveEntryDownCommand => new RelayCommand(param => MoveEntryDown());
         public ICommand MoveSubstageUpCommand => new RelayCommand(param => MoveSubstageUp());
@@ -49,11 +54,12 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveSubstageCommand => new RelayCommand(param => RemoveSubstage());
 
         [ImportingConstructor]
-        public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IStageCosmeticViewModel stageCosmeticViewModel)
+        public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, IStageCosmeticViewModel stageCosmeticViewModel)
         {
             _stageService = stageService;
             _dialogService = dialogService;
             _tracklistService = tracklistService;
+            _fileService = fileService;
             StageCosmeticViewModel = stageCosmeticViewModel;
 
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
@@ -122,6 +128,27 @@ namespace BrawlInstaller.ViewModels
             Tracklists = _tracklistService.GetTracklists();
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(Tracklists));
+        }
+
+        public void SaveStage()
+        {
+            var deleteOptions = new List<string>();
+            deleteOptions = _stageService.SaveStage(Stage);
+
+            // Prompt user for delete options
+            foreach (var item in deleteOptions)
+            {
+                var delete = _dialogService.ShowMessage($"Delete the file {Path.GetFileName(item)}?", "Delete", MessageBoxButton.YesNo);
+                if (delete)
+                {
+                    _fileService.DeleteFile(item);
+                }
+            }
+
+            Stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
+            Stage.Cosmetics.ClearChanges();
+            // Update stage list
+            WeakReferenceMessenger.Default.Send(new StageSavedMessage(Stage));
         }
 
         private void MoveEntryUp()
@@ -223,6 +250,14 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(SelectedStageEntry));
             OnPropertyChanged(nameof(Substages));
+        }
+    }
+
+    // Messages
+    public class StageSavedMessage : ValueChangedMessage<StageInfo>
+    {
+        public StageSavedMessage(StageInfo stage) : base(stage)
+        {
         }
     }
 }

@@ -15,10 +15,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Width="3" Background="Silver" ResizeDirection="Columns"/>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Width="3" Grid.RowSpan="3" Background="Silver" ResizeDirection="Columns"/>
         <GroupBox x:Name="stageListGroupBox" Header="Stages" Grid.Column="0">
             <ContentControl Content="{Binding StageListViewModel}"/>
         </GroupBox>
@@ -26,6 +25,5 @@
             <ContentControl Content="{Binding StageEditorViewModel}"/>
         </GroupBox>
         <Button x:Name="loadStageButton" Content="Load" Command="{Binding LoadStageCommand}" Grid.Row="1"/>
-        <Button x:Name="saveStageButton" Content="Save" Command="{Binding SaveStageCommand}" Grid.Row="2"/>
     </Grid>
 </UserControl>

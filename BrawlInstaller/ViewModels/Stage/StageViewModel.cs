@@ -34,7 +34,6 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand LoadStageCommand => new RelayCommand(param => LoadStage());
-        public ICommand SaveStageCommand => new RelayCommand(param => SaveStage());
 
         [ImportingConstructor]
         public StageViewModel(IStageService stageService, IDialogService dialogService, IFileService fileService, IStageListViewModel stageListViewModel, IStageEditorViewModel stageEditorViewModel)
@@ -65,40 +64,12 @@ namespace BrawlInstaller.ViewModels
                 WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
             }
         }
-
-        public void SaveStage()
-        {
-            var deleteOptions = new List<string>();
-            deleteOptions = _stageService.SaveStage(Stage);
-
-            // Prompt user for delete options
-            foreach(var item in deleteOptions)
-            {
-                var delete = _dialogService.ShowMessage($"Delete the file {Path.GetFileName(item)}?", "Delete", MessageBoxButton.YesNo);
-                if (delete)
-                {
-                    _fileService.DeleteFile(item);
-                }
-            }
-
-            Stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
-            Stage.Cosmetics.ClearChanges();
-            // Update stage list
-            WeakReferenceMessenger.Default.Send(new StageSavedMessage(Stage));
-        }
     }
 
     // Messages
     public class StageLoadedMessage : ValueChangedMessage<StageInfo>
     {
         public StageLoadedMessage(StageInfo stage) : base(stage)
-        {
-        }
-    }
-
-    public class StageSavedMessage : ValueChangedMessage<StageInfo>
-    {
-        public StageSavedMessage(StageInfo stage) : base(stage)
         {
         }
     }

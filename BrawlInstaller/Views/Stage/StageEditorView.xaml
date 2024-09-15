@@ -15,6 +15,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <GroupBox x:Name="stageCosmeticGroupBox" Header="Cosmetics">
             <ContentControl x:Name="StageCosmeticViewModel" Content="{Binding StageCosmeticViewModel}"/>
@@ -313,5 +315,7 @@
                 </GroupBox>
             </Grid>
         </Grid>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Width="Auto" Height="3" Background="Silver" ResizeDirection="Rows"/>
+        <Button x:Name="saveStageButton" Content="Save" HorizontalAlignment="Right" Grid.Row="3" Command="{Binding SaveStageCommand}"/>
     </Grid>
 </UserControl>
