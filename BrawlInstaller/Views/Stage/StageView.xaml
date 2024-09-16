@@ -14,10 +14,10 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Stretch" Width="3" Grid.RowSpan="3" Background="Silver" ResizeDirection="Columns"/>
-        <GroupBox x:Name="stageListGroupBox" Header="Stages">
+        <GroupBox x:Name="stageListGroupBox" Header="Stages" VerticalAlignment="Stretch">
             <ContentControl Content="{Binding StageListViewModel}"/>
         </GroupBox>
-        <GroupBox x:Name="stageEditorGroupBox" Header="Editor" Grid.Column="1" Margin="3,2,2,2" Grid.RowSpan="2" Visibility="{Binding StageListViewModel.Stage, Converter={StaticResource nullVisConverter}}">
+        <GroupBox x:Name="stageEditorGroupBox" VerticalAlignment="Stretch" Header="Editor" Grid.Column="1" Margin="3,2,2,2" Visibility="{Binding StageListViewModel.Stage, Converter={StaticResource nullVisConverter}}">
             <ContentControl Content="{Binding StageEditorViewModel}"/>
         </GroupBox>
     </Grid>
