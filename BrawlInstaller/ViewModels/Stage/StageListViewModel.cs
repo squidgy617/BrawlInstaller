@@ -87,6 +87,7 @@ namespace BrawlInstaller.ViewModels
         public void UpdateStageList(StageSavedMessage message)
         {
             OnPropertyChanged(nameof(StageLists));
+            SaveStageList();
         }
 
         public void MoveStageUp()
