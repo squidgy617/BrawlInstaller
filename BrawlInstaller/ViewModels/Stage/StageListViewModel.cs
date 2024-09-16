@@ -29,6 +29,7 @@ namespace BrawlInstaller.ViewModels
         private StagePage _selectedPage;
         private StageSlot _selectedStageSlot;
         private List<StageSlot> _stageTable;
+        private StageSlot _selectedUnusedSlot;
 
         // Services
         IStageService _stageService { get; }
@@ -36,6 +37,8 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand MoveUpCommand => new RelayCommand(param => MoveStageUp());
         public ICommand MoveDownCommand => new RelayCommand(param => MoveStageDown());
+        public ICommand SetStageUnusedCommand => new RelayCommand(param =>  SetStageUnused());
+        public ICommand SetStageUsedCommand => new RelayCommand(param => SetStageUsed());
         public ICommand SaveStageListCommand => new RelayCommand(param => SaveStageList());
 
         [ImportingConstructor]
@@ -77,6 +80,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(StageTable))]
         public List<StageSlot> UnusedSlots { get => StageTable.Where(x => !SelectedStageList.Pages.SelectMany(z => z.StageSlots).ToList().Contains(x)).ToList(); }
 
+        [DependsUpon(nameof(UnusedSlots))]
+        public StageSlot SelectedUnusedSlot { get => _selectedUnusedSlot; set { _selectedUnusedSlot = value; OnPropertyChanged(nameof(SelectedUnusedSlot)); } }
+
         // Methods
         public void UpdateStageList(StageSavedMessage message)
         {
@@ -95,6 +101,30 @@ namespace BrawlInstaller.ViewModels
             SelectedPage.StageSlots.MoveDown(SelectedStageSlot);
             StageSlots.MoveDown(SelectedStageSlot);
             OnPropertyChanged(nameof(StageSlots));
+        }
+
+        public void SetStageUnused()
+        {
+            if (SelectedStageSlot != null)
+            {
+                SelectedPage.StageSlots.Remove(SelectedStageSlot);
+                OnPropertyChanged(nameof(StageLists));
+                OnPropertyChanged(nameof(SelectedStageSlot));
+                OnPropertyChanged(nameof(UnusedSlots));
+                OnPropertyChanged(nameof(StageSlots));
+            }
+        }
+
+        public void SetStageUsed()
+        {
+            if (SelectedUnusedSlot != null)
+            {
+                SelectedPage.StageSlots.Add(SelectedUnusedSlot);
+                OnPropertyChanged(nameof(StageLists));
+                OnPropertyChanged(nameof(SelectedStageSlot));
+                OnPropertyChanged(nameof(UnusedSlots));
+                OnPropertyChanged(nameof(StageSlots));
+            }
         }
 
         private void SaveStageList()
