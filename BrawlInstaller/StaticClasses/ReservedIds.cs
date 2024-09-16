@@ -9,5 +9,6 @@ namespace BrawlInstaller.StaticClasses
     public static class ReservedIds
     {
         public static List<int> ReservedStageCosmeticIds = new List<int> { 80, 81, 82, 83, 84, 85, 100, 101, 102 };
+        public static List<int> ReservedStageIds = new List<int> { 61 };
     }
 }

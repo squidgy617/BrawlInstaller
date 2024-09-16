@@ -1,7 +1,10 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,12 +21,14 @@ namespace BrawlInstaller.ViewModels
     public interface IStageListViewModel
     {
         StageSlot SelectedStageSlot { get; }
+        StageInfo Stage { get; }
     }
 
     [Export(typeof(IStageListViewModel))]
     internal class StageListViewModel : ViewModelBase, IStageListViewModel
     {
         // Private properties
+        private StageInfo _stage;
         private List<StageList> _stageLists;
         private StageList _selectedStageList;
         private StagePage _selectedPage;
@@ -40,6 +45,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand SetStageUnusedCommand => new RelayCommand(param =>  SetStageUnused());
         public ICommand SetStageUsedCommand => new RelayCommand(param => SetStageUsed());
         public ICommand SaveStageListCommand => new RelayCommand(param => SaveStageList());
+        public ICommand LoadStageCommand => new RelayCommand(param => LoadStage());
 
         [ImportingConstructor]
         public StageListViewModel(IStageService stageService)
@@ -59,6 +65,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
+        public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
         public List<StageList> StageLists { get => _stageLists; set { _stageLists = value; OnPropertyChanged(nameof(StageLists)); } }
 
         [DependsUpon(nameof(StageLists))]
@@ -157,6 +164,49 @@ namespace BrawlInstaller.ViewModels
         private void SaveStageList()
         {
             _stageService.SaveStageLists(StageLists, StageTable);
+        }
+
+        public void LoadStage()
+        {
+            if (SelectedStageSlot != null)
+            {
+                using (new CursorWait())
+                {
+                    var stage = new StageInfo();
+                    Stage = stage;
+                    stage.Slot = SelectedStageSlot;
+                    stage = _stageService.GetStageData(stage);
+                    WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
+                }
+            }
+        }
+
+        public void NewStage()
+        {
+            // Get new stage ID
+            var stageId = 1;
+            var stageCosmeticId = 1;
+            var stageIdList = StageLists.SelectMany(x => x.Pages).SelectMany(x => x.StageSlots).Select(x => x.StageIds).Concat(UnusedSlots.Select(x => x.StageIds));
+            while (stageIdList.Select(x => x.StageId).Contains(stageId) || ReservedIds.ReservedStageIds.Contains(stageId))
+            {
+                stageId++;
+            }
+            while (stageIdList.Select(x => x.StageCosmeticId).Contains(stageCosmeticId) || ReservedIds.ReservedStageCosmeticIds.Contains(stageId))
+            {
+                stageCosmeticId++;
+            }
+            var stage = new StageInfo();
+            stage.Slot.StageIds.StageId = stageId;
+            stage.Slot.StageIds.StageCosmeticId = stageCosmeticId;
+            WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
+        }
+    }
+
+    // Messages
+    public class StageLoadedMessage : ValueChangedMessage<StageInfo>
+    {
+        public StageLoadedMessage(StageInfo stage) : base(stage)
+        {
         }
     }
 }

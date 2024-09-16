@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
@@ -25,7 +26,6 @@ namespace BrawlInstaller.ViewModels
     internal class StageViewModel : ViewModelBase, IStageViewModel
     {
         // Private properties
-        private StageInfo _stage;
 
         // Services
         IStageService _stageService { get; }
@@ -33,7 +33,6 @@ namespace BrawlInstaller.ViewModels
         IFileService _fileService { get; }
 
         // Commands
-        public ICommand LoadStageCommand => new RelayCommand(param => LoadStage());
 
         [ImportingConstructor]
         public StageViewModel(IStageService stageService, IDialogService dialogService, IFileService fileService, IStageListViewModel stageListViewModel, IStageEditorViewModel stageEditorViewModel)
@@ -50,27 +49,7 @@ namespace BrawlInstaller.ViewModels
         public IStageEditorViewModel StageEditorViewModel { get; }
 
         // Properties
-        public StageInfo Stage { get =>  _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
 
         // Methods
-        public void LoadStage()
-        {
-            using (new CursorWait())
-            {
-                var stage = new StageInfo();
-                Stage = stage;
-                stage.Slot = StageListViewModel.SelectedStageSlot;
-                stage = _stageService.GetStageData(stage);
-                WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
-            }
-        }
-    }
-
-    // Messages
-    public class StageLoadedMessage : ValueChangedMessage<StageInfo>
-    {
-        public StageLoadedMessage(StageInfo stage) : base(stage)
-        {
-        }
     }
 }

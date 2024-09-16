@@ -9,57 +9,64 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="userControl">
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3">
-                <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
-                <Button x:Name="stageListSaveButton" Content="Save" Command="{Binding SaveStageListCommand}"/>
-            </StackPanel>
-            <TabControl x:Name="pageTabControl" SelectedItem="{Binding SelectedPage, Mode=TwoWay}" SelectedIndex="0" ItemsSource="{Binding SelectedStageList.Pages}" Grid.Row="1" Width="Auto" Height="Auto">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding PageNumber}"/>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" DisplayMemberPath="Name" Width="120" Height="400"/>
-                            <Grid x:Name="stageListButtonsGrid" Grid.Column="1">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Button x:Name="stageUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveUpCommand}"/>
-                                <Button x:Name="stageDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3">
+                    <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
+                    <Button x:Name="stageListSaveButton" Content="Save" Command="{Binding SaveStageListCommand}"/>
+                </StackPanel>
+                <TabControl x:Name="pageTabControl" SelectedItem="{Binding SelectedPage, Mode=TwoWay}" SelectedIndex="0" ItemsSource="{Binding SelectedStageList.Pages}" Grid.Row="1" Width="Auto" Height="Auto">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding PageNumber}"/>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" DisplayMemberPath="Name" Width="120" Height="400"/>
+                                <Grid x:Name="stageListButtonsGrid" Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Button x:Name="stageUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveUpCommand}"/>
+                                    <Button x:Name="stageDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
-            <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button x:Name="setStageUnusedButton" Content="→" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SetStageUnusedCommand}"/>
-                <Button x:Name="setStageUsedButton" Content="←" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SetStageUsedCommand}"/>
-            </StackPanel>
-            <StackPanel x:Name="unusedStageStackPanel" Grid.Row="1" Grid.Column="3">
-                <Label x:Name="unusedStageLabel" Content="Unused Stages:" HorizontalAlignment="Left"/>
-                <ListBox x:Name="unusedStageListBox" ItemsSource="{Binding UnusedSlots}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedUnusedSlot}" Width="120" Height="400"/>
-            </StackPanel>
-        </Grid>
-    </ScrollViewer>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+                <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button x:Name="setStageUnusedButton" Content="→" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SetStageUnusedCommand}"/>
+                    <Button x:Name="setStageUsedButton" Content="←" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SetStageUsedCommand}"/>
+                </StackPanel>
+                <StackPanel x:Name="unusedStageStackPanel" Grid.Row="1" Grid.Column="3">
+                    <Label x:Name="unusedStageLabel" Content="Unused Stages:" HorizontalAlignment="Left"/>
+                    <ListBox x:Name="unusedStageListBox" ItemsSource="{Binding UnusedSlots}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedUnusedSlot}" Width="120" Height="400"/>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        <Button x:Name="loadStageButton" Content="Load" Command="{Binding LoadStageCommand}" Grid.Row="1"/>
+    </Grid>
 </UserControl>
