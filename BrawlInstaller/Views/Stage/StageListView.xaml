@@ -16,6 +16,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
                 <Button x:Name="stageListSaveButton" Content="Save" Command="{Binding SaveStageListCommand}"/>
@@ -32,6 +36,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" DisplayMemberPath="Name" Width="120" Height="Auto" MaxHeight="400" MinHeight="240"/>
                             <Grid x:Name="stageListButtonsGrid" Grid.Column="1">
@@ -42,6 +47,7 @@
                                 <Button x:Name="stageUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveUpCommand}"/>
                                 <Button x:Name="stageDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
                             </Grid>
+                            <ListBox x:Name="unusedStageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.UnusedSlots}" Width="120" Height="Auto" MinHeight="120" Grid.Column="2"/>
                         </Grid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
