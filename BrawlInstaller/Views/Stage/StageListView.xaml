@@ -44,22 +44,29 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Button x:Name="stageUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveUpCommand}"/>
                                 <Button x:Name="stageDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
+                                <Button x:Name="setStageUnusedButton" Content="→" Style="{StaticResource miniButton}" HorizontalAlignment="Right" Command="{Binding Source={x:Reference userControl}, Path=DataContext.SetStageUnusedCommand}" Grid.Row="2"/>
                             </Grid>
                         </Grid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
-            <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button x:Name="setStageUnusedButton" Content="→" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SetStageUnusedCommand}"/>
-                <Button x:Name="setStageUsedButton" Content="←" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SetStageUsedCommand}"/>
-            </StackPanel>
-            <StackPanel x:Name="unusedStageStackPanel" Grid.Row="1" Grid.Column="3">
-                <Label x:Name="unusedStageLabel" Content="Unused Stages:" HorizontalAlignment="Left"/>
-                <ListBox x:Name="unusedStageListBox" ItemsSource="{Binding UnusedSlots}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedUnusedSlot}" Width="120" Height="Auto" MaxHeight="400" MinHeight="240"/>
-            </StackPanel>
+            <Grid x:Name="unusedStageGrid" Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="setStageUsedButton" Content="←" Style="{StaticResource miniButton}" HorizontalAlignment="Right" Command="{Binding SetStageUsedCommand}" Grid.Row="1"/>
+                <Label x:Name="unusedStageLabel" Content="Unused Stages:" HorizontalAlignment="Left" Grid.Column="1"/>
+                <ListBox x:Name="unusedStageListBox" ItemsSource="{Binding UnusedSlots}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedUnusedSlot}" Width="120" Height="Auto" MaxHeight="400" MinHeight="240" Grid.Row="1" Grid.Column="1"/>
+            </Grid>
         </Grid>
     </ScrollViewer>
 </UserControl>
