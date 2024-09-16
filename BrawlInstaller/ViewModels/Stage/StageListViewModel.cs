@@ -91,15 +91,41 @@ namespace BrawlInstaller.ViewModels
 
         public void MoveStageUp()
         {
-            SelectedPage.StageSlots.MoveUp(SelectedStageSlot);
-            StageSlots.MoveUp(SelectedStageSlot);
+            if (SelectedPage.StageSlots.FirstOrDefault() != SelectedStageSlot)
+            {
+                SelectedPage.StageSlots.MoveUp(SelectedStageSlot);
+                StageSlots.MoveUp(SelectedStageSlot);
+            }
+            else if (SelectedPage != SelectedStageList.Pages.FirstOrDefault())
+            {
+                SelectedPage.StageSlots.Remove(SelectedStageSlot);
+                StageSlots.Remove(SelectedStageSlot);
+                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) - 1];
+                newPage.StageSlots.Add(SelectedStageSlot);
+                SelectedPage = newPage;
+                OnPropertyChanged(nameof(SelectedPage));
+                OnPropertyChanged(nameof(SelectedStageSlot));
+            }
             OnPropertyChanged(nameof(StageSlots));
         }
 
         public void MoveStageDown()
         {
-            SelectedPage.StageSlots.MoveDown(SelectedStageSlot);
-            StageSlots.MoveDown(SelectedStageSlot);
+            if (SelectedPage.StageSlots.LastOrDefault() != SelectedStageSlot)
+            {
+                SelectedPage.StageSlots.MoveDown(SelectedStageSlot);
+                StageSlots.MoveDown(SelectedStageSlot);
+            }
+            else if (SelectedPage != SelectedStageList.Pages.LastOrDefault())
+            {
+                SelectedPage.StageSlots.Remove(SelectedStageSlot);
+                StageSlots.Remove(SelectedStageSlot);
+                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) + 1];
+                newPage.StageSlots.Insert(0, SelectedStageSlot);
+                SelectedPage = newPage;
+                OnPropertyChanged(nameof(SelectedPage));
+                OnPropertyChanged(nameof(SelectedStageSlot));
+            }
             OnPropertyChanged(nameof(StageSlots));
         }
 
