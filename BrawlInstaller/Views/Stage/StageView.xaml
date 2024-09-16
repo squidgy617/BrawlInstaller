@@ -13,17 +13,19 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Stretch" Width="3" Grid.RowSpan="3" Background="Silver" ResizeDirection="Columns"/>
-        <GroupBox x:Name="stageListGroupBox" Header="Stages" Grid.Column="0">
-            <ContentControl Content="{Binding StageListViewModel}"/>
-        </GroupBox>
+        <Grid x:Name="stageListGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <GroupBox x:Name="stageListGroupBox" Header="Stages">
+                <ContentControl Content="{Binding StageListViewModel}"/>
+            </GroupBox>
+            <Button x:Name="loadStageButton" Content="Load" Command="{Binding LoadStageCommand}" Grid.Row="1"/>
+        </Grid>
         <GroupBox x:Name="stageEditorGroupBox" Header="Editor" Grid.Column="1" Margin="3,2,2,2" Grid.RowSpan="2" Visibility="{Binding Stage, Converter={StaticResource nullVisConverter}}">
             <ContentControl Content="{Binding StageEditorViewModel}"/>
         </GroupBox>
-        <Button x:Name="loadStageButton" Content="Load" Command="{Binding LoadStageCommand}" Grid.Row="1"/>
     </Grid>
 </UserControl>

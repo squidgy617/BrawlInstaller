@@ -15,7 +15,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid>
@@ -323,7 +322,6 @@
                 </Grid>
             </Grid>
         </ScrollViewer>
-        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Width="Auto" Height="3" Background="Silver" ResizeDirection="Rows"/>
-        <Button x:Name="saveStageButton" Content="Save" HorizontalAlignment="Right" Grid.Row="2" Command="{Binding SaveStageCommand}"/>
+        <Button x:Name="saveStageButton" Content="Save" HorizontalAlignment="Right" Grid.Row="1" Command="{Binding SaveStageCommand}"/>
     </Grid>
 </UserControl>
