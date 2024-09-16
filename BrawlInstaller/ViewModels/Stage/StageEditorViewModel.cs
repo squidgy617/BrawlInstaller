@@ -132,6 +132,7 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveStage()
         {
+            // TODO: If it's a new stage, add it to unused list
             var deleteOptions = new List<string>();
             deleteOptions = _stageService.SaveStage(Stage);
 

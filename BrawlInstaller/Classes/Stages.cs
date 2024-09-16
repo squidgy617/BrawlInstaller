@@ -15,7 +15,7 @@ namespace BrawlInstaller.Classes
     public class StageInfo
     {
         public string RandomName { get; set; } = string.Empty;
-        public StageSlot Slot { get; set; }
+        public StageSlot Slot { get; set; } = new StageSlot();
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
         public List<StageEntry> StageEntries { get; set; } = new List<StageEntry>();
         public List<StageParams> AllParams { get; set; } = new List<StageParams>();

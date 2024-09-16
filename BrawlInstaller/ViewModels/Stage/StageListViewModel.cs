@@ -46,6 +46,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand SetStageUsedCommand => new RelayCommand(param => SetStageUsed());
         public ICommand SaveStageListCommand => new RelayCommand(param => SaveStageList());
         public ICommand LoadStageCommand => new RelayCommand(param => LoadStage());
+        public ICommand NewStageCommand => new RelayCommand(param =>  NewStage());
 
         [ImportingConstructor]
         public StageListViewModel(IStageService stageService)
@@ -186,7 +187,7 @@ namespace BrawlInstaller.ViewModels
             // Get new stage ID
             var stageId = 1;
             var stageCosmeticId = 1;
-            var stageIdList = StageLists.SelectMany(x => x.Pages).SelectMany(x => x.StageSlots).Select(x => x.StageIds).Concat(UnusedSlots.Select(x => x.StageIds));
+            var stageIdList = StageTable.Select(x => x.StageIds).ToList();
             while (stageIdList.Select(x => x.StageId).Contains(stageId) || ReservedIds.ReservedStageIds.Contains(stageId))
             {
                 stageId++;
@@ -196,6 +197,8 @@ namespace BrawlInstaller.ViewModels
                 stageCosmeticId++;
             }
             var stage = new StageInfo();
+            Stage = stage;
+            stage.Slot = new StageSlot { Name = "New Stage", Index = StageTable.Count };
             stage.Slot.StageIds.StageId = stageId;
             stage.Slot.StageIds.StageCosmeticId = stageCosmeticId;
             WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));

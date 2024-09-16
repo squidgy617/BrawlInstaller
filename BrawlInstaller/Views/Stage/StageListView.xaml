@@ -67,6 +67,9 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
-        <Button x:Name="loadStageButton" Content="Load" Command="{Binding LoadStageCommand}" Grid.Row="1"/>
+        <StackPanel Grid.Row="1">
+            <Button x:Name="newStageButton" Content="New" Command="{Binding NewStageCommand}"/>
+            <Button x:Name="loadStageButton" Content="Load" Command="{Binding LoadStageCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
