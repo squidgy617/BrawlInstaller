@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,9 +36,11 @@ namespace BrawlInstaller.ViewModels
         private StageSlot _selectedStageSlot;
         private List<StageSlot> _stageTable;
         private StageSlot _selectedUnusedSlot;
+        private List<int> _incompleteStageIds;
 
         // Services
         IStageService _stageService { get; }
+        ICosmeticService _cosmeticService { get; }
 
         // Commands
         public ICommand MoveUpCommand => new RelayCommand(param => MoveStageUp());
@@ -49,15 +52,18 @@ namespace BrawlInstaller.ViewModels
         public ICommand NewStageCommand => new RelayCommand(param =>  NewStage());
 
         [ImportingConstructor]
-        public StageListViewModel(IStageService stageService)
+        public StageListViewModel(IStageService stageService, ICosmeticService cosmeticService)
         {
             _stageService = stageService;
+            _cosmeticService = cosmeticService;
 
             StageTable = _stageService.GetStageSlots();
 
             StageLists = _stageService.GetStageLists(StageTable);
 
             SelectedStageList = StageLists.FirstOrDefault();
+
+            IncompleteStageIds = _stageService.GetIncompleteStageIds();
 
             WeakReferenceMessenger.Default.Register<StageSavedMessage>(this, (recipient, message) =>
             {
@@ -91,9 +97,18 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(UnusedSlots))]
         public StageSlot SelectedUnusedSlot { get => _selectedUnusedSlot; set { _selectedUnusedSlot = value; OnPropertyChanged(nameof(SelectedUnusedSlot)); } }
 
+        public List<int> IncompleteStageIds { get => _incompleteStageIds; set { _incompleteStageIds = value; OnPropertyChanged(nameof(IncompleteStageIds)); } }
+
         // Methods
         public void UpdateStageList(StageSavedMessage message)
         {
+            // If new stage, add it to the table
+            var stage = message.Value;
+            if (!StageTable.Select(x => x.StageIds).Select(x => x.StageId).Contains(stage.Slot.StageIds.StageId))
+            {
+                StageTable.Add(stage.Slot);
+            }
+            OnPropertyChanged(nameof(StageTable));
             OnPropertyChanged(nameof(StageLists));
             SaveStageList();
         }
@@ -188,11 +203,11 @@ namespace BrawlInstaller.ViewModels
             var stageId = 1;
             var stageCosmeticId = 1;
             var stageIdList = StageTable.Select(x => x.StageIds).ToList();
-            while (stageIdList.Select(x => x.StageId).Contains(stageId) || ReservedIds.ReservedStageIds.Contains(stageId))
+            while (stageIdList.Select(x => x.StageId).Contains(stageId) || ReservedIds.ReservedStageIds.Contains(stageId) || IncompleteStageIds.Contains(stageId))
             {
                 stageId++;
             }
-            while (stageIdList.Select(x => x.StageCosmeticId).Contains(stageCosmeticId) || ReservedIds.ReservedStageCosmeticIds.Contains(stageId))
+            while (stageIdList.Select(x => x.StageCosmeticId).Contains(stageCosmeticId) || ReservedIds.ReservedStageCosmeticIds.Contains(stageCosmeticId))
             {
                 stageCosmeticId++;
             }
@@ -201,6 +216,8 @@ namespace BrawlInstaller.ViewModels
             stage.Slot = new StageSlot { Name = "New Stage", Index = StageTable.Count };
             stage.Slot.StageIds.StageId = stageId;
             stage.Slot.StageIds.StageCosmeticId = stageCosmeticId;
+            // This is done to populate selectable cosmetics
+            stage.Cosmetics.Items = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
         }
     }

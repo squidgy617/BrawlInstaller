@@ -22,6 +22,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="StageService.GetStageLists(List{StageSlot})"/>
         List<StageList> GetStageLists(List<StageSlot> stageTable);
 
+        /// <inheritdoc cref="StageService.GetIncompleteStageIds()"/>
+        List<int> GetIncompleteStageIds();
+
         /// <inheritdoc cref="StageService.GetStageSlots()"/>
         List<StageSlot> GetStageSlots();
 
@@ -127,6 +130,29 @@ namespace BrawlInstaller.Services
                 }
             }
             return stageLists;
+        }
+
+        /// <summary>
+        /// Get all stage IDs that are missing a corresponding cosmetic ID
+        /// </summary>
+        /// <returns>List of stage IDs</returns>
+        public List<int> GetIncompleteStageIds()
+        {
+            var ids = new List<int>();
+            var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}";
+            if (Directory.Exists(path))
+            {
+                var files = Directory.GetFiles(path, "*.asl");
+                foreach(var file in files)
+                {
+                    var result = int.TryParse(Path.GetFileNameWithoutExtension(file), NumberStyles.HexNumber, null, out int newId);
+                    if (result)
+                    {
+                        ids.Add(newId);
+                    }
+                }
+            }
+            return ids;
         }
 
         /// <summary>
@@ -677,11 +703,11 @@ namespace BrawlInstaller.Services
                             hookAddress = "80496004";
                             break;
                     }
-                    var hook = new AsmHook { Address = hookAddress, Instructions = new List<string> { $"byte {page.StageSlots.Count:D2}" }, Comment = $" # Page {page.PageNumber}" };
+                    var hook = new AsmHook { Address = hookAddress, Instructions = new List<string> { $"byte {page.StageSlots.Count:D2}" }, Comment = $"Page {page.PageNumber}" };
                    fileText = _codeService.ReplaceHook(hook, fileText);
                 }
                 // Update total stage count
-                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {stageLists.SelectMany(x => x.Pages.SelectMany(y => y.StageSlots)).Count():D2}" }, Comment = "Stage Count" };
+                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {stageTable.Count():D2}" }, Comment = "Stage Count" };
                 fileText = _codeService.ReplaceHook(countHook, fileText);
                 _fileService.SaveTextFile(filePath, fileText);
             }
