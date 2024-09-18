@@ -200,7 +200,8 @@ namespace BrawlInstaller.ViewModels
         public void NewStage()
         {
             // Get new stage ID
-            var stageId = 1;
+            // Start at 64 because that's where custom stages are supposed to start
+            var stageId = 64;
             var stageCosmeticId = 1;
             var stageIdList = StageTable.Select(x => x.StageIds).ToList();
             while (stageIdList.Select(x => x.StageId).Contains(stageId) || ReservedIds.ReservedStageIds.Contains(stageId) || IncompleteStageIds.Contains(stageId))
