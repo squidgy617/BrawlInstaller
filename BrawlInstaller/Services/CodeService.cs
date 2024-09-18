@@ -53,7 +53,7 @@ namespace BrawlInstaller.Services
         {
             var lines = File.ReadAllLines(filePath);
             // Do this to maintain consistent line endings of \n
-            var text = string.Join("\n", lines);
+            var text = string.Join("\r\n", lines);
             return text;
         }
 
@@ -97,7 +97,7 @@ namespace BrawlInstaller.Services
         /// <returns>Text with hook added</returns>
         private string WriteHook(AsmHook hook, string fileText, int index)
         {
-            var newLine = "\n";
+            var newLine = "\r\n";
             var hookString = string.Empty;
             // Single line code
             if (hook.Instructions.Count == 1)
@@ -137,7 +137,7 @@ namespace BrawlInstaller.Services
         private (string FileText, int Index) RemoveHook(string fileText, string address)
         {
             var hookStart = -1;
-            var newLine = "\n";
+            var newLine = "\r\n";
             var index = fileText.IndexOf($"${address}");
             if (index > -1)
             {
@@ -178,7 +178,7 @@ namespace BrawlInstaller.Services
         /// <returns>ASM hook with instructions</returns>
         private AsmHook ReadHook(string fileText, string address)
         {
-            var newLine = "\n";
+            var newLine = "\r\n";
             var asmHook = new AsmHook();
             // Remove comments
             var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
@@ -255,10 +255,10 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table added</returns>
         private string WriteTable(string fileText, string label, List<AsmTableEntry> table, int index, DataSize dataSize, int width=1)
         {
-            var newLine = "\n";
+            var newLine = "\r\n";
             // Write label
             fileText = fileText.Insert(index, $"{label}{newLine}");
-            index += label.Length + 1;
+            index += label.Length + newLine.Length;
             if (table.Count > 0)
             {
                 // Write count
@@ -314,7 +314,7 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table removed</returns>
         private string RemoveTable(string fileText, string label)
         {
-            var newLine = "\n";
+            var newLine = "\r\n";
             var newText = fileText;
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
@@ -325,8 +325,7 @@ namespace BrawlInstaller.Services
                 // Find the start of the next label
                 var nextLabelStart = fileText.LastIndexOf(newLine, nextLabelPosition);
                 // Replace all table text with whitespace
-                var tableText = fileText.Substring(labelPosition, nextLabelStart - labelPosition);
-                newText = fileText.Replace(tableText, string.Empty);
+                newText = fileText.Remove(labelPosition, nextLabelStart - labelPosition);
             }
             return newText;
         }
