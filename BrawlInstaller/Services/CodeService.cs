@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,6 +14,9 @@ namespace BrawlInstaller.Services
 {
     public interface ICodeService
     {
+        /// <inheritdoc cref="CodeService.ReadCode(string)"/>
+        string ReadCode(string filePath);
+
         /// <inheritdoc cref="CodeService.ReadTable(string, string)"/>
         List<string> ReadTable(string fileText, string label);
 
@@ -39,6 +43,18 @@ namespace BrawlInstaller.Services
         }
 
         // Methods
+
+        /// <summary>
+        /// Read code from an ASM file
+        /// </summary>
+        /// <param name="filePath">File to read code from</param>
+        /// <returns>String containing code</returns>
+        public string ReadCode(string filePath)
+        {
+            var lines = File.ReadAllLines(filePath);
+            var text = string.Join(Environment.NewLine, lines);
+            return text;
+        }
 
         /// <summary>
         /// Replace multiple pieces of ASM code
@@ -130,8 +146,9 @@ namespace BrawlInstaller.Services
                 var atIndex = header.IndexOf('@');
                 var instruction = header.Substring(0, atIndex).Trim();
                 var hookEnd = fileText.IndexOf(newLine, index);
+                hookEnd = fileText.Length <= hookEnd + 2 || hookEnd == -1 ? fileText.Length : hookEnd + 2;
                 // Single instruction hook
-                fileText = fileText.Remove(hookStart, hookEnd + 2 - hookStart);
+                fileText = fileText.Remove(hookStart, hookEnd - hookStart);
                 // Multi instruction hook
                 if (instruction == "CODE" || instruction == "HOOK")
                 {

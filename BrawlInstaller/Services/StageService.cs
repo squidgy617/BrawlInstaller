@@ -658,12 +658,17 @@ namespace BrawlInstaller.Services
         /// <param name="stageTable">Stage table to save</param>
         public void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable)
         {
+            // Add dummy slots
+            // TODO: Is this how we should handle this? Do we need this?
+            var dummySlot = new StageSlot { Name = "NOTHING", StageIds = new BrawlIds { StageId = 0xFF, StageCosmeticId = 0x64 } };
+            stageTable.Insert(41, dummySlot);
+            stageTable.Insert(42, dummySlot);
             // Update stage table
             var stageTableAsm = stageTable.ConvertToAsmTable();
             var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";
             if (File.Exists(tableFilepath))
             {
-                var tableFileText = File.ReadAllText(tableFilepath);
+                var tableFileText = _codeService.ReadCode(tableFilepath);
                 tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableAsm, DataSize.Halfword, 4);
                 _fileService.SaveTextFile(tableFilepath, tableFileText);
             }
@@ -675,7 +680,7 @@ namespace BrawlInstaller.Services
             foreach(var stageList in stageLists)
             {
                 var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageList.FilePath}";
-                var fileText = File.ReadAllText(filePath);
+                var fileText = _codeService.ReadCode(filePath);
                 foreach (var page in stageList.Pages)
                 {
                     // Update stage table if it exists
@@ -707,7 +712,8 @@ namespace BrawlInstaller.Services
                    fileText = _codeService.ReplaceHook(hook, fileText);
                 }
                 // Update total stage count
-                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {stageTable.Count():D2}" }, Comment = "Stage Count" };
+                // TODO: we subtract 2 for the dummy slots, do we need to?
+                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {(stageTable.Count() - 2):D2}" }, Comment = "Stage Count" };
                 fileText = _codeService.ReplaceHook(countHook, fileText);
                 _fileService.SaveTextFile(filePath, fileText);
             }
