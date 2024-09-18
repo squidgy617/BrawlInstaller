@@ -711,9 +711,11 @@ namespace BrawlInstaller.Services
                     var hook = new AsmHook { Address = hookAddress, Instructions = new List<string> { $"byte {page.StageSlots.Count:D2}" }, Comment = $"Page {page.PageNumber}" };
                    fileText = _codeService.ReplaceHook(hook, fileText);
                 }
+                // Remove dummy slots
+                // TODO: Remove this if we don't need the dummy slots to begin with
+                stageTable.RemoveAll(x => x == dummySlot);
                 // Update total stage count
-                // TODO: we subtract 2 for the dummy slots, do we need to?
-                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {(stageTable.Count() - 2):D2}" }, Comment = "Stage Count" };
+                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {stageTable.Count():D2}" }, Comment = "Stage Count" };
                 fileText = _codeService.ReplaceHook(countHook, fileText);
                 _fileService.SaveTextFile(filePath, fileText);
             }

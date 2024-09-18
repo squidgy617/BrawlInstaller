@@ -52,7 +52,8 @@ namespace BrawlInstaller.Services
         public string ReadCode(string filePath)
         {
             var lines = File.ReadAllLines(filePath);
-            var text = string.Join(Environment.NewLine, lines);
+            // Do this to maintain consistent line endings of \n
+            var text = string.Join("\n", lines);
             return text;
         }
 
@@ -96,7 +97,7 @@ namespace BrawlInstaller.Services
         /// <returns>Text with hook added</returns>
         private string WriteHook(AsmHook hook, string fileText, int index)
         {
-            var newLine = Environment.NewLine;
+            var newLine = "\n";
             var hookString = string.Empty;
             // Single line code
             if (hook.Instructions.Count == 1)
@@ -136,7 +137,7 @@ namespace BrawlInstaller.Services
         private (string FileText, int Index) RemoveHook(string fileText, string address)
         {
             var hookStart = -1;
-            var newLine = Environment.NewLine;
+            var newLine = "\n";
             var index = fileText.IndexOf($"${address}");
             if (index > -1)
             {
@@ -146,7 +147,7 @@ namespace BrawlInstaller.Services
                 var atIndex = header.IndexOf('@');
                 var instruction = header.Substring(0, atIndex).Trim();
                 var hookEnd = fileText.IndexOf(newLine, index);
-                hookEnd = fileText.Length <= hookEnd + 2 || hookEnd == -1 ? fileText.Length : hookEnd + 2;
+                hookEnd = fileText.Length <= hookEnd + newLine.Length || hookEnd == -1 ? fileText.Length : hookEnd + newLine.Length;
                 // Single instruction hook
                 fileText = fileText.Remove(hookStart, hookEnd - hookStart);
                 // Multi instruction hook
@@ -161,7 +162,7 @@ namespace BrawlInstaller.Services
                         // Remove instructions between braces
                         if (endingBrace > -1)
                         {
-                            fileText = fileText.Remove(startingBrace, endingBrace + 2 - startingBrace);
+                            fileText = fileText.Remove(startingBrace, endingBrace + newLine.Length - startingBrace);
                         }
                     }
                 }
@@ -177,7 +178,7 @@ namespace BrawlInstaller.Services
         /// <returns>ASM hook with instructions</returns>
         private AsmHook ReadHook(string fileText, string address)
         {
-            var newLine = Environment.NewLine;
+            var newLine = "\n";
             var asmHook = new AsmHook();
             // Remove comments
             var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
@@ -254,7 +255,7 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table added</returns>
         private string WriteTable(string fileText, string label, List<AsmTableEntry> table, int index, DataSize dataSize, int width=1)
         {
-            var newLine = Environment.NewLine;
+            var newLine = "\n";
             // Write label
             fileText = fileText.Insert(index, $"{label}{newLine}");
             index += label.Length + 1;
@@ -313,7 +314,7 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table removed</returns>
         private string RemoveTable(string fileText, string label)
         {
-            var newLine = Environment.NewLine;
+            var newLine = "\n";
             var newText = fileText;
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
