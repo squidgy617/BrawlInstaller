@@ -217,6 +217,9 @@ namespace BrawlInstaller.ViewModels
             stage.Slot = new StageSlot { Name = "New Stage", Index = StageTable.Count };
             stage.Slot.StageIds.StageId = stageId;
             stage.Slot.StageIds.StageCosmeticId = stageCosmeticId;
+            // Include a default stage entry
+            stage.StageEntries.Add(new StageEntry());
+            stage.AllParams.Add(stage.StageEntries[0].Params);
             // This is done to populate selectable cosmetics
             stage.Cosmetics.Items = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
