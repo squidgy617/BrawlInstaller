@@ -43,6 +43,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
         public ICommand AddPatSettingsCommand => new RelayCommand(param => AddPatSettings());
         public ICommand AddDefinitionCommand => new RelayCommand(param => AddDefinition());
+        public ICommand RemoveDefinitionCommand => new RelayCommand(param => RemoveDefinition());
+        public ICommand CopyDefinitionCommand => new RelayCommand(param => CopyDefinition());
 
         [ImportingConstructor]
         public CosmeticSettingsViewModel(IDialogService dialogService)
@@ -177,6 +179,27 @@ namespace BrawlInstaller.ViewModels
             CosmeticSettings.Add(newDefinition);
             OnPropertyChanged(nameof(CosmeticSettings));
             OnPropertyChanged(nameof(DefinitionList));
+        }
+
+        public void RemoveDefinition()
+        {
+            CosmeticSettings.Remove(SelectedDefinition);
+            OnPropertyChanged(nameof(CosmeticSettings));
+            OnPropertyChanged(nameof(DefinitionList));
+            OnPropertyChanged(nameof(SelectedDefinition));
+        }
+
+        public void CopyDefinition()
+        {
+            if (SelectedDefinition != null)
+            {
+                var newDefinition = SelectedDefinition.Copy();
+                CosmeticSettings.Add(newDefinition);
+                SelectedDefinition = newDefinition;
+                OnPropertyChanged(nameof(CosmeticSettings));
+                OnPropertyChanged(nameof(DefinitionList));
+                OnPropertyChanged(nameof(SelectedDefinition));
+            }
         }
     }
 }

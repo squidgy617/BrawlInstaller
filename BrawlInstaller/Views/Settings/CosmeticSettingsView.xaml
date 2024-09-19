@@ -43,9 +43,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <ListBox x:Name="definitionListBox" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Width="180" Height="120"/>
+                <ListBox x:Name="definitionListBox" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Width="180" Height="120" Grid.RowSpan="3"/>
                 <Button x:Name="definitionAddButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddDefinitionCommand}" Grid.Column="1"/>
+                <Button x:Name="definitionRemoveButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveDefinitionCommand}" Grid.Column="1" Grid.Row="1"/>
+                <Button x:Name="definitionCopyButton" Content="🗐" Style="{StaticResource miniButton}" Command="{Binding CopyDefinitionCommand}" Grid.Column="1" Grid.Row="2"/>
             </Grid>
         </Grid>
         <Grid x:Name="definitionSettingsGrid" Grid.Column="1" Visibility="{Binding SelectedDefinition, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
