@@ -1247,7 +1247,7 @@ namespace BrawlInstaller.Services
             var nodes = new List<CosmeticTexture>();
             var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
             // If the definition contains PatSettings, check the PAT0 first
-            if (definition.PatSettings.Count > 0 && definition.PatSettings.Count > 0)
+            if (definition.PatSettings.Count > 0)
             {
                 var patSettings = definition.PatSettings.FirstOrDefault();
                 var pat = node.FindChild(patSettings.Path);
@@ -1271,7 +1271,11 @@ namespace BrawlInstaller.Services
                             });
                         }
                     }
-                    return nodes;
+                    // If it's a selectable cosmetic, don't return right away, we still need to retrieve the other textures
+                    if (!definition.Selectable)
+                    {
+                        return nodes;
+                    }
                 }
             }
             var start = definition.InstallLocation.NodePath != "" ? node.FindChild(definition.InstallLocation.NodePath) : node;
@@ -1290,7 +1294,14 @@ namespace BrawlInstaller.Services
                     {
                         // Get textures that match definition
                         if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || child.Name.StartsWith(definition.Prefix)) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
-                            nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = GetCosmeticId(child.Name, definition) });
+                        {
+                            // If it's selectable and not a new texture, don't add it. Also set ID to null for selectable textures
+                            if (!definition.Selectable || !nodes.Select(x => x.TextureId).Contains(GetCosmeticId(child.Name, definition)))
+                            {
+                                var nodeId = !definition.Selectable ? GetCosmeticId(child.Name, definition) : null;
+                                nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = nodeId });
+                            }
+                        }
                     }
                 }
             }
@@ -1438,7 +1449,7 @@ namespace BrawlInstaller.Services
                     .Select(g => g.OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId) ?? g.First())
                     .ToList();
                 // Set nearest option to selected
-                cosmetics.OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId).SelectionOption = false;
+                cosmetics.Where(x => x.Id != null).OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId).SelectionOption = false;
                 // Order cosmetics
                 cosmetics = cosmetics.OrderByDescending(x => x.Texture.Name).ToList();
             }
