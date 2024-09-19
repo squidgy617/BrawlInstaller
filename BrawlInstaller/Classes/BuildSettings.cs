@@ -73,8 +73,6 @@ namespace BrawlInstaller.Classes
         public IdType? IdType { get; set; } = null;
         public int? Multiplier { get; set; } = null;
         public int? Offset { get; set; } = null;
-
-        // TODO: Add this to UI, or make it automatic based on type? This is for stats images
         public bool AddTerminatorFrame { get; set; } = false;
     }
 
