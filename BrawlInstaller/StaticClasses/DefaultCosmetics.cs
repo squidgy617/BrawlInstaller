@@ -13,7 +13,10 @@ namespace BrawlInstaller.StaticClasses
         {
             (CosmeticType.StagePreview, "Preview"),
             (CosmeticType.StageIcon, "Icon"),
-            (CosmeticType.StageFranchiseIcon, "Icon")
+            (CosmeticType.StageFranchiseIcon, "Icon"),
+            (CosmeticType.StageName, "Name"),
+            (CosmeticType.StageGameLogo, "Game Logo"),
+            (CosmeticType.StageAltName, "Alt Name")
         };
     }
 }

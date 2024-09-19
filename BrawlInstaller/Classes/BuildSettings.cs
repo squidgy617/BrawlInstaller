@@ -54,8 +54,8 @@ namespace BrawlInstaller.Classes
         public bool SeparateFiles { get; set; } = false;
         [JsonIgnore] public bool UseIndividualIds { get => CosmeticType == CosmeticType.FranchiseIcon || Selectable; }
         [JsonIgnore] public bool FighterCosmetic { get => CosmeticType != CosmeticType.FranchiseIcon && !StageCosmetic; }
-        [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon; }
-        [JsonIgnore] public bool Selectable { get => CosmeticType == CosmeticType.StageFranchiseIcon; }
+        [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon || CosmeticType == CosmeticType.StageName || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName; }
+        [JsonIgnore] public bool Selectable { get => CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName; }
 
         public CosmeticDefinition Copy()
         {
@@ -119,6 +119,8 @@ namespace BrawlInstaller.Classes
         // on save
         public string StageTablePath { get; set; } = "Source\\Project+\\StageTable.asm";
         [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
+        
+        [JsonProperty("RandomStageNamesLocations", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
         public List<InstallLocation> RandomStageNamesLocations { get; set; } = new List<InstallLocation> 
         {
             new InstallLocation

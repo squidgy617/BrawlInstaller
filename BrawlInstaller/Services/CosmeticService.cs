@@ -267,25 +267,28 @@ namespace BrawlInstaller.Services
             foreach(var patSetting in definition.PatSettings)
             {
                 var patTexture = GetPatTextureNode(rootNode, patSetting);
-                var patEntries = patTexture.Children.Where(x => CheckIdRange(patSetting, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
-                // Only remove textures if it's not selectable - we'll remove those by the selected ID instead of the definition ID
-                if (!definition.Selectable)
+                if (patTexture != null)
                 {
-                    // Remove texture and palette associated with pat entries
-                    foreach (var patEntry in patEntries)
+                    var patEntries = patTexture.Children.Where(x => CheckIdRange(patSetting, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
+                    // Only remove textures if it's not selectable - we'll remove those by the selected ID instead of the definition ID
+                    if (!definition.Selectable)
                     {
-                        ((PAT0TextureEntryNode)patEntry).GetImage(0);
-                        ((PAT0TextureEntryNode)patEntry)._textureNode?.Remove(true);
+                        // Remove texture and palette associated with pat entries
+                        foreach (var patEntry in patEntries)
+                        {
+                            ((PAT0TextureEntryNode)patEntry).GetImage(0);
+                            ((PAT0TextureEntryNode)patEntry)._textureNode?.Remove(true);
+                        }
                     }
-                }
-                // Remove pat entries
-                patTexture.Children.RemoveAll(x => patEntries.Contains(x));
-                // Update the FrameCount
-                var pat0 = patTexture.Parent.Parent;
-                if (pat0 != null)
-                {
-                    pat0.IsDirty = true;
-                    ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
+                    // Remove pat entries
+                    patTexture.Children.RemoveAll(x => patEntries.Contains(x));
+                    // Update the FrameCount
+                    var pat0 = patTexture.Parent.Parent;
+                    if (pat0 != null)
+                    {
+                        pat0.IsDirty = true;
+                        ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
+                    }
                 }
             }
         }
@@ -1405,7 +1408,6 @@ namespace BrawlInstaller.Services
                     CostumeIndex = texture.CostumeIndex,
                     Id = texture.Id,
                     TextureId = texture.TextureId,
-                    // TODO: SelectionOption should be set based on the NEAREST ID
                     SelectionOption = definition.Selectable
                 });
             }
@@ -1426,6 +1428,7 @@ namespace BrawlInstaller.Services
                 }
             }
             // For selectable cosmetics, we only want to get each texture once
+            // TODO: Need to get ALL textures while still favoring one with the pat0 entry closest to ours
             if (definition.Selectable)
             {
                 // Get ID of selected cosmetic
@@ -1522,6 +1525,7 @@ namespace BrawlInstaller.Services
         /// <param name="definitions">List of cosmetic definitions to retrieve cosmetics for</param>
         /// <param name="restrictRange">Whether to restrict range of cosmetics based on ID</param>
         /// <returns>List of cosmetics</returns>
+        // TODO: If node path or pat path can't be found, we should report this to user somehow
         private List<Cosmetic> GetCosmetics(BrawlIds brawlIds, List<CosmeticDefinition> definitions, bool restrictRange)
         {
             var cosmetics = new ConcurrentBag<Cosmetic>();
