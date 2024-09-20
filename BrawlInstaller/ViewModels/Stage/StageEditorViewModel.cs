@@ -256,39 +256,43 @@ namespace BrawlInstaller.ViewModels
 
         private void DeleteStage()
         {
-            var oldSlot = Stage.Slot;
-            var selectableCosmeticsToDelete = new List<(CosmeticType CosmeticType, string Style)>();
-            // Set to new stage that is missing everything
-            var deleteStage = new StageInfo { Slot = new StageSlot { StageIds = new BrawlIds { StageId = Stage.Slot.StageIds.StageId, StageCosmeticId = Stage.Slot.StageIds.StageCosmeticId } } };
-            // Mark all non-selectable cosmetics as changed
-            foreach(var cosmetic in Stage.Cosmetics.Items)
+            var result = _dialogService.ShowMessage("Are you sure you'd like to delete this stage?", "Delete stage?", MessageBoxButton.YesNo);
+            if (result)
             {
-                if (Stage.Cosmetics.Items.Count(x => x.CosmeticType == cosmetic.CosmeticType && x.Style == cosmetic.Style) == 1)
+                var oldSlot = Stage.Slot;
+                var selectableCosmeticsToDelete = new List<(CosmeticType CosmeticType, string Style)>();
+                // Set to new stage that is missing everything
+                var deleteStage = new StageInfo { Slot = new StageSlot { StageIds = new BrawlIds { StageId = Stage.Slot.StageIds.StageId, StageCosmeticId = Stage.Slot.StageIds.StageCosmeticId } } };
+                // Mark all non-selectable cosmetics as changed
+                foreach (var cosmetic in Stage.Cosmetics.Items)
+                {
+                    if (Stage.Cosmetics.Items.Count(x => x.CosmeticType == cosmetic.CosmeticType && x.Style == cosmetic.Style) == 1)
+                    {
+                        deleteStage.Cosmetics.ItemChanged(cosmetic);
+                    }
+                }
+                // TODO: instead of prompting for each one separately, create one prompt with checkbox options for each. Maybe images too?
+                // Prompt for selectable cosmetics
+                foreach (var cosmeticGroup in Stage.Cosmetics.Items.Where(x => x.SelectionOption).GroupBy(x => new { x.CosmeticType, x.Style }))
+                {
+                    var delete = _dialogService.ShowMessage($"Would you like to delete cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}?",
+                        "Delete cosmetics?", MessageBoxButton.YesNo);
+                    if (delete)
+                    {
+                        selectableCosmeticsToDelete.Add((cosmeticGroup.Key.CosmeticType, cosmeticGroup.Key.Style));
+                    }
+                }
+                // Mark selectable cosmetics as changed
+                foreach (var cosmetic in Stage.Cosmetics.Items.Where(x => selectableCosmeticsToDelete.Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)))
                 {
                     deleteStage.Cosmetics.ItemChanged(cosmetic);
                 }
+                Stage = null;
+                OnPropertyChanged(nameof(Stage));
+                SaveStage(deleteStage);
+                // Update stage lists
+                WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
             }
-            // TODO: instead of prompting for each one separately, create one prompt with checkbox options for each. Maybe images too?
-            // Prompt for selectable cosmetics
-            foreach(var cosmeticGroup in Stage.Cosmetics.Items.Where(x => x.SelectionOption).GroupBy(x => new { x.CosmeticType, x.Style }))
-            {
-                var delete = _dialogService.ShowMessage($"Would you like to delete cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}?",
-                    "Delete cosmetics?", MessageBoxButton.YesNo);
-                if (delete)
-                {
-                    selectableCosmeticsToDelete.Add((cosmeticGroup.Key.CosmeticType, cosmeticGroup.Key.Style));
-                }
-            }
-            // Mark selectable cosmetics as changed
-            foreach(var cosmetic in Stage.Cosmetics.Items.Where(x => selectableCosmeticsToDelete.Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)))
-            {
-                deleteStage.Cosmetics.ItemChanged(cosmetic);
-            }
-            Stage = null;
-            OnPropertyChanged(nameof(Stage));
-            SaveStage(deleteStage);
-            // Update stage lists
-            WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
         }
     }
 
