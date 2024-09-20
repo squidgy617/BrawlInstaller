@@ -164,7 +164,7 @@
                         <Label x:Name="framesPerImageLabel" Content="Frames Per Image:" Grid.Row="3"/>
                         <TextBox x:Name="framesPerImageTextBox" Text="{Binding SelectedPatSettings.FramesPerImage}" Width="60" Grid.Column="1" Grid.Row="3"/>
                         <CheckBox x:Name="copyPatSettingsCheckBox" Content="Copy From Cosmetic Settings" IsChecked="{Binding CopyPatSettings, Mode=TwoWay}" Grid.Column="2" Margin="2"/>
-                        <CheckBox x:Name="terminatorFrameCheckBox" Content="Use last available frame" IsChecked="{Binding SelectedPatSettings.AddTerminatorFrame, Mode=TwoWay}" Grid.Column="2" Grid.Row="1"/>
+                        <CheckBox x:Name="terminatorFrameCheckBox" Content="Create terminator frames" IsChecked="{Binding SelectedPatSettings.AddTerminatorFrame, Mode=TwoWay}" Grid.Column="2" Grid.Row="1"/>
                     </Grid>
                     
                 </Grid>
