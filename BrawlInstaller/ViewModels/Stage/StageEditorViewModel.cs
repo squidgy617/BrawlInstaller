@@ -42,7 +42,7 @@ namespace BrawlInstaller.ViewModels
         IFileService _fileService { get; }
 
         // Commands
-        public ICommand SaveStageCommand => new RelayCommand(param => SaveStage());
+        public ICommand SaveStageCommand => new RelayCommand(param => SaveStage(Stage));
         public ICommand MoveEntryUpCommand => new RelayCommand(param => MoveEntryUp());
         public ICommand MoveEntryDownCommand => new RelayCommand(param => MoveEntryDown());
         public ICommand MoveSubstageUpCommand => new RelayCommand(param => MoveSubstageUp());
@@ -132,11 +132,10 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(Tracklists));
         }
 
-        public void SaveStage()
+        public void SaveStage(StageInfo stage)
         {
-            // TODO: If it's a new stage, add it to unused list
             var deleteOptions = new List<string>();
-            deleteOptions = _stageService.SaveStage(Stage);
+            deleteOptions = _stageService.SaveStage(stage);
 
             // Prompt user for delete options
             foreach (var item in deleteOptions)
@@ -148,10 +147,10 @@ namespace BrawlInstaller.ViewModels
                 }
             }
 
-            Stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
-            Stage.Cosmetics.ClearChanges();
+            stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
+            stage.Cosmetics.ClearChanges();
             // Update stage list
-            WeakReferenceMessenger.Default.Send(new StageSavedMessage(Stage));
+            WeakReferenceMessenger.Default.Send(new StageSavedMessage(stage));
         }
 
         private void MoveEntryUp()
@@ -287,8 +286,7 @@ namespace BrawlInstaller.ViewModels
             }
             Stage = null;
             OnPropertyChanged(nameof(Stage));
-            Stage = deleteStage;
-            SaveStage();
+            SaveStage(deleteStage);
             // Update stage lists
             WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
         }
