@@ -322,6 +322,7 @@
                 </Grid>
             </Grid>
         </ScrollViewer>
+        <Button x:Name="deleteStageButton" Content="Delete" HorizontalAlignment="Left" Grid.Row="1" Command="{Binding DeleteStageCommand}"/>
         <Button x:Name="saveStageButton" Content="Save" HorizontalAlignment="Right" Grid.Row="1" Command="{Binding SaveStageCommand}"/>
     </Grid>
 </UserControl>

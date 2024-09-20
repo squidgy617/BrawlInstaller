@@ -277,7 +277,11 @@ namespace BrawlInstaller.Services
                         foreach (var patEntry in patEntries)
                         {
                             ((PAT0TextureEntryNode)patEntry).GetImage(0);
-                            ((PAT0TextureEntryNode)patEntry)._textureNode?.Remove(true);
+                            if (((PAT0TextureEntryNode)patEntry)._textureNode != null)
+                            {
+                                DeleteHDTexture(((PAT0TextureEntryNode)patEntry)._textureNode);
+                                ((PAT0TextureEntryNode)patEntry)._textureNode?.Remove(true);
+                            }
                         }
                     }
                     // Remove pat entries
@@ -313,6 +317,24 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Delete HD texture associated with a TEX0
+        /// </summary>
+        /// <param name="texNode">TEX0 node to delete HD texture for</param>
+        private void DeleteHDTexture(TEX0Node texNode)
+        {
+            var name = texNode.DolphinTextureName;
+            if (_settingsService.BuildSettings.HDTextures)
+            {
+                var deleteFiles = HDImages.Where(x => x.Key == name);
+                foreach (var deleteFile in deleteFiles)
+                {
+                    _fileService.DeleteFile(deleteFile.Value);
+                }
+                HDImages.Remove(name);
+            }
+        }
+
+        /// <summary>
         /// Remove textures based on definition rules
         /// </summary>
         /// <param name="parentNode">Parent node to remove textures from</param>
@@ -328,16 +350,7 @@ namespace BrawlInstaller.Services
                 foreach(var node in folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)))
                 {
                     var texNode = (TEX0Node)node;
-                    var name = texNode.DolphinTextureName;
-                    if (_settingsService.BuildSettings.HDTextures)
-                    {
-                        var deleteFiles = HDImages.Where(x => x.Key == name);
-                        foreach(var deleteFile in deleteFiles)
-                        {
-                            _fileService.DeleteFile(deleteFile.Value);
-                        }
-                        HDImages.Remove(name);
-                    }
+                    DeleteHDTexture(texNode);
                 };
                 folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
             }
@@ -1383,8 +1396,9 @@ namespace BrawlInstaller.Services
             var file = GetHDTexture(fileName);
             if (!string.IsNullOrEmpty(file))
             {
-                var bitmap = new Bitmap(file);
-                return bitmap.ToBitmapImage();
+                //var bitmap = new Bitmap(file);
+                //return bitmap.ToBitmapImage();
+                return _fileService.LoadImage(file);
             }
             return null;
         }

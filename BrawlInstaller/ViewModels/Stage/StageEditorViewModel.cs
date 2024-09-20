@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlLib.Internal;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
@@ -52,6 +53,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveStageParamCommand => new RelayCommand(param => RemoveStageParam());
         public ICommand AddSubstageCommand => new RelayCommand(param => AddSubstage());
         public ICommand RemoveSubstageCommand => new RelayCommand(param => RemoveSubstage());
+        public ICommand DeleteStageCommand => new RelayCommand(param => DeleteStage());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -252,12 +254,57 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedStageEntry));
             OnPropertyChanged(nameof(Substages));
         }
+
+        private void DeleteStage()
+        {
+            var oldSlot = Stage.Slot;
+            var selectableCosmeticsToDelete = new List<(CosmeticType CosmeticType, string Style)>();
+            // Set to new stage that is missing everything
+            var deleteStage = new StageInfo { Slot = new StageSlot { StageIds = new BrawlIds { StageId = Stage.Slot.StageIds.StageId, StageCosmeticId = Stage.Slot.StageIds.StageCosmeticId } } };
+            // Mark all non-selectable cosmetics as changed
+            foreach(var cosmetic in Stage.Cosmetics.Items)
+            {
+                if (Stage.Cosmetics.Items.Count(x => x.CosmeticType == cosmetic.CosmeticType && x.Style == cosmetic.Style) == 1)
+                {
+                    deleteStage.Cosmetics.ItemChanged(cosmetic);
+                }
+            }
+            // TODO: instead of prompting for each one separately, create one prompt with checkbox options for each. Maybe images too?
+            // Prompt for selectable cosmetics
+            foreach(var cosmeticGroup in Stage.Cosmetics.Items.Where(x => x.SelectionOption).GroupBy(x => new { x.CosmeticType, x.Style }))
+            {
+                var delete = _dialogService.ShowMessage($"Would you like to delete cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}?",
+                    "Delete cosmetics?", MessageBoxButton.YesNo);
+                if (delete)
+                {
+                    selectableCosmeticsToDelete.Add((cosmeticGroup.Key.CosmeticType, cosmeticGroup.Key.Style));
+                }
+            }
+            // Mark selectable cosmetics as changed
+            foreach(var cosmetic in Stage.Cosmetics.Items.Where(x => selectableCosmeticsToDelete.Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)))
+            {
+                deleteStage.Cosmetics.ItemChanged(cosmetic);
+            }
+            Stage = null;
+            OnPropertyChanged(nameof(Stage));
+            Stage = deleteStage;
+            SaveStage();
+            // Update stage lists
+            WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
+        }
     }
 
     // Messages
     public class StageSavedMessage : ValueChangedMessage<StageInfo>
     {
         public StageSavedMessage(StageInfo stage) : base(stage)
+        {
+        }
+    }
+
+    public class StageDeletedMessage : ValueChangedMessage<StageSlot>
+    {
+        public StageDeletedMessage(StageSlot stageSlot) : base(stageSlot)
         {
         }
     }

@@ -69,6 +69,11 @@ namespace BrawlInstaller.ViewModels
             {
                 UpdateStageList(message);
             });
+
+            WeakReferenceMessenger.Default.Register<StageDeletedMessage>(this, (recipient, message) =>
+            {
+                DeleteStageSlot(message);
+            });
         }
 
         // Properties
@@ -107,6 +112,22 @@ namespace BrawlInstaller.ViewModels
             if (!StageTable.Select(x => x.StageIds).Select(x => x.StageId).Contains(stage.Slot.StageIds.StageId))
             {
                 StageTable.Add(stage.Slot);
+            }
+            OnPropertyChanged(nameof(StageTable));
+            OnPropertyChanged(nameof(StageLists));
+            SaveStageList();
+        }
+
+        public void DeleteStageSlot(StageDeletedMessage message)
+        {
+            var stageSlot = message.Value;
+            StageTable.Remove(stageSlot);
+            foreach(var list in StageLists)
+            {
+                foreach(var page in list.Pages)
+                {
+                    page.StageSlots.Remove(stageSlot);
+                }
             }
             OnPropertyChanged(nameof(StageTable));
             OnPropertyChanged(nameof(StageLists));

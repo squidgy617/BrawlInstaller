@@ -43,6 +43,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.SaveTextFile(string, string)"/>
         void SaveTextFile(string filePath, string text);
+
+        /// <inheritdoc cref="FileService.LoadImage(string)"/>
+        BitmapImage LoadImage(string filePath);
     }
     [Export(typeof(IFileService))]
     internal class FileService : IFileService
@@ -87,7 +90,10 @@ namespace BrawlInstaller.Services
         /// <param name="path">Path to save file to</param>
         public void SaveFileAs(ResourceNode node, string path)
         {
-            node.Export(path);
+            if (node.WorkingSource.Length != 0)
+            {
+                node.Export(path);
+            }
             node.IsDirty = false;
         }
 
@@ -163,6 +169,22 @@ namespace BrawlInstaller.Services
         public void SaveImage(BitmapImage image, string outFile)
         {
             SaveImage(image.ToBitmap(), outFile);
+        }
+
+        /// <summary>
+        /// Load an image from a file
+        /// </summary>
+        /// <param name="filePath">Path to image</param>
+        /// <returns>BitmapImage of image</returns>
+        public BitmapImage LoadImage(string filePath)
+        {
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.UriSource = new Uri(filePath);
+            bitmap.EndInit();
+            bitmap.Freeze();
+            return bitmap;
         }
 
         /// <summary>

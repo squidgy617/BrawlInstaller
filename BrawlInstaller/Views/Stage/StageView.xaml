@@ -17,7 +17,7 @@
         <GroupBox x:Name="stageListGroupBox" Header="Stages" VerticalAlignment="Stretch">
             <ContentControl Content="{Binding StageListViewModel}"/>
         </GroupBox>
-        <GroupBox x:Name="stageEditorGroupBox" VerticalAlignment="Stretch" Header="Editor" Grid.Column="1" Margin="3,2,2,2" Visibility="{Binding StageListViewModel.Stage, Converter={StaticResource nullVisConverter}}">
+        <GroupBox x:Name="stageEditorGroupBox" VerticalAlignment="Stretch" Header="Editor" Grid.Column="1" Margin="3,2,2,2" Visibility="{Binding StageEditorViewModel.Stage, Converter={StaticResource nullVisConverter}}">
             <ContentControl Content="{Binding StageEditorViewModel}"/>
         </GroupBox>
     </Grid>
