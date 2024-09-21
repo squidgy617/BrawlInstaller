@@ -83,6 +83,7 @@ namespace BrawlInstaller.Classes
         public string SawndReplaceExe { get; set; } = "";
         public string SfxChangeExe { get; set; } = "";
         public string GfxChangeExe { get; set; } = "";
+        public string GctRealMateExe { get; set; } = "GCTRealMate.exe";
     }
 
     public class KirbyHatSettings
@@ -142,5 +143,15 @@ namespace BrawlInstaller.Classes
         public string TracklistPath { get; set; } = "pf\\sound\\tracklist";
         public string SoundbankPath { get; set; } = "pf\\sfx";
         public string StageAltListPath { get; set; } = "pf\\stage\\stagelist";
+
+        [JsonProperty("CodeFilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+        public List<string> CodeFilePaths { get; set; } = new List<string>
+        {
+            "RSBE01.txt",
+            "BOOST.txt"
+            // TODO: Re-add these when done testing
+            //"NETPLAY.txt",
+            //"NETBOOST.txt"
+        };
     }
 }

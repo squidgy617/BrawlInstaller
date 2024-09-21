@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Exceptions;
 using BrawlInstaller.StaticClasses;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.ReplaceHooks(List{AsmHook}, string)"/>
         string ReplaceHooks(List<AsmHook> hooks, string fileText);
+
+        /// <inheritdoc cref="CodeService.CompileCodes()"/>
+        void CompileCodes();
     }
 
     [Export(typeof(ICodeService))]
@@ -375,6 +379,37 @@ namespace BrawlInstaller.Services
                 }
             }
             return table;
+        }
+
+        /// <summary>
+        /// Compile all codes
+        /// </summary>
+        // TODO: Create backups of code files when we do this
+        public void CompileCodes()
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.ToolPathSettings.GctRealMateExe))
+            {
+                var args = "-g -l -q";
+                var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Select(s => $" \"{Path.Combine(buildPath, s)}\"");
+                foreach(var arg in argList)
+                {
+                    args += arg;
+                }
+                Process gctRm = Process.Start(new ProcessStartInfo
+                {
+                    FileName = Path.Combine(buildPath, _settingsService.BuildSettings.ToolPathSettings.GctRealMateExe),
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    Arguments = args
+                });
+                gctRm?.WaitForExit(5000);
+                if (gctRm?.HasExited == false)
+                {
+                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.ToolPathSettings.GctRealMateExe} encountered an error.");
+                    gctRm?.Kill();
+                    throw error;
+                }
+            }
         }
     }
 }

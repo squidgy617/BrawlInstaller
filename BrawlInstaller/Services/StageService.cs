@@ -718,6 +718,8 @@ namespace BrawlInstaller.Services
                 var countHook = new AsmHook { Address = "800AF673", Instructions = new List<string> { $"byte {stageTable.Count():D2}" }, Comment = "Stage Count" };
                 fileText = _codeService.ReplaceHook(countHook, fileText);
                 _fileService.SaveTextFile(filePath, fileText);
+                // Compile code
+                _codeService.CompileCodes();
             }
         }
 

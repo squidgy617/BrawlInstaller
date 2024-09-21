@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -41,6 +42,7 @@ namespace BrawlInstaller.ViewModels
         // Services
         IStageService _stageService { get; }
         ICosmeticService _cosmeticService { get; }
+        IDialogService _dialogService { get; }
 
         // Commands
         public ICommand MoveUpCommand => new RelayCommand(param => MoveStageUp());
@@ -52,10 +54,11 @@ namespace BrawlInstaller.ViewModels
         public ICommand NewStageCommand => new RelayCommand(param =>  NewStage());
 
         [ImportingConstructor]
-        public StageListViewModel(IStageService stageService, ICosmeticService cosmeticService)
+        public StageListViewModel(IStageService stageService, ICosmeticService cosmeticService, IDialogService dialogService)
         {
             _stageService = stageService;
             _cosmeticService = cosmeticService;
+            _dialogService = dialogService;
 
             StageTable = _stageService.GetStageSlots();
 
@@ -200,7 +203,15 @@ namespace BrawlInstaller.ViewModels
 
         private void SaveStageList()
         {
-            _stageService.SaveStageLists(StageLists, StageTable);
+            // TODO: Review if there's a better way to catch exceptions
+            try
+            {
+                _stageService.SaveStageLists(StageLists, StageTable);
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowMessage(ex.Message, "Error", MessageBoxImage.Error);
+            }
         }
 
         public void LoadStage()
