@@ -203,15 +203,7 @@ namespace BrawlInstaller.ViewModels
 
         private void SaveStageList()
         {
-            // TODO: Review if there's a better way to catch exceptions
-            try
-            {
-                _stageService.SaveStageLists(StageLists, StageTable);
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowMessage(ex.Message, "Error", MessageBoxImage.Error);
-            }
+            _stageService.SaveStageLists(StageLists, StageTable);
         }
 
         public void LoadStage()

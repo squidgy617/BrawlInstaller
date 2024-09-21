@@ -405,7 +405,7 @@ namespace BrawlInstaller.Services
                 gctRm?.WaitForExit(5000);
                 if (gctRm?.HasExited == false)
                 {
-                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.ToolPathSettings.GctRealMateExe} encountered an error.");
+                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.ToolPathSettings.GctRealMateExe} encountered an error. Verify your code files are valid and don't contain errors.");
                     gctRm?.Kill();
                     throw error;
                 }

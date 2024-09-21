@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace BrawlInstaller
 {
@@ -30,6 +31,7 @@ namespace BrawlInstaller
             CompositionBootstrapper.InitializeContainer(this);
             InitializeComponent();
             DataContext = this;
+            Application.Current.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(AppDispatcherUnhandledException);
         }
 
         [Import]
@@ -49,5 +51,23 @@ namespace BrawlInstaller
 
         [Import]
         public IStageViewModel StageViewModel { get; set; }
+
+        // Global error handler
+        void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            ShowUnhandledException(e);
+        }
+
+        void ShowUnhandledException(DispatcherUnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+
+            string errorMessage = e.Exception.Message;
+
+            // TODO: Probably will need to make this a custom box, along with the dialog service box
+            MessageBox.Show(errorMessage, "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // TODO: Restore backups when an error occurs
+        }
     }
 }
