@@ -5,11 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrawlInstaller.Views"
         xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
-             mc:Ignorable="d"
-        Height="450" Width="800">
+             mc:Ignorable="d">
     <Grid>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="368,245,0,0" VerticalAlignment="Top" Command="{Binding ButtonCommand}"/>
-        <Label x:Name="label" Content="{Binding Title}" HorizontalAlignment="Left" Margin="327,166,0,0" VerticalAlignment="Top" Height="33" Width="108"/>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ContentControl x:Name="MainControlsView" Content="{Binding MainControlsViewModel}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="Auto" Height="Auto"/>
+        <TabControl x:Name="MainTabControl" Grid.Row="1" SelectedIndex="0" Height="Auto" Width="Auto">
+            <TabItem Header="Fighter">
+                <ContentControl x:Name="FighterView" Content="{Binding FighterViewModel}" Height="Auto" Width="Auto"/>
+            </TabItem>
+            <TabItem Header="Fighter Info">
+                <ContentControl x:Name="FighterInfoView" Content="{Binding FighterInfoViewModel}" Height="Auto" Width="Auto"/>
+            </TabItem>
+            <TabItem Header="Settings">
+                <ContentControl x:Name="SettingsView" Content="{Binding SettingsViewModel}" Height="Auto" Width="Auto"/>
+            </TabItem>
+            <TabItem Header="Stages">
+                <ContentControl x:Name="StageView" Content="{Binding StageViewModel}" Height="Auto" Width="Auto"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

@@ -10,89 +10,59 @@ using BrawlLib.SSBB.ResourceNodes;
 using System.Diagnostics;
 using BrawlInstaller.Services;
 using BrawlInstaller.Classes;
+using System.Windows.Threading;
+using System.Windows;
 
 namespace BrawlInstaller.ViewModels
 {
     public interface IMainViewModel
     {
-        ICommand ButtonCommand { get; }
-        void Button();
-        string Title { get; }
+
     }
 
     [Export(typeof(IMainViewModel))]
     internal class MainViewModel : ViewModelBase, IMainViewModel
     {
         // Services
-        IFileService _fileService { get; }
-        ISettingsService _settingsService { get; }
-        IPackageService _packageService { get; }
-
-        // Commands
-        public ICommand ButtonCommand
-        {
-            get
-            {
-                var buttonCommand = new RelayCommand(param => this.Button());
-                return buttonCommand;
-            }
-        }
+        IDialogService _dialogService;
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public MainViewModel(IFileService fileService, ISettingsService settingsService, IPackageService packageService)
+        public MainViewModel(IDialogService dialogService, IMainControlsViewModel mainControlsViewModel, ISettingsViewModel settingsViewModel, IFighterViewModel fighterViewModel, 
+            IFighterInfoViewModel fighterInfoViewModel, IStageViewModel stageViewModel)
         {
-            _fileService = fileService;
-            _settingsService = settingsService;
-            _packageService = packageService;
-            Title = "Test title";
+            _dialogService = dialogService;
+            MainControlsViewModel = mainControlsViewModel;
+            SettingsViewModel = settingsViewModel;
+            FighterViewModel = fighterViewModel;
+            FighterInfoViewModel = fighterInfoViewModel;
+            StageViewModel = stageViewModel;
+
+            Application.Current.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(AppDispatcherUnhandledException);
         }
 
-        // Properties
-        public string Title { get; }
+        // Viewmodels
+        public IMainControlsViewModel MainControlsViewModel { get; set; }
+        public ISettingsViewModel SettingsViewModel { get; set; }
+        public IFighterViewModel FighterViewModel { get; set; }
+        public IFighterInfoViewModel FighterInfoViewModel { get; set; }
+        public IStageViewModel StageViewModel { get; set; }
 
-        // Methods
-        public void Button()
+        // Global error handler
+        void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            //TestFiles();
-            //TestJson();
-            TestExtract();
+            ShowUnhandledException(e);
         }
 
-        public void TestFiles()
+        void ShowUnhandledException(DispatcherUnhandledExceptionEventArgs e)
         {
-            var rootNode = _fileService.OpenFile("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\pf\\menu2\\sc_selcharacter.pac");
-            var testName = rootNode.Children.Last().Name;
-            rootNode.Children.Last().MoveUp();
-            _fileService.SaveFile(rootNode);
-            Debug.Print(testName);
-        }
+            e.Handled = true;
 
-        public void TestJson()
-        {
-            var buildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
-            _settingsService.SaveSettings(buildSettings, "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
-            _settingsService.LoadSettings("F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\settings.json");
-        }
+            string errorMessage = e.Exception.Message;
 
-        public void TestExtract()
-        {
-            _settingsService.AppSettings.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
-            _settingsService.BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
-            _packageService.ExtractFighter(new FighterInfo
-            {
-                Ids = new BrawlIds
-                {
-                    //CosmeticId = 19,
-                    //CosmeticConfigId = 19,
-                    //FranchiseId = 38,
-                    //TrophyThumbnailId = 39
-                    FighterConfigId = 37,
-                    SlotConfigId = 39,
-                    CosmeticConfigId = 35,
-                    CSSSlotConfigId = 35
-                }
-            });
+            _dialogService.ShowMessage(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // TODO: Restore backups when an error occurs
         }
     }
 }

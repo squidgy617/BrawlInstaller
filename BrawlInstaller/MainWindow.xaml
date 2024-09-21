@@ -8,24 +8,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <ContentControl x:Name="MainControlsView" Content="{Binding MainControlsViewModel}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="Auto" Height="Auto"/>
-        <TabControl x:Name="MainView" Grid.Row="1" SelectedIndex="0">
-            <TabItem Header="Fighter">
-                <ContentControl x:Name="FighterView" Content="{Binding FighterViewModel}" Height="Auto" Width="Auto"/>
-            </TabItem>
-            <TabItem Header="Fighter Info">
-                <ContentControl x:Name="FighterInfoView" Content="{Binding FighterInfoViewModel}" Height="Auto" Width="Auto"/>
-            </TabItem>
-            <TabItem Header="Settings">
-                <ContentControl x:Name="SettingsView" Content="{Binding SettingsViewModel}" Height="Auto" Width="Auto"/>
-            </TabItem>
-            <TabItem Header="Stages">
-                <ContentControl x:Name="StageView" Content="{Binding StageViewModel}" Height="Auto" Width="Auto"/>
-            </TabItem>
-        </TabControl>
+        <ContentControl x:Name="MainView" Content="{Binding MainViewModel}" Height="Auto" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
 </Window>
