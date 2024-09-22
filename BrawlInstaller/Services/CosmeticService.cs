@@ -631,22 +631,25 @@ namespace BrawlInstaller.Services
         private Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
-            var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
             // If location is an ARC node and the BRRES does not exist, generate new BRRES
-            if (foundNode == null && node.GetType() == typeof(ARCNode))
+            if (node.GetType() == typeof(ARCNode))
             {
-                var bres = new BRRESNode();
-                bres.Compression = definition.CompressionType.ToString();
-                bres.FileType = definition.FileType;
-                bres.FileIndex = (short)id;
-                bres.Parent = node;
-                bres.UpdateName();
-                node.SortChildren();
-                node = bres;
-            }
-            else
-            {
-                node = foundNode;
+                var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                if (foundNode == null)
+                {
+                    var bres = new BRRESNode();
+                    bres.Compression = definition.CompressionType.ToString();
+                    bres.FileType = definition.FileType;
+                    bres.FileIndex = (short)id;
+                    bres.Parent = node;
+                    bres.UpdateName();
+                    node.SortChildren();
+                    node = bres;
+                }
+                else
+                {
+                    node = foundNode;
+                }
             }
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
@@ -1123,8 +1126,11 @@ namespace BrawlInstaller.Services
             {
                 var newNode = new ARCNode();
                 var bresNode = new BRRESNode();
+                bresNode.Compression = definition.CompressionType.ToString();
+                bresNode.FileType = definition.FileType;
                 bresNode.FileIndex = (short)id;
-                newNode.AddChild(bresNode);
+                bresNode.Parent = newNode;
+                bresNode.UpdateName();
                 newNode._origPath = cosmeticPath;
                 FileCache.Add(newNode);
                 return newNode;
@@ -1132,6 +1138,8 @@ namespace BrawlInstaller.Services
             else if (definition.InstallLocation.FileExtension == "brres")
             {
                 var newNode = new BRRESNode();
+                newNode.Compression = definition.CompressionType.ToString();
+                newNode.FileType = ARCFileType.None;
                 //_fileService.SaveFileAs(newNode, cosmeticPath);
                 newNode._origPath = cosmeticPath;
                 FileCache.Add(newNode);
