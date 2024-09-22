@@ -627,9 +627,14 @@ namespace BrawlInstaller.Services
         private Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            // If location is an ARC node, generate new BRRES
             if (node.GetType() == typeof(ARCNode))
             {
-                node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                var bres = new BRRESNode();
+                bres.Compression = definition.CompressionType.ToString();
+                node.Children.Add(bres);
+                bres.FileIndex = (short)id;
+                node = bres;
             }
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
@@ -732,10 +737,11 @@ namespace BrawlInstaller.Services
             var restrictRange = true;
             // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
             var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
+            var originalNode = parentNode;
             if (parentNode.GetType() == typeof(ARCNode))
             {
                 restrictRange = false;
-                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id); ;
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
             }
             if (parentNode != null)
             {
@@ -744,6 +750,16 @@ namespace BrawlInstaller.Services
                     RemoveTextures((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
                 }
                 RemoveModels((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
+            }
+            // If location is an ARC node, remove entire BRRES
+            if (originalNode.GetType() == typeof(ARCNode))
+            {
+                if (parentNode != null)
+                {
+                    parentNode.Children.Remove(parentNode);
+                    parentNode.Dispose();
+                    return;
+                }
             }
         }
 
@@ -881,8 +897,6 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // TODO: Upon importing selectable cosmetics, filter out cosmetics with "SelectionOption" of true. Also only import the textures if they have a new ID, otherwise,
-        // just update the texture name on the PAT0
         /// <summary>
         /// Import cosmetics with file caching based on definition rules
         /// </summary>
@@ -905,8 +919,6 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // TODO: Handle compression
-        // TODO: Handle selectable cosmetics
         /// <summary>
         /// Import cosmetics based on definition rules
         /// </summary>
