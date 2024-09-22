@@ -248,7 +248,13 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Label x:Name="binNameLabel" Content="Bin File:"/>
-                                    <TextBox x:Name="binNameTextBox" Text="{Binding SelectedStageEntry.BinFileName}" Grid.Column="1"/>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                        <TextBlock Text="st_" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding BinIndexString}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="_" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="binNameTextBox" Text="{Binding SelectedStageEntry.BinFileName}"/>
+                                        <TextBlock Text=".bin" VerticalAlignment="Center"/>
+                                    </StackPanel>
                                     <userControls:FileBox x:Name="binFileBox" Text="{Binding SelectedStageEntry.BinFilePath}" Filter="BIN file (.bin)|*.bin" Grid.Row="1" Grid.Column="1" TextBoxWidth="160"/>
                                 </Grid>
                             </GroupBox>
