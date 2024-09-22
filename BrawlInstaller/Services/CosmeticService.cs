@@ -735,7 +735,7 @@ namespace BrawlInstaller.Services
             if (parentNode.GetType() == typeof(ARCNode))
             {
                 restrictRange = false;
-                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id); ;
             }
             if (parentNode != null)
             {
