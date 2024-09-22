@@ -637,7 +637,7 @@ namespace BrawlInstaller.Services
             {
                 var bres = new BRRESNode();
                 bres.Compression = definition.CompressionType.ToString();
-                bres.FileType = ARCFileType.MiscData;
+                bres.FileType = definition.FileType;
                 bres.FileIndex = (short)id;
                 bres.Parent = node;
                 bres.UpdateName();

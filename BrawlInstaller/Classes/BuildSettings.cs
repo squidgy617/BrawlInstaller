@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Newtonsoft.Json;
 using BrawlLib.Wii.Compression;
+using BrawlLib.SSBB.Types;
 
 namespace BrawlInstaller.Classes
 {
@@ -54,6 +55,7 @@ namespace BrawlInstaller.Classes
         public bool FirstOnly { get; set; } = false;
         public bool SeparateFiles { get; set; } = false;
         public CompressionType CompressionType { get; set; } = CompressionType.None;
+        public ARCFileType FileType { get; set; } = ARCFileType.MiscData;
         [JsonIgnore] public bool UseIndividualIds { get => CosmeticType == CosmeticType.FranchiseIcon || Selectable; }
         [JsonIgnore] public bool FighterCosmetic { get => CosmeticType != CosmeticType.FranchiseIcon && !StageCosmetic; }
         [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon || CosmeticType == CosmeticType.StageName || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName; }

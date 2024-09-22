@@ -2,6 +2,8 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlLib.SSBB.Types;
+using BrawlLib.Wii.Compression;
 using BrawlLib.Wii.Textures;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -79,6 +81,10 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(DefinitionList))]
         public CosmeticDefinition SelectedDefinition { get => _selectedDefinition; set { _selectedDefinition = value; OnPropertyChanged(nameof(SelectedDefinition)); } }
+
+        public Dictionary<string, CompressionType> CompressionTypes { get => typeof(CompressionType).GetDictionary<CompressionType>(); }
+
+        public Dictionary<string, ARCFileType> FileTypes { get => typeof(ARCFileType).GetDictionary<ARCFileType>(); }
 
         public List<string> ExtensionOptions { get => new List<string> { "brres", "pac" }; }
 

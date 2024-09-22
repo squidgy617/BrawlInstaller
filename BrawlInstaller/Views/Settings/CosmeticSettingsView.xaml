@@ -104,6 +104,10 @@
             <TextBox x:Name="widthTextBox" Text="{Binding SelectedDefinition.Size.Width, Mode=TwoWay}" Grid.Column="5" Grid.Row="1" Width="60"/>
             <Label x:Name="heightLabel" Content="Height:" Grid.Row="2" Grid.Column="4"/>
             <TextBox x:Name="heightTextBox" Text="{Binding SelectedDefinition.Size.Height, Mode=TwoWay}" Grid.Column="6" Grid.Row="2" Width="60"/>
+            <Label x:Name="compressionLabel" Content="Compression:" Grid.Row="3" Grid.Column="4"/>
+            <ComboBox x:Name="compressionDropDown" ItemsSource="{Binding CompressionTypes}" Grid.Row="3" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.CompressionType}" Width="120"/>
+            <Label x:Name="fileTypeLabel" Content="File Type:" Grid.Row="4" Grid.Column="4"/>
+            <ComboBox x:Name="fileTypeDropDown" ItemsSource="{Binding FileTypes}" Grid.Row="4" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.FileType}" Width="120"/>
             <Grid x:Name="checkboxesGrid" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
