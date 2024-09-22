@@ -21,6 +21,7 @@ using static BrawlLib.BrawlManagerLib.TextureContainer;
 using System.Windows.Media.Imaging;
 using System.Collections.Concurrent;
 using BrawlLib.SSBB.Types.Animations;
+using BrawlLib.SSBB.Types;
 
 namespace BrawlInstaller.Services
 {
@@ -474,10 +475,13 @@ namespace BrawlInstaller.Services
         /// <returns></returns>
         private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode rootNode)
         {
-            var usedIds = GetUsedCosmeticIds(definition, rootNode);
-            while (usedIds.Contains(id))
+            if (rootNode.GetType() != typeof(ARCNode))
             {
-                id = id + definition.Multiplier;
+                var usedIds = GetUsedCosmeticIds(definition, rootNode);
+                while (usedIds.Contains(id))
+                {
+                    id = id + definition.Multiplier;
+                }
             }
             return id;
         }
@@ -627,14 +631,22 @@ namespace BrawlInstaller.Services
         private Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, int id, ResourceNode rootNode)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
-            // If location is an ARC node, generate new BRRES
-            if (node.GetType() == typeof(ARCNode))
+            var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+            // If location is an ARC node and the BRRES does not exist, generate new BRRES
+            if (foundNode == null && node.GetType() == typeof(ARCNode))
             {
                 var bres = new BRRESNode();
                 bres.Compression = definition.CompressionType.ToString();
-                node.Children.Add(bres);
+                bres.FileType = ARCFileType.MiscData;
                 bres.FileIndex = (short)id;
+                bres.Parent = node;
+                bres.UpdateName();
+                node.SortChildren();
                 node = bres;
+            }
+            else
+            {
+                node = foundNode;
             }
             var parentNode = (BRRESNode)node;
             id = definition.Offset + id;
@@ -754,12 +766,8 @@ namespace BrawlInstaller.Services
             // If location is an ARC node, remove entire BRRES
             if (originalNode.GetType() == typeof(ARCNode))
             {
-                if (parentNode != null)
-                {
-                    parentNode.Children.Remove(parentNode);
-                    parentNode.Dispose();
-                    return;
-                }
+                originalNode.Children.Remove(parentNode);
+                parentNode.Dispose();
             }
         }
 
