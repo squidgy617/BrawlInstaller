@@ -83,11 +83,12 @@ namespace BrawlInstaller.Services
                 {
                     PacFiles = _fighterService.GetFighterFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList(),
                     Module = _fighterService.GetModule(fighterInfo.InternalName),
-                    ExConfigs = new List<string>(),
-                    ItemFiles = _fighterService.GetItemFiles(fighterInfo.InternalName),
-                    KirbyPacFiles = _fighterService.GetKirbyFiles(fighterInfo.InternalName)
+                    ExConfigs = new List<string>()
                 } 
             };
+            // Add items and Kirby files
+            fighterFiles.FirstOrDefault()?.PacFiles.AddRange(_fighterService.GetKirbyFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList());
+            fighterFiles.FirstOrDefault()?.PacFiles.AddRange(_fighterService.GetItemFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList());
 
             // Set fighter info
             if (fighterInfo.FighterConfig != "")

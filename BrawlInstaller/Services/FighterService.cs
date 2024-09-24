@@ -383,25 +383,43 @@ namespace BrawlInstaller.Services
                 "Entry",
                 "AltR",
                 "AltZ",
-                "Alt"
+                "Alt",
+                "Param",
+                "Brres"
             };
+            if (fighterInfo.InternalName.ToLower() != "kirby")
+            {
+                modifierStrings.Add("Kirby");
+            }
             var name = Path.GetFileNameWithoutExtension(node.FileName);
-            // Get modifiers
+            var oldFighterName = name;
+            // Remove prefix
+            var prefix = new Regex("(Itm|Fit)");
+            oldFighterName = prefix.Replace(oldFighterName, string.Empty, 1);
+            // Remove numbers
+            var numbers = new Regex("\\d");
+            oldFighterName = numbers.Replace(oldFighterName, string.Empty);
+            // Remove modifiers
             var index = 0;
             foreach (var modifier in modifierStrings)
             {
-                var currentIndex = name.LastIndexOf(modifier);
+                var currentIndex = oldFighterName.LastIndexOf(modifier);
                 if (currentIndex > -1 && (index == 0 || currentIndex < index))
                     index = currentIndex;
             }
-            name = $"Fit{fighterInfo.InternalName}";
-            // Add modifiers to name
+            oldFighterName = oldFighterName.Substring(0, index);
+            // Replace first match of name with the new fighter name
             if (index > 0)
-                name += Path.GetFileNameWithoutExtension(node.FileName).Substring(index);
+            {
+                var regex = new Regex(oldFighterName);
+                name = regex.Replace(name, fighterInfo.InternalName, 1);
+            }
             // Remove old costume ID
             var oldCostumeId = string.Concat(name.Where(char.IsNumber));
-            if (!string.IsNullOrEmpty(oldCostumeId))
-                name = name.Replace(oldCostumeId, "");
+            if (!string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && name.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
+            {
+                name = name.Substring(0, name.Length - 2);
+            }
             // Add new costume ID
             if (costumeId > -1)
                 name += costumeId.ToString("D2");
@@ -458,10 +476,14 @@ namespace BrawlInstaller.Services
                         files.Add((file, name));
                 }
             }
+            // Remove files if they exist
             RemoveFighterFiles(fighterInfo.InternalName);
+            // Save all files
             foreach(var file in files)
             {
-                _fileService.SaveFileAs(file.node, $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.InternalName}\\{file.name}");
+                var folder = file.name.Contains("Kirby") ? "kirby" : fighterInfo.InternalName;
+                folder += file.name.StartsWith("Itm") ? "\\item" : string.Empty;
+                _fileService.SaveFileAs(file.node, $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{folder}\\{file.name}");
                 _fileService.CloseFile(file.node);
             }
         }
@@ -476,6 +498,8 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}";
             RemovePacFiles(internalName, path);
+            RemoveKirbyFiles(internalName);
+            RemoveItemFiles(internalName);
         }
 
         /// <summary>
@@ -519,6 +543,32 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Remove Kirby pac files associated with fighter
+        /// </summary>
+        /// <param name="name">Internal name of fighter</param>
+        private void RemoveKirbyFiles(string name)
+        {
+            var files = GetKirbyFiles(name);
+            foreach(var file in files)
+            {
+                _fileService.DeleteFile(file);
+            }
+        }
+
+        /// <summary>
+        /// Remove item pac files associated with fighter
+        /// </summary>
+        /// <param name="name">Internal name of fighter</param>
+        private void RemoveItemFiles(string name)
+        {
+            var files = GetItemFiles(name);
+            foreach(var file in files)
+            {
+                _fileService.DeleteFile(file);
+            }
+        }
+
+        /// <summary>
         /// Get Kirby and fighter PAC files for fighter
         /// </summary>
         /// <param name="name">Internal name of fighter</param>
@@ -544,7 +594,7 @@ namespace BrawlInstaller.Services
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}\\item";
             var files = new List<string>();
             if (Directory.Exists(path))
-                files = Directory.GetFiles(path).ToList();
+                files = Directory.GetFiles(path, "*.pac").ToList();
             return files;
         }
 
@@ -613,6 +663,10 @@ namespace BrawlInstaller.Services
                         {
                             costume.PacFiles = GetFighterFiles(fighterInfo.InternalName)
                                 .Where(x => Path.GetFileNameWithoutExtension(x).EndsWith(costume.CostumeId.ToString("D2"))).ToList();
+                            costume.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName)
+                                .Where(x => Path.GetFileNameWithoutExtension(x).EndsWith(costume.CostumeId.ToString("D2"))).ToList());
+                            costume.PacFiles.AddRange(GetItemFiles(fighterInfo.InternalName)
+                                .Where(x => Path.GetFileNameWithoutExtension(x).EndsWith(costume.CostumeId.ToString("D2"))).ToList());
                         }
                         costumes.Add(costume);
                     }
