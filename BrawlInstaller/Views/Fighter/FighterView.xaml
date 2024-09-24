@@ -14,23 +14,33 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="1" Grid.RowSpan="2"/>
-        <GroupBox x:Name="idGroupBox" Header="Fighters" Grid.Column="0" Grid.RowSpan="2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="0" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
-                <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="0" Grid.Column="2" Style="{StaticResource miniButton}"/>
-                <Button x:Name="loadButton" Content="Load" Command="{Binding LoadCommand}" Grid.Row="1" Grid.Column="0"/>
-                <Button x:Name="saveButton" Content="Save" Command="{Binding SaveCommand}" Grid.Row="1" Grid.Column="1"/>
-            </Grid>
-        </GroupBox>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <GroupBox x:Name="idGroupBox" Header="Fighters">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="0" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
+                        <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="0" Grid.Column="2" Style="{StaticResource miniButton}"/>
+                    </Grid>
+                </GroupBox>
+            </ScrollViewer>
+            <StackPanel Grid.Row="1">
+                <Button x:Name="loadButton" Content="Load" Command="{Binding LoadCommand}"/>
+                <Button x:Name="saveButton" Content="Save" Command="{Binding SaveCommand}"/>
+            </StackPanel>
+        </Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1" Visibility="{Binding FighterPackage, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
             <Grid>
                 <Grid.RowDefinitions>
