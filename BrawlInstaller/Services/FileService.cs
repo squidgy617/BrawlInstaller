@@ -46,6 +46,12 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.LoadImage(string)"/>
         BitmapImage LoadImage(string filePath);
+
+        /// <inheritdoc cref="FileService.ReadRawData(ResourceNode)"/>
+        byte[] ReadRawData(ResourceNode node);
+
+        /// <inheritdoc cref="FileService.ReplaceNodeRaw(ResourceNode, byte[])"/>
+        void ReplaceNodeRaw(ResourceNode node, byte[] data);
     }
     [Export(typeof(IFileService))]
     internal class FileService : IFileService
@@ -214,6 +220,35 @@ namespace BrawlInstaller.Services
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+        }
+
+        /// <summary>
+        /// Read raw data of a node
+        /// </summary>
+        /// <param name="node">Node to read data from</param>
+        /// <returns>Raw data of node</returns>
+        public byte[] ReadRawData(ResourceNode node)
+        {
+            var length = node.WorkingUncompressed.Length;
+            byte[] data = new byte[length];
+            Marshal.Copy(node.WorkingUncompressed.Address, data, 0, length);
+            return data;
+        }
+
+        /// <summary>
+        /// Replace raw data of a node
+        /// </summary>
+        /// <param name="node">Node to replace</param>
+        /// <param name="data">Byte array to replace node data with</param>
+        public void ReplaceNodeRaw(ResourceNode node, byte[] data)
+        {
+            unsafe
+            {
+                fixed (byte* ptr = data)
+                {
+                    node.ReplaceRaw(ptr, data.Length);
+                }
             }
         }
     }

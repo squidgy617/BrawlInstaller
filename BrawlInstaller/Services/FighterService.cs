@@ -10,6 +10,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -48,6 +49,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
+
+        /// <inheritdoc cref="FighterService.UpdateModule(string, int)"/>
+        void UpdateModule(string module, int fighterId);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -706,6 +710,38 @@ namespace BrawlInstaller.Services
                 if (File.Exists(module))
                     return module;
             return null;
+        }
+
+        /// <summary>
+        /// Update fighter module with new ID
+        /// </summary>
+        /// <param name="module">Module to update</param>
+        /// <param name="fighterId">Fighter ID to insert</param>
+        public void UpdateModule(string module, int fighterId)
+        {
+            var rootNode = _fileService.OpenFile(module);
+            if (rootNode != null)
+            {
+                // First, check for Section [8] - indicates Ex module
+                var section = ((RELNode)rootNode).Sections[8];
+                if (section != null)
+                {
+                    var sectionData = _fileService.ReadRawData(section);
+                    // Next, check that first three digits are zeroes, otherwise its not a proper Ex module
+                    var isExModule = !sectionData.Take(3).Any(x => x != 0) && sectionData.Length >= 4;
+                    // Update the fighter ID
+                    if (isExModule)
+                    {
+                        var newSection = new ModuleSectionNode();
+                        // 4th position is fighter ID
+                        // TODO: Make this configurable?
+                        sectionData[3] = (byte)fighterId;
+                        _fileService.ReplaceNodeRaw(section, sectionData);
+                    }
+                }
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
+            }
         }
     }
 }
