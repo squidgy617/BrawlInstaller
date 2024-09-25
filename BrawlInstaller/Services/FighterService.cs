@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Enums;
+using BrawlInstaller.StaticClasses;
 using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.Types;
@@ -719,24 +720,54 @@ namespace BrawlInstaller.Services
         /// <param name="fighterId">Fighter ID to insert</param>
         public void UpdateModule(string module, int fighterId)
         {
+            var isExModule = false;
             var rootNode = _fileService.OpenFile(module);
-            if (rootNode != null)
+            var relNode = (RELNode)rootNode;
+            if (relNode != null)
             {
                 // First, check for Section [8] - indicates Ex module
-                var section = ((RELNode)rootNode).Sections[8];
-                if (section != null)
+                if (relNode.Sections.Length >= 9)
                 {
-                    var sectionData = _fileService.ReadRawData(section);
-                    // Next, check that first three digits are zeroes, otherwise its not a proper Ex module
-                    var isExModule = !sectionData.Take(3).Any(x => x != 0) && sectionData.Length >= 4;
-                    // Update the fighter ID
-                    if (isExModule)
+                    var section = relNode.Sections[8];
+                    if (section != null)
                     {
-                        var newSection = new ModuleSectionNode();
-                        // 4th position is fighter ID
-                        // TODO: Make this configurable?
-                        sectionData[3] = (byte)fighterId;
-                        _fileService.ReplaceNodeRaw(section, sectionData);
+                        var sectionData = _fileService.ReadRawData(section);
+                        // Next, check that first three digits are zeroes, otherwise its not a proper Ex module
+                        isExModule = !sectionData.Take(3).Any(x => x != 0) && sectionData.Length >= 4;
+                        // Update the fighter ID
+                        if (isExModule)
+                        {
+                            // 4th position is fighter ID
+                            // TODO: Make this configurable?
+                            sectionData[3] = (byte)fighterId;
+                            _fileService.ReplaceNodeRaw(section, sectionData);
+                        }
+                    }
+                }
+                // If it isn't an Ex module - either because we didn't find a Section [8] or it didn't match - treat it as a fighter module
+                if (!isExModule)
+                {
+                    // Find matching fighter module ID locations
+                    var matches = ModuleIdLocations.IdLocations.Where(x => x.ModuleName == rootNode.Name);
+                    if (matches.Any())
+                    {
+                        var match = matches.First();
+                        // Check for Section [1]
+                        if (relNode.Sections.Length >= 2)
+                        {
+                            var section = relNode.Sections[1];
+                            if (section != null)
+                            {
+                                var sectionData = _fileService.ReadRawData(section);
+                                // Replace data at each location with our ID
+                                foreach(var location in match.Locations)
+                                {
+                                    // TODO: Instead of putting + 3 here, put it in the static class?
+                                    sectionData[location + 3] = (byte)fighterId;
+                                    _fileService.ReplaceNodeRaw(section, sectionData);
+                                }
+                            }
+                        }
                     }
                 }
                 _fileService.SaveFile(rootNode);
