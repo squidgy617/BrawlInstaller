@@ -64,6 +64,7 @@ namespace BrawlInstaller.ViewModels
         ISettingsService _settingsService { get; }
         IDialogService _dialogService { get; }
         ICosmeticService _cosmeticService { get; }
+        IFileService _fileService { get; }
 
         // Commands
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic(param));
@@ -82,11 +83,12 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor
         [ImportingConstructor]
-        public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService, ICosmeticService cosmeticService)
+        public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService, ICosmeticService cosmeticService, IFileService fileService)
         {
             _settingsService = settingsService;
             _dialogService = dialogService;
             _cosmeticService = cosmeticService;
+            _fileService = fileService;
 
             // TODO: Modify this list
             var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
@@ -99,7 +101,7 @@ namespace BrawlInstaller.ViewModels
                 CosmeticType.ReplayIcon.GetKeyValuePair()
             };
 
-            foreach(var option in cosmeticOptions)
+            foreach (var option in cosmeticOptions)
             {
                 CosmeticOptions.Add(option.Key, option.Value);
             }
@@ -112,6 +114,7 @@ namespace BrawlInstaller.ViewModels
             {
                 LoadCostumes(message);
             });
+            _fileService = fileService;
         }
 
         // Properties
@@ -269,10 +272,10 @@ namespace BrawlInstaller.ViewModels
                 var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
                 if (!string.IsNullOrEmpty(image))
                 {
-                    var bitmap = new Bitmap(image);
+                    var bitmap = _fileService.LoadImage(image);
                     if (currentCosmetic == null)
                         currentCosmetic = AddCosmetic(currentCostume);
-                    currentCosmetic.Image = bitmap.ToBitmapImage();
+                    currentCosmetic.Image = bitmap;
                     currentCosmetic.ImagePath = image;
                     currentCosmetic.Texture = null;
                     currentCosmetic.Palette = null;
@@ -309,10 +312,10 @@ namespace BrawlInstaller.ViewModels
                 var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
                 if (!string.IsNullOrEmpty(image))
                 {
-                    var bitmap = new Bitmap(image);
+                    var bitmap = _fileService.LoadImage(image);
                     if (currentCosmetic == null)
                         currentCosmetic = AddCosmetic(currentCostume);
-                    currentCosmetic.HDImage = bitmap.ToBitmapImage();
+                    currentCosmetic.HDImage = bitmap;
                     currentCosmetic.HDImagePath = image;
                     FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
                 }

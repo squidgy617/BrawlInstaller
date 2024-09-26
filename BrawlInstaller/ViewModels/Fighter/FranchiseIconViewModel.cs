@@ -44,13 +44,15 @@ namespace BrawlInstaller.ViewModels
         // Services
         ICosmeticService _cosmeticService;
         IDialogService _dialogService;
+        IFileService _fileService;
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public FranchiseIconViewModel(ICosmeticService cosmeticService, IDialogService dialogService)
+        public FranchiseIconViewModel(ICosmeticService cosmeticService, IDialogService dialogService, IFileService fileService)
         {
             _cosmeticService = cosmeticService;
             _dialogService = dialogService;
+            _fileService = fileService;
             FranchiseIconList = new CosmeticList();
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
@@ -103,8 +105,8 @@ namespace BrawlInstaller.ViewModels
             // Update the image
             if (!string.IsNullOrEmpty(image))
             {
-                var bitmap = new Bitmap(image);
-                SelectedFranchiseIcon.Image = bitmap.ToBitmapImage();
+                var bitmap = _fileService.LoadImage(image);
+                SelectedFranchiseIcon.Image = bitmap;
                 SelectedFranchiseIcon.ImagePath = image;
                 SelectedFranchiseIcon.Texture = null;
                 SelectedFranchiseIcon.Palette = null;
@@ -119,8 +121,8 @@ namespace BrawlInstaller.ViewModels
             // Update the image
             if (!string.IsNullOrEmpty(image))
             {
-                var bitmap = new Bitmap(image);
-                SelectedFranchiseIcon.HDImage = bitmap.ToBitmapImage();
+                var bitmap = _fileService.LoadImage(image);
+                SelectedFranchiseIcon.HDImage = bitmap;
                 SelectedFranchiseIcon.HDImagePath = image;
                 FranchiseIconList.ItemChanged(SelectedFranchiseIcon);
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));

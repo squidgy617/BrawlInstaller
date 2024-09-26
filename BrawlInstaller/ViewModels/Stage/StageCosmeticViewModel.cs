@@ -36,6 +36,7 @@ namespace BrawlInstaller.ViewModels
         // Services
         IDialogService _dialogService { get; }
         ISettingsService _settingsService { get; }
+        IFileService _fileService { get; }
 
         // Commands
         public ICommand ChangeCosmeticCommand => new RelayCommand(param => ChangeCosmetic(param));
@@ -48,10 +49,11 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
 
         [ImportingConstructor]
-        public StageCosmeticViewModel(IDialogService dialogService, ISettingsService settingsService)
+        public StageCosmeticViewModel(IDialogService dialogService, ISettingsService settingsService, IFileService fileService)
         {
             _dialogService = dialogService;
             _settingsService = settingsService;
+            _fileService = fileService;
 
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
             {
@@ -209,12 +211,12 @@ namespace BrawlInstaller.ViewModels
             var image = _dialogService.OpenFileDialog("Select image", "PNG image (.png)|*.png");
             if (!string.IsNullOrEmpty(image))
             {
-                var bitmap = new Bitmap(image);
+                var bitmap = _fileService.LoadImage(image);
                 if (SelectedCosmetic == null)
                 {
                     SelectedCosmetic = AddCosmetic();
                 }
-                SelectedCosmetic.Image = bitmap.ToBitmapImage();
+                SelectedCosmetic.Image = bitmap;
                 SelectedCosmetic.ImagePath = image;
                 SelectedCosmetic.Texture = null;
                 SelectedCosmetic.Palette = null;
@@ -229,12 +231,12 @@ namespace BrawlInstaller.ViewModels
             var image = _dialogService.OpenFileDialog("Select HD image", "PNG image (.png)|*.png");
             if (!string.IsNullOrEmpty(image))
             {
-                var bitmap = new Bitmap(image);
+                var bitmap = _fileService.LoadImage(image);
                 if (SelectedCosmetic == null)
                 {
                     SelectedCosmetic = AddCosmetic();
                 }
-                SelectedCosmetic.HDImage = bitmap.ToBitmapImage();
+                SelectedCosmetic.HDImage = bitmap;
                 SelectedCosmetic.HDImagePath = image;
                 Stage.Cosmetics.ItemChanged(SelectedCosmetic);
                 OnPropertyChanged(nameof(SelectedCosmetic));
