@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace BrawlLib.SSBB.ResourceNodes
@@ -298,25 +299,21 @@ namespace BrawlLib.SSBB.ResourceNodes
 
         public override void Dispose()
         {
+            // If not populated, try to give it time to finish
             if (!Populated)
             {
-                int timeoutSecs = 5;
-                // wait 5 seconds to see if population finishes
-                while (!Populated && timeoutSecs >= 0)
+                var sw = new Stopwatch();
+                sw.Start();
+                while (!Populated)
                 {
-                    Thread.Sleep(1000);
-                    --timeoutSecs;
-                }
-                // attempt to cancel population if it hasn't finished still
-                if (!Populated)
-                {
-                    populator.CancelAsync();
-                    for (int i = 0; i < 5; i++) // wait 5 more seconds for cancellation to finish hopefully
+                    Application.DoEvents();
+                    // Wait max 5 seconds before forcefully disposing
+                    if (sw.ElapsedMilliseconds > 5000)
                     {
-                        Thread.Sleep(1000);
+                        break;
                     }
-                    Debug.WriteLine("Cancelled population");
                 }
+                sw.Stop();
             }
             populator?.Dispose();
             _files.Remove(ModuleID);
