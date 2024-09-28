@@ -161,13 +161,12 @@ namespace BrawlInstaller.Services
 
             // Import cosmetics
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
-            // Update pac files
+            // Import pac files
             // TODO: only update pac files that have changed
             _fighterService.ImportFighterFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
-            // Update config
-            // TODO: only update if costumes changed
-            _fighterService.UpdateCostumeConfig(fighterPackage.FighterInfo, fighterPackage.Costumes);
-            // Update module
+            // Import Ex configs
+            _fighterService.ImportExConfigs(fighterPackage);
+            // Import module
             _fighterService.ImportModule(fighterPackage.Module, fighterPackage.FighterInfo);
         }
     }

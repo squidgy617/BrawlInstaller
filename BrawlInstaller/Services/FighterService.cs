@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace BrawlInstaller.Services
@@ -45,8 +46,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.ImportFighterFiles(List{string}, List{Costume}, FighterInfo)"/>
         void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo);
 
-        /// <inheritdoc cref="FighterService.UpdateCostumeConfig(FighterInfo, List{Costume})"/>
-        void UpdateCostumeConfig(FighterInfo fighterInfo, List<Costume> costumes);
+        /// <inheritdoc cref="FighterService.ImportExConfigs(FighterPackage)"/>
+        void ImportExConfigs(FighterPackage fighterPackage);
 
         /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
@@ -604,37 +605,48 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Import Ex configs for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to import configs for</param>
+        public void ImportExConfigs(FighterPackage fighterPackage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var settings = _settingsService.BuildSettings;
+            // Import costume config
+            if (fighterPackage.FighterInfo.CSSSlotConfig != null)
+            {
+                var rootNode = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
+                if (rootNode != null)
+                {
+                    UpdateCostumeConfig(rootNode, fighterPackage.Costumes);
+                    var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig\\CSSSlot{fighterPackage.FighterInfo.Ids.CSSSlotConfigId:X2}.dat";
+                    _fileService.SaveFileAs(rootNode, configPath);
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+        }
+
+        /// <summary>
         /// Update CSSSlotConfig for fighter
         /// </summary>
         /// <param name="fighterInfo">Fighter info</param>
         /// <param name="costumes">Costumes to place in config</param>
-        public void UpdateCostumeConfig(FighterInfo fighterInfo, List<Costume> costumes)
+        private ResourceNode UpdateCostumeConfig(ResourceNode rootNode, List<Costume> costumes)
         {
-            if (fighterInfo.CSSSlotConfig != null)
+            if (rootNode != null)
             {
-                var buildPath = _settingsService.AppSettings.BuildPath;
-                var settings = _settingsService.BuildSettings;
-                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig";
-                ResourceNode rootNode = null;
-
-                if (Directory.Exists(configPath))
-                    rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
-                if (rootNode != null)
+                rootNode.Children.RemoveAll(x => x != null);
+                foreach(var costume in costumes)
                 {
-                    rootNode.Children.RemoveAll(x => x != null);
-                    foreach(var costume in costumes)
+                    var newNode = new CSSCEntryNode
                     {
-                        var newNode = new CSSCEntryNode
-                        {
-                            Parent = rootNode,
-                            CostumeID = (byte)costume.CostumeId,
-                            Color = costume.Color
-                        };
-                    }
-                    _fileService.SaveFile(rootNode);
-                    _fileService.CloseFile(rootNode);
+                        Parent = rootNode,
+                        CostumeID = (byte)costume.CostumeId,
+                        Color = costume.Color
+                    };
                 }
             }
+            return rootNode;
         }
 
         /// <summary>
