@@ -168,7 +168,7 @@ namespace BrawlInstaller.Services
             // TODO: only update if costumes changed
             _fighterService.UpdateCostumeConfig(fighterPackage.FighterInfo, fighterPackage.Costumes);
             // Update module
-            _fighterService.UpdateModule(fighterPackage.Module, fighterPackage.FighterInfo.Ids.FighterConfigId);
+            _fighterService.ImportModule(fighterPackage.Module, fighterPackage.FighterInfo);
         }
     }
 }

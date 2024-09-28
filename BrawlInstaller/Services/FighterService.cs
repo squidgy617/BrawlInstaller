@@ -51,8 +51,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
 
-        /// <inheritdoc cref="FighterService.UpdateModule(string, int)"/>
-        void UpdateModule(string module, int fighterId);
+        /// <inheritdoc cref="FighterService.ImportModule(string, FighterInfo)"/>
+        void ImportModule(string module, FighterInfo fighterInfo);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -714,15 +714,30 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Import fighter module and update ID
+        /// </summary>
+        /// <param name="module">Module to import</param>
+        /// <param name="fighterInfo">Fighter info</param>
+        public void ImportModule(string module, FighterInfo fighterInfo)
+        {
+            var rootNode = _fileService.OpenFile(module);
+            if (rootNode != null)
+            {
+                rootNode = UpdateModule((RELNode)rootNode, fighterInfo.Ids.FighterConfigId);
+                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.Modules}\\ft_{fighterInfo.InternalName.ToLower()}.rel";
+                _fileService.SaveFileAs(rootNode, path);
+                _fileService.CloseFile(rootNode);
+            }
+        }
+
+        /// <summary>
         /// Update fighter module with new ID
         /// </summary>
         /// <param name="module">Module to update</param>
         /// <param name="fighterId">Fighter ID to insert</param>
-        public void UpdateModule(string module, int fighterId)
+        private RELNode UpdateModule(RELNode relNode, int fighterId)
         {
             var isExModule = false;
-            var rootNode = _fileService.OpenFile(module);
-            var relNode = (RELNode)rootNode;
             if (relNode != null)
             {
                 // First, check for Section [8] - indicates Ex module
@@ -748,7 +763,7 @@ namespace BrawlInstaller.Services
                 if (!isExModule)
                 {
                     // Find matching fighter module ID locations
-                    var matches = ModuleIdLocations.IdLocations.Where(x => x.ModuleName == rootNode.Name);
+                    var matches = ModuleIdLocations.IdLocations.Where(x => x.ModuleName == relNode.Name);
                     if (matches.Any())
                     {
                         var match = matches.First();
@@ -770,9 +785,8 @@ namespace BrawlInstaller.Services
                         }
                     }
                 }
-                _fileService.SaveFile(rootNode);
-                _fileService.CloseFile(rootNode);
             }
+            return relNode;
         }
     }
 }
