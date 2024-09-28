@@ -44,38 +44,17 @@ namespace BrawlInstaller.Services
         // Methods
 
         /// <summary>
-        /// Generate fighter package from build
+        /// Get all fighter files for fighter package
         /// </summary>
-        /// <param name="fighterIds">IDs of fighter</param>
-        /// <returns>Fighter package</returns>
-        public FighterPackage ExtractFighter(FighterInfo fighterInfo)
+        /// <param name="fighterPackage">Fighter package to retrieve files for</param>
+        /// <returns>Fighter package with files</returns>
+        private FighterPackage GetAllFighterFiles(FighterPackage fighterPackage)
         {
-            var fighterPackage = new FighterPackage();
             // Get fighter info
-            fighterInfo = _fighterService.GetFighterInfo(fighterInfo);
-
-            // Get cosmetics
-            var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
+            var fighterInfo = _fighterService.GetFighterInfo(fighterPackage.FighterInfo);
 
             // Get costumes
             var costumes = _fighterService.GetFighterCostumes(fighterInfo);
-            costumes = _fighterService.GetCostumeCosmetics(costumes, cosmetics);
-
-            // Set up inheritance for styles
-            var inheritedStyles = new Dictionary<(CosmeticType, string), string>();
-            foreach(var cosmeticType in cosmetics.GroupBy(x => x.CosmeticType).Select(x => x.Key))
-            {
-                var typedCosmetics = cosmetics.Where(x => x.CosmeticType == cosmeticType);
-                var groups = typedCosmetics.GroupBy(x => x.Style);
-                foreach (var group in groups)
-                {
-                    var match = groups.Where(x => x.Key != group.Key).FirstOrDefault(x => group.Select(y => y.Texture?.MD5Str()).All(x.Select(y => y.Texture?.MD5Str()).Contains) && group.Count() == x.Count());
-                    if (match != null && !inheritedStyles.Any(x => (x.Key == (cosmeticType, group.Key)) || x.Value == group.Key))
-                    {
-                        inheritedStyles.Add((cosmeticType, group.Key), match.Key);
-                    }
-                }
-            }
 
             // Get fighter files
             fighterPackage.PacFiles = _fighterService.GetFighterFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList();
@@ -96,6 +75,47 @@ namespace BrawlInstaller.Services
 
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
+
+            return fighterPackage;
+        }
+
+        /// <summary>
+        /// Generate fighter package from build
+        /// </summary>
+        /// <param name="fighterIds">IDs of fighter</param>
+        /// <returns>Fighter package</returns>
+        public FighterPackage ExtractFighter(FighterInfo fighterInfo)
+        {
+            var fighterPackage = new FighterPackage();
+            // Get fighter info
+            fighterInfo = _fighterService.GetFighterInfo(fighterInfo);
+            fighterPackage.FighterInfo = fighterInfo;
+
+            // Get fighter files
+            fighterPackage = GetAllFighterFiles(fighterPackage);
+
+            // Get cosmetics
+            var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
+
+            // Get costumes
+            fighterPackage.Costumes = _fighterService.GetCostumeCosmetics(fighterPackage.Costumes, cosmetics);
+
+            // Set up inheritance for styles
+            var inheritedStyles = new Dictionary<(CosmeticType, string), string>();
+            foreach(var cosmeticType in cosmetics.GroupBy(x => x.CosmeticType).Select(x => x.Key))
+            {
+                var typedCosmetics = cosmetics.Where(x => x.CosmeticType == cosmeticType);
+                var groups = typedCosmetics.GroupBy(x => x.Style);
+                foreach (var group in groups)
+                {
+                    var match = groups.Where(x => x.Key != group.Key).FirstOrDefault(x => group.Select(y => y.Texture?.MD5Str()).All(x.Select(y => y.Texture?.MD5Str()).Contains) && group.Count() == x.Count());
+                    if (match != null && !inheritedStyles.Any(x => (x.Key == (cosmeticType, group.Key)) || x.Value == group.Key))
+                    {
+                        inheritedStyles.Add((cosmeticType, group.Key), match.Key);
+                    }
+                }
+            }
+
             fighterPackage.Cosmetics.Items = cosmetics;
             fighterPackage.Cosmetics.InheritedStyles = inheritedStyles;
             return fighterPackage;

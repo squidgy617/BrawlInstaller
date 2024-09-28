@@ -22,5 +22,39 @@ namespace BrawlInstaller.Classes
         [JsonIgnore]
         public string SlotConfig { get; set; }
         public uint VictoryThemeId { get; set; }
+
+        public FighterInfo Copy()
+        {
+            var newFighterInfo = new FighterInfo
+            {
+                EntryName = EntryName,
+                InternalName = InternalName,
+                DisplayName = DisplayName,
+                Ids = new BrawlIds
+                {
+                    FighterConfigId = Ids.FighterConfigId,
+                    CosmeticConfigId = Ids.CosmeticConfigId,
+                    CSSSlotConfigId = Ids.CSSSlotConfigId,
+                    SlotConfigId = Ids.SlotConfigId
+                },
+                VictoryThemeId = VictoryThemeId
+            };
+            return newFighterInfo;
+        }
+
+        public FighterInfo CopyOnlyIds()
+        {
+            var newFighterInfo = new FighterInfo
+            {
+                Ids = new BrawlIds
+                {
+                    FighterConfigId = Ids.FighterConfigId,
+                    CosmeticConfigId = Ids.CosmeticConfigId,
+                    CSSSlotConfigId = Ids.CSSSlotConfigId,
+                    SlotConfigId = Ids.SlotConfigId
+                }
+            };
+            return newFighterInfo;
+        }
     }
 }
