@@ -19,9 +19,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0"/>
-        <ListBox x:Name="pacFileListBox" Grid.Column="1" ItemsSource="{Binding FighterPackage.PacFiles}" Width="120" Height="100"/>
+        <ListBox x:Name="pacFileListBox" Grid.Column="1" ItemsSource="{Binding FighterPackage.PacFiles}" Width="120" Height="100">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <Label x:Name="exConfigsLabel" Content="Ex Configs:" Grid.Column="2"/>
-        <ListBox x:Name="exConfigsListBox" Grid.Column="3" ItemsSource="{Binding FighterPackage.ExConfigs}" Width="120" Height="100"/>
+        <ListBox x:Name="exConfigsListBox" Grid.Column="3" ItemsSource="{Binding FighterPackage.ExConfigs}" Width="120" Height="100">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="1" Grid.Column="0"/>
         <TextBox x:Name="moduleTextBox" Text="{Binding FighterPackage.Module, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="120"/>
     </Grid>
