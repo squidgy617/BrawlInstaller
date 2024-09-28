@@ -12,16 +12,14 @@ namespace BrawlInstaller.ViewModels
 {
     public interface IFighterFileViewModel
     {
-        List<FighterFiles> FighterFiles { get; }
-        FighterFiles SelectedFighterFiles { get; }
+        FighterPackage FighterPackage { get; }
     }
 
     [Export(typeof(IFighterFileViewModel))]
     internal class FighterFileViewModel : ViewModelBase, IFighterFileViewModel
     {
         // Private properties
-        private List<FighterFiles> _fighterFiles;
-        private FighterFiles _selectedFighterFiles;
+        private FighterPackage _fighterPackage;
 
         // Importing constructor
         [ImportingConstructor]
@@ -34,16 +32,12 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public List<FighterFiles> FighterFiles { get => _fighterFiles; set {  _fighterFiles = value; OnPropertyChanged(nameof(FighterFiles)); } }
-
-        [DependsUpon(nameof(FighterFiles))]
-        public FighterFiles SelectedFighterFiles { get => _selectedFighterFiles; set { _selectedFighterFiles = value; OnPropertyChanged(); } }
+        public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
         {
-            FighterFiles = message.Value.FighterFiles;
-            SelectedFighterFiles = FighterFiles.FirstOrDefault();
+            FighterPackage = message.Value;
         }
     }
 }
