@@ -96,6 +96,10 @@ namespace BrawlInstaller.Services
         /// <param name="path">Path to save file to</param>
         public void SaveFileAs(ResourceNode node, string path)
         {
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
             node.Export(path);
             node.IsDirty = false;
         }

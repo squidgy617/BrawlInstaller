@@ -41,6 +41,16 @@ namespace BrawlInstaller.Classes
         {
             return Ids.FirstOrDefault(x => x.Type == type)?.Id ?? 0;
         }
+
+        public BrawlIds Copy()
+        {
+            var copy = new BrawlIds();
+            foreach(var id in Ids)
+            {
+                copy.Ids.Add(new BrawlId { Id = id.Id, Type = id.Type });
+            }
+            return copy;
+        }
     }
 
     public class BrawlId

@@ -44,42 +44,6 @@ namespace BrawlInstaller.Services
         // Methods
 
         /// <summary>
-        /// Get all fighter files for fighter package
-        /// </summary>
-        /// <param name="fighterPackage">Fighter package to retrieve files for</param>
-        /// <returns>Fighter package with files</returns>
-        private FighterPackage GetAllFighterFiles(FighterPackage fighterPackage)
-        {
-            // Get fighter info
-            var fighterInfo = _fighterService.GetFighterInfo(fighterPackage.FighterInfo);
-
-            // Get costumes
-            var costumes = _fighterService.GetFighterCostumes(fighterInfo);
-
-            // Get fighter files
-            fighterPackage.PacFiles = _fighterService.GetFighterFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList();
-            fighterPackage.PacFiles.AddRange(_fighterService.GetKirbyFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList());
-            fighterPackage.PacFiles.AddRange(_fighterService.GetItemFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList());
-            fighterPackage.Module = _fighterService.GetModule(fighterInfo.InternalName);
-            fighterPackage.ExConfigs = new List<string>();
-
-            // Set fighter info
-            if (fighterInfo.FighterConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.FighterConfig);
-            if (fighterInfo.CosmeticConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.CosmeticConfig);
-            if (fighterInfo.CSSSlotConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.CSSSlotConfig);
-            if (fighterInfo.SlotConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.SlotConfig);
-
-            fighterPackage.Costumes = costumes;
-            fighterPackage.FighterInfo = fighterInfo;
-
-            return fighterPackage;
-        }
-
-        /// <summary>
         /// Generate fighter package from build
         /// </summary>
         /// <param name="fighterIds">IDs of fighter</param>
@@ -92,7 +56,7 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo = fighterInfo;
 
             // Get fighter files
-            fighterPackage = GetAllFighterFiles(fighterPackage);
+            fighterPackage = _fighterService.GetFighterFiles(fighterPackage);
 
             // Get cosmetics
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
@@ -161,13 +125,8 @@ namespace BrawlInstaller.Services
 
             // Import cosmetics
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
-            // Import pac files
-            // TODO: only update pac files that have changed
-            _fighterService.ImportFighterFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
-            // Import Ex configs
-            _fighterService.ImportExConfigs(fighterPackage);
-            // Import module
-            _fighterService.ImportModule(fighterPackage.Module, fighterPackage.FighterInfo);
+            // Import fighter files
+            _fighterService.ImportFighterFiles(fighterPackage);
         }
     }
 }

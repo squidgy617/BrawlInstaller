@@ -41,20 +41,5 @@ namespace BrawlInstaller.Classes
             };
             return newFighterInfo;
         }
-
-        public FighterInfo CopyOnlyIds()
-        {
-            var newFighterInfo = new FighterInfo
-            {
-                Ids = new BrawlIds
-                {
-                    FighterConfigId = Ids.FighterConfigId,
-                    CosmeticConfigId = Ids.CosmeticConfigId,
-                    CSSSlotConfigId = Ids.CSSSlotConfigId,
-                    SlotConfigId = Ids.SlotConfigId
-                }
-            };
-            return newFighterInfo;
-        }
     }
 }

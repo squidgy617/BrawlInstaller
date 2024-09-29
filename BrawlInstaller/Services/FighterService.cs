@@ -34,8 +34,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetModule(string)"/>
         string GetModule(string internalName);
 
-        /// <inheritdoc cref="FighterService.GetFighterFiles(string)"/>
-        List<string> GetFighterFiles(string internalName);
+        /// <inheritdoc cref="FighterService.GetPacFiles(string)"/>
+        List<string> GetPacFiles(string internalName);
 
         /// <inheritdoc cref="FighterService.GetItemFiles(string)"/>
         List<string> GetItemFiles(string internalName);
@@ -43,17 +43,17 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetKirbyFiles(string)"/>
         List<string> GetKirbyFiles(string internalName);
 
-        /// <inheritdoc cref="FighterService.ImportFighterFiles(List{string}, List{Costume}, FighterInfo)"/>
-        void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo);
-
-        /// <inheritdoc cref="FighterService.ImportExConfigs(FighterPackage)"/>
-        void ImportExConfigs(FighterPackage fighterPackage);
+        /// <inheritdoc cref="FighterService.ImportPacFiles(List{string}, List{Costume}, FighterInfo)"/>
+        void ImportPacFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo);
 
         /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
 
-        /// <inheritdoc cref="FighterService.ImportModule(string, FighterInfo)"/>
-        void ImportModule(string module, FighterInfo fighterInfo);
+        /// <inheritdoc cref="FighterService.GetFighterFiles(FighterPackage)"/>
+        FighterPackage GetFighterFiles(FighterPackage fighterPackage);
+
+        /// <inheritdoc cref="FighterService.ImportFighterFiles(FighterPackage)"/>
+        void ImportFighterFiles(FighterPackage fighterPackage);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -393,10 +393,6 @@ namespace BrawlInstaller.Services
                 "Param",
                 "Brres"
             };
-            if (fighterInfo.InternalName.ToLower() != "kirby")
-            {
-                modifierStrings.Add("Kirby");
-            }
             var name = Path.GetFileNameWithoutExtension(node.FileName);
             var oldFighterName = name;
             // Remove prefix
@@ -405,6 +401,12 @@ namespace BrawlInstaller.Services
             // Remove numbers
             var numbers = new Regex("\\d");
             oldFighterName = numbers.Replace(oldFighterName, string.Empty);
+            // Remove Kirby if fighter is not Kirby
+            if (fighterInfo.InternalName.ToLower() != "kirby")
+            {
+                var kirby = new Regex("Kirby");
+                oldFighterName = kirby.Replace(oldFighterName, string.Empty);
+            }
             // Remove modifiers
             var index = 0;
             foreach (var modifier in modifierStrings)
@@ -413,13 +415,13 @@ namespace BrawlInstaller.Services
                 if (currentIndex > -1 && (index == 0 || currentIndex < index))
                     index = currentIndex;
             }
-            oldFighterName = oldFighterName.Substring(0, index);
-            // Replace first match of name with the new fighter name
             if (index > 0)
             {
-                var regex = new Regex(oldFighterName);
-                name = regex.Replace(name, fighterInfo.InternalName, 1);
+                oldFighterName = oldFighterName.Substring(0, index);
             }
+            // Replace first match of name with the new fighter name
+            var regex = new Regex(oldFighterName);
+            name = regex.Replace(name, fighterInfo.InternalName, 1);
             // Remove old costume ID
             var oldCostumeId = string.Concat(name.Where(char.IsNumber));
             if (!string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && name.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
@@ -436,12 +438,12 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Import fighter PAC files
+        /// Import all PAC files associated with a fighter
         /// </summary>
         /// <param name="pacFiles">PAC files to import</param>
         /// <param name="costumes">Costumes to import PAC files for</param>
         /// <param name="fighterInfo">Fighter info</param>
-        public void ImportFighterFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo)
+        public void ImportPacFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -483,7 +485,7 @@ namespace BrawlInstaller.Services
                 }
             }
             // Remove files if they exist
-            RemoveFighterFiles(fighterInfo.InternalName);
+            RemovePacFiles(fighterInfo.InternalName);
             // Save all files
             foreach(var file in files)
             {
@@ -495,30 +497,30 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Remove fighter files for specified fighter
+        /// Remove all PAC files for specified fighter
         /// </summary>
         /// <param name="internalName">Internal name of fighter</param>
-        private void RemoveFighterFiles(string internalName)
+        private void RemovePacFiles(string internalName)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}";
-            RemovePacFiles(internalName, path);
+            RemoveFighterPacFiles(internalName, path);
             RemoveKirbyFiles(internalName);
             RemoveItemFiles(internalName);
         }
 
         /// <summary>
-        /// Get PAC files associated with fighter
+        /// Get all PAC files associated with fighter
         /// </summary>
         /// <param name="internalName">Internal name of fighter</param>
         /// <returns>List of PAC files</returns>
-        public List<string> GetFighterFiles(string internalName)
+        public List<string> GetPacFiles(string internalName)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}";
-            return GetPacFiles(internalName, path);
+            return GetFighterPacFiles(internalName, path);
         }
 
         /// <summary>
@@ -531,17 +533,17 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\kirby";
-            return GetPacFiles("Kirby" + internalName, path);
+            return GetFighterPacFiles("Kirby" + internalName, path);
         }
 
         /// <summary>
-        /// Remove PAC files associated with fighter
+        /// Remove regular PAC files associated with fighter
         /// </summary>
         /// <param name="name">Internal name of fighter</param>
         /// <param name="path">Path to remove PAC files from</param>
-        private void RemovePacFiles(string name, string path)
+        private void RemoveFighterPacFiles(string name, string path)
         {
-            var files = GetPacFiles(name, path);
+            var files = GetFighterPacFiles(name, path);
             foreach(var file in files)
             {
                 _fileService.DeleteFile(file);
@@ -580,7 +582,7 @@ namespace BrawlInstaller.Services
         /// <param name="name">Internal name of fighter</param>
         /// <param name="path">Path to retrive files from</param>
         /// <returns>List of PAC files</returns>
-        private List<string> GetPacFiles(string name, string path)
+        private List<string> GetFighterPacFiles(string name, string path)
         {
             var files = new List<string>();
             if (Directory.Exists(path))
@@ -605,24 +607,89 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Import Ex configs for fighter
+        /// Import updated fighter files
         /// </summary>
-        /// <param name="fighterPackage">Fighter package to import configs for</param>
-        public void ImportExConfigs(FighterPackage fighterPackage)
+        /// <param name="fighterPackage">Fighter package to import files for</param>
+        public void ImportFighterFiles(FighterPackage fighterPackage)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
+            fighterPackage.FighterInfo.InternalName = "TEST";
             var settings = _settingsService.BuildSettings;
-            // Import costume config
-            if (fighterPackage.FighterInfo.CSSSlotConfig != null)
+            // First, get fighter package with all of the old values
+            var oldFighter = new FighterPackage();
+            oldFighter.FighterInfo = new FighterInfo();
+            oldFighter.FighterInfo.Ids = fighterPackage.FighterInfo.Ids.Copy();
+            oldFighter.FighterInfo = GetFighterInfo(oldFighter.FighterInfo);
+            oldFighter = GetFighterFiles(oldFighter);
+            // Then, get new files for install, in case any of them would be deleted
+            var module = _fileService.OpenFile(oldFighter.Module);
+            var fighterConfig = _fileService.OpenFile(oldFighter.FighterInfo.FighterConfig);
+            var cosmeticConfig = _fileService.OpenFile(oldFighter.FighterInfo.CosmeticConfig);
+            var cssSlotConfig = _fileService.OpenFile(oldFighter.FighterInfo.CSSSlotConfig);
+            var slotConfig = _fileService.OpenFile(oldFighter.FighterInfo.SlotConfig);
+            // Delete old files
+            DeleteModule(oldFighter.FighterInfo.InternalName);
+            DeleteExConfigs(oldFighter.FighterInfo);
+            // Import pac files
+            // TODO: Refactor this so we delete PAC files BEFORE calling it, that way they are removed properly as expected
+            ImportPacFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
+            // Update and import ex configs
+            if (cssSlotConfig != null)
             {
-                var rootNode = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
-                if (rootNode != null)
-                {
-                    UpdateCostumeConfig(rootNode, fighterPackage.Costumes);
-                    var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig\\CSSSlot{fighterPackage.FighterInfo.Ids.CSSSlotConfigId:X2}.dat";
-                    _fileService.SaveFileAs(rootNode, configPath);
-                    _fileService.CloseFile(rootNode);
-                }
+                cssSlotConfig = UpdateCostumeConfig(cssSlotConfig, fighterPackage.Costumes);
+                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig\\CSSSlot{fighterPackage.FighterInfo.Ids.CSSSlotConfigId:X2}.dat";
+                _fileService.SaveFileAs(cssSlotConfig, configPath);
+                _fileService.CloseFile(cssSlotConfig);
+            }
+            if (fighterConfig != null)
+            {
+                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\FighterConfig\\Fighter{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}.dat";
+                _fileService.SaveFileAs(fighterConfig, configPath);
+                _fileService.CloseFile(fighterConfig);
+            }
+            if (slotConfig != null)
+            {
+                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\SlotConfig\\Slot{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}.dat";
+                _fileService.SaveFileAs(slotConfig, configPath);
+                _fileService.CloseFile(slotConfig);
+            }
+            if (cosmeticConfig != null)
+            {
+                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CosmeticConfig\\Cosmetic{fighterPackage.FighterInfo.Ids.CosmeticConfigId:X2}.dat";
+                _fileService.SaveFileAs(cosmeticConfig, configPath);
+                _fileService.CloseFile(cosmeticConfig);
+            }
+            // Update and import module
+            if (module != null)
+            {
+                module = UpdateModule((RELNode)module, fighterPackage.FighterInfo.Ids.FighterConfigId);
+                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.Modules}\\ft_{fighterPackage.FighterInfo.InternalName.ToLower()}.rel";
+                _fileService.SaveFileAs(module, path);
+                _fileService.CloseFile(module);
+            }
+        }
+
+        /// <summary>
+        /// Delete all ex configs associated with fighter
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info</param>
+        public void DeleteExConfigs(FighterInfo fighterInfo)
+        {
+            if (fighterInfo?.FighterConfig != null)
+            {
+                _fileService.DeleteFile(fighterInfo?.FighterConfig);
+            }
+            if (fighterInfo?.CosmeticConfig != null)
+            {
+                _fileService.DeleteFile(fighterInfo?.CosmeticConfig);
+            }
+            if (fighterInfo?.CSSSlotConfig != null)
+            {
+                _fileService.DeleteFile(fighterInfo?.CSSSlotConfig);
+            }
+            if (fighterInfo?.SlotConfig != null)
+            {
+                _fileService.DeleteFile(fighterInfo?.SlotConfig);
             }
         }
 
@@ -678,7 +745,7 @@ namespace BrawlInstaller.Services
                         };
                         if (Directory.Exists(fighterPath))
                         {
-                            costume.PacFiles = GetFighterFiles(fighterInfo.InternalName)
+                            costume.PacFiles = GetPacFiles(fighterInfo.InternalName)
                                 .Where(x => Path.GetFileNameWithoutExtension(x).EndsWith(costume.CostumeId.ToString("D2"))).ToList();
                             costume.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName)
                                 .Where(x => Path.GetFileNameWithoutExtension(x).EndsWith(costume.CostumeId.ToString("D2"))).ToList());
@@ -709,6 +776,55 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get all fighter files for fighter package
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to retrieve files for</param>
+        /// <returns>Fighter package with files</returns>
+        public FighterPackage GetFighterFiles(FighterPackage fighterPackage)
+        {
+            // Get fighter info
+            var fighterInfo = GetFighterInfo(fighterPackage.FighterInfo);
+
+            // Get costumes
+            var costumes = GetFighterCostumes(fighterInfo);
+
+            // Get fighter files
+            fighterPackage.PacFiles = GetPacFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList();
+            fighterPackage.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList());
+            fighterPackage.PacFiles.AddRange(GetItemFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList());
+            fighterPackage.Module = GetModule(fighterInfo.InternalName);
+            fighterPackage.ExConfigs = new List<string>();
+
+            // Set fighter info
+            if (fighterInfo.FighterConfig != "")
+                fighterPackage.ExConfigs.Add(fighterInfo.FighterConfig);
+            if (fighterInfo.CosmeticConfig != "")
+                fighterPackage.ExConfigs.Add(fighterInfo.CosmeticConfig);
+            if (fighterInfo.CSSSlotConfig != "")
+                fighterPackage.ExConfigs.Add(fighterInfo.CSSSlotConfig);
+            if (fighterInfo.SlotConfig != "")
+                fighterPackage.ExConfigs.Add(fighterInfo.SlotConfig);
+
+            fighterPackage.Costumes = costumes;
+            fighterPackage.FighterInfo = fighterInfo;
+
+            return fighterPackage;
+        }
+
+        /// <summary>
+        /// Delete fighter module by name
+        /// </summary>
+        /// <param name="internalName">Internal name of fighter</param>
+        private void DeleteModule(string internalName)
+        {
+            var module = GetModule(internalName);
+            if (module != null)
+            {
+                _fileService.DeleteFile(module);
+            }
+        }
+
+        /// <summary>
         /// Get module for fighter
         /// </summary>
         /// <param name="internalName">Internal name for fighter</param>
@@ -723,23 +839,6 @@ namespace BrawlInstaller.Services
                 if (File.Exists(module))
                     return module;
             return null;
-        }
-
-        /// <summary>
-        /// Import fighter module and update ID
-        /// </summary>
-        /// <param name="module">Module to import</param>
-        /// <param name="fighterInfo">Fighter info</param>
-        public void ImportModule(string module, FighterInfo fighterInfo)
-        {
-            var rootNode = _fileService.OpenFile(module);
-            if (rootNode != null)
-            {
-                rootNode = UpdateModule((RELNode)rootNode, fighterInfo.Ids.FighterConfigId);
-                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.Modules}\\ft_{fighterInfo.InternalName.ToLower()}.rel";
-                _fileService.SaveFileAs(rootNode, path);
-                _fileService.CloseFile(rootNode);
-            }
         }
 
         /// <summary>
