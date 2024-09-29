@@ -43,9 +43,6 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetKirbyFiles(string)"/>
         List<string> GetKirbyFiles(string internalName);
 
-        /// <inheritdoc cref="FighterService.ImportPacFiles(List{string}, List{Costume}, FighterInfo)"/>
-        void ImportPacFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo);
-
         /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
 
@@ -443,7 +440,7 @@ namespace BrawlInstaller.Services
         /// <param name="pacFiles">PAC files to import</param>
         /// <param name="costumes">Costumes to import PAC files for</param>
         /// <param name="fighterInfo">Fighter info</param>
-        public void ImportPacFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo)
+        private List<ResourceNode> UpdatePacFiles(List<string> pacFiles, List<Costume> costumes, FighterInfo fighterInfo)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -484,16 +481,14 @@ namespace BrawlInstaller.Services
                         files.Add((file, name));
                 }
             }
-            // Remove files if they exist
-            RemovePacFiles(fighterInfo.InternalName);
-            // Save all files
+            // Set all file paths
             foreach(var file in files)
             {
                 var folder = file.name.Contains("Kirby") ? "kirby" : fighterInfo.InternalName;
                 folder += file.name.StartsWith("Itm") ? "\\item" : string.Empty;
-                _fileService.SaveFileAs(file.node, $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{folder}\\{file.name}");
-                _fileService.CloseFile(file.node);
+                file.node._origPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{folder}\\{file.name}";
             }
+            return files.Select(x => x.node).ToList();
         }
 
         /// <summary>
@@ -613,7 +608,6 @@ namespace BrawlInstaller.Services
         public void ImportFighterFiles(FighterPackage fighterPackage)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
-            fighterPackage.FighterInfo.InternalName = "TEST";
             var settings = _settingsService.BuildSettings;
             // First, get fighter package with all of the old values
             var oldFighter = new FighterPackage();
@@ -622,17 +616,22 @@ namespace BrawlInstaller.Services
             oldFighter.FighterInfo = GetFighterInfo(oldFighter.FighterInfo);
             oldFighter = GetFighterFiles(oldFighter);
             // Then, get new files for install, in case any of them would be deleted
+            var pacFiles = UpdatePacFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
             var module = _fileService.OpenFile(oldFighter.Module);
             var fighterConfig = _fileService.OpenFile(oldFighter.FighterInfo.FighterConfig);
             var cosmeticConfig = _fileService.OpenFile(oldFighter.FighterInfo.CosmeticConfig);
             var cssSlotConfig = _fileService.OpenFile(oldFighter.FighterInfo.CSSSlotConfig);
             var slotConfig = _fileService.OpenFile(oldFighter.FighterInfo.SlotConfig);
             // Delete old files
+            RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
             // Import pac files
-            // TODO: Refactor this so we delete PAC files BEFORE calling it, that way they are removed properly as expected
-            ImportPacFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
+            foreach(var pacFile in pacFiles)
+            {
+                _fileService.SaveFile(pacFile);
+                _fileService.CloseFile(pacFile);
+            }
             // Update and import ex configs
             if (cssSlotConfig != null)
             {
