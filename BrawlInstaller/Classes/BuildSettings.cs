@@ -98,9 +98,7 @@ namespace BrawlInstaller.Classes
 
     public class SoundSettings
     {
-        public string SoundbankStyle { get; set; } = "hex";
-        public bool IncrementSoundbankIds { get; set; } = true;
-        public bool IncrementSoundbankNames { get; set; } = false;
+        public SoundbankStyle SoundbankStyle { get; set; } = SoundbankStyle.InfoIndex;
     }
 
     public class MiscSettings

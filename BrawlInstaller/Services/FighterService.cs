@@ -831,8 +831,9 @@ namespace BrawlInstaller.Services
                 var path = Path.Combine(buildPath, sfxPath);
                 if (Directory.Exists(path))
                 {
-                    // TODO handle the add 7 stuff?
-                    var soundbank = Directory.GetFiles(path, $"{soundbankId:X3}.sawnd").FirstOrDefault();
+                    var name = _settingsService.BuildSettings.SoundSettings.SoundbankStyle == SoundbankStyle.InfoIndex 
+                        ? $"{soundbankId:X3}.sawnd" : $"{(soundbankId + 7):D}.sawnd";
+                    var soundbank = Directory.GetFiles(path, name).FirstOrDefault();
                     if (soundbank != null)
                     {
                         return soundbank;

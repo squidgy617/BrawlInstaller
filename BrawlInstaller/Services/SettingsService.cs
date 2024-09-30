@@ -381,9 +381,7 @@ namespace BrawlInstaller.Services
                 },
                 SoundSettings = new SoundSettings
                 {
-                    SoundbankStyle = "hex",
-                    IncrementSoundbankIds = true,
-                    IncrementSoundbankNames = false
+                    SoundbankStyle = SoundbankStyle.InfoIndex
                 },
                 MiscSettings = new MiscSettings
                 {
