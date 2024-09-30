@@ -626,10 +626,12 @@ namespace BrawlInstaller.Services
             var cosmeticConfig = _fileService.OpenFile(oldFighter.FighterInfo.CosmeticConfig);
             var cssSlotConfig = _fileService.OpenFile(oldFighter.FighterInfo.CSSSlotConfig);
             var slotConfig = _fileService.OpenFile(oldFighter.FighterInfo.SlotConfig);
+            var soundbank = _fileService.OpenFile(oldFighter.Soundbank);
             // Delete old files
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
+            DeleteSoundbank(oldFighter.FighterInfo.Ids.SoundbankId);
             // Import pac files
             foreach(var pacFile in pacFiles)
             {
@@ -646,6 +648,7 @@ namespace BrawlInstaller.Services
             }
             if (fighterConfig != null)
             {
+                // TODO: Update soundbank ID here
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\FighterConfig\\Fighter{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}.dat";
                 _fileService.SaveFileAs(fighterConfig, configPath);
                 _fileService.CloseFile(fighterConfig);
@@ -669,6 +672,14 @@ namespace BrawlInstaller.Services
                 var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.Modules}\\ft_{fighterPackage.FighterInfo.InternalName.ToLower()}.rel";
                 _fileService.SaveFileAs(module, path);
                 _fileService.CloseFile(module);
+            }
+            // Rename and import soundbank
+            if (soundbank != null)
+            {
+                var name = GetSoundbankName(fighterPackage.FighterInfo.Ids.SoundbankId);
+                soundbank._origPath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
+                _fileService.SaveFile(soundbank);
+                _fileService.CloseFile(soundbank);
             }
         }
 
@@ -818,6 +829,18 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get name of soundbank by ID
+        /// </summary>
+        /// <param name="soundbankId">GetSoundbankName</param>
+        /// <returns>Name of soundbank file</returns>
+        private string GetSoundbankName(int soundbankId)
+        {
+            var name = _settingsService.BuildSettings.SoundSettings.SoundbankStyle == SoundbankStyle.InfoIndex
+                        ? $"{soundbankId:X3}.sawnd" : $"{(soundbankId + 7):D}.sawnd";
+            return name;
+        }
+
+        /// <summary>
         /// Get soundbank filepath by ID
         /// </summary>
         /// <param name="soundbankId">Soundbank ID</param>
@@ -831,8 +854,7 @@ namespace BrawlInstaller.Services
                 var path = Path.Combine(buildPath, sfxPath);
                 if (Directory.Exists(path))
                 {
-                    var name = _settingsService.BuildSettings.SoundSettings.SoundbankStyle == SoundbankStyle.InfoIndex 
-                        ? $"{soundbankId:X3}.sawnd" : $"{(soundbankId + 7):D}.sawnd";
+                    var name = GetSoundbankName(soundbankId);
                     var soundbank = Directory.GetFiles(path, name).FirstOrDefault();
                     if (soundbank != null)
                     {
@@ -841,6 +863,19 @@ namespace BrawlInstaller.Services
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Delete soundbank by ID
+        /// </summary>
+        /// <param name="soundbankId">ID of soundbank to delete</param>
+        private void DeleteSoundbank(int soundbankId)
+        {
+            var soundbank = GetSoundbank(soundbankId);
+            if (soundbank != null)
+            {
+                _fileService.DeleteFile(soundbank);
+            }
         }
 
         /// <summary>

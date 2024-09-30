@@ -329,6 +329,7 @@ namespace BrawlInstaller.Services
                     stageParams.PacFile = Directory.GetFiles(pacPath, $"STG{paramNode.StageName.ToUpper()}.pac").FirstOrDefault();
                     stageParams.ModuleFile = Directory.GetFiles(modulePath, $"{paramNode.Module}").FirstOrDefault();
                     stageParams.TrackListFile = Directory.GetFiles(tracklistPath, $"{paramNode.TrackList}.tlst").FirstOrDefault();
+                    // TODO: handle soundbank styles here too?
                     stageParams.SoundBankFile = Directory.GetFiles(soundbankPath, $"{paramNode.SoundBank:X3}_{stageParams.PacName}.sawnd").FirstOrDefault();
                     _fileService.CloseFile(rootNode);
                 }
