@@ -99,6 +99,8 @@ namespace BrawlInstaller.Classes
     public class SoundSettings
     {
         public SoundbankStyle SoundbankStyle { get; set; } = SoundbankStyle.InfoIndex;
+        public int SoundbankIncrement { get => SoundbankStyle == SoundbankStyle.InfoIndex ? 0 : 7; }
+        public string SoundbankFormat { get => SoundbankStyle == SoundbankStyle.InfoIndex ? "X3" : "D"; }
     }
 
     public class MiscSettings

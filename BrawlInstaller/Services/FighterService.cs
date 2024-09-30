@@ -851,8 +851,9 @@ namespace BrawlInstaller.Services
         /// <returns>Name of soundbank file</returns>
         private string GetSoundbankName(int soundbankId)
         {
-            var name = _settingsService.BuildSettings.SoundSettings.SoundbankStyle == SoundbankStyle.InfoIndex
-                        ? $"{soundbankId:X3}.sawnd" : $"{(soundbankId + 7):D}.sawnd";
+            var increment = _settingsService.BuildSettings.SoundSettings.SoundbankIncrement;
+            var format = _settingsService.BuildSettings.SoundSettings.SoundbankFormat;
+            var name = $"{(soundbankId + increment).ToString(format)}.sawnd";
             return name;
         }
 
