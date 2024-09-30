@@ -621,12 +621,12 @@ namespace BrawlInstaller.Services
             oldFighter = GetFighterFiles(oldFighter);
             // Then, get new files for install, in case any of them would be deleted
             var pacFiles = UpdatePacFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
-            var module = _fileService.OpenFile(oldFighter.Module);
-            var fighterConfig = _fileService.OpenFile(oldFighter.FighterInfo.FighterConfig);
-            var cosmeticConfig = _fileService.OpenFile(oldFighter.FighterInfo.CosmeticConfig);
-            var cssSlotConfig = _fileService.OpenFile(oldFighter.FighterInfo.CSSSlotConfig);
-            var slotConfig = _fileService.OpenFile(oldFighter.FighterInfo.SlotConfig);
-            var soundbank = _fileService.OpenFile(oldFighter.Soundbank);
+            var module = _fileService.OpenFile(fighterPackage.Module);
+            var fighterConfig = _fileService.OpenFile(fighterPackage.FighterInfo.FighterConfig);
+            var cosmeticConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CosmeticConfig);
+            var cssSlotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
+            var slotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.SlotConfig);
+            var soundbank = _fileService.OpenFile(fighterPackage.Soundbank);
             // Delete old files
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
