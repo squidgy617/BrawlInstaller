@@ -648,7 +648,7 @@ namespace BrawlInstaller.Services
             }
             if (fighterConfig != null)
             {
-                // TODO: Update soundbank ID here
+                fighterConfig = UpdateFighterConfig(fighterConfig, fighterPackage.FighterInfo);
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\FighterConfig\\Fighter{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}.dat";
                 _fileService.SaveFileAs(fighterConfig, configPath);
                 _fileService.CloseFile(fighterConfig);
@@ -726,6 +726,22 @@ namespace BrawlInstaller.Services
                         Color = costume.Color
                     };
                 }
+            }
+            return rootNode;
+        }
+
+        /// <summary>
+        /// Update fighter config
+        /// </summary>
+        /// <param name="rootNode">Config to update</param>
+        /// <param name="fighterInfo">Fighter info</param>
+        /// <returns>Updated config</returns>
+        private ResourceNode UpdateFighterConfig(ResourceNode rootNode, FighterInfo fighterInfo)
+        {
+            if (rootNode != null)
+            {
+                var node = (FCFGNode) rootNode;
+                node.SoundBank = (uint)fighterInfo.Ids.SoundbankId;
             }
             return rootNode;
         }
