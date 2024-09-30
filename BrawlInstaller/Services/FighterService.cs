@@ -320,6 +320,10 @@ namespace BrawlInstaller.Services
                 {
                     fighterInfo.InternalName = fighterNode.InternalFighterName;
                 }
+                if (fighterInfo.Ids.SoundbankId <= -1)
+                {
+                    fighterInfo.Ids.SoundbankId = (int)fighterNode.SoundBank;
+                }
             }
             fighterInfo.Ids = fighterIds;
             return fighterInfo;
@@ -804,10 +808,38 @@ namespace BrawlInstaller.Services
             if (fighterInfo.SlotConfig != "")
                 fighterPackage.ExConfigs.Add(fighterInfo.SlotConfig);
 
+            // Get soundbank
+            fighterPackage.Soundbank = GetSoundbank(fighterInfo.Ids.SoundbankId);
+
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
 
             return fighterPackage;
+        }
+
+        /// <summary>
+        /// Get soundbank filepath by ID
+        /// </summary>
+        /// <param name="soundbankId">Soundbank ID</param>
+        /// <returns>Soundbank file path</returns>
+        private string GetSoundbank(int soundbankId)
+        {
+            if (soundbankId > -1)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var sfxPath = _settingsService.BuildSettings.FilePathSettings.SoundbankPath;
+                var path = Path.Combine(buildPath, sfxPath);
+                if (Directory.Exists(path))
+                {
+                    // TODO handle the add 7 stuff?
+                    var soundbank = Directory.GetFiles(path, $"{soundbankId:X3}.sawnd").FirstOrDefault();
+                    if (soundbank != null)
+                    {
+                        return soundbank;
+                    }
+                }
+            }
+            return null;
         }
 
         /// <summary>
