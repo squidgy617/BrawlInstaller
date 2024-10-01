@@ -124,9 +124,9 @@ namespace BrawlInstaller.Classes
         // on save
         public string StageTablePath { get; set; } = "Source\\Project+\\StageTable.asm";
         [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
-        
-        [JsonProperty("RandomStageNamesLocations", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
-        public List<InstallLocation> RandomStageNamesLocations { get; set; } = new List<InstallLocation> 
+
+        [JsonProperty("RandomStageNamesLocations", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+        public List<InstallLocation> RandomStageNamesLocations { get; set; } = new List<InstallLocation>
         {
             new InstallLocation
             {
@@ -145,6 +145,9 @@ namespace BrawlInstaller.Classes
         public string StagePacPath { get; set; } = "pf\\stage\\melee";
         // TODO: Allow multiple for netplay?
         public string TracklistPath { get; set; } = "pf\\sound\\tracklist";
+        public string VictoryThemeTracklist { get; set; } = "Results.tlst";
+        public string CreditsThemeTracklist { get; set; } = "Credits.tlst";
+        public string BrstmPath { get; set; } = "pf\\sound\\strm";
         public string SoundbankPath { get; set; } = "pf\\sfx";
         public string StageAltListPath { get; set; } = "pf\\stage\\stagelist";
 

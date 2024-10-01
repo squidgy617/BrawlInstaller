@@ -3,6 +3,7 @@ using BrawlInstaller.Enums;
 using BrawlInstaller.StaticClasses;
 using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
+using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using BrawlLib.SSBB.Types;
 using System;
 using System.Collections.Concurrent;
@@ -842,6 +843,35 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo = fighterInfo;
 
             return fighterPackage;
+        }
+
+        /// <summary>
+        /// Get victory theme by song ID
+        /// </summary>
+        /// <param name="songId">Song ID to retrieve</param>
+        /// <returns>Song file path</returns>
+        private string GetVictoryTheme(uint songId)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
+            var path = Path.Combine(buildPath, tracklistPath, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist);
+            var rootNode = _fileService.OpenFile(path);
+            if (rootNode != null)
+            {
+                var songNode = rootNode.Children.FirstOrDefault(x => ((TLSTEntryNode)x).SongID == songId);
+                if (songNode != null)
+                {
+                    var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
+                    var songPath = $"{((TLSTEntryNode)songNode).SongFileName}.brstm";
+                    var songFile = Path.Combine(buildPath, brstmPath, songPath);
+                    if (File.Exists(songFile))
+                    {
+                        return songFile;
+                    }
+                }
+                _fileService.CloseFile(rootNode);
+            }
+            return null;
         }
 
         /// <summary>
