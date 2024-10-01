@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -144,6 +145,34 @@ namespace BrawlInstaller.Services
                     rootNode.Children.Remove(songNode);
                     songNode.Dispose();
                 }
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
+            }
+        }
+
+        /// <summary>
+        /// Import a song into a tracklist
+        /// </summary>
+        /// <param name="tracklistSong">Tracklist song object to import</param>
+        /// <param name="tracklist">Tracklist to import to</param>
+        public void ImportTracklistSong(TracklistSong tracklistSong, string tracklist)
+        {
+            // TODO: get first available ID
+            var rootNode = OpenTracklist(tracklist);
+            if (rootNode != null)
+            {
+                uint newId = 0x0000F000;
+                while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(newId))
+                {
+                    newId++;
+                }
+                var newNode = new TLSTEntryNode
+                {
+                    SongID = newId,
+                    Name = tracklistSong.Name,
+                    SongFileName = tracklistSong.SongPath
+                };
+                rootNode.Children.Add(newNode);
                 _fileService.SaveFile(rootNode);
                 _fileService.CloseFile(rootNode);
             }
