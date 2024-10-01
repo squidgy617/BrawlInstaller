@@ -63,7 +63,7 @@ namespace BrawlInstaller.Services
             var song = new TracklistSong();
             var buildPath = _settingsService.AppSettings.BuildPath;
             var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
-            var path = Path.Combine(buildPath, tracklistPath, $"{tracklist}.brstm");
+            var path = Path.Combine(buildPath, tracklistPath, $"{tracklist}.tlst");
             var rootNode = _fileService.OpenFile(path);
             if (rootNode != null)
             {

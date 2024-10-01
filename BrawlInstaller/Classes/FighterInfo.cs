@@ -21,7 +21,6 @@ namespace BrawlInstaller.Classes
         public string CSSSlotConfig { get; set; }
         [JsonIgnore]
         public string SlotConfig { get; set; }
-        public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
         public uint? VictoryThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
 

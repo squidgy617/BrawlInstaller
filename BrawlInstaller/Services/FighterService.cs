@@ -331,7 +331,6 @@ namespace BrawlInstaller.Services
                     fighterInfo.SoundbankId = fighterNode.SoundBank;
                 }
             }
-            fighterInfo.VictoryTheme = GetVictoryTheme(fighterInfo.VictoryThemeId);
             fighterInfo.Ids = fighterIds;
             return fighterInfo;
         }
@@ -844,6 +843,9 @@ namespace BrawlInstaller.Services
 
             // Get soundbank
             fighterPackage.Soundbank = GetSoundbank(fighterInfo.SoundbankId);
+
+            // Get victory theme
+            fighterPackage.VictoryTheme = GetVictoryTheme(fighterInfo.VictoryThemeId);
 
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;

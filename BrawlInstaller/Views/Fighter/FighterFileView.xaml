@@ -19,6 +19,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0"/>
         <ListBox x:Name="pacFileListBox" Grid.Column="1" ItemsSource="{Binding FighterPackage.PacFiles}" Width="120" Height="100">
@@ -40,5 +41,7 @@
         <userControls:FileBox x:Name="moduleFileBox" Text="{Binding FighterPackage.Module, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" TextBoxWidth="120" Filter="REL file (.rel)|*.rel"/>
         <Label x:Name="soundbankLabel" Content="Soundbank:" Grid.Row="2" Grid.Column="0"/>
         <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding FighterPackage.Soundbank, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
+        <Label x:Name="victoryThemeLabel" Content="Victory Theme:" Grid.Row="3" Grid.Column="0"/>
+        <TextBox x:Name="victoryThemeTextBox" Text="{Binding FighterPackage.VictoryTheme.SongPath, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Width="120"/>
     </Grid>
 </UserControl>

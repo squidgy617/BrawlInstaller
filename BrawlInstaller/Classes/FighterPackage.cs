@@ -23,7 +23,7 @@ namespace BrawlInstaller.Classes
         public string Module { get; set; }
         public string Soundbank { get; set; }
         public string CreditsTheme { get; set; }
-        public string VictoryTheme { get; set; }
+        public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
         public FighterSettings FighterSettings { get; set; } = null;
     }
 
