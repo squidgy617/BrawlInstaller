@@ -59,12 +59,14 @@ namespace BrawlInstaller.Services
         // Services
         ISettingsService _settingsService { get; }
         IFileService _fileService { get; }
+        ITracklistService _tracklistService { get; }
 
         [ImportingConstructor]
-        public FighterService(ISettingsService settingsService, IFileService fileService)
+        public FighterService(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
+            _tracklistService = tracklistService;
         }
 
         // Methods
@@ -310,7 +312,10 @@ namespace BrawlInstaller.Services
                 var slotNode = (SLTCNode)rootNode;
                 if (fighterIds.FighterConfigId <= -1 && slotNode.SetSlot)
                     fighterIds.FighterConfigId = Convert.ToInt32(slotNode.CharSlot1);
-                fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
+                if (fighterInfo.VictoryThemeId == null)
+                {
+                    fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
+                }
             }
             fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
             rootNode = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig);
@@ -326,6 +331,7 @@ namespace BrawlInstaller.Services
                     fighterInfo.SoundbankId = fighterNode.SoundBank;
                 }
             }
+            fighterInfo.VictoryTheme = GetVictoryTheme(fighterInfo.VictoryThemeId);
             fighterInfo.Ids = fighterIds;
             return fighterInfo;
         }
@@ -849,29 +855,10 @@ namespace BrawlInstaller.Services
         /// Get victory theme by song ID
         /// </summary>
         /// <param name="songId">Song ID to retrieve</param>
-        /// <returns>Song file path</returns>
-        private string GetVictoryTheme(uint songId)
+        /// <returns>Tracklist song object</returns>
+        private TracklistSong GetVictoryTheme(uint? songId)
         {
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
-            var path = Path.Combine(buildPath, tracklistPath, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist);
-            var rootNode = _fileService.OpenFile(path);
-            if (rootNode != null)
-            {
-                var songNode = rootNode.Children.FirstOrDefault(x => ((TLSTEntryNode)x).SongID == songId);
-                if (songNode != null)
-                {
-                    var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
-                    var songPath = $"{((TLSTEntryNode)songNode).SongFileName}.brstm";
-                    var songFile = Path.Combine(buildPath, brstmPath, songPath);
-                    if (File.Exists(songFile))
-                    {
-                        return songFile;
-                    }
-                }
-                _fileService.CloseFile(rootNode);
-            }
-            return null;
+            return _tracklistService.GetTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist);
         }
 
         /// <summary>
