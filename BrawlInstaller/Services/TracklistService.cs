@@ -70,6 +70,7 @@ namespace BrawlInstaller.Services
                 var songNode = rootNode.Children.FirstOrDefault(x => ((TLSTEntryNode)x).SongID == songId);
                 if (songNode != null)
                 {
+                    song.Name = songNode.Name;
                     song.SongPath = ((TLSTEntryNode)songNode).SongFileName;
                     var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
                     var songPath = $"{((TLSTEntryNode)songNode).SongFileName}.brstm";
