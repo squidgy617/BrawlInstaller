@@ -1,4 +1,6 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlLib.BrawlManagerLib.Songs;
+using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
 using System.Collections.Generic;
@@ -61,20 +63,17 @@ namespace BrawlInstaller.Services
         public TracklistSong GetTracklistSong(uint? songId, string tracklist)
         {
             var song = new TracklistSong();
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
-            var path = Path.Combine(buildPath, tracklistPath, $"{tracklist}.tlst");
-            var rootNode = _fileService.OpenFile(path);
+            var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
             {
-                var songNode = rootNode.Children.FirstOrDefault(x => ((TLSTEntryNode)x).SongID == songId);
+                var songNode = GetSongNode(rootNode, songId);
                 if (songNode != null)
                 {
                     song.Name = songNode.Name;
-                    song.SongPath = ((TLSTEntryNode)songNode).SongFileName;
+                    song.SongPath = songNode.SongFileName;
                     var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
-                    var songPath = $"{((TLSTEntryNode)songNode).SongFileName}.brstm";
-                    var songFile = Path.Combine(buildPath, brstmPath, songPath);
+                    var songPath = $"{songNode.SongFileName}.brstm";
+                    var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
                     if (File.Exists(songFile))
                     {
                         song.SongFile = songFile;
@@ -83,6 +82,71 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(rootNode);
             }
             return song;
+        }
+
+        /// <summary>
+        /// Open tracklist by name
+        /// </summary>
+        /// <param name="tracklist">Tracklist to open</param>
+        /// <returns>Tracklist root node</returns>
+        private ResourceNode OpenTracklist(string tracklist)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
+            var path = Path.Combine(buildPath, tracklistPath, $"{tracklist}.tlst");
+            var rootNode = _fileService.OpenFile(path);
+            if (rootNode != null)
+            {
+                return rootNode;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get song node in tracklist
+        /// </summary>
+        /// <param name="rootNode">Tracklist node to search</param>
+        /// <param name="songId">ID of song node</param>
+        /// <returns>Song node</returns>
+        private TLSTEntryNode GetSongNode(ResourceNode rootNode, uint? songId)
+        {
+            if (rootNode != null)
+            {
+                var songNode = rootNode.Children.FirstOrDefault(x => ((TLSTEntryNode)x).SongID == songId);
+                if (songNode != null)
+                {
+                    return (TLSTEntryNode)songNode;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Delete song on tracklist
+        /// </summary>
+        /// <param name="songId">ID of song to delete</param>
+        /// <param name="tracklist">Tracklist song is in</param>
+        public void DeleteTracklistSong(uint? songId, string tracklist)
+        {
+            var rootNode = OpenTracklist(tracklist);
+            if (rootNode != null)
+            {
+                var songNode = GetSongNode(rootNode, songId);
+                if (songNode != null)
+                {
+                    var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
+                    var songPath = $"{songNode.SongFileName}.brstm";
+                    var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
+                    if (File.Exists(songFile))
+                    {
+                        _fileService.DeleteFile(songFile);
+                    }
+                    rootNode.Children.Remove(songNode);
+                    songNode.Dispose();
+                }
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
+            }
         }
     }
 }
