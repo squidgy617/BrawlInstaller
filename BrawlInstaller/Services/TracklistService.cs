@@ -157,7 +157,6 @@ namespace BrawlInstaller.Services
         /// <param name="tracklist">Tracklist to import to</param>
         public void ImportTracklistSong(TracklistSong tracklistSong, string tracklist)
         {
-            // TODO: get first available ID
             var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
             {
