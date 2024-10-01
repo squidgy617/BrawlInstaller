@@ -30,8 +30,6 @@ namespace BrawlInstaller.Enums
         [Description("Stage")]
         Stage,
         [Description("Stage Cosmetic")]
-        StageCosmetic,
-        [Description("Soundbank")]
-        Soundbank
+        StageCosmetic
     }
 }

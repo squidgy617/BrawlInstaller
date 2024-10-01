@@ -321,9 +321,9 @@ namespace BrawlInstaller.Services
                 {
                     fighterInfo.InternalName = fighterNode.InternalFighterName;
                 }
-                if (fighterInfo.Ids.SoundbankId <= -1)
+                if (fighterInfo.SoundbankId == null)
                 {
-                    fighterInfo.Ids.SoundbankId = (int)fighterNode.SoundBank;
+                    fighterInfo.SoundbankId = fighterNode.SoundBank;
                 }
             }
             fighterInfo.Ids = fighterIds;
@@ -632,7 +632,7 @@ namespace BrawlInstaller.Services
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
-            DeleteSoundbank(oldFighter.FighterInfo.Ids.SoundbankId);
+            DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
             // Import pac files
             foreach(var pacFile in pacFiles)
             {
@@ -677,7 +677,7 @@ namespace BrawlInstaller.Services
             // Rename and import soundbank
             if (soundbank != null)
             {
-                var name = GetSoundbankName(fighterPackage.FighterInfo.Ids.SoundbankId);
+                var name = GetSoundbankName(fighterPackage.FighterInfo.SoundbankId);
                 soundbank._origPath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
                 _fileService.SaveFile(soundbank);
                 _fileService.CloseFile(soundbank);
@@ -742,7 +742,7 @@ namespace BrawlInstaller.Services
             if (rootNode != null)
             {
                 var node = (FCFGNode) rootNode;
-                node.SoundBank = (uint)fighterInfo.Ids.SoundbankId;
+                node.SoundBank = (uint)fighterInfo.SoundbankId;
             }
             return rootNode;
         }
@@ -837,7 +837,7 @@ namespace BrawlInstaller.Services
                 fighterPackage.ExConfigs.Add(fighterInfo.SlotConfig);
 
             // Get soundbank
-            fighterPackage.Soundbank = GetSoundbank(fighterInfo.Ids.SoundbankId);
+            fighterPackage.Soundbank = GetSoundbank(fighterInfo.SoundbankId);
 
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
@@ -879,12 +879,16 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="soundbankId">GetSoundbankName</param>
         /// <returns>Name of soundbank file</returns>
-        private string GetSoundbankName(int soundbankId)
+        private string GetSoundbankName(uint? soundbankId)
         {
-            var increment = _settingsService.BuildSettings.SoundSettings.SoundbankIncrement;
-            var format = _settingsService.BuildSettings.SoundSettings.SoundbankFormat;
-            var name = $"{(soundbankId + increment).ToString(format)}.sawnd";
-            return name;
+            if (soundbankId != null)
+            {
+                var increment = _settingsService.BuildSettings.SoundSettings.SoundbankIncrement;
+                var format = _settingsService.BuildSettings.SoundSettings.SoundbankFormat;
+                var name = $"{((uint)soundbankId + increment).ToString(format)}.sawnd";
+                return name;
+            }
+            return string.Empty;
         }
 
         /// <summary>
@@ -892,9 +896,9 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="soundbankId">Soundbank ID</param>
         /// <returns>Soundbank file path</returns>
-        private string GetSoundbank(int soundbankId)
+        private string GetSoundbank(uint? soundbankId)
         {
-            if (soundbankId > -1)
+            if (soundbankId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var sfxPath = _settingsService.BuildSettings.FilePathSettings.SoundbankPath;
@@ -916,7 +920,7 @@ namespace BrawlInstaller.Services
         /// Delete soundbank by ID
         /// </summary>
         /// <param name="soundbankId">ID of soundbank to delete</param>
-        private void DeleteSoundbank(int soundbankId)
+        private void DeleteSoundbank(uint? soundbankId)
         {
             var soundbank = GetSoundbank(soundbankId);
             if (soundbank != null)

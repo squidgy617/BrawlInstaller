@@ -21,7 +21,8 @@ namespace BrawlInstaller.Classes
         public string CSSSlotConfig { get; set; }
         [JsonIgnore]
         public string SlotConfig { get; set; }
-        public uint VictoryThemeId { get; set; }
+        public uint? VictoryThemeId { get; set; } = null;
+        public uint? SoundbankId { get; set; } = null;
 
         public FighterInfo Copy()
         {
