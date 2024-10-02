@@ -18,8 +18,14 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="TracklistService.GetTracklists()"/>
         List<string> GetTracklists();
 
-        /// <inheritdoc cref="TracklistService.GetTracklistSong(uint, string)"/>
+        /// <inheritdoc cref="TracklistService.GetTracklistSong(uint?, string)"/>
         TracklistSong GetTracklistSong(uint? songId, string tracklist);
+
+        /// <inheritdoc cref="TracklistService.DeleteTracklistSong(uint?, string)"/>
+        void DeleteTracklistSong(uint? songId, string tracklist);
+
+        /// <inheritdoc cref="TracklistService.ImportTracklistSong(TracklistSong, string, ResourceNode)"/>
+        uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode);
     }
 
     [Export(typeof(ITracklistService))]
@@ -71,7 +77,15 @@ namespace BrawlInstaller.Services
                 if (songNode != null)
                 {
                     song.Name = songNode.Name;
+                    song.SongId = songNode.SongID;
                     song.SongPath = songNode.SongFileName;
+                    song.SongDelay = songNode.SongDelay;
+                    song.Volume = songNode.Volume;
+                    song.Frequency = songNode.Frequency;
+                    song.SongSwitch = songNode.SongSwitch;
+                    song.DisableStockPinch = songNode.DisableStockPinch;
+                    song.HiddenFromTracklist = songNode.HiddenFromTracklist;
+                    song.Index = songNode.Index;
                     var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
                     var songPath = $"{songNode.SongFileName}.brstm";
                     var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
@@ -142,7 +156,7 @@ namespace BrawlInstaller.Services
                     {
                         _fileService.DeleteFile(songFile);
                     }
-                    rootNode.Children.Remove(songNode);
+                    rootNode.RemoveChild(songNode);
                     songNode.Dispose();
                 }
                 _fileService.SaveFile(rootNode);
@@ -156,27 +170,35 @@ namespace BrawlInstaller.Services
         /// <param name="tracklistSong">Tracklist song object to add</param>
         /// <param name="tracklist">Tracklist to add to</param>
         /// <returns>Added song ID</returns>
-        public uint AddTracklistSong(TracklistSong tracklistSong, string tracklist)
+        private uint AddTracklistSong(TracklistSong tracklistSong, string tracklist)
         {
-            uint newId = 0x0000F000;
             var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
             {
-                while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(newId))
+                // Generate tracklist node from object
+                var newNode = tracklistSong.ConvertToNode();
+                // If song ID is taken, generate a new one
+                if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
                 {
-                    newId++;
+                    tracklistSong.SongId = 0x0000F000;
+                    while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
+                    {
+                        tracklistSong.SongId++;
+                    }
                 }
-                var newNode = new TLSTEntryNode
+                if (tracklistSong.Index <= -1)
                 {
-                    SongID = newId,
-                    Name = tracklistSong.Name,
-                    SongFileName = tracklistSong.SongPath
-                };
-                rootNode.Children.Add(newNode);
+                    rootNode.AddChild(newNode);
+                    tracklistSong.Index = newNode.Index;
+                }
+                else
+                {
+                    rootNode.InsertChild(newNode, tracklistSong.Index);
+                }
                 _fileService.SaveFile(rootNode);
                 _fileService.CloseFile(rootNode);
             }
-            return newId;
+            return tracklistSong.SongId;
         }
 
         /// <summary>

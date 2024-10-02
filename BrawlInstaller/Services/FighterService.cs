@@ -633,11 +633,13 @@ namespace BrawlInstaller.Services
             var cssSlotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
             var slotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.SlotConfig);
             var soundbank = _fileService.OpenFile(fighterPackage.Soundbank);
+            var victoryTheme = _fileService.OpenFile(fighterPackage.VictoryTheme.SongFile);
             // Delete old files
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
             DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
+            DeleteVictoryTheme(oldFighter.FighterInfo.VictoryThemeId);
             // Import pac files
             foreach(var pacFile in pacFiles)
             {
@@ -687,6 +689,8 @@ namespace BrawlInstaller.Services
                 _fileService.SaveFile(soundbank);
                 _fileService.CloseFile(soundbank);
             }
+            // Import victory theme
+            fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme);
         }
 
         /// <summary>
@@ -861,6 +865,26 @@ namespace BrawlInstaller.Services
         private TracklistSong GetVictoryTheme(uint? songId)
         {
             return _tracklistService.GetTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist);
+        }
+
+        /// <summary>
+        /// Delete victory theme by song ID
+        /// </summary>
+        /// <param name="songId">Song ID to delete</param>
+        private void DeleteVictoryTheme(uint? songId)
+        {
+            _tracklistService.DeleteTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist);
+        }
+
+        /// <summary>
+        /// Import victory theme for fighter
+        /// </summary>
+        /// <param name="tracklistSong">Tracklist song object to import</param>
+        /// <param name="brstmNode">BRSTM node to import</param>
+        /// <returns>ID of added song</returns>
+        private uint ImportVictoryTheme(TracklistSong tracklistSong, ResourceNode brstmNode)
+        {
+            return _tracklistService.ImportTracklistSong(tracklistSong, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist, brstmNode);
         }
 
         /// <summary>
