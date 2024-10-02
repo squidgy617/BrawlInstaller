@@ -151,16 +151,17 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Import a song into a tracklist
+        /// Add a song to a tracklist
         /// </summary>
-        /// <param name="tracklistSong">Tracklist song object to import</param>
-        /// <param name="tracklist">Tracklist to import to</param>
-        public void ImportTracklistSong(TracklistSong tracklistSong, string tracklist)
+        /// <param name="tracklistSong">Tracklist song object to add</param>
+        /// <param name="tracklist">Tracklist to add to</param>
+        /// <returns>Added song ID</returns>
+        public uint AddTracklistSong(TracklistSong tracklistSong, string tracklist)
         {
+            uint newId = 0x0000F000;
             var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
             {
-                uint newId = 0x0000F000;
                 while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(newId))
                 {
                     newId++;
@@ -175,6 +176,30 @@ namespace BrawlInstaller.Services
                 _fileService.SaveFile(rootNode);
                 _fileService.CloseFile(rootNode);
             }
+            return newId;
+        }
+
+        /// <summary>
+        /// Import tracklist song
+        /// </summary>
+        /// <param name="tracklistSong">Tracklist song to import</param>
+        /// <param name="tracklist">Tracklist to import to</param>
+        /// <param name="brstmNode">BRSTM node to import</param>
+        /// <returns>Added song ID</returns>
+        public uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode)
+        {
+            var id = AddTracklistSong(tracklistSong, tracklist);
+            if (brstmNode != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var strmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
+                var path = $"{Path.Combine(buildPath, strmPath, tracklistSong.SongPath)}.brstm";
+                brstmNode._origPath = path;
+                _fileService.SaveFile(brstmNode);
+                _fileService.CloseFile(brstmNode);
+                tracklistSong.SongFile = path;
+            }
+            return id;
         }
     }
 }
