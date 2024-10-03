@@ -96,6 +96,10 @@ namespace BrawlInstaller.Services
                 }
                 _fileService.CloseFile(rootNode);
             }
+            if (songId != null)
+            {
+                song.SongId = (uint)songId;
+            }
             return song;
         }
 
@@ -172,33 +176,41 @@ namespace BrawlInstaller.Services
         /// <returns>Added song ID</returns>
         private uint AddTracklistSong(TracklistSong tracklistSong, string tracklist)
         {
-            var rootNode = OpenTracklist(tracklist);
-            if (rootNode != null)
+            // Only add the song if it's using a custom TLST ID, otherwise it's a vBrawl song and should not be added
+            if (tracklistSong.SongId >= 0x0000F000)
             {
-                // Generate tracklist node from object
-                var newNode = tracklistSong.ConvertToNode();
-                // If song ID is taken, generate a new one
-                if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
+                var rootNode = OpenTracklist(tracklist);
+                if (rootNode != null)
                 {
-                    tracklistSong.SongId = 0x0000F000;
-                    while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
+                    // Generate tracklist node from object
+                    var newNode = tracklistSong.ConvertToNode();
+                    // If song ID is taken, generate a new one
+                    if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
                     {
-                        tracklistSong.SongId++;
+                        tracklistSong.SongId = 0x0000F000;
+                        while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
+                        {
+                            tracklistSong.SongId++;
+                        }
                     }
+                    if (tracklistSong.Index <= -1)
+                    {
+                        rootNode.AddChild(newNode);
+                        tracklistSong.Index = newNode.Index;
+                    }
+                    else
+                    {
+                        rootNode.InsertChild(newNode, tracklistSong.Index);
+                    }
+                    _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
                 }
-                if (tracklistSong.Index <= -1)
-                {
-                    rootNode.AddChild(newNode);
-                    tracklistSong.Index = newNode.Index;
-                }
-                else
-                {
-                    rootNode.InsertChild(newNode, tracklistSong.Index);
-                }
-                _fileService.SaveFile(rootNode);
-                _fileService.CloseFile(rootNode);
+                return tracklistSong.SongId;
             }
-            return tracklistSong.SongId;
+            else
+            {
+                return tracklistSong.SongId;
+            }
         }
 
         /// <summary>

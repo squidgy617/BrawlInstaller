@@ -147,6 +147,7 @@ namespace BrawlInstaller.Classes
         public string TracklistPath { get; set; } = "pf\\sound\\tracklist";
         public string VictoryThemeTracklist { get; set; } = "Results";
         public string CreditsThemeTracklist { get; set; } = "Credits";
+        public string CreditsThemeAsmFile { get; set; } = "Source\\Project+\\ResultsMusic.asm";
         public string BrstmPath { get; set; } = "pf\\sound\\strm";
         public string SoundbankPath { get; set; } = "pf\\sfx";
         public string StageAltListPath { get; set; } = "pf\\stage\\stagelist";

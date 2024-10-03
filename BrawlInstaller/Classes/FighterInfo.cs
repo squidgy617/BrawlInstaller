@@ -21,6 +21,7 @@ namespace BrawlInstaller.Classes
         public string CSSSlotConfig { get; set; }
         [JsonIgnore]
         public string SlotConfig { get; set; }
+        // TODO: Should these even be in here? They are not used for costumes so aren't needed for P+ probably. Maybe should go in fighter package itself?
         public uint? VictoryThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
 

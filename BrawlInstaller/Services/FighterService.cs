@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -60,13 +61,15 @@ namespace BrawlInstaller.Services
         ISettingsService _settingsService { get; }
         IFileService _fileService { get; }
         ITracklistService _tracklistService { get; }
+        ICodeService _codeService { get; }
 
         [ImportingConstructor]
-        public FighterService(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService)
+        public FighterService(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, ICodeService codeService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _tracklistService = tracklistService;
+            _codeService = codeService;
         }
 
         // Methods
@@ -634,12 +637,14 @@ namespace BrawlInstaller.Services
             var slotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.SlotConfig);
             var soundbank = _fileService.OpenFile(fighterPackage.Soundbank);
             var victoryTheme = _fileService.OpenFile(fighterPackage.VictoryTheme.SongFile);
+            var creditsTheme = _fileService.OpenFile(fighterPackage.CreditsTheme.SongFile);
             // Delete old files
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
             DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
-            DeleteVictoryTheme(oldFighter.FighterInfo.VictoryThemeId);
+            DeleteVictoryTheme(oldFighter.VictoryTheme.SongId);
+            DeleteCreditsTheme(oldFighter.CreditsTheme.SongId);
             // Import pac files
             foreach(var pacFile in pacFiles)
             {
@@ -691,6 +696,8 @@ namespace BrawlInstaller.Services
             }
             // Import victory theme
             fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme);
+            // Import credits theme
+            fighterPackage.CreditsTheme.SongId = ImportCreditsTheme(fighterPackage.CreditsTheme, creditsTheme, fighterPackage.FighterInfo);
         }
 
         /// <summary>
@@ -851,6 +858,9 @@ namespace BrawlInstaller.Services
             // Get victory theme
             fighterPackage.VictoryTheme = GetVictoryTheme(fighterInfo.VictoryThemeId);
 
+            // Get credits theme
+            fighterPackage.CreditsTheme = GetCreditsTheme(fighterInfo.Ids.SlotConfigId);
+
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
 
@@ -885,6 +895,80 @@ namespace BrawlInstaller.Services
         private uint ImportVictoryTheme(TracklistSong tracklistSong, ResourceNode brstmNode)
         {
             return _tracklistService.ImportTracklistSong(tracklistSong, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist, brstmNode);
+        }
+
+        /// <summary>
+        /// Get credits theme by slot ID
+        /// </summary>
+        /// <param name="slotId">Slot ID</param>
+        /// <returns>Credits theme</returns>
+        private TracklistSong GetCreditsTheme(int slotId)
+        {
+            var creditsTheme = new TracklistSong();
+            // Read the credits theme table
+            var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "ClassicResultsTable:");
+            // Ensure slot ID is within range of table
+            if (table.Count > slotId)
+            {
+                var id = table[slotId];
+                // Find matching table entry
+                var result = uint.TryParse(id.Replace("0x",string.Empty), NumberStyles.HexNumber, null, out uint foundId);
+                if (result)
+                {
+                    creditsTheme = _tracklistService.GetTracklistSong(foundId, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist);
+                }
+            }
+            return creditsTheme;
+        }
+
+        /// <summary>
+        /// Delete credits theme by song ID
+        /// </summary>
+        /// <param name="songId">Song ID to delete</param>
+        private void DeleteCreditsTheme(uint? songId)
+        {
+            _tracklistService.DeleteTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist);
+        }
+
+        /// <summary>
+        /// Import credits theme for fighter
+        /// </summary>
+        /// <param name="tracklistSong">Tracklist song object to import</param>
+        /// <param name="brstmNode">BRSTM node to import</param>
+        /// <returns>ID of added song</returns>
+        private uint ImportCreditsTheme(TracklistSong tracklistSong, ResourceNode brstmNode, FighterInfo fighterInfo)
+        {
+            var slotId = fighterInfo.Ids.SlotConfigId;
+            var id = _tracklistService.ImportTracklistSong(tracklistSong, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist, brstmNode);
+            // Read the credits theme table
+            var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "ClassicResultsTable:");
+            // Convert to AsmTable
+            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var asmTable = new List<AsmTableEntry>();
+            foreach(var entry in table)
+            {
+                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.SlotConfigId == asmTable.Count)?.DisplayName;
+                var newEntry = new AsmTableEntry
+                {
+                    Item = entry,
+                    Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
+                };
+                asmTable.Add(newEntry);
+            }
+            // Update fighter slot
+            if (asmTable.Count > slotId)
+            {
+                asmTable[slotId].Item = $"0x{tracklistSong.SongId:X4}";
+                asmTable[slotId].Comment = fighterInfo.DisplayName;
+            }
+            // Write table
+            code = _codeService.ReplaceTable(code, "ClassicResultsTable:", asmTable, DataSize.Halfword, 4);
+            _fileService.SaveTextFile(codePath, code);
+            return id;
         }
 
         /// <summary>
