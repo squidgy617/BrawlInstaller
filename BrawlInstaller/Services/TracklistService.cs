@@ -176,41 +176,33 @@ namespace BrawlInstaller.Services
         /// <returns>Added song ID</returns>
         private uint AddTracklistSong(TracklistSong tracklistSong, string tracklist)
         {
-            // Only add the song if it's using a custom TLST ID, otherwise it's a vBrawl song and should not be added
-            if (tracklistSong.SongId >= 0x0000F000)
+            var rootNode = OpenTracklist(tracklist);
+            if (rootNode != null)
             {
-                var rootNode = OpenTracklist(tracklist);
-                if (rootNode != null)
+                // Generate tracklist node from object
+                var newNode = tracklistSong.ConvertToNode();
+                // If song ID is taken, generate a new one
+                if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
                 {
-                    // Generate tracklist node from object
-                    var newNode = tracklistSong.ConvertToNode();
-                    // If song ID is taken, generate a new one
-                    if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
+                    tracklistSong.SongId = 0x0000F000;
+                    while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
                     {
-                        tracklistSong.SongId = 0x0000F000;
-                        while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
-                        {
-                            tracklistSong.SongId++;
-                        }
+                        tracklistSong.SongId++;
                     }
-                    if (tracklistSong.Index <= -1)
-                    {
-                        rootNode.AddChild(newNode);
-                        tracklistSong.Index = newNode.Index;
-                    }
-                    else
-                    {
-                        rootNode.InsertChild(newNode, tracklistSong.Index);
-                    }
-                    _fileService.SaveFile(rootNode);
-                    _fileService.CloseFile(rootNode);
                 }
-                return tracklistSong.SongId;
+                if (tracklistSong.Index <= -1)
+                {
+                    rootNode.AddChild(newNode);
+                    tracklistSong.Index = newNode.Index;
+                }
+                else
+                {
+                    rootNode.InsertChild(newNode, tracklistSong.Index);
+                }
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
             }
-            else
-            {
-                return tracklistSong.SongId;
-            }
+            return tracklistSong.SongId;
         }
 
         /// <summary>
@@ -222,16 +214,21 @@ namespace BrawlInstaller.Services
         /// <returns>Added song ID</returns>
         public uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode)
         {
-            var id = AddTracklistSong(tracklistSong, tracklist);
-            if (brstmNode != null)
+            var id = tracklistSong.SongId;
+            // Only add the song if it's using a custom TLST ID, otherwise it's a vBrawl song and should not be added
+            if (tracklistSong.SongId >= 0x0000F000)
             {
-                var buildPath = _settingsService.AppSettings.BuildPath;
-                var strmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
-                var path = $"{Path.Combine(buildPath, strmPath, tracklistSong.SongPath)}.brstm";
-                brstmNode._origPath = path;
-                _fileService.SaveFile(brstmNode);
-                _fileService.CloseFile(brstmNode);
-                tracklistSong.SongFile = path;
+                id = AddTracklistSong(tracklistSong, tracklist);
+                if (brstmNode != null)
+                {
+                    var buildPath = _settingsService.AppSettings.BuildPath;
+                    var strmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
+                    var path = $"{Path.Combine(buildPath, strmPath, tracklistSong.SongPath)}.brstm";
+                    brstmNode._origPath = path;
+                    _fileService.SaveFile(brstmNode);
+                    _fileService.CloseFile(brstmNode);
+                    tracklistSong.SongFile = path;
+                }
             }
             return id;
         }
