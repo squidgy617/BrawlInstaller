@@ -631,12 +631,22 @@ namespace BrawlInstaller.Services
             var victoryTheme = _fileService.OpenFile(fighterPackage.VictoryTheme.SongFile);
             var creditsTheme = _fileService.OpenFile(fighterPackage.CreditsTheme.SongFile);
             var classicIntro = _fileService.OpenFile(fighterPackage.ClassicIntro);
+            var endingFiles = new List<ResourceNode>();
+            foreach(var endingFile in fighterPackage.EndingPacFiles)
+            {
+                var file = _fileService.OpenFile(endingFile);
+                if (file != null)
+                {
+                    endingFiles.Add(file);
+                }
+            }
             // Delete old files
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
             DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
             DeleteClassicIntro(oldFighter.FighterInfo.Ids.CosmeticId);
+            DeleteEndingPacFiles(oldFighter.FighterInfo.EndingId);
             // Delete some files only if user chose to
             if (fighterPackage.FighterDeleteOptions.DeleteVictoryTheme)
             {
@@ -701,6 +711,8 @@ namespace BrawlInstaller.Services
             fighterPackage.CreditsTheme.SongId = ImportCreditsTheme(fighterPackage.CreditsTheme, creditsTheme, fighterPackage.FighterInfo);
             // Import classic intro
             fighterPackage.ClassicIntro = ImportClassicIntro(classicIntro, fighterPackage.FighterInfo.Ids.CosmeticId);
+            // Import ending files
+            fighterPackage.FighterInfo.EndingId = ImportEndingPacFiles(endingFiles, fighterPackage.FighterInfo);
         }
 
         /// <summary>
@@ -919,6 +931,98 @@ namespace BrawlInstaller.Services
                 pacFiles.AddRange(Directory.GetFiles(path, $"EndingSimple{endingId:D2}.pac").ToList());
             }
             return pacFiles;
+        }
+
+        /// <summary>
+        /// Delete ending pac files for fighter
+        /// </summary>
+        /// <param name="endingId">Ending ID for fighter</param>
+        private void DeleteEndingPacFiles(int endingId)
+        {
+            var files = GetEndingPacFiles(endingId);
+            foreach(var file in files)
+            {
+                _fileService.DeleteFile(file);
+            }
+        }
+
+        /// <summary>
+        /// Import ending pac files for fighter
+        /// </summary>
+        /// <param name="endingPacFiles">Opened files to import</param>
+        /// <param name="fighterInfo">Fighter info to use</param>
+        /// <returns>New ending ID</returns>
+        private int ImportEndingPacFiles(List<ResourceNode> endingPacFiles, FighterInfo fighterInfo)
+        {
+            var cosmeticConfigId = fighterInfo.Ids.CosmeticConfigId;
+            var endingId = fighterInfo.EndingId;
+            if (cosmeticConfigId > -1 && endingPacFiles.Count >= 1)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
+                var path = Path.Combine(buildPath, endingAsm);
+                var code = _codeService.ReadCode(path);
+                var table = _codeService.ReadTable(code, "ENDINGTABLE:");
+                // Convert to AsmTable
+                var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+                var asmTable = new List<AsmTableEntry>();
+                foreach (var entry in table)
+                {
+                    var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.CosmeticConfigId == asmTable.Count)?.DisplayName;
+                    var newEntry = new AsmTableEntry
+                    {
+                        Item = entry,
+                        Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
+                    };
+                    asmTable.Add(newEntry);
+                }
+                // Update ending ID if it's already used
+                if (asmTable.Where(x => asmTable.IndexOf(x) != cosmeticConfigId).Any(x => int.Parse(x.Item) == endingId))
+                {
+                    while (asmTable.Where(x => asmTable.IndexOf(x) != cosmeticConfigId).Any(x => int.Parse(x.Item) == endingId))
+                    {
+                        endingId++;
+                    }
+                    fighterInfo.EndingId = endingId;
+                }
+                // Update fighter slot
+                if (asmTable.Count > cosmeticConfigId)
+                {
+                    asmTable[cosmeticConfigId].Item = $"0x{fighterInfo.EndingId:D}";
+                    asmTable[cosmeticConfigId].Comment = fighterInfo.DisplayName;
+                }
+                // Write table
+                code = _codeService.ReplaceTable(code, "ENDINGTABLE:", asmTable, DataSize.Byte, 8);
+                _fileService.SaveTextFile(path, code);
+                // Update and import pac files
+                var endingPath = _settingsService.BuildSettings.FilePathSettings.EndingPath;
+                var savePath = Path.Combine(buildPath, endingPath);
+                foreach(var file in endingPacFiles)
+                {
+                    // Update texture names
+                    var texturePrefix = "A";
+                    var filePrefix = "All";
+                    if (file.RootNode.Name.StartsWith("EndingSimple"))
+                    {
+                        texturePrefix = "S";
+                        filePrefix = "Simple";
+                    }
+                    var nodes = file.GetChildrenRecursive();
+                    foreach (var node in nodes)
+                    {
+                        var regex = new Regex("MenEndpictures(A|S)\\d{4}");
+                        if (!node.Name.EndsWith("0000"))
+                        {
+                            node.Name = regex.Replace(node.Name, $"MenEndpictures{texturePrefix}{endingId:D4}");
+                        }
+                    }
+                    // Save
+                    file._origPath = Path.Combine(savePath, $"Ending{filePrefix}{endingId:D2}.pac");
+                    _fileService.SaveFile(file);
+                    _fileService.CloseFile(file);
+                }
+            }
+            return endingId;
         }
 
         /// <summary>
