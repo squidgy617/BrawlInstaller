@@ -401,7 +401,8 @@ namespace BrawlInstaller.Services
                 "AltZ",
                 "Alt",
                 "Param",
-                "Brres"
+                "Brres",
+                "Fake"
             };
             var name = Path.GetFileNameWithoutExtension(node.FileName);
             var oldFighterName = name;
