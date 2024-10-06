@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -869,10 +870,29 @@ namespace BrawlInstaller.Services
             // Get credits theme
             fighterPackage.CreditsTheme = GetCreditsTheme(fighterInfo.Ids.SlotConfigId);
 
+            // Get classic intro
+            fighterPackage.ClassicIntro = GetClassicIntro(fighterInfo.Ids.CosmeticId);
+
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
 
             return fighterPackage;
+        }
+
+        private string GetClassicIntro(int cosmeticId)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var classicPath = _settingsService.BuildSettings.FilePathSettings.ClassicIntroPath;
+            var path = Path.Combine(buildPath, classicPath);
+            if (Directory.Exists(path))
+            {
+                var filePath = Path.Combine(path, $"chr{(cosmeticId + 1):D4}.brres");
+                if (File.Exists(filePath))
+                {
+                    return filePath;
+                }
+            }
+            return null;
         }
 
         /// <summary>

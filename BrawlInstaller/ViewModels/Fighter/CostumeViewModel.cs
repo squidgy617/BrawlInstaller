@@ -90,7 +90,7 @@ namespace BrawlInstaller.ViewModels
             _cosmeticService = cosmeticService;
             _fileService = fileService;
 
-            // TODO: Modify this list
+            // TODO: Do what we did with stages for getting defaults
             var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
             {
                 CosmeticType.CSP.GetKeyValuePair(),
