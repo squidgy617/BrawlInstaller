@@ -644,8 +644,15 @@ namespace BrawlInstaller.Services
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
             DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
-            DeleteVictoryTheme(oldFighter.VictoryTheme.SongId);
-            DeleteCreditsTheme(oldFighter.CreditsTheme.SongId);
+            // Delete some files only if user chose to
+            if (fighterPackage.FighterDeleteOptions.DeleteVictoryTheme)
+            {
+                DeleteVictoryTheme(oldFighter.VictoryTheme.SongId);
+            }
+            if (fighterPackage.FighterDeleteOptions.DeleteCreditsTheme)
+            {
+                DeleteCreditsTheme(oldFighter.CreditsTheme.SongId);
+            }
             // Import pac files
             foreach(var pacFile in pacFiles)
             {

@@ -189,6 +189,7 @@ namespace BrawlInstaller.Services
                     {
                         tracklistSong.SongId++;
                     }
+                    newNode.SongID = tracklistSong.SongId;
                 }
                 if (tracklistSong.Index <= -1)
                 {

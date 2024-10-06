@@ -25,6 +25,7 @@ namespace BrawlInstaller.Classes
         public TracklistSong CreditsTheme { get; set; }
         public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
         public FighterSettings FighterSettings { get; set; } = null;
+        public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
     }
 
     public class Costume
@@ -97,5 +98,11 @@ namespace BrawlInstaller.Classes
     public class BowserSettings
     {
         public int BoneId { get; set; }
+    }
+
+    public class FighterDeleteOptions
+    {
+        public bool DeleteVictoryTheme { get; set; } = true;
+        public bool DeleteCreditsTheme { get; set; } = true;
     }
 }

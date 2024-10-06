@@ -21,6 +21,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System.Collections.ObjectModel;
 using BrawlInstaller.Helpers;
+using System.Windows;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -37,6 +38,8 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private List<FighterInfo> _fighterList;
         private FighterInfo _selectedFighter;
+        private string _oldVictoryThemePath;
+        private string _oldCreditsThemePath;
 
         // Services
         IPackageService _packageService { get; }
@@ -85,6 +88,8 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage = new FighterPackage();
                 FighterPackage.FighterInfo = SelectedFighter;
                 FighterPackage = _packageService.ExtractFighter(SelectedFighter);
+                _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
+                _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
                 OnPropertyChanged(nameof(FighterPackage));
                 WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
@@ -140,12 +145,35 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
+            // Prompt for items to delete if applicable
+            if (FighterPackage.VictoryTheme != null && FighterPackage.VictoryTheme.SongPath != _oldVictoryThemePath)
+            {
+                var delete = _dialogService.ShowMessage($"Victory theme has changed. Would you like to delete the old theme at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
+                if (!delete)
+                {
+                    FighterPackage.FighterDeleteOptions.DeleteVictoryTheme = false;
+                }
+            }
+            if (FighterPackage.CreditsTheme != null && FighterPackage.CreditsTheme.SongPath != _oldCreditsThemePath)
+            {
+                var delete = _dialogService.ShowMessage($"Credits theme has changed. Would you like to delete the old theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
+                if (delete)
+                {
+                    FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = false;
+                }
+            }
+            // Save fighter
             _packageService.SaveFighter(FighterPackage);
             // Remove added franchise icons from package
             FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
             // Clear changes on all cosmetics
             FighterPackage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; } );
             FighterPackage.Cosmetics.ClearChanges();
+            // Update delete options
+            FighterPackage.FighterDeleteOptions.DeleteVictoryTheme = true;
+            FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = true;
+            _oldVictoryThemePath = FighterPackage.VictoryTheme?.SongPath;
+            _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
         }
 
         private void GetFighters()
