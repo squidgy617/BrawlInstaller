@@ -282,6 +282,8 @@ namespace BrawlInstaller.Services
         // TODO: get way more info
         private FighterInfo GetFighterInfo(FighterInfo fighterInfo, List<ResourceNode> fighterConfigs, List<ResourceNode> cosmeticConfigs, List<ResourceNode> cssSlotConfigs, List<ResourceNode> slotConfigs)
         {
+            // For IDs, we only fill them if they have not already been filled, but for everything else we fill it if we find it.
+            // This way, if we can't find a file, we default to what the fighter info already has, otherwise we pull from the source of truth we find.
             var fighterIds = LinkExConfigs(fighterInfo.Ids, cosmeticConfigs, cssSlotConfigs, slotConfigs);
             fighterInfo.CosmeticConfig = GetExConfig(fighterIds.CosmeticConfigId, IdType.CosmeticConfig);
             var rootNode = cosmeticConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CosmeticConfig);
@@ -290,14 +292,10 @@ namespace BrawlInstaller.Services
                 var coscNode = (COSCNode)rootNode;
                 if (fighterIds.SlotConfigId <= -1 && coscNode.HasSecondary)
                     fighterIds.SlotConfigId = coscNode.CharSlot1;
-                if (fighterIds.CosmeticId <= -1)
-                    fighterIds.CosmeticId = coscNode.CosmeticID;
-                if (fighterIds.FranchiseId <= -1)
-                    fighterIds.FranchiseId = coscNode.FranchiseIconID + 1;
-                if (fighterInfo.DisplayName == null)
-                    fighterInfo.DisplayName = coscNode.CharacterName;
-                if (fighterInfo.EntryName == null)
-                    fighterInfo.EntryName = coscNode.CharacterName;
+                fighterIds.CosmeticId = coscNode.CosmeticID;
+                fighterIds.FranchiseId = coscNode.FranchiseIconID + 1;
+                fighterInfo.DisplayName = coscNode.CharacterName;
+                fighterInfo.EntryName = coscNode.CharacterName;
             }
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
             rootNode = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig);
@@ -316,24 +314,15 @@ namespace BrawlInstaller.Services
                 var slotNode = (SLTCNode)rootNode;
                 if (fighterIds.FighterConfigId <= -1 && slotNode.SetSlot)
                     fighterIds.FighterConfigId = Convert.ToInt32(slotNode.CharSlot1);
-                if (fighterInfo.VictoryThemeId == null)
-                {
-                    fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
-                }
+                fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
             }
             fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
             rootNode = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig);
             if (rootNode != null)
             {
                 var fighterNode = (FCFGNode)rootNode;
-                if (fighterInfo.InternalName == null)
-                {
-                    fighterInfo.InternalName = fighterNode.InternalFighterName;
-                }
-                if (fighterInfo.SoundbankId == null)
-                {
-                    fighterInfo.SoundbankId = fighterNode.SoundBank;
-                }
+                fighterInfo.InternalName = fighterNode.InternalFighterName;
+                fighterInfo.SoundbankId = fighterNode.SoundBank;
             }
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
@@ -894,17 +883,20 @@ namespace BrawlInstaller.Services
         /// <returns>Ending ID</returns>
         private int GetEndingId(int cosmeticConfigId)
         {
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
-            var path = Path.Combine(buildPath, endingAsm);
-            var code = _codeService.ReadCode(path);
-            var table = _codeService.ReadTable(code, "ENDINGTABLE:");
-            if (table.Count > cosmeticConfigId)
+            if (cosmeticConfigId > -1)
             {
-                var result = int.TryParse(table[cosmeticConfigId], out int endingId);
-                if (result)
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
+                var path = Path.Combine(buildPath, endingAsm);
+                var code = _codeService.ReadCode(path);
+                var table = _codeService.ReadTable(code, "ENDINGTABLE:");
+                if (table.Count > cosmeticConfigId)
                 {
-                    return endingId;
+                    var result = int.TryParse(table[cosmeticConfigId], out int endingId);
+                    if (result)
+                    {
+                        return endingId;
+                    }
                 }
             }
             return -1;
