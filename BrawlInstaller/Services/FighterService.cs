@@ -336,6 +336,7 @@ namespace BrawlInstaller.Services
                 }
             }
             fighterInfo.Ids = fighterIds;
+            fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
             return fighterInfo;
         }
 
@@ -877,10 +878,55 @@ namespace BrawlInstaller.Services
             // Get classic intro
             fighterPackage.ClassicIntro = GetClassicIntro(fighterInfo.Ids.CosmeticId);
 
+            // Get ending files
+            fighterPackage.EndingPacFiles = GetEndingPacFiles(fighterInfo.EndingId);
+
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
 
             return fighterPackage;
+        }
+
+        /// <summary>
+        /// Get ending ID for fighter
+        /// </summary>
+        /// <param name="cosmeticConfigId">Cosmetic config ID of fighter</param>
+        /// <returns>Ending ID</returns>
+        private int GetEndingId(int cosmeticConfigId)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
+            var path = Path.Combine(buildPath, endingAsm);
+            var code = _codeService.ReadCode(path);
+            var table = _codeService.ReadTable(code, "ENDINGTABLE:");
+            if (table.Count > cosmeticConfigId)
+            {
+                var result = int.TryParse(table[cosmeticConfigId], out int endingId);
+                if (result)
+                {
+                    return endingId;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Get ending pac files for fighter
+        /// </summary>
+        /// <param name="endingId">Ending ID for fighter</param>
+        /// <returns>List of ending pac files</returns>
+        private List<string> GetEndingPacFiles(int endingId)
+        {
+            var pacFiles = new List<string>();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var endingPath = _settingsService.BuildSettings.FilePathSettings.EndingPath;
+            var path = Path.Combine(buildPath, endingPath);
+            if (Directory.Exists(path))
+            {
+                pacFiles = Directory.GetFiles(path, $"EndingAll{endingId:D2}.pac").ToList();
+                pacFiles.AddRange(Directory.GetFiles(path, $"EndingSimple{endingId:D2}.pac").ToList());
+            }
+            return pacFiles;
         }
 
         /// <summary>

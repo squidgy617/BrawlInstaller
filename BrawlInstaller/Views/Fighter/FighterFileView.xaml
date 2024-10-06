@@ -49,8 +49,20 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Label x:Name="classicIntroLabel" Content="Classic Intro:"/>
                 <userControls:FileBox x:Name="classicIntroFileBox" Text="{Binding FighterPackage.ClassicIntro, Mode=TwoWay}" Grid.Column="1" TextBoxWidth="120"/>
+                <Label x:Name="endingLabel" Content="Ending PAC Files:" Grid.Row="1"/>
+                <ListBox x:Name="endingListBox" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding FighterPackage.EndingPacFiles}" Width="120" Height="80">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </Grid>
         </GroupBox>
         <GroupBox Header="Music" Grid.Row="4" Grid.ColumnSpan="4">

@@ -24,6 +24,7 @@ namespace BrawlInstaller.Classes
         // TODO: Should these even be in here? They are not used for costumes so aren't needed for P+ probably. Maybe should go in fighter package itself?
         public uint? VictoryThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
+        [JsonIgnore] public int EndingId { get; set; } = -1;
 
         public FighterInfo Copy()
         {
@@ -39,7 +40,9 @@ namespace BrawlInstaller.Classes
                     CSSSlotConfigId = Ids.CSSSlotConfigId,
                     SlotConfigId = Ids.SlotConfigId
                 },
-                VictoryThemeId = VictoryThemeId
+                VictoryThemeId = VictoryThemeId,
+                SoundbankId = SoundbankId,
+                EndingId = EndingId
             };
             return newFighterInfo;
         }
