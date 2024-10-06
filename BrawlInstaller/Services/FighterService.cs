@@ -640,11 +640,13 @@ namespace BrawlInstaller.Services
             var soundbank = _fileService.OpenFile(fighterPackage.Soundbank);
             var victoryTheme = _fileService.OpenFile(fighterPackage.VictoryTheme.SongFile);
             var creditsTheme = _fileService.OpenFile(fighterPackage.CreditsTheme.SongFile);
+            var classicIntro = _fileService.OpenFile(fighterPackage.ClassicIntro);
             // Delete old files
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
             DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
+            DeleteClassicIntro(oldFighter.FighterInfo.Ids.CosmeticId);
             // Delete some files only if user chose to
             if (fighterPackage.FighterDeleteOptions.DeleteVictoryTheme)
             {
@@ -707,6 +709,8 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme);
             // Import credits theme
             fighterPackage.CreditsTheme.SongId = ImportCreditsTheme(fighterPackage.CreditsTheme, creditsTheme, fighterPackage.FighterInfo);
+            // Import classic intro
+            fighterPackage.ClassicIntro = ImportClassicIntro(classicIntro, fighterPackage.FighterInfo.Ids.CosmeticId);
         }
 
         /// <summary>
@@ -879,6 +883,11 @@ namespace BrawlInstaller.Services
             return fighterPackage;
         }
 
+        /// <summary>
+        /// Get classic intro filepath for fighter
+        /// </summary>
+        /// <param name="cosmeticId">Cosmetic ID of fighter</param>
+        /// <returns>Path to classic intro</returns>
         private string GetClassicIntro(int cosmeticId)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
@@ -893,6 +902,58 @@ namespace BrawlInstaller.Services
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Delete classic intro for fighter
+        /// </summary>
+        /// <param name="cosmeticId">Cosmetic ID of fighter</param>
+        private void DeleteClassicIntro(int cosmeticId)
+        {
+            var classicIntro = GetClassicIntro(cosmeticId);
+            _fileService.DeleteFile(classicIntro);
+        }
+
+        /// <summary>
+        /// Import classic intro for fighter
+        /// </summary>
+        /// <param name="rootNode">Root node of opened classic intro file</param>
+        /// <param name="cosmeticId">Cosmetic ID of fighter</param>
+        private string ImportClassicIntro(ResourceNode rootNode, int cosmeticId)
+        {
+            var path = string.Empty;
+            if (rootNode != null)
+            {
+                var id = cosmeticId + 1;
+                // Rename nodes
+                var allNodes = rootNode.GetChildrenRecursive();
+                foreach (var node in allNodes)
+                {
+                    var regex = new Regex("ItrSimpleChr\\d{4}");
+                    if (regex.IsMatch(node.Name))
+                    {
+                        node.Name = regex.Replace(node.Name, $"ItrSimpleChr{id:D4}", 1);
+                    }
+                    regex = new Regex("GmSimpleChr\\d+");
+                    if (regex.IsMatch(node.Name))
+                    {
+                        node.Name = regex.Replace(node.Name, $"GmSimpleChr{id:D2}", 1);
+                    }
+                    regex = new Regex("GmSimpleChrEy\\d+");
+                    if (regex.IsMatch(node.Name))
+                    {
+                        node.Name = regex.Replace(node.Name, $"GmSimpleChrEy{id:D2}", 1);
+                    }
+                }
+                // Save file
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var introPath = _settingsService.BuildSettings.FilePathSettings.ClassicIntroPath;
+                path = Path.Combine(buildPath, introPath, $"chr{id:D4}.brres");
+                rootNode._origPath = path;
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
+            }
+            return path;
         }
 
         /// <summary>
