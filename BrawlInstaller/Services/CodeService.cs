@@ -274,7 +274,7 @@ namespace BrawlInstaller.Services
                 var lineComment = string.Empty;
                 foreach (var item in table)
                 {
-                    formattedTable += item.Item;
+                    formattedTable += item.Item.PadLeft(2);
                     if (table.LastOrDefault() != item)
                     {
                         formattedTable += ", ";
