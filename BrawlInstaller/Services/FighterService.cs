@@ -988,7 +988,7 @@ namespace BrawlInstaller.Services
                 // Update fighter slot
                 if (asmTable.Count > cosmeticConfigId)
                 {
-                    asmTable[cosmeticConfigId].Item = $"0x{fighterInfo.EndingId:D}";
+                    asmTable[cosmeticConfigId].Item = $"{fighterInfo.EndingId:D}";
                     asmTable[cosmeticConfigId].Comment = fighterInfo.DisplayName;
                 }
                 // Write table
@@ -1074,17 +1074,23 @@ namespace BrawlInstaller.Services
                     var regex = new Regex("ItrSimpleChr\\d{4}");
                     if (regex.IsMatch(node.Name))
                     {
-                        node.Name = regex.Replace(node.Name, $"ItrSimpleChr{id:D4}", 1);
+                        var name = regex.Replace(node.Name, $"ItrSimpleChr{id:D4}", 1);
+                        if (name != node.Name)
+                            node.Name = name;
                     }
                     regex = new Regex("GmSimpleChr\\d+");
                     if (regex.IsMatch(node.Name))
                     {
-                        node.Name = regex.Replace(node.Name, $"GmSimpleChr{id:D2}", 1);
+                        var name = regex.Replace(node.Name, $"GmSimpleChr{id:D2}", 1);
+                        if (name != node.Name)
+                            node.Name = name;
                     }
                     regex = new Regex("GmSimpleChrEy\\d+");
                     if (regex.IsMatch(node.Name))
                     {
-                        node.Name = regex.Replace(node.Name, $"GmSimpleChrEy{id:D2}", 1);
+                        var name = regex.Replace(node.Name, $"GmSimpleChrEy{id:D2}", 1);
+                        if (name != node.Name)
+                            node.Name = name;
                     }
                 }
                 // Save file
