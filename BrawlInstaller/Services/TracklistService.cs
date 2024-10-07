@@ -54,10 +54,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
             var path = Path.Combine(buildPath, tracklistPath);
-            if (Directory.Exists(path))
-            {
-                tracklists = Directory.GetFiles(path, "*.tlst").ToList();
-            }
+            tracklists = _fileService.GetFiles(path, "*.tlst").ToList();
             return tracklists;
         }
 
@@ -89,7 +86,7 @@ namespace BrawlInstaller.Services
                     var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
                     var songPath = $"{songNode.SongFileName}.brstm";
                     var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
-                    if (File.Exists(songFile))
+                    if (_fileService.FileExists(songFile))
                     {
                         song.SongFile = songFile;
                     }
@@ -156,7 +153,7 @@ namespace BrawlInstaller.Services
                     var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
                     var songPath = $"{songNode.SongFileName}.brstm";
                     var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
-                    if (File.Exists(songFile))
+                    if (_fileService.FileExists(songFile))
                     {
                         _fileService.DeleteFile(songFile);
                     }

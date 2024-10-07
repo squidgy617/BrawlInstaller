@@ -49,10 +49,9 @@ namespace BrawlInstaller.Services
         {
             var folder = bres.GetFolder<TEX0Node>();
             var paletteFolder = bres.GetFolder<PLT0Node>();
-            if (Directory.Exists(ColorSmashDirectory))
-                Directory.Delete(ColorSmashDirectory, true);
-            Directory.CreateDirectory(ColorSmashDirectory);
-            Directory.CreateDirectory(ColorSmashOutDirectory);
+            _fileService.DeleteDirectory(ColorSmashDirectory);
+            _fileService.CreateDirectory(ColorSmashDirectory);
+            _fileService.CreateDirectory(ColorSmashOutDirectory);
             // Save images to color smash input folder
             foreach(var cosmetic in cosmetics)
             {
@@ -99,8 +98,7 @@ namespace BrawlInstaller.Services
                 if (texture.HasPalette)
                     texture.GetPaletteNode().IsDirty = true;
             }
-            if (Directory.Exists(ColorSmashDirectory))
-                Directory.Delete(ColorSmashDirectory, true);
+            _fileService.DeleteDirectory(ColorSmashDirectory);
         }
 
         /// <summary>
@@ -149,8 +147,6 @@ namespace BrawlInstaller.Services
         /// <param name="paletteCount">Palette count to use</param>
         private void ColorSmasher(int paletteCount)
         {
-            var directory = Directory.CreateDirectory(ColorSmashDirectory);
-            var outDirectory = Directory.CreateDirectory(ColorSmashOutDirectory);
             Process cSmash = Process.Start(new ProcessStartInfo
             {
                 FileName = "color_smash.exe",

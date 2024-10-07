@@ -44,6 +44,12 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.SaveTextFile(string, string)"/>
         void SaveTextFile(string filePath, string text);
 
+        /// <inheritdoc cref="FileService.ReadTextFile(string)"/>
+        string ReadTextFile(string filePath);
+
+        /// <inheritdoc cref="FileService.ReadTextLines(string)"/>
+        List<string> ReadTextLines(string filePath);
+
         /// <inheritdoc cref="FileService.LoadImage(string)"/>
         BitmapImage LoadImage(string filePath);
 
@@ -52,7 +58,26 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.ReplaceNodeRaw(ResourceNode, byte[])"/>
         void ReplaceNodeRaw(ResourceNode node, byte[] data);
+
+        /// <inheritdoc cref="FileService.CreateDirectory(string)"/>
+        void CreateDirectory(string path);
+
+        /// <inheritdoc cref="FileService.DirectoryExists(string)"/>
+        bool DirectoryExists(string path);
+
+        /// <inheritdoc cref="FileService.DeleteDirectory(string)"/>
+        void DeleteDirectory(string path);
+
+        /// <inheritdoc cref="FileService.GetDirectories(string, string, SearchOption)"/>
+        List<string> GetDirectories(string path, string searchPattern, SearchOption searchOption);
+
+        /// <inheritdoc cref="FileService.GetFiles(string, string)"/>
+        List<string> GetFiles(string path, string searchPattern);
+
+        /// <inheritdoc cref="FileService.FileExists(string)"/>
+        bool FileExists(string path);
     }
+    // TODO: Backup system, only back up files in build
     [Export(typeof(IFileService))]
     internal class FileService : IFileService
     {
@@ -175,6 +200,7 @@ namespace BrawlInstaller.Services
         /// <param name="outFile">Output path of image file</param>
         public void SaveImage(BitmapImage image, string outFile)
         {
+            CreateDirectory(outFile);
             SaveImage(image.ToBitmap(), outFile);
         }
 
@@ -212,19 +238,108 @@ namespace BrawlInstaller.Services
         /// <param name="text">Text to save</param>
         public void SaveTextFile(string filePath, string text)
         {
+            CreateDirectory(filePath);
             File.WriteAllText(filePath, text);
+        }
+
+        /// <summary>
+        /// Read text file if it exists
+        /// </summary>
+        /// <param name="filePath">Text file to read</param>
+        /// <returns>Text from file</returns>
+        public string ReadTextFile(string filePath)
+        {
+            if (FileExists(filePath))
+            {
+                return File.ReadAllText(filePath);
+            }
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Read all lines from text file if it exists
+        /// </summary>
+        /// <param name="filePath">Text file to read</param>
+        /// <returns>List of lines from text file</returns>
+        public List<string> ReadTextLines(string filePath)
+        {
+            if (FileExists(filePath))
+            {
+                return File.ReadAllLines(filePath).ToList();
+            }
+            return new List<string>();
         }
 
         /// <summary>
         /// Create a directory if it does not exist
         /// </summary>
         /// <param name="path">Directory to create</param>
-        private void CreateDirectory(string path)
+        public void CreateDirectory(string path)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }
+        }
+
+        /// <summary>
+        /// Check if a directory exists
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns>Whether or not directory exists</returns>
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        /// <summary>
+        /// Delete specified directory
+        /// </summary>
+        /// <param name="path">Path to delete</param>
+        public void DeleteDirectory(string path)
+        {
+            Directory.Delete(path, true);
+        }
+
+        /// <summary>
+        /// Get directories in directory if it exists
+        /// </summary>
+        /// <param name="path">Path to search for folders</param>
+        /// <param name="searchPattern">Search pattern</param>
+        /// <param name="searchOption">Search option</param>
+        /// <returns>List of directories</returns>
+        public List<string> GetDirectories(string path, string searchPattern, SearchOption searchOption)
+        {
+            if (DirectoryExists(path))
+            {
+                return Directory.GetDirectories(path, searchPattern, searchOption).ToList();
+            }
+            return new List<string>();
+        }
+
+        /// <summary>
+        /// Get files in directory if it exists
+        /// </summary>
+        /// <param name="path">Path to search</param>
+        /// <param name="searchPattern">Search pattern</param>
+        /// <returns>List of files</returns>
+        public List<string> GetFiles(string path, string searchPattern)
+        {
+            if (DirectoryExists(path))
+            {
+                return Directory.GetFiles(path, searchPattern).ToList();
+            }
+            return new List<string>();
+        }
+
+        /// <summary>
+        /// Check if file exists
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <returns>Whether file exists or not</returns>
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
         }
 
         /// <summary>

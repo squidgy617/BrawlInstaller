@@ -127,11 +127,10 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var prefix = GetConfigPrefix(type);
             var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
-            if (Directory.Exists(directory))
+            var config = $"{directory}\\{prefix}{id:X2}.dat";
+            if (_fileService.FileExists(config))
             {
-                var config = $"{directory}\\{prefix}{id:X2}.dat";
-                if (File.Exists(config))
-                    return config;
+                return config;
             }
             return "";
         }
@@ -148,14 +147,11 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var prefix = GetConfigPrefix(type);
             var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
-            if (Directory.Exists(directory))
+            var files = _fileService.GetFiles(directory, $"{prefix}*.dat").AsParallel().ToList();
+            Parallel.ForEach(files, file =>
             {
-                var files = Directory.GetFiles(directory, $"{prefix}*.dat").AsParallel().ToList();
-                Parallel.ForEach(files, file =>
-                {
-                    configs.Add(_fileService.OpenFile(file));
-                });
-            }
+                configs.Add(_fileService.OpenFile(file));
+            });
             return configs.ToList();
         }
 
@@ -585,8 +581,7 @@ namespace BrawlInstaller.Services
         private List<string> GetFighterPacFiles(string name, string path)
         {
             var files = new List<string>();
-            if (Directory.Exists(path))
-                files = Directory.GetFiles(path, "*.pac").Where(x => Path.GetFileName(x).StartsWith($"Fit{name}", StringComparison.InvariantCultureIgnoreCase)).ToList();
+            files = _fileService.GetFiles(path, "*.pac").Where(x => Path.GetFileName(x).StartsWith($"Fit{name}", StringComparison.InvariantCultureIgnoreCase)).ToList();
             return files;
         }
 
@@ -601,8 +596,7 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}\\item";
             var files = new List<string>();
-            if (Directory.Exists(path))
-                files = Directory.GetFiles(path, "*.pac").ToList();
+            files = _fileService.GetFiles(path, "*.pac").ToList();
             return files;
         }
 
@@ -798,8 +792,7 @@ namespace BrawlInstaller.Services
                 var fighterPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.InternalName}";
                 ResourceNode rootNode = null;
 
-                if (Directory.Exists(configPath))
-                    rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
+                rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
                 if (rootNode != null)
                 {
                     foreach (CSSCEntryNode entry in rootNode.Children)
@@ -809,7 +802,7 @@ namespace BrawlInstaller.Services
                             Color = entry.Color,
                             CostumeId = entry.CostumeID
                         };
-                        if (Directory.Exists(fighterPath))
+                        if (_fileService.DirectoryExists(fighterPath))
                         {
                             costume.PacFiles = GetPacFiles(fighterInfo.InternalName)
                                 .Where(x => Path.GetFileNameWithoutExtension(x).EndsWith(costume.CostumeId.ToString("D2"))).ToList();
@@ -905,7 +898,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var moviePath = _settingsService.BuildSettings.FilePathSettings.MoviePath;
             var path = Path.Combine(buildPath, moviePath, $"End_{internalName}.thp");
-            if (File.Exists(path))
+            if (_fileService.FileExists(path))
             {
                 return path;
             }
@@ -982,10 +975,10 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var endingPath = _settingsService.BuildSettings.FilePathSettings.EndingPath;
             var path = Path.Combine(buildPath, endingPath);
-            if (Directory.Exists(path))
+            if (_fileService.DirectoryExists(path))
             {
-                pacFiles = Directory.GetFiles(path, $"EndingAll{endingId:D2}.pac").ToList();
-                pacFiles.AddRange(Directory.GetFiles(path, $"EndingSimple{endingId:D2}.pac").ToList());
+                pacFiles = _fileService.GetFiles(path, $"EndingAll{endingId:D2}.pac").ToList();
+                pacFiles.AddRange(_fileService.GetFiles(path, $"EndingSimple{endingId:D2}.pac").ToList());
             }
             return pacFiles;
         }
@@ -1092,13 +1085,10 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var classicPath = _settingsService.BuildSettings.FilePathSettings.ClassicIntroPath;
             var path = Path.Combine(buildPath, classicPath);
-            if (Directory.Exists(path))
+            var filePath = Path.Combine(path, $"chr{(cosmeticId + 1):D4}.brres");
+            if (_fileService.FileExists(filePath))
             {
-                var filePath = Path.Combine(path, $"chr{(cosmeticId + 1):D4}.brres");
-                if (File.Exists(filePath))
-                {
-                    return filePath;
-                }
+                return filePath;
             }
             return null;
         }
@@ -1294,10 +1284,10 @@ namespace BrawlInstaller.Services
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var sfxPath = _settingsService.BuildSettings.FilePathSettings.SoundbankPath;
                 var path = Path.Combine(buildPath, sfxPath);
-                if (Directory.Exists(path))
+                if (_fileService.DirectoryExists(path))
                 {
                     var name = GetSoundbankName(soundbankId);
-                    var soundbank = Directory.GetFiles(path, name).FirstOrDefault();
+                    var soundbank = _fileService.GetFiles(path, name).FirstOrDefault();
                     if (soundbank != null)
                     {
                         return soundbank;
@@ -1344,9 +1334,10 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var moduleFolder = $"{buildPath}\\{settings.FilePathSettings.Modules}";
             var module = $"{moduleFolder}\\ft_{internalName.ToLower()}.rel";
-            if (Directory.Exists(moduleFolder))
-                if (File.Exists(module))
-                    return module;
+            if (_fileService.FileExists(module))
+            {
+                return module;
+            }
             return null;
         }
 

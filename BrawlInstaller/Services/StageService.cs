@@ -95,11 +95,11 @@ namespace BrawlInstaller.Services
             foreach(var stageListFile in _settingsService.BuildSettings.FilePathSettings.StageListPaths)
             {
                 var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageListFile}";
-                if (File.Exists(filePath))
+                if (_fileService.FileExists(filePath))
                 {
                     var stageList = new StageList { Name = Path.GetFileNameWithoutExtension(stageListFile), FilePath = filePath.Replace(_settingsService.AppSettings.BuildPath, "") };
                     // Read all pages from stage list file
-                    var fileText = File.ReadAllText(filePath);
+                    var fileText = _fileService.ReadTextFile(filePath);
                     var labels = new List<string> { "TABLE_1:", "TABLE_2:", "TABLE_3:", "TABLE_4:", "TABLE_5:" };
                     int pageNumber = 1;
                     foreach (var label in labels)
@@ -140,16 +140,13 @@ namespace BrawlInstaller.Services
         {
             var ids = new List<int>();
             var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}";
-            if (Directory.Exists(path))
+            var files = _fileService.GetFiles(path, "*.asl");
+            foreach(var file in files)
             {
-                var files = Directory.GetFiles(path, "*.asl");
-                foreach(var file in files)
+                var result = int.TryParse(Path.GetFileNameWithoutExtension(file), NumberStyles.HexNumber, null, out int newId);
+                if (result)
                 {
-                    var result = int.TryParse(Path.GetFileNameWithoutExtension(file), NumberStyles.HexNumber, null, out int newId);
-                    if (result)
-                    {
-                        ids.Add(newId);
-                    }
+                    ids.Add(newId);
                 }
             }
             return ids;
@@ -245,11 +242,11 @@ namespace BrawlInstaller.Services
                 var folderLetter = entry.IsRAlt ? "R" : (entry.IsLAlt ? "L" : string.Empty);
                 var folderName = $"{stageId.ToString("X2")}_{folderLetter}";
                 var folder = Path.Combine(directoryPath, folderName);
-                if (Directory.Exists(folder))
+                if (_fileService.DirectoryExists(folder))
                 {
                     // Bin files correspond to button flags in alphabetical order (e.g. the first file in alphabetical order will be attached to button flag ending in 00
                     var index = GetButtonFlagIndex(entry);
-                    var files = Directory.GetFiles(folder, "*.bin");
+                    var files = _fileService.GetFiles(folder, "*.bin");
                     string file = null;
                     if (index < files.Count())
                         file = files[index];
@@ -289,7 +286,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var paramPath = _settingsService.BuildSettings.FilePathSettings.StageParamPath;
             var path = $"{buildPath}\\{paramPath}";
-            var file = Directory.GetFiles(path, $"{name}.param").FirstOrDefault();
+            var file = _fileService.GetFiles(path, $"{name}.param").FirstOrDefault();
             if (file != null)
             {
                 var rootNode = _fileService.OpenFile(file);
@@ -326,11 +323,11 @@ namespace BrawlInstaller.Services
                     var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules);
                     var tracklistPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath);
                     var soundbankPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath);
-                    stageParams.PacFile = Directory.GetFiles(pacPath, $"STG{paramNode.StageName.ToUpper()}.pac").FirstOrDefault();
-                    stageParams.ModuleFile = Directory.GetFiles(modulePath, $"{paramNode.Module}").FirstOrDefault();
-                    stageParams.TrackListFile = Directory.GetFiles(tracklistPath, $"{paramNode.TrackList}.tlst").FirstOrDefault();
+                    stageParams.PacFile = _fileService.GetFiles(pacPath, $"STG{paramNode.StageName.ToUpper()}.pac").FirstOrDefault();
+                    stageParams.ModuleFile = _fileService.GetFiles(modulePath, $"{paramNode.Module}").FirstOrDefault();
+                    stageParams.TrackListFile = _fileService.GetFiles(tracklistPath, $"{paramNode.TrackList}.tlst").FirstOrDefault();
                     // TODO: handle soundbank styles here too?
-                    stageParams.SoundBankFile = Directory.GetFiles(soundbankPath, $"{paramNode.SoundBank:X3}_{stageParams.PacName}.sawnd").FirstOrDefault();
+                    stageParams.SoundBankFile = _fileService.GetFiles(soundbankPath, $"{paramNode.SoundBank:X3}_{stageParams.PacName}.sawnd").FirstOrDefault();
                     _fileService.CloseFile(rootNode);
                 }
             }
@@ -349,7 +346,7 @@ namespace BrawlInstaller.Services
             var stagePath = _settingsService.BuildSettings.FilePathSettings.StagePacPath;
             var path = Path.Combine(buildPath, stagePath);
             var pacPath = $"{path}\\STG{mainPacName.ToUpper()}_{suffix.ToUpper()}.pac";
-            if (File.Exists(pacPath))
+            if (_fileService.FileExists(pacPath))
             {
                 return pacPath;
             }
@@ -364,9 +361,9 @@ namespace BrawlInstaller.Services
         {
             var stageIds = new List<BrawlIds>();
             var filePath = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageTablePath}";
-            if (File.Exists(filePath))
+            if (_fileService.FileExists(filePath))
             {
-                var fileText = File.ReadAllText(filePath);
+                var fileText = _fileService.ReadTextFile(filePath);
                 var idList = _codeService.ReadTable(fileText, "TABLE_STAGES:");
                 foreach(var id in idList)
                 {
@@ -602,52 +599,34 @@ namespace BrawlInstaller.Services
             {
                 // Delete param files
                 var path = Path.Combine(paramPath, $"{stageEntry.Params.Name}.param");
-                if (File.Exists(path))
-                {
-                    _fileService.DeleteFile(path);
-                }
+                _fileService.DeleteFile(path);
                 // Delete pac files
                 path = stageEntry.Params.PacFile;
-                if (File.Exists(path))
-                {
-                    _fileService.DeleteFile(path);
-                }
+                _fileService.DeleteFile(path);
                 // Delete substage files
                 foreach(var substage in stageEntry.Params.Substages)
                 {
                     path = substage.PacFile;
-                    if (File.Exists(path))
-                    {
-                        _fileService.DeleteFile(path);
-                    }
+                    _fileService.DeleteFile(path);
                 }
                 // Delete soundbank file
                 path = stageEntry.Params.SoundBankFile;
-                if (File.Exists(path))
-                {
-                    _fileService.DeleteFile(path);
-                }
+                _fileService.DeleteFile(path);
                 // Delete bin file
                 path = stageEntry.BinFilePath;
-                if (File.Exists(path))
-                {
-                    _fileService.DeleteFile(path);
-                }
+                _fileService.DeleteFile(path);
                 // Add modules and tracklists to delete options
-                if (stageEntry.Params.ModuleFile != null && File.Exists(stageEntry.Params.ModuleFile) && !toDelete.Contains(stageEntry.Params.ModuleFile))
+                if (stageEntry.Params.ModuleFile != null && _fileService.FileExists(stageEntry.Params.ModuleFile) && !toDelete.Contains(stageEntry.Params.ModuleFile))
                 {
                     toDelete.Add(stageEntry.Params.ModuleFile);
                 }
-                if (stageEntry.Params.TrackListFile != null && File.Exists(stageEntry.Params.TrackListFile) && !toDelete.Contains(stageEntry.Params.TrackListFile))
+                if (stageEntry.Params.TrackListFile != null && _fileService.FileExists(stageEntry.Params.TrackListFile) && !toDelete.Contains(stageEntry.Params.TrackListFile))
                 {
                     toDelete.Add(stageEntry.Params.TrackListFile);
                 }
                 // Delete ASL file
                 path = Path.Combine(aslPath, $"{stage.Slot.StageIds.StageId:X2}.asl");
-                if (File.Exists(path))
-                {
-                    _fileService.DeleteFile(path);
-                }
+                _fileService.DeleteFile(path);
             }
             return toDelete;
         }
@@ -667,7 +646,7 @@ namespace BrawlInstaller.Services
             // Update stage table
             var stageTableAsm = stageTable.ConvertToAsmTable();
             var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";
-            if (File.Exists(tableFilepath))
+            if (_fileService.FileExists(tableFilepath))
             {
                 var tableFileText = _codeService.ReadCode(tableFilepath);
                 tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableAsm, DataSize.Halfword, 4);

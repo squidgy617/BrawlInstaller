@@ -895,8 +895,7 @@ namespace BrawlInstaller.Services
                 var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}";
                 if (!string.IsNullOrEmpty(name) && definition.CreateHDTextureFolder == true)
                     imagePath += $"\\{name}";
-                if (!Directory.Exists(imagePath))
-                    Directory.CreateDirectory(imagePath);
+                _fileService.CreateDirectory(imagePath);
                 imagePath += $"\\{texture?.DolphinTextureName}.png";
                 _fileService.SaveImage(cosmetic.HDImage, imagePath);
                 cosmetic.HDImagePath = imagePath;
@@ -1077,7 +1076,7 @@ namespace BrawlInstaller.Services
                 else
                     paths = files.Where(f => f.Name == GetFileName(definition, id)).Select(f => f.FullName).ToList();
             }
-            else if (File.Exists(buildPath + definition.InstallLocation.FilePath))
+            else if (_fileService.FileExists(buildPath + definition.InstallLocation.FilePath))
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
             return paths;
         }
@@ -1388,13 +1387,13 @@ namespace BrawlInstaller.Services
         /// <returns>List of HD textures</returns>
         private Dictionary<string, string> PreloadHDTextures()
         {
-            var directories = Directory.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
-            directories = directories.Where(x => !x.Contains(".git")).ToArray();
-            directories = directories.Append(_settingsService.BuildSettings.FilePathSettings.HDTextures).ToArray();
+            var directories = _fileService.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
+            directories = directories.Where(x => !x.Contains(".git")).ToList();
+            directories = directories.Append(_settingsService.BuildSettings.FilePathSettings.HDTextures).ToList();
             var hdImages = new ConcurrentBag<string>();
             Parallel.ForEach(directories, directory =>
             {
-                var images = Directory.GetFiles(directory, "*.png").ToList();
+                var images = _fileService.GetFiles(directory, "*.png").ToList();
                 Parallel.ForEach(images, image =>
                 {
                     hdImages.Add(image);

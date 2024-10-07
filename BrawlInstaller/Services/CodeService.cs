@@ -39,11 +39,13 @@ namespace BrawlInstaller.Services
     {
         // Services
         ISettingsService _settingsService { get; }
+        IFileService _fileService { get; }
 
         [ImportingConstructor]
-        public CodeService(ISettingsService settingsService)
+        public CodeService(ISettingsService settingsService, IFileService fileService)
         {
             _settingsService = settingsService;
+            _fileService = fileService;
         }
 
         // Methods
@@ -55,7 +57,7 @@ namespace BrawlInstaller.Services
         /// <returns>String containing code</returns>
         public string ReadCode(string filePath)
         {
-            var lines = File.ReadAllLines(filePath);
+            var lines = _fileService.ReadTextLines(filePath);
             // Do this to maintain consistent line endings of \n
             var text = string.Join("\r\n", lines);
             return text;
