@@ -52,9 +52,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label x:Name="classicIntroLabel" Content="Classic Intro:"/>
-                <userControls:FileBox x:Name="classicIntroFileBox" Text="{Binding FighterPackage.ClassicIntro, Mode=TwoWay}" Grid.Column="1" TextBoxWidth="120"/>
+                <userControls:FileBox x:Name="classicIntroFileBox" Text="{Binding FighterPackage.ClassicIntro, Mode=TwoWay}" Grid.Column="1" TextBoxWidth="120" Filter="PAC file (.pac)|*.pac"/>
                 <Label x:Name="endingLabel" Content="Ending PAC Files:" Grid.Row="1"/>
                 <ListBox x:Name="endingListBox" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding FighterPackage.EndingPacFiles}" Width="120" Height="80">
                     <ListBox.ItemTemplate>
@@ -63,6 +64,8 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <Label x:Name="endingMovieLabel" Content="Ending Movie:" Grid.Row="2"/>
+                <userControls:FileBox x:Name="endingMovieFileBox" Text="{Binding FighterPackage.EndingMovie, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" TextBoxWidth="120" Filter="THP file (.thp)|*.thp"/>
             </Grid>
         </GroupBox>
         <GroupBox Header="Music" Grid.Row="4" Grid.ColumnSpan="4">

@@ -640,6 +640,7 @@ namespace BrawlInstaller.Services
                     endingFiles.Add(file);
                 }
             }
+            var endingMovie = _fileService.OpenFile(fighterPackage.EndingMovie);
             // Delete old files
             RemovePacFiles(oldFighter.FighterInfo.InternalName);
             DeleteModule(oldFighter.FighterInfo.InternalName);
@@ -647,6 +648,7 @@ namespace BrawlInstaller.Services
             DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
             DeleteClassicIntro(oldFighter.FighterInfo.Ids.CosmeticId);
             DeleteEndingPacFiles(oldFighter.FighterInfo.EndingId);
+            DeleteEndingMovie(oldFighter.FighterInfo.InternalName);
             // Delete some files only if user chose to
             if (fighterPackage.FighterDeleteOptions.DeleteVictoryTheme)
             {
@@ -713,6 +715,8 @@ namespace BrawlInstaller.Services
             fighterPackage.ClassicIntro = ImportClassicIntro(classicIntro, fighterPackage.FighterInfo.Ids.CosmeticId);
             // Import ending files
             fighterPackage.FighterInfo.EndingId = ImportEndingPacFiles(endingFiles, fighterPackage.FighterInfo);
+            // Import ending movie
+            fighterPackage.EndingMovie = ImportEndingMovie(endingMovie, fighterPackage.FighterInfo.InternalName);
         }
 
         /// <summary>
@@ -882,10 +886,63 @@ namespace BrawlInstaller.Services
             // Get ending files
             fighterPackage.EndingPacFiles = GetEndingPacFiles(fighterInfo.EndingId);
 
+            // Get ending movie
+            fighterPackage.EndingMovie = GetEndingMovie(fighterInfo.InternalName);
+
             fighterPackage.Costumes = costumes;
             fighterPackage.FighterInfo = fighterInfo;
 
             return fighterPackage;
+        }
+
+        /// <summary>
+        /// Get ending movie for fighter
+        /// </summary>
+        /// <param name="internalName">Internal fighter name</param>
+        /// <returns>Ending movie path</returns>
+        private string GetEndingMovie(string internalName)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var moviePath = _settingsService.BuildSettings.FilePathSettings.MoviePath;
+            var path = Path.Combine(buildPath, moviePath, $"End_{internalName}.thp");
+            if (File.Exists(path))
+            {
+                return path;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Delete ending movie for fighter
+        /// </summary>
+        /// <param name="internalName">Internal name of fighter</param>
+        private void DeleteEndingMovie(string internalName)
+        {
+            var file = GetEndingMovie(internalName);
+            if (file != null)
+            {
+                _fileService.DeleteFile(file);
+            }
+        }
+
+        /// <summary>
+        /// Import ending movie for fighter
+        /// </summary>
+        /// <param name="rootNode">Root node of movie file</param>
+        /// <param name="internalName">Internal name of fighter</param>
+        private string ImportEndingMovie(ResourceNode rootNode, string internalName)
+        {
+            if (rootNode != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var moviePath = _settingsService.BuildSettings.FilePathSettings.MoviePath;
+                var path = Path.Combine(buildPath, moviePath, $"End_{internalName}.thp");
+                rootNode._origPath = path;
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
+                return path;
+            }
+            return null;
         }
 
         /// <summary>

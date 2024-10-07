@@ -151,6 +151,7 @@ namespace BrawlInstaller.Classes
         public string ClassicIntroPath { get; set; } = "pf\\menu\\intro\\enter";
         public string EndingPath { get; set; } = "pf\\menu\\intro\\ending";
         public string EndingAsmFile { get; set; } = "Source\\ProjectM\\CloneEngine.asm";
+        public string MoviePath { get; set; } = "pf\\movie";
         public string BrstmPath { get; set; } = "pf\\sound\\strm";
         public string SoundbankPath { get; set; } = "pf\\sfx";
         public string StageAltListPath { get; set; } = "pf\\stage\\stagelist";
