@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using System.IO;
+using lKHM;
 
 namespace BrawlInstaller.Classes
 {
@@ -27,7 +28,7 @@ namespace BrawlInstaller.Classes
         public string EndingMovie { get; set; }
         public TracklistSong CreditsTheme { get; set; }
         public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
-        public FighterSettings FighterSettings { get; set; } = null;
+        public FighterSettings FighterSettings { get; set; } = new FighterSettings();
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
     }
 
@@ -76,6 +77,7 @@ namespace BrawlInstaller.Classes
 
     public class FighterSettings
     {
+        public HatInfoPack KirbyHatData { get; set; } = null;
         public LucarioSettings LucarioSettings { get; set; } = null;
         public BowserSettings BowserSettings { get; set; } = null;
         public JigglypuffSettings JigglypuffSettings { get; set; } = null;

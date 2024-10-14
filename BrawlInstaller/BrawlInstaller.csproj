@@ -291,6 +291,10 @@
       <Project>{775df34b-397e-41e2-85d6-c3042f0b8c46}</Project>
       <Name>BrawlLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\lavaKirbyHatManagerV2\lavaKirbyHatManagerV2.csproj">
+      <Project>{9DFD4208-0F96-4AE5-B6C6-444C54CDE312}</Project>
+      <Name>lavaKirbyHatManagerV2</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SharedTEX0.png" />
