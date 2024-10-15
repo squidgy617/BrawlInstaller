@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using System.IO;
 using lKHM;
+using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 
 namespace BrawlInstaller.Classes
 {

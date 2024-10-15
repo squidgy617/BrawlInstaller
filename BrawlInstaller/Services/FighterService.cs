@@ -329,6 +329,7 @@ namespace BrawlInstaller.Services
                 var fighterNode = (FCFGNode)rootNode;
                 fighterInfo.InternalName = fighterNode.InternalFighterName;
                 fighterInfo.SoundbankId = fighterNode.SoundBank;
+                fighterInfo.KirbyLoadType = fighterNode.KirbyLoadType;
             }
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
@@ -888,6 +889,8 @@ namespace BrawlInstaller.Services
             {
                 var node = (FCFGNode) rootNode;
                 node.SoundBank = (uint)fighterInfo.SoundbankId;
+                node.HasKirbyHat = fighterInfo.KirbyLoadType != FCFGNode.KirbyLoadFlags.None;
+                node.KirbyLoadType = fighterInfo.KirbyLoadType;
             }
             return rootNode;
         }

@@ -1,6 +1,8 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -47,6 +50,9 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public Dictionary<string, KirbyLoadFlags> KirbyLoadFlagOptions { get => typeof(KirbyLoadFlags).GetDictionary<KirbyLoadFlags>(); }
 
         // Methods
         public void LoadFighterSettings(FighterLoadedMessage message)

@@ -16,10 +16,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:"/>
         <TextBlock x:Name="kirbyHatKindTextBlock" VerticalAlignment="Center" Text="{Binding FighterPackage.FighterSettings.KirbyHatData.TopStatusKind}" Grid.Column="1"/>
         <Button x:Name="kirbyHatBrowseButton" Content="Browse..." Command="{Binding LoadKirbyHatCommand}" Grid.Column="2"/>
         <Button x:Name="kirbyHatClearButton" Content="Clear" Command="{Binding ClearKirbyHatCommand}" Grid.Column="3"/>
+        <Label x:Name="kirbyHatLoadTypeLabel" Content="Kirby Hat Load Type:" Grid.Row="1"/>
+        <ComboBox x:Name="kirbyHatLoadTypeDropDown" ItemsSource="{Binding KirbyLoadFlagOptions}" SelectedValue="{Binding FighterPackage.FighterInfo.KirbyLoadType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Row="1" Grid.Column="1"/>
     </Grid>
 </UserControl>
