@@ -26,7 +26,7 @@ namespace BrawlInstaller.Classes
         public uint? VictoryThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
         [JsonIgnore] public int EndingId { get; set; } = -1;
-        [JsonIgnore] public KirbyLoadFlags KirbyLoadType { get; set; } = KirbyLoadFlags.None;
+        public KirbyLoadFlags KirbyLoadType { get; set; } = KirbyLoadFlags.None;
 
         public FighterInfo Copy()
         {
