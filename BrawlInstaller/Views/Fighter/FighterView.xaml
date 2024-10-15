@@ -55,6 +55,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.ColumnSpan="2">
                         <Grid>
@@ -67,8 +68,11 @@
                     <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" Grid.Column="1" Grid.Row="1" Margin="3,2,2,2">
                         <ContentControl Content="{Binding CosmeticViewModel}"/>
                     </GroupBox>
-                    <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files" Grid.Column="2" Grid.Row="0">
+                    <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
                         <ContentControl Content="{Binding FighterFileViewModel}"/>
+                    </GroupBox>
+                    <GroupBox x:Name="fighterSettingsGroupBox" Header="Fighter Settings" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2">
+                        <ContentControl Content="{Binding FighterSettingsViewModel}"/>
                     </GroupBox>
                 </Grid>
             </ScrollViewer>

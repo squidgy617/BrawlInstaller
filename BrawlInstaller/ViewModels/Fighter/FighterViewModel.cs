@@ -53,7 +53,7 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel)
+        public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel)
         {
             _packageService = packageService;
             _settingsService = settingsService;
@@ -62,8 +62,7 @@ namespace BrawlInstaller.ViewModels
             CostumeViewModel = costumeViewModel;
             CosmeticViewModel = cosmeticViewmodel;
             FighterFileViewModel = fighterFileViewModel;
-
-            
+            FighterSettingsViewModel = fighterSettingsViewModel;
 
             var list = _settingsService.LoadFighterInfoSettings();
             FighterList = list;
@@ -74,6 +73,7 @@ namespace BrawlInstaller.ViewModels
         public ICostumeViewModel CostumeViewModel { get; }
         public ICosmeticViewModel CosmeticViewModel { get; }
         public IFighterFileViewModel FighterFileViewModel { get; }
+        public IFighterSettingsViewModel FighterSettingsViewModel { get; }
 
         // Properties
         public FighterPackage FighterPackage { get; set; }

@@ -112,6 +112,7 @@
       <DependentUpon>FileBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
+    <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
@@ -137,6 +138,9 @@
     </Compile>
     <Compile Include="Views\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Fighter\FighterSettingsView.xaml.cs">
+      <DependentUpon>FighterSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Fighter\FighterView.xaml.cs">
       <DependentUpon>FighterView.xaml</DependentUpon>
@@ -215,6 +219,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FighterInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Fighter\FighterSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
