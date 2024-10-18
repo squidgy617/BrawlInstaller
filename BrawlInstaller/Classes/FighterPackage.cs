@@ -82,7 +82,7 @@ namespace BrawlInstaller.Classes
         public LucarioSettings LucarioSettings { get; set; } = null;
         public BowserSettings BowserSettings { get; set; } = null;
         public JigglypuffSettings JigglypuffSettings { get; set; } = null;
-        public Tuple<float, float> ThrowReleasePoint { get; set; } = null;
+        public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);
         public int? CreditsThemeId { get; set; }
         public int? TrophyId { get; set; }
         public int? DoorId { get; set; }

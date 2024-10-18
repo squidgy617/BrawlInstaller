@@ -15,6 +15,7 @@ namespace BrawlInstaller.Classes
         public static DataSize Byte { get { return new DataSize("byte"); } }
         public static DataSize Halfword { get { return new DataSize("half"); } }
         public static DataSize Word { get { return new DataSize("word"); } }
+        public static DataSize Float { get { return new DataSize("float"); } }
 
         public override string ToString()
         {

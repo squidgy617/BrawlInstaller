@@ -1015,8 +1015,41 @@ namespace BrawlInstaller.Services
         public FighterSettings GetFighterSettings(FighterPackage fighterPackage)
         {
             var fighterSettings = fighterPackage.FighterSettings;
+
+            // Get Kirby hat data
             fighterSettings.KirbyHatData = GetKirbyHatData(fighterPackage.FighterInfo.Ids.FighterConfigId);
+
+            // Get throw release point
+            fighterSettings.ThrowReleasePoint = GetThrowReleasePoint(fighterPackage.FighterInfo.Ids.FighterConfigId);
+
             return fighterSettings;
+        }
+
+        /// <summary>
+        /// Get throw release point by fighter ID
+        /// </summary>
+        /// <param name="fighterId">Fighter ID</param>
+        /// <returns>Throw release point</returns>
+        private Position GetThrowReleasePoint(int fighterId)
+        {
+            var throwRelease = new Position(0.0, 0.0);
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+            if (table.Count > fighterId * 2)
+            {
+                var x = table[fighterId * 2];
+                var y = "0.0";
+                if (table.Count > (fighterId * 2) + 1)
+                {
+                    y = table[(fighterId * 2) + 1];
+                }
+                throwRelease.X = Convert.ToDouble(x);
+                throwRelease.Y = Convert.ToDouble(y);
+            }
+            return throwRelease;
         }
 
         /// <summary>

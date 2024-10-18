@@ -351,7 +351,7 @@ namespace BrawlInstaller.Services
             var labelPosition = cleanText.IndexOf(label);
             var workingText = cleanText.Substring(labelPosition, cleanText.Length - labelPosition);
             // Get table length
-            var result = Regex.Match(workingText, "(half|word|byte)[[]\\d+[]]");
+            var result = Regex.Match(workingText, "(half|word|byte|float)[[]\\d+[]]");
             // If another label appears before the table counter, then it is an empty table
             var nextLabelPosition = workingText.IndexOf(':', label.Length);
             if (result.Success && result.Index < nextLabelPosition)

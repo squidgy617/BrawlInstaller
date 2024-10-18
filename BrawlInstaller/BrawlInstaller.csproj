@@ -78,6 +78,7 @@
     <Compile Include="Classes\FighterInfo.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Classes\ImageSize.cs" />
+    <Compile Include="Classes\Position.cs" />
     <Compile Include="Classes\Tracklists.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
