@@ -22,7 +22,7 @@ namespace BrawlInstaller.Services
         List<string> ReadTable(string fileText, string label);
 
         /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{AsmTableEntry}, DataSize, int)"/>
-        string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width = 1);
+        string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width = 1, int padding = 2);
 
         /// <inheritdoc cref="CodeService.ReplaceHook(AsmHook, string)"/>
         string ReplaceHook(AsmHook hook, string fileText);
@@ -236,15 +236,16 @@ namespace BrawlInstaller.Services
         /// <param name="table">ASM table to write</param>
         /// <param name="dataSize">Size of data for table entries</param>
         /// <param name="width">Columns of table</param>
+        /// <param name="padding">Minimum width of each column</param>
         /// <returns>Text with table replaced</returns>
-        public string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width=1)
+        public string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width=1, int padding=2)
         {
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
             if (labelPosition > -1)
             {
                 fileText = RemoveTable(fileText, label);
-                fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width);
+                fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width, padding);
             }
             return fileText;
         }
@@ -258,8 +259,9 @@ namespace BrawlInstaller.Services
         /// <param name="index">Position to write table to</param>
         /// <param name="dataSize">Size of data for table entries</param>
         /// <param name="width">Columns of table</param>
+        /// <param name="padding">Minimum width of each column</param>
         /// <returns>Text with table added</returns>
-        private string WriteTable(string fileText, string label, List<AsmTableEntry> table, int index, DataSize dataSize, int width=1)
+        private string WriteTable(string fileText, string label, List<AsmTableEntry> table, int index, DataSize dataSize, int width=1, int padding=2)
         {
             var newLine = "\r\n";
             // Write label
@@ -276,7 +278,7 @@ namespace BrawlInstaller.Services
                 var lineComment = string.Empty;
                 foreach (var item in table)
                 {
-                    formattedTable += item.Item.PadLeft(2);
+                    formattedTable += item.Item.PadLeft(padding);
                     if (table.LastOrDefault() != item)
                     {
                         formattedTable += ", ";
@@ -292,7 +294,7 @@ namespace BrawlInstaller.Services
                         // Add comment
                         lineComment += item.Comment;
                         // If not end of line, add a comma 
-                        if (!((table.IndexOf(item) + 1) % width == 0) && item != table.LastOrDefault())
+                        if (!((table.IndexOf(item) + 1) % width == 0) && item != table.LastOrDefault() && !string.IsNullOrEmpty(table[table.IndexOf(item) + 1].Comment))
                         {
                             lineComment += ", ";
                         }

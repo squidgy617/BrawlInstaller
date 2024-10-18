@@ -174,6 +174,9 @@ namespace BrawlInstaller.ViewModels
             FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = true;
             _oldVictoryThemePath = FighterPackage.VictoryTheme?.SongPath;
             _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
+            // Update UI
+            OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
         private void GetFighters()

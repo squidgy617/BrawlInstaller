@@ -431,15 +431,19 @@ namespace BrawlInstaller.Services
             // Replace first match of name with the new fighter name
             var regex = new Regex(oldFighterName);
             name = regex.Replace(name, fighterInfo.InternalName, 1);
-            // Remove old costume ID
-            var oldCostumeId = string.Concat(name.Where(char.IsNumber));
-            if (!string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && name.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
-            {
-                name = name.Substring(0, name.Length - 2);
-            }
-            // Add new costume ID
+            // Update costume ID
             if (costumeId > -1)
-                name += costumeId.ToString("D2");
+            {
+                // Remove old costume ID
+                var oldCostumeId = string.Concat(name.Where(char.IsNumber));
+                if (!string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && name.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
+                {
+                    name = name.Substring(0, name.Length - 2);
+                }
+                // Add new costume ID
+                if (costumeId > -1)
+                    name += costumeId.ToString("D2");
+            }
             name += Path.GetExtension(node.FileName);
             if (name.ToLower() == node.FileName.ToLower())
                 name = node.FileName;
@@ -469,6 +473,7 @@ namespace BrawlInstaller.Services
                 foreach(var path in costume.PacFiles)
                 {
                     var file = _fileService.OpenFile(path);
+                    // TODO: Need to somehow handle Kirby files that are shared with other fighters here
                     var name = GetFighterPacName(file, fighterInfo, costume.CostumeId);
                     // Update GFX if they are per-costume
                     var efNode = file.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
@@ -758,6 +763,7 @@ namespace BrawlInstaller.Services
                 DeleteCreditsTheme(oldFighter.CreditsTheme.SongId);
             }
             // Import pac files
+            // TODO: Update fighter files in package after installing
             foreach(var pacFile in pacFiles)
             {
                 _fileService.SaveFile(pacFile);
@@ -826,8 +832,12 @@ namespace BrawlInstaller.Services
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var fighterSettings = fighterPackage.FighterSettings;
+
             // Update Kirby hat
             UpdateKirbyHatData(fighterSettings.KirbyHatData, fighterPackage.FighterInfo.Ids.FighterConfigId);
+
+            // Update throw release point
+            UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
         }
 
         /// <summary>
@@ -1050,6 +1060,49 @@ namespace BrawlInstaller.Services
                 throwRelease.Y = Convert.ToDouble(y);
             }
             return throwRelease;
+        }
+
+        /// <summary>
+        /// Update throw release point for fighter
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info for fighter</param>
+        /// <param name="throwReleasePoint">Throw release point to update</param>
+        private void UpdateThrowReleaseTable(FighterInfo fighterInfo, Position throwReleasePoint)
+        {
+            var fighterId = fighterInfo.Ids.FighterConfigId;
+            // Get table
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+            // Convert to ASM table
+            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var asmTable = new List<AsmTableEntry>();
+            foreach (var entry in table)
+            {
+                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.FighterConfigId * 2 == asmTable.Count)?.DisplayName;
+                var newEntry = new AsmTableEntry
+                {
+                    Item = entry,
+                    Comment = !string.IsNullOrEmpty(comment) ? comment : asmTable.Count % 2 == 0 ? "Unknown" : string.Empty
+                };
+                asmTable.Add(newEntry);
+            }
+            // Update fighter slot
+            if (asmTable.Count > (fighterId * 2) + 1)
+            {
+                var x = $"{throwReleasePoint.X}";
+                x = x.Contains(".") ? x : x += ".0";
+                asmTable[fighterId * 2].Item = x;
+                asmTable[fighterId * 2].Comment = fighterInfo.DisplayName;
+                var y = $"{throwReleasePoint.Y}";
+                y = y.Contains(".") ? y : y += ".0";
+                asmTable[(fighterId * 2) + 1].Item = y;
+            }
+            // Write table
+            code = _codeService.ReplaceTable(code, "ThrowReleaseTable:", asmTable, DataSize.Float, 2, 12);
+            _fileService.SaveTextFile(codePath, code);
         }
 
         /// <summary>
