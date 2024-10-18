@@ -5,6 +5,7 @@ using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using BrawlLib.SSBB.Types;
+using lKHM;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -54,6 +55,15 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.ImportFighterFiles(FighterPackage)"/>
         void ImportFighterFiles(FighterPackage fighterPackage);
+
+        /// <inheritdoc cref="FighterService.UpdateFighterSettings(FighterPackage)"/>
+        void UpdateFighterSettings(FighterPackage fighterPackage);
+
+        /// <inheritdoc cref="FighterService.GetFighterSettings(FighterPackage)"/>
+        FighterSettings GetFighterSettings(FighterPackage fighterPackage);
+
+        /// <inheritdoc cref="FighterService.ConvertXMLToKirbyHatData(string)"/>
+        HatInfoPack ConvertXMLToKirbyHatData(string xmlPath);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -319,6 +329,7 @@ namespace BrawlInstaller.Services
                 var fighterNode = (FCFGNode)rootNode;
                 fighterInfo.InternalName = fighterNode.InternalFighterName;
                 fighterInfo.SoundbankId = fighterNode.SoundBank;
+                fighterInfo.KirbyLoadType = fighterNode.KirbyLoadType;
             }
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
@@ -420,15 +431,19 @@ namespace BrawlInstaller.Services
             // Replace first match of name with the new fighter name
             var regex = new Regex(oldFighterName);
             name = regex.Replace(name, fighterInfo.InternalName, 1);
-            // Remove old costume ID
-            var oldCostumeId = string.Concat(name.Where(char.IsNumber));
-            if (!string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && name.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
-            {
-                name = name.Substring(0, name.Length - 2);
-            }
-            // Add new costume ID
+            // Update costume ID
             if (costumeId > -1)
-                name += costumeId.ToString("D2");
+            {
+                // Remove old costume ID
+                var oldCostumeId = string.Concat(name.Where(char.IsNumber));
+                if (!string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && name.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
+                {
+                    name = name.Substring(0, name.Length - 2);
+                }
+                // Add new costume ID
+                if (costumeId > -1)
+                    name += costumeId.ToString("D2");
+            }
             name += Path.GetExtension(node.FileName);
             if (name.ToLower() == node.FileName.ToLower())
                 name = node.FileName;
@@ -458,6 +473,7 @@ namespace BrawlInstaller.Services
                 foreach(var path in costume.PacFiles)
                 {
                     var file = _fileService.OpenFile(path);
+                    // TODO: Need to somehow handle Kirby files that are shared with other fighters here
                     var name = GetFighterPacName(file, fighterInfo, costume.CostumeId);
                     // Update GFX if they are per-costume
                     var efNode = file.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
@@ -601,6 +617,100 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Convert Kirby hat XML to Kirby hat data
+        /// </summary>
+        /// <param name="xmlPath">Path to XML file</param>
+        /// <returns>Parsed Kirby hat data</returns>
+        public HatInfoPack ConvertXMLToKirbyHatData(string xmlPath)
+        {
+            // Parse XML
+            var dictionary = new SortedDictionary<uint, HatInfoPack>();
+            HatXMLParser.parseHatsFromXML(xmlPath, dictionary);
+            // Return first item
+            return dictionary.FirstOrDefault().Value;
+        }
+
+        /// <summary>
+        /// Get Kirby hat data for fighter
+        /// </summary>
+        /// <param name="fighterId">Fighter ID</param>
+        /// <returns>Hat data</returns>
+        private HatInfoPack GetKirbyHatData(int fighterId)
+        {
+            // Open rel
+            HatInfoPack hatData = null;
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var modulePath = _settingsService.BuildSettings.FilePathSettings.Modules;
+            var path = Path.Combine(buildPath, modulePath, "ft_kirby.rel");
+            var rootNode = _fileService.OpenFile(path);
+            if (rootNode != null)
+            {
+                // Load hat entries
+                var hatManager = new KirbyHatManager();
+                var result = hatManager.loadHatEntriesFromREL((RELNode)rootNode);
+                if (result)
+                {
+                    // Check if hat exists
+                    var foundHat = hatManager.fighterIDToInfoPacks.ContainsKey((uint)fighterId);
+                    if (foundHat)
+                    {
+                        // Load hat data
+                        hatData = hatManager.fighterIDToInfoPacks[(uint)fighterId];
+                    }
+                }
+                _fileService.CloseFile(rootNode);
+            }
+            return hatData;
+        }
+
+        /// <summary>
+        /// Update Kirby hat data for specified fighter
+        /// </summary>
+        /// <param name="kirbyHatData">Kirby hat data to use. If null, hat will be removed.</param>
+        /// <param name="fighterId">Fighter ID to update</param>
+        private void UpdateKirbyHatData(HatInfoPack kirbyHatData, int fighterId)
+        {
+            // Open rel
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var modulePath = _settingsService.BuildSettings.FilePathSettings.Modules;
+            var path = Path.Combine(buildPath, modulePath, "ft_kirby.rel");
+            var rootNode = _fileService.OpenFile(path);
+            if (rootNode != null)
+            {
+                // Load hat entries
+                var hatManager = new KirbyHatManager();
+                var result = hatManager.loadHatEntriesFromREL((RELNode)rootNode);
+                if (result)
+                {
+                    // Search for hat
+                    var foundHat = hatManager.fighterIDToInfoPacks.ContainsKey((uint)fighterId);
+                    if (foundHat)
+                    {
+                        // Replace hat if it exists and new one is provided
+                        if (kirbyHatData != null)
+                        {
+                            hatManager.fighterIDToInfoPacks[(uint)fighterId] = kirbyHatData;
+                        }
+                        // If hat passed is null, remove existing hat
+                        else
+                        {
+                            hatManager.eraseHat((uint)fighterId);
+                        }
+                    }
+                    // If hat doesn't exist and is not null, add new one
+                    else if (kirbyHatData != null)
+                    {
+                        hatManager.fighterIDToInfoPacks.Add((uint)fighterId, kirbyHatData);
+                    }
+                    // Write to rel
+                    hatManager.writeTablesToREL((RELNode)rootNode);
+                }
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
+            }
+        }
+
+        /// <summary>
         /// Import updated fighter files
         /// </summary>
         /// <param name="fighterPackage">Fighter package to import files for</param>
@@ -653,6 +763,7 @@ namespace BrawlInstaller.Services
                 DeleteCreditsTheme(oldFighter.CreditsTheme.SongId);
             }
             // Import pac files
+            // TODO: Update fighter files in package after installing
             foreach(var pacFile in pacFiles)
             {
                 _fileService.SaveFile(pacFile);
@@ -714,6 +825,22 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Update fighter settings in build
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update settings for</param>
+        public void UpdateFighterSettings(FighterPackage fighterPackage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var fighterSettings = fighterPackage.FighterSettings;
+
+            // Update Kirby hat
+            UpdateKirbyHatData(fighterSettings.KirbyHatData, fighterPackage.FighterInfo.Ids.FighterConfigId);
+
+            // Update throw release point
+            UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
+        }
+
+        /// <summary>
         /// Delete all ex configs associated with fighter
         /// </summary>
         /// <param name="fighterInfo">Fighter info</param>
@@ -772,6 +899,8 @@ namespace BrawlInstaller.Services
             {
                 var node = (FCFGNode) rootNode;
                 node.SoundBank = (uint)fighterInfo.SoundbankId;
+                node.HasKirbyHat = fighterInfo.KirbyLoadType != FCFGNode.KirbyLoadFlags.None;
+                node.KirbyLoadType = fighterInfo.KirbyLoadType;
             }
             return rootNode;
         }
@@ -886,6 +1015,94 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo = fighterInfo;
 
             return fighterPackage;
+        }
+
+        /// <summary>
+        /// Get all fighter setting data for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to retrieve settings for</param>
+        /// <returns></returns>
+        public FighterSettings GetFighterSettings(FighterPackage fighterPackage)
+        {
+            var fighterSettings = fighterPackage.FighterSettings;
+
+            // Get Kirby hat data
+            fighterSettings.KirbyHatData = GetKirbyHatData(fighterPackage.FighterInfo.Ids.FighterConfigId);
+
+            // Get throw release point
+            fighterSettings.ThrowReleasePoint = GetThrowReleasePoint(fighterPackage.FighterInfo.Ids.FighterConfigId);
+
+            return fighterSettings;
+        }
+
+        /// <summary>
+        /// Get throw release point by fighter ID
+        /// </summary>
+        /// <param name="fighterId">Fighter ID</param>
+        /// <returns>Throw release point</returns>
+        private Position GetThrowReleasePoint(int fighterId)
+        {
+            var throwRelease = new Position(0.0, 0.0);
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+            if (table.Count > fighterId * 2)
+            {
+                var x = table[fighterId * 2];
+                var y = "0.0";
+                if (table.Count > (fighterId * 2) + 1)
+                {
+                    y = table[(fighterId * 2) + 1];
+                }
+                throwRelease.X = Convert.ToDouble(x);
+                throwRelease.Y = Convert.ToDouble(y);
+            }
+            return throwRelease;
+        }
+
+        /// <summary>
+        /// Update throw release point for fighter
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info for fighter</param>
+        /// <param name="throwReleasePoint">Throw release point to update</param>
+        private void UpdateThrowReleaseTable(FighterInfo fighterInfo, Position throwReleasePoint)
+        {
+            var fighterId = fighterInfo.Ids.FighterConfigId;
+            // Get table
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+            // Convert to ASM table
+            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var asmTable = new List<AsmTableEntry>();
+            foreach (var entry in table)
+            {
+                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.FighterConfigId * 2 == asmTable.Count)?.DisplayName;
+                var newEntry = new AsmTableEntry
+                {
+                    Item = entry,
+                    Comment = !string.IsNullOrEmpty(comment) ? comment : asmTable.Count % 2 == 0 ? "Unknown" : string.Empty
+                };
+                asmTable.Add(newEntry);
+            }
+            // Update fighter slot
+            if (asmTable.Count > (fighterId * 2) + 1)
+            {
+                var x = $"{throwReleasePoint.X}";
+                x = x.Contains(".") ? x : x += ".0";
+                asmTable[fighterId * 2].Item = x;
+                asmTable[fighterId * 2].Comment = fighterInfo.DisplayName;
+                var y = $"{throwReleasePoint.Y}";
+                y = y.Contains(".") ? y : y += ".0";
+                asmTable[(fighterId * 2) + 1].Item = y;
+            }
+            // Write table
+            code = _codeService.ReplaceTable(code, "ThrowReleaseTable:", asmTable, DataSize.Float, 2, 12);
+            _fileService.SaveTextFile(codePath, code);
         }
 
         /// <summary>

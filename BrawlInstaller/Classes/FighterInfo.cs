@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 
 namespace BrawlInstaller.Classes
 {
@@ -25,6 +26,7 @@ namespace BrawlInstaller.Classes
         public uint? VictoryThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
         [JsonIgnore] public int EndingId { get; set; } = -1;
+        public KirbyLoadFlags KirbyLoadType { get; set; } = KirbyLoadFlags.None;
 
         public FighterInfo Copy()
         {
@@ -42,7 +44,8 @@ namespace BrawlInstaller.Classes
                 },
                 VictoryThemeId = VictoryThemeId,
                 SoundbankId = SoundbankId,
-                EndingId = EndingId
+                EndingId = EndingId,
+                KirbyLoadType = KirbyLoadType
             };
             return newFighterInfo;
         }

@@ -155,6 +155,7 @@ namespace BrawlInstaller.Classes
         public string BrstmPath { get; set; } = "pf\\sound\\strm";
         public string SoundbankPath { get; set; } = "pf\\sfx";
         public string StageAltListPath { get; set; } = "pf\\stage\\stagelist";
+        public string ThrowReleaseAsmFile { get; set; } = "Source\\ProjectM\\Modifier\\ThrowRelease.asm";
 
         [JsonProperty("CodeFilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<string> CodeFilePaths { get; set; } = new List<string>

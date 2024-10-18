@@ -58,6 +58,9 @@ namespace BrawlInstaller.Services
             // Get fighter files
             fighterPackage = _fighterService.GetFighterFiles(fighterPackage);
 
+            // Get fighter settings
+            fighterPackage.FighterSettings = _fighterService.GetFighterSettings(fighterPackage);
+
             // Get cosmetics
             var cosmetics = _cosmeticService.GetFighterCosmetics(fighterInfo.Ids);
 
@@ -127,6 +130,8 @@ namespace BrawlInstaller.Services
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
             // Import fighter files
             _fighterService.ImportFighterFiles(fighterPackage);
+            // Update fighter settings
+            _fighterService.UpdateFighterSettings(fighterPackage);
         }
     }
 }

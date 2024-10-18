@@ -10,6 +10,8 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using System.IO;
+using lKHM;
+using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 
 namespace BrawlInstaller.Classes
 {
@@ -27,7 +29,7 @@ namespace BrawlInstaller.Classes
         public string EndingMovie { get; set; }
         public TracklistSong CreditsTheme { get; set; }
         public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
-        public FighterSettings FighterSettings { get; set; } = null;
+        public FighterSettings FighterSettings { get; set; } = new FighterSettings();
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
     }
 
@@ -76,10 +78,11 @@ namespace BrawlInstaller.Classes
 
     public class FighterSettings
     {
+        public HatInfoPack KirbyHatData { get; set; } = null;
         public LucarioSettings LucarioSettings { get; set; } = null;
         public BowserSettings BowserSettings { get; set; } = null;
         public JigglypuffSettings JigglypuffSettings { get; set; } = null;
-        public Tuple<float, float> ThrowReleasePoint { get; set; } = null;
+        public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);
         public int? CreditsThemeId { get; set; }
         public int? TrophyId { get; set; }
         public int? DoorId { get; set; }

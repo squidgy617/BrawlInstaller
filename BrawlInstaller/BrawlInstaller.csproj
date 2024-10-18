@@ -78,6 +78,7 @@
     <Compile Include="Classes\FighterInfo.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Classes\ImageSize.cs" />
+    <Compile Include="Classes\Position.cs" />
     <Compile Include="Classes\Tracklists.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
@@ -112,6 +113,7 @@
       <DependentUpon>FileBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
+    <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
@@ -137,6 +139,9 @@
     </Compile>
     <Compile Include="Views\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Fighter\FighterSettingsView.xaml.cs">
+      <DependentUpon>FighterSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Fighter\FighterView.xaml.cs">
       <DependentUpon>FighterView.xaml</DependentUpon>
@@ -218,6 +223,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Fighter\FighterSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Fighter\FighterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -290,6 +299,10 @@
     <ProjectReference Include="..\BrawlLib\BrawlLib.csproj">
       <Project>{775df34b-397e-41e2-85d6-c3042f0b8c46}</Project>
       <Name>BrawlLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lavaKirbyHatManagerV2\lavaKirbyHatManagerV2.csproj">
+      <Project>{9DFD4208-0F96-4AE5-B6C6-444C54CDE312}</Project>
+      <Name>lavaKirbyHatManagerV2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
