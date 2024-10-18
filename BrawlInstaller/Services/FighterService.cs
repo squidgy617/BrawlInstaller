@@ -429,8 +429,12 @@ namespace BrawlInstaller.Services
                 oldFighterName = oldFighterName.Substring(0, index);
             }
             // Replace first match of name with the new fighter name
-            var regex = new Regex(oldFighterName);
-            name = regex.Replace(name, fighterInfo.InternalName, 1);
+            // TODO: We check for Kirby to ensure we don't overwrite filenames for Kirby's other fighter files, is there a better way to do this?
+            if (fighterInfo.InternalName.ToLower() != "kirby")
+            {
+                var regex = new Regex(oldFighterName);
+                name = regex.Replace(name, fighterInfo.InternalName, 1);
+            }
             // Update costume ID
             if (costumeId > -1)
             {
@@ -473,7 +477,6 @@ namespace BrawlInstaller.Services
                 foreach(var path in costume.PacFiles)
                 {
                     var file = _fileService.OpenFile(path);
-                    // TODO: Need to somehow handle Kirby files that are shared with other fighters here
                     var name = GetFighterPacName(file, fighterInfo, costume.CostumeId);
                     // Update GFX if they are per-costume
                     var efNode = file.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
