@@ -40,8 +40,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+        <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}">
             <TextBox x:Name="pacFilePrefixTextBox" HorizontalContentAlignment="Right" Text="{Binding SelectedPacFile.Prefix}" Width="50"/>
             <TextBlock x:Name="pacFileNameTextBlock" Text="{Binding FighterPackage.FighterInfo.InternalName}" VerticalAlignment="Center"/>
             <TextBox x:Name="pacFileSuffixTextBox" Text="{Binding SelectedPacFile.Suffix}" Width="50"/>
