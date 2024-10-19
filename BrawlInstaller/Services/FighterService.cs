@@ -479,13 +479,13 @@ namespace BrawlInstaller.Services
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
-            var files = new List<(ResourceNode node, string name)>();
+            var files = new List<(ResourceNode node, string name, FighterPacFile pacFile)>();
             foreach(var pacFile in pacFiles)
             {
                 var file = _fileService.OpenFile(pacFile.FilePath);
                 var name = pacFile.Prefix + fighterInfo.InternalName + pacFile.Suffix + ".pac";
                 if (file != null)
-                    files.Add((file, name));
+                    files.Add((file, name, pacFile));
             }
             foreach(var costume in costumes)
             {
@@ -513,7 +513,7 @@ namespace BrawlInstaller.Services
                     }
                     // Add file to list
                     if (file != null)
-                        files.Add((file, name));
+                        files.Add((file, name, pacFile));
                 }
             }
             // Set all file paths
@@ -522,6 +522,7 @@ namespace BrawlInstaller.Services
                 var folder = file.name.Contains("Kirby") ? "kirby" : fighterInfo.InternalName;
                 folder += file.name.StartsWith("Itm") ? "\\item" : string.Empty;
                 file.node._origPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{folder}\\{file.name}";
+                file.pacFile.FilePath = file.node._origPath;
             }
             return files.Select(x => x.node).ToList();
         }
@@ -795,7 +796,6 @@ namespace BrawlInstaller.Services
                 DeleteCreditsTheme(oldFighter.CreditsTheme.SongId);
             }
             // Import pac files
-            // TODO: Update fighter files in package after installing
             foreach(var pacFile in pacFiles)
             {
                 _fileService.SaveFile(pacFile);
