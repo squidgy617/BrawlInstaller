@@ -23,6 +23,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private FighterPackage _fighterPackage;
+        private FighterPacFile _selectedPacFile;
 
         // Services
         IDialogService _dialogService { get; }
@@ -43,6 +44,9 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public FighterPacFile SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)

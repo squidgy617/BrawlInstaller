@@ -20,7 +20,7 @@ namespace BrawlInstaller.Classes
         public FighterInfo FighterInfo { get; set; }
         public List<Costume> Costumes { get; set; }
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
-        public List<string> PacFiles { get; set; }
+        public List<FighterPacFile> PacFiles { get; set; }
         public List<string> ExConfigs { get; set; }
         public string Module { get; set; }
         public string Soundbank { get; set; }
@@ -33,10 +33,18 @@ namespace BrawlInstaller.Classes
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
     }
 
+    public class FighterPacFile
+    {
+        public string FilePath { get; set; }
+        public string Prefix { get; set; }
+        public string Suffix { get; set; }
+        public ResourceNode Node { get; set; } = null;
+    }
+
     public class Costume
     {
         public List<Cosmetic> Cosmetics { get; set; }
-        public List<string> PacFiles { get; set; }
+        public List<FighterPacFile> PacFiles { get; set; }
         public byte Color { get; set; }
         public int CostumeId { get; set; }
     }

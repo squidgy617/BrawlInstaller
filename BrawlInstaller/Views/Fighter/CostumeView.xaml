@@ -56,6 +56,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="costumeIdLabel" Content="ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0"/>
             <ComboBox x:Name="costumeIdComboBox" ItemsSource="{Binding AvailableCostumeIds}" SelectedItem="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" Width="50" Grid.Row="0" Grid.Column="1"/>
@@ -68,7 +69,7 @@
                 <ListBox x:Name="pacFilesListBox" ItemsSource="{Binding PacFiles}" SelectedValue="{Binding SelectedPacFile, Mode=TwoWay}" Width="120" Height="100">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
+                            <TextBlock Text="{Binding FilePath, Converter={StaticResource filePathConverter}}" ToolTip="{Binding FilePath}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -81,8 +82,15 @@
                     <Button x:Name="removePacFilesButton" Content="-" Command="{Binding RemovePacFileCommand}" Grid.Row="1" Style="{StaticResource miniButton}"/>
                 </Grid>
             </Grid>
-            <Label x:Name="colorLabel" Content="Color:" Grid.Row="2"/>
-            <ComboBox x:Name="colorComboBox" Width="120" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
+            <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="2"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                <TextBox x:Name="pacFilePrefixTextBox" HorizontalContentAlignment="Right" Text="{Binding SelectedPacFile.Prefix}" Width="50"/>
+                <TextBlock x:Name="pacFileNameTextBlock" Text="{Binding FighterPackage.FighterInfo.InternalName}" VerticalAlignment="Center"/>
+                <TextBox x:Name="pacFileSuffixTextBox" Text="{Binding SelectedPacFile.Suffix}" Width="50"/>
+                <TextBlock x:Name="pacFileCostumeIdTextBlock" Text="{Binding SelectedCostume.CostumeId, StringFormat=D2}" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Label x:Name="colorLabel" Content="Color:" Grid.Row="3"/>
+            <ComboBox x:Name="colorComboBox" Width="120" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
         </Grid>
         <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" Grid.Row="0" Grid.Column="4" Grid.RowSpan="3">
             <Grid x:Name="costumeCosmeticGrid">

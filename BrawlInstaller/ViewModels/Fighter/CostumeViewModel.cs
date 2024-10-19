@@ -25,8 +25,8 @@ namespace BrawlInstaller.ViewModels
         ObservableCollection<Costume> Costumes { get; }
         Costume SelectedCostume { get; set; }
         List<int> AvailableCostumeIds { get; }
-        ObservableCollection<string> PacFiles { get; }
-        string SelectedPacFile { get; set; }
+        ObservableCollection<FighterPacFile> PacFiles { get; }
+        FighterPacFile SelectedPacFile { get; set; }
         Dictionary<string, CosmeticType> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
@@ -53,7 +53,7 @@ namespace BrawlInstaller.ViewModels
         private FighterPackage _fighterPackage;
         private ObservableCollection<Costume> _costumes;
         private Costume _selectedCostume;
-        private string _selectedPacFile;
+        private FighterPacFile _selectedPacFile;
         private Dictionary<string, CosmeticType> _cosmeticOptions = new Dictionary<string, CosmeticType>();
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
@@ -65,6 +65,7 @@ namespace BrawlInstaller.ViewModels
         IDialogService _dialogService { get; }
         ICosmeticService _cosmeticService { get; }
         IFileService _fileService { get; }
+        IFighterService _fighterService { get; }
 
         // Commands
         public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic(param));
@@ -83,12 +84,13 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor
         [ImportingConstructor]
-        public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService, ICosmeticService cosmeticService, IFileService fileService)
+        public CostumeViewModel(ISettingsService settingsService, IDialogService dialogService, ICosmeticService cosmeticService, IFileService fileService, IFighterService fighterService)
         {
             _settingsService = settingsService;
             _dialogService = dialogService;
             _cosmeticService = cosmeticService;
             _fileService = fileService;
+            _fighterService = fighterService;
 
             // TODO: Do what we did with stages for getting defaults
             var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
@@ -129,9 +131,9 @@ namespace BrawlInstaller.ViewModels
         public List<int> AvailableCostumeIds { get => GetCostumeIds(); }
 
         [DependsUpon(nameof(SelectedCostume))]
-        public ObservableCollection<string> PacFiles { get => SelectedCostume != null ? new ObservableCollection<string>(SelectedCostume?.PacFiles) : new ObservableCollection<string>(); }
+        public ObservableCollection<FighterPacFile> PacFiles { get => SelectedCostume != null ? new ObservableCollection<FighterPacFile>(SelectedCostume?.PacFiles) : new ObservableCollection<FighterPacFile>(); }
         
-        public string SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
+        public FighterPacFile SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
 
         [DependsUpon(nameof(Costumes))]
         public Dictionary<string, CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
@@ -227,7 +229,12 @@ namespace BrawlInstaller.ViewModels
         public void AddPacFiles()
         {
             var files = _dialogService.OpenMultiFileDialog("Select pac files", "PAC files (.pac)|*.pac");
-            SelectedCostume.PacFiles.AddRange(files);
+            foreach(var file in files)
+            {
+                var pacFile = new FighterPacFile { FilePath = file };
+                pacFile = _fighterService.GetFighterPacName(pacFile, FighterPackage.FighterInfo);
+                SelectedCostume.PacFiles.Add(pacFile);
+            }
             OnPropertyChanged(nameof(PacFiles));
         }
 
@@ -551,7 +558,7 @@ namespace BrawlInstaller.ViewModels
             {
                 Color = 0x0B,
                 CostumeId = costumeId,
-                PacFiles = new List<string>(),
+                PacFiles = new List<FighterPacFile>(),
                 Cosmetics = new List<Cosmetic>()
             };
             Costumes.Add(newCostume);
