@@ -309,7 +309,7 @@ namespace BrawlInstaller.Services
                     }
                 }
             }
-            return (index, newMacro);
+            return (index, null);
         }
 
         /// <summary>

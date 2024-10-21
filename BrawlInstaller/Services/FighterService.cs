@@ -1085,11 +1085,17 @@ namespace BrawlInstaller.Services
             var code = _codeService.ReadCode(path);
             if (!string.IsNullOrEmpty(code))
             {
-                // Get Lucario Aura Sphere GFX settings
-                var lucarioGfxMacro = _codeService.GetMacro(code, "80AA9D98", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 1, "BoneIDFixA");
-                if (lucarioGfxMacro != null)
+                // Get Lucario Aura Sphere Bone ID settings
+                var lucarioBoneMacro = _codeService.GetMacro(code, "80AA9D98", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 1, "BoneIDFixA");
+                if (lucarioBoneMacro != null)
                 {
-                    fighterSettings.LucarioSettings.BoneId = Convert.ToInt32(lucarioGfxMacro.Parameters[2].Replace("0x", ""), 16);
+                    fighterSettings.LucarioSettings.BoneId = Convert.ToInt32(lucarioBoneMacro.Parameters[2].Replace("0x", ""), 16);
+                }
+                // Get Lucario Aura Sphere Kirby GFX Settings
+                var lucarioKirbyGfxMacro = _codeService.GetMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (lucarioKirbyGfxMacro != null)
+                {
+                    fighterSettings.LucarioSettings.KirbyEffectId = Convert.ToInt32(lucarioBoneMacro.Parameters[1].Replace("0x", ""), 16);
                 }
             }
             return fighterSettings;
