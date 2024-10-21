@@ -86,7 +86,7 @@ namespace BrawlInstaller.Classes
     public class FighterSettings
     {
         public HatInfoPack KirbyHatData { get; set; } = null;
-        public LucarioSettings LucarioSettings { get; set; } = null;
+        public LucarioSettings LucarioSettings { get; set; } = new LucarioSettings();
         public BowserSettings BowserSettings { get; set; } = null;
         public JigglypuffSettings JigglypuffSettings { get; set; } = null;
         public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);

@@ -32,6 +32,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.CompileCodes()"/>
         void CompileCodes();
+
+        /// <inheritdoc cref="CodeService.GetMacro(string, string, string, int, string)"/>
+        AsmMacro GetMacro(string fileText, string address, string paramValue, int paramIndex, string macroName);
     }
 
     [Export(typeof(ICodeService))]
@@ -185,13 +188,14 @@ namespace BrawlInstaller.Services
         private AsmHook ReadHook(string fileText, string address)
         {
             var newLine = "\r\n";
-            var asmHook = new AsmHook();
+            AsmHook asmHook = null;
             // Remove comments
-            var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
+            var cleanText = Regex.Replace(fileText, "([|]|[#]).*", "");
             // Find hook position
             var index = cleanText.IndexOf($"${address}");
             if (index > -1)
             {
+                asmHook = new AsmHook();
                 asmHook.Address = address;
                 // Find the start of the line
                 var hookStart = cleanText.LastIndexOf(newLine, index);
@@ -225,6 +229,131 @@ namespace BrawlInstaller.Services
                     asmHook.IsHook = true;
                 }
             }
+            return asmHook;
+        }
+
+        /// <summary>
+        /// Get macro in hook by address
+        /// </summary>
+        /// <param name="fileText">Text containing code</param>
+        /// <param name="address">Address of hook to search for</param>
+        /// <param name="paramValue">Value to compare to</param>
+        /// <param name="paramIndex">Index of parameter to compare to</param>
+        /// <param name="macroName">Name of macro</param>
+        /// <returns>Found ASM macro</returns>
+        public AsmMacro GetMacro(string fileText, string address, string paramValue, int paramIndex, string macroName)
+        {
+            var asmHook = ReadHook(fileText, address);
+            if (asmHook != null)
+            {
+                var macroMatch = FindMacroMatch(asmHook, paramValue, paramIndex, macroName);
+                return macroMatch.Macro;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Find matching macro in ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to search for match</param>
+        /// <param name="asmMacro">Macro to use for comparison</param>
+        /// <param name="paramIndex">Which parameter to compare</param>
+        /// <returns>Index of matching macro</returns>
+        private (int Index, AsmMacro Macro) FindMacroMatch(AsmHook asmHook, AsmMacro asmMacro, int paramIndex)
+        {
+            var index = -1;
+            AsmMacro newMacro = null;
+            if (asmMacro.Parameters.Count > paramIndex)
+            {
+                return FindMacroMatch(asmHook, asmMacro.Parameters[paramIndex], paramIndex, asmMacro.MacroName);
+            }
+            return (index, newMacro);
+        }
+
+        /// <summary>
+        /// Find matching macro in ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to search for match</param>
+        /// <param name="paramValue">Value to compare parameter to</param>
+        /// <param name="paramIndex">Which parameter to compare</param>
+        /// <returns>Index of matching macro</returns>
+        private (int Index, AsmMacro Macro) FindMacroMatch(AsmHook asmHook, string paramValue, int paramIndex, string macroName)
+        {
+            var index = -1;
+            AsmMacro newMacro = null;
+            foreach(var instruction in asmHook.Instructions)
+            {
+                var formattedInstruction = instruction.Trim();
+                // Check if macro starting character (%) is present
+                if (formattedInstruction.StartsWith("%"))
+                {
+                    // Get macro name and parameters
+                    var opening = formattedInstruction.IndexOf('(');
+                    var closing = formattedInstruction.IndexOf(')');
+                    var label = formattedInstruction.Substring(1, opening - 1).Trim();
+                    var parameterString = formattedInstruction.Substring(opening + 1, closing - opening - 1);
+                    parameterString = Regex.Replace(parameterString, @"\s+", "");
+                    var parameters = parameterString.Split(',').ToList();
+                    // Generate the new macro
+                    newMacro = new AsmMacro
+                    {
+                        MacroName = label,
+                        Parameters = parameters
+                    };
+                    // Check parameters at specified index to determine if we found a match
+                    if (newMacro.Parameters.Count > paramIndex && newMacro.MacroName == macroName && newMacro.Parameters[paramIndex] == paramValue)
+                    {
+                        // If so, return the index of the match
+                        index = asmHook.Instructions.IndexOf(instruction);
+                        return (index, newMacro);
+                    }
+                }
+            }
+            return (index, newMacro);
+        }
+
+        /// <summary>
+        /// Insert or update macro in ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to insert macro to</param>
+        /// <param name="asmMacro">ASM macro to insert</param>
+        /// <param name="paramIndex">Parameter index to check for matching macro</param>
+        /// <param name="index">Index to insert macro if no match is found</param>
+        /// <returns>ASM hook with inserted macro</returns>
+        public AsmHook InsertUpdateMacro(AsmHook asmHook, AsmMacro asmMacro, int paramIndex = 0, int index = 0)
+        {
+            var foundMacro = FindMacroMatch(asmHook, asmMacro, paramIndex);
+            if (foundMacro.Index > -1)
+            {
+                index = foundMacro.Index;
+                asmHook = RemoveInstruction(asmHook, index);
+            }
+            return InsertMacro(asmHook, asmMacro, index);
+        }
+
+        /// <summary>
+        /// Insert a macro into an ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to insert macro into</param>
+        /// <param name="asmMacro">ASM macro to insert</param>
+        /// <param name="index">Line index to insert to</param>
+        /// <returns>ASM hook with added macro</returns>
+        private AsmHook InsertMacro(AsmHook asmHook, AsmMacro asmMacro, int index = 0)
+        {
+            var macroString = $"${asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})";
+            asmHook.Instructions.Insert(index, macroString);
+            return asmHook;
+        }
+
+        /// <summary>
+        /// Remove ASM hook instruction at specified index
+        /// </summary>
+        /// <param name="asmHook">ASM hook to remove instructionf rom</param>
+        /// <param name="index">Index of instruction to remove</param>
+        /// <returns>ASM hook with instruction removed</returns>
+        private AsmHook RemoveInstruction(AsmHook asmHook, int index)
+        {
+            asmHook.Instructions.RemoveAt(index);
             return asmHook;
         }
 

@@ -20,4 +20,10 @@ namespace BrawlInstaller.Classes
         public List<string> Instructions { get; set; } = new List<string>();
         public string Comment { get; set; } = string.Empty;
     }
+
+    public class AsmMacro
+    {
+        public string MacroName { get; set; }
+        public List<string> Parameters { get; set; }
+    }
 }
