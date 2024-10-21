@@ -35,6 +35,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.GetMacro(string, string, string, int, string)"/>
         AsmMacro GetMacro(string fileText, string address, string paramValue, int paramIndex, string macroName);
+
+        /// <inheritdoc cref="CodeService.InsertUpdateMacro(string, string, AsmMacro, int, int)"/>
+        string InsertUpdateMacro(string fileText, string address, AsmMacro asmMacro, int paramIndex = 0, int index = 0);
     }
 
     [Export(typeof(ICodeService))]
@@ -313,6 +316,26 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Insert or update a macro in a hook specified by address
+        /// </summary>
+        /// <param name="fileText">Text of code</param>
+        /// <param name="address">Address of hook to insert to</param>
+        /// <param name="asmMacro">Macro to insert</param>
+        /// <param name="paramIndex">Index of parameter for comparison</param>
+        /// <param name="index">Index to insert to</param>
+        /// <returns>Updated code</returns>
+        public string InsertUpdateMacro(string fileText, string address, AsmMacro asmMacro, int paramIndex = 0, int index = 0)
+        {
+            var asmHook = ReadHook(fileText, address);
+            if (asmHook != null)
+            {
+                asmHook = InsertUpdateMacro(asmHook, asmMacro, paramIndex, index);
+                fileText = ReplaceHook(asmHook, fileText);
+            }
+            return fileText;
+        }
+
+        /// <summary>
         /// Insert or update macro in ASM hook
         /// </summary>
         /// <param name="asmHook">ASM hook to insert macro to</param>
@@ -320,7 +343,7 @@ namespace BrawlInstaller.Services
         /// <param name="paramIndex">Parameter index to check for matching macro</param>
         /// <param name="index">Index to insert macro if no match is found</param>
         /// <returns>ASM hook with inserted macro</returns>
-        public AsmHook InsertUpdateMacro(AsmHook asmHook, AsmMacro asmMacro, int paramIndex = 0, int index = 0)
+        private AsmHook InsertUpdateMacro(AsmHook asmHook, AsmMacro asmMacro, int paramIndex = 0, int index = 0)
         {
             var foundMacro = FindMacroMatch(asmHook, asmMacro, paramIndex);
             if (foundMacro.Index > -1)
@@ -344,7 +367,7 @@ namespace BrawlInstaller.Services
         /// <returns>ASM hook with added macro</returns>
         private AsmHook InsertMacro(AsmHook asmHook, AsmMacro asmMacro, int index = 0)
         {
-            var macroString = $"${asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})";
+            var macroString = $"%{asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})";
             asmHook.Instructions.Insert(index, macroString);
             return asmHook;
         }

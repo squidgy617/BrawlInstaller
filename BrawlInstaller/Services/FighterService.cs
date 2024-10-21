@@ -870,6 +870,43 @@ namespace BrawlInstaller.Services
 
             // Update throw release point
             UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
+
+            // Update fighter specific settings
+            UpdateFighterSpecificSettings(fighterPackage);
+        }
+
+
+        /// <summary>
+        /// Update fighter specific settings in build
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update settings for</param>
+        private void UpdateFighterSpecificSettings(FighterPackage fighterPackage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var fighterSettings = fighterPackage.FighterSettings;
+
+            var codePath = _settingsService.BuildSettings.FilePathSettings.FighterSpecificAsmFile;
+            var path = Path.Combine(buildPath, codePath);
+            var code = _codeService.ReadCode(path);
+            if (!string.IsNullOrEmpty(code))
+            {
+                // Update Lucario settings
+                if (fighterSettings.LucarioSettings?.BoneId != null)
+                {
+                    var lucarioBoneMacro = new AsmMacro
+                    {
+                        MacroName = "BoneIDFixA", 
+                        Parameters = new List<string>
+                        {
+                            "r7",
+                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                            $"0x{fighterSettings.LucarioSettings.BoneId:X2}"
+                        }
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80AA9D98", lucarioBoneMacro, 1, 3);
+                }
+            }
+            _fileService.SaveTextFile(path, code);
         }
 
         /// <summary>
