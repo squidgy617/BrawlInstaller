@@ -328,7 +328,11 @@ namespace BrawlInstaller.Services
                 index = foundMacro.Index;
                 asmHook = RemoveInstruction(asmHook, index);
             }
-            return InsertMacro(asmHook, asmMacro, index);
+            if (asmMacro != null)
+            {
+                return InsertMacro(asmHook, asmMacro, index);
+            }
+            return null;
         }
 
         /// <summary>
