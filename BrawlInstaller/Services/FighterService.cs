@@ -1070,6 +1070,11 @@ namespace BrawlInstaller.Services
             return fighterSettings;
         }
 
+        /// <summary>
+        /// Get fighter settings that are only for clones of specific characters
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to get settings for</param>
+        /// <returns>Fighter settings</returns>
         private FighterSettings GetFighterSpecificSettings(FighterPackage fighterPackage)
         {
             // Get fighter specific settings
