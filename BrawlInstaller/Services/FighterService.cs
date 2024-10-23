@@ -909,6 +909,10 @@ namespace BrawlInstaller.Services
                         };
                         code = _codeService.InsertUpdateMacro(code, macroList[i], lucarioBoneMacro, 1, 3);
                     }
+                    else
+                    {
+                        code = _codeService.RemoveMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFixA", 1);
+                    }
                 }
             }
             _fileService.SaveTextFile(path, code);

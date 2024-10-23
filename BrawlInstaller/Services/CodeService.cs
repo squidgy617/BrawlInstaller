@@ -7,6 +7,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -38,6 +39,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.InsertUpdateMacro(string, string, AsmMacro, int, int)"/>
         string InsertUpdateMacro(string fileText, string address, AsmMacro asmMacro, int paramIndex = 0, int index = 0);
+
+        /// <inheritdoc cref="CodeService.RemoveMacro(string, string, string, string, int)"/>
+        string RemoveMacro(string fileText, string address, string paramValue, string macroName, int paramIndex = 0);
     }
 
     [Export(typeof(ICodeService))]
@@ -367,8 +371,47 @@ namespace BrawlInstaller.Services
         /// <returns>ASM hook with added macro</returns>
         private AsmHook InsertMacro(AsmHook asmHook, AsmMacro asmMacro, int index = 0)
         {
-            var macroString = $"%{asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})";
+            // TODO: Find a way to keep fighter names intact in comments when this is done
+            var macroString = $"%{asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})" + (!string.IsNullOrEmpty(asmMacro.Comment) ? $" #{asmMacro.Comment}" : string.Empty);
             asmHook.Instructions.Insert(index, macroString);
+            return asmHook;
+        }
+
+        /// <summary>
+        /// Remove macro in hook specified by address
+        /// </summary>
+        /// <param name="fileText">Code to remove macro from</param>
+        /// <param name="address">Address of hook to remove macro from</param>
+        /// <param name="paramValue">Value to use for comparison</param>
+        /// <param name="macroName">Name of macro</param>
+        /// <param name="paramIndex">Index of parameter to compare</param>
+        /// <returns>Code with macro removed</returns>
+        public string RemoveMacro(string fileText, string address, string paramValue, string macroName, int paramIndex = 0)
+        {
+            var asmHook = ReadHook(fileText, address);
+            if (asmHook != null)
+            {
+                asmHook = RemoveMacro(asmHook, paramValue, macroName, paramIndex);
+                fileText = ReplaceHook(asmHook, fileText);
+            }
+            return fileText;
+        }
+
+        /// <summary>
+        /// Remove macro in ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to remove macro from</param>
+        /// <param name="paramValue">Parameter value to use for comparison</param>
+        /// <param name="macroName">Name of macro</param>
+        /// <param name="paramIndex">Index of parameter to compare</param>
+        /// <returns>ASM hook with macro removed</returns>
+        private AsmHook RemoveMacro(AsmHook asmHook, string paramValue, string macroName, int paramIndex = 0)
+        {
+            var macro = FindMacroMatch(asmHook, paramValue, paramIndex, macroName);
+            if (macro.Index > -1)
+            {
+                asmHook = RemoveInstruction(asmHook, macro.Index);
+            }
             return asmHook;
         }
 

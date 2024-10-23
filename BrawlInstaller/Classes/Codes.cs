@@ -25,5 +25,6 @@ namespace BrawlInstaller.Classes
     {
         public string MacroName { get; set; }
         public List<string> Parameters { get; set; }
+        public string Comment { get; set; } = string.Empty;
     }
 }
