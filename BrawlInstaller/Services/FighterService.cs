@@ -890,9 +890,10 @@ namespace BrawlInstaller.Services
             var code = _codeService.ReadCode(path);
             if (!string.IsNullOrEmpty(code))
             {
+                // Update Lucario settings
+                // Lucario Bone ID Fix
                 var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
                 var registerList = new List<string> { "r3", "r7", "r3", "r7" };
-                // Update Lucario settings
                 for (int i = 0; i < 4; i++)
                 {
                     if (fighterSettings.LucarioSettings?.BoneIds[i] != null)
