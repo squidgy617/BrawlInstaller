@@ -97,7 +97,8 @@ namespace BrawlInstaller.Classes
 
     public class LucarioSettings
     {
-        public int? BoneId { get; set; }
+        // TODO: Make these nullable in UI somehow
+        public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public int? KirbyEffectId { get; set; }
     }
 

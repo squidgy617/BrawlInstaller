@@ -890,20 +890,25 @@ namespace BrawlInstaller.Services
             var code = _codeService.ReadCode(path);
             if (!string.IsNullOrEmpty(code))
             {
+                var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
+                var registerList = new List<string> { "r3", "r7", "r3", "r7" };
                 // Update Lucario settings
-                if (fighterSettings.LucarioSettings?.BoneId != null)
+                for (int i = 0; i < 4; i++)
                 {
-                    var lucarioBoneMacro = new AsmMacro
+                    if (fighterSettings.LucarioSettings?.BoneIds[i] != null)
                     {
-                        MacroName = "BoneIDFixA", 
-                        Parameters = new List<string>
+                        var lucarioBoneMacro = new AsmMacro
                         {
-                            "r7",
-                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterSettings.LucarioSettings.BoneId:X2}"
-                        }
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80AA9D98", lucarioBoneMacro, 1, 3);
+                            MacroName = "BoneIDFixA",
+                            Parameters = new List<string>
+                            {
+                                registerList[i],
+                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                $"0x{fighterSettings.LucarioSettings.BoneIds[i]:X2}"
+                            }
+                        };
+                        code = _codeService.InsertUpdateMacro(code, macroList[i], lucarioBoneMacro, 1, 3);
+                    }
                 }
             }
             _fileService.SaveTextFile(path, code);
@@ -1123,16 +1128,20 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(code))
             {
                 // Get Lucario Aura Sphere Bone ID settings
-                var lucarioBoneMacro = _codeService.GetMacro(code, "80AA9D98", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 1, "BoneIDFixA");
-                if (lucarioBoneMacro != null)
+                var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
+                for (int i = 0; i < 4; i++)
                 {
-                    fighterSettings.LucarioSettings.BoneId = Convert.ToInt32(lucarioBoneMacro.Parameters[2].Replace("0x", ""), 16);
+                    var lucarioBoneMacro = _codeService.GetMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 1, "BoneIDFixA");
+                    if (lucarioBoneMacro != null)
+                    {
+                        fighterSettings.LucarioSettings.BoneIds[i] = Convert.ToInt32(lucarioBoneMacro.Parameters[2].Replace("0x", ""), 16);
+                    }
                 }
                 // Get Lucario Aura Sphere Kirby GFX Settings
                 var lucarioKirbyGfxMacro = _codeService.GetMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
                 if (lucarioKirbyGfxMacro != null)
                 {
-                    fighterSettings.LucarioSettings.KirbyEffectId = Convert.ToInt32(lucarioBoneMacro.Parameters[1].Replace("0x", ""), 16);
+                    fighterSettings.LucarioSettings.KirbyEffectId = Convert.ToInt32(lucarioKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
                 }
             }
             return fighterSettings;
