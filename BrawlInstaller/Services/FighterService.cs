@@ -1438,7 +1438,6 @@ namespace BrawlInstaller.Services
             return endingId;
         }
 
-        // TODO: This must work with ALL Effect.pacs
         /// <summary>
         /// Get Effect.pac ID for fighter
         /// </summary>
@@ -1459,6 +1458,7 @@ namespace BrawlInstaller.Services
                     && x.Name.StartsWith("ef_"));
                     if (effectNode != null)
                     {
+                        // Check dictionary for Effect.pac ID
                         var result = EffectPacs.FighterEffectPacs.TryGetValue(effectNode.Name, out int id);
                         if (result)
                         {
