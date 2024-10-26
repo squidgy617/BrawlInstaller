@@ -1701,6 +1701,7 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter settings</returns>
         private FighterSettings GetFighterSpecificSettings(FighterPackage fighterPackage)
         {
+            // TODO: Make kirby hat GFX settings read from pac files just like the others do
             // Get fighter specific settings
             var fighterSettings = fighterPackage.FighterSettings;
             var buildPath = _settingsService.AppSettings.BuildPath;
@@ -1742,6 +1743,16 @@ namespace BrawlInstaller.Services
                 if (samusKirbyGfxMacro != null)
                 {
                     fighterSettings.SamusSettings.KirbyEffectId = Convert.ToInt32(samusKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
+                }
+                // Get Jigglypuff rollout bone settings
+                macroList = new List<string> { "80AD0B20", "80ACC0C4", "80ACC9C4", "80ACD178" };
+                for (int i = 0; i < 4; i++)
+                {
+                    var jigglypuffBoneMacro = _codeService.GetMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "CloneBones");
+                    if (jigglypuffBoneMacro != null)
+                    {
+                        fighterSettings.JigglypuffSettings.BoneIds[i] = Convert.ToInt32(jigglypuffBoneMacro.Parameters[1].Replace("0x", ""), 16);
+                    }
                 }
             }
             return fighterSettings;

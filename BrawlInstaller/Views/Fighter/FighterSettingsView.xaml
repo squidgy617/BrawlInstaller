@@ -72,6 +72,28 @@
                         <TextBox x:Name="samusKirbyGfxTextBox" Text="{Binding FighterPackage.FighterSettings.SamusSettings.KirbyEffectId, TargetNullValue=''}" Grid.Row="1" Grid.Column="1"/>
                     </Grid>
                 </Expander>
+                <Expander x:Name="jigglypuffExpander" Header="Jigglypuff Clone Settings">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="jigglypuffMainBoneLabel" Content="Main Bone ID:"/>
+                        <TextBox x:Name="jigglypuffMainBoneTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[0], TargetNullValue=''}" Grid.Column="1"/>
+                        <Label x:Name="jigglypuffXRotNLabel" Content="XRotN ID:" Grid.Row="1"/>
+                        <TextBox x:Name="jigglypuffXRotNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[1], TargetNullValue=''}" Grid.Column="1" Grid.Row="1"/>
+                        <Label x:Name="jigglypuffYRotNLabel" Content="YRotN ID:" Grid.Row="2"/>
+                        <TextBox x:Name="jigglypuffYRotNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[2], TargetNullValue=''}" Grid.Column="1" Grid.Row="2"/>
+                        <Label x:Name="jigglypuffBodyNLabel" Content="BodyN ID:" Grid.Row="3"/>
+                        <TextBox x:Name="jigglypuffBodyNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[3], TargetNullValue=''}" Grid.Column="1" Grid.Row="3"/>
+                    </Grid>
+                </Expander>
             </StackPanel>
         </GroupBox>
     </Grid>

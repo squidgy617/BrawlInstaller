@@ -90,7 +90,7 @@ namespace BrawlInstaller.Classes
         public LucarioSettings LucarioSettings { get; set; } = new LucarioSettings();
         public SamusSettings SamusSettings { get; set; } = new SamusSettings();
         public BowserSettings BowserSettings { get; set; } = null;
-        public JigglypuffSettings JigglypuffSettings { get; set; } = null;
+        public JigglypuffSettings JigglypuffSettings { get; set; } = new JigglypuffSettings();
         public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);
         public int? CreditsThemeId { get; set; }
         public int? TrophyId { get; set; }
@@ -112,7 +112,7 @@ namespace BrawlInstaller.Classes
 
     public class JigglypuffSettings
     {
-        public int? BoneId { get; set; }
+        public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public int? EFLSId { get; set; }
         public List<int> SfxIds { get; set; }
     }
