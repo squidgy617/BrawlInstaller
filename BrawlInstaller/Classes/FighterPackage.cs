@@ -88,6 +88,7 @@ namespace BrawlInstaller.Classes
     {
         public HatInfoPack KirbyHatData { get; set; } = null;
         public LucarioSettings LucarioSettings { get; set; } = new LucarioSettings();
+        public SamusSettings SamusSettings { get; set; } = new SamusSettings();
         public BowserSettings BowserSettings { get; set; } = null;
         public JigglypuffSettings JigglypuffSettings { get; set; } = null;
         public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);
@@ -98,8 +99,13 @@ namespace BrawlInstaller.Classes
 
     public class LucarioSettings
     {
-        // TODO: Make these nullable in UI somehow
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
+        public bool UseGfxFix { get; set; } = false;
+        public int? KirbyEffectId { get; set; } = null;
+    }
+
+    public class SamusSettings
+    {
         public bool UseGfxFix { get; set; } = false;
         public int? KirbyEffectId { get; set; } = null;
     }

@@ -1113,6 +1113,18 @@ namespace BrawlInstaller.Services
                 {
                     fighterSettings.LucarioSettings.KirbyEffectId = Convert.ToInt32(lucarioKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
                 }
+                // Get Samus GFX fix settings
+                var samusGfxMacro = _codeService.GetMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (samusGfxMacro != null)
+                {
+                    fighterSettings.SamusSettings.UseGfxFix = true;
+                }
+                // Get Samus Kirby GFX Settings
+                var samusKirbyGfxMacro = _codeService.GetMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (samusKirbyGfxMacro != null)
+                {
+                    fighterSettings.SamusSettings.KirbyEffectId = Convert.ToInt32(samusKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
+                }
             }
             return fighterSettings;
         }
@@ -1811,7 +1823,46 @@ namespace BrawlInstaller.Services
                 }
                 else
                 {
-                    code = _codeService.RemoveMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 7);
+                    code = _codeService.RemoveMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                }
+                // Update Samus settings
+                // Samus GFX Fix
+                if (fighterSettings.SamusSettings?.UseGfxFix == true && fighterPackage.EffectPacId != null)
+                {
+                    var samusGfxMacro = new AsmMacro
+                    {
+                        MacroName = "GFXFix",
+                        Parameters = new List<string>
+                            {
+                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                $"0x{fighterPackage.EffectPacId:X2}"
+                            },
+                        Comment = fighterPackage.FighterInfo.DisplayName
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80A0AAA8", samusGfxMacro, 0, 9);
+                }
+                else
+                {
+                    code = _codeService.RemoveMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                }
+                // Samus Kirby hat GFX Fix
+                if (fighterSettings.SamusSettings?.KirbyEffectId != null)
+                {
+                    var samusKirbyGfxMacro = new AsmMacro
+                    {
+                        MacroName = "GFXFix",
+                        Parameters = new List<string>
+                        {
+                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                            $"0x{fighterSettings.SamusSettings.KirbyEffectId:X2}"
+                        },
+                        Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80A0AB1C", samusKirbyGfxMacro, 0, 17);
+                }
+                else
+                {
+                    code = _codeService.RemoveMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
                 }
             }
             _fileService.SaveTextFile(path, code);
