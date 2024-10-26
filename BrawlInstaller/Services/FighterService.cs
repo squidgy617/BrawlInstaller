@@ -1875,48 +1875,7 @@ namespace BrawlInstaller.Services
                     code = _codeService.RemoveMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
                 }
                 // Jigglypuff rollout bone fix
-                var cloneBoneList = new List<(int BoneIdIndex, string Register, string Address)>
-                {
-                    (2, "r28", "80AC9F9C"),
-                    (2, "r27", "80ACA3A4"),
-                    (2, "r27", "80ACA414"),
-                    (2, "r31", "80ACA7E8"),
-                    (2, "r31", "80ACA858"),
-                    (2, "r28", "80ACAC2C"),
-                    (2, "r27", "80ACB050"),
-                    (2, "r27", "80ACB0c0"),
-                    (3, "r5", "80ACB6A0"),
-                    (2, "r31", "80ACB7BC"),
-                    (2, "r31", "80ACB81C"),
-                    (2, "r28", "80ACBE9C"),
-                    (1, "r4", "80ACC0C4"),
-                    (2, "r27", "80ACC9C4"),
-                    (2, "r26", "80ACCA34"),
-                    (3, "r28", "80ACD178"),
-                    (2, "r31", "80ACD53C"),
-                    (2, "r31", "80ACD5AC"),
-                    (2, "r30", "80ACD93C"),
-                    (1, "r4", "80ACDB60"),
-                    (2, "r28", "80ACE580"),
-                    (2, "r26", "80ACE5F0"),
-                    (2, "r29", "80ACEBF0"),
-                    (3, "r28", "80ACEDF4"),
-                    (1, "r4", "80ACF8B0"),
-                    (2, "r25", "80ACFCD4"),
-                    (2, "r26", "80ACFD94"),
-                    (2, "r31", "80AD02C8"),
-                    (2, "r31", "80AD0338"),
-                    (1, "r4", "80AD0AE0"),
-                    (0, "r28", "80AD0B20"),
-                    (1, "r4", "80AD0B5C"),
-                    (1, "r4", "80AD0D94"),
-                    (1, "r4", "80AD1404"),
-                    (2, "r28", "80AD1628"),
-                    (2, "r28", "80AD1698"),
-                    (2, "r31", "80AD17D8"),
-                    (2, "r31", "80AD1848")
-                };
-                foreach(var item in cloneBoneList)
+                foreach(var item in _jigglypuffCloneBoneList)
                 {
                     if (fighterSettings.JigglypuffSettings?.BoneIds[item.BoneIdIndex] != null)
                     {
@@ -1941,6 +1900,48 @@ namespace BrawlInstaller.Services
             }
             _fileService.SaveTextFile(path, code);
         }
+
+        private List<(int BoneIdIndex, string Register, string Address)> _jigglypuffCloneBoneList = new List<(int, string, string)>
+        {
+            (2, "r28", "80AC9F9C"),
+            (2, "r27", "80ACA3A4"),
+            (2, "r27", "80ACA414"),
+            (2, "r31", "80ACA7E8"),
+            (2, "r31", "80ACA858"),
+            (2, "r28", "80ACAC2C"),
+            (2, "r27", "80ACB050"),
+            (2, "r27", "80ACB0c0"),
+            (3, "r5", "80ACB6A0"),
+            (2, "r31", "80ACB7BC"),
+            (2, "r31", "80ACB81C"),
+            (2, "r28", "80ACBE9C"),
+            (1, "r4", "80ACC0C4"),
+            (2, "r27", "80ACC9C4"),
+            (2, "r26", "80ACCA34"),
+            (3, "r28", "80ACD178"),
+            (2, "r31", "80ACD53C"),
+            (2, "r31", "80ACD5AC"),
+            (2, "r30", "80ACD93C"),
+            (1, "r4", "80ACDB60"),
+            (2, "r28", "80ACE580"),
+            (2, "r26", "80ACE5F0"),
+            (2, "r29", "80ACEBF0"),
+            (3, "r28", "80ACEDF4"),
+            (1, "r4", "80ACF8B0"),
+            (2, "r25", "80ACFCD4"),
+            (2, "r26", "80ACFD94"),
+            (2, "r31", "80AD02C8"),
+            (2, "r31", "80AD0338"),
+            (1, "r4", "80AD0AE0"),
+            (0, "r28", "80AD0B20"),
+            (1, "r4", "80AD0B5C"),
+            (1, "r4", "80AD0D94"),
+            (1, "r4", "80AD1404"),
+            (2, "r28", "80AD1628"),
+            (2, "r28", "80AD1698"),
+            (2, "r31", "80AD17D8"),
+            (2, "r31", "80AD1848")
+        };
 
         #endregion Fighter-Specific Settings
     }
