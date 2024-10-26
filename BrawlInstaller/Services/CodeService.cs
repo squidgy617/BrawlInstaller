@@ -137,7 +137,7 @@ namespace BrawlInstaller.Services
                 }
                 // Add instructions
                 hookString += newLine + "{" + newLine;
-                hookString += string.Join(newLine, hook.Instructions.Select(s => $"\t{s}"));
+                hookString += string.Join(newLine, hook.Instructions.Select(s => $"\t{s.Trim()}"));
                 hookString += newLine + "}" + newLine;
             }
             fileText = fileText.Insert(index, hookString);
@@ -196,17 +196,15 @@ namespace BrawlInstaller.Services
         {
             var newLine = "\r\n";
             AsmHook asmHook = null;
-            // Remove comments
-            var cleanText = Regex.Replace(fileText, "([|]|[#]).*", "");
             // Find hook position
-            var index = cleanText.IndexOf($"${address}");
+            var index = fileText.IndexOf($"${address}");
             if (index > -1)
             {
                 asmHook = new AsmHook();
                 asmHook.Address = address;
                 // Find the start of the line
-                var hookStart = cleanText.LastIndexOf(newLine, index);
-                var header = cleanText.Substring(hookStart, index - hookStart);
+                var hookStart = fileText.LastIndexOf(newLine, index);
+                var header = fileText.Substring(hookStart, index - hookStart);
                 var atIndex = header.IndexOf('@');
                 var instruction = header.Substring(0, atIndex).Trim();
                 // Single instruction hook
@@ -219,14 +217,14 @@ namespace BrawlInstaller.Services
                 else
                 {
                     // Find braces
-                    var startingBrace = cleanText.IndexOf('{', index);
+                    var startingBrace = fileText.IndexOf('{', index);
                     if (startingBrace > -1)
                     {
-                        var endingBrace = cleanText.IndexOf('}', startingBrace);
+                        var endingBrace = fileText.IndexOf('}', startingBrace);
                         // Get instructions between braces
                         if (endingBrace > -1)
                         {
-                            asmHook.Instructions = cleanText.Substring(startingBrace + 1, endingBrace - startingBrace - 1).Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                            asmHook.Instructions = fileText.Substring(startingBrace + 1, endingBrace - startingBrace - 1).Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         }
                     }
                 }
@@ -299,13 +297,21 @@ namespace BrawlInstaller.Services
                     var closing = formattedInstruction.IndexOf(')');
                     var label = formattedInstruction.Substring(1, opening - 1).Trim();
                     var parameterString = formattedInstruction.Substring(opening + 1, closing - opening - 1);
+                    var comment = string.Empty;
+                    // Get comments
+                    if (formattedInstruction.Contains("#"))
+                    {
+                        var commentStart = formattedInstruction.IndexOf("#");
+                        comment = formattedInstruction.Substring(commentStart);
+                    }
                     parameterString = Regex.Replace(parameterString, @"\s+", "");
                     var parameters = parameterString.Split(',').ToList();
                     // Generate the new macro
                     newMacro = new AsmMacro
                     {
                         MacroName = label,
-                        Parameters = parameters
+                        Parameters = parameters,
+                        Comment = comment
                     };
                     // Check parameters at specified index to determine if we found a match
                     if (newMacro.Parameters.Count > paramIndex && newMacro.MacroName == macroName && newMacro.Parameters[paramIndex] == paramValue)
@@ -371,8 +377,7 @@ namespace BrawlInstaller.Services
         /// <returns>ASM hook with added macro</returns>
         private AsmHook InsertMacro(AsmHook asmHook, AsmMacro asmMacro, int index = 0)
         {
-            // TODO: Find a way to keep fighter names intact in comments when this is done
-            var macroString = $"%{asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})" + (!string.IsNullOrEmpty(asmMacro.Comment) ? $" #{asmMacro.Comment}" : string.Empty);
+            var macroString = $"%{asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})" + (!string.IsNullOrEmpty(asmMacro.Comment) ? $"\t#{asmMacro.Comment}" : string.Empty);
             asmHook.Instructions.Insert(index, macroString);
             return asmHook;
         }

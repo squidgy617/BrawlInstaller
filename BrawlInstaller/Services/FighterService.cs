@@ -906,7 +906,8 @@ namespace BrawlInstaller.Services
                                 registerList[i],
                                 $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
                                 $"0x{fighterSettings.LucarioSettings.BoneIds[i]:X2}"
-                            }
+                            },
+                            Comment = fighterPackage.FighterInfo.DisplayName
                         };
                         code = _codeService.InsertUpdateMacro(code, macroList[i], lucarioBoneMacro, 1, 3);
                     }
