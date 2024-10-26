@@ -52,8 +52,8 @@
                         <TextBox x:Name="lucarioBoneId4TextBox" Text="{Binding FighterPackage.FighterSettings.LucarioSettings.BoneIds[3], TargetNullValue=''}" Grid.Column="1" Grid.Row="3"/>
                         <Label x:Name="lucarioGfxLabel" Content="Use GFX Fix" Grid.Row="4"/>
                         <CheckBox x:Name="lucarioGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.LucarioSettings.UseGfxFix}" Grid.Row="4" Grid.Column="1"/>
-                        <Label x:Name="lucarioKirbyGfxIdLabel" Content="Aura Sphere Kirby GFX ID:" Grid.Row="5"/>
-                        <TextBox x:Name="lucarioKirbyGfxIdTextBox" Text="{Binding FighterPackage.FighterSettings.LucarioSettings.KirbyEffectId, TargetNullValue=''}" Grid.Row="5" Grid.Column="1"/>
+                        <Label x:Name="lucarioKirbyGfxIdLabel" Content="Use Kirby Hat GFX Fix" Grid.Row="5"/>
+                        <CheckBox x:Name="lucarioKirbyGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.LucarioSettings.UseKirbyGfxFix}" Grid.Row="5" Grid.Column="1"/>
                     </Grid>
                 </Expander>
                 <Expander x:Name="samusExpander" Header="Samus Clone Settings">
@@ -68,8 +68,8 @@
                         </Grid.ColumnDefinitions>
                         <Label x:Name="samusGfxLabel" Content="Use GFX Fix"/>
                         <CheckBox x:Name="samusGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.SamusSettings.UseGfxFix}" Grid.Column="1"/>
-                        <Label x:Name="samusKirbyGfxLabel" Content="Charge Shot Kirby GFX ID:" Grid.Row="1"/>
-                        <TextBox x:Name="samusKirbyGfxTextBox" Text="{Binding FighterPackage.FighterSettings.SamusSettings.KirbyEffectId, TargetNullValue=''}" Grid.Row="1" Grid.Column="1"/>
+                        <Label x:Name="samusKirbyGfxLabel" Content="Use Kirby Hat GFX Fix" Grid.Row="1"/>
+                        <CheckBox x:Name="samusKirbyGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.SamusSettings.UseKirbyGfxFix}" Grid.Row="1" Grid.Column="1"/>
                     </Grid>
                 </Expander>
                 <Expander x:Name="jigglypuffExpander" Header="Jigglypuff Clone Settings">

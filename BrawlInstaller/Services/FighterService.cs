@@ -1701,7 +1701,6 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter settings</returns>
         private FighterSettings GetFighterSpecificSettings(FighterPackage fighterPackage)
         {
-            // TODO: Make kirby hat GFX settings read from pac files just like the others do
             // Get fighter specific settings
             var fighterSettings = fighterPackage.FighterSettings;
             var buildPath = _settingsService.AppSettings.BuildPath;
@@ -1730,7 +1729,7 @@ namespace BrawlInstaller.Services
                 var lucarioKirbyGfxMacro = _codeService.GetMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
                 if (lucarioKirbyGfxMacro != null)
                 {
-                    fighterSettings.LucarioSettings.KirbyEffectId = Convert.ToInt32(lucarioKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
+                    fighterSettings.LucarioSettings.UseKirbyGfxFix = true;
                 }
                 // Get Samus GFX fix settings
                 var samusGfxMacro = _codeService.GetMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
@@ -1742,7 +1741,7 @@ namespace BrawlInstaller.Services
                 var samusKirbyGfxMacro = _codeService.GetMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
                 if (samusKirbyGfxMacro != null)
                 {
-                    fighterSettings.SamusSettings.KirbyEffectId = Convert.ToInt32(samusKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
+                    fighterSettings.SamusSettings.UseKirbyGfxFix = true;
                 }
                 // Get Jigglypuff rollout bone settings
                 macroList = new List<string> { "80AD0B20", "80ACC0C4", "80ACC9C4", "80ACD178" };
@@ -1818,7 +1817,7 @@ namespace BrawlInstaller.Services
                     code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
                 }
                 // Lucario Kirby Hat GFX Fix
-                if (fighterSettings.LucarioSettings?.KirbyEffectId != null)
+                if (fighterSettings.LucarioSettings?.UseKirbyGfxFix == true && fighterPackage.KirbyEffectPacId != null)
                 {
                     var lucarioKirbyGfxMacro = new AsmMacro
                     {
@@ -1826,7 +1825,7 @@ namespace BrawlInstaller.Services
                         Parameters = new List<string>
                         {
                             $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterSettings.LucarioSettings.KirbyEffectId:X2}"
+                            $"0x{fighterPackage.KirbyEffectPacId:X2}"
                         },
                         Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
                     };
@@ -1857,7 +1856,7 @@ namespace BrawlInstaller.Services
                     code = _codeService.RemoveMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
                 }
                 // Samus Kirby hat GFX Fix
-                if (fighterSettings.SamusSettings?.KirbyEffectId != null)
+                if (fighterSettings.SamusSettings?.UseKirbyGfxFix == true && fighterPackage.KirbyEffectPacId != null)
                 {
                     var samusKirbyGfxMacro = new AsmMacro
                     {
@@ -1865,7 +1864,7 @@ namespace BrawlInstaller.Services
                         Parameters = new List<string>
                         {
                             $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterSettings.SamusSettings.KirbyEffectId:X2}"
+                            $"0x{fighterPackage.KirbyEffectPacId:X2}"
                         },
                         Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
                     };
