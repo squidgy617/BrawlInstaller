@@ -38,14 +38,14 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetModule(string)"/>
         string GetModule(string internalName);
 
-        /// <inheritdoc cref="FighterService.GetPacFiles(string)"/>
-        List<FighterPacFile> GetPacFiles(string internalName);
+        /// <inheritdoc cref="FighterService.GetPacFiles(string, bool)"/>
+        List<FighterPacFile> GetPacFiles(string internalName, bool removeCostumeId = true);
 
-        /// <inheritdoc cref="FighterService.GetItemFiles(string)"/>
-        List<FighterPacFile> GetItemFiles(string internalName);
+        /// <inheritdoc cref="FighterService.GetItemFiles(string, bool)"/>
+        List<FighterPacFile> GetItemFiles(string internalName, bool removeCostumeId = true);
 
-        /// <inheritdoc cref="FighterService.GetKirbyFiles(string)"/>
-        List<FighterPacFile> GetKirbyFiles(string internalName);
+        /// <inheritdoc cref="FighterService.GetKirbyFiles(string, bool)"/>
+        List<FighterPacFile> GetKirbyFiles(string internalName, bool removeCostumeId = true);
 
         /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
@@ -65,8 +65,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.ConvertXMLToKirbyHatData(string)"/>
         HatInfoPack ConvertXMLToKirbyHatData(string xmlPath);
 
-        /// <inheritdoc cref="FighterService.GetFighterPacName(FighterPacFile, FighterInfo)"/>
-        FighterPacFile GetFighterPacName(FighterPacFile pacFile, FighterInfo fighterInfo);
+        /// <inheritdoc cref="FighterService.GetFighterPacName(FighterPacFile, FighterInfo, bool)"/>
+        FighterPacFile GetFighterPacName(FighterPacFile pacFile, FighterInfo fighterInfo, bool removeCostumeId = true);
 
         /// <inheritdoc cref="FighterService.GetFighterEffectPacId(List{FighterPacFile}, string)"/>
         int? GetFighterEffectPacId(List<FighterPacFile> pacFiles, string internalName);
@@ -386,9 +386,9 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="pacFile">PAC file</param>
         /// <param name="fighterInfo">Fighter info</param>
-        /// <param name="costumeId">Costume ID for PAC file</param>
+        /// <param name="removeCostumeId">Remove costume ID from pac name</param>
         /// <returns>Name to use for fighter PAC file</returns>
-        public FighterPacFile GetFighterPacName(FighterPacFile pacFile, FighterInfo fighterInfo)
+        public FighterPacFile GetFighterPacName(FighterPacFile pacFile, FighterInfo fighterInfo, bool removeCostumeId=true)
         {
             // List of strings that can be found in pac file names
             var modifierStrings = new List<string>
@@ -441,7 +441,7 @@ namespace BrawlInstaller.Services
                 var regex = new Regex(oldFighterName);
                 name = regex.Replace(name, fighterInfo.InternalName, 1);
             }
-            return GetFighterPacFile(pacFile.FilePath, oldFighterName);
+            return GetFighterPacFile(pacFile.FilePath, oldFighterName, removeCostumeId);
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace BrawlInstaller.Services
         /// <param name="filePath">Path to file</param>
         /// <param name="name">Internal name of fighter</param>
         /// <returns>Fighter pac file object</returns>
-        private FighterPacFile GetFighterPacFile(string filePath, string name)
+        private FighterPacFile GetFighterPacFile(string filePath, string name, bool removeCostumeId=true)
         {
             var pacFile = new FighterPacFile { FilePath = filePath };
             var fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -459,7 +459,7 @@ namespace BrawlInstaller.Services
             {
                 // Remove old costume ID
                 var oldCostumeId = string.Concat(fileName.Where(char.IsNumber));
-                if (!string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && fileName.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
+                if (removeCostumeId && !string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && fileName.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
                 {
                     fileName = fileName.Substring(0, fileName.Length - 2);
                 }
@@ -548,21 +548,23 @@ namespace BrawlInstaller.Services
         /// Get all PAC files associated with fighter
         /// </summary>
         /// <param name="internalName">Internal name of fighter</param>
+        /// <param name="removeCostumeId">Remove costume ID from pac name</param>
         /// <returns>List of PAC files</returns>
-        public List<FighterPacFile> GetPacFiles(string internalName)
+        public List<FighterPacFile> GetPacFiles(string internalName, bool removeCostumeId = true)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{internalName}";
-            return GetFighterPacFiles(internalName, path);
+            return GetFighterPacFiles(internalName, path, removeCostumeId);
         }
 
         /// <summary>
         /// Get Kirby PAC files associated with fighter
         /// </summary>
         /// <param name="internalName">Internal name of fighter</param>
+        /// <param name="removeCostumeId">Remove costume ID from pac name</param>
         /// <returns>List of Kirby PAC files</returns>
-        public List<FighterPacFile> GetKirbyFiles(string internalName)
+        public List<FighterPacFile> GetKirbyFiles(string internalName, bool removeCostumeId=true)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -570,7 +572,7 @@ namespace BrawlInstaller.Services
             var files = new List<FighterPacFile>();
             foreach (var file in _fileService.GetFiles(path, "*.pac").Where(x => Path.GetFileName(x).StartsWith($"FitKirby{internalName}", StringComparison.InvariantCultureIgnoreCase)).ToList())
             {
-                var pacFile = GetFighterPacFile(file, internalName);
+                var pacFile = GetFighterPacFile(file, internalName, removeCostumeId);
                 files.Add(pacFile);
             }
             return files;
@@ -621,13 +623,14 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="name">Internal name of fighter</param>
         /// <param name="path">Path to retrive files from</param>
+        /// <param name="removeCostumeId">Remove costume ID from pac names</param>
         /// <returns>List of PAC files</returns>
-        private List<FighterPacFile> GetFighterPacFiles(string name, string path)
+        private List<FighterPacFile> GetFighterPacFiles(string name, string path, bool removeCostumeId = true)
         {
             var files = new List<FighterPacFile>();
             foreach (var file in _fileService.GetFiles(path, "*.pac").Where(x => Path.GetFileName(x).StartsWith($"Fit{name}", StringComparison.InvariantCultureIgnoreCase)).ToList())
             {
-                var pacFile = GetFighterPacFile(file, name);
+                var pacFile = GetFighterPacFile(file, name, removeCostumeId);
                 files.Add(pacFile);
             }
             return files;
@@ -637,8 +640,9 @@ namespace BrawlInstaller.Services
         /// Get item files for fighter
         /// </summary>
         /// <param name="internalName">Internal name of fighter</param>
+        /// <param name="removeCostumeId">Remove costume ID from pac name</param>
         /// <returns>List of item files</returns>
-        public List<FighterPacFile> GetItemFiles(string internalName)
+        public List<FighterPacFile> GetItemFiles(string internalName, bool removeCostumeId=true)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -646,7 +650,7 @@ namespace BrawlInstaller.Services
             var files = new List<FighterPacFile>();
             foreach (var file in _fileService.GetFiles(path, "*.pac").ToList())
             {
-                var itemFile = GetFighterPacFile(file, internalName);
+                var itemFile = GetFighterPacFile(file, internalName, removeCostumeId);
                 files.Add(itemFile);
             }
             return files;
@@ -1015,9 +1019,9 @@ namespace BrawlInstaller.Services
             var costumes = GetFighterCostumes(fighterInfo);
 
             // Get fighter files
-            fighterPackage.PacFiles = GetPacFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList();
-            fighterPackage.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList());
-            fighterPackage.PacFiles.AddRange(GetItemFiles(fighterInfo.InternalName)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList());
+            fighterPackage.PacFiles = GetPacFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList();
+            fighterPackage.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList());
+            fighterPackage.PacFiles.AddRange(GetItemFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList());
             fighterPackage.Module = GetModule(fighterInfo.InternalName);
             fighterPackage.ExConfigs = new List<string>();
 
