@@ -1077,59 +1077,6 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Get fighter settings that are only for clones of specific characters
-        /// </summary>
-        /// <param name="fighterPackage">Fighter package to get settings for</param>
-        /// <returns>Fighter settings</returns>
-        private FighterSettings GetFighterSpecificSettings(FighterPackage fighterPackage)
-        {
-            // Get fighter specific settings
-            var fighterSettings = fighterPackage.FighterSettings;
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var codePath = _settingsService.BuildSettings.FilePathSettings.FighterSpecificAsmFile;
-            var path = Path.Combine(buildPath, codePath);
-            var code = _codeService.ReadCode(path);
-            if (!string.IsNullOrEmpty(code))
-            {
-                // Get Lucario Aura Sphere Bone ID settings
-                var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
-                for (int i = 0; i < 4; i++)
-                {
-                    var lucarioBoneMacro = _codeService.GetMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 1, "BoneIDFixA");
-                    if (lucarioBoneMacro != null)
-                    {
-                        fighterSettings.LucarioSettings.BoneIds[i] = Convert.ToInt32(lucarioBoneMacro.Parameters[2].Replace("0x", ""), 16);
-                    }
-                }
-                // Get Lucario GFX fix settings
-                var lucarioGfxMacro = _codeService.GetMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
-                if (lucarioGfxMacro != null)
-                {
-                    fighterSettings.LucarioSettings.UseGfxFix = true;
-                }
-                // Get Lucario Aura Sphere Kirby GFX Settings
-                var lucarioKirbyGfxMacro = _codeService.GetMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
-                if (lucarioKirbyGfxMacro != null)
-                {
-                    fighterSettings.LucarioSettings.KirbyEffectId = Convert.ToInt32(lucarioKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
-                }
-                // Get Samus GFX fix settings
-                var samusGfxMacro = _codeService.GetMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
-                if (samusGfxMacro != null)
-                {
-                    fighterSettings.SamusSettings.UseGfxFix = true;
-                }
-                // Get Samus Kirby GFX Settings
-                var samusKirbyGfxMacro = _codeService.GetMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
-                if (samusKirbyGfxMacro != null)
-                {
-                    fighterSettings.SamusSettings.KirbyEffectId = Convert.ToInt32(samusKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
-                }
-            }
-            return fighterSettings;
-        }
-
-        /// <summary>
         /// Get throw release point by fighter ID
         /// </summary>
         /// <param name="fighterId">Fighter ID</param>
@@ -1746,6 +1693,59 @@ namespace BrawlInstaller.Services
         }
 
         #region Fighter-Specific Settings
+
+        /// <summary>
+        /// Get fighter settings that are only for clones of specific characters
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to get settings for</param>
+        /// <returns>Fighter settings</returns>
+        private FighterSettings GetFighterSpecificSettings(FighterPackage fighterPackage)
+        {
+            // Get fighter specific settings
+            var fighterSettings = fighterPackage.FighterSettings;
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var codePath = _settingsService.BuildSettings.FilePathSettings.FighterSpecificAsmFile;
+            var path = Path.Combine(buildPath, codePath);
+            var code = _codeService.ReadCode(path);
+            if (!string.IsNullOrEmpty(code))
+            {
+                // Get Lucario Aura Sphere Bone ID settings
+                var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
+                for (int i = 0; i < 4; i++)
+                {
+                    var lucarioBoneMacro = _codeService.GetMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 1, "BoneIDFixA");
+                    if (lucarioBoneMacro != null)
+                    {
+                        fighterSettings.LucarioSettings.BoneIds[i] = Convert.ToInt32(lucarioBoneMacro.Parameters[2].Replace("0x", ""), 16);
+                    }
+                }
+                // Get Lucario GFX fix settings
+                var lucarioGfxMacro = _codeService.GetMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (lucarioGfxMacro != null)
+                {
+                    fighterSettings.LucarioSettings.UseGfxFix = true;
+                }
+                // Get Lucario Aura Sphere Kirby GFX Settings
+                var lucarioKirbyGfxMacro = _codeService.GetMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (lucarioKirbyGfxMacro != null)
+                {
+                    fighterSettings.LucarioSettings.KirbyEffectId = Convert.ToInt32(lucarioKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
+                }
+                // Get Samus GFX fix settings
+                var samusGfxMacro = _codeService.GetMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (samusGfxMacro != null)
+                {
+                    fighterSettings.SamusSettings.UseGfxFix = true;
+                }
+                // Get Samus Kirby GFX Settings
+                var samusKirbyGfxMacro = _codeService.GetMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (samusKirbyGfxMacro != null)
+                {
+                    fighterSettings.SamusSettings.KirbyEffectId = Convert.ToInt32(samusKirbyGfxMacro.Parameters[1].Replace("0x", ""), 16);
+                }
+            }
+            return fighterSettings;
+        }
 
         /// <summary>
         /// Update fighter specific settings in build
