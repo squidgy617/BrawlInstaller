@@ -58,6 +58,9 @@ namespace BrawlInstaller.Services
             // Get fighter files
             fighterPackage = _fighterService.GetFighterFiles(fighterPackage);
 
+            // Get Effect.pac ID
+            fighterPackage.EffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterInfo.InternalName);
+
             // Get fighter settings
             fighterPackage.FighterSettings = _fighterService.GetFighterSettings(fighterPackage);
 

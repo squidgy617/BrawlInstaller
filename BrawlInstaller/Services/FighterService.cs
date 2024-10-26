@@ -67,6 +67,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetFighterPacName(FighterPacFile, FighterInfo)"/>
         FighterPacFile GetFighterPacName(FighterPacFile pacFile, FighterInfo fighterInfo);
+
+        /// <inheritdoc cref="FighterService.GetFighterEffectPacId(List{FighterPacFile}, string)"/>
+        int? GetFighterEffectPacId(List<FighterPacFile> pacFiles, string internalName);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -916,6 +919,25 @@ namespace BrawlInstaller.Services
                         code = _codeService.RemoveMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFixA", 1);
                     }
                 }
+                // Lucario GFX fix
+                if (fighterSettings.LucarioSettings?.UseGfxFix == true && fighterPackage.EffectPacId != null)
+                {
+                    var lucarioGfxMacro = new AsmMacro
+                    {
+                        MacroName = "GFXFix",
+                        Parameters = new List<string>
+                            {
+                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                $"0x{fighterPackage.EffectPacId:X2}"
+                            },
+                        Comment = fighterPackage.FighterInfo.DisplayName
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 1, 0);
+                }
+                else
+                {
+                    code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                }
             }
             _fileService.SaveTextFile(path, code);
         }
@@ -1142,6 +1164,12 @@ namespace BrawlInstaller.Services
                     {
                         fighterSettings.LucarioSettings.BoneIds[i] = Convert.ToInt32(lucarioBoneMacro.Parameters[2].Replace("0x", ""), 16);
                     }
+                }
+                // Get Lucario GFX fix settings
+                var lucarioGfxMacro = _codeService.GetMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
+                if (lucarioGfxMacro != null)
+                {
+                    fighterSettings.LucarioSettings.UseGfxFix = true;
                 }
                 // Get Lucario Aura Sphere Kirby GFX Settings
                 var lucarioKirbyGfxMacro = _codeService.GetMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
@@ -1408,6 +1436,40 @@ namespace BrawlInstaller.Services
                 }
             }
             return endingId;
+        }
+
+        /// <summary>
+        /// Get Effect.pac ID for fighter
+        /// </summary>
+        /// <param name="pacFiles">PAC files to get ID from</param>
+        /// <param name="internalName">Internal name of fighter</param>
+        /// <returns>Effect.pac ID of fighter, null if ID not found</returns>
+        public int? GetFighterEffectPacId(List<FighterPacFile> pacFiles, string internalName)
+        {
+            int? effectId = null;
+            // Offset for custom Effect.pac IDs
+            int offset = 0x137;
+            var pacFile = pacFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.FilePath).ToLower() == $"fit{internalName.ToLower()}");
+            if (pacFile != null)
+            {
+                var rootNode = _fileService.OpenFile(pacFile.FilePath);
+                if (rootNode != null)
+                {
+                    var effectNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(ARCNode) && ((ARCNode)x).FileType == ARCFileType.EffectData
+                    && x.Name.StartsWith("ef_custom"));
+                    if (effectNode != null)
+                    {
+                        // Get last 2 characters of name
+                        var idString = effectNode.Name.Substring(Math.Max(0, effectNode.Name.Length - 2));
+                        var result = int.TryParse(idString, NumberStyles.HexNumber, null, out int id);
+                        if (result)
+                        {
+                            effectId = id + offset;
+                        }
+                    }
+                }
+            }
+            return effectId;
         }
 
         /// <summary>
