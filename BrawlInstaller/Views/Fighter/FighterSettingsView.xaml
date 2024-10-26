@@ -79,6 +79,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -92,6 +93,8 @@
                         <TextBox x:Name="jigglypuffYRotNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[2], TargetNullValue=''}" Grid.Column="1" Grid.Row="2"/>
                         <Label x:Name="jigglypuffBodyNLabel" Content="BodyN ID:" Grid.Row="3"/>
                         <TextBox x:Name="jigglypuffBodyNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[3], TargetNullValue=''}" Grid.Column="1" Grid.Row="3"/>
+                        <Label x:Name="jigglypuffGfxFixLabel" Content="Use GFX Fix" Grid.Row="4"/>
+                        <CheckBox x:Name="jigglypuffGfxFixCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.JigglypuffSettings.UseGfxFix}" Grid.Row="4" Grid.Column="1"/>
                     </Grid>
                 </Expander>
             </StackPanel>
