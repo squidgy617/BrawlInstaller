@@ -1449,7 +1449,6 @@ namespace BrawlInstaller.Services
         {
             int? effectId = null;
             // Offset for custom Effect.pac IDs
-            int offset = 0x137;
             var pacFile = pacFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.FilePath).ToLower() == $"fit{internalName.ToLower()}");
             if (pacFile != null)
             {
@@ -1457,19 +1456,19 @@ namespace BrawlInstaller.Services
                 if (rootNode != null)
                 {
                     var effectNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(ARCNode) && ((ARCNode)x).FileType == ARCFileType.EffectData
-                    && x.Name.StartsWith("ef_custom"));
+                    && x.Name.StartsWith("ef_"));
                     if (effectNode != null)
                     {
-                        // Get last 2 characters of name
-                        var idString = effectNode.Name.Substring(Math.Max(0, effectNode.Name.Length - 2));
-                        var result = int.TryParse(idString, NumberStyles.HexNumber, null, out int id);
+                        var result = EffectPacs.FighterEffectPacs.TryGetValue(effectNode.Name, out int id);
                         if (result)
                         {
-                            effectId = id + offset;
+                            effectId = id;
                         }
                     }
+                    _fileService.CloseFile(rootNode);
                 }
             }
+
             return effectId;
         }
 
