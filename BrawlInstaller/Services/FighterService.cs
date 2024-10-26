@@ -932,11 +932,30 @@ namespace BrawlInstaller.Services
                             },
                         Comment = fighterPackage.FighterInfo.DisplayName
                     };
-                    code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 1, 0);
+                    code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 0, 0);
                 }
                 else
                 {
                     code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                }
+                // Lucario Kirby Hat GFX Fix
+                if (fighterSettings.LucarioSettings?.KirbyEffectId != null)
+                {
+                    var lucarioKirbyGfxMacro = new AsmMacro
+                    {
+                        MacroName = "GFXFix",
+                        Parameters = new List<string>
+                        {
+                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                            $"0x{fighterSettings.LucarioSettings.KirbyEffectId:X2}"
+                        },
+                        Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80AA95AC", lucarioKirbyGfxMacro, 0, 7);
+                }
+                else
+                {
+                    code = _codeService.RemoveMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 7);
                 }
             }
             _fileService.SaveTextFile(path, code);

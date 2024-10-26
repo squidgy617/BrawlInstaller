@@ -101,7 +101,7 @@ namespace BrawlInstaller.Classes
         // TODO: Make these nullable in UI somehow
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public bool UseGfxFix { get; set; } = false;
-        public int? KirbyEffectId { get; set; }
+        public int? KirbyEffectId { get; set; } = null;
     }
 
     public class JigglypuffSettings
