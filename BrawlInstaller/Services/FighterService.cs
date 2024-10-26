@@ -878,89 +878,6 @@ namespace BrawlInstaller.Services
             UpdateFighterSpecificSettings(fighterPackage);
         }
 
-
-        /// <summary>
-        /// Update fighter specific settings in build
-        /// </summary>
-        /// <param name="fighterPackage">Fighter package to update settings for</param>
-        private void UpdateFighterSpecificSettings(FighterPackage fighterPackage)
-        {
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var fighterSettings = fighterPackage.FighterSettings;
-
-            var codePath = _settingsService.BuildSettings.FilePathSettings.FighterSpecificAsmFile;
-            var path = Path.Combine(buildPath, codePath);
-            var code = _codeService.ReadCode(path);
-            if (!string.IsNullOrEmpty(code))
-            {
-                // Update Lucario settings
-                // Lucario Bone ID Fix
-                var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
-                var registerList = new List<string> { "r3", "r7", "r3", "r7" };
-                for (int i = 0; i < 4; i++)
-                {
-                    if (fighterSettings.LucarioSettings?.BoneIds[i] != null)
-                    {
-                        var lucarioBoneMacro = new AsmMacro
-                        {
-                            MacroName = "BoneIDFixA",
-                            Parameters = new List<string>
-                            {
-                                registerList[i],
-                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                                $"0x{fighterSettings.LucarioSettings.BoneIds[i]:X2}"
-                            },
-                            Comment = fighterPackage.FighterInfo.DisplayName
-                        };
-                        code = _codeService.InsertUpdateMacro(code, macroList[i], lucarioBoneMacro, 1, 3);
-                    }
-                    else
-                    {
-                        code = _codeService.RemoveMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFixA", 1);
-                    }
-                }
-                // Lucario GFX fix
-                if (fighterSettings.LucarioSettings?.UseGfxFix == true && fighterPackage.EffectPacId != null)
-                {
-                    var lucarioGfxMacro = new AsmMacro
-                    {
-                        MacroName = "GFXFix",
-                        Parameters = new List<string>
-                            {
-                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                                $"0x{fighterPackage.EffectPacId:X2}"
-                            },
-                        Comment = fighterPackage.FighterInfo.DisplayName
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 0, 0);
-                }
-                else
-                {
-                    code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
-                }
-                // Lucario Kirby Hat GFX Fix
-                if (fighterSettings.LucarioSettings?.KirbyEffectId != null)
-                {
-                    var lucarioKirbyGfxMacro = new AsmMacro
-                    {
-                        MacroName = "GFXFix",
-                        Parameters = new List<string>
-                        {
-                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterSettings.LucarioSettings.KirbyEffectId:X2}"
-                        },
-                        Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80AA95AC", lucarioKirbyGfxMacro, 0, 7);
-                }
-                else
-                {
-                    code = _codeService.RemoveMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 7);
-                }
-            }
-            _fileService.SaveTextFile(path, code);
-        }
-
         /// <summary>
         /// Delete all ex configs associated with fighter
         /// </summary>
@@ -1815,5 +1732,91 @@ namespace BrawlInstaller.Services
             }
             return relNode;
         }
+
+        #region Fighter-Specific Settings
+
+        /// <summary>
+        /// Update fighter specific settings in build
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update settings for</param>
+        private void UpdateFighterSpecificSettings(FighterPackage fighterPackage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var fighterSettings = fighterPackage.FighterSettings;
+
+            var codePath = _settingsService.BuildSettings.FilePathSettings.FighterSpecificAsmFile;
+            var path = Path.Combine(buildPath, codePath);
+            var code = _codeService.ReadCode(path);
+            if (!string.IsNullOrEmpty(code))
+            {
+                // Update Lucario settings
+                // Lucario Bone ID Fix
+                var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
+                var registerList = new List<string> { "r3", "r7", "r3", "r7" };
+                for (int i = 0; i < 4; i++)
+                {
+                    if (fighterSettings.LucarioSettings?.BoneIds[i] != null)
+                    {
+                        var lucarioBoneMacro = new AsmMacro
+                        {
+                            MacroName = "BoneIDFixA",
+                            Parameters = new List<string>
+                            {
+                                registerList[i],
+                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                $"0x{fighterSettings.LucarioSettings.BoneIds[i]:X2}"
+                            },
+                            Comment = fighterPackage.FighterInfo.DisplayName
+                        };
+                        code = _codeService.InsertUpdateMacro(code, macroList[i], lucarioBoneMacro, 1, 3);
+                    }
+                    else
+                    {
+                        code = _codeService.RemoveMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFixA", 1);
+                    }
+                }
+                // Lucario GFX fix
+                if (fighterSettings.LucarioSettings?.UseGfxFix == true && fighterPackage.EffectPacId != null)
+                {
+                    var lucarioGfxMacro = new AsmMacro
+                    {
+                        MacroName = "GFXFix",
+                        Parameters = new List<string>
+                            {
+                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                $"0x{fighterPackage.EffectPacId:X2}"
+                            },
+                        Comment = fighterPackage.FighterInfo.DisplayName
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 0, 0);
+                }
+                else
+                {
+                    code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                }
+                // Lucario Kirby Hat GFX Fix
+                if (fighterSettings.LucarioSettings?.KirbyEffectId != null)
+                {
+                    var lucarioKirbyGfxMacro = new AsmMacro
+                    {
+                        MacroName = "GFXFix",
+                        Parameters = new List<string>
+                        {
+                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                            $"0x{fighterSettings.LucarioSettings.KirbyEffectId:X2}"
+                        },
+                        Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80AA95AC", lucarioKirbyGfxMacro, 0, 7);
+                }
+                else
+                {
+                    code = _codeService.RemoveMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 7);
+                }
+            }
+            _fileService.SaveTextFile(path, code);
+        }
+
+        #endregion Fighter-Specific Settings
     }
 }
