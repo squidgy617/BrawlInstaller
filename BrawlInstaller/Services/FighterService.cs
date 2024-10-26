@@ -1438,6 +1438,7 @@ namespace BrawlInstaller.Services
             return endingId;
         }
 
+        // TODO: This must work with ALL Effect.pacs
         /// <summary>
         /// Get Effect.pac ID for fighter
         /// </summary>
