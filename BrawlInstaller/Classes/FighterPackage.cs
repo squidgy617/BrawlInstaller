@@ -40,6 +40,7 @@ namespace BrawlInstaller.Classes
         public string FilePath { get; set; }
         public string Prefix { get; set; }
         public string Suffix { get; set; }
+        public string Subdirectory { get; set; } = string.Empty;
     }
 
     public class Costume
