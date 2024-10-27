@@ -116,13 +116,17 @@ namespace BrawlInstaller.Services
             var newLine = "\r\n";
             var hookString = string.Empty;
             // Single line code
-            if (hook.Instructions.Count == 1)
+            if (hook.Instructions.Count == 1 && !hook.IsHook)
             {
-                hookString = $"{newLine}{hook.Instructions.FirstOrDefault().Trim()} @ ${hook.Address}";
+                hookString = $"{newLine}{hook.Instructions.FirstOrDefault()?.Text.Trim()} @ ${hook.Address}";
                 // Add comment if there is one
                 if (!string.IsNullOrEmpty(hook.Comment))
                 {
                     hookString += $" # {hook.Comment}";
+                }
+                if (!string.IsNullOrEmpty(hook.Instructions.FirstOrDefault()?.Comment))
+                {
+                    hookString += $" # {hook.Instructions.FirstOrDefault()?.Comment}";
                 }
                 hookString += newLine;
             }
@@ -137,7 +141,7 @@ namespace BrawlInstaller.Services
                 }
                 // Add instructions
                 hookString += newLine + "{" + newLine;
-                hookString += string.Join(newLine, hook.Instructions.Select(s => $"\t{s.Trim()}"));
+                hookString += string.Join(newLine, hook.Instructions.Select(s => $"\t{s.Text.Trim()}" + (!string.IsNullOrEmpty(s.Comment) ? $" # {s.Comment}" : string.Empty)));
                 hookString += newLine + "}" + newLine;
             }
             fileText = fileText.Insert(index, hookString);
@@ -187,6 +191,25 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get an instruction object from a string
+        /// </summary>
+        /// <param name="instructionText">Raw text of instruction</param>
+        /// <returns>Instruction object</returns>
+        private Instruction GetInstruction(string instructionText)
+        {
+            var instruction = new Instruction();
+            var text = Regex.Replace(instructionText, "([|]|[#]|[//]).*", "");
+            instruction.Text = text;
+            if (instructionText.Contains("#"))
+            {
+                var commentStart = instructionText.IndexOf("#");
+                var comment = instructionText.Substring(commentStart + 1).Trim();
+                instruction.Comment = comment;
+            }
+            return instruction;
+        }
+
+        /// <summary>
         /// Read a piece of ASM code
         /// </summary>
         /// <param name="fileText">Text to read from</param>
@@ -206,10 +229,18 @@ namespace BrawlInstaller.Services
                 var hookStart = fileText.LastIndexOf(newLine, index);
                 var header = fileText.Substring(hookStart, index - hookStart);
                 var atIndex = header.IndexOf('@');
-                var instruction = header.Substring(0, atIndex).Trim();
+                var instructionText = header.Substring(0, atIndex).Trim();
+                var lineEnd = fileText.IndexOf(newLine, hookStart + 1);
+                var fullLine = fileText.Substring(hookStart, lineEnd - hookStart);
                 // Single instruction hook
-                if (instruction != "CODE" && instruction != "HOOK")
+                if (instructionText != "CODE" && instructionText != "HOOK")
                 {
+                    var instruction = GetInstruction(instructionText);
+                    if (fullLine.Contains("#"))
+                    {
+                        var commentStart = fullLine.IndexOf("#");
+                        instruction.Comment = fullLine.Substring(commentStart + 1);
+                    }
                     asmHook.IsHook = false;
                     asmHook.Instructions.Add(instruction);
                 }
@@ -224,12 +255,17 @@ namespace BrawlInstaller.Services
                         // Get instructions between braces
                         if (endingBrace > -1)
                         {
-                            asmHook.Instructions = fileText.Substring(startingBrace + 1, endingBrace - startingBrace - 1).Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                            var instructionLines = fileText.Substring(startingBrace + 1, endingBrace - startingBrace - 1).Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                            foreach (var line in instructionLines)
+                            {
+                                var instruction = GetInstruction(line);
+                                asmHook.Instructions.Add(instruction);
+                            }
                         }
                     }
                 }
                 // Indicates if it is a true hook or just code
-                if (instruction == "HOOK")
+                if (instructionText == "HOOK")
                 {
                     asmHook.IsHook = true;
                 }
@@ -288,7 +324,7 @@ namespace BrawlInstaller.Services
             AsmMacro newMacro = null;
             foreach(var instruction in asmHook.Instructions)
             {
-                var formattedInstruction = instruction.Trim();
+                var formattedInstruction = instruction.Text.Trim();
                 // Check if macro starting character (%) is present
                 if (formattedInstruction.StartsWith("%"))
                 {
@@ -378,7 +414,8 @@ namespace BrawlInstaller.Services
         private AsmHook InsertMacro(AsmHook asmHook, AsmMacro asmMacro, int index = 0)
         {
             var macroString = $"%{asmMacro.MacroName}({string.Join(",", asmMacro.Parameters)})" + (!string.IsNullOrEmpty(asmMacro.Comment) ? $"\t#{asmMacro.Comment}" : string.Empty);
-            asmHook.Instructions.Insert(index, macroString);
+            var instruction = GetInstruction(macroString);
+            asmHook.Instructions.Insert(index, instruction);
             return asmHook;
         }
 
@@ -552,7 +589,7 @@ namespace BrawlInstaller.Services
         {
             var table = new List<string>();
             // Remove comments
-            var cleanText = Regex.Replace(fileText, "([|]|[#]).*(\n|\r)", "");
+            var cleanText = Regex.Replace(fileText, "([|]|[#]|[//]).*(\n|\r)", "");
             // Find table start
             var labelPosition = cleanText.IndexOf(label);
             var workingText = cleanText.Substring(labelPosition, cleanText.Length - labelPosition);

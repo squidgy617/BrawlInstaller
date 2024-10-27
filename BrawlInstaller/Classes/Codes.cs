@@ -17,7 +17,13 @@ namespace BrawlInstaller.Classes
     {
         public string Address { get; set; }
         public bool IsHook { get; set; } = false;
-        public List<string> Instructions { get; set; } = new List<string>();
+        public List<Instruction> Instructions { get; set; } = new List<Instruction>();
+        public string Comment { get; set; } = string.Empty;
+    }
+
+    public class Instruction
+    {
+        public string Text { get; set; }
         public string Comment { get; set; } = string.Empty;
     }
 
