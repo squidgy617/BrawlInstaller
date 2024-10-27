@@ -68,6 +68,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetFighterEffectPacId(List{FighterPacFile}, string)"/>
         int? GetFighterEffectPacId(List<FighterPacFile> pacFiles, string internalName);
+
+        /// <inheritdoc cref="FighterService.UpdateCreditsModule(FighterInfo, bool)"/>
+        void UpdateCreditsModule(FighterInfo fighterInfo, bool remove=false);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -474,6 +477,41 @@ namespace BrawlInstaller.Services
                 }
             }
             return pacFile;
+        }
+
+        /// <summary>
+        /// Update credits module for fighter
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info</param>
+        /// <param name="remove">Whether or not to remove the module entry</param>
+        public void UpdateCreditsModule(FighterInfo fighterInfo, bool remove=false)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            if (_settingsService.BuildSettings.MiscSettings.UpdateCreditsModule)
+            {
+                var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.CreditsModule);
+                var rootNode = _fileService.OpenFile(modulePath);
+                if (rootNode != null)
+                {
+                    // Update section 7
+                    var module = (RELNode)rootNode;
+                    if (module.Sections.Count() >= 7)
+                    {
+                        var section = module.Sections[7];
+                        var sectionData = _fileService.ReadRawData(section);
+                        // Slot ID + 0x200 is position to modify
+                        var fighterPosition = 0x200 + fighterInfo.Ids.SlotConfigId;
+                        if (sectionData.Length > fighterPosition)
+                        {
+                            // Insert cosmetic config ID
+                            sectionData[fighterPosition] = !remove ? (byte)fighterInfo.Ids.CosmeticConfigId : (byte)0;
+                            _fileService.ReplaceNodeRaw(section, sectionData);
+                            _fileService.SaveFile(rootNode);
+                        }
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
         }
 
         /// <summary>

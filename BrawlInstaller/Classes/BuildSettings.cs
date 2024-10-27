@@ -109,6 +109,7 @@ namespace BrawlInstaller.Classes
         public SSEUnlockStage SSEUnlockStage { get; set; } = SSEUnlockStage.End;
         public bool InstallTrophies { get; set; } = false;
         public List<string> CustomStageLists { get; set; } = new List<string>();
+        public bool UpdateCreditsModule { get; set; } = true;
     }
 
     public class FilePathSettings
@@ -157,6 +158,7 @@ namespace BrawlInstaller.Classes
         public string StageAltListPath { get; set; } = "pf\\stage\\stagelist";
         public string ThrowReleaseAsmFile { get; set; } = "Source\\ProjectM\\Modifier\\ThrowRelease.asm";
         public string FighterSpecificAsmFile { get; set; } = "Source\\ProjectM\\CloneEngine.asm";
+        public string CreditsModule { get; set; } = "pf\\module\\st_croll.rel";
 
         [JsonProperty("CodeFilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<string> CodeFilePaths { get; set; } = new List<string>
