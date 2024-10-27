@@ -119,6 +119,16 @@
                         <CheckBox x:Name="dededeFixCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.DededeSettings.UseFix}" Grid.Column="1"/>
                     </Grid>
                 </Expander>
+                <Expander x:Name="bowserExpander" Header="Bowser Clone Settings">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="bowserBoneIdLabel" Content="Fire Breath Bone ID:"/>
+                        <TextBox x:Name="bowserBoneIdTextBox" Text="{Binding FighterPackage.FighterSettings.BowserSettings.BoneId, TargetNullValue=''}" Grid.Column="1"/>
+                    </Grid>
+                </Expander>
             </StackPanel>
         </GroupBox>
     </Grid>

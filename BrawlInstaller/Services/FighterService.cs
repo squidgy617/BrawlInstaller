@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -1755,6 +1756,12 @@ namespace BrawlInstaller.Services
                 {
                     fighterSettings.DededeSettings.UseFix = true;
                 }
+                // Get Bowser bone fix setings
+                var bowserBoneMacro = _codeService.GetMacro(code, "80A391F8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "BoneIDFix");
+                if (bowserBoneMacro != null)
+                {
+                    fighterSettings.BowserSettings.BoneId = Convert.ToInt32(bowserBoneMacro.Parameters[1].Replace("0x", ""), 16);
+                }
             }
             return fighterSettings;
         }
@@ -1996,6 +2003,25 @@ namespace BrawlInstaller.Services
                     {
                         code = _codeService.RemoveMacro(code, address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "DededeFix", 0);
                     }
+                }
+                // Bowser fixes
+                if (fighterSettings.BowserSettings?.BoneId != null)
+                {
+                    var bowserBoneIdFixMacro = new AsmMacro
+                    {
+                        MacroName = "BoneIDFix",
+                        Parameters = new List<string>
+                        {
+                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                            $"0x{fighterSettings.BowserSettings.BoneId:X2}"
+                        },
+                        Comment = fighterPackage.FighterInfo.DisplayName
+                    };
+                    code = _codeService.InsertUpdateMacro(code, "80A391F8", bowserBoneIdFixMacro, 0, 0);
+                }
+                else
+                {
+                    code = _codeService.RemoveMacro(code, "80A391F8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFix", 0);
                 }
             }
             _fileService.SaveTextFile(path, code);

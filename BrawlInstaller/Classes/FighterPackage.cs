@@ -91,7 +91,7 @@ namespace BrawlInstaller.Classes
         public HatInfoPack KirbyHatData { get; set; } = null;
         public LucarioSettings LucarioSettings { get; set; } = new LucarioSettings();
         public SamusSettings SamusSettings { get; set; } = new SamusSettings();
-        public BowserSettings BowserSettings { get; set; } = null;
+        public BowserSettings BowserSettings { get; set; } = new BowserSettings();
         public JigglypuffSettings JigglypuffSettings { get; set; } = new JigglypuffSettings();
         public DededeSettings DededeSettings { get; set; } = new DededeSettings();
         public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);
@@ -128,7 +128,7 @@ namespace BrawlInstaller.Classes
 
     public class BowserSettings
     {
-        public int BoneId { get; set; }
+        public int? BoneId { get; set; } = null;
     }
 
     public class FighterDeleteOptions
