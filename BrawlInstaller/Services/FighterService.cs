@@ -1761,7 +1761,7 @@ namespace BrawlInstaller.Services
                 var jigglypuffGfxMacro = _codeService.GetMacro(code, "80ACB67C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "CloneGFX");
                 if (jigglypuffGfxMacro != null)
                 {
-                    fighterSettings.JigglypuffSettings.UseGfxFix = true;
+                    fighterSettings.JigglypuffSettings.EFLSId = Convert.ToInt32(jigglypuffGfxMacro.Parameters[2].Replace("0x", ""), 16);
                 }
             }
             return fighterSettings;
@@ -1914,7 +1914,7 @@ namespace BrawlInstaller.Services
                     ("r4", "80ACD1EC"),
                     ("r4", "80ACEE68")
                 };
-                if (fighterSettings.JigglypuffSettings?.UseGfxFix == true && fighterPackage.EffectPacId != null)
+                if (fighterSettings.JigglypuffSettings?.EFLSId != null && fighterPackage.EffectPacId != null)
                 {
                     foreach(var item in cloneGfxList)
                     {
@@ -1925,7 +1925,7 @@ namespace BrawlInstaller.Services
                         {
                             $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
                             $"0x{fighterPackage.KirbyEffectPacId:X2}",
-                            "0xF",
+                            $"0x{fighterSettings.JigglypuffSettings?.EFLSId:X2}",
                             item.Register
                         },
                             Comment = fighterPackage.FighterInfo.DisplayName

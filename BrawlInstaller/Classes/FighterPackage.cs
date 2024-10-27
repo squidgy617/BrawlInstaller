@@ -114,7 +114,7 @@ namespace BrawlInstaller.Classes
     public class JigglypuffSettings
     {
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
-        public bool UseGfxFix { get; set; } = false;
+        public int? EFLSId { get; set; } = null;
         public List<int> SfxIds { get; set; }
     }
 
