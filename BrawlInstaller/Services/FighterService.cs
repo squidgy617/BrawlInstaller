@@ -1739,6 +1739,16 @@ namespace BrawlInstaller.Services
                 {
                     fighterSettings.JigglypuffSettings.EFLSId = Convert.ToInt32(jigglypuffGfxMacro.Parameters[2].Replace("0x", ""), 16);
                 }
+                // Get Jigglypuff SFX settings
+                var jigglypuffSfxAddresses = new List<string> { "80ACAE3C", "80ACAE60", "80ACF704", "80ACA09C" };
+                for(var i = 0; i < 4; i++)
+                {
+                    var jigglypuffSfxMacro = _codeService.GetMacro(code, jigglypuffSfxAddresses[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "CloneSFX");
+                    if (jigglypuffSfxMacro != null)
+                    {
+                        fighterSettings.JigglypuffSettings.SfxIds[i] = Convert.ToInt32(jigglypuffSfxMacro.Parameters[1].Replace("0x", ""), 16);
+                    }
+                }
             }
             return fighterSettings;
         }
@@ -1914,6 +1924,36 @@ namespace BrawlInstaller.Services
                     foreach(var item in cloneGfxList)
                     {
                         code = _codeService.RemoveMacro(code, item.Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneGFX", 0);
+                    }
+                }
+                // Jigglypuff SFX fix
+                var cloneSfxList = new List<(string Register, string Address, int Index)>
+                {
+                    ("r4", "80ACAE3C", 1),
+                    ("r4", "80ACAE60", 2),
+                    ("r3", "80ACF704", 0),
+                    ("r3", "80ACA09C", 0)
+                };
+                for (var i = 0; i < 4; i++)
+                {
+                    if (fighterSettings.JigglypuffSettings?.SfxIds[i] != null)
+                    {
+                        var jigglypuffSfxMacro = new AsmMacro
+                        {
+                            MacroName = "CloneSFX",
+                            Parameters = new List<string>
+                        {
+                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                            $"0x{fighterSettings.JigglypuffSettings.SfxIds[i]:X2}",
+                            cloneSfxList[i].Register
+                        },
+                            Comment = fighterPackage.FighterInfo.DisplayName
+                        };
+                        code = _codeService.InsertUpdateMacro(code, cloneSfxList[i].Address, jigglypuffSfxMacro, 0, cloneSfxList[i].Index);
+                    }
+                    else
+                    {
+                        code = _codeService.RemoveMacro(code, cloneSfxList[i].Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneSFX", 0);
                     }
                 }
             }
