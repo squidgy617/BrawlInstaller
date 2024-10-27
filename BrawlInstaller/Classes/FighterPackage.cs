@@ -93,6 +93,7 @@ namespace BrawlInstaller.Classes
         public SamusSettings SamusSettings { get; set; } = new SamusSettings();
         public BowserSettings BowserSettings { get; set; } = null;
         public JigglypuffSettings JigglypuffSettings { get; set; } = new JigglypuffSettings();
+        public DededeSettings DededeSettings { get; set; } = new DededeSettings();
         public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);
         public int? CreditsThemeId { get; set; }
         public int? TrophyId { get; set; }
@@ -118,6 +119,11 @@ namespace BrawlInstaller.Classes
         public int? EFLSId { get; set; } = null;
         // TODO: Somehow update these when soundbank ID is changed
         public List<int?> SfxIds { get; set; } = new List<int?> { null, null, null, null };
+    }
+
+    public class DededeSettings
+    {
+        public bool UseFix { get; set; } = false;
     }
 
     public class BowserSettings

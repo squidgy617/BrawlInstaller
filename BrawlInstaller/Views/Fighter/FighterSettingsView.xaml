@@ -109,6 +109,16 @@
                         <TextBox x:Name="jigglypuffSfxFixTextBox4" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.SfxIds[3], TargetNullValue=''}" Grid.Row="8" Grid.Column="1"/>
                     </Grid>
                 </Expander>
+                <Expander x:Name="dededeExpander" Header="Dedede Clone Settings">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="dededeFixLabel" Content="Use Fix"/>
+                        <CheckBox x:Name="dededeFixCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.DededeSettings.UseFix}" Grid.Column="1"/>
+                    </Grid>
+                </Expander>
             </StackPanel>
         </GroupBox>
     </Grid>

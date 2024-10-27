@@ -1749,6 +1749,12 @@ namespace BrawlInstaller.Services
                         fighterSettings.JigglypuffSettings.SfxIds[i] = Convert.ToInt32(jigglypuffSfxMacro.Parameters[1].Replace("0x", ""), 16);
                     }
                 }
+                // Get Dedede fix settings
+                var dededeFixMacro = _codeService.GetMacro(code, "80aa1544", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "DededeFix");
+                if (dededeFixMacro != null)
+                {
+                    fighterSettings.DededeSettings.UseFix = true;
+                }
             }
             return fighterSettings;
         }
@@ -1954,6 +1960,41 @@ namespace BrawlInstaller.Services
                     else
                     {
                         code = _codeService.RemoveMacro(code, cloneSfxList[i].Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneSFX", 0);
+                    }
+                }
+                // Dedede fixes
+                var dededeAddresses = new List<string>
+                {
+                    "80aa1544",
+                    "80aa0af0",
+                    "80aa0d4c",
+                    "8088f768",
+                    "8088e758",
+                    "8088f120",
+                    "8088fa50",
+                    "80890050"
+                };
+                if (fighterSettings.DededeSettings?.UseFix == true)
+                {
+                    foreach(var address in dededeAddresses)
+                    {
+                        var dededeFixMacro = new AsmMacro
+                        {
+                            MacroName = "DededeFix",
+                            Parameters = new List<string>
+                        {
+                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}"
+                        },
+                            Comment = fighterPackage.FighterInfo.DisplayName
+                        };
+                        code = _codeService.InsertUpdateMacro(code, address, dededeFixMacro, 0, 0);
+                    }
+                }
+                else
+                {
+                    foreach(var address in dededeAddresses)
+                    {
+                        code = _codeService.RemoveMacro(code, address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "DededeFix", 0);
                     }
                 }
             }
