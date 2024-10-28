@@ -1659,6 +1659,8 @@ namespace BrawlInstaller.Services
             return null;
         }
 
+        // TODO: Handle game over trophies for SSE mode, also automatically add new fighters?
+
         /// <summary>
         /// Get SSE settings for fighter
         /// </summary>
@@ -1686,6 +1688,12 @@ namespace BrawlInstaller.Services
                             {
                                 var unlockBytes = sectionData.Skip(unlockPosition).Take(4).ToArray();
                                 fighterPackage.FighterSettings.DoorId = Convert.ToUInt32(BitConverter.ToString(unlockBytes, 0, 4).Replace("-", ""), 16);
+                            }
+                            // Get sub character
+                            var subcharacterPosition = fighterPackage.FighterInfo.Ids.CSSSlotConfigId + 0x84;
+                            if (sectionData.Length > subcharacterPosition)
+                            {
+                                fighterPackage.FighterSettings.SSESubCharacterId = sectionData[subcharacterPosition];
                             }
                         }
                     }
@@ -1722,6 +1730,13 @@ namespace BrawlInstaller.Services
                             {
                                 byte[] newBytes = BitConverter.GetBytes(fighterPackage.FighterSettings.DoorId).Reverse().ToArray();
                                 newBytes.CopyTo(sectionData, unlockPosition);
+                                _fileService.ReplaceNodeRaw(section, sectionData);
+                            }
+                            // Set sub character
+                            var subcharacterPosition = fighterPackage.FighterInfo.Ids.CSSSlotConfigId + 0x84;
+                            if (sectionData.Length > subcharacterPosition && fighterPackage.FighterSettings.SSESubCharacterId != null)
+                            {
+                                sectionData[subcharacterPosition] = (byte)fighterPackage.FighterSettings.SSESubCharacterId;
                                 _fileService.ReplaceNodeRaw(section, sectionData);
                             }
                         }

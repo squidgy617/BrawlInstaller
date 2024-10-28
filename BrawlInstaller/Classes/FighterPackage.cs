@@ -98,6 +98,7 @@ namespace BrawlInstaller.Classes
         public int? CreditsThemeId { get; set; }
         public int? TrophyId { get; set; }
         public uint DoorId { get; set; } = 0;
+        public int? SSESubCharacterId { get; set; } = 0;
     }
 
     public class LucarioSettings
