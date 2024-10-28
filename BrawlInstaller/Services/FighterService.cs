@@ -895,6 +895,9 @@ namespace BrawlInstaller.Services
             // Update throw release point
             UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
 
+            // Update L-Load
+            UpdateLLoadTable(fighterPackage);
+
             // Update SSE settings
             UpdateSSEModule(fighterPackage);
 
@@ -1148,6 +1151,38 @@ namespace BrawlInstaller.Services
                 id = Convert.ToInt32(table[cssSlotId].Replace("0x", ""), 16);
             }
             return id;
+        }
+
+        private void UpdateLLoadTable(FighterPackage fighterPackage)
+        {
+            var cssSlotId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
+            // Convert to ASM table
+            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var asmTable = new List<AsmTableEntry>();
+            foreach(var entry in table)
+            {
+                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.CSSSlotConfigId == asmTable.Count)?.DisplayName;
+                var newEntry = new AsmTableEntry
+                {
+                    Item = entry,
+                    Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
+                };
+                asmTable.Add(newEntry);
+            }
+            // Update fighter slot
+            if (asmTable.Count > cssSlotId + 1)
+            {
+                asmTable[cssSlotId].Item = $"0x{fighterPackage.FighterSettings.LLoadCharacterId:X2}";
+                asmTable[cssSlotId].Comment = fighterPackage.FighterInfo.DisplayName;
+            }
+            // Write table
+            code = _codeService.ReplaceTable(code, ".GOTO->Table_Skip", asmTable, DataSize.Byte, 4);
+            _fileService.SaveTextFile(codePath, code);
         }
 
         /// <summary>
