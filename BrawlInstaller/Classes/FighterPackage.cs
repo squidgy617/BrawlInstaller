@@ -12,9 +12,17 @@ using Newtonsoft.Json;
 using System.IO;
 using lKHM;
 using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
+using System.ComponentModel;
 
 namespace BrawlInstaller.Classes
 {
+    public enum PackageType
+    {
+        Update,
+        New,
+        Delete
+    }
+
     public class FighterPackage
     {
         public FighterInfo FighterInfo { get; set; }
@@ -33,6 +41,7 @@ namespace BrawlInstaller.Classes
         public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
         public FighterSettings FighterSettings { get; set; } = new FighterSettings();
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
+        public PackageType PackageType { get; set; } = PackageType.Update;
     }
 
     public class FighterPacFile

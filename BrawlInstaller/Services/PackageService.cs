@@ -137,10 +137,9 @@ namespace BrawlInstaller.Services
             // Update fighter settings
             _fighterService.UpdateFighterSettings(fighterPackage);
             // Update credits module
-            // TODO: pass remove parameter if fighter is being deleted
             if (changedDefinitions.Any(x => x.CosmeticType == CosmeticType.CreditsIcon))
             {
-                _fighterService.UpdateCreditsModule(fighterPackage.FighterInfo);
+                _fighterService.UpdateCreditsModule(fighterPackage);
             }
         }
     }

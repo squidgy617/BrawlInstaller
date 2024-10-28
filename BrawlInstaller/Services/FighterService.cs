@@ -70,8 +70,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetFighterEffectPacId(List{FighterPacFile}, string)"/>
         int? GetFighterEffectPacId(List<FighterPacFile> pacFiles, string internalName);
 
-        /// <inheritdoc cref="FighterService.UpdateCreditsModule(FighterInfo, bool)"/>
-        void UpdateCreditsModule(FighterInfo fighterInfo, bool remove=false);
+        /// <inheritdoc cref="FighterService.UpdateCreditsModule(FighterPackage)"/>
+        void UpdateCreditsModule(FighterPackage fighterPackage);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -483,10 +483,10 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Update credits module for fighter
         /// </summary>
-        /// <param name="fighterInfo">Fighter info</param>
-        /// <param name="remove">Whether or not to remove the module entry</param>
-        public void UpdateCreditsModule(FighterInfo fighterInfo, bool remove=false)
+        /// <param name="fighterPackage">Fighter package</param>
+        public void UpdateCreditsModule(FighterPackage fighterPackage)
         {
+            var fighterInfo = fighterPackage.FighterInfo;
             var buildPath = _settingsService.AppSettings.BuildPath;
             if (_settingsService.BuildSettings.MiscSettings.UpdateCreditsModule)
             {
@@ -505,7 +505,7 @@ namespace BrawlInstaller.Services
                         if (sectionData.Length > fighterPosition)
                         {
                             // Insert cosmetic config ID
-                            sectionData[fighterPosition] = !remove ? (byte)fighterInfo.Ids.CosmeticConfigId : (byte)0;
+                            sectionData[fighterPosition] = fighterPackage.PackageType != PackageType.Delete ? (byte)fighterInfo.Ids.CosmeticConfigId : (byte)0;
                             _fileService.ReplaceNodeRaw(section, sectionData);
                             _fileService.SaveFile(rootNode);
                         }
@@ -1659,8 +1659,6 @@ namespace BrawlInstaller.Services
             return null;
         }
 
-        // TODO: Handle game over trophies for SSE mode, also automatically add new fighters?
-
         /// <summary>
         /// Get SSE settings for fighter
         /// </summary>
@@ -1707,8 +1705,7 @@ namespace BrawlInstaller.Services
         /// Update SSE module settings for fighter
         /// </summary>
         /// <param name="fighterPackage">Fighter package to update</param>
-        /// <param name="remove">Whether fighter is being removed or not</param>
-        private void UpdateSSEModule(FighterPackage fighterPackage, bool remove=false)
+        private void UpdateSSEModule(FighterPackage fighterPackage)
         {
             if (_settingsService.BuildSettings.MiscSettings.SubspaceEx)
             {
@@ -1730,15 +1727,23 @@ namespace BrawlInstaller.Services
                             {
                                 byte[] newBytes = BitConverter.GetBytes(fighterPackage.FighterSettings.DoorId).Reverse().ToArray();
                                 newBytes.CopyTo(sectionData, unlockPosition);
-                                _fileService.ReplaceNodeRaw(section, sectionData);
                             }
                             // Set sub character
                             var subcharacterPosition = fighterPackage.FighterInfo.Ids.CSSSlotConfigId + 0x84;
                             if (sectionData.Length > subcharacterPosition && fighterPackage.FighterSettings.SSESubCharacterId != null)
                             {
                                 sectionData[subcharacterPosition] = (byte)fighterPackage.FighterSettings.SSESubCharacterId;
-                                _fileService.ReplaceNodeRaw(section, sectionData);
                             }
+                            // Add fighter if it is not already present
+                            // TODO: Test this
+                            var fighterCount = sectionData[0];
+                            var fighterTable = sectionData.Skip(2).Take(126).ToList(); // There are 126 slots in sora_adv_stage.rel
+                            if (fighterPackage.PackageType == PackageType.New && !fighterTable.Contains((byte)fighterPackage.FighterInfo.Ids.SlotConfigId))
+                            {
+                                sectionData[fighterTable.IndexOf(0) + 2] = (byte)fighterPackage.FighterInfo.Ids.SlotConfigId;
+                                sectionData[0] = (byte)(fighterCount + 1);
+                            }
+                            _fileService.ReplaceNodeRaw(section, sectionData);
                         }
                     }
                     _fileService.SaveFile(rootNode);
