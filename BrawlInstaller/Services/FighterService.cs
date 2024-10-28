@@ -1091,6 +1091,9 @@ namespace BrawlInstaller.Services
             // Get throw release point
             fighterSettings.ThrowReleasePoint = GetThrowReleasePoint(fighterPackage.FighterInfo.Ids.FighterConfigId);
 
+            // Get L-load
+            fighterSettings.LLoadCharacterId = GetLLoad(fighterPackage.FighterInfo.Ids.CSSSlotConfigId);
+
             // Get SSE settings
             fighterPackage = GetSSESettings(fighterPackage);
 
@@ -1125,6 +1128,26 @@ namespace BrawlInstaller.Services
                 throwRelease.Y = Convert.ToDouble(y);
             }
             return throwRelease;
+        }
+
+        /// <summary>
+        /// Get L-load ID for fighter
+        /// </summary>
+        /// <param name="cssSlotId">CSS slot ID of fighter</param>
+        /// <returns>CSS slot ID of fighter L-load</returns>
+        private int? GetLLoad(int cssSlotId)
+        {
+            int? id = null;
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
+            if (table.Count > cssSlotId)
+            {
+                id = Convert.ToInt32(table[cssSlotId].Replace("0x", ""), 16);
+            }
+            return id;
         }
 
         /// <summary>

@@ -21,6 +21,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:"/>
         <TextBlock x:Name="kirbyHatKindTextBlock" VerticalAlignment="Center" Text="{Binding FighterPackage.FighterSettings.KirbyHatData.TopStatusKind}" Grid.Column="1"/>
@@ -31,11 +32,13 @@
         <Label x:Name="throwReleaseLabel" Content="Throw Release Point:" Grid.Row="2"/>
         <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="2" Grid.Column="1"/>
         <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="2" Grid.Column="2"/>
-        <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="3"/>
-        <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="3" Grid.Column="1"/>
-        <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="4"/>
-        <TextBox x:Name="ssesubcharacterIdTextBox" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}}" Grid.Row="4" Grid.Column="1"/>
-        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="5" Grid.ColumnSpan="4">
+        <Label x:Name="lLoadLabel" Content="L-load ID:" Grid.Row="3"/>
+        <TextBox x:Name="lLoadTextBox" Text="{Binding FighterPackage.FighterSettings.LLoadCharacterId, Converter={StaticResource hexConverter}}" Grid.Row="3" Grid.Column="1"/>
+        <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="4"/>
+        <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="4" Grid.Column="1"/>
+        <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="5"/>
+        <TextBox x:Name="ssesubcharacterIdTextBox" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}}" Grid.Row="5" Grid.Column="1"/>
+        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="6" Grid.ColumnSpan="4">
             <StackPanel>
                 <Expander x:Name="lucarioExpander" Header="Lucario Clone Settings">
                     <Grid>
