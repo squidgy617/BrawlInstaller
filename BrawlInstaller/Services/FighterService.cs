@@ -9,6 +9,7 @@ using lKHM;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Globalization;
@@ -894,6 +895,9 @@ namespace BrawlInstaller.Services
             // Update throw release point
             UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
 
+            // Update SSE settings
+            UpdateSSEModule(fighterPackage);
+
             // Update fighter specific settings
             UpdateFighterSpecificSettings(fighterPackage);
         }
@@ -1086,6 +1090,9 @@ namespace BrawlInstaller.Services
 
             // Get throw release point
             fighterSettings.ThrowReleasePoint = GetThrowReleasePoint(fighterPackage.FighterInfo.Ids.FighterConfigId);
+
+            // Get SSE settings
+            fighterPackage = GetSSESettings(fighterPackage);
 
             // Get fighter-specific settings
             fighterSettings = GetFighterSpecificSettings(fighterPackage);
@@ -1650,6 +1657,79 @@ namespace BrawlInstaller.Services
                 return module;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get SSE settings for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to retrieve settings for</param>
+        /// <returns>Fighter package with SSE settings</returns>
+        private FighterPackage GetSSESettings(FighterPackage fighterPackage)
+        {
+            if (_settingsService.BuildSettings.MiscSettings.SubspaceEx)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SSEModule);
+                var rootNode = _fileService.OpenFile(modulePath);
+                if (rootNode != null)
+                {
+                    var relNode = (RELNode)rootNode;
+                    if (relNode.Sections.Count() > 8)
+                    {
+                        var section = relNode.Sections[8];
+                        if (section != null)
+                        {
+                            var sectionData = _fileService.ReadRawData(section);
+                            // Get unlock conditions
+                            var unlockPosition = ((fighterPackage.FighterInfo.Ids.CSSSlotConfigId - 0x2A) * 4) + 0x178;
+                            if (fighterPackage.FighterInfo.Ids.CSSSlotConfigId > 0x2A && sectionData.Length > unlockPosition)
+                            {
+                                var unlockBytes = sectionData.Skip(unlockPosition).Take(4).ToArray();
+                                fighterPackage.FighterSettings.DoorId = Convert.ToUInt32(BitConverter.ToString(unlockBytes, 0, 4).Replace("-", ""), 16);
+                            }
+                        }
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+            return fighterPackage;
+        }
+
+        /// <summary>
+        /// Update SSE module settings for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update</param>
+        /// <param name="remove">Whether fighter is being removed or not</param>
+        private void UpdateSSEModule(FighterPackage fighterPackage, bool remove=false)
+        {
+            if (_settingsService.BuildSettings.MiscSettings.SubspaceEx)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SSEModule);
+                var rootNode = _fileService.OpenFile(modulePath);
+                if (rootNode != null)
+                {
+                    var relNode = (RELNode)rootNode;
+                    if (relNode.Sections.Count() > 8)
+                    {
+                        var section = relNode.Sections[8];
+                        if (section != null)
+                        {
+                            byte[] sectionData = _fileService.ReadRawData(section);
+                            // Set unlock conditions
+                            var unlockPosition = ((fighterPackage.FighterInfo.Ids.CSSSlotConfigId - 0x2A) * 4) + 0x178;
+                            if (fighterPackage.FighterInfo.Ids.CSSSlotConfigId > 0x2A && sectionData.Length > unlockPosition)
+                            {
+                                byte[] newBytes = BitConverter.GetBytes(fighterPackage.FighterSettings.DoorId).Reverse().ToArray();
+                                newBytes.CopyTo(sectionData, unlockPosition);
+                                _fileService.ReplaceNodeRaw(section, sectionData);
+                            }
+                        }
+                    }
+                    _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
+                }
+            }
         }
 
         /// <summary>

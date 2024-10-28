@@ -110,6 +110,7 @@ namespace BrawlInstaller.Classes
         public bool InstallTrophies { get; set; } = false;
         public List<string> CustomStageLists { get; set; } = new List<string>();
         public bool UpdateCreditsModule { get; set; } = true;
+        public bool SubspaceEx { get; set; } = true;
     }
 
     public class FilePathSettings
@@ -159,6 +160,7 @@ namespace BrawlInstaller.Classes
         public string ThrowReleaseAsmFile { get; set; } = "Source\\ProjectM\\Modifier\\ThrowRelease.asm";
         public string FighterSpecificAsmFile { get; set; } = "Source\\ProjectM\\CloneEngine.asm";
         public string CreditsModule { get; set; } = "pf\\module\\st_croll.rel";
+        public string SSEModule { get; set; } = "pf\\module\\sora_adv_stage.rel";
 
         [JsonProperty("CodeFilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<string> CodeFilePaths { get; set; } = new List<string>
