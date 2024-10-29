@@ -1153,6 +1153,10 @@ namespace BrawlInstaller.Services
             return id;
         }
 
+        /// <summary>
+        /// Update L-load table for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update L-load table for</param>
         private void UpdateLLoadTable(FighterPackage fighterPackage)
         {
             var cssSlotId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
