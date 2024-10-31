@@ -26,10 +26,12 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private FighterPackage _fighterPackage;
+        private List<FighterInfo> _fighterInfoList;
 
         // Services
         IDialogService _dialogService { get; }
         IFighterService _fighterService { get; }
+        ISettingsService _settingsService { get; }
 
         // Commands
         public ICommand LoadKirbyHatCommand => new RelayCommand(param => LoadKirbyHat());
@@ -37,10 +39,11 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor
         [ImportingConstructor]
-        public FighterSettingsViewModel(IDialogService dialogService, IFighterService fighterService)
+        public FighterSettingsViewModel(IDialogService dialogService, IFighterService fighterService, ISettingsService settingsService)
         {
             _dialogService = dialogService;
             _fighterService = fighterService;
+            _settingsService = settingsService;
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
@@ -50,6 +53,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
+        public List<FighterInfo> FighterInfoList { get => _fighterInfoList; set { _fighterInfoList = value; OnPropertyChanged(nameof(FighterInfoList)); } }
 
         [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, KirbyLoadFlags> KirbyLoadFlagOptions { get => typeof(KirbyLoadFlags).GetDictionary<KirbyLoadFlags>(); }
@@ -58,6 +62,7 @@ namespace BrawlInstaller.ViewModels
         public void LoadFighterSettings(FighterLoadedMessage message)
         {
             FighterPackage = message.Value;
+            FighterInfoList = _settingsService.LoadFighterInfoSettings();
         }
 
         public void LoadKirbyHat()
