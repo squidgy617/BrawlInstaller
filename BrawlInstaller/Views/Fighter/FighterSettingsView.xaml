@@ -34,7 +34,7 @@
         <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="2" Grid.Column="1"/>
         <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="2" Grid.Column="2"/>
         <Label x:Name="lLoadLabel" Content="L-Load ID:" Grid.Row="3"/>
-        <ComboBox x:Name="lLoadTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.LLoadCharacterId, Converter={StaticResource hexConverter}, TargetNullValue=''}" Width="60" Grid.Row="3" Grid.Column="1"/>
+        <ComboBox x:Name="lLoadTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.LLoadCharacterId, Converter={StaticResource hexConverter}, TargetNullValue='', Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="3" Grid.Column="1"/>
         <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="4"/>
         <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="4" Grid.Column="1"/>
         <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="5"/>
