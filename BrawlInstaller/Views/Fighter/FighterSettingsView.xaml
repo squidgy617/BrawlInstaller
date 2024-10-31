@@ -22,6 +22,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:"/>
         <TextBlock x:Name="kirbyHatKindTextBlock" VerticalAlignment="Center" Text="{Binding FighterPackage.FighterSettings.KirbyHatData.TopStatusKind}" Grid.Column="1"/>
@@ -38,7 +39,29 @@
         <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="4" Grid.Column="1"/>
         <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="5"/>
         <TextBox x:Name="ssesubcharacterIdTextBox" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}}" Grid.Row="5" Grid.Column="1"/>
-        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="6" Grid.ColumnSpan="4">
+        <GroupBox Header="Alternate Slots" Grid.Row="6" Grid.ColumnSpan="4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Upper-Left ID:"/>
+                <TextBox Text="{Binding FighterPackage.FighterSettings.ExSlotIds[3], Converter={StaticResource hexUInt2CharConverter}}" Grid.Column="1"/>
+                <Label Content="Upper-Right ID:" Grid.Column="2"/>
+                <TextBox Text="{Binding FighterPackage.FighterSettings.ExSlotIds[1], Converter={StaticResource hexUInt2CharConverter}}" Grid.Column="3"/>
+                <Label Content="Lower-Left ID:" Grid.Row="1"/>
+                <TextBox Text="{Binding FighterPackage.FighterSettings.ExSlotIds[2], Converter={StaticResource hexUInt2CharConverter}}" Grid.Row="1" Grid.Column="1"/>
+                <Label Content="Lower-Right ID:" Grid.Row="1" Grid.Column="2"/>
+                <TextBox Text="{Binding FighterPackage.FighterSettings.ExSlotIds[0], Converter={StaticResource hexUInt2CharConverter}}" Grid.Row="1" Grid.Column="3"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="7" Grid.ColumnSpan="4">
             <StackPanel>
                 <Expander x:Name="lucarioExpander" Header="Lucario Clone Settings">
                     <Grid>

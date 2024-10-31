@@ -109,6 +109,7 @@ namespace BrawlInstaller.Classes
         public uint DoorId { get; set; } = 0;
         public int? SSESubCharacterId { get; set; } = 0;
         public int? LLoadCharacterId { get; set; } = 0;
+        public List<uint> ExSlotIds { get; set; } = new List<uint> { 0xFF, 0xFF, 0xFF, 0xFF };
     }
 
     public class LucarioSettings

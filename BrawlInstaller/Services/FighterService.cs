@@ -1097,6 +1097,9 @@ namespace BrawlInstaller.Services
             // Get L-load
             fighterSettings.LLoadCharacterId = GetLLoad(fighterPackage.FighterInfo.Ids.CSSSlotConfigId);
 
+            // Get Ex slots
+            fighterSettings.ExSlotIds = GetExSlots(fighterPackage.FighterInfo.Ids.CSSSlotConfigId);
+
             // Get SSE settings
             fighterPackage = GetSSESettings(fighterPackage);
 
@@ -1131,6 +1134,30 @@ namespace BrawlInstaller.Services
                 throwRelease.Y = Convert.ToDouble(y);
             }
             return throwRelease;
+        }
+
+        /// <summary>
+        /// Get Ex slots for fighter
+        /// </summary>
+        /// <param name="cssSlotId">CSS slot ID of fighter</param>
+        /// <returns>Ex slot IDs for fighter</returns>
+        private List<uint> GetExSlots(int cssSlotId)
+        {
+            var exSlots = new List<uint>();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "Table:");
+            if (table.Count > cssSlotId)
+            {
+                var fullString = table[cssSlotId].Replace("0x", "");
+                exSlots = Enumerable.Range(0, fullString.Length)
+                     .Where(x => x % 2 == 0)
+                     .Select(x => Convert.ToUInt32(fullString.Substring(x, 2), 16))
+                     .ToList();
+            }
+            return exSlots;
         }
 
         /// <summary>

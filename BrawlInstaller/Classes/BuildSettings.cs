@@ -162,6 +162,7 @@ namespace BrawlInstaller.Classes
         public string CreditsModule { get; set; } = "pf\\module\\st_croll.rel";
         public string SSEModule { get; set; } = "pf\\module\\sora_adv_stage.rel";
         public string LLoadAsmFile { get; set; } = "Source\\ProjectM\\CSS.asm";
+        public string SlotExAsmFile { get; set; } = "Source\\P+Ex\\SlotEx.asm";
 
         [JsonProperty("CodeFilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<string> CodeFilePaths { get; set; } = new List<string>

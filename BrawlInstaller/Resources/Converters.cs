@@ -142,6 +142,32 @@ namespace BrawlInstaller.Resources
         }
     }
 
+    [ValueConversion(typeof(string), typeof(uint))]
+    public class HexUInt2CharConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != null)
+                return $"0x{(uint)value:X2}";
+            else
+                return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is uint) return value;
+            if (value == null || (string)value == "")
+            {
+                return null;
+            }
+            var parsed = uint.TryParse(((string)value), NumberStyles.Integer, null, out uint result);
+            if (parsed) return result;
+            parsed = uint.TryParse(((string)value).Replace("0x", ""), NumberStyles.HexNumber, null, out result);
+            if (parsed) return result;
+            else return null;
+        }
+    }
+
     [ValueConversion(typeof(object), typeof(bool))]
     public class  NullBoolConverter : IValueConverter
     {
