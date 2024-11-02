@@ -54,6 +54,7 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
         public List<FighterInfo> FighterInfoList { get => _fighterInfoList; set { _fighterInfoList = value; OnPropertyChanged(nameof(FighterInfoList)); } }
+        public Dictionary<string, int> FighterEffectPacs { get => EffectPacs.FighterEffectPacs; }
 
         [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, KirbyLoadFlags> KirbyLoadFlagOptions { get => typeof(KirbyLoadFlags).GetDictionary<KirbyLoadFlags>(); }
