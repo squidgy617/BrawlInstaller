@@ -898,6 +898,9 @@ namespace BrawlInstaller.Services
             // Update L-Load
             UpdateLLoadTable(fighterPackage);
 
+            // Update Slot Ex table
+            UpdateExSlotsTable(fighterPackage);
+
             // Update SSE settings
             UpdateSSEModule(fighterPackage);
 
@@ -1178,6 +1181,43 @@ namespace BrawlInstaller.Services
                 id = Convert.ToInt32(table[cssSlotId].Replace("0x", ""), 16);
             }
             return id;
+        }
+
+        /// <summary>
+        /// Update SlotEx table for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update</param>
+        private void UpdateExSlotsTable(FighterPackage fighterPackage)
+        {
+            var cssSlotId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
+            var codePath = Path.Combine(buildPath, asmPath);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, "Table:");
+            // Convert to ASM table
+            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var asmTable = new List<AsmTableEntry>();
+            foreach (var entry in table)
+            {
+                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.CSSSlotConfigId == asmTable.Count)?.DisplayName;
+                var newEntry = new AsmTableEntry
+                {
+                    Item = entry,
+                    Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
+                };
+                asmTable.Add(newEntry);
+            }
+            // Update fighter slot
+            if (asmTable.Count > cssSlotId + 1)
+            {
+                var exSlots = fighterPackage.FighterSettings.ExSlotIds;
+                asmTable[cssSlotId].Item = $"0x{exSlots[0]:X2}{exSlots[1]:X2}{exSlots[2]:X2}{exSlots[3]:X2}";
+                asmTable[cssSlotId].Comment = fighterPackage.FighterInfo.DisplayName;
+            }
+            // Write table
+            code = _codeService.ReplaceTable(code, "Table:", asmTable, DataSize.Word, 4);
+            _fileService.SaveTextFile(codePath, code);
         }
 
         /// <summary>
