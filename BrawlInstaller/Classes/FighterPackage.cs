@@ -36,6 +36,7 @@ namespace BrawlInstaller.Classes
         public List<string> EndingPacFiles { get; set; }
         public string EndingMovie { get; set; }
         public int? EffectPacId { get; set; } = null;
+        public int? OriginalEffectPacId { get; set; } = null;
         public int? KirbyEffectPacId { get; set; } = null;
         public TracklistSong CreditsTheme { get; set; }
         public TracklistSong VictoryTheme { get; set; } = new TracklistSong();

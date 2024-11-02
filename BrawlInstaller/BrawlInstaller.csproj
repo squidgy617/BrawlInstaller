@@ -79,9 +79,11 @@
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Classes\ImageSize.cs" />
     <Compile Include="Classes\Position.cs" />
+    <Compile Include="Classes\PSA.cs" />
     <Compile Include="Classes\Tracklists.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
+    <Compile Include="Services\PsaService.cs" />
     <Compile Include="Services\TracklistService.cs" />
     <Compile Include="StaticClasses\DefaultCosmetics.cs" />
     <Compile Include="StaticClasses\EffectPacs.cs" />

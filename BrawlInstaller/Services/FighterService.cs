@@ -81,14 +81,16 @@ namespace BrawlInstaller.Services
         IFileService _fileService { get; }
         ITracklistService _tracklistService { get; }
         ICodeService _codeService { get; }
+        IPsaService _psaService { get; }
 
         [ImportingConstructor]
-        public FighterService(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, ICodeService codeService)
+        public FighterService(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, ICodeService codeService, IPsaService psaService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _tracklistService = tracklistService;
             _codeService = codeService;
+            _psaService = psaService;
         }
 
         // Methods
@@ -287,7 +289,7 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Get fighter info based on supplied configs
         /// </summary>
-        /// <param name="fighterIds">Fighter IDs</param>
+        /// <param name="fighterInfo">Fighter info</param>
         /// <param name="fighterConfigs">All fighter configs to use</param>
         /// <param name="cosmeticConfigs">All cosmetic configs to use</param>
         /// <param name="cssSlotConfigs">All CSSslot configs to use</param>
@@ -521,7 +523,7 @@ namespace BrawlInstaller.Services
         /// <param name="pacFiles">PAC files to import</param>
         /// <param name="costumes">Costumes to import PAC files for</param>
         /// <param name="fighterInfo">Fighter info</param>
-        private List<ResourceNode> UpdatePacFiles(List<FighterPacFile> pacFiles, List<Costume> costumes, FighterInfo fighterInfo)
+        private List<ResourceNode> UpdatePacFiles(List<FighterPacFile> pacFiles, List<Costume> costumes, FighterInfo fighterInfo, int? effectPacId, int? oldEffectPacId)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -531,7 +533,15 @@ namespace BrawlInstaller.Services
                 var file = _fileService.OpenFile(pacFile.FilePath);
                 var name = pacFile.Prefix + fighterInfo.InternalName + pacFile.Suffix + ".pac";
                 if (file != null)
+                {
                     files.Add((file, name, pacFile));
+                    // If main PAC file, update GFX IDs
+                    if (effectPacId != null && oldEffectPacId != null && effectPacId != oldEffectPacId &&
+                        name.ToLower() == (pacFile.Prefix + fighterInfo.InternalName + ".pac").ToLower())
+                    {
+                        UpdateGFXIds(file, (int)effectPacId, (int)oldEffectPacId);
+                    }
+                }
             }
             foreach(var costume in costumes)
             {
@@ -571,6 +581,22 @@ namespace BrawlInstaller.Services
                 file.pacFile.FilePath = file.node._origPath;
             }
             return files.Select(x => x.node).ToList();
+        }
+
+        /// <summary>
+        /// Update GFX IDs for fighter PAC file
+        /// </summary>
+        /// <param name="rootNode">Root node of fighter PAC file</param>
+        /// <param name="effectPacId">New Effect.pac ID</param>
+        /// <param name="oldEffectPacId">Old Effect.pac ID</param>
+        private void UpdateGFXIds(ResourceNode rootNode, int effectPacId, int oldEffectPacId)
+        {
+            // Find moveset data node
+            var dataNode = rootNode.FindChild("Misc Data [0]");
+            if (dataNode != null)
+            {
+                _psaService.UpdateGFXIds(dataNode, effectPacId, oldEffectPacId);
+            }
         }
 
         /// <summary>
@@ -782,7 +808,7 @@ namespace BrawlInstaller.Services
             oldFighter.FighterInfo = GetFighterInfo(oldFighter.FighterInfo);
             oldFighter = GetFighterFiles(oldFighter);
             // Then, get new files for install, in case any of them would be deleted
-            var pacFiles = UpdatePacFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo);
+            var pacFiles = UpdatePacFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo, fighterPackage.EffectPacId, fighterPackage.OriginalEffectPacId);
             var module = _fileService.OpenFile(fighterPackage.Module);
             var fighterConfig = _fileService.OpenFile(fighterPackage.FighterInfo.FighterConfig);
             var cosmeticConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CosmeticConfig);

@@ -62,6 +62,7 @@ namespace BrawlInstaller.Services
 
             // Get Effect.pac IDs
             fighterPackage.EffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterInfo.InternalName);
+            fighterPackage.OriginalEffectPacId = fighterPackage.EffectPacId;
             fighterPackage.KirbyEffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, $"Kirby{fighterInfo.InternalName}");
 
             // Get fighter settings
@@ -136,6 +137,8 @@ namespace BrawlInstaller.Services
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
             // Import fighter files
             _fighterService.ImportFighterFiles(fighterPackage);
+            // Set original Effect.pac ID to current
+            fighterPackage.OriginalEffectPacId = fighterPackage.EffectPacId;
             // Update fighter settings
             _fighterService.UpdateFighterSettings(fighterPackage);
             // Update credits module
