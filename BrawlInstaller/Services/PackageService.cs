@@ -31,14 +31,16 @@ namespace BrawlInstaller.Services
         ISettingsService _settingsService { get; }
         ICosmeticService _cosmeticService { get; }
         IFighterService _fighterService { get; }
+        ICodeService _codeService { get; }
 
         [ImportingConstructor]
-        public PackageService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService) 
+        public PackageService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService, ICodeService codeService) 
         {
             _fileService = fileService;
             _settingsService = settingsService;
             _cosmeticService = cosmeticService;
             _fighterService = fighterService;
+            _codeService = codeService;
         }
 
         // Methods
@@ -141,6 +143,8 @@ namespace BrawlInstaller.Services
             {
                 _fighterService.UpdateCreditsModule(fighterPackage);
             }
+            // Compile GCT
+            _codeService.CompileCodes();
         }
     }
 }
