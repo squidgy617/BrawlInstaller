@@ -539,9 +539,10 @@ namespace BrawlInstaller.Services
                 if (file != null)
                 {
                     files.Add((file, name, pacFile));
-                    // If main PAC file, update GFX IDs
+                    // If main PAC file or item PAC file, update GFX IDs
+                    var regex = Regex.Match(name.ToLower(), $"[itm{fighterInfo.InternalName.ToLower()}]\\d+[param]");
                     if (fighterPackage.EffectPacId != null && fighterPackage.OriginalEffectPacId != null && fighterPackage.EffectPacId != fighterPackage.OriginalEffectPacId &&
-                        name.ToLower() == ("Fit" + fighterInfo.InternalName + ".pac").ToLower())
+                        name.ToLower() == ("Fit" + fighterInfo.InternalName + ".pac").ToLower() || regex.Success)
                     {
                         UpdateEffectPac(file, (int)fighterPackage.EffectPacId, (int)fighterPackage.OriginalEffectPacId);
                     }
