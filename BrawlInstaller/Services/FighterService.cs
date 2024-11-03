@@ -555,7 +555,8 @@ namespace BrawlInstaller.Services
                     && ((ARCNode)x).FileType == ARCFileType.EffectData && Regex.Match(x.Name, ".+[X]\\d{2}$").Success);
                     if (efNode != null)
                     {
-                        efNode.Name = efNode.Name.Substring(0, efNode.Name.Length - 2) + costume.CostumeId.ToString("D2");
+                        var effectPacName = GetEffectPacName(effectPacId);
+                        efNode.Name = effectPacName + "X" + costume.CostumeId.ToString("D2");
                         // Update EFLS and REF nodes
                         foreach (var node in efNode.Children.Where(x => x.GetType() == typeof(EFLSNode) || x.GetType() == typeof(REFFNode)))
                         {
@@ -585,6 +586,25 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get Effect.pac name from ID
+        /// </summary>
+        /// <param name="effectPacId">EFfect.pac ID</param>
+        /// <returns>Name of Effect.pac</returns>
+        private string GetEffectPacName(int? effectPacId)
+        {
+            // Check dictionary for Effect.pac
+            if (effectPacId != null)
+            {
+                var effectPacEntry = EffectPacs.FighterEffectPacs.FirstOrDefault(x => x.Value == effectPacId);
+                if (effectPacEntry.Key != null)
+                {
+                    return effectPacEntry.Key;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Update Effect.pac
         /// </summary>
         /// <param name="rootNode">Root node of Effect.pac</param>
@@ -599,12 +619,7 @@ namespace BrawlInstaller.Services
             var effectPac = GetEffectPacNode(rootNode);
             if (effectPac != null)
             {
-                // Check dictionary for Effect.pac
-                var effectPacEntry = EffectPacs.FighterEffectPacs.FirstOrDefault(x => x.Value == effectPacId);
-                if (effectPacEntry.Key != null)
-                {
-                    effectPac.Name = effectPacEntry.Key;
-                }
+                effectPac.Name = GetEffectPacName(effectPacId);
             }
         }
 
