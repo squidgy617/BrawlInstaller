@@ -36,6 +36,12 @@ namespace BrawlInstaller.Services
             new OpCode(new byte[4]{0x11, 0x03, 0x14, 0x00 }, 11)
         };
 
+        private List<OpCode> TraceOpCodes = new List<OpCode>()
+        {
+            new OpCode(new byte[4]{0x11, 0x03, 0x14, 0x00}, 0),
+            new OpCode(new byte[4]{0x11, 0x04, 0x17, 0x00}, 0)
+        };
+
         // Services
         ISettingsService _settingsService { get; }
         IFileService _fileService { get; }
@@ -60,6 +66,11 @@ namespace BrawlInstaller.Services
         {
             var data = _fileService.ReadRawData(movesetDataNode);
             data = UpdateGFXIds(data, effectPacId, oldEffectPacId);
+            // Only update custom traces
+            if (effectPacId >= 311 && oldEffectPacId >= 311)
+            {
+                data = UpdateTraceIds(data, effectPacId, oldEffectPacId);
+            }
             _fileService.ReplaceNodeRaw(movesetDataNode, data);
             return movesetDataNode;
         }
@@ -109,6 +120,57 @@ namespace BrawlInstaller.Services
                     if (foundEffectPacId == oldEffectPacId)
                     {
                         byte[] newBytes = BitConverter.GetBytes((ushort)effectPacId).Reverse().ToArray();
+                        newBytes.CopyTo(data, parameterAddress);
+                    }
+                }
+            }
+            return data;
+        }
+
+        private byte[] UpdateTraceIds(byte[] data, int effectPacId, int oldEffectPacId)
+        {
+            // Loop through each OpCode
+            foreach (var opCode in TraceOpCodes)
+            {
+                var slice = data.AsSpan(0, data.Length);
+                // Search data for opcode
+                while (true)
+                {
+                    // Get index of first matching opcode
+                    var index = slice.IndexOf(opCode.Bytes);
+                    // If invalid index, break
+                    if (index <= -1 || index > slice.Length)
+                    {
+                        break;
+                    }
+                    // Jump to first matching opcode
+                    slice = slice.Slice(slice.IndexOf(opCode.Bytes));
+                    // If end of data, break
+                    if (slice.Length < 4)
+                    {
+                        break;
+                    }
+                    // Skip over opcode to data pointer
+                    slice = slice.Slice(4);
+                    // Get address from pointer
+                    var parameterAddress = Convert.ToUInt32(BitConverter.ToString(slice.ToArray(), 0, 4).Replace("-", ""), 16) + 0x24 + opCode.Offset * 8;
+                    // If address is out of reach, continue
+                    if (parameterAddress > data.Length)
+                    {
+                        continue;
+                    }
+                    // Otherwise, get trace ID from address
+                    var array = data.AsSpan((int)parameterAddress, 4).ToArray().Reverse();
+                    var foundTraceId = BitConverter.ToUInt16(array.ToArray(), 0);
+                    // Get offsets
+                    var effectPacOffset = (effectPacId - 311) * 10 + 141; // 311 is first custom Effect.pac ID, 141 is first custom trace ID
+                    var oldEffectPacOffset = (oldEffectPacId - 311) * 10 + 141; // Multiply by 10 because each trace has 10 entries
+                    // Check that trace ID is within range of traces for old Effect.pac
+                    if (foundTraceId >= oldEffectPacOffset && foundTraceId < oldEffectPacOffset + 10)
+                    {
+                        var traceOffset = foundTraceId - oldEffectPacOffset;
+                        var newTraceId = effectPacOffset + traceOffset;
+                        byte[] newBytes = BitConverter.GetBytes((uint)newTraceId).Reverse().ToArray();
                         newBytes.CopyTo(data, parameterAddress);
                     }
                 }
