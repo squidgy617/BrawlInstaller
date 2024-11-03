@@ -38,6 +38,7 @@ namespace BrawlInstaller.Classes
         public int? EffectPacId { get; set; } = null;
         public int? OriginalEffectPacId { get; set; } = null;
         public int? KirbyEffectPacId { get; set; } = null;
+        public int? OriginalKirbyEffectPacId { get; set; } = null;
         public TracklistSong CreditsTheme { get; set; }
         public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
         public FighterSettings FighterSettings { get; set; } = new FighterSettings();

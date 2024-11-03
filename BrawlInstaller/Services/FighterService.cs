@@ -524,8 +524,11 @@ namespace BrawlInstaller.Services
         /// <param name="pacFiles">PAC files to import</param>
         /// <param name="costumes">Costumes to import PAC files for</param>
         /// <param name="fighterInfo">Fighter info</param>
-        private List<ResourceNode> UpdatePacFiles(List<FighterPacFile> pacFiles, List<Costume> costumes, FighterInfo fighterInfo, int? effectPacId, int? oldEffectPacId)
+        private List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage)
         {
+            var pacFiles = fighterPackage.PacFiles;
+            var costumes = fighterPackage.Costumes;
+            var fighterInfo = fighterPackage.FighterInfo;
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var files = new List<(ResourceNode node, string name, FighterPacFile pacFile)>();
@@ -537,10 +540,16 @@ namespace BrawlInstaller.Services
                 {
                     files.Add((file, name, pacFile));
                     // If main PAC file, update GFX IDs
-                    if (effectPacId != null && oldEffectPacId != null && effectPacId != oldEffectPacId &&
+                    if (fighterPackage.EffectPacId != null && fighterPackage.OriginalEffectPacId != null && fighterPackage.EffectPacId != fighterPackage.OriginalEffectPacId &&
                         name.ToLower() == ("Fit" + fighterInfo.InternalName + ".pac").ToLower())
                     {
-                        UpdateEffectPac(file, (int)effectPacId, (int)oldEffectPacId);
+                        UpdateEffectPac(file, (int)fighterPackage.EffectPacId, (int)fighterPackage.OriginalEffectPacId);
+                    }
+                    // If Kirby PAC file, update GFX IDs
+                    if (fighterPackage.KirbyEffectPacId != null && fighterPackage.OriginalKirbyEffectPacId != null && fighterPackage.KirbyEffectPacId != fighterPackage.OriginalKirbyEffectPacId &&
+                        name.ToLower() == ("FitKirby" + fighterInfo.InternalName + ".pac").ToLower())
+                    {
+                        UpdateEffectPac(file, (int)fighterPackage.KirbyEffectPacId, (int)fighterPackage.OriginalKirbyEffectPacId);
                     }
                 }
             }
@@ -555,7 +564,17 @@ namespace BrawlInstaller.Services
                     && ((ARCNode)x).FileType == ARCFileType.EffectData && Regex.Match(x.Name, ".+[X]\\d{2}$").Success);
                     if (efNode != null)
                     {
-                        var effectPacName = GetEffectPacName(effectPacId);
+                        // Update Effect.pac name
+                        var effectPacName = string.Empty;
+                        // Differentiate between Kirby and non-Kirby Effect.pac IDs to ensure everything is named properly
+                        if (pacFile.Prefix.ToLower() != "fitkirby")
+                        {
+                            effectPacName = GetEffectPacName(fighterPackage.EffectPacId);
+                        }
+                        else
+                        {
+                            effectPacName = GetEffectPacName(fighterPackage.KirbyEffectPacId);
+                        }
                         efNode.Name = effectPacName + "X" + costume.CostumeId.ToString("D2");
                         // Update EFLS and REF nodes
                         foreach (var node in efNode.Children.Where(x => x.GetType() == typeof(EFLSNode) || x.GetType() == typeof(REFFNode)))
@@ -848,7 +867,7 @@ namespace BrawlInstaller.Services
             oldFighter.FighterInfo = GetFighterInfo(oldFighter.FighterInfo);
             oldFighter = GetFighterFiles(oldFighter);
             // Then, get new files for install, in case any of them would be deleted
-            var pacFiles = UpdatePacFiles(fighterPackage.PacFiles, fighterPackage.Costumes, fighterPackage.FighterInfo, fighterPackage.EffectPacId, fighterPackage.OriginalEffectPacId);
+            var pacFiles = UpdatePacFiles(fighterPackage);
             var module = _fileService.OpenFile(fighterPackage.Module);
             var fighterConfig = _fileService.OpenFile(fighterPackage.FighterInfo.FighterConfig);
             var cosmeticConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CosmeticConfig);
