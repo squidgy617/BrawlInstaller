@@ -22,6 +22,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Effects;
 using System.Xml.Linq;
 
 namespace BrawlInstaller.Services
@@ -537,9 +538,9 @@ namespace BrawlInstaller.Services
                     files.Add((file, name, pacFile));
                     // If main PAC file, update GFX IDs
                     if (effectPacId != null && oldEffectPacId != null && effectPacId != oldEffectPacId &&
-                        name.ToLower() == (pacFile.Prefix + fighterInfo.InternalName + ".pac").ToLower())
+                        name.ToLower() == ("Fit" + fighterInfo.InternalName + ".pac").ToLower())
                     {
-                        UpdateGFXIds(file, (int)effectPacId, (int)oldEffectPacId);
+                        UpdateEffectPac(file, (int)effectPacId, (int)oldEffectPacId);
                     }
                 }
             }
@@ -581,6 +582,30 @@ namespace BrawlInstaller.Services
                 file.pacFile.FilePath = file.node._origPath;
             }
             return files.Select(x => x.node).ToList();
+        }
+
+        /// <summary>
+        /// Update Effect.pac
+        /// </summary>
+        /// <param name="rootNode">Root node of Effect.pac</param>
+        /// <param name="effectPacId">Effect.pac ID to update to</param>
+        /// <param name="oldEffectPacId">Effect.pac ID to replace</param>
+        private void UpdateEffectPac(ResourceNode rootNode, int effectPacId, int oldEffectPacId)
+        {
+            // Update GFX IDs
+            UpdateGFXIds(rootNode, effectPacId, oldEffectPacId);
+
+            // Find and update effect ARC
+            var effectPac = GetEffectPacNode(rootNode);
+            if (effectPac != null)
+            {
+                // Check dictionary for Effect.pac
+                var effectPacEntry = EffectPacs.FighterEffectPacs.FirstOrDefault(x => x.Value == effectPacId);
+                if (effectPacEntry.Key != null)
+                {
+                    effectPac.Name = effectPacEntry.Key;
+                }
+            }
         }
 
         /// <summary>
@@ -1523,15 +1548,13 @@ namespace BrawlInstaller.Services
         public int? GetFighterEffectPacId(List<FighterPacFile> pacFiles, string internalName)
         {
             int? effectId = null;
-            // Offset for custom Effect.pac IDs
             var pacFile = pacFiles.OrderByDescending(x => x.Subdirectory == "ex").FirstOrDefault(x => Path.GetFileNameWithoutExtension(x.FilePath).ToLower() == $"fit{internalName.ToLower()}");
             if (pacFile != null)
             {
                 var rootNode = _fileService.OpenFile(pacFile.FilePath);
                 if (rootNode != null)
                 {
-                    var effectNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(ARCNode) && ((ARCNode)x).FileType == ARCFileType.EffectData
-                    && x.Name.StartsWith("ef_"));
+                    var effectNode = GetEffectPacNode(rootNode);
                     if (effectNode != null)
                     {
                         // Check dictionary for Effect.pac ID
@@ -1546,6 +1569,22 @@ namespace BrawlInstaller.Services
             }
 
             return effectId;
+        }
+
+        /// <summary>
+        /// Get Effect.pac node in fighter PAC file
+        /// </summary>
+        /// <param name="rootNode">Root node of fighter PAC file</param>
+        /// <returns>Effect.pac node</returns>
+        private ARCNode GetEffectPacNode(ResourceNode rootNode)
+        {
+            var node = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(ARCNode) && ((ARCNode)x).FileType == ARCFileType.EffectData
+                    && x.Name.StartsWith("ef_"));
+            if (node != null)
+            {
+                return (ARCNode)node;
+            }
+            return null;
         }
 
         /// <summary>
