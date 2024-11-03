@@ -23,6 +23,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0"/>
         <ListBox x:Name="pacFileListBox" Grid.Column="1" ItemsSource="{Binding FighterPackage.PacFiles}" SelectedItem="{Binding SelectedPacFile}" Width="120" Height="100">
@@ -52,7 +53,9 @@
         <userControls:FileBox x:Name="moduleFileBox" Text="{Binding FighterPackage.Module, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="REL file (.rel)|*.rel"/>
         <Label x:Name="soundbankLabel" Content="Soundbank:" Grid.Row="3" Grid.Column="0"/>
         <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding FighterPackage.Soundbank, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
-        <GroupBox Header="Classic/All-Star Files" x:Name="classicFileGroupBox" Grid.Row="4" Grid.ColumnSpan="4">
+        <Label x:Name="kirbySoundbankLabel" Content="Kirby Soundbank:" Grid.Row="4" Grid.Column="0"/>
+        <userControls:FileBox x:Name="kirbySoundbankFileBox" Text="{Binding FighterPackage.KirbySoundbank, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
+        <GroupBox Header="Classic/All-Star Files" x:Name="classicFileGroupBox" Grid.Row="5" Grid.ColumnSpan="4">
             <Grid x:Name="classicFileGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -77,7 +80,7 @@
                 <userControls:FileBox x:Name="endingMovieFileBox" Text="{Binding FighterPackage.EndingMovie, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" TextBoxWidth="120" Filter="THP file (.thp)|*.thp"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Music" Grid.Row="5" Grid.ColumnSpan="4">
+        <GroupBox Header="Music" Grid.Row="6" Grid.ColumnSpan="4">
             <StackPanel Orientation="Horizontal">
                 <Grid x:Name="victoryThemeGrid">
                     <Grid.RowDefinitions>

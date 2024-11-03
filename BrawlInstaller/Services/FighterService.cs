@@ -340,6 +340,7 @@ namespace BrawlInstaller.Services
                 var fighterNode = (FCFGNode)rootNode;
                 fighterInfo.InternalName = fighterNode.InternalFighterName;
                 fighterInfo.SoundbankId = fighterNode.SoundBank;
+                fighterInfo.KirbySoundbankId = fighterNode.KirbySoundBank;
                 fighterInfo.KirbyLoadType = fighterNode.KirbyLoadType;
             }
             fighterInfo.Ids = fighterIds;
@@ -891,6 +892,7 @@ namespace BrawlInstaller.Services
             var cssSlotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
             var slotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.SlotConfig);
             var soundbank = _fileService.OpenFile(fighterPackage.Soundbank);
+            var kirbySoundbank = _fileService.OpenFile(fighterPackage.KirbySoundbank);
             var victoryTheme = _fileService.OpenFile(fighterPackage.VictoryTheme.SongFile);
             var creditsTheme = _fileService.OpenFile(fighterPackage.CreditsTheme.SongFile);
             var classicIntro = _fileService.OpenFile(fighterPackage.ClassicIntro);
@@ -909,6 +911,7 @@ namespace BrawlInstaller.Services
             DeleteModule(oldFighter.FighterInfo.InternalName);
             DeleteExConfigs(oldFighter.FighterInfo);
             DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
+            DeleteSoundbank(oldFighter.FighterInfo.KirbySoundbankId);
             DeleteClassicIntro(oldFighter.FighterInfo.Ids.CosmeticId);
             DeleteEndingPacFiles(oldFighter.FighterInfo.EndingId);
             DeleteEndingMovie(oldFighter.FighterInfo.InternalName);
@@ -969,6 +972,14 @@ namespace BrawlInstaller.Services
                 soundbank._origPath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
                 _fileService.SaveFile(soundbank);
                 _fileService.CloseFile(soundbank);
+            }
+            // Rename and import Kirby soundbank
+            if (kirbySoundbank != null)
+            {
+                var name = GetSoundbankName(fighterPackage.FighterInfo.KirbySoundbankId);
+                kirbySoundbank._origPath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
+                _fileService.SaveFile(kirbySoundbank);
+                _fileService.CloseFile(kirbySoundbank);
             }
             // Import victory theme
             fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme);
@@ -1069,6 +1080,7 @@ namespace BrawlInstaller.Services
             {
                 var node = (FCFGNode) rootNode;
                 node.SoundBank = (uint)fighterInfo.SoundbankId;
+                node.KirbySoundBank = (uint)fighterInfo.KirbySoundbankId;
                 node.HasKirbyHat = fighterInfo.KirbyLoadType != FCFGNode.KirbyLoadFlags.None;
                 node.KirbyLoadType = fighterInfo.KirbyLoadType;
             }
@@ -1162,6 +1174,9 @@ namespace BrawlInstaller.Services
 
             // Get soundbank
             fighterPackage.Soundbank = GetSoundbank(fighterInfo.SoundbankId);
+
+            // Get Kirby soundbank
+            fighterPackage.KirbySoundbank = GetSoundbank(fighterInfo.KirbySoundbankId);
 
             // Get victory theme
             fighterPackage.VictoryTheme = GetVictoryTheme(fighterInfo.VictoryThemeId);

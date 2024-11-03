@@ -25,6 +25,7 @@ namespace BrawlInstaller.Classes
         // TODO: Should credits theme ID go in here too?
         public uint? VictoryThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
+        public uint? KirbySoundbankId { get; set; } = null;
         [JsonIgnore] public int EndingId { get; set; } = -1;
         public KirbyLoadFlags KirbyLoadType { get; set; } = KirbyLoadFlags.None;
         public int? EffectPacId { get; set; } = null;
@@ -48,6 +49,7 @@ namespace BrawlInstaller.Classes
                 },
                 VictoryThemeId = VictoryThemeId,
                 SoundbankId = SoundbankId,
+                KirbySoundbankId = KirbySoundbankId,
                 EndingId = EndingId,
                 KirbyLoadType = KirbyLoadType,
                 EffectPacId = EffectPacId,

@@ -32,6 +32,7 @@ namespace BrawlInstaller.Classes
         public List<string> ExConfigs { get; set; }
         public string Module { get; set; }
         public string Soundbank { get; set; }
+        public string KirbySoundbank { get; set; }
         public string ClassicIntro { get; set; }
         public List<string> EndingPacFiles { get; set; }
         public string EndingMovie { get; set; }
