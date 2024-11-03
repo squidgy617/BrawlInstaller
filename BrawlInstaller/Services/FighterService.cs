@@ -641,6 +641,22 @@ namespace BrawlInstaller.Services
             {
                 effectPac.Name = GetEffectPacName(effectPacId);
             }
+
+            // If custom Effect.pac ID , find trace textures and rename them
+            if (effectPacId >= 311 && oldEffectPacId >= 311)
+            {
+                var nodes = rootNode.GetChildrenRecursive();
+                foreach (var node in nodes)
+                {
+                    var regex = Regex.Match(node.Name, "TexCustom\\d+Trace\\d+");
+                    if (node.GetType() == typeof(TEX0Node) && regex.Success)
+                    {
+                        var newTraceId = effectPacId - 311;
+                        var newTraceName = Regex.Replace(node.Name, "TexCustom\\d+Trace", $"Tex{newTraceId:X2}Trace");
+                        node.Name = newTraceName;
+                    }
+                }
+            }
         }
 
         /// <summary>

@@ -24,6 +24,8 @@ namespace BrawlInstaller.ViewModels
     [Export(typeof(IFighterSettingsViewModel))]
     internal class FighterSettingsViewModel : ViewModelBase, IFighterSettingsViewModel
     {
+        //TODO: warn user that sword trails will not be changed when switching between custom and vanilla Effect.pacs
+
         // Private properties
         private FighterPackage _fighterPackage;
         private List<FighterInfo> _fighterInfoList;
