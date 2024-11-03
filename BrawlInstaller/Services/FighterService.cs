@@ -541,16 +541,16 @@ namespace BrawlInstaller.Services
                     files.Add((file, name, pacFile));
                     // If main PAC file or item PAC file, update GFX IDs
                     var regex = Regex.Match(name.ToLower(), $"[itm{fighterInfo.InternalName.ToLower()}]\\d+[param]");
-                    if (fighterPackage.EffectPacId != null && fighterPackage.OriginalEffectPacId != null && fighterPackage.EffectPacId != fighterPackage.OriginalEffectPacId &&
+                    if (fighterPackage.FighterInfo.EffectPacId != null && fighterPackage.FighterInfo.OriginalEffectPacId != null && fighterPackage.FighterInfo.EffectPacId != fighterPackage.FighterInfo.OriginalEffectPacId &&
                         name.ToLower() == ("Fit" + fighterInfo.InternalName + ".pac").ToLower() || regex.Success)
                     {
-                        UpdateEffectPac(file, (int)fighterPackage.EffectPacId, (int)fighterPackage.OriginalEffectPacId);
+                        UpdateEffectPac(file, (int)fighterPackage.FighterInfo.EffectPacId, (int)fighterPackage.FighterInfo.OriginalEffectPacId);
                     }
                     // If Kirby PAC file, update GFX IDs
-                    if (fighterPackage.KirbyEffectPacId != null && fighterPackage.OriginalKirbyEffectPacId != null && fighterPackage.KirbyEffectPacId != fighterPackage.OriginalKirbyEffectPacId &&
+                    if (fighterPackage.FighterInfo.KirbyEffectPacId != null && fighterPackage.FighterInfo.OriginalKirbyEffectPacId != null && fighterPackage.FighterInfo.KirbyEffectPacId != fighterPackage.FighterInfo.OriginalKirbyEffectPacId &&
                         name.ToLower() == ("FitKirby" + fighterInfo.InternalName + ".pac").ToLower())
                     {
-                        UpdateEffectPac(file, (int)fighterPackage.KirbyEffectPacId, (int)fighterPackage.OriginalKirbyEffectPacId);
+                        UpdateEffectPac(file, (int)fighterPackage.FighterInfo.KirbyEffectPacId, (int)fighterPackage.FighterInfo.OriginalKirbyEffectPacId);
                     }
                 }
             }
@@ -570,11 +570,11 @@ namespace BrawlInstaller.Services
                         // Differentiate between Kirby and non-Kirby Effect.pac IDs to ensure everything is named properly
                         if (pacFile.Prefix.ToLower() != "fitkirby")
                         {
-                            effectPacName = GetEffectPacName(fighterPackage.EffectPacId);
+                            effectPacName = GetEffectPacName(fighterPackage.FighterInfo.EffectPacId);
                         }
                         else
                         {
-                            effectPacName = GetEffectPacName(fighterPackage.KirbyEffectPacId);
+                            effectPacName = GetEffectPacName(fighterPackage.FighterInfo.KirbyEffectPacId);
                         }
                         efNode.Name = effectPacName + "X" + costume.CostumeId.ToString("D2");
                         // Update EFLS and REF nodes
@@ -1588,8 +1588,6 @@ namespace BrawlInstaller.Services
             return endingId;
         }
 
-        // TODO: Get this with fighter info, just in case someone doesn't have the fighter's main PAC file in their build?
-
         /// <summary>
         /// Get Effect.pac ID for fighter
         /// </summary>
@@ -2190,7 +2188,7 @@ namespace BrawlInstaller.Services
                     }
                 }
                 // Lucario GFX fix
-                if (fighterSettings.LucarioSettings?.UseGfxFix == true && fighterPackage.EffectPacId != null)
+                if (fighterSettings.LucarioSettings?.UseGfxFix == true && fighterPackage.FighterInfo.EffectPacId != null)
                 {
                     var lucarioGfxMacro = new AsmMacro
                     {
@@ -2198,7 +2196,7 @@ namespace BrawlInstaller.Services
                         Parameters = new List<string>
                             {
                                 $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                                $"0x{fighterPackage.EffectPacId:X2}"
+                                $"0x{fighterPackage.FighterInfo.EffectPacId:X2}"
                             },
                         Comment = fighterPackage.FighterInfo.DisplayName
                     };
@@ -2209,7 +2207,7 @@ namespace BrawlInstaller.Services
                     code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
                 }
                 // Lucario Kirby Hat GFX Fix
-                if (fighterSettings.LucarioSettings?.UseKirbyGfxFix == true && fighterPackage.KirbyEffectPacId != null)
+                if (fighterSettings.LucarioSettings?.UseKirbyGfxFix == true && fighterPackage.FighterInfo.KirbyEffectPacId != null)
                 {
                     var lucarioKirbyGfxMacro = new AsmMacro
                     {
@@ -2217,7 +2215,7 @@ namespace BrawlInstaller.Services
                         Parameters = new List<string>
                         {
                             $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterPackage.KirbyEffectPacId:X2}"
+                            $"0x{fighterPackage.FighterInfo.KirbyEffectPacId:X2}"
                         },
                         Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
                     };
@@ -2229,7 +2227,7 @@ namespace BrawlInstaller.Services
                 }
                 // Update Samus settings
                 // Samus GFX Fix
-                if (fighterSettings.SamusSettings?.UseGfxFix == true && fighterPackage.EffectPacId != null)
+                if (fighterSettings.SamusSettings?.UseGfxFix == true && fighterPackage.FighterInfo.EffectPacId != null)
                 {
                     var samusGfxMacro = new AsmMacro
                     {
@@ -2237,7 +2235,7 @@ namespace BrawlInstaller.Services
                         Parameters = new List<string>
                             {
                                 $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                                $"0x{fighterPackage.EffectPacId:X2}"
+                                $"0x{fighterPackage.FighterInfo.EffectPacId:X2}"
                             },
                         Comment = fighterPackage.FighterInfo.DisplayName
                     };
@@ -2248,7 +2246,7 @@ namespace BrawlInstaller.Services
                     code = _codeService.RemoveMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
                 }
                 // Samus Kirby hat GFX Fix
-                if (fighterSettings.SamusSettings?.UseKirbyGfxFix == true && fighterPackage.KirbyEffectPacId != null)
+                if (fighterSettings.SamusSettings?.UseKirbyGfxFix == true && fighterPackage.FighterInfo.KirbyEffectPacId != null)
                 {
                     var samusKirbyGfxMacro = new AsmMacro
                     {
@@ -2256,7 +2254,7 @@ namespace BrawlInstaller.Services
                         Parameters = new List<string>
                         {
                             $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterPackage.KirbyEffectPacId:X2}"
+                            $"0x{fighterPackage.FighterInfo.KirbyEffectPacId:X2}"
                         },
                         Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
                     };
@@ -2296,7 +2294,7 @@ namespace BrawlInstaller.Services
                     ("r4", "80ACD1EC"),
                     ("r4", "80ACEE68")
                 };
-                if (fighterSettings.JigglypuffSettings?.EFLSId != null && fighterPackage.EffectPacId != null)
+                if (fighterSettings.JigglypuffSettings?.EFLSId != null && fighterPackage.FighterInfo.EffectPacId != null)
                 {
                     foreach(var item in cloneGfxList)
                     {
@@ -2306,7 +2304,7 @@ namespace BrawlInstaller.Services
                             Parameters = new List<string>
                         {
                             $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterPackage.EffectPacId:X2}",
+                            $"0x{fighterPackage.FighterInfo.EffectPacId:X2}",
                             $"0x{fighterSettings.JigglypuffSettings?.EFLSId:X2}",
                             item.Register
                         },

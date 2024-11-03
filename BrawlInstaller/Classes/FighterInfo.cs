@@ -27,6 +27,10 @@ namespace BrawlInstaller.Classes
         public uint? SoundbankId { get; set; } = null;
         [JsonIgnore] public int EndingId { get; set; } = -1;
         public KirbyLoadFlags KirbyLoadType { get; set; } = KirbyLoadFlags.None;
+        public int? EffectPacId { get; set; } = null;
+        [JsonIgnore] public int? OriginalEffectPacId { get; set; } = null;
+        public int? KirbyEffectPacId { get; set; } = null;
+        [JsonIgnore] public int? OriginalKirbyEffectPacId { get; set; } = null;
 
         public FighterInfo Copy()
         {
@@ -45,7 +49,11 @@ namespace BrawlInstaller.Classes
                 VictoryThemeId = VictoryThemeId,
                 SoundbankId = SoundbankId,
                 EndingId = EndingId,
-                KirbyLoadType = KirbyLoadType
+                KirbyLoadType = KirbyLoadType,
+                EffectPacId = EffectPacId,
+                OriginalEffectPacId = OriginalEffectPacId,
+                KirbyEffectPacId = KirbyEffectPacId,
+                OriginalKirbyEffectPacId = OriginalKirbyEffectPacId
             };
             return newFighterInfo;
         }
