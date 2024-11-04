@@ -340,7 +340,9 @@ namespace BrawlInstaller.Services
                 var fighterNode = (FCFGNode)rootNode;
                 fighterInfo.InternalName = fighterNode.InternalFighterName;
                 fighterInfo.SoundbankId = fighterNode.SoundBank;
+                fighterInfo.OriginalSoundbankId = fighterNode.SoundBank;
                 fighterInfo.KirbySoundbankId = fighterNode.KirbySoundBank;
+                fighterInfo.OriginalKirbySoundbankId = fighterNode.KirbySoundBank;
                 fighterInfo.KirbyLoadType = fighterNode.KirbyLoadType;
             }
             fighterInfo.Ids = fighterIds;
@@ -540,18 +542,38 @@ namespace BrawlInstaller.Services
                 if (file != null)
                 {
                     files.Add((file, name, pacFile));
-                    // If main PAC file or item PAC file, update GFX IDs
+                    // If main PAC file or item PAC file, update GFX and SFX IDs
                     var regex = Regex.Match(name.ToLower(), $"[itm{fighterInfo.InternalName.ToLower()}]\\d+[param]");
-                    if (fighterPackage.FighterInfo.EffectPacId != null && fighterPackage.FighterInfo.OriginalEffectPacId != null && fighterPackage.FighterInfo.EffectPacId != fighterPackage.FighterInfo.OriginalEffectPacId &&
-                        name.ToLower() == ("Fit" + fighterInfo.InternalName + ".pac").ToLower() || regex.Success)
+                    if (name.ToLower() == ("Fit" + fighterInfo.InternalName + ".pac").ToLower() || regex.Success)
                     {
-                        UpdateEffectPac(file, (int)fighterPackage.FighterInfo.EffectPacId, (int)fighterPackage.FighterInfo.OriginalEffectPacId);
+                        // Update GFX IDs if they've changed
+                        if (fighterPackage.FighterInfo.EffectPacId != null && fighterPackage.FighterInfo.OriginalEffectPacId != null && 
+                            fighterPackage.FighterInfo.EffectPacId != fighterPackage.FighterInfo.OriginalEffectPacId)
+                        {
+                            UpdateEffectPac(file, (int)fighterPackage.FighterInfo.EffectPacId, (int)fighterPackage.FighterInfo.OriginalEffectPacId);
+                        }
+                        // Update SFX IDs if they've changed
+                        if (fighterPackage.FighterInfo.SoundbankId != null && fighterPackage.FighterInfo.OriginalSoundbankId != null &&
+                            fighterPackage.FighterInfo.SoundbankId != fighterPackage.FighterInfo.OriginalSoundbankId)
+                        {
+                            UpdateSFXIds(file, (int)fighterPackage.FighterInfo.SoundbankId, (int)fighterPackage.FighterInfo.OriginalSoundbankId);
+                        }
                     }
                     // If Kirby PAC file, update GFX IDs
-                    if (fighterPackage.FighterInfo.KirbyEffectPacId != null && fighterPackage.FighterInfo.OriginalKirbyEffectPacId != null && fighterPackage.FighterInfo.KirbyEffectPacId != fighterPackage.FighterInfo.OriginalKirbyEffectPacId &&
-                        name.ToLower() == ("FitKirby" + fighterInfo.InternalName + ".pac").ToLower())
+                    if (name.ToLower() == ("FitKirby" + fighterInfo.InternalName + ".pac").ToLower())
                     {
-                        UpdateEffectPac(file, (int)fighterPackage.FighterInfo.KirbyEffectPacId, (int)fighterPackage.FighterInfo.OriginalKirbyEffectPacId);
+                        // Update GFX IDs if they've changed
+                        if (fighterPackage.FighterInfo.KirbyEffectPacId != null && fighterPackage.FighterInfo.OriginalKirbyEffectPacId != null && 
+                            fighterPackage.FighterInfo.KirbyEffectPacId != fighterPackage.FighterInfo.OriginalKirbyEffectPacId)
+                        {
+                            UpdateEffectPac(file, (int)fighterPackage.FighterInfo.KirbyEffectPacId, (int)fighterPackage.FighterInfo.OriginalKirbyEffectPacId);
+                        }
+                        // Update SFX IDs if they've changed
+                        if (fighterPackage.FighterInfo.KirbySoundbankId != null && fighterPackage.FighterInfo.OriginalKirbySoundbankId != null &&
+                            fighterPackage.FighterInfo.KirbySoundbankId != fighterPackage.FighterInfo.OriginalKirbySoundbankId)
+                        {
+                            UpdateSFXIds(file, (int)fighterPackage.FighterInfo.KirbySoundbankId, (int)fighterPackage.FighterInfo.OriginalKirbySoundbankId);
+                        }
                     }
                 }
             }
@@ -673,6 +695,22 @@ namespace BrawlInstaller.Services
             if (dataNode != null)
             {
                 _psaService.UpdateGFXIds(dataNode, effectPacId, oldEffectPacId);
+            }
+        }
+
+        /// <summary>
+        /// Update SFX IDs for fighter PAC file
+        /// </summary>
+        /// <param name="rootNode">Root node of fighter PAC file</param>
+        /// <param name="soundbankId">New soundbank ID</param>
+        /// <param name="oldSoundbankId">Old soundbank ID</param>
+        private void UpdateSFXIds(ResourceNode rootNode, int soundbankId, int oldSoundbankId)
+        {
+            // Find moveset data node
+            var dataNode = rootNode.FindChild("Misc Data [0]");
+            if (dataNode != null)
+            {
+                _psaService.UpdateSFXIds(dataNode, soundbankId, oldSoundbankId);
             }
         }
 
