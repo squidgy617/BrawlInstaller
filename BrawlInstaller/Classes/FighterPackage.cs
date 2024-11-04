@@ -128,7 +128,7 @@ namespace BrawlInstaller.Classes
     {
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public int? EFLSId { get; set; } = null;
-        // TODO: Somehow update these when soundbank ID is changed
+        // TODO: Somehow update these when soundbank ID is changed, probably at UI level
         public List<int?> SfxIds { get; set; } = new List<int?> { null, null, null, null };
     }
 
