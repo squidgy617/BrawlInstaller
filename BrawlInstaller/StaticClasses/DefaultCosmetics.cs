@@ -18,5 +18,31 @@ namespace BrawlInstaller.StaticClasses
             (CosmeticType.StageGameLogo, "Game Logo"),
             (CosmeticType.StageAltName, "Alt Name")
         };
+
+        public static List<(CosmeticType CosmeticType, string Style)> DefaultCostumeCosmetics = new List<(CosmeticType CosmeticType, string Style)>
+        {
+            (CosmeticType.CSP, "Result"),
+            (CosmeticType.CSP, "CSS"),
+            (CosmeticType.PortraitName, "vBrawl"),
+            (CosmeticType.PortraitName, "PM"),
+            (CosmeticType.PortraitName, "REMIX"),
+            (CosmeticType.BP, "vBrawl"),
+            (CosmeticType.BP, "REMIX"),
+            (CosmeticType.BPName, "vBrawl"),
+            (CosmeticType.StockIcon, "P+"),
+            (CosmeticType.CSSIcon, "vBrawl"),
+            (CosmeticType.CSSIcon, "P+"),
+            (CosmeticType.CSSIcon, "PM"),
+            (CosmeticType.CSSIcon, "REMIX"),
+            (CosmeticType.CSSIconName, "vBrawl"),
+            (CosmeticType.ReplayIcon, "vBrawl"),
+            (CosmeticType.ReplayIcon, "P+")
+        };
+
+        public static List<(CosmeticType CosmeticType, string Style)> DefaultFighterCosmetics = new List<(CosmeticType CosmeticType, string Style)>
+        {
+            (CosmeticType.RecordsIcon, "vBrawl"),
+            (CosmeticType.CreditsIcon, "vBrawl")
+        };
     }
 }

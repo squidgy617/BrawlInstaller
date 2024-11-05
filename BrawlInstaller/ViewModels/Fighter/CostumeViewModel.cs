@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using BrawlLib.Internal;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -51,10 +52,10 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private FighterPackage _fighterPackage;
+        private BuildSettings _buildSettings;
         private ObservableCollection<Costume> _costumes;
         private Costume _selectedCostume;
         private FighterPacFile _selectedPacFile;
-        private Dictionary<string, CosmeticType> _cosmeticOptions = new Dictionary<string, CosmeticType>();
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
         private List<BrawlExColorID> _colors;
@@ -92,22 +93,6 @@ namespace BrawlInstaller.ViewModels
             _fileService = fileService;
             _fighterService = fighterService;
 
-            // TODO: Do what we did with stages for getting defaults
-            var cosmeticOptions = new List<KeyValuePair<string, CosmeticType>>
-            {
-                CosmeticType.CSP.GetKeyValuePair(),
-                CosmeticType.PortraitName.GetKeyValuePair(),
-                CosmeticType.BP.GetKeyValuePair(),
-                CosmeticType.StockIcon.GetKeyValuePair(),
-                CosmeticType.CSSIcon.GetKeyValuePair(),
-                CosmeticType.ReplayIcon.GetKeyValuePair()
-            };
-
-            foreach (var option in cosmeticOptions)
-            {
-                CosmeticOptions.Add(option.Key, option.Value);
-            }
-
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
 
             Colors = BrawlExColorID.Colors.ToList();
@@ -121,7 +106,10 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
-        
+
+        [DependsUpon(nameof(FighterPackage))]
+        public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
+
         public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(nameof(Costumes)); } }
         
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(nameof(SelectedCostume)); } }
@@ -136,7 +124,7 @@ namespace BrawlInstaller.ViewModels
         public FighterPacFile SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
 
         [DependsUpon(nameof(Costumes))]
-        public Dictionary<string, CosmeticType> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+        public Dictionary<string, CosmeticType> CosmeticOptions { get => DefaultCosmetics.DefaultCostumeCosmetics.Select(x => x.CosmeticType.GetKeyValuePair()).Distinct().ToList().ToDictionary(x => x.Key, x => x.Value); }
 
         [DependsUpon(nameof(SelectedCostume))]
         [DependsUpon(nameof(CosmeticOptions))]
@@ -151,8 +139,13 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(Costumes))]
         [DependsUpon(nameof(SelectedCostume))]
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public List<string> Styles { get => Costumes?.SelectMany(x => x.Cosmetics)?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
-        
+        public List<string> Styles
+        {
+            get => DefaultCosmetics.DefaultCostumeCosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
+                .Concat(BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style) ?? new List<string>())
+                .Concat(FighterPackage?.Cosmetics?.Items?.Where(y => y.CosmeticType == SelectedCosmeticOption)?.Select(y => y.Style) ?? new List<string>()).Distinct().ToList();
+        }
+
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
         
         public List<BrawlExColorID> Colors { get => _colors; set { _colors = value; OnPropertyChanged(nameof(Colors)); } }
@@ -205,6 +198,7 @@ namespace BrawlInstaller.ViewModels
         public void LoadCostumes(FighterLoadedMessage message)
         {
             FighterPackage = message.Value;
+            BuildSettings = _settingsService.BuildSettings;
             Costumes = new ObservableCollection<Costume>(message.Value.Costumes);
             SelectedCostume = Costumes.FirstOrDefault();
 
