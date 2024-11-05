@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280">
     <Grid>
-        <ContentControl x:Name="MainView" Content="{Binding MainViewModel}" Height="Auto" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ContentControl x:Name="MainView" Content="{Binding MainViewModel}" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
     </Grid>
 </Window>

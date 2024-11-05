@@ -12,18 +12,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <ContentControl x:Name="MainControlsView" Content="{Binding MainControlsViewModel}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="Auto" Height="Auto"/>
-        <TabControl x:Name="MainTabControl" Grid.Row="1" SelectedIndex="0" Height="Auto" Width="Auto">
+        <TabControl x:Name="MainTabControl" Grid.Row="1" SelectedIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TabItem Header="Fighter">
-                <ContentControl x:Name="FighterView" Content="{Binding FighterViewModel}" Height="Auto" Width="Auto"/>
+                <ContentControl x:Name="FighterView" Content="{Binding FighterViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
             <TabItem Header="Fighter Info">
-                <ContentControl x:Name="FighterInfoView" Content="{Binding FighterInfoViewModel}" Height="Auto" Width="Auto"/>
+                <ContentControl x:Name="FighterInfoView" Content="{Binding FighterInfoViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
             <TabItem Header="Settings">
-                <ContentControl x:Name="SettingsView" Content="{Binding SettingsViewModel}" Height="Auto" Width="Auto"/>
+                <ContentControl x:Name="SettingsView" Content="{Binding SettingsViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
             <TabItem Header="Stages">
-                <ContentControl x:Name="StageView" Content="{Binding StageViewModel}" Height="Auto" Width="Auto"/>
+                <ContentControl x:Name="StageView" Content="{Binding StageViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
         </TabControl>
     </Grid>
