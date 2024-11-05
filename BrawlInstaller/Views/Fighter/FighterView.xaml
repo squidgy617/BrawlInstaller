@@ -62,18 +62,22 @@
                             <ContentControl Content="{Binding CostumeViewModel}"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" Grid.Row="1" Margin="3,2,2,2">
-                        <ContentControl Content="{Binding FranchiseIconViewModel}"/>
-                    </GroupBox>
-                    <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" Grid.Column="1" Grid.Row="1" Margin="3,2,2,2">
-                        <ContentControl Content="{Binding CosmeticViewModel}"/>
-                    </GroupBox>
-                    <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
-                        <ContentControl Content="{Binding FighterFileViewModel}"/>
-                    </GroupBox>
-                    <GroupBox x:Name="fighterSettingsGroupBox" Header="Fighter Settings" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2">
-                        <ContentControl Content="{Binding FighterSettingsViewModel}"/>
-                    </GroupBox>
+                    <StackPanel Grid.Column="2" Grid.RowSpan="2">
+                        <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" Margin="3,2,2,2">
+                            <ContentControl Content="{Binding FranchiseIconViewModel}"/>
+                        </GroupBox>
+                        <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" Margin="3,2,2,2">
+                            <ContentControl Content="{Binding CosmeticViewModel}"/>
+                        </GroupBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+                        <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files">
+                            <ContentControl Content="{Binding FighterFileViewModel}"/>
+                        </GroupBox>
+                        <GroupBox x:Name="fighterSettingsGroupBox" Header="Fighter Settings">
+                            <ContentControl Content="{Binding FighterSettingsViewModel}"/>
+                        </GroupBox>
+                    </StackPanel>
                 </Grid>
             </ScrollViewer>
             <StackPanel Grid.Row="1">
