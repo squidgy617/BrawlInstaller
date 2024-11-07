@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace BrawlInstaller.ViewModels
     public interface ICosmeticViewModel
     {
         List<Cosmetic> Cosmetics { get; }
-        ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
         List<string> Styles { get; }
@@ -27,8 +27,8 @@ namespace BrawlInstaller.ViewModels
     internal class CosmeticViewModel : ViewModelBase, ICosmeticViewModel
     {
         // Private properties
+        private FighterPackage _fighterPackage;
         private List<Cosmetic> _cosmetics;
-        private ObservableCollection<KeyValuePair<string, CosmeticType>> _cosmeticOptions;
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
 
@@ -41,11 +41,6 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService = settingsService;
 
-            CosmeticOptions = new ObservableCollection<KeyValuePair<string, CosmeticType>>
-            {
-                CosmeticType.RecordsIcon.GetKeyValuePair()
-            };
-
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
 
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
@@ -55,10 +50,12 @@ namespace BrawlInstaller.ViewModels
         }
 
         //Properties
+        public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
+
         public List<Cosmetic> Cosmetics { get => _cosmetics; set { _cosmetics = value; OnPropertyChanged(nameof(Cosmetics)); } }
 
         [DependsUpon(nameof(Cosmetics))]
-        public ObservableCollection<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => _cosmeticOptions; set { _cosmeticOptions = value; OnPropertyChanged(nameof(CosmeticOptions)); } }
+        public Dictionary<string, CosmeticType> CosmeticOptions { get => DefaultCosmetics.DefaultFighterCosmetics.Select(x => x.CosmeticType.GetKeyValuePair()).Distinct().ToList().ToDictionary(x => x.Key, x => x.Value); }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
         [DependsUpon(nameof(Cosmetics))]
@@ -67,18 +64,20 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(Cosmetics))]
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public List<string> Styles { get => Cosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList(); }
+        public List<string> Styles
+        {
+            get => DefaultCosmetics.DefaultCostumeCosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
+                .Concat(_settingsService.BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style) ?? new List<string>())
+                .Concat(FighterPackage?.Cosmetics?.Items?.Where(y => y.CosmeticType == SelectedCosmeticOption)?.Select(y => y.Style) ?? new List<string>()).Distinct().ToList();
+        }
+
+        [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
 
         // Methods
         public void LoadCosmetics(FighterLoadedMessage message)
         {
             Cosmetics = message.Value.Cosmetics.Items;
-            foreach (CosmeticType option in _settingsService.BuildSettings.CosmeticSettings.Where(x => x.IdType != IdType.Cosmetic && x.IdType != IdType.Franchise
-            && x.IdType != IdType.Thumbnail && !CosmeticOptions.Select(y => y.Value).Contains(x.CosmeticType)).Select(x => x.CosmeticType).Distinct())
-            {
-                CosmeticOptions.Add(option.GetKeyValuePair());
-            }
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
         }
     }
