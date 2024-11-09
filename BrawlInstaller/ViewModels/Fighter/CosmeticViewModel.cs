@@ -5,18 +5,19 @@ using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
 {
     public interface ICosmeticViewModel
     {
-        List<Cosmetic> Cosmetics { get; }
         CosmeticType SelectedCosmeticOption { get; set; }
         Cosmetic SelectedCosmetic { get; }
         List<string> Styles { get; }
@@ -28,18 +29,27 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private FighterPackage _fighterPackage;
-        private List<Cosmetic> _cosmetics;
         private CosmeticType _selectedCosmeticOption;
         private string _selectedStyle;
 
         // Services
         ISettingsService _settingsService { get; }
+        IDialogService _dialogService { get; }
+        IFileService _fileService { get; }
+
+        // Commands
+        public ICommand ReplaceCosmeticCommand => new RelayCommand(param => ReplaceCosmetic());
+        public ICommand ClearCosmeticCommand => new RelayCommand(param => ClearCosmetic());
+        public ICommand ReplaceHDCosmeticCommand => new RelayCommand(param => ReplaceHDCosmetic());
+        public ICommand ClearHDCosmeticCommand => new RelayCommand(param => ClearHDCosmetic());
 
         // Importing constructor
         [ImportingConstructor]
-        public CosmeticViewModel(ISettingsService settingsService)
+        public CosmeticViewModel(ISettingsService settingsService, IDialogService dialogService, IFileService fileService)
         {
             _settingsService = settingsService;
+            _dialogService = dialogService;
+            _fileService = fileService;
 
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
 
@@ -52,17 +62,15 @@ namespace BrawlInstaller.ViewModels
         //Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
 
-        public List<Cosmetic> Cosmetics { get => _cosmetics; set { _cosmetics = value; OnPropertyChanged(nameof(Cosmetics)); } }
-
-        [DependsUpon(nameof(Cosmetics))]
+        [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, CosmeticType> CosmeticOptions { get => DefaultCosmetics.DefaultFighterCosmetics.Select(x => x.CosmeticType.GetKeyValuePair()).Distinct().ToList().ToDictionary(x => x.Key, x => x.Value); }
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
-        [DependsUpon(nameof(Cosmetics))]
+        [DependsUpon(nameof(FighterPackage))]
         [DependsUpon(nameof(SelectedStyle))]
-        public Cosmetic SelectedCosmetic { get => Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
+        public Cosmetic SelectedCosmetic { get => FighterPackage?.Cosmetics?.Items.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == SelectedStyle); }
 
-        [DependsUpon(nameof(Cosmetics))]
+        [DependsUpon(nameof(FighterPackage))]
         [DependsUpon(nameof(SelectedCosmeticOption))]
         public List<string> Styles
         {
@@ -77,8 +85,75 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadCosmetics(FighterLoadedMessage message)
         {
-            Cosmetics = message.Value.Cosmetics.Items;
+            FighterPackage = message.Value;
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public Cosmetic AddCosmetic()
+        {
+            var cosmetic = new Cosmetic
+            {
+                CosmeticType = SelectedCosmeticOption,
+                Style = SelectedStyle
+            };
+            FighterPackage.Cosmetics.Add(cosmetic);
+            return cosmetic;
+        }
+
+        public void ReplaceCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select image", "PNG images (.png)|*.png");
+            // Update the image
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = _fileService.LoadImage(image);
+                if (SelectedCosmetic == null)
+                    AddCosmetic();
+                SelectedCosmetic.Image = bitmap;
+                SelectedCosmetic.ImagePath = image;
+                SelectedCosmetic.Texture = null;
+                SelectedCosmetic.Palette = null;
+                FighterPackage.Cosmetics.ItemChanged(SelectedCosmetic);
+            }
+            OnPropertyChanged(nameof(SelectedCosmetic));
+        }
+
+        public void ReplaceHDCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select image", "PNG images (.png)|*.png");
+            // Update the image
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = _fileService.LoadImage(image);
+                if (SelectedCosmetic == null)
+                    AddCosmetic();
+                SelectedCosmetic.HDImage = bitmap;
+                SelectedCosmetic.HDImagePath = image;
+                FighterPackage.Cosmetics.ItemChanged(SelectedCosmetic);
+            }
+            OnPropertyChanged(nameof(SelectedCosmetic));
+        }
+
+        public void ClearCosmetic()
+        {
+            FighterPackage?.Cosmetics?.Remove(SelectedCosmetic);
+            OnPropertyChanged(nameof(SelectedCosmetic));
+        }
+
+        public void ClearHDCosmetic()
+        {
+            if (SelectedCosmetic.Image == null)
+            {
+                FighterPackage.Cosmetics.Remove(SelectedCosmetic);
+            }
+            else
+            {
+                SelectedCosmetic.HDImage = null;
+                SelectedCosmetic.HDImagePath = string.Empty;
+                FighterPackage.Cosmetics.ItemChanged(SelectedCosmetic);
+            }
+            OnPropertyChanged(nameof(SelectedCosmetic));
         }
     }
 }

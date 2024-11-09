@@ -11,8 +11,12 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,6 +25,13 @@
         <ComboBox x:Name="cosmeticOptionsDropDown" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
         <Label x:Name="cosmeticStyleLabel" Content="Style:" Grid.Column="0" Grid.Row="1"/>
         <ComboBox x:Name="stylesDropDown" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
-        <Image x:Name="cosmeticImage" Height="128" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="2" Grid.Column="1"/>
+        <Label x:Name="cosmeticLabel" Content="Image:" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1"/>
+        <Image x:Name="cosmeticImage" Height="128" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="3" Grid.Column="1"/>
+        <Button x:Name="browseCosmeticButton" Content="Browse..." Command="{Binding ReplaceCosmeticCommand}" Grid.Row="4" Grid.Column="1"/>
+        <Button x:Name="clearCosmeticButton" Content="Clear" Command="{Binding ClearCosmeticCommand}" Grid.Row="5" Grid.Column="1"/>
+        <Label x:Name="hdCosmeticLabel" Content="HD Image:" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2"/>
+        <Image x:Name="hdCosmeticImage" Height="128" Width="128" Source="{Binding SelectedCosmetic.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="3" Grid.Column="2"/>
+        <Button x:Name="browseHdCosmeticButton" Content="Browse..." Command="{Binding ReplaceHDCosmeticCommand}" Grid.Row="4" Grid.Column="2"/>
+        <Button x:Name="clearHdCosmeticButton" Content="Clear" Command="{Binding ClearHDCosmeticCommand}" Grid.Row="5" Grid.Column="2"/>
     </Grid>
 </UserControl>
