@@ -26,13 +26,19 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0"/>
-        <ListBox x:Name="pacFileListBox" Grid.Column="1" ItemsSource="{Binding FighterPackage.PacFiles}" SelectedItem="{Binding SelectedPacFile}" Width="120" Height="100">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding FilePath, Converter={StaticResource filePathConverter}}" ToolTip="{Binding FilePath}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2">
+            <ListBox x:Name="pacFileListBox" ItemsSource="{Binding PacFiles}" SelectedItem="{Binding SelectedPacFile}" Width="120" Height="100">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding FilePath, Converter={StaticResource filePathConverter}}" ToolTip="{Binding FilePath}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel>
+                <Button x:Name="addPacFilesButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddPacFilesCommand}"/>
+                <Button x:Name="removePacFileButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePacFileCommand}"/>
+            </StackPanel>
+        </StackPanel>
         <Label x:Name="exConfigsLabel" Content="Ex Configs:" Grid.Column="2"/>
         <ListBox x:Name="exConfigsListBox" Grid.Column="3" ItemsSource="{Binding FighterPackage.ExConfigs}" Width="120" Height="100">
             <ListBox.ItemTemplate>
