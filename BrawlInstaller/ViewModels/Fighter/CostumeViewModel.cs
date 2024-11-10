@@ -82,6 +82,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddCostumeCommand => new RelayCommand(param => AddCostume());
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
         public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
+        public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
+        public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
 
         // Importing constructor
         [ImportingConstructor]
@@ -599,6 +601,32 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             return ids;
+        }
+
+        private void AddStyle()
+        {
+            var styleName = _dialogService.OpenStringInputDialog("Style Name Input", "Enter the name for your new style");
+            if (styleName != null && !FighterPackage.Cosmetics.Items.Any(x => x.Style == styleName && x.CosmeticType == SelectedCosmeticOption))
+            {
+                var cosmetic = new Cosmetic
+                {
+                    CosmeticType = SelectedCosmeticOption,
+                    Style = styleName
+                };
+                FighterPackage.Cosmetics.Add(cosmetic);
+                OnPropertyChanged(nameof(Styles));
+                OnPropertyChanged(nameof(FighterPackage));
+            }
+        }
+
+        private void RemoveStyle()
+        {
+            foreach (var cosmetic in FighterPackage.Cosmetics.Items.Where(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption).ToList())
+            {
+                FighterPackage.Cosmetics.Remove(cosmetic);
+            }
+            OnPropertyChanged(nameof(Styles));
+            OnPropertyChanged(nameof(FighterPackage));
         }
     }
 }

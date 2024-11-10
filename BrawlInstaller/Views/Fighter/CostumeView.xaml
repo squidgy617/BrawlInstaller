@@ -118,7 +118,11 @@
                     <Label x:Name="costumeCosmeticTypeLabel" Content="Type:" Grid.Row="0" Grid.Column="0"/>
                     <ComboBox x:Name="cosmeticOptionsDropDown" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
                     <Label x:Name="costumeCosmeticStyleLabel" Content="Style:" Grid.Column="0" Grid.Row="1"/>
-                    <ComboBox x:Name="stylesDropDown" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+                        <ComboBox x:Name="stylesDropDown" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+                        <Button x:Name="stylesAddButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddStyleCommand}"/>
+                        <Button x:Name="stylesRemoveButton" Style="{StaticResource miniButton}" Content="-" Command="{Binding RemoveStyleCommand}"/>
+                    </StackPanel>
                     <Label x:Name="inheritedStylesLabel" Content="Copy From:" Grid.Column="0" Grid.Row="2"/>
                     <ComboBox x:Name="inheritedStylesDropDown" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding InheritedStyle, Mode=TwoWay}" Grid.Row="2" Grid.Column="1"/>
                     <Label x:Name="cosmeticImageLabel" Content="Image:" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"/>

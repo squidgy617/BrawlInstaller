@@ -24,7 +24,11 @@
         <Label x:Name="cosmeticTypeLabel" Content="Type:" Grid.Row="0" Grid.Column="0"/>
         <ComboBox x:Name="cosmeticOptionsDropDown" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
         <Label x:Name="cosmeticStyleLabel" Content="Style:" Grid.Column="0" Grid.Row="1"/>
-        <ComboBox x:Name="stylesDropDown" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="1" Grid.Column="1"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <ComboBox x:Name="stylesDropDown" Width="120" ItemsSource="{Binding Styles}" SelectedValue="{Binding SelectedStyle, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True"/>
+            <Button x:Name="stylesAddButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddStyleCommand}"/>
+            <Button x:Name="stylesRemoveButton" Style="{StaticResource miniButton}" Content="-" Command="{Binding RemoveStyleCommand}"/>
+        </StackPanel>
         <Label x:Name="cosmeticLabel" Content="Image:" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1"/>
         <Image x:Name="cosmeticImage" Height="128" Width="128" Source="{Binding SelectedCosmetic.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="3" Grid.Column="1"/>
         <Button x:Name="browseCosmeticButton" Content="Browse..." Command="{Binding ReplaceCosmeticCommand}" Grid.Row="4" Grid.Column="1"/>
