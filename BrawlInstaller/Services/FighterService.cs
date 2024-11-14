@@ -1026,7 +1026,7 @@ namespace BrawlInstaller.Services
             // Import classic intro
             fighterPackage.ClassicIntro = ImportClassicIntro(classicIntro, fighterPackage.FighterInfo.Ids.CosmeticId);
             // Import ending files
-            fighterPackage.FighterInfo.EndingId = ImportEndingPacFiles(endingFiles, fighterPackage.FighterInfo);
+            fighterPackage.FighterInfo.EndingId = ImportEndingPacFiles(endingFiles, fighterPackage);
             // Import ending movie
             fighterPackage.EndingMovie = ImportEndingMovie(endingMovie, fighterPackage.FighterInfo.InternalName);
         }
@@ -1566,13 +1566,14 @@ namespace BrawlInstaller.Services
         /// Import ending pac files for fighter
         /// </summary>
         /// <param name="endingPacFiles">Opened files to import</param>
-        /// <param name="fighterInfo">Fighter info to use</param>
+        /// <param name="fighterPackage">Fighter package to use</param>
         /// <returns>New ending ID</returns>
-        private int ImportEndingPacFiles(List<ResourceNode> endingPacFiles, FighterInfo fighterInfo)
+        private int ImportEndingPacFiles(List<ResourceNode> endingPacFiles, FighterPackage fighterPackage)
         {
+            var fighterInfo = fighterPackage.FighterInfo;
             var cosmeticConfigId = fighterInfo.Ids.CosmeticConfigId;
             var endingId = fighterInfo.EndingId;
-            if (cosmeticConfigId > -1 && endingPacFiles.Count >= 1)
+            if (cosmeticConfigId > -1)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
@@ -1593,13 +1594,19 @@ namespace BrawlInstaller.Services
                     asmTable.Add(newEntry);
                 }
                 // Update ending ID if it's already used
-                if (asmTable.Where(x => asmTable.IndexOf(x) != cosmeticConfigId).Any(x => int.Parse(x.Item) == endingId))
+                if (asmTable.Where(x => asmTable.IndexOf(x) != cosmeticConfigId).Any(x => int.Parse(x.Item) == endingId) && 
+                    fighterPackage.PackageType != PackageType.Delete)
                 {
                     while (asmTable.Where(x => asmTable.IndexOf(x) != cosmeticConfigId).Any(x => int.Parse(x.Item) == endingId))
                     {
                         endingId++;
                     }
                     fighterInfo.EndingId = endingId;
+                }
+                // If fighter is being deleted, set to -1
+                else if (fighterPackage.PackageType == PackageType.Delete)
+                {
+                    fighterInfo.EndingId = -1;
                 }
                 // Update fighter slot
                 if (asmTable.Count > cosmeticConfigId)
@@ -1611,31 +1618,34 @@ namespace BrawlInstaller.Services
                 code = _codeService.ReplaceTable(code, "ENDINGTABLE:", asmTable, DataSize.Byte, 8);
                 _fileService.SaveTextFile(path, code);
                 // Update and import pac files
-                var endingPath = _settingsService.BuildSettings.FilePathSettings.EndingPath;
-                var savePath = Path.Combine(buildPath, endingPath);
-                foreach(var file in endingPacFiles)
+                if (endingPacFiles.Count > 0)
                 {
-                    // Update texture names
-                    var texturePrefix = "A";
-                    var filePrefix = "All";
-                    if (file.RootNode.Name.StartsWith("EndingSimple"))
+                    var endingPath = _settingsService.BuildSettings.FilePathSettings.EndingPath;
+                    var savePath = Path.Combine(buildPath, endingPath);
+                    foreach (var file in endingPacFiles)
                     {
-                        texturePrefix = "S";
-                        filePrefix = "Simple";
-                    }
-                    var nodes = file.GetChildrenRecursive();
-                    foreach (var node in nodes)
-                    {
-                        var regex = new Regex("MenEndpictures(A|S)\\d{4}");
-                        if (!node.Name.EndsWith("0000"))
+                        // Update texture names
+                        var texturePrefix = "A";
+                        var filePrefix = "All";
+                        if (file.RootNode.Name.StartsWith("EndingSimple"))
                         {
-                            node.Name = regex.Replace(node.Name, $"MenEndpictures{texturePrefix}{endingId:D4}");
+                            texturePrefix = "S";
+                            filePrefix = "Simple";
                         }
+                        var nodes = file.GetChildrenRecursive();
+                        foreach (var node in nodes)
+                        {
+                            var regex = new Regex("MenEndpictures(A|S)\\d{4}");
+                            if (!node.Name.EndsWith("0000"))
+                            {
+                                node.Name = regex.Replace(node.Name, $"MenEndpictures{texturePrefix}{endingId:D4}");
+                            }
+                        }
+                        // Save
+                        file._origPath = Path.Combine(savePath, $"Ending{filePrefix}{endingId:D2}.pac");
+                        _fileService.SaveFile(file);
+                        _fileService.CloseFile(file);
                     }
-                    // Save
-                    file._origPath = Path.Combine(savePath, $"Ending{filePrefix}{endingId:D2}.pac");
-                    _fileService.SaveFile(file);
-                    _fileService.CloseFile(file);
                 }
             }
             return endingId;
