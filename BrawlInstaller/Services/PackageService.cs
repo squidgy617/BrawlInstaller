@@ -152,6 +152,8 @@ namespace BrawlInstaller.Services
             }
             // Compile GCT
             _codeService.CompileCodes();
+            // Set package type to update, in case it was a new package
+            fighterPackage.PackageType = PackageType.Update;
         }
     }
 }
