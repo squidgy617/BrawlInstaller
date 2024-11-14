@@ -89,13 +89,19 @@
                 <Label x:Name="classicIntroLabel" Content="Classic Intro:"/>
                 <userControls:FileBox x:Name="classicIntroFileBox" Text="{Binding FighterPackage.ClassicIntro, Mode=TwoWay}" Grid.Column="1" TextBoxWidth="120" Filter="PAC file (.pac)|*.pac"/>
                 <Label x:Name="endingLabel" Content="Ending PAC Files:" Grid.Row="1"/>
-                <ListBox x:Name="endingListBox" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding FighterPackage.EndingPacFiles}" Width="120" Height="80">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                    <ListBox x:Name="endingListBox" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding EndingPacFiles}" Width="120" Height="80" SelectedValue="{Binding SelectedEndingPacFile}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel>
+                        <Button x:Name="addEndingPacFiles" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddEndingPacFilesCommand}"/>
+                        <Button x:Name="removeEndingPacFile" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveEndingPacFileCommand}"/>
+                    </StackPanel>
+                </StackPanel>
                 <Label x:Name="endingMovieLabel" Content="Ending Movie:" Grid.Row="2"/>
                 <userControls:FileBox x:Name="endingMovieFileBox" Text="{Binding FighterPackage.EndingMovie, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" TextBoxWidth="120" Filter="THP file (.thp)|*.thp"/>
             </Grid>

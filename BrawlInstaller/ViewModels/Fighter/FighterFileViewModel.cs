@@ -26,6 +26,7 @@ namespace BrawlInstaller.ViewModels
         private FighterPackage _fighterPackage;
         private FighterPacFile _selectedPacFile;
         private string _selectedExConfig;
+        private string _selectedEndingPacFile;
 
         // Services
         IDialogService _dialogService { get; }
@@ -37,6 +38,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
         public ICommand AddExConfigsCommand => new RelayCommand(param => AddExConfigs());
         public ICommand RemoveExConfigCommand => new RelayCommand(param => RemoveExConfig());
+        public ICommand AddEndingPacFilesCommand => new RelayCommand(param => AddEndingPacFiles());
+        public ICommand RemoveEndingPacFileCommand => new RelayCommand(param => RemoveEndingPacFile());
 
         // Importing constructor
         [ImportingConstructor]
@@ -60,10 +63,16 @@ namespace BrawlInstaller.ViewModels
         public string SelectedExConfig { get => _selectedExConfig; set { _selectedExConfig = value; OnPropertyChanged(nameof(SelectedExConfig)); } }
 
         [DependsUpon(nameof(FighterPackage))]
+        public string SelectedEndingPacFile { get => _selectedEndingPacFile; set { _selectedEndingPacFile = value; OnPropertyChanged(nameof(SelectedEndingPacFile)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<FighterPacFile> PacFiles { get => FighterPackage != null ? new ObservableCollection<FighterPacFile>(FighterPackage?.PacFiles) : new ObservableCollection<FighterPacFile>(); }
 
         [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<string> ExConfigs { get => FighterPackage != null ? new ObservableCollection<string>(FighterPackage?.ExConfigs) : new ObservableCollection<string>(); }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public ObservableCollection<string> EndingPacFiles { get => FighterPackage != null ? new ObservableCollection<string>(FighterPackage?.EndingPacFiles) : new ObservableCollection<string>(); }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
@@ -117,6 +126,23 @@ namespace BrawlInstaller.ViewModels
         public void RemoveExConfig()
         {
             FighterPackage.ExConfigs.Remove(SelectedExConfig);
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void AddEndingPacFiles()
+        {
+            var files = _dialogService.OpenMultiFileDialog("Select ending pac files", "PAC files (.pac)|*.pac");
+            foreach (var file in files)
+            {
+                var pacFile = file;
+                FighterPackage.EndingPacFiles.Add(pacFile);
+            }
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void RemoveEndingPacFile()
+        {
+            FighterPackage.EndingPacFiles.Remove(SelectedEndingPacFile);
             OnPropertyChanged(nameof(FighterPackage));
         }
     }
