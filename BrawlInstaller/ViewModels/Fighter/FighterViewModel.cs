@@ -126,12 +126,20 @@ namespace BrawlInstaller.ViewModels
                     deletePackage.FighterDeleteOptions.DeleteCreditsTheme = false;
                 }
             }
+            if (FranchiseIconViewModel.FranchiseIconList.Items.Any(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId))
+            {
+                var delete = _dialogService.ShowMessage("Would you like to delete the fighter's franchise icon?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Franchise Icon?", MessageBoxButton.YesNo);
+                if (delete)
+                {
+                    deletePackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
+                }
+            }
             // Update UI
             FighterPackage = null;
             OnPropertyChanged(nameof(FighterPackage));
             // Save
             _packageService.SaveFighter(deletePackage);
-            // TODO: Publish a message to remove the fighter from the fighter list, also prompt user and remove franchise icon
+            // TODO: Publish a message to remove the fighter from the fighter list
         }
 
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
