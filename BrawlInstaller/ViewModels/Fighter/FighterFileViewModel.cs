@@ -25,6 +25,7 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private FighterPackage _fighterPackage;
         private FighterPacFile _selectedPacFile;
+        private string _selectedExConfig;
 
         // Services
         IDialogService _dialogService { get; }
@@ -34,6 +35,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand ChangedThemeCommand => new RelayCommand(param => ChangedThemeId(param));
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
         public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
+        public ICommand AddExConfigsCommand => new RelayCommand(param => AddExConfigs());
+        public ICommand RemoveExConfigCommand => new RelayCommand(param => RemoveExConfig());
 
         // Importing constructor
         [ImportingConstructor]
@@ -54,7 +57,13 @@ namespace BrawlInstaller.ViewModels
         public FighterPacFile SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
 
         [DependsUpon(nameof(FighterPackage))]
+        public string SelectedExConfig { get => _selectedExConfig; set { _selectedExConfig = value; OnPropertyChanged(nameof(SelectedExConfig)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<FighterPacFile> PacFiles { get => FighterPackage != null ? new ObservableCollection<FighterPacFile>(FighterPackage?.PacFiles) : new ObservableCollection<FighterPacFile>(); }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public ObservableCollection<string> ExConfigs { get => FighterPackage != null ? new ObservableCollection<string>(FighterPackage?.ExConfigs) : new ObservableCollection<string>(); }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
@@ -91,6 +100,23 @@ namespace BrawlInstaller.ViewModels
         public void RemovePacFile()
         {
             FighterPackage.PacFiles.Remove(SelectedPacFile);
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void AddExConfigs()
+        {
+            var files = _dialogService.OpenMultiFileDialog("Select Ex configs", "DAT files (.dat)|*.dat");
+            foreach (var file in files)
+            {
+                var exConfig = file;
+                FighterPackage.ExConfigs.Add(exConfig);
+            }
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void RemoveExConfig()
+        {
+            FighterPackage.ExConfigs.Remove(SelectedExConfig);
             OnPropertyChanged(nameof(FighterPackage));
         }
     }
