@@ -49,6 +49,7 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand LoadCommand => new RelayCommand(param => LoadFighter());
         public ICommand SaveCommand => new RelayCommand(param => SaveFighter());
+        public ICommand DeleteCommand => new RelayCommand(param => DeleteFighter());
         public ICommand RefreshFightersCommand => new RelayCommand(param => GetFighters());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
@@ -93,6 +94,14 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(FighterPackage));
                 WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
+        }
+
+        public void DeleteFighter()
+        {
+            _packageService.DeleteFighter(FighterPackage);
+            // Update UI
+            OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not

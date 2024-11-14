@@ -26,17 +26,17 @@ namespace BrawlInstaller.Classes
     public class FighterPackage
     {
         public FighterInfo FighterInfo { get; set; }
-        public List<Costume> Costumes { get; set; }
+        public List<Costume> Costumes { get; set; } = new List<Costume>();
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
-        public List<FighterPacFile> PacFiles { get; set; }
-        public List<string> ExConfigs { get; set; }
+        public List<FighterPacFile> PacFiles { get; set; } = new List<FighterPacFile>();
+        public List<string> ExConfigs { get; set; } = new List<string>();
         public string Module { get; set; }
         public string Soundbank { get; set; }
         public string KirbySoundbank { get; set; }
         public string ClassicIntro { get; set; }
-        public List<string> EndingPacFiles { get; set; }
+        public List<string> EndingPacFiles { get; set; } = new List<string>();
         public string EndingMovie { get; set; }
-        public TracklistSong CreditsTheme { get; set; }
+        public TracklistSong CreditsTheme { get; set; } = new TracklistSong();
         public TracklistSong VictoryTheme { get; set; } = new TracklistSong();
         public FighterSettings FighterSettings { get; set; } = new FighterSettings();
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();

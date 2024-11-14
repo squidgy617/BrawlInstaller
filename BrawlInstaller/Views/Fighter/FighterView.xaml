@@ -80,6 +80,7 @@
                     </StackPanel>
                 </Grid>
             </ScrollViewer>
+            <Button x:Name="deleteButton" Grid.Row="1" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteCommand}"/>
             <StackPanel Grid.Row="1">
                 <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Right" Command="{Binding SaveCommand}"/>
             </StackPanel>

@@ -22,6 +22,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="PackageService.SaveFighter(FighterPackage)"/>
         void SaveFighter(FighterPackage fighterPackage);
+
+        /// <inheritdoc cref="PackageService.DeleteFighter(FighterPackage)"/>
+        void DeleteFighter(FighterPackage fighterPackage);
     }
     [Export(typeof(IPackageService))]
     internal class PackageService : IPackageService
@@ -152,6 +155,25 @@ namespace BrawlInstaller.Services
             }
             // Compile GCT
             _codeService.CompileCodes();
+        }
+
+        /// <summary>
+        /// Delete fighter from build
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to delete</param>
+        public void DeleteFighter(FighterPackage fighterPackage)
+        {
+            var deletePackage = new FighterPackage
+            {
+                PackageType = PackageType.Delete,
+                FighterInfo = fighterPackage.FighterInfo.Copy()
+            };
+            // Mark all cosmetics as changed
+            foreach (var cosmetic in fighterPackage.Cosmetics.Items)
+            {
+                deletePackage.Cosmetics.ItemChanged(cosmetic);
+            }
+            SaveFighter(deletePackage);
         }
     }
 }

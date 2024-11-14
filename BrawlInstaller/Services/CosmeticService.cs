@@ -347,13 +347,19 @@ namespace BrawlInstaller.Services
             var folder = parentNode.GetFolder<TEX0Node>();
             if (folder != null)
             {
+                var toRemove = new List<TEX0Node>();
                 // Remove all HD textures
-                foreach(var node in folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)))
+                foreach (var node in folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)))
                 {
                     var texNode = (TEX0Node)node;
                     DeleteHDTexture(texNode);
+                    toRemove.Add(texNode);
                 };
-                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
+                // Remove regular textures
+                foreach(var tex in toRemove)
+                {
+                    folder.RemoveChild(tex);
+                }
             }
             RemovePalettes(parentNode, definition, id, restrictRange);
         }
@@ -370,7 +376,11 @@ namespace BrawlInstaller.Services
             var folder = parentNode.GetFolder<PLT0Node>();
             if (folder != null)
             {
-                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
+                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)).ToList();
+                foreach (var node in toRemove)
+                {
+                    folder.RemoveChild(node);
+                }
             }
         }
 
@@ -386,7 +396,11 @@ namespace BrawlInstaller.Services
             var folder = parentNode.GetFolder<MDL0Node>();
             if (folder != null)
             {
-                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
+                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)).ToList();
+                foreach (var node in toRemove)
+                {
+                    folder.RemoveChild(node);
+                }
             }
             RemoveColorSequences(parentNode, definition, id, restrictRange);
         }
@@ -403,7 +417,11 @@ namespace BrawlInstaller.Services
             var folder = parentNode.GetFolder<CLR0Node>();
             if (folder != null)
             {
-                folder.Children.RemoveAll(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix));
+                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)).ToList();
+                foreach (var node in toRemove)
+                {
+                    folder.RemoveChild(node);
+                }
             }
         }
 
