@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,6 +46,11 @@ namespace BrawlInstaller.ViewModels
             _settingsService = settingsService;
 
             GetFighters();
+
+            WeakReferenceMessenger.Default.Register<FighterDeletedMessage>(this, (recipient, message) =>
+            {
+                DeleteFighterInfo(message);
+            });
         }
 
         // Properties
@@ -137,6 +143,21 @@ namespace BrawlInstaller.ViewModels
             var selected = SelectedFighterInfo;
             FighterInfoList.MoveDown(SelectedFighterInfo);
             SelectedFighterInfo = selected;
+            OnPropertyChanged(nameof(FighterInfoList));
+        }
+
+        private void DeleteFighterInfo(FighterDeletedMessage message)
+        {
+            var fighterPackage = message.Value;
+            var foundFighters = FighterInfoList.Where(x => x.Ids.FighterConfigId == fighterPackage.FighterInfo.Ids.FighterConfigId
+            && x.Ids.CSSSlotConfigId == fighterPackage.FighterInfo.Ids.CSSSlotConfigId
+            && x.Ids.SlotConfigId == fighterPackage.FighterInfo.Ids.SlotConfigId
+            && x.Ids.CosmeticConfigId == fighterPackage.FighterInfo.Ids.CosmeticConfigId);
+            foreach(var foundFighter in foundFighters.ToList())
+            {
+                FighterInfoList.Remove(foundFighter);
+            }
+            SaveFighters();
             OnPropertyChanged(nameof(FighterInfoList));
         }
     }
