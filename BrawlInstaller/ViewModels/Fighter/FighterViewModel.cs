@@ -98,10 +98,40 @@ namespace BrawlInstaller.ViewModels
 
         public void DeleteFighter()
         {
-            _packageService.DeleteFighter(FighterPackage);
+            // Set up delete package
+            var deletePackage = new FighterPackage
+            {
+                PackageType = PackageType.Delete,
+                FighterInfo = FighterPackage.FighterInfo.Copy()
+            };
+            // Mark all cosmetics as changed
+            foreach (var cosmetic in FighterPackage.Cosmetics.Items)
+            {
+                deletePackage.Cosmetics.ItemChanged(cosmetic);
+            }
+            // Prompt for items to delete if applicable
+            if (FighterPackage.VictoryTheme != null && !string.IsNullOrEmpty(FighterPackage.VictoryTheme.SongFile))
+            {
+                var delete = _dialogService.ShowMessage($"Would you like to delete the victory theme at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
+                if (!delete)
+                {
+                    deletePackage.FighterDeleteOptions.DeleteVictoryTheme = false;
+                }
+            }
+            if (FighterPackage.CreditsTheme != null && !string.IsNullOrEmpty(FighterPackage.CreditsTheme.SongFile))
+            {
+                var delete = _dialogService.ShowMessage($"Would you like to delete the credits theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
+                if (!delete)
+                {
+                    deletePackage.FighterDeleteOptions.DeleteCreditsTheme = false;
+                }
+            }
             // Update UI
+            FighterPackage = null;
             OnPropertyChanged(nameof(FighterPackage));
-            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+            // Save
+            _packageService.SaveFighter(deletePackage);
+            // TODO: Publish a message to remove the fighter from the fighter list, also prompt user and remove franchise icon
         }
 
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
@@ -166,7 +196,7 @@ namespace BrawlInstaller.ViewModels
             if (FighterPackage.CreditsTheme != null && FighterPackage.CreditsTheme.SongPath != _oldCreditsThemePath)
             {
                 var delete = _dialogService.ShowMessage($"Credits theme has changed. Would you like to delete the old theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
-                if (delete)
+                if (!delete)
                 {
                     FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = false;
                 }
