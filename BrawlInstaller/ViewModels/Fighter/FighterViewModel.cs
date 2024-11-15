@@ -105,6 +105,7 @@ namespace BrawlInstaller.ViewModels
                 PackageType = PackageType.Delete,
                 FighterInfo = FighterPackage.FighterInfo.Copy()
             };
+            deletePackage.FighterInfo.DisplayName = "Unknown";
             // Mark all cosmetics as changed
             foreach (var cosmetic in FighterPackage.Cosmetics.Items)
             {
