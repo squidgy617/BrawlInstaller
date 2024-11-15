@@ -81,8 +81,9 @@
                 </Grid>
             </ScrollViewer>
             <Button x:Name="deleteButton" Grid.Row="1" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteCommand}"/>
-            <StackPanel Grid.Row="1">
-                <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Right" Command="{Binding SaveCommand}"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                <Button x:Name="exportButton" Content="Export" Command="{Binding ExportFighterCommand}"/>
+                <Button x:Name="saveButton" Content="Save" Command="{Binding SaveCommand}"/>
             </StackPanel>
         </Grid>
     </Grid>

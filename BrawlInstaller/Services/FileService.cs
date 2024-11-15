@@ -200,8 +200,11 @@ namespace BrawlInstaller.Services
         /// <param name="outFile">Output path of image file</param>
         public void SaveImage(BitmapImage image, string outFile)
         {
-            CreateDirectory(outFile);
-            SaveImage(image.ToBitmap(), outFile);
+            if (image != null)
+            {
+                CreateDirectory(outFile);
+                SaveImage(image.ToBitmap(), outFile);
+            }
         }
 
         /// <summary>

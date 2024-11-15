@@ -22,6 +22,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="PackageService.SaveFighter(FighterPackage)"/>
         void SaveFighter(FighterPackage fighterPackage);
+
+        /// <inheritdoc cref="PackageService.ExportFighter(FighterPackage)"/>
+        void ExportFighter(FighterPackage fighterPackage);
     }
     [Export(typeof(IPackageService))]
     internal class PackageService : IPackageService
@@ -154,6 +157,15 @@ namespace BrawlInstaller.Services
             _codeService.CompileCodes();
             // Set package type to update, in case it was a new package
             fighterPackage.PackageType = PackageType.Update;
+        }
+
+        /// <summary>
+        /// Export fighter package to filesystem
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to export</param>
+        public void ExportFighter(FighterPackage fighterPackage)
+        {
+            _cosmeticService.ExportCosmetics("FighterPackage", fighterPackage.Cosmetics);
         }
     }
 }

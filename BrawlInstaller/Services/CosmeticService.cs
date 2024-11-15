@@ -41,6 +41,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CosmeticService.GetSharesDataGroups(List{Cosmetic})"/>
         List<List<Cosmetic>> GetSharesDataGroups(List<Cosmetic> cosmetics);
+
+        /// <inheritdoc cref="CosmeticService.ExportCosmetics(string, CosmeticList)"/>
+        void ExportCosmetics(string path, CosmeticList cosmeticList);
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
@@ -1623,6 +1626,63 @@ namespace BrawlInstaller.Services
                 }
             });
             return cosmetics.ToList();
+        }
+
+        /// <summary>
+        /// Export all cosmetics in a list
+        /// </summary>
+        /// <param name="path">Path to export to</param>
+        /// <param name="cosmeticList">List of cosmetics to export</param>
+        public void ExportCosmetics(string path, CosmeticList cosmeticList)
+        {
+            foreach(var group in cosmeticList.Items.GroupBy(x => new { x.CosmeticType, x.Style }))
+            {
+                var index = 0;
+                var colorSmashGroup = 0;
+                foreach (var cosmetic in group.OrderBy(x => x.InternalIndex).OrderBy(x => x.CostumeIndex))
+                {
+                    ExportCosmetic(path, cosmetic, index, colorSmashGroup, cosmetic.CostumeIndex ?? 0);
+                    index++;
+                    if (cosmetic.SharesData == false)
+                    {
+                        index = 0;
+                        colorSmashGroup++;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Export a single cosmetic
+        /// </summary>
+        /// <param name="path">Base path to export to</param>
+        /// <param name="cosmetic">Cosmetic to export</param>
+        /// <param name="index">Index of cosmetic in directory</param>
+        /// <param name="colorSmashGroup">Color smash group of cosmetic</param>
+        private void ExportCosmetic(string path, Cosmetic cosmetic, int index, int colorSmashGroup, int costumeIndex = 0)
+        {
+            var name = index.ToString("D4") + (costumeIndex != 0 ? $"-{costumeIndex:D4}" : string.Empty);
+            var filePath = Path.Combine(path, cosmetic.CosmeticType.ToString(), cosmetic.Style);
+            var groupPath = Path.Combine(filePath, colorSmashGroup.ToString("D4"));
+            _fileService.SaveImage(cosmetic.Image, $"{Path.Combine(groupPath, name)}.png");
+            _fileService.SaveImage(cosmetic.HDImage, $"{Path.Combine(groupPath, "HD", name)}.png");
+            if (cosmetic.Model != null)
+            {
+                _fileService.SaveFileAs(cosmetic.Model, $"{Path.Combine(filePath, "Model", name)}.mdl0");
+            }
+            else if (!string.IsNullOrEmpty(cosmetic.ModelPath))
+            {
+                _fileService.CopyFile(cosmetic.ModelPath, $"{Path.Combine(filePath, "Model", name)}.mdl0");
+            }
+            if (cosmetic.ColorSequence != null)
+            {
+                _fileService.SaveFileAs(cosmetic.ColorSequence, $"{Path.Combine(filePath, "ColorSequence", name)}.clr0");
+            }
+            if (cosmetic.GetType() == typeof(FranchiseCosmetic))
+            {
+                var franchiseCosmetic = (FranchiseCosmetic)cosmetic;
+                _fileService.SaveImage(franchiseCosmetic.TransparentImage, $"{Path.Combine(filePath, "Transparent", name)}.png");
+            }
         }
     }
 }
