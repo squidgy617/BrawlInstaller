@@ -22,7 +22,6 @@ namespace BrawlInstaller.ViewModels
     internal class FighterInfoViewModel : ViewModelBase, IFighterInfoViewModel
     {
         // Private properties
-        private ObservableCollection<FighterInfo> _fighterInfoList;
         private FighterInfo _selectedFighterInfo;
 
         // Services
@@ -47,14 +46,14 @@ namespace BrawlInstaller.ViewModels
 
             GetFighters();
 
-            WeakReferenceMessenger.Default.Register<FighterDeletedMessage>(this, (recipient, message) =>
+            WeakReferenceMessenger.Default.Register<UpdateFighterListMessage>(this, (recipient, message) =>
             {
-                DeleteFighterInfo(message);
+                UpdateFighterList(message);
             });
         }
 
         // Properties
-        public ObservableCollection<FighterInfo> FighterInfoList { get => _fighterInfoList; set { _fighterInfoList = value; OnPropertyChanged(nameof(FighterInfoList)); } }
+        public ObservableCollection<FighterInfo> FighterInfoList { get => new ObservableCollection<FighterInfo>(_settingsService.FighterInfoList); }
 
         [DependsUpon(nameof(FighterInfoList))]
         public FighterInfo SelectedFighterInfo { get => _selectedFighterInfo; set { _selectedFighterInfo = value; OnPropertyChanged(nameof(SelectedFighterInfo)); } }
@@ -74,25 +73,28 @@ namespace BrawlInstaller.ViewModels
                     FranchiseId = 0
                 }
             };
-            FighterInfoList.Add(newFighter);
+            _settingsService.FighterInfoList.Add(newFighter);
             SelectedFighterInfo = newFighter;
             OnPropertyChanged(nameof(FighterInfoList));
             OnPropertyChanged(nameof(SelectedFighterInfo));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void RemoveFighter()
         {
-            FighterInfoList.Remove(SelectedFighterInfo);
+            _settingsService.FighterInfoList.Remove(SelectedFighterInfo);
             OnPropertyChanged(nameof(FighterInfoList));
             OnPropertyChanged(nameof(SelectedFighterInfo));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void GetFighters()
         {
             var list = _settingsService.LoadFighterInfoSettings();
-            FighterInfoList = new ObservableCollection<FighterInfo>(list);
+            _settingsService.FighterInfoList = list;
             OnPropertyChanged(nameof(FighterInfoList));
             OnPropertyChanged(nameof(SelectedFighterInfo));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void LoadFighters()
@@ -121,7 +123,9 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             currentFighterList.AddRange(newFighterList.OrderBy(x => x.Ids.FighterConfigId));
-            FighterInfoList = new ObservableCollection<FighterInfo>(currentFighterList);
+            _settingsService.FighterInfoList = currentFighterList;
+            OnPropertyChanged(nameof(FighterInfoList));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         // TODO: Include default fighter info stuff, make another pass at IDs that differ between builds
@@ -133,31 +137,23 @@ namespace BrawlInstaller.ViewModels
         private void MoveUp()
         {
             var selected = SelectedFighterInfo;
-            FighterInfoList.MoveUp(SelectedFighterInfo);
+            _settingsService.FighterInfoList.MoveUp(SelectedFighterInfo);
             SelectedFighterInfo = selected;
             OnPropertyChanged(nameof(FighterInfoList));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void MoveDown()
         {
             var selected = SelectedFighterInfo;
-            FighterInfoList.MoveDown(SelectedFighterInfo);
+            _settingsService.FighterInfoList.MoveDown(SelectedFighterInfo);
             SelectedFighterInfo = selected;
             OnPropertyChanged(nameof(FighterInfoList));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
-        private void DeleteFighterInfo(FighterDeletedMessage message)
+        private void UpdateFighterList(UpdateFighterListMessage message)
         {
-            var fighterPackage = message.Value;
-            var foundFighters = FighterInfoList.Where(x => x.Ids.FighterConfigId == fighterPackage.FighterInfo.Ids.FighterConfigId
-            && x.Ids.CSSSlotConfigId == fighterPackage.FighterInfo.Ids.CSSSlotConfigId
-            && x.Ids.SlotConfigId == fighterPackage.FighterInfo.Ids.SlotConfigId
-            && x.Ids.CosmeticConfigId == fighterPackage.FighterInfo.Ids.CosmeticConfigId);
-            foreach(var foundFighter in foundFighters.ToList())
-            {
-                FighterInfoList.Remove(foundFighter);
-            }
-            SaveFighters();
             OnPropertyChanged(nameof(FighterInfoList));
         }
     }

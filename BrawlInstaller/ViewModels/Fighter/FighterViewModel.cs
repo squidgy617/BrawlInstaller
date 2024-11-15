@@ -36,7 +36,6 @@ namespace BrawlInstaller.ViewModels
     internal class FighterViewModel : ViewModelBase, IFighterViewModel
     {
         // Private properties
-        private ObservableCollection<FighterInfo> _fighterList;
         private FighterInfo _selectedFighter;
         private string _oldVictoryThemePath;
         private string _oldCreditsThemePath;
@@ -65,8 +64,10 @@ namespace BrawlInstaller.ViewModels
             FighterFileViewModel = fighterFileViewModel;
             FighterSettingsViewModel = fighterSettingsViewModel;
 
-            var list = _settingsService.LoadFighterInfoSettings();
-            FighterList = new ObservableCollection<FighterInfo>(list);
+            WeakReferenceMessenger.Default.Register<UpdateFighterListMessage>(this, (recipient, message) =>
+            {
+                UpdateFighterList(message);
+            });
         }
 
         // ViewModels
@@ -78,7 +79,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get; set; }
-        public ObservableCollection<FighterInfo> FighterList { get => _fighterList; set { _fighterList = value; OnPropertyChanged(nameof(FighterList)); } }
+        public ObservableCollection<FighterInfo> FighterList { get => new ObservableCollection<FighterInfo>(_settingsService.FighterInfoList); }
         public FighterInfo SelectedFighter { get => _selectedFighter; set { _selectedFighter = value; OnPropertyChanged(nameof(SelectedFighter)); } }
 
         // Methods
@@ -146,10 +147,10 @@ namespace BrawlInstaller.ViewModels
             && x.Ids.CosmeticConfigId == deletePackage.FighterInfo.Ids.CosmeticConfigId);
             foreach(var foundFighter in foundFighters.ToList())
             {
-                FighterList.Remove(foundFighter);
+                _settingsService.FighterInfoList.Remove(foundFighter);
             }
             OnPropertyChanged(nameof(FighterList));
-            WeakReferenceMessenger.Default.Send(new FighterDeletedMessage(deletePackage));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
@@ -239,9 +240,15 @@ namespace BrawlInstaller.ViewModels
         private void GetFighters()
         {
             var list = _settingsService.LoadFighterInfoSettings();
-            FighterList = new ObservableCollection<FighterInfo>(list);
+            _settingsService.FighterInfoList = list;
             OnPropertyChanged(nameof(FighterList));
             OnPropertyChanged(nameof(SelectedFighter));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+        }
+
+        private void UpdateFighterList(UpdateFighterListMessage message)
+        {
+            OnPropertyChanged(nameof(FighterList));
         }
     }
 
@@ -253,9 +260,9 @@ namespace BrawlInstaller.ViewModels
         }
     }
 
-    public class FighterDeletedMessage : ValueChangedMessage<FighterPackage>
+    public class UpdateFighterListMessage : ValueChangedMessage<List<FighterInfo>>
     {
-        public FighterDeletedMessage(FighterPackage fighterPackage) : base(fighterPackage)
+        public UpdateFighterListMessage(List<FighterInfo> fighterInfoList) : base(fighterInfoList)
         {
         }
     }

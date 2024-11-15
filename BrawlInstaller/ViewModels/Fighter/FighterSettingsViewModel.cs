@@ -28,7 +28,6 @@ namespace BrawlInstaller.ViewModels
 
         // Private properties
         private FighterPackage _fighterPackage;
-        private List<FighterInfo> _fighterInfoList;
 
         // Services
         IDialogService _dialogService { get; }
@@ -55,7 +54,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
-        public List<FighterInfo> FighterInfoList { get => _fighterInfoList; set { _fighterInfoList = value; OnPropertyChanged(nameof(FighterInfoList)); } }
+        public List<FighterInfo> FighterInfoList { get => _settingsService.FighterInfoList; }
         public Dictionary<string, int> FighterEffectPacs { get => EffectPacs.FighterEffectPacs; }
 
         [DependsUpon(nameof(FighterPackage))]
@@ -65,7 +64,6 @@ namespace BrawlInstaller.ViewModels
         public void LoadFighterSettings(FighterLoadedMessage message)
         {
             FighterPackage = message.Value;
-            FighterInfoList = _settingsService.LoadFighterInfoSettings();
         }
 
         public void LoadKirbyHat()

@@ -21,6 +21,7 @@ namespace BrawlInstaller.Services
         // Should be accessible from any ViewModel implementing the service
         BuildSettings BuildSettings { get; set; }
         AppSettings AppSettings { get; set; }
+        List<FighterInfo> FighterInfoList { get; set; }
 
         // Methods
 
@@ -51,6 +52,7 @@ namespace BrawlInstaller.Services
         // Properties
         public BuildSettings BuildSettings { get; set; } = null;
         public AppSettings AppSettings { get; set; } = new AppSettings();
+        public List<FighterInfo> FighterInfoList { get; set; } = new List<FighterInfo>();
 
         // Methods
 

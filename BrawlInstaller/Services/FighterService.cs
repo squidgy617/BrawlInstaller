@@ -1351,7 +1351,7 @@ namespace BrawlInstaller.Services
             var code = _codeService.ReadCode(codePath);
             var table = _codeService.ReadTable(code, "Table:");
             // Convert to ASM table
-            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var fighterInfoTable = _settingsService.FighterInfoList;
             var asmTable = new List<AsmTableEntry>();
             foreach (var entry in table)
             {
@@ -1388,7 +1388,7 @@ namespace BrawlInstaller.Services
             var code = _codeService.ReadCode(codePath);
             var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
             // Convert to ASM table
-            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var fighterInfoTable = _settingsService.FighterInfoList;
             var asmTable = new List<AsmTableEntry>();
             foreach(var entry in table)
             {
@@ -1426,7 +1426,7 @@ namespace BrawlInstaller.Services
             var code = _codeService.ReadCode(codePath);
             var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
             // Convert to ASM table
-            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var fighterInfoTable = _settingsService.FighterInfoList;
             var asmTable = new List<AsmTableEntry>();
             foreach (var entry in table)
             {
@@ -1581,7 +1581,7 @@ namespace BrawlInstaller.Services
                 var code = _codeService.ReadCode(path);
                 var table = _codeService.ReadTable(code, "ENDINGTABLE:");
                 // Convert to AsmTable
-                var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+                var fighterInfoTable = _settingsService.FighterInfoList;
                 var asmTable = new List<AsmTableEntry>();
                 foreach (var entry in table)
                 {
@@ -1855,7 +1855,7 @@ namespace BrawlInstaller.Services
             var code = _codeService.ReadCode(codePath);
             var table = _codeService.ReadTable(code, "ClassicResultsTable:");
             // Convert to AsmTable
-            var fighterInfoTable = _settingsService.LoadFighterInfoSettings();
+            var fighterInfoTable = _settingsService.FighterInfoList;
             var asmTable = new List<AsmTableEntry>();
             foreach(var entry in table)
             {
