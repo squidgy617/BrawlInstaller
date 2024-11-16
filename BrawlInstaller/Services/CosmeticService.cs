@@ -1494,7 +1494,7 @@ namespace BrawlInstaller.Services
                         CosmeticType = definition.CosmeticType,
                         Style = definition.Style,
                         Model = (MDL0Node)_fileService.CopyNode(model),
-                        ColorSequence = model.GetColorSequence(),
+                        ColorSequence = model.GetColorSequence() != null ? (CLR0Node)_fileService.CopyNode(model.GetColorSequence()) : null,
                         Id = GetCosmeticId(model.Name, definition),
                         SelectionOption = definition.Selectable
                     });

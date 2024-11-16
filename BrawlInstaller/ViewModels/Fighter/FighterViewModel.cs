@@ -241,7 +241,11 @@ namespace BrawlInstaller.ViewModels
 
         public void ExportFighter()
         {
+            var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
+            FighterPackage.Cosmetics.Add(franchiseIcon);
             _packageService.ExportFighter(FighterPackage);
+            // Remove added franchise icons from package
+            FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
         }
 
         private void GetFighters()
