@@ -1668,20 +1668,20 @@ namespace BrawlInstaller.Services
             _fileService.SaveImage(cosmetic.HDImage, $"{Path.Combine(groupPath, "HD", name)}.png");
             if (cosmetic.Model != null)
             {
-                _fileService.SaveFileAs(cosmetic.Model, $"{Path.Combine(filePath, "Model", name)}.mdl0");
+                _fileService.SaveFileAs(cosmetic.Model, $"{Path.Combine(groupPath, "Model", name)}.mdl0");
             }
             else if (!string.IsNullOrEmpty(cosmetic.ModelPath))
             {
-                _fileService.CopyFile(cosmetic.ModelPath, $"{Path.Combine(filePath, "Model", name)}.mdl0");
+                _fileService.CopyFile(cosmetic.ModelPath, $"{Path.Combine(groupPath, "Model", name)}.mdl0");
             }
             if (cosmetic.ColorSequence != null)
             {
-                _fileService.SaveFileAs(cosmetic.ColorSequence, $"{Path.Combine(filePath, "ColorSequence", name)}.clr0");
+                _fileService.SaveFileAs(cosmetic.ColorSequence, $"{Path.Combine(groupPath, "ColorSequence", name)}.clr0");
             }
             if (cosmetic.GetType() == typeof(FranchiseCosmetic))
             {
                 var franchiseCosmetic = (FranchiseCosmetic)cosmetic;
-                _fileService.SaveImage(franchiseCosmetic.TransparentImage, $"{Path.Combine(filePath, "Transparent", name)}.png");
+                _fileService.SaveImage(franchiseCosmetic.TransparentImage, $"{Path.Combine(groupPath, "Transparent", name)}.png");
             }
         }
     }

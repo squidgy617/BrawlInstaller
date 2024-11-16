@@ -155,6 +155,7 @@ namespace BrawlInstaller.ViewModels
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
+        // TODO: Copy fighter package before save, only update after save completes successfully
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
         public void SaveFighter()
         {
@@ -243,6 +244,7 @@ namespace BrawlInstaller.ViewModels
         {
             var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
             FighterPackage.Cosmetics.Add(franchiseIcon);
+            FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
             _packageService.ExportFighter(FighterPackage);
             // Remove added franchise icons from package
             FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));

@@ -53,8 +53,8 @@ namespace BrawlInstaller.Classes
 
     public class Costume
     {
-        public List<Cosmetic> Cosmetics { get; set; }
-        public List<FighterPacFile> PacFiles { get; set; }
+        [JsonIgnore] public List<Cosmetic> Cosmetics { get; set; }
+        [JsonIgnore] public List<FighterPacFile> PacFiles { get; set; }
         public byte Color { get; set; }
         public int CostumeId { get; set; }
     }

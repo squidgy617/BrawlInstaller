@@ -2,6 +2,7 @@
 using BrawlInstaller.Enums;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -165,7 +166,55 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to export</param>
         public void ExportFighter(FighterPackage fighterPackage)
         {
-            _cosmeticService.ExportCosmetics("FighterPackage", fighterPackage.Cosmetics);
+            _cosmeticService.ExportCosmetics("FighterPackage\\Cosmetics", fighterPackage.Cosmetics);
+            var fighterInfo = JsonConvert.SerializeObject(fighterPackage.FighterInfo, Formatting.Indented);
+            var fighterSettings = JsonConvert.SerializeObject(fighterPackage.FighterSettings, Formatting.Indented);
+            // Export pac files
+            foreach(var pacFile in fighterPackage.PacFiles)
+            {
+                _fileService.CopyFile(pacFile.FilePath, $"FighterPackage\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}.pac");
+            }
+            // Export costumes
+            foreach(var costume in fighterPackage.Costumes)
+            {
+                var costumePath = $"FighterPackage\\Costumes\\{costume.CostumeId:D4}";
+                foreach (var pacFile in costume.PacFiles)
+                {
+                    _fileService.CopyFile(pacFile.FilePath, $"{costumePath}\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}{costume.CostumeId:D2}.pac");
+                }
+                var costumeJson = JsonConvert.SerializeObject(costume, Formatting.Indented);
+                _fileService.SaveTextFile($"{costumePath}\\Costume{costume.CostumeId:D2}.json", costumeJson);
+            }
+            // Export other files
+            foreach(var config in fighterPackage.ExConfigs)
+            {
+                _fileService.CopyFile(config, $"FighterPackage\\ExConfigs\\{Path.GetFileName(config)}");
+            }
+            var files = new List<(string Folder, string File)>
+            {
+                ("Module", fighterPackage.Module),
+                ("Soundbank", fighterPackage.Soundbank),
+                ("KirbySoundbank", fighterPackage.KirbySoundbank),
+                ("ClassicIntro", fighterPackage.ClassicIntro),
+                ("EndingMovie", fighterPackage.EndingMovie),
+                ("CreditsTheme", fighterPackage.CreditsTheme.SongFile),
+                ("VictoryTheme", fighterPackage.VictoryTheme.SongFile)
+            };
+            foreach(var config in fighterPackage.ExConfigs)
+            {
+                files.Add(("ExConfigs", config));
+            }
+            foreach(var endingPacFile in fighterPackage.EndingPacFiles)
+            {
+                files.Add(("EndingPacFiles",  endingPacFile));
+            }
+            foreach(var file in files)
+            {
+                _fileService.CopyFile(file.File, $"FighterPackage\\{file.Folder}\\{Path.GetFileName(file.File)}");
+            }
+            // Export info and settings
+            _fileService.SaveTextFile("FighterPackage\\FighterInfo.json", fighterInfo);
+            _fileService.SaveTextFile("FighterPackage\\FighterSettings.json", fighterSettings);
         }
     }
 }
