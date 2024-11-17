@@ -169,25 +169,34 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter package</returns>
         public FighterPackage LoadFighterPackage()
         {
+            var path = _settingsService.AppSettings.TempPath + "\\FighterPackage";
+            if (_fileService.DirectoryExists(path))
+            {
+                path = Path.GetFullPath(path);
+            }
+            else
+            {
+                return null;
+            }
             var fighterPackage = new FighterPackage();
             // Get fighter info
-            var fighterInfoPath = _fileService.GetFiles("FighterPackage", "FighterInfo.json").FirstOrDefault();
+            var fighterInfoPath = _fileService.GetFiles(path, "FighterInfo.json").FirstOrDefault();
             if (!string.IsNullOrEmpty(fighterInfoPath))
             {
                 var fighterInfoJson = _fileService.ReadTextFile(fighterInfoPath);
                 fighterPackage.FighterInfo = JsonConvert.DeserializeObject<FighterInfo>(fighterInfoJson);
             }
             // Get fighter settings
-            var fighterSettingsPath = _fileService.GetFiles("FighterPackage", "FighterSettings.json").FirstOrDefault();
+            var fighterSettingsPath = _fileService.GetFiles(path, "FighterSettings.json").FirstOrDefault();
             if (!string.IsNullOrEmpty(fighterSettingsPath))
             {
                 var fighterSettingsJson = _fileService.ReadTextFile(fighterSettingsPath);
                 fighterPackage.FighterSettings = JsonConvert.DeserializeObject<FighterSettings>(fighterSettingsJson);
             }
             // Get cosmetics
-            fighterPackage.Cosmetics = _cosmeticService.LoadCosmetics("FighterPackage\\Cosmetics");
+            fighterPackage.Cosmetics = _cosmeticService.LoadCosmetics($"{path}\\Cosmetics");
             // Get costumes
-            var costumeJson = _fileService.ReadTextFile("FighterPackage\\Costumes\\Costumes.json");
+            var costumeJson = _fileService.ReadTextFile($"{path}\\Costumes\\Costumes.json");
             if (!string.IsNullOrEmpty(costumeJson))
             {
                 var costumes = JsonConvert.DeserializeObject<List<Costume>>(costumeJson);
@@ -195,7 +204,7 @@ namespace BrawlInstaller.Services
                 foreach (var costume in costumes)
                 {
                     var dirs = new List<string>();
-                    var costumePacPath = $"FighterPackage\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
+                    var costumePacPath = $"{path}\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
                     dirs.Add(costumePacPath);
                     dirs.AddRange(_fileService.GetDirectories(costumePacPath, "*", SearchOption.TopDirectoryOnly));
                     foreach(var dir in dirs)
@@ -203,13 +212,31 @@ namespace BrawlInstaller.Services
                         var pacFiles = _fileService.GetFiles(dir, "*.pac");
                         foreach (var pacFile in pacFiles)
                         {
-                            var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.InternalName, costume.CostumeId.ToString("D4"), false);
+                            var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.InternalName, costume.CostumeId.ToString("D4"), true);
                             costume.PacFiles.Add(newPacFile);
                         }
                     }
                 }
                 fighterPackage.Costumes = costumes;
             }
+            // Get pac files
+            var pacDirs = new List<string>();
+            var pacPath = $"{path}\\PacFiles";
+            pacDirs.Add(pacPath);
+            pacDirs.AddRange(_fileService.GetDirectories(pacPath, "*", SearchOption.TopDirectoryOnly));
+            foreach (var dir in pacDirs)
+            {
+                var pacFiles = _fileService.GetFiles(dir, "*.pac");
+                foreach (var pacFile in pacFiles)
+                {
+                    var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.InternalName, "PacFiles", false);
+                    fighterPackage.PacFiles.Add(newPacFile);
+                }
+            }
+            // Get Ex configs
+            fighterPackage.ExConfigs.AddRange(_fileService.GetFiles($"{path}\\ExConfigs", "*.dat"));
+            // Get module
+            fighterPackage.Module = _fileService.GetFiles($"{path}\\Module", "*.rel").FirstOrDefault();
             return fighterPackage;
         }
 
@@ -219,20 +246,21 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to export</param>
         public void ExportFighter(FighterPackage fighterPackage)
         {
-            _cosmeticService.ExportCosmetics("FighterPackage\\Cosmetics", fighterPackage.Cosmetics);
+            var path = _settingsService.AppSettings.TempPath + "\\FighterPackage";
+            _cosmeticService.ExportCosmetics($"{path}\\Cosmetics", fighterPackage.Cosmetics);
             var fighterInfo = JsonConvert.SerializeObject(fighterPackage.FighterInfo, Formatting.Indented);
             var fighterSettings = JsonConvert.SerializeObject(fighterPackage.FighterSettings, Formatting.Indented);
             // Export pac files
             foreach(var pacFile in fighterPackage.PacFiles)
             {
-                _fileService.CopyFile(pacFile.FilePath, $"FighterPackage\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}.pac");
+                _fileService.CopyFile(pacFile.FilePath, $"{path}\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}.pac");
             }
             // Export costumes
             var costumeJson = JsonConvert.SerializeObject(fighterPackage.Costumes, Formatting.Indented);
-            _fileService.SaveTextFile("FighterPackage\\Costumes\\Costumes.json", costumeJson);
+            _fileService.SaveTextFile($"{path}\\Costumes\\Costumes.json", costumeJson);
             foreach (var costume in fighterPackage.Costumes)
             {
-                var costumePath = $"FighterPackage\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
+                var costumePath = $"{path}\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
                 foreach (var pacFile in costume.PacFiles)
                 {
                     _fileService.CopyFile(pacFile.FilePath, $"{costumePath}\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}{costume.CostumeId:D2}.pac");
@@ -241,7 +269,7 @@ namespace BrawlInstaller.Services
             // Export other files
             foreach(var config in fighterPackage.ExConfigs)
             {
-                _fileService.CopyFile(config, $"FighterPackage\\ExConfigs\\{Path.GetFileName(config)}");
+                _fileService.CopyFile(config, $"{path}\\ExConfigs\\{Path.GetFileName(config)}");
             }
             var files = new List<(string Folder, string File)>
             {
@@ -263,11 +291,11 @@ namespace BrawlInstaller.Services
             }
             foreach(var file in files)
             {
-                _fileService.CopyFile(file.File, $"FighterPackage\\{file.Folder}\\{Path.GetFileName(file.File)}");
+                _fileService.CopyFile(file.File, $"{path}\\{file.Folder}\\{Path.GetFileName(file.File)}");
             }
             // Export info and settings
-            _fileService.SaveTextFile("FighterPackage\\FighterInfo.json", fighterInfo);
-            _fileService.SaveTextFile("FighterPackage\\FighterSettings.json", fighterSettings);
+            _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
+            _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);
         }
     }
 }
