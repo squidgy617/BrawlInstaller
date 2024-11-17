@@ -194,10 +194,18 @@ namespace BrawlInstaller.Services
                 costumes = _fighterService.GetCostumeCosmetics(costumes, fighterPackage.Cosmetics.Items);
                 foreach (var costume in costumes)
                 {
-                    var pacFiles = _fileService.GetFiles($"FighterPackage\\Costumes\\{costume.CostumeId:D4}", "*.pac");
-                    foreach(var pacFile in pacFiles)
+                    var dirs = new List<string>();
+                    var costumePacPath = $"FighterPackage\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
+                    dirs.Add(costumePacPath);
+                    dirs.AddRange(_fileService.GetDirectories(costumePacPath, "*", SearchOption.TopDirectoryOnly));
+                    foreach(var dir in dirs)
                     {
-                        
+                        var pacFiles = _fileService.GetFiles(dir, "*.pac");
+                        foreach (var pacFile in pacFiles)
+                        {
+                            var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.InternalName, costume.CostumeId.ToString("D4"), false);
+                            costume.PacFiles.Add(newPacFile);
+                        }
                     }
                 }
                 fighterPackage.Costumes = costumes;
