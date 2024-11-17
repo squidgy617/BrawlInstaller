@@ -37,6 +37,7 @@
                 </GroupBox>
             </ScrollViewer>
             <StackPanel Grid.Row="1">
+                <Button x:Name="openButton" Content="Open" Command="{Binding OpenFighterCommand}"/>
                 <Button x:Name="loadButton" Content="Load" Command="{Binding LoadCommand}"/>
             </StackPanel>
         </Grid>

@@ -22,6 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Collections.Concurrent;
 using BrawlLib.SSBB.Types.Animations;
 using BrawlLib.SSBB.Types;
+using Newtonsoft.Json;
 
 namespace BrawlInstaller.Services
 {
@@ -44,6 +45,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CosmeticService.ExportCosmetics(string, CosmeticList)"/>
         void ExportCosmetics(string path, CosmeticList cosmeticList);
+
+        /// <inheritdoc cref="CosmeticService.LoadCosmetics(string)"/>
+        CosmeticList LoadCosmetics(string path);
     }
     [Export(typeof(ICosmeticService))]
     internal class CosmeticService : ICosmeticService
@@ -1635,21 +1639,53 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticList">List of cosmetics to export</param>
         public void ExportCosmetics(string path, CosmeticList cosmeticList)
         {
-            foreach(var group in cosmeticList.Items.GroupBy(x => new { x.CosmeticType, x.Style }))
+            var cosmetics = new List<Cosmetic>();
+            foreach (var group in cosmeticList.Items.GroupBy(x => new { x.CosmeticType, x.Style }))
             {
                 var index = 0;
-                var colorSmashGroup = 0;
                 foreach (var cosmetic in group.OrderBy(x => x.InternalIndex).OrderBy(x => x.CostumeIndex))
                 {
-                    ExportCosmetic(path, cosmetic, index, colorSmashGroup, cosmetic.CostumeIndex ?? 0);
+                    cosmetics.Add(cosmetic);
+                    ExportCosmetic(path, cosmetic, index);
                     index++;
-                    if (cosmetic.SharesData == false)
-                    {
-                        index = 0;
-                        colorSmashGroup++;
-                    }
                 }
             }
+            var cosmeticListJson = JsonConvert.SerializeObject(cosmetics, Formatting.Indented);
+            _fileService.SaveTextFile($"{path}\\CosmeticList.json", cosmeticListJson);
+        }
+
+        /// <summary>
+        /// Load all cosmetics from folder
+        /// </summary>
+        /// <param name="path">Path to load from</param>
+        /// <returns>Cosmetic list</returns>
+        public CosmeticList LoadCosmetics(string path)
+        {
+            var cosmeticsJson = _fileService.ReadTextFile($"{path}\\CosmeticList.json");
+            var cosmetics = JsonConvert.DeserializeObject<List<Cosmetic>>(cosmeticsJson);
+            foreach(var cosmetic in cosmetics)
+            {
+                var index = cosmetics.Where(x => x.CosmeticType == cosmetic.CosmeticType && x.Style == cosmetic.Style).ToList().IndexOf(cosmetic);
+                var image = _fileService.GetFiles($"{path}\\{cosmetic.CosmeticType}\\{cosmetic.Style}\\SD", $"{index:D4}.png").FirstOrDefault();
+                if (!string.IsNullOrEmpty(image))
+                {
+                    var imagePath = Path.GetFullPath(image);
+                    cosmetic.ImagePath = imagePath;
+                    cosmetic.Image = _fileService.LoadImage(imagePath);
+                }
+                var hdImage = _fileService.GetFiles($"{path}\\{cosmetic.CosmeticType}\\{cosmetic.Style}\\HD", $"{index:D4}.png").FirstOrDefault();
+                if (!string.IsNullOrEmpty(hdImage))
+                {
+                    var hdImagePath = Path.GetFullPath(hdImage);
+                    cosmetic.HDImagePath = hdImagePath;
+                    cosmetic.HDImage = _fileService.LoadImage(hdImagePath);
+                }
+            }
+            var cosmeticList = new CosmeticList
+            {
+                Items = cosmetics
+            };
+            return cosmeticList;
         }
 
         /// <summary>
@@ -1659,29 +1695,28 @@ namespace BrawlInstaller.Services
         /// <param name="cosmetic">Cosmetic to export</param>
         /// <param name="index">Index of cosmetic in directory</param>
         /// <param name="colorSmashGroup">Color smash group of cosmetic</param>
-        private void ExportCosmetic(string path, Cosmetic cosmetic, int index, int colorSmashGroup, int costumeIndex = 0)
+        private void ExportCosmetic(string path, Cosmetic cosmetic, int index)
         {
-            var name = index.ToString("D4") + (costumeIndex != 0 ? $"-{costumeIndex:D4}" : string.Empty);
+            var name = index.ToString("D4");
             var filePath = Path.Combine(path, cosmetic.CosmeticType.ToString(), cosmetic.Style);
-            var groupPath = Path.Combine(filePath, colorSmashGroup.ToString("D4"));
-            _fileService.SaveImage(cosmetic.Image, $"{Path.Combine(groupPath, name)}.png");
-            _fileService.SaveImage(cosmetic.HDImage, $"{Path.Combine(groupPath, "HD", name)}.png");
+            _fileService.SaveImage(cosmetic.Image, $"{Path.Combine(filePath, "SD", name)}.png");
+            _fileService.SaveImage(cosmetic.HDImage, $"{Path.Combine(filePath, "HD", name)}.png");
             if (cosmetic.Model != null)
             {
-                _fileService.SaveFileAs(cosmetic.Model, $"{Path.Combine(groupPath, "Model", name)}.mdl0");
+                _fileService.SaveFileAs(cosmetic.Model, $"{Path.Combine(filePath, "Model", name)}.mdl0");
             }
             else if (!string.IsNullOrEmpty(cosmetic.ModelPath))
             {
-                _fileService.CopyFile(cosmetic.ModelPath, $"{Path.Combine(groupPath, "Model", name)}.mdl0");
+                _fileService.CopyFile(cosmetic.ModelPath, $"{Path.Combine(filePath, "Model", name)}.mdl0");
             }
             if (cosmetic.ColorSequence != null)
             {
-                _fileService.SaveFileAs(cosmetic.ColorSequence, $"{Path.Combine(groupPath, "ColorSequence", name)}.clr0");
+                _fileService.SaveFileAs(cosmetic.ColorSequence, $"{Path.Combine(filePath, "ColorSequence", name)}.clr0");
             }
             if (cosmetic.GetType() == typeof(FranchiseCosmetic))
             {
                 var franchiseCosmetic = (FranchiseCosmetic)cosmetic;
-                _fileService.SaveImage(franchiseCosmetic.TransparentImage, $"{Path.Combine(groupPath, "Transparent", name)}.png");
+                _fileService.SaveImage(franchiseCosmetic.TransparentImage, $"{Path.Combine(filePath, "Transparent", name)}.png");
             }
         }
     }

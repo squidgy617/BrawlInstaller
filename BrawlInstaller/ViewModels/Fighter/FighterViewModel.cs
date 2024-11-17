@@ -51,6 +51,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand DeleteCommand => new RelayCommand(param => DeleteFighter());
         public ICommand RefreshFightersCommand => new RelayCommand(param => GetFighters());
         public ICommand ExportFighterCommand => new RelayCommand(param => ExportFighter());
+        public ICommand OpenFighterCommand => new RelayCommand(param => OpenFighter());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -96,6 +97,16 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(FighterPackage));
                 WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
+        }
+
+        public void OpenFighter()
+        {
+            FighterPackage = new FighterPackage();
+            FighterPackage = _packageService.LoadFighterPackage();
+            _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
+            _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
+            OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
         public void DeleteFighter()

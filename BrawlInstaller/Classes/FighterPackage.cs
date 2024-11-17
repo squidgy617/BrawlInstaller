@@ -13,6 +13,7 @@ using System.IO;
 using lKHM;
 using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 using System.ComponentModel;
+using BrawlInstaller.Services;
 
 namespace BrawlInstaller.Classes
 {
@@ -53,8 +54,8 @@ namespace BrawlInstaller.Classes
 
     public class Costume
     {
-        [JsonIgnore] public List<Cosmetic> Cosmetics { get; set; }
-        [JsonIgnore] public List<FighterPacFile> PacFiles { get; set; }
+        [JsonIgnore] public List<Cosmetic> Cosmetics { get; set; } = new List<Cosmetic>();
+        [JsonIgnore] public List<FighterPacFile> PacFiles { get; set; } = new List<FighterPacFile>();
         public byte Color { get; set; }
         public int CostumeId { get; set; }
     }
@@ -72,12 +73,12 @@ namespace BrawlInstaller.Classes
         public string Style { get; set; }
         [JsonIgnore] public BitmapImage Image { get; set; } = null;
         [JsonIgnore] public BitmapImage HDImage { get; set; } = null;
-        public string ImagePath { get; set; } = string.Empty;
-        public string HDImagePath { get; set; } = string.Empty;
+        [JsonIgnore] public string ImagePath { get; set; } = string.Empty;
+        [JsonIgnore] public string HDImagePath { get; set; } = string.Empty;
         [JsonIgnore] public TEX0Node Texture { get; set; } = null;
         [JsonIgnore] public PLT0Node Palette { get; set; } = null;
         [JsonIgnore] public MDL0Node Model { get; set; } = null;
-        public string ModelPath { get; set; } = string.Empty;
+        [JsonIgnore] public string ModelPath { get; set; } = string.Empty;
         [JsonIgnore] public CLR0Node ColorSequence { get; set; } = null;
         public bool? SharesData { get; set; }
         public int? InternalIndex { get; set; }

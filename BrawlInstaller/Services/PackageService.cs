@@ -26,6 +26,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="PackageService.ExportFighter(FighterPackage)"/>
         void ExportFighter(FighterPackage fighterPackage);
+
+        /// <inheritdoc cref="PackageService.LoadFighterPackage()"/>
+        FighterPackage LoadFighterPackage();
     }
     [Export(typeof(IPackageService))]
     internal class PackageService : IPackageService
@@ -161,6 +164,48 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Load fighter package from folder
+        /// </summary>
+        /// <returns>Fighter package</returns>
+        public FighterPackage LoadFighterPackage()
+        {
+            var fighterPackage = new FighterPackage();
+            // Get fighter info
+            var fighterInfoPath = _fileService.GetFiles("FighterPackage", "FighterInfo.json").FirstOrDefault();
+            if (!string.IsNullOrEmpty(fighterInfoPath))
+            {
+                var fighterInfoJson = _fileService.ReadTextFile(fighterInfoPath);
+                fighterPackage.FighterInfo = JsonConvert.DeserializeObject<FighterInfo>(fighterInfoJson);
+            }
+            // Get fighter settings
+            var fighterSettingsPath = _fileService.GetFiles("FighterPackage", "FighterSettings.json").FirstOrDefault();
+            if (!string.IsNullOrEmpty(fighterSettingsPath))
+            {
+                var fighterSettingsJson = _fileService.ReadTextFile(fighterSettingsPath);
+                fighterPackage.FighterSettings = JsonConvert.DeserializeObject<FighterSettings>(fighterSettingsJson);
+            }
+            // Get cosmetics
+            fighterPackage.Cosmetics = _cosmeticService.LoadCosmetics("FighterPackage\\Cosmetics");
+            // Get costumes
+            var costumeJson = _fileService.ReadTextFile("FighterPackage\\Costumes\\Costumes.json");
+            if (!string.IsNullOrEmpty(costumeJson))
+            {
+                var costumes = JsonConvert.DeserializeObject<List<Costume>>(costumeJson);
+                costumes = _fighterService.GetCostumeCosmetics(costumes, fighterPackage.Cosmetics.Items);
+                foreach (var costume in costumes)
+                {
+                    var pacFiles = _fileService.GetFiles($"FighterPackage\\Costumes\\{costume.CostumeId:D4}", "*.pac");
+                    foreach(var pacFile in pacFiles)
+                    {
+                        
+                    }
+                }
+                fighterPackage.Costumes = costumes;
+            }
+            return fighterPackage;
+        }
+
+        /// <summary>
         /// Export fighter package to filesystem
         /// </summary>
         /// <param name="fighterPackage">Fighter package to export</param>
@@ -175,15 +220,15 @@ namespace BrawlInstaller.Services
                 _fileService.CopyFile(pacFile.FilePath, $"FighterPackage\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}.pac");
             }
             // Export costumes
-            foreach(var costume in fighterPackage.Costumes)
+            var costumeJson = JsonConvert.SerializeObject(fighterPackage.Costumes, Formatting.Indented);
+            _fileService.SaveTextFile("FighterPackage\\Costumes\\Costumes.json", costumeJson);
+            foreach (var costume in fighterPackage.Costumes)
             {
-                var costumePath = $"FighterPackage\\Costumes\\{costume.CostumeId:D4}";
+                var costumePath = $"FighterPackage\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
                 foreach (var pacFile in costume.PacFiles)
                 {
-                    _fileService.CopyFile(pacFile.FilePath, $"{costumePath}\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}{costume.CostumeId:D2}.pac");
+                    _fileService.CopyFile(pacFile.FilePath, $"{costumePath}\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}{costume.CostumeId:D2}.pac");
                 }
-                var costumeJson = JsonConvert.SerializeObject(costume, Formatting.Indented);
-                _fileService.SaveTextFile($"{costumePath}\\Costume{costume.CostumeId:D2}.json", costumeJson);
             }
             // Export other files
             foreach(var config in fighterPackage.ExConfigs)
