@@ -237,6 +237,32 @@ namespace BrawlInstaller.Services
             fighterPackage.ExConfigs.AddRange(_fileService.GetFiles($"{path}\\ExConfigs", "*.dat"));
             // Get module
             fighterPackage.Module = _fileService.GetFiles($"{path}\\Module", "*.rel").FirstOrDefault();
+            // Get ending pac files
+            fighterPackage.EndingPacFiles = _fileService.GetFiles($"{path}\\EndingPacFiles", "*.pac");
+            // Get other files
+            fighterPackage.Soundbank = _fileService.GetFiles($"{path}\\Soundbank", "*.sawnd").FirstOrDefault();
+            fighterPackage.KirbySoundbank = _fileService.GetFiles($"{path}\\KirbySoundbank", "*.sawnd").FirstOrDefault();
+            fighterPackage.ClassicIntro = _fileService.GetFiles($"{path}\\ClassicIntro", "*.brres").FirstOrDefault();
+            fighterPackage.EndingMovie = _fileService.GetFiles($"{path}\\EndingMovie", "*.thp").FirstOrDefault();
+            // Get victory and credits themes
+            var victoryTheme = _fileService.GetFiles($"{path}\\VictoryTheme", "*.brstm").FirstOrDefault();
+            if (!string.IsNullOrEmpty(victoryTheme))
+            {
+                fighterPackage.VictoryTheme = new TracklistSong
+                {
+                    SongFile = victoryTheme,
+                    SongPath = $"Victory!/{fighterPackage.FighterInfo.DisplayName}"
+                };
+            }
+            var creditsTheme = _fileService.GetFiles($"{path}\\CreditsTheme", "*.brstm").FirstOrDefault();
+            if (!string.IsNullOrEmpty(creditsTheme))
+            {
+                fighterPackage.CreditsTheme = new TracklistSong
+                {
+                    SongFile = creditsTheme,
+                    SongPath = $"Credits/{fighterPackage.FighterInfo.DisplayName}"
+                };
+            }
             return fighterPackage;
         }
 
