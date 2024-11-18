@@ -9,13 +9,14 @@ using System.Drawing;
 using Newtonsoft.Json;
 using BrawlLib.Wii.Compression;
 using BrawlLib.SSBB.Types;
+using BrawlInstaller.StaticClasses;
 
 namespace BrawlInstaller.Classes
 {
     public class AppSettings
     {
         public string BuildPath { get; set; } = string.Empty;
-        [JsonIgnore] public string TempPath { get; set; } = "temp";
+        [JsonIgnore] public string TempPath { get => Paths.TempPath; }
     }
 
     public class BuildSettings

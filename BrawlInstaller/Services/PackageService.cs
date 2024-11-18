@@ -169,7 +169,7 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter package</returns>
         public FighterPackage LoadFighterPackage(string inFile)
         {
-            var path = _settingsService.AppSettings.TempPath + "\\FighterPackage";
+            var path = _settingsService.AppSettings.TempPath + "\\FighterPackageImport";
             var output = _fileService.ExtractZipFile(inFile, path);
             if (!string.IsNullOrEmpty(output))
             {
@@ -278,7 +278,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to export</param>
         public void ExportFighter(FighterPackage fighterPackage, string outFile)
         {
-            var path = _settingsService.AppSettings.TempPath + "\\FighterPackage";
+            var path = _settingsService.AppSettings.TempPath + "\\FighterPackageExport";
             _cosmeticService.ExportCosmetics($"{path}\\Cosmetics", fighterPackage.Cosmetics);
             var fighterInfo = JsonConvert.SerializeObject(fighterPackage.FighterInfo, Formatting.Indented);
             var fighterSettings = JsonConvert.SerializeObject(fighterPackage.FighterSettings, Formatting.Indented);
@@ -330,7 +330,7 @@ namespace BrawlInstaller.Services
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);
             // Generate fighter package file
             _fileService.GenerateZipFileFromDirectory(path, outFile);
-            _fileService.DeleteDirectory(_settingsService.AppSettings.TempPath);
+            _fileService.DeleteDirectory(path);
         }
     }
 }
