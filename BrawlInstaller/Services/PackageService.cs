@@ -266,6 +266,7 @@ namespace BrawlInstaller.Services
                         SongPath = $"Credits/{fighterPackage.FighterInfo.DisplayName}"
                     };
                 }
+                fighterPackage.PackageType = PackageType.New;
                 return fighterPackage;
             }
             return null;
