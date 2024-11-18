@@ -101,12 +101,16 @@ namespace BrawlInstaller.ViewModels
 
         public void OpenFighter()
         {
-            FighterPackage = new FighterPackage();
-            FighterPackage = _packageService.LoadFighterPackage();
-            _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
-            _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
-            OnPropertyChanged(nameof(FighterPackage));
-            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+            var file = _dialogService.OpenFileDialog("Select a fighter package to load", "FIGHTERPACKAGE file (.fighterpackage)|*.fighterpackage");
+            if (!string.IsNullOrEmpty(file))
+            {
+                FighterPackage = new FighterPackage();
+                FighterPackage = _packageService.LoadFighterPackage(file);
+                _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
+                _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
+                OnPropertyChanged(nameof(FighterPackage));
+                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+            }
         }
 
         public void DeleteFighter()
@@ -253,12 +257,16 @@ namespace BrawlInstaller.ViewModels
 
         public void ExportFighter()
         {
-            var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
-            FighterPackage.Cosmetics.Add(franchiseIcon);
-            FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
-            _packageService.ExportFighter(FighterPackage);
-            // Remove added franchise icons from package
-            FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
+            var file = _dialogService.SaveFileDialog("Save fighter package", "FIGHTERPACKAGE file (.fighterpackage)|*.fighterpackage");
+            if (!string.IsNullOrEmpty(file))
+            {
+                var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
+                FighterPackage.Cosmetics.Add(franchiseIcon);
+                FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
+                _packageService.ExportFighter(FighterPackage, file);
+                // Remove added franchise icons from package
+                FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
+            }
         }
 
         private void GetFighters()

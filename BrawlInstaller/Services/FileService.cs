@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using BrawlInstaller.Common;
+using System.IO.Compression;
 
 namespace BrawlInstaller.Services
 {
@@ -76,6 +77,12 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.FileExists(string)"/>
         bool FileExists(string path);
+
+        /// <inheritdoc cref="FileService.GenerateZipFileFromDirectory(string, string)"/>
+        string GenerateZipFileFromDirectory(string inDirectory, string outFile);
+
+        /// <inheritdoc cref="FileService.ExtractZipFile(string, string)"/>
+        string ExtractZipFile(string inFile, string outDirectory);
     }
     // TODO: Backup system, only back up files in build
     [Export(typeof(IFileService))]
@@ -372,6 +379,30 @@ namespace BrawlInstaller.Services
                     node.ReplaceRaw(ptr, data.Length);
                 }
             }
+        }
+
+        /// <summary>
+        /// Generate a zip file from a directory
+        /// </summary>
+        /// <param name="inDirectory">Directory to zip</param>
+        /// <param name="outFile">Output file</param>
+        /// <returns>Output file</returns>
+        public string GenerateZipFileFromDirectory(string inDirectory, string outFile)
+        {
+            ZipFile.CreateFromDirectory(inDirectory, outFile);
+            return outFile;
+        }
+
+        /// <summary>
+        /// Extract a zip file to a directory
+        /// </summary>
+        /// <param name="inFile">File to extract</param>
+        /// <param name="outDirectory">Directory to extract to</param>
+        /// <returns>Output directory</returns>
+        public string ExtractZipFile(string inFile, string outDirectory)
+        {
+            ZipFile.ExtractToDirectory(inFile, outDirectory);
+            return outDirectory;
         }
     }
 }

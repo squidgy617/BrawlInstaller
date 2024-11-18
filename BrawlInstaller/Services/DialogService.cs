@@ -21,6 +21,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenFileDialog(string, string)"/>
         string OpenFileDialog(string title, string filter);
 
+        /// <inheritdoc cref="DialogService.SaveFileDialog(string, string)"/>
+        string SaveFileDialog(string title = "Save file", string filter = "");
+
         /// <inheritdoc cref="DialogService.OpenMultiFileDialog(string, string)"/>
         List<string> OpenMultiFileDialog(string title, string filter);
 
@@ -73,6 +76,26 @@ namespace BrawlInstaller.Services
         public string OpenFileDialog(string title="Select a file", string filter = "")
         {
             var dialog = new OpenFileDialog();
+            dialog.Title = title;
+            dialog.Filter = filter;
+
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                return dialog.FileName;
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Open save file dialog
+        /// </summary>
+        /// <param name="title">Title to display on dialog</param>
+        /// <param name="filter">File extension filter</param>
+        /// <returns>Path to file</returns>
+        public string SaveFileDialog(string title="Save file", string filter = "")
+        {
+            var dialog = new SaveFileDialog();
             dialog.Title = title;
             dialog.Filter = filter;
 

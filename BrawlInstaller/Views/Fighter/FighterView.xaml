@@ -37,7 +37,7 @@
                 </GroupBox>
             </ScrollViewer>
             <StackPanel Grid.Row="1">
-                <Button x:Name="openButton" Content="Open" Command="{Binding OpenFighterCommand}"/>
+                <Button x:Name="browseButton" Content="Browse..." Command="{Binding OpenFighterCommand}"/>
                 <Button x:Name="loadButton" Content="Load" Command="{Binding LoadCommand}"/>
             </StackPanel>
         </Grid>
@@ -83,7 +83,7 @@
             </ScrollViewer>
             <Button x:Name="deleteButton" Grid.Row="1" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteCommand}"/>
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                <Button x:Name="exportButton" Content="Export" Command="{Binding ExportFighterCommand}"/>
+                <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFighterCommand}"/>
                 <Button x:Name="saveButton" Content="Save" Command="{Binding SaveCommand}"/>
             </StackPanel>
         </Grid>
