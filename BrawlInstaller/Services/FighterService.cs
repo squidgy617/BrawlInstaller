@@ -350,6 +350,7 @@ namespace BrawlInstaller.Services
             }
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
+            fighterInfo.CreditsThemeId = GetCreditsTheme(fighterInfo.Ids.SlotConfigId)?.SongId;
             return fighterInfo;
         }
 
@@ -1026,7 +1027,7 @@ namespace BrawlInstaller.Services
             // Import victory theme
             fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme);
             // Import credits theme
-            fighterPackage.CreditsTheme.SongId = ImportCreditsTheme(fighterPackage.CreditsTheme, creditsTheme, fighterPackage.FighterInfo);
+            fighterPackage.FighterInfo.CreditsThemeId = ImportCreditsTheme(fighterPackage.CreditsTheme, creditsTheme, fighterPackage.FighterInfo);
             // Import classic intro
             fighterPackage.ClassicIntro = ImportClassicIntro(classicIntro, fighterPackage.FighterInfo.Ids.CosmeticId);
             // Import ending files

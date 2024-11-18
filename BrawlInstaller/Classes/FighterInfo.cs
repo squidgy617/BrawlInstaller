@@ -24,6 +24,7 @@ namespace BrawlInstaller.Classes
         public string SlotConfig { get; set; }
         // TODO: Should credits theme ID go in here too?
         public uint? VictoryThemeId { get; set; } = null;
+        public uint? CreditsThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
         [JsonIgnore] public  uint? OriginalSoundbankId { get; set; } = null;
         public uint? KirbySoundbankId { get; set; } = null;
@@ -53,6 +54,7 @@ namespace BrawlInstaller.Classes
                     FranchiseId = Ids.FranchiseId
                 },
                 VictoryThemeId = VictoryThemeId,
+                CreditsThemeId = CreditsThemeId,
                 SoundbankId = SoundbankId,
                 OriginalSoundbankId = OriginalSoundbankId,
                 KirbySoundbankId = KirbySoundbankId,
