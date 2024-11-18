@@ -389,8 +389,16 @@ namespace BrawlInstaller.Services
         /// <returns>Output file</returns>
         public string GenerateZipFileFromDirectory(string inDirectory, string outFile)
         {
-            ZipFile.CreateFromDirectory(inDirectory, outFile);
-            return outFile;
+            if (DirectoryExists(inDirectory) && !string.IsNullOrEmpty(outFile))
+            {
+                if (FileExists(outFile))
+                {
+                    DeleteFile(outFile);
+                }
+                ZipFile.CreateFromDirectory(inDirectory, outFile);
+                return outFile;
+            }
+            return string.Empty;
         }
 
         /// <summary>
@@ -401,8 +409,16 @@ namespace BrawlInstaller.Services
         /// <returns>Output directory</returns>
         public string ExtractZipFile(string inFile, string outDirectory)
         {
-            ZipFile.ExtractToDirectory(inFile, outDirectory);
-            return outDirectory;
+            if (!string.IsNullOrEmpty(inFile))
+            {
+                if (DirectoryExists(outDirectory))
+                {
+                    DeleteDirectory(outDirectory);
+                }
+                ZipFile.ExtractToDirectory(inFile, outDirectory);
+                return outDirectory;
+            }
+            return string.Empty;
         }
     }
 }
