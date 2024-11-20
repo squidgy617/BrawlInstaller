@@ -188,6 +188,8 @@ namespace BrawlInstaller.Services
                 {
                     var fighterInfoJson = _fileService.ReadTextFile(fighterInfoPath);
                     fighterPackage.FighterInfo = JsonConvert.DeserializeObject<FighterInfo>(fighterInfoJson);
+                    fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
+                    fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
                 }
                 // Get fighter settings
                 var fighterSettingsPath = _fileService.GetFiles(path, "FighterSettings.json").FirstOrDefault();
@@ -238,6 +240,10 @@ namespace BrawlInstaller.Services
                 }
                 // Get Ex configs
                 fighterPackage.ExConfigs.AddRange(_fileService.GetFiles($"{path}\\ExConfigs", "*.dat"));
+                fighterPackage.FighterInfo.FighterConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Fighter"));
+                fighterPackage.FighterInfo.CosmeticConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Cosmetic"));
+                fighterPackage.FighterInfo.SlotConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Slot"));
+                fighterPackage.FighterInfo.CSSSlotConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("CSSSlot"));
                 // Get module
                 fighterPackage.Module = _fileService.GetFiles($"{path}\\Module", "*.rel").FirstOrDefault();
                 // Get ending pac files
@@ -254,7 +260,7 @@ namespace BrawlInstaller.Services
                     fighterPackage.VictoryTheme = new TracklistSong
                     {
                         SongFile = victoryTheme,
-                        SongPath = $"Victory!/{fighterPackage.FighterInfo.DisplayName}"
+                        SongPath = $"Victory!/{Path.GetFileNameWithoutExtension(victoryTheme)}"
                     };
                 }
                 var creditsTheme = _fileService.GetFiles($"{path}\\CreditsTheme", "*.brstm").FirstOrDefault();
@@ -263,7 +269,7 @@ namespace BrawlInstaller.Services
                     fighterPackage.CreditsTheme = new TracklistSong
                     {
                         SongFile = creditsTheme,
-                        SongPath = $"Credits/{fighterPackage.FighterInfo.DisplayName}"
+                        SongPath = $"Credits/{Path.GetFileNameWithoutExtension(creditsTheme)}"
                     };
                 }
                 fighterPackage.PackageType = PackageType.New;
@@ -328,6 +334,8 @@ namespace BrawlInstaller.Services
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);
+            // Delete fighter package file if it exists
+            _fileService.DeleteFile(outFile);
             // Generate fighter package file
             _fileService.GenerateZipFileFromDirectory(path, outFile);
             _fileService.DeleteDirectory(path);

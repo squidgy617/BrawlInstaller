@@ -350,7 +350,8 @@ namespace BrawlInstaller.Services
             }
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
-            fighterInfo.CreditsThemeId = GetCreditsTheme(fighterInfo.Ids.SlotConfigId)?.SongId;
+            // TODO: Commented because it slows things down, find a way to speed this up, maybe get all slot IDs in advance at the start?
+            //fighterInfo.CreditsThemeId = GetCreditsTheme(fighterInfo.Ids.SlotConfigId)?.SongId;
             return fighterInfo;
         }
 
@@ -465,30 +466,34 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter pac file object</returns>
         public FighterPacFile GetFighterPacFile(string filePath, string name, string folderName, bool removeCostumeId=true)
         {
-            var pacFile = new FighterPacFile { FilePath = filePath };
-            // If files are gotten from a subdirectory, set folder name
-            var dir = Path.GetFileName(Path.GetDirectoryName(filePath));
-            if (dir != folderName && (dir != "kirby" && folderName != "kirby"))
+            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(folderName))
             {
-                pacFile.Subdirectory = dir;
-            }
-            var fileName = Path.GetFileNameWithoutExtension(filePath);
-            var nameLocation = fileName.IndexOf(name, StringComparison.OrdinalIgnoreCase);
-            if (nameLocation > -1)
-            {
-                // Remove old costume ID
-                var oldCostumeId = string.Concat(fileName.Where(char.IsNumber));
-                if (removeCostumeId && !string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && fileName.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
+                var pacFile = new FighterPacFile { FilePath = filePath };
+                // If files are gotten from a subdirectory, set folder name
+                var dir = Path.GetFileName(Path.GetDirectoryName(filePath));
+                if (dir != folderName && (dir != "kirby" && folderName != "kirby"))
                 {
-                    fileName = fileName.Substring(0, fileName.Length - 2);
+                    pacFile.Subdirectory = dir;
                 }
-                pacFile.Prefix = fileName.Substring(0, nameLocation);
-                if (nameLocation + name.Length < fileName.Length)
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                var nameLocation = fileName.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+                if (nameLocation > -1)
                 {
-                    pacFile.Suffix = fileName.Substring(nameLocation + name.Length);
+                    // Remove old costume ID
+                    var oldCostumeId = string.Concat(fileName.Where(char.IsNumber));
+                    if (removeCostumeId && !string.IsNullOrEmpty(oldCostumeId) && oldCostumeId.Length >= 2 && fileName.EndsWith(oldCostumeId.Substring(oldCostumeId.Length - 2, 2)))
+                    {
+                        fileName = fileName.Substring(0, fileName.Length - 2);
+                    }
+                    pacFile.Prefix = fileName.Substring(0, nameLocation);
+                    if (nameLocation + name.Length < fileName.Length)
+                    {
+                        pacFile.Suffix = fileName.Substring(nameLocation + name.Length);
+                    }
                 }
+                return pacFile;
             }
-            return pacFile;
+            return null;
         }
 
         /// <summary>
@@ -768,7 +773,10 @@ namespace BrawlInstaller.Services
             foreach (var file in _fileService.GetFiles(path, "*.pac").Where(x => Path.GetFileName(x).StartsWith($"FitKirby{internalName}", StringComparison.InvariantCultureIgnoreCase)).ToList())
             {
                 var pacFile = GetFighterPacFile(file, internalName, internalName, removeCostumeId);
-                files.Add(pacFile);
+                if (pacFile != null)
+                {
+                    files.Add(pacFile);
+                }
             }
             return files;
         }
@@ -814,7 +822,10 @@ namespace BrawlInstaller.Services
             || Path.GetFileName(x).StartsWith($"Itm{name}", StringComparison.InvariantCultureIgnoreCase)).ToList())
             {
                 var pacFile = GetFighterPacFile(file, name, name, removeCostumeId);
-                files.Add(pacFile);
+                if (pacFile != null)
+                {
+                    files.Add(pacFile);
+                }
             }
             return files;
         }
@@ -1201,7 +1212,7 @@ namespace BrawlInstaller.Services
 
             // Get fighter files
             fighterPackage.PacFiles = GetPacFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList();
-            fighterPackage.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList());
+            fighterPackage.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y?.PacFiles).Select(z => z?.FilePath).Contains(x?.FilePath)).ToList());
             fighterPackage.Module = GetModule(fighterInfo.InternalName);
             fighterPackage.ExConfigs = new List<string>();
 
@@ -1818,19 +1829,22 @@ namespace BrawlInstaller.Services
         private TracklistSong GetCreditsTheme(int slotId)
         {
             var creditsTheme = new TracklistSong();
-            // Read the credits theme table
-            var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, "ClassicResultsTable:");
-            // Ensure slot ID is within range of table
-            if (table.Count > slotId)
+            if (slotId > -1)
             {
-                var id = table[slotId];
-                // Find matching table entry
-                var result = uint.TryParse(id.Replace("0x",string.Empty), NumberStyles.HexNumber, null, out uint foundId);
-                if (result)
+                // Read the credits theme table
+                var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, "ClassicResultsTable:");
+                // Ensure slot ID is within range of table
+                if (table.Count > slotId)
                 {
-                    creditsTheme = _tracklistService.GetTracklistSong(foundId, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist);
+                    var id = table[slotId];
+                    // Find matching table entry
+                    var result = uint.TryParse(id.Replace("0x", string.Empty), NumberStyles.HexNumber, null, out uint foundId);
+                    if (result)
+                    {
+                        creditsTheme = _tracklistService.GetTracklistSong(foundId, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist);
+                    }
                 }
             }
             return creditsTheme;
@@ -1962,7 +1976,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var moduleFolder = $"{buildPath}\\{settings.FilePathSettings.Modules}";
-            var module = $"{moduleFolder}\\ft_{internalName.ToLower()}.rel";
+            var module = $"{moduleFolder}\\ft_{internalName?.ToLower()}.rel";
             if (_fileService.FileExists(module))
             {
                 return module;

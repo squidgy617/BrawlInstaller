@@ -84,7 +84,8 @@
             <Button x:Name="deleteButton" Grid.Row="1" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteCommand}"/>
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
                 <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFighterCommand}"/>
-                <Button x:Name="saveButton" Content="Save" Command="{Binding SaveCommand}"/>
+                <Button x:Name="saveButton" Content="Save" Command="{Binding SavePackageCommand}" Visibility="{Binding FighterPackagePath, Converter={StaticResource stringVisConverter}}"/>
+                <Button x:Name="importButton" Content="{Binding ImportButtonText}" Command="{Binding SaveCommand}"/>
             </StackPanel>
         </Grid>
     </Grid>

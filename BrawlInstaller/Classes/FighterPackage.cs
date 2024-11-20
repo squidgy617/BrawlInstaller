@@ -26,7 +26,7 @@ namespace BrawlInstaller.Classes
 
     public class FighterPackage
     {
-        public FighterInfo FighterInfo { get; set; }
+        public FighterInfo FighterInfo { get; set; } = new FighterInfo();
         public List<Costume> Costumes { get; set; } = new List<Costume>();
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
         public List<FighterPacFile> PacFiles { get; set; } = new List<FighterPacFile>();

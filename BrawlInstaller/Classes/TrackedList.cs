@@ -15,6 +15,10 @@ namespace BrawlInstaller.Classes
             if (!ChangedItems.Contains(item))
                 ChangedItems.Add(item);
         }
+        public void MarkAllChanged()
+        {
+            Items.ForEach(item => ItemChanged(item));
+        }
         public void ClearChanges()
         {
             ChangedItems.Clear();

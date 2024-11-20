@@ -22,6 +22,7 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using System.Collections.ObjectModel;
 using BrawlInstaller.Helpers;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -39,6 +40,7 @@ namespace BrawlInstaller.ViewModels
         private FighterInfo _selectedFighter;
         private string _oldVictoryThemePath;
         private string _oldCreditsThemePath;
+        private string _fighterPackagePath;
 
         // Services
         IPackageService _packageService { get; }
@@ -51,6 +53,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand DeleteCommand => new RelayCommand(param => DeleteFighter());
         public ICommand RefreshFightersCommand => new RelayCommand(param => GetFighters());
         public ICommand ExportFighterCommand => new RelayCommand(param => ExportFighter());
+        public ICommand SavePackageCommand => new RelayCommand(param => ExportFighterAs(FighterPackagePath));
         public ICommand OpenFighterCommand => new RelayCommand(param => OpenFighter());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
@@ -84,6 +87,12 @@ namespace BrawlInstaller.ViewModels
         public ObservableCollection<FighterInfo> FighterList { get => new ObservableCollection<FighterInfo>(_settingsService.FighterInfoList); }
         public FighterInfo SelectedFighter { get => _selectedFighter; set { _selectedFighter = value; OnPropertyChanged(nameof(SelectedFighter)); } }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public string ImportButtonText { get => FighterPackage?.PackageType == PackageType.Update ? "Save" : "Import"; }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public string FighterPackagePath { get => _fighterPackagePath; set { _fighterPackagePath = value; OnPropertyChanged(nameof(FighterPackagePath)); } }
+
         // Methods
         public void LoadFighter()
         {
@@ -94,6 +103,8 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage = _packageService.ExtractFighter(SelectedFighter);
                 _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
                 _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
+                // Set package path to internal fighter
+                FighterPackagePath = string.Empty;
                 OnPropertyChanged(nameof(FighterPackage));
                 WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
@@ -108,6 +119,8 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage = _packageService.LoadFighterPackage(file);
                 _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
                 _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
+                // Set package path to newly opened fighter
+                FighterPackagePath = file;
                 OnPropertyChanged(nameof(FighterPackage));
                 WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
@@ -166,6 +179,8 @@ namespace BrawlInstaller.ViewModels
             {
                 _settingsService.FighterInfoList.Remove(foundFighter);
             }
+            // Set package path to internal fighter
+            FighterPackagePath = string.Empty;
             OnPropertyChanged(nameof(FighterList));
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
@@ -250,6 +265,8 @@ namespace BrawlInstaller.ViewModels
             FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = true;
             _oldVictoryThemePath = FighterPackage.VictoryTheme?.SongPath;
             _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
+            // Set package path to internal fighter
+            FighterPackagePath = string.Empty;
             // Update UI
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
@@ -258,6 +275,11 @@ namespace BrawlInstaller.ViewModels
         public void ExportFighter()
         {
             var file = _dialogService.SaveFileDialog("Save fighter package", "FIGHTERPACKAGE file (.fighterpackage)|*.fighterpackage");
+            ExportFighterAs(file);
+        }
+
+        public void ExportFighterAs(string file)
+        {
             if (!string.IsNullOrEmpty(file))
             {
                 var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
@@ -266,7 +288,10 @@ namespace BrawlInstaller.ViewModels
                 _packageService.ExportFighter(FighterPackage, file);
                 // Remove added franchise icons from package
                 FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
+                // Set package path to new file
+                FighterPackagePath = file;
             }
+            OnPropertyChanged(nameof(FighterPackage));
         }
 
         private void GetFighters()

@@ -1685,6 +1685,7 @@ namespace BrawlInstaller.Services
             {
                 Items = cosmetics
             };
+            cosmeticList.MarkAllChanged();
             return cosmeticList;
         }
 
