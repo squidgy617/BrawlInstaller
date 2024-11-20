@@ -93,6 +93,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public string FighterPackagePath { get => _fighterPackagePath; set { _fighterPackagePath = value; OnPropertyChanged(nameof(FighterPackagePath)); } }
 
+        [DependsUpon(nameof(FighterPackagePath))]
+        public bool InternalPackage { get => string.IsNullOrEmpty(FighterPackagePath); }
+
         // Methods
         public void LoadFighter()
         {
