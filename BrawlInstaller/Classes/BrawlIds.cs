@@ -39,7 +39,7 @@ namespace BrawlInstaller.Classes
 
         public int GetIdOfType(IdType type)
         {
-            return Ids.FirstOrDefault(x => x.Type == type)?.Id ?? 0;
+            return Ids.FirstOrDefault(x => x.Type == type)?.Id ?? -1;
         }
 
         public BrawlIds Copy()

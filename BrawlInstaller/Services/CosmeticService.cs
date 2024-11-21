@@ -1311,60 +1311,63 @@ namespace BrawlInstaller.Services
             // Try to get all textures for cosmetic definition
             var nodes = new List<CosmeticTexture>();
             var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
-            // If the definition contains PatSettings, check the PAT0 first
-            if (definition.PatSettings.Count > 0)
+            if (id > -1 || !restrictRange)
             {
-                var patSettings = definition.PatSettings.FirstOrDefault();
-                var pat = node.FindChild(patSettings.Path);
-                if (pat != null)
+                // If the definition contains PatSettings, check the PAT0 first
+                if (definition.PatSettings.Count > 0)
                 {
-                    var patEntries = new List<ResourceNode>();
-                    id = brawlIds.GetIdOfType(patSettings.IdType ?? definition.IdType) + (patSettings.Offset ?? definition.Offset);
-                    patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(patSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
-                    foreach (PAT0TextureEntryNode patEntry in patEntries)
+                    var patSettings = definition.PatSettings.FirstOrDefault();
+                    var pat = node.FindChild(patSettings.Path);
+                    if (pat != null)
                     {
-                        // Get the texture from the pat entry
-                        patEntry.GetImage(0);
-                        if (patEntry._textureNode != null)
+                        var patEntries = new List<ResourceNode>();
+                        id = brawlIds.GetIdOfType(patSettings.IdType ?? definition.IdType) + (patSettings.Offset ?? definition.Offset);
+                        patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(patSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
+                        foreach (PAT0TextureEntryNode patEntry in patEntries)
                         {
-                            nodes.Add(new CosmeticTexture 
-                            { 
-                                Texture = patEntry._textureNode, 
-                                CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), patSettings.Multiplier ?? definition.Multiplier, id),
-                                Id = (int)patEntry.FrameIndex,
-                                TextureId = GetCosmeticId(patEntry._textureNode?.Name, definition)
-                            });
+                            // Get the texture from the pat entry
+                            patEntry.GetImage(0);
+                            if (patEntry._textureNode != null)
+                            {
+                                nodes.Add(new CosmeticTexture
+                                {
+                                    Texture = patEntry._textureNode,
+                                    CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), patSettings.Multiplier ?? definition.Multiplier, id),
+                                    Id = (int)patEntry.FrameIndex,
+                                    TextureId = GetCosmeticId(patEntry._textureNode?.Name, definition)
+                                });
+                            }
+                        }
+                        // If it's a selectable cosmetic, don't return right away, we still need to retrieve the other textures
+                        if (!definition.Selectable)
+                        {
+                            return nodes;
                         }
                     }
-                    // If it's a selectable cosmetic, don't return right away, we still need to retrieve the other textures
-                    if (!definition.Selectable)
-                    {
-                        return nodes;
-                    }
                 }
-            }
-            var start = definition.InstallLocation.NodePath != "" ? node.FindChild(definition.InstallLocation.NodePath) : node;
-            // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
-            if (start.GetType() == typeof(ARCNode))
-            {
-                start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
-                restrictRange = false;
-            }
-            if (start != null)
-            {
-                var folder = start.FindChild("Textures(NW4R)");
-                if (folder != null)
+                var start = definition.InstallLocation.NodePath != "" ? node.FindChild(definition.InstallLocation.NodePath) : node;
+                // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
+                if (start.GetType() == typeof(ARCNode))
                 {
-                    foreach (var child in folder.Children)
+                    start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                    restrictRange = false;
+                }
+                if (start != null)
+                {
+                    var folder = start.FindChild("Textures(NW4R)");
+                    if (folder != null)
                     {
-                        // Get textures that match definition
-                        if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || child.Name.StartsWith(definition.Prefix)) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
+                        foreach (var child in folder.Children)
                         {
-                            // If it's selectable and not a new texture, don't add it. Also set ID to null for selectable textures
-                            if (!definition.Selectable || !nodes.Select(x => x.TextureId).Contains(GetCosmeticId(child.Name, definition)))
+                            // Get textures that match definition
+                            if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || child.Name.StartsWith(definition.Prefix)) && (!restrictRange || CheckIdRange(definition, id, child.Name, definition.Prefix)))
                             {
-                                var nodeId = !definition.Selectable ? GetCosmeticId(child.Name, definition) : null;
-                                nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = nodeId });
+                                // If it's selectable and not a new texture, don't add it. Also set ID to null for selectable textures
+                                if (!definition.Selectable || !nodes.Select(x => x.TextureId).Contains(GetCosmeticId(child.Name, definition)))
+                                {
+                                    var nodeId = !definition.Selectable ? GetCosmeticId(child.Name, definition) : null;
+                                    nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = nodeId });
+                                }
                             }
                         }
                     }
@@ -1386,21 +1389,24 @@ namespace BrawlInstaller.Services
             // Try to get all models for cosmetic definition
             var nodes = new List<MDL0Node>();
             var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
-            var start = definition.ModelPath != null ? node.FindChild(definition.ModelPath) : node;
-            // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for models
-            if (start.GetType() == typeof(ARCNode))
+            if (id > -1 || !restrictRange)
             {
-                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == id));
-                restrictRange = false;
-            }
-            var folder = start.FindChild("3DModels(NW4R)");
-            if (folder != null)
-            {
-                foreach (var child in folder.Children)
+                var start = definition.ModelPath != null ? node.FindChild(definition.ModelPath) : node;
+                // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for models
+                if (start.GetType() == typeof(ARCNode))
                 {
-                    // Get models that match definition
-                    if (child.GetType() == typeof(MDL0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition, id, child.Name.Replace("_TopN", ""), definition.Prefix)))
-                        nodes.Add((MDL0Node)child);
+                    start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == id));
+                    restrictRange = false;
+                }
+                var folder = start.FindChild("3DModels(NW4R)");
+                if (folder != null)
+                {
+                    foreach (var child in folder.Children)
+                    {
+                        // Get models that match definition
+                        if (child.GetType() == typeof(MDL0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition, id, child.Name.Replace("_TopN", ""), definition.Prefix)))
+                            nodes.Add((MDL0Node)child);
+                    }
                 }
             }
             return nodes;
@@ -1613,15 +1619,18 @@ namespace BrawlInstaller.Services
                 foreach (var cosmetic in cosmeticGroup.OrderByDescending(x => !x.SeparateFiles).OrderByDescending(x => !x.FirstOnly))
                 {
                     var id = brawlIds.GetIdOfType(cosmetic.IdType) + cosmetic.Offset;
-                    // Check all paths for the cosmetic definition
-                    foreach (var path in GetCosmeticPaths(cosmetic, id))
+                    if (id > -1 || !restrictRange)
                     {
-                        var rootNode = _fileService.OpenFile(path);
-                        if (rootNode != null)
+                        // Check all paths for the cosmetic definition
+                        foreach (var path in GetCosmeticPaths(cosmetic, id))
                         {
-                            foreach (var foundCosmetics in GetDefinitionCosmetics(cosmetic, rootNode, brawlIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\") && !cosmetic.Selectable))
-                                cosmetics.Add(foundCosmetics);
-                            _fileService.CloseFile(rootNode);
+                            var rootNode = _fileService.OpenFile(path);
+                            if (rootNode != null)
+                            {
+                                foreach (var foundCosmetics in GetDefinitionCosmetics(cosmetic, rootNode, brawlIds, restrictRange && !cosmetic.InstallLocation.FilePath.EndsWith("\\") && !cosmetic.Selectable))
+                                    cosmetics.Add(foundCosmetics);
+                                _fileService.CloseFile(rootNode);
+                            }
                         }
                     }
                     // If we found cosmetics, don't bother checking the other definitions in the group - proceed to the next group
