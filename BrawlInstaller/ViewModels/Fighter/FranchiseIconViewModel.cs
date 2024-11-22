@@ -73,8 +73,26 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadIcons(FighterLoadedMessage message)
         {
-            FranchiseIconList = _cosmeticService.GetFranchiseIcons();
+            var fighterPackage = message.Value;
+            FranchiseIconList = _cosmeticService.GetFranchiseIcons(fighterPackage.PackageType == PackageType.New);
+            // Add franchise icons that were loaded alongside fighter, if any
+            // TODO: Is there a less stupid way to do this?
+            foreach(var icon in fighterPackage.Cosmetics.ChangedItems.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList())
+            {
+                var newId = 0;
+                while (FranchiseIconList.Items.Select(x => x.Id).Contains(newId))
+                {
+                    newId++;
+                }
+                icon.Id = newId;
+                FranchiseIconList.Add(icon);
+                fighterPackage.Cosmetics.Remove(icon);
+                fighterPackage.Cosmetics.RemoveChange(icon);
+                fighterPackage.FighterInfo.Ids.FranchiseId = newId;
+            }
             SelectedFranchiseIcon = FranchiseIcons.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
+            OnPropertyChanged(nameof(FranchiseIconList));
+            OnPropertyChanged(nameof(SelectedFranchiseIcon));
         }
 
         public void SelectModel()

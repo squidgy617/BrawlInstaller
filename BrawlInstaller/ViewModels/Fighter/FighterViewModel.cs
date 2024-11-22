@@ -120,6 +120,20 @@ namespace BrawlInstaller.ViewModels
             {
                 FighterPackage = new FighterPackage();
                 FighterPackage = _packageService.LoadFighterPackage(file);
+                // Prompt if user wants to load franchise icon
+                if (FighterPackage.Cosmetics.ChangedItems.Any(x => x.CosmeticType == CosmeticType.FranchiseIcon))
+                {
+                    var importIcons = _dialogService.ShowMessage("This package includes a franchise icon. Would you like to import it?\nNOTE: Only import NEW franchise icons, not ones already in your build.", "Import franchise icon?", MessageBoxButton.YesNo);
+                    if (!importIcons)
+                    {
+                        // Remove franchise icons from package if user selects No
+                        foreach(var icon in FighterPackage.Cosmetics.Items.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList())
+                        {
+                            FighterPackage.Cosmetics.Remove(icon, false);
+                            FighterPackage.Cosmetics.RemoveChange(icon);
+                        }
+                    }
+                }
                 _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
                 _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
                 // Set package path to newly opened fighter

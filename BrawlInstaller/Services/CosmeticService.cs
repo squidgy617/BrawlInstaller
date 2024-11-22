@@ -34,8 +34,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CosmeticService.GetStageCosmetics(BrawlIds)"/>
         List<Cosmetic> GetStageCosmetics(BrawlIds stageIds);
 
-        /// <inheritdoc cref="CosmeticService.GetFranchiseIcons()"/>
-        CosmeticList GetFranchiseIcons();
+        /// <inheritdoc cref="CosmeticService.GetFranchiseIcons(bool)"/>
+        CosmeticList GetFranchiseIcons(bool loadHdTextures = false);
 
         /// <inheritdoc cref="CosmeticService.ImportCosmetics(List{CosmeticDefinition}, CosmeticList, BrawlIds, string)"/>
         void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name=null);
@@ -1567,11 +1567,14 @@ namespace BrawlInstaller.Services
         /// Get a list of all fighter franchise icons
         /// </summary>
         /// <returns>List of franchise icons</returns>
-        public CosmeticList GetFranchiseIcons()
+        public CosmeticList GetFranchiseIcons(bool loadHdTextures = false)
         {
             var franchiseIcons = new List<Cosmetic>();
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList();
+            // Load HD textures in advance
+            if (_settingsService.BuildSettings.HDTextures && loadHdTextures)
+                PreloadHDTextures();
             // Get all franchise icons
             var allIcons = GetCosmetics(new BrawlIds(), definitions, false);
             // Aggregate the models and transparent textures
@@ -1688,6 +1691,12 @@ namespace BrawlInstaller.Services
                     var hdImagePath = Path.GetFullPath(hdImage);
                     cosmetic.HDImagePath = hdImagePath;
                     cosmetic.HDImage = _fileService.LoadImage(hdImagePath);
+                }
+                var model = _fileService.GetFiles($"{path}\\{cosmetic.CosmeticType}\\{cosmetic.Style}\\Model", $"{index:D4}.mdl0").FirstOrDefault();
+                if (!string.IsNullOrEmpty(model))
+                {
+                    var modelPath = Path.GetFullPath(model);
+                    cosmetic.ModelPath = modelPath;
                 }
             }
             var cosmeticList = new CosmeticList

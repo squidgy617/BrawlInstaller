@@ -42,5 +42,10 @@ namespace BrawlInstaller.Classes
                 ItemChanged(item);
             Items.Remove(item);
         }
+
+        public void RemoveChange(T item)
+        {
+            ChangedItems.Remove(item);
+        }
     }
 }
