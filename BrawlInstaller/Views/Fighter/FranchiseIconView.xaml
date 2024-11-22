@@ -36,7 +36,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="addIconButton" Style="{StaticResource miniButton}" Content="+"/>
+                <Button x:Name="addIconButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddIconCommand}"/>
                 <Button x:Name="removeIconButton" Style="{StaticResource miniButton}" Content="-" Grid.Column="1" Command="{Binding RemoveIconCommand}"/>
             </Grid>
             <Label Target="{Binding ElementName=franchiseIconIdTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="2"/>

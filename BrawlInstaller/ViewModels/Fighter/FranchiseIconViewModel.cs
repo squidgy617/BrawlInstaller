@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using System.Drawing;
 using System.Collections.ObjectModel;
 using System.Windows;
+using BrawlInstaller.Enums;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -36,6 +37,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ReplaceHDIconCommand => new RelayCommand(param => ReplaceHDIcon());
         public ICommand ClearHDIconCommand => new RelayCommand(param => ClearHDIcon());
         public ICommand RemoveIconCommand => new RelayCommand(param => RemoveIcon());
+        public ICommand AddIconCommand => new RelayCommand(param => AddIcon());
 
         // Private Properties
         private CosmeticList _franchiseIconList;
@@ -156,6 +158,25 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(SelectedFranchiseIcon));
                 OnPropertyChanged(nameof(FranchiseIconList));
             }
+        }
+
+        public void AddIcon()
+        {
+            var newId = 0;
+            while (FranchiseIconList.Items.Select(x => x.Id).Contains(newId))
+            {
+                newId++;
+            }
+            var cosmetic = new Cosmetic
+            {
+                CosmeticType = CosmeticType.FranchiseIcon,
+                Style = "Icon",
+                Id = newId
+            };
+            FranchiseIconList.Add(cosmetic);
+            SelectedFranchiseIcon = cosmetic;
+            OnPropertyChanged(nameof(FranchiseIconList));
+            OnPropertyChanged(nameof(SelectedFranchiseIcon));
         }
     }
 }
