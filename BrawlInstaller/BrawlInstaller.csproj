@@ -82,6 +82,9 @@
     <Compile Include="Classes\Position.cs" />
     <Compile Include="Classes\PSA.cs" />
     <Compile Include="Classes\Tracklists.cs" />
+    <Compile Include="Dialogs\MessageWindow.xaml.cs">
+      <DependentUpon>MessageWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
     <Compile Include="Services\PsaService.cs" />
@@ -178,6 +181,10 @@
     <Compile Include="Views\Stage\StageView.xaml.cs">
       <DependentUpon>StageView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\MessageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\StringInputWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

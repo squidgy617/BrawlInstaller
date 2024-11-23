@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Services
 {
@@ -15,8 +16,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxImage)"/>
         bool ShowMessage(string text, string caption, MessageBoxImage image=MessageBoxImage.Information);
 
-        /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxButton, MessageBoxImage)"/>
-        bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information);
+        /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxButton, MessageBoxImage, BitmapImage)"/>
+        bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information, BitmapImage bitmapImage=null);
 
         /// <inheritdoc cref="DialogService.OpenFileDialog(string, string)"/>
         string OpenFileDialog(string title, string filter);
@@ -58,10 +59,16 @@ namespace BrawlInstaller.Services
         /// <param name="buttonType">Type of buttons to use in dialog</param>
         /// <param name="image">Image to show on dialog</param>
         /// <returns>Whether user gave a positive response to message</returns>
-        public bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information)
+        public bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information, BitmapImage bitmapImage=null)
         {
-            var result = MessageBox.Show(text, caption, buttonType, image);
-            if (result == MessageBoxResult.Yes || result == MessageBoxResult.OK || result == MessageBoxResult.None)
+            var dialog = new MessageWindow();
+            dialog.Title = caption;
+            dialog.Message = text;
+            dialog.MessageBoxButton = buttonType;
+            dialog.MessageIcon = image;
+            dialog.Image = bitmapImage;
+            var result = dialog.ShowDialog();
+            if (result == true)
                 return true;
             else
                 return false;
