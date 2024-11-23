@@ -83,22 +83,28 @@
                     </StackPanel>
                 </Grid>
             </ScrollViewer>
-            <Button x:Name="deleteButton" Grid.Row="1" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteCommand}" Visibility="{Binding InternalPackage, Converter={StaticResource boolVisConverter}}"/>
-            <WrapPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                <Label x:Name="fighterConfigIdLabel" Content="Fighter ID:"/>
-                <TextBox x:Name="fighterConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.FighterConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                <Label x:Name="cosmeticConfigIdLabel" Content="Cosmetic Config ID:"/>
-                <TextBox x:Name="cosmeticConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                <Label x:Name="slotConfigIdLabel" Content="Slot ID:"/>
-                <TextBox x:Name="slotConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.SlotConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                <Label x:Name="cssSlotConfigIdLabel" Content="CSS Slot ID:"/>
-                <TextBox x:Name="cssSlotConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.CSSSlotConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                <Label x:Name="cosmeticIdLabel" Content="Cosmetic ID:"/>
-                <TextBox x:Name="cosmeticIdTextBox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticId}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFighterCommand}"/>
-                <Button x:Name="saveButton" Content="Save" Command="{Binding SavePackageCommand}" Visibility="{Binding FighterPackagePath, Converter={StaticResource stringVisConverter}}"/>
-                <Button x:Name="importButton" Content="{Binding ImportButtonText}" Command="{Binding SaveCommand}"/>
-            </WrapPanel>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="deleteButton" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteCommand}" Visibility="{Binding InternalPackage, Converter={StaticResource boolVisConverter}}"/>
+                <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Label x:Name="fighterConfigIdLabel" Content="Fighter ID:"/>
+                    <TextBox x:Name="fighterConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.FighterConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
+                    <Label x:Name="cosmeticConfigIdLabel" Content="Cosmetic Config ID:"/>
+                    <TextBox x:Name="cosmeticConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
+                    <Label x:Name="slotConfigIdLabel" Content="Slot ID:"/>
+                    <TextBox x:Name="slotConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.SlotConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
+                    <Label x:Name="cssSlotConfigIdLabel" Content="CSS Slot ID:"/>
+                    <TextBox x:Name="cssSlotConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.CSSSlotConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
+                    <Label x:Name="cosmeticIdLabel" Content="Cosmetic ID:"/>
+                    <TextBox x:Name="cosmeticIdTextBox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticId}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
+                    <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFighterCommand}"/>
+                    <Button x:Name="saveButton" Content="Save" Command="{Binding SavePackageCommand}" Visibility="{Binding FighterPackagePath, Converter={StaticResource stringVisConverter}}"/>
+                    <Button x:Name="importButton" Content="{Binding ImportButtonText}" Command="{Binding SaveCommand}"/>
+                </WrapPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>
