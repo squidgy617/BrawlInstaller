@@ -39,6 +39,7 @@
             <StackPanel Grid.Row="1">
                 <Button x:Name="browseButton" Content="Browse..." Command="{Binding OpenFighterCommand}"/>
                 <Button x:Name="loadButton" Content="Load" Command="{Binding LoadCommand}"/>
+                <Button x:Name="newButton" Content="New" Command="{Binding NewFighterCommand}"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Column="1" Margin="3,0,0,0"  Visibility="{Binding FighterPackage, Mode=OneWay, Converter={StaticResource nullVisConverter}}">

@@ -34,17 +34,17 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Grid x:Name="costumeButtonGrid" Grid.Column="1" IsEnabled="{Binding SelectedCostume, Mode=OneWay, Converter={StaticResource nullBoolConverter}}">
+            <Grid x:Name="costumeButtonGrid" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Button x:Name="costumeUpButton" Content="↑" Command="{Binding CostumeUpCommand}" Grid.Row="0" Grid.Column="1" Style="{StaticResource sideButton}"/>
-                <Button x:Name="costumeDownButton" Content="↓" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource sideButton}"/>
+                <Button x:Name="costumeUpButton" Content="↑" Command="{Binding CostumeUpCommand}" Grid.Row="0" Grid.Column="1" Style="{StaticResource sideButton}" IsEnabled="{Binding SelectedCostume, Mode=OneWay, Converter={StaticResource nullBoolConverter}}"/>
+                <Button x:Name="costumeDownButton" Content="↓" Command="{Binding CostumeDownCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource sideButton}" IsEnabled="{Binding SelectedCostume, Mode=OneWay, Converter={StaticResource nullBoolConverter}}"/>
                 <Button x:Name="costumeAddButton" Content="+" Command="{Binding AddCostumeCommand}" Grid.Row="2" Grid.Column="1" Style="{StaticResource miniButton}"/>
-                <Button x:Name="costumeRemoveButton" Content="-" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding RemoveCostumesCommand}" Grid.Row="3" Grid.Column="1" Style="{StaticResource miniButton}"/>
+                <Button x:Name="costumeRemoveButton" Content="-" CommandParameter="{Binding ElementName=costumeListBox, Path=SelectedItems}" Command="{Binding RemoveCostumesCommand}" Grid.Row="3" Grid.Column="1" Style="{StaticResource miniButton}" IsEnabled="{Binding SelectedCostume, Mode=OneWay, Converter={StaticResource nullBoolConverter}}"/>
             </Grid>
         </Grid>
         <Grid x:Name="costumeOptionsGrid" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="3" Visibility="{Binding SelectedCostume, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
