@@ -2154,6 +2154,7 @@ namespace BrawlInstaller.Services
                 {
                     var roster = new Roster();
                     roster.Name = rootNode.Name;
+                    roster.FilePath = rosterFile;
                     // Get CSS entries
                     var csNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Character Select");
                     if (csNode != null)
