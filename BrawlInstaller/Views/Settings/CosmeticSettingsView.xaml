@@ -121,6 +121,7 @@
                 <CheckBox x:Name="firstOnlyCheckBox" Content="Use First Image Only" IsChecked="{Binding SelectedDefinition.FirstOnly}"/>
                 <CheckBox x:Name="separateFilesCheckBox" Content="Create Separate File for Each Image" IsChecked="{Binding SelectedDefinition.SeparateFiles}" Grid.Column="1"/>
                 <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1"/>
+                <CheckBox x:Name="alwaysInheritCheckBox" Content="Use other style if not available" IsChecked="{Binding SelectedDefinition.AlwaysInheritStyle}" Grid.Row="1" Grid.Column="1"/>
             </Grid>
             <Expander x:Name="patExpander" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6" IsExpanded="True">
                 <Grid>

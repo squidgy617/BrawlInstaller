@@ -1703,6 +1703,18 @@ namespace BrawlInstaller.Services
             {
                 Items = cosmetics
             };
+            // Inherit missing cosmetics that require it
+            foreach(var definition in _settingsService.BuildSettings.CosmeticSettings)
+            {
+                if (definition.AlwaysInheritStyle && !cosmeticList.Items.Any(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style))
+                {
+                    var inheritedStyle = cosmeticList.Items.FirstOrDefault(x => x.CosmeticType == definition.CosmeticType)?.Style;
+                    if (!string.IsNullOrEmpty(inheritedStyle))
+                    {
+                        cosmeticList.InheritedStyles.Add((definition.CosmeticType, definition.Style), inheritedStyle);
+                    }
+                }
+            }
             cosmeticList.MarkAllChanged();
             return cosmeticList;
         }
