@@ -88,7 +88,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="deleteButton" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteCommand}" Visibility="{Binding InternalPackage, Converter={StaticResource boolVisConverter}}"/>
+                <Button x:Name="deleteButton" Content="Delete" VerticalAlignment="Bottom" HorizontalAlignment="Left" Command="{Binding DeleteCommand}" Visibility="{Binding InternalPackage, Converter={StaticResource boolVisConverter}}"/>
                 <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                     <Label x:Name="fighterConfigIdLabel" Content="Fighter ID:"/>
                     <TextBox x:Name="fighterConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.FighterConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
