@@ -356,6 +356,7 @@ namespace BrawlInstaller.ViewModels
                     match.Name = fighterInfo.DisplayName;
                 }
             }
+            OnPropertyChanged(nameof(Rosters));
             OnPropertyChanged(nameof(FighterList));
         }
     }
