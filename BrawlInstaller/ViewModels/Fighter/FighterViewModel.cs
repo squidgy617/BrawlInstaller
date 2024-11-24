@@ -41,11 +41,14 @@ namespace BrawlInstaller.ViewModels
         private string _oldVictoryThemePath;
         private string _oldCreditsThemePath;
         private string _fighterPackagePath;
+        private List<Roster> _rosters;
+        private Roster _selectedRoster;
 
         // Services
         IPackageService _packageService { get; }
         ISettingsService _settingsService { get; }
         IDialogService _dialogService { get; }
+        IFighterService _fighterService { get; }
 
         // Commands
         public ICommand LoadCommand => new RelayCommand(param => LoadFighter());
@@ -59,16 +62,20 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel)
+        public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFighterService fighterService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel)
         {
             _packageService = packageService;
             _settingsService = settingsService;
             _dialogService = dialogService;
+            _fighterService = fighterService;
             FranchiseIconViewModel = franchiseIconViewModel;
             CostumeViewModel = costumeViewModel;
             CosmeticViewModel = cosmeticViewmodel;
             FighterFileViewModel = fighterFileViewModel;
             FighterSettingsViewModel = fighterSettingsViewModel;
+
+            Rosters = _fighterService.GetRosters();
+            SelectedRoster = Rosters.FirstOrDefault();
 
             WeakReferenceMessenger.Default.Register<UpdateFighterListMessage>(this, (recipient, message) =>
             {
@@ -96,6 +103,11 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackagePath))]
         public bool InternalPackage { get => string.IsNullOrEmpty(FighterPackagePath); }
+
+        public List<Roster> Rosters { get => _rosters; set { _rosters = value; OnPropertyChanged(nameof(Rosters)); } }
+
+        [DependsUpon(nameof(Rosters))]
+        public Roster SelectedRoster { get => _selectedRoster; set { _selectedRoster = value; OnPropertyChanged(nameof(SelectedRoster)); } }
 
         // Methods
         public void LoadFighter()

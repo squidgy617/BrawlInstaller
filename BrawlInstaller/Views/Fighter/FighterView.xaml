@@ -31,8 +31,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="0" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
-                        <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="0" Grid.Column="2" Style="{StaticResource miniButton}"/>
+                        <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="400"/>
+                        <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource miniButton}"/>
+                        <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}"/>
+                        <ListBox x:Name="rosterListBox" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding SelectedRoster.Entries}" DisplayMemberPath="Name" Width="120" Height="400"/>
                     </Grid>
                 </GroupBox>
             </ScrollViewer>

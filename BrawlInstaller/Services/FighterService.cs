@@ -76,6 +76,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetFighterPacFile(string, string, string, bool)"/>
         FighterPacFile GetFighterPacFile(string filePath, string name, string folderName, bool removeCostumeId = true);
+
+        /// <inheritdoc cref="FighterService.GetRosters()"/>
+        List<Roster> GetRosters();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2134,6 +2137,69 @@ namespace BrawlInstaller.Services
                 }
             }
             return relNode;
+        }
+
+        /// <summary>
+        /// Get all rosters in build
+        /// </summary>
+        /// <returns>List of rosters</returns>
+        public List<Roster> GetRosters()
+        {
+            var rosters = new List<Roster>();
+            foreach(var rosterFile in _settingsService.BuildSettings.FilePathSettings.RosterFiles)
+            {
+                var path = Path.Combine(_settingsService.AppSettings.BuildPath, rosterFile);
+                var rootNode = _fileService.OpenFile(path);
+                if (rootNode != null)
+                {
+                    var roster = new Roster();
+                    roster.Name = rootNode.Name;
+                    // Get CSS entries
+                    var csNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Character Select");
+                    if (csNode != null)
+                    {
+                        foreach(RSTCEntryNode child in csNode.Children)
+                        {
+                            var newEntry = new RosterEntry
+                            {
+                                Id = child.FighterID,
+                                Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == child.FighterID)?.DisplayName ?? child.Name,
+                                InCss = true,
+                                InRandom = false
+                            };
+                            roster.Entries.Add(newEntry);
+                        }
+                    }
+                    // Get random entries
+                    var randomNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Random Character List");
+                    if (randomNode != null)
+                    {
+                        foreach (RSTCEntryNode child in randomNode.Children)
+                        {
+                            // Add an entry if one isn't already in the roster
+                            var entry = roster.Entries.FirstOrDefault(x => x.Id == child.FighterID);
+                            if (entry == null)
+                            {
+                                var newEntry = new RosterEntry
+                                {
+                                    Id = child.FighterID,
+                                    Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == child.FighterID)?.DisplayName ?? child.Name,
+                                    InCss = false,
+                                    InRandom = true
+                                };
+                            }
+                            // Otherwise, update existing entry
+                            else
+                            {
+                                entry.InRandom = true;
+                            }
+                        }
+                    }
+                    rosters.Add(roster);
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+            return rosters;
         }
 
         #region Fighter-Specific Settings

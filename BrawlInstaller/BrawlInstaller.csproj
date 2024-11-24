@@ -81,6 +81,7 @@
     <Compile Include="Classes\ImageSize.cs" />
     <Compile Include="Classes\Position.cs" />
     <Compile Include="Classes\PSA.cs" />
+    <Compile Include="Classes\Roster.cs" />
     <Compile Include="Classes\Tracklists.cs" />
     <Compile Include="Dialogs\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>

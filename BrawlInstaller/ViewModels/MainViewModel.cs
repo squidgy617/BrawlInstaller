@@ -28,14 +28,15 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public MainViewModel(IDialogService dialogService, IMainControlsViewModel mainControlsViewModel, ISettingsViewModel settingsViewModel, IFighterViewModel fighterViewModel, 
-            IFighterInfoViewModel fighterInfoViewModel, IStageViewModel stageViewModel)
+        // Order of viewmodels in this constructor determines the order they load in!
+        public MainViewModel(IDialogService dialogService, IMainControlsViewModel mainControlsViewModel, ISettingsViewModel settingsViewModel, IFighterInfoViewModel fighterInfoViewModel,
+            IFighterViewModel fighterViewModel, IStageViewModel stageViewModel)
         {
             _dialogService = dialogService;
             MainControlsViewModel = mainControlsViewModel;
             SettingsViewModel = settingsViewModel;
-            FighterViewModel = fighterViewModel;
             FighterInfoViewModel = fighterInfoViewModel;
+            FighterViewModel = fighterViewModel;
             StageViewModel = stageViewModel;
 
             Application.Current.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(AppDispatcherUnhandledException);
