@@ -109,6 +109,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(Rosters))]
         public Roster SelectedRoster { get => _selectedRoster; set { _selectedRoster = value; OnPropertyChanged(nameof(SelectedRoster)); } }
 
+        [DependsUpon(nameof(SelectedRoster))]
+        public ObservableCollection<RosterEntry> RosterEntries { get => SelectedRoster != null ? new ObservableCollection<RosterEntry>(SelectedRoster?.Entries) : new ObservableCollection<RosterEntry>(); }
+
         // Methods
         public void LoadFighter()
         {
