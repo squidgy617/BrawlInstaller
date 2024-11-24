@@ -346,6 +346,16 @@ namespace BrawlInstaller.ViewModels
 
         private void UpdateFighterList(UpdateFighterListMessage message)
         {
+            var fighterInfoList = message.Value;
+            // Update roster entries
+            foreach(var fighterInfo in fighterInfoList)
+            {
+                var foundMatches = Rosters.SelectMany(x => x.Entries).Where(x => x.Id == fighterInfo.Ids.CSSSlotConfigId);
+                foreach(var match in foundMatches)
+                {
+                    match.Name = fighterInfo.DisplayName;
+                }
+            }
             OnPropertyChanged(nameof(FighterList));
         }
     }
