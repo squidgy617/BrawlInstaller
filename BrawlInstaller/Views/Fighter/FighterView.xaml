@@ -32,11 +32,18 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="400"/>
                         <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource miniButton}"/>
-                        <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}"/>
+                        <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}" Width="120"/>
+                        <Button x:Name="saveRosterButton" Grid.Column="3" Content="Save" Command="{Binding SaveRostersCommand}"/>
                         <ListBox x:Name="rosterListBox" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" DisplayMemberPath="Name" Width="120" Height="400"/>
+                        <StackPanel x:Name="rosterButtonsStackPanel" Grid.Column="3" Grid.Row="1">
+                            <Button x:Name="moveUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveFighterUpCommand}"/>
+                            <Button x:Name="moveDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveFighterDownCommand}"/>
+                            <Button x:Name="removeButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveFighterCommand}"/>
+                        </StackPanel>
                         <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="2" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}"/>
                         <CheckBox x:Name="inRandomCheckBox" Grid.Column="2" Grid.Row="3" IsChecked="{Binding SelectedRosterEntry.InRandom}" Content="In Random" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}"/>
                     </Grid>

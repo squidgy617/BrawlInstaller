@@ -60,6 +60,10 @@ namespace BrawlInstaller.ViewModels
         public ICommand SavePackageCommand => new RelayCommand(param => ExportFighterAs(FighterPackagePath));
         public ICommand OpenFighterCommand => new RelayCommand(param => OpenFighter());
         public ICommand NewFighterCommand => new RelayCommand(param => NewFighter());
+        public ICommand MoveFighterUpCommand => new RelayCommand(param => MoveFighterUp());
+        public ICommand MoveFighterDownCommand => new RelayCommand(param => MoveFighterDown());
+        public ICommand RemoveFighterCommand => new RelayCommand(param =>  RemoveFighter());
+        public ICommand SaveRostersCommand => new RelayCommand(param => SaveRosters());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -410,6 +414,37 @@ namespace BrawlInstaller.ViewModels
             }
             _fighterService.SaveRosters(Rosters);
             OnPropertyChanged(nameof(Rosters));
+        }
+
+        private void MoveFighterUp()
+        {
+            if (SelectedRosterEntry != null)
+            {
+                SelectedRoster.Entries.MoveUp(SelectedRosterEntry);
+            }
+            OnPropertyChanged(nameof(RosterEntries));
+        }
+        private void MoveFighterDown()
+        {
+            if (SelectedRosterEntry != null)
+            {
+                SelectedRoster.Entries.MoveDown(SelectedRosterEntry);
+            }
+            OnPropertyChanged(nameof(RosterEntries));
+        }
+
+        private void RemoveFighter()
+        {
+            if (SelectedRosterEntry != null)
+            {
+                SelectedRoster.Entries.Remove(SelectedRosterEntry);
+            }
+            OnPropertyChanged(nameof(RosterEntries));
+        }
+
+        private void SaveRosters()
+        {
+            _fighterService.SaveRosters(Rosters);
         }
     }
 
