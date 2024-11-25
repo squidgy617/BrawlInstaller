@@ -225,6 +225,8 @@ namespace BrawlInstaller.ViewModels
             }
             // Set package path to internal fighter
             FighterPackagePath = string.Empty;
+            // Update rosters
+            UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
             OnPropertyChanged(nameof(FighterList));
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
@@ -233,6 +235,7 @@ namespace BrawlInstaller.ViewModels
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
         public void SaveFighter()
         {
+            var packageType = FighterPackage.PackageType;
             // Set costume indexes for cosmetics
             foreach(var costume in FighterPackage.Costumes)
             {
@@ -311,6 +314,8 @@ namespace BrawlInstaller.ViewModels
             _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
             // Set package path to internal fighter
             FighterPackagePath = string.Empty;
+            // Update rosters
+            UpdateRoster(packageType, FighterPackage.FighterInfo);
             // Update UI
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
@@ -363,6 +368,43 @@ namespace BrawlInstaller.ViewModels
             }
             OnPropertyChanged(nameof(Rosters));
             OnPropertyChanged(nameof(FighterList));
+        }
+
+        private void UpdateRoster(PackageType packageType, FighterInfo fighterInfo)
+        {
+            if (packageType == PackageType.New)
+            {
+                foreach(var roster in Rosters)
+                {
+                    var newEntry = new RosterEntry
+                    {
+                        Id = fighterInfo.Ids.CSSSlotConfigId,
+                        Name = fighterInfo.DisplayName,
+                        InCss = true,
+                        InRandom = true
+                    };
+                    roster.Entries.Add(newEntry);
+                }
+            }
+            else
+            {
+                foreach(var roster in Rosters)
+                {
+                    var foundEntry = roster.Entries.FirstOrDefault(x => x.Id == fighterInfo.Ids.CSSSlotConfigId);
+                    if (foundEntry != null)
+                    {
+                        if (packageType == PackageType.Delete)
+                        {
+                            roster.Entries.Remove(foundEntry);
+                        }
+                        else if (packageType == PackageType.Update)
+                        {
+                            foundEntry.Name = fighterInfo.DisplayName;
+                        }
+                    }
+                }
+            }
+            OnPropertyChanged(nameof(Rosters));
         }
     }
 
