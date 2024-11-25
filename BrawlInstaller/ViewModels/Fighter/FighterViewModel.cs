@@ -408,6 +408,7 @@ namespace BrawlInstaller.ViewModels
                     }
                 }
             }
+            _fighterService.SaveRosters(Rosters);
             OnPropertyChanged(nameof(Rosters));
         }
     }
