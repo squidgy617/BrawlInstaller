@@ -79,6 +79,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetRosters()"/>
         List<Roster> GetRosters();
+
+        /// <inheritdoc cref="FighterService.SaveRosters(List{Roster})"/>
+        void SaveRosters(List<Roster> rosters);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2188,6 +2191,7 @@ namespace BrawlInstaller.Services
                                     InCss = false,
                                     InRandom = true
                                 };
+                                roster.Entries.Add(newEntry);
                             }
                             // Otherwise, update existing entry
                             else
@@ -2201,6 +2205,43 @@ namespace BrawlInstaller.Services
                 }
             }
             return rosters;
+        }
+
+        /// <summary>
+        /// Save a list of rosters to the build
+        /// </summary>
+        /// <param name="rosters">List of rosters to save</param>
+        public void SaveRosters(List<Roster> rosters)
+        {
+            foreach (var roster in rosters)
+            {
+                // TODO: Create a whole new RSTCNode instead of opening existing one.
+                // For some reason new RSTCNodes save as RawDataNodes, but this should be fixable somehow
+                var file = _fileService.OpenFile(Path.Combine(_settingsService.AppSettings.BuildPath, roster.FilePath));
+                if (file != null)
+                {
+                    var rosterFile = (RSTCNode)file;
+                    rosterFile.cssList.Children.RemoveAll(x => x.GetType() == typeof(RSTCEntryNode));
+                    rosterFile.randList.Children.RemoveAll(x => x.GetType() == typeof(RSTCEntryNode));
+                    foreach (var entry in roster.Entries)
+                    {
+                        if (entry.InCss)
+                        {
+                            rosterFile.cssList.AddChild(new RSTCEntryNode { FighterID = (byte)entry.Id });
+                        }
+                        if (entry.InRandom)
+                        {
+                            rosterFile.randList.AddChild(new RSTCEntryNode { FighterID = (byte)entry.Id });
+                        }
+                    }
+                    rosterFile.cssList.Name = rosterFile.cssList.GroupType.ToString();
+                    rosterFile.randList.Name = rosterFile.cssList.GroupType.ToString();
+                    rosterFile.AddChild(rosterFile.cssList);
+                    rosterFile.AddChild(rosterFile.randList);
+                    _fileService.SaveFileAs(rosterFile, Path.Combine(_settingsService.AppSettings.BuildPath, roster.FilePath));
+                    _fileService.CloseFile(rosterFile);
+                }
+            }
         }
 
         #region Fighter-Specific Settings
