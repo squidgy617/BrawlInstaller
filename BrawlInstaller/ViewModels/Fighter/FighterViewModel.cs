@@ -43,6 +43,7 @@ namespace BrawlInstaller.ViewModels
         private string _fighterPackagePath;
         private List<Roster> _rosters;
         private Roster _selectedRoster;
+        private RosterEntry _selectedRosterEntry;
 
         // Services
         IPackageService _packageService { get; }
@@ -111,6 +112,9 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedRoster))]
         public ObservableCollection<RosterEntry> RosterEntries { get => SelectedRoster != null ? new ObservableCollection<RosterEntry>(SelectedRoster?.Entries) : new ObservableCollection<RosterEntry>(); }
+
+        [DependsUpon(nameof(SelectedRoster))]
+        public RosterEntry SelectedRosterEntry { get => _selectedRosterEntry; set { _selectedRosterEntry = value; OnPropertyChanged(nameof(SelectedRosterEntry)); } }
 
         // Methods
         public void LoadFighter()
