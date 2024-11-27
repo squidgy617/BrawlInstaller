@@ -83,6 +83,9 @@
     <Compile Include="Classes\PSA.cs" />
     <Compile Include="Classes\Roster.cs" />
     <Compile Include="Classes\Tracklists.cs" />
+    <Compile Include="Dialogs\DropDownWindow.xaml.cs">
+      <DependentUpon>DropDownWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
@@ -182,6 +185,10 @@
     <Compile Include="Views\Stage\StageView.xaml.cs">
       <DependentUpon>StageView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DropDownWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\MessageWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

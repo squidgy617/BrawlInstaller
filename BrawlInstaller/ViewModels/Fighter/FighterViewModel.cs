@@ -64,6 +64,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand MoveFighterDownCommand => new RelayCommand(param => MoveFighterDown());
         public ICommand RemoveFighterCommand => new RelayCommand(param =>  RemoveFighter());
         public ICommand SaveRostersCommand => new RelayCommand(param => SaveRosters());
+        public ICommand AddFighterCommand => new RelayCommand(param => AddFighter());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -440,6 +441,39 @@ namespace BrawlInstaller.ViewModels
                 SelectedRoster.Entries.Remove(SelectedRosterEntry);
             }
             OnPropertyChanged(nameof(RosterEntries));
+        }
+
+        private void AddFighter()
+        {
+            if (SelectedRoster != null)
+            {
+                var rosterOptions = new List<RosterEntry>();
+                var randomEntry = new RosterEntry
+                {
+                    Id = 0x29,
+                    Name = "Random",
+                    InCss = true,
+                    InRandom = false
+                };
+                rosterOptions.Add(randomEntry);
+                foreach (var fighter in _settingsService.FighterInfoList)
+                {
+                    var newEntry = new RosterEntry
+                    {
+                        Id = fighter.Ids.CSSSlotConfigId,
+                        Name = fighter.DisplayName,
+                        InCss = true,
+                        InRandom = true
+                    };
+                    rosterOptions.Add(newEntry);
+                }
+                var selectedOption = _dialogService.OpenDropDownDialog<RosterEntry>(rosterOptions, "Name");
+                if (selectedOption != null)
+                {
+                    SelectedRoster.Entries.Add((RosterEntry)selectedOption);
+                    OnPropertyChanged(nameof(RosterEntries));
+                }
+            }
         }
 
         private void SaveRosters()

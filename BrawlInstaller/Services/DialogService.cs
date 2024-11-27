@@ -30,6 +30,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="DialogService.OpenStringInputDialog(string, string)"/>
         string OpenStringInputDialog(string title, string caption);
+
+        /// <inheritdoc cref="DialogService.OpenDropDownDialog<T>(object, string, string, string)"/>
+        object OpenDropDownDialog<T>(IEnumerable<T> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
     }
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
@@ -63,7 +66,7 @@ namespace BrawlInstaller.Services
         {
             var dialog = new MessageWindow();
             dialog.Title = caption;
-            dialog.Message = text;
+            dialog.Caption = text;
             dialog.MessageBoxButton = buttonType;
             dialog.MessageIcon = image;
             dialog.Image = bitmapImage;
@@ -148,6 +151,30 @@ namespace BrawlInstaller.Services
             if (result == true)
             {
                 return dialog.ResponseText;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Open dialog that accepts a list of items
+        /// </summary>
+        /// <typeparam name="T">Type of items in list</typeparam>
+        /// <param name="list">List of items</param>
+        /// <param name="title">Title displayed in dialog</param>
+        /// <param name="caption">Caption displayed in dialog</param>
+        /// <returns></returns>
+        public object OpenDropDownDialog<T>(IEnumerable<T> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item")
+        {
+            var dialog = new DropDownWindow();
+            dialog.Title = title;
+            dialog.Message = caption;
+            dialog.ListItems = list;
+            dialog.DisplayMemberPath = displayMemberPath;
+            dialog.SelectedItem = list.FirstOrDefault();
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                return dialog.SelectedItem;
             }
             return null;
         }

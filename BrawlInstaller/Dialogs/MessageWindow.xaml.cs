@@ -28,10 +28,10 @@ namespace BrawlInstaller.Dialogs
             InitializeComponent();
         }
 
-        public string Message
+        public string Caption
         {
-            get { return message.Text.ToString(); }
-            set { message.Text = value.Replace("\n", "\n\n"); }
+            get { return caption.Text.ToString(); }
+            set { caption.Text = value.Replace("\n", "\n\n"); }
         }
 
         public MessageBoxButton MessageBoxButton

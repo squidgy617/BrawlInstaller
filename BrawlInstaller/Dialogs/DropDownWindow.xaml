@@ -1,4 +1,4 @@
-﻿<Window x:Class="BrawlInstaller.Dialogs.MessageWindow"
+﻿<Window x:Class="BrawlInstaller.Dialogs.DropDownWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,8 +14,9 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Image x:Name="icon" Visibility="Collapsed"/>
-                <TextBlock x:Name="caption" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="Confirm" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock x:Name="message" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="Confirm" Margin="5" TextWrapping="Wrap"/>
             </StackPanel>
+            <ComboBox x:Name="dropDown" Width="150" HorizontalAlignment="Center" SelectedItem="{Binding Path=SelectedItem, RelativeSource={RelativeSource AncestorType=Window}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Image x:Name="image" Visibility="Collapsed" Width="64" Height="64" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button x:Name="button" Content="OK" HorizontalAlignment="Center" VerticalAlignment="Center" Click="button_Click" Width="70" Height="25" Margin="5" IsDefault="True"/>

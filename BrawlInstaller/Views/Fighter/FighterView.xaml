@@ -42,6 +42,7 @@
                         <StackPanel x:Name="rosterButtonsStackPanel" Grid.Column="3" Grid.Row="1">
                             <Button x:Name="moveUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveFighterUpCommand}"/>
                             <Button x:Name="moveDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveFighterDownCommand}"/>
+                            <Button x:Name="addButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddFighterCommand}"/>
                             <Button x:Name="removeButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveFighterCommand}"/>
                         </StackPanel>
                         <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="2" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}"/>
