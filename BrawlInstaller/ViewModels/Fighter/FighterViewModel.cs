@@ -65,6 +65,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveFighterCommand => new RelayCommand(param =>  RemoveFighter());
         public ICommand SaveRostersCommand => new RelayCommand(param => SaveRosters());
         public ICommand AddFighterCommand => new RelayCommand(param => AddFighter());
+        public ICommand CopyFighterCommand => new RelayCommand(param => CopyFighter());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -443,6 +444,24 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(RosterEntries));
         }
 
+        private void CopyFighter()
+        {
+            if (SelectedRoster != null && SelectedFighter != null)
+            {
+                var newEntry = new RosterEntry
+                {
+                    Id = SelectedFighter.Ids.CSSSlotConfigId,
+                    InCss = true,
+                    InRandom = true,
+                    Name = SelectedFighter.DisplayName
+                };
+                SelectedRoster.Entries.Add(newEntry);
+                SelectedRosterEntry = newEntry;
+                OnPropertyChanged(nameof(RosterEntries));
+                OnPropertyChanged(nameof(SelectedRosterEntry));
+            }
+        }
+
         private void AddFighter()
         {
             if (SelectedRoster != null)
@@ -471,7 +490,9 @@ namespace BrawlInstaller.ViewModels
                 if (selectedOption != null)
                 {
                     SelectedRoster.Entries.Add((RosterEntry)selectedOption);
+                    SelectedRosterEntry = (RosterEntry)selectedOption;
                     OnPropertyChanged(nameof(RosterEntries));
+                    OnPropertyChanged(nameof(SelectedRosterEntry));
                 }
             }
         }
