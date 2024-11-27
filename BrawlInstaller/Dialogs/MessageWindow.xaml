@@ -9,7 +9,7 @@
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="MessageWindow" Height="172" Width="300">
+        Title="Confirm" Height="172" Width="300">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=button}">
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

@@ -9,7 +9,7 @@
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="StringInputWindow" Height="172" Width="300">
+        Title="Enter Text" Height="172" Width="300">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=textBox}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,7 +20,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label x:Name="caption" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Content="Enter a string input" HorizontalContentAlignment="Center" Margin="5" Grid.ColumnSpan="2"/>
+        <Label x:Name="caption" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Content="Enter Text" HorizontalContentAlignment="Center" Margin="5" Grid.ColumnSpan="2"/>
         <TextBox x:Name="textBox" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Grid.Row="1" Margin="5" Grid.ColumnSpan="2"/>
         <Button x:Name="button" Content="OK" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Click="button_Click" Width="70" Height="25" Margin="5" IsDefault="True"/>
         <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Click="cancelButton_Click" Width="70" Height="25" Margin="5" IsCancel="True"/>

@@ -9,12 +9,12 @@
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="MessageWindow" Height="172" Width="300">
+        Title="Select Item" Height="172" Width="300">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=button}">
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Image x:Name="icon" Visibility="Collapsed"/>
-                <TextBlock x:Name="message" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="Confirm" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock x:Name="message" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="Select an item" Margin="5" TextWrapping="Wrap"/>
             </StackPanel>
             <ComboBox x:Name="dropDown" Width="150" HorizontalAlignment="Center" SelectedItem="{Binding Path=SelectedItem, RelativeSource={RelativeSource AncestorType=Window}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Image x:Name="image" Visibility="Collapsed" Width="64" Height="64" HorizontalAlignment="Center"/>

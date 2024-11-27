@@ -467,7 +467,7 @@ namespace BrawlInstaller.ViewModels
                     };
                     rosterOptions.Add(newEntry);
                 }
-                var selectedOption = _dialogService.OpenDropDownDialog<RosterEntry>(rosterOptions, "Name");
+                var selectedOption = _dialogService.OpenDropDownDialog<RosterEntry>(rosterOptions, "Name", "Add Fighter", "Select a fighter");
                 if (selectedOption != null)
                 {
                     SelectedRoster.Entries.Add((RosterEntry)selectedOption);
