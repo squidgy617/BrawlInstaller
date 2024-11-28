@@ -34,6 +34,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
+                        <Label x:Name="fighterListLabel" Content="All Fighters:" HorizontalAlignment="Left"/>
                         <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="400"/>
                         <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource miniButton}"/>
                         <Button x:Name="copyFighterButton" Grid.Column="1" Grid.Row="1" Content="→" VerticalAlignment="Center" Command="{Binding CopyFighterCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
