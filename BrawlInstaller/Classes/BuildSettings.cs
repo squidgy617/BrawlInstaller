@@ -166,6 +166,7 @@ namespace BrawlInstaller.Classes
         public string LLoadAsmFile { get; set; } = "Source\\ProjectM\\CSS.asm";
         public string SlotExAsmFile { get; set; } = "Source\\P+Ex\\SlotEx.asm";
 
+        // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<RosterFile> RosterFiles { get; set; } = new List<RosterFile> 
         { 
