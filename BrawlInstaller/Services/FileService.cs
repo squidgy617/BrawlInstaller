@@ -248,8 +248,11 @@ namespace BrawlInstaller.Services
         /// <param name="text">Text to save</param>
         public void SaveTextFile(string filePath, string text)
         {
-            CreateDirectory(filePath);
-            File.WriteAllText(filePath, text);
+            if (!string.IsNullOrEmpty(text))
+            {
+                CreateDirectory(filePath);
+                File.WriteAllText(filePath, text);
+            }
         }
 
         /// <summary>
