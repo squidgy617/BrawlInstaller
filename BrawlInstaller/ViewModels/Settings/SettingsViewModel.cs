@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static BrawlInstaller.ViewModels.MainControlsViewModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -39,6 +40,11 @@ namespace BrawlInstaller.ViewModels
 
             BuildSettings = _settingsService.BuildSettings;
 
+            WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
+            });
+
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }
 
@@ -59,6 +65,12 @@ namespace BrawlInstaller.ViewModels
         private void LoadSettings()
         {
             BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+        }
+
+        private void UpdateSettings()
+        {
+            BuildSettings = _settingsService.BuildSettings;
+            OnPropertyChanged(nameof(BuildSettings));
         }
     }
 

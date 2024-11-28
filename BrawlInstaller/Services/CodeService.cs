@@ -592,34 +592,37 @@ namespace BrawlInstaller.Services
             var cleanText = Regex.Replace(fileText, "([|]|[#]|[//]).*(\n|\r)", "");
             // Find table start
             var labelPosition = cleanText.IndexOf(label);
-            var workingText = cleanText.Substring(labelPosition, cleanText.Length - labelPosition);
-            // Get table length
-            var result = Regex.Match(workingText, "(half|word|byte|float)\\s*[[]\\d+[]]");
-            // If another label appears before the table counter, then it is an empty table
-            var nextLabelPosition = workingText.IndexOf(':', label.Length);
-            if (result.Success && result.Index < nextLabelPosition)
+            if (labelPosition > -1)
             {
-                var match = result.Value;
-                var start = match.IndexOf('[') + 1;
-                var end = match.IndexOf(']');
-                var countString = match.Substring(start, end - start);
-                // Add table values to list
-                if (int.TryParse(countString, out int count)) 
+                var workingText = cleanText.Substring(labelPosition, cleanText.Length - labelPosition);
+                // Get table length
+                var result = Regex.Match(workingText, "(half|word|byte|float)\\s*[[]\\d+[]]");
+                // If another label appears before the table counter, then it is an empty table
+                var nextLabelPosition = workingText.IndexOf(':', label.Length);
+                if (result.Success && result.Index < nextLabelPosition)
                 {
-                    // Table starts after count
-                    var tableStart = workingText.IndexOf(countString) + countString.Length + 1;
-                    workingText = workingText.Substring(tableStart, workingText.Length - tableStart);
-                    // Values are comma-separated
-                    foreach(var item in workingText.Split(','))
+                    var match = result.Value;
+                    var start = match.IndexOf('[') + 1;
+                    var end = match.IndexOf(']');
+                    var countString = match.Substring(start, end - start);
+                    // Add table values to list
+                    if (int.TryParse(countString, out int count))
                     {
-                        // Remove everything after tabs or newlines
-                        var value = item.Trim().Split('\t', '\n', '\r')[0];
-                        // Only gather up to table size
-                        if (table.Count >= count)
+                        // Table starts after count
+                        var tableStart = workingText.IndexOf(countString) + countString.Length + 1;
+                        workingText = workingText.Substring(tableStart, workingText.Length - tableStart);
+                        // Values are comma-separated
+                        foreach (var item in workingText.Split(','))
                         {
-                            break;
+                            // Remove everything after tabs or newlines
+                            var value = item.Trim().Split('\t', '\n', '\r')[0];
+                            // Only gather up to table size
+                            if (table.Count >= count)
+                            {
+                                break;
+                            }
+                            table.Add(value);
                         }
-                        table.Add(value);
                     }
                 }
             }
