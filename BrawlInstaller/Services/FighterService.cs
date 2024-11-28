@@ -960,6 +960,7 @@ namespace BrawlInstaller.Services
             var cosmeticConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CosmeticConfig);
             var cssSlotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
             var slotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.SlotConfig);
+            var masquerade = _fileService.OpenFile(fighterPackage.FighterInfo.Masquerade);
             var soundbank = _fileService.OpenFile(fighterPackage.Soundbank);
             var kirbySoundbank = _fileService.OpenFile(fighterPackage.KirbySoundbank);
             var victoryTheme = _fileService.OpenFile(fighterPackage.VictoryTheme.SongFile);
@@ -984,6 +985,7 @@ namespace BrawlInstaller.Services
             DeleteClassicIntro(oldFighter.FighterInfo.Ids.CosmeticId);
             DeleteEndingPacFiles(oldFighter.FighterInfo.EndingId);
             DeleteEndingMovie(oldFighter.FighterInfo.InternalName);
+            _fileService.DeleteFile(oldFighter.FighterInfo.Masquerade);
             // Delete some files only if user chose to
             if (fighterPackage.FighterDeleteOptions.DeleteVictoryTheme)
             {
@@ -1002,7 +1004,7 @@ namespace BrawlInstaller.Services
             // Update and import ex configs
             if (cssSlotConfig != null)
             {
-                cssSlotConfig = UpdateCostumeConfig(cssSlotConfig, fighterPackage.Costumes);
+                cssSlotConfig = UpdateCostumeConfig((CSSCNode)cssSlotConfig, fighterPackage.Costumes);
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig\\CSSSlot{fighterPackage.FighterInfo.Ids.CSSSlotConfigId:X2}.dat";
                 _fileService.SaveFileAs(cssSlotConfig, configPath);
                 _fileService.CloseFile(cssSlotConfig);
@@ -1025,6 +1027,14 @@ namespace BrawlInstaller.Services
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CosmeticConfig\\Cosmetic{fighterPackage.FighterInfo.Ids.CosmeticConfigId:X2}.dat";
                 _fileService.SaveFileAs(cosmeticConfig, configPath);
                 _fileService.CloseFile(cosmeticConfig);
+            }
+            // Update and import masquerade
+            if (masquerade != null)
+            {
+                masquerade = UpdateCostumeConfig((MasqueradeNode)masquerade, fighterPackage.Costumes);
+                var configPath = $"{buildPath}\\{settings.FilePathSettings.MasqueradePath}\\{fighterPackage.FighterInfo.Ids.MasqueradeId:D2}.masq";
+                _fileService.SaveFileAs(masquerade, configPath);
+                _fileService.CloseFile(masquerade);
             }
             // Update and import module
             if (module != null)
@@ -1117,9 +1127,9 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Update CSSSlotConfig for fighter
         /// </summary>
-        /// <param name="fighterInfo">Fighter info</param>
+        /// <param name="rootNode">Root node of file</param>
         /// <param name="costumes">Costumes to place in config</param>
-        private ResourceNode UpdateCostumeConfig(ResourceNode rootNode, List<Costume> costumes)
+        private ResourceNode UpdateCostumeConfig(CSSCNode rootNode, List<Costume> costumes)
         {
             if (rootNode != null)
             {
@@ -1127,6 +1137,29 @@ namespace BrawlInstaller.Services
                 foreach(var costume in costumes)
                 {
                     var newNode = new CSSCEntryNode
+                    {
+                        Parent = rootNode,
+                        CostumeID = (byte)costume.CostumeId,
+                        Color = costume.Color
+                    };
+                }
+            }
+            return rootNode;
+        }
+
+        /// <summary>
+        /// Update Masquerade for fighter
+        /// </summary>
+        /// <param name="rootNode">Root node of file</param>
+        /// <param name="costumes">Costumes to place in config</param>
+        private ResourceNode UpdateCostumeConfig(MasqueradeNode rootNode, List<Costume> costumes)
+        {
+            if (rootNode != null)
+            {
+                rootNode.Children.RemoveAll(x => x != null);
+                foreach (var costume in costumes)
+                {
+                    var newNode = new MasqueradeEntryNode
                     {
                         Parent = rootNode,
                         CostumeID = (byte)costume.CostumeId,
