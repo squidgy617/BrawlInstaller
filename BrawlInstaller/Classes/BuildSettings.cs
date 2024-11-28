@@ -119,6 +119,7 @@ namespace BrawlInstaller.Classes
     {
         public string FighterFiles { get; set; } = "pf\\fighter";
         public string BrawlEx { get; set; } = "pf\\BrawlEx";
+        public string MasqueradePath { get; set; } = string.Empty;
         public string Modules { get; set; } = "pf\\module";
         public string StageSlots { get; set; } = "pf\\stage\\stageslot";
 

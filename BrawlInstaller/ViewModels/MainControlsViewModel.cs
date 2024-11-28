@@ -1,12 +1,15 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Services;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -24,6 +27,9 @@ namespace BrawlInstaller.ViewModels
         // Services
         ISettingsService _settingsService { get; }
 
+        // Commands
+        public ICommand RefreshCommand => new RelayCommand(param => RefreshSettings());
+
         [ImportingConstructor]
         public MainControlsViewModel(ISettingsService settingsService)
         {
@@ -37,5 +43,22 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public AppSettings AppSettings { get => _appSettings; set { _appSettings = value; OnPropertyChanged(nameof(AppSettings)); } }
+
+        // Methods
+        private void RefreshSettings()
+        {
+            _settingsService.AppSettings = AppSettings;
+            _settingsService.LoadSettings(AppSettings.BuildPath);
+            _settingsService.LoadFighterInfoSettings();
+            WeakReferenceMessenger.Default.Send(new UpdateSettingsMessage(AppSettings));
+        }
+
+        // Messages
+        public class UpdateSettingsMessage : ValueChangedMessage<AppSettings>
+        {
+            public UpdateSettingsMessage(AppSettings appSettings) : base(appSettings)
+            {
+            }
+        }
     }
 }

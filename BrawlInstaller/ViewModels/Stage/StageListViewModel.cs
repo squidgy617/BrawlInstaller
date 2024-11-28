@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using static BrawlInstaller.ViewModels.MainControlsViewModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -77,6 +78,11 @@ namespace BrawlInstaller.ViewModels
             {
                 DeleteStageSlot(message);
             });
+
+            WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
+            });
         }
 
         // Properties
@@ -90,7 +96,7 @@ namespace BrawlInstaller.ViewModels
         public StagePage SelectedPage { get => _selectedPage; set { _selectedPage = value; OnPropertyChanged(nameof(SelectedPage)); } }
 
         [DependsUpon(nameof(SelectedPage))]
-        public ObservableCollection<StageSlot> StageSlots { get => new ObservableCollection<StageSlot>(SelectedPage.StageSlots); }
+        public ObservableCollection<StageSlot> StageSlots { get => SelectedPage != null ? new ObservableCollection<StageSlot>(SelectedPage.StageSlots) : new ObservableCollection<StageSlot>(); }
 
         [DependsUpon(nameof(StageSlots))]
         public StageSlot SelectedStageSlot { get => _selectedStageSlot; set { _selectedStageSlot = value; OnPropertyChanged(nameof(SelectedStageSlot)); } }
@@ -100,7 +106,7 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedStageList))]
         [DependsUpon(nameof(StageTable))]
-        public List<StageSlot> UnusedSlots { get => StageTable.Where(x => !SelectedStageList.Pages.SelectMany(z => z.StageSlots).ToList().Contains(x)).ToList(); }
+        public List<StageSlot> UnusedSlots { get => StageTable.Where(x => !SelectedStageList?.Pages?.SelectMany(z => z.StageSlots).ToList().Contains(x) == true).ToList(); }
 
         [DependsUpon(nameof(UnusedSlots))]
         public StageSlot SelectedUnusedSlot { get => _selectedUnusedSlot; set { _selectedUnusedSlot = value; OnPropertyChanged(nameof(SelectedUnusedSlot)); } }
@@ -247,6 +253,20 @@ namespace BrawlInstaller.ViewModels
             // This is done to populate selectable cosmetics
             stage.Cosmetics.Items = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
+        }
+
+        private void UpdateSettings()
+        {
+            StageTable = _stageService.GetStageSlots();
+            StageLists = _stageService.GetStageLists(StageTable);
+            SelectedStageList = StageLists.FirstOrDefault();
+            SelectedPage = SelectedStageList.Pages.FirstOrDefault();
+            IncompleteStageIds = _stageService.GetIncompleteStageIds();
+            OnPropertyChanged(nameof(StageTable));
+            OnPropertyChanged(nameof(StageLists));
+            OnPropertyChanged(nameof(SelectedPage));
+            OnPropertyChanged(nameof(SelectedStageList));
+            OnPropertyChanged(nameof(IncompleteStageIds));
         }
     }
 
