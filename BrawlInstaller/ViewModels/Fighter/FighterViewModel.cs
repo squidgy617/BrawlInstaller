@@ -238,6 +238,7 @@ namespace BrawlInstaller.ViewModels
             {
                 _settingsService.FighterInfoList.Remove(foundFighter);
             }
+            _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
             // Set package path to internal fighter
             FighterPackagePath = string.Empty;
             // Update rosters
@@ -332,12 +333,14 @@ namespace BrawlInstaller.ViewModels
             // Update fighter list
             var newFighterInfo = FighterPackage.FighterInfo.Copy();
             _settingsService.FighterInfoList.Add(newFighterInfo);
+            _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
             // Update rosters
             UpdateRoster(packageType, FighterPackage.FighterInfo);
             // Update UI
             OnPropertyChanged(nameof(FighterPackage));
             OnPropertyChanged(nameof(FighterList));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         public void ExportFighter()
