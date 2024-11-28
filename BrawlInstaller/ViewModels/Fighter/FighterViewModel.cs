@@ -388,8 +388,7 @@ namespace BrawlInstaller.ViewModels
         {
             if (packageType == PackageType.New)
             {
-                foreach(var roster in Rosters.Where(x => _settingsService.BuildSettings.FilePathSettings.RosterFiles
-                .Where(y => y.AddNewCharacters).Select(y => y.FilePath).Contains(x.FilePath)))
+                foreach(var roster in Rosters.Where(x => x.AddNewCharacters))
                 {
                     var newEntry = new RosterEntry
                     {

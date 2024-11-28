@@ -11,6 +11,7 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; } = "Roster";
         public List<RosterEntry> Entries { get; set; } = new List<RosterEntry>();
         public string FilePath { get; set; } = string.Empty;
+        public bool AddNewCharacters { get; set; } = true;
     }
 
     public class RosterEntry
