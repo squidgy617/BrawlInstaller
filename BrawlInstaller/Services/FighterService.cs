@@ -2151,13 +2151,13 @@ namespace BrawlInstaller.Services
             var rosters = new List<Roster>();
             foreach(var rosterFile in _settingsService.BuildSettings.FilePathSettings.RosterFiles)
             {
-                var path = Path.Combine(_settingsService.AppSettings.BuildPath, rosterFile);
+                var path = Path.Combine(_settingsService.AppSettings.BuildPath, rosterFile.FilePath);
                 var rootNode = _fileService.OpenFile(path);
                 if (rootNode != null)
                 {
                     var roster = new Roster();
                     roster.Name = rootNode.Name;
-                    roster.FilePath = rosterFile;
+                    roster.FilePath = rosterFile.FilePath;
                     // Get CSS entries
                     var csNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Character Select");
                     if (csNode != null)

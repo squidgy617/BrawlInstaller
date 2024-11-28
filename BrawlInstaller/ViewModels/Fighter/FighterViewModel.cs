@@ -324,10 +324,14 @@ namespace BrawlInstaller.ViewModels
             _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
             // Set package path to internal fighter
             FighterPackagePath = string.Empty;
+            // Update fighter list
+            var newFighterInfo = FighterPackage.FighterInfo.Copy();
+            _settingsService.FighterInfoList.Add(newFighterInfo);
             // Update rosters
             UpdateRoster(packageType, FighterPackage.FighterInfo);
             // Update UI
             OnPropertyChanged(nameof(FighterPackage));
+            OnPropertyChanged(nameof(FighterList));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
@@ -384,7 +388,8 @@ namespace BrawlInstaller.ViewModels
         {
             if (packageType == PackageType.New)
             {
-                foreach(var roster in Rosters)
+                foreach(var roster in Rosters.Where(x => _settingsService.BuildSettings.FilePathSettings.RosterFiles
+                .Where(y => y.AddNewCharacters).Select(y => y.FilePath).Contains(x.FilePath)))
                 {
                     var newEntry = new RosterEntry
                     {
