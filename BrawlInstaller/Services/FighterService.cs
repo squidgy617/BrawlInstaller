@@ -356,6 +356,15 @@ namespace BrawlInstaller.Services
             }
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
+            // Get masquerade file
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.MasqueradePath))
+            {
+                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.MasqueradePath}\\{fighterInfo.Ids.MasqueradeId:D2}.masq";
+                if (_fileService.FileExists(path))
+                {
+                    fighterInfo.Masquerade = path;
+                }
+            }
             // TODO: Commented because it slows things down, find a way to speed this up, maybe get all slot IDs in advance at the start?
             //fighterInfo.CreditsThemeId = GetCreditsTheme(fighterInfo.Ids.SlotConfigId)?.SongId;
             return fighterInfo;
@@ -1155,23 +1164,35 @@ namespace BrawlInstaller.Services
         public List<Costume> GetFighterCostumes(FighterInfo fighterInfo)
         {
             var costumes = new List<Costume>();
-            if (fighterInfo.CSSSlotConfig != null)
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var settings = _settingsService.BuildSettings;
+            var configPath = string.Empty;
+            Type entryType = null;
+            if (!string.IsNullOrEmpty(fighterInfo.CSSSlotConfig))
             {
-                var buildPath = _settingsService.AppSettings.BuildPath;
-                var settings = _settingsService.BuildSettings;
-                var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig";
+                
+                configPath = fighterInfo.CSSSlotConfig;
+                entryType = typeof(CSSCEntryNode);
+            }
+            else if (!string.IsNullOrEmpty(fighterInfo.Masquerade))
+            {
+                configPath = fighterInfo.Masquerade;
+                entryType = typeof(MasqueradeEntryNode);
+            }
+            if (entryType != null)
+            {
                 var fighterPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.InternalName}";
                 ResourceNode rootNode = null;
 
-                rootNode = _fileService.OpenFile(fighterInfo.CSSSlotConfig);
+                rootNode = _fileService.OpenFile(configPath);
                 if (rootNode != null)
                 {
-                    foreach (CSSCEntryNode entry in rootNode.Children)
+                    foreach (var entry in rootNode.Children)
                     {
                         var costume = new Costume
                         {
-                            Color = entry.Color,
-                            CostumeId = entry.CostumeID
+                            Color = entryType == typeof(CSSCEntryNode) ? ((CSSCEntryNode)entry).Color : ((MasqueradeEntryNode)entry).Color,
+                            CostumeId = entryType == typeof(CSSCEntryNode) ? ((CSSCEntryNode)entry).CostumeID : ((MasqueradeEntryNode)entry).CostumeID
                         };
                         if (_fileService.DirectoryExists(fighterPath))
                         {
@@ -1231,6 +1252,8 @@ namespace BrawlInstaller.Services
                 fighterPackage.ExConfigs.Add(fighterInfo.CSSSlotConfig);
             if (fighterInfo.SlotConfig != "")
                 fighterPackage.ExConfigs.Add(fighterInfo.SlotConfig);
+            if (fighterInfo.Masquerade != "")
+                fighterPackage.MasqueradeFile = fighterInfo.Masquerade;
 
             // Get soundbank
             fighterPackage.Soundbank = GetSoundbank(fighterInfo.SoundbankId);

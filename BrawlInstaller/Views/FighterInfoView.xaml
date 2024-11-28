@@ -57,6 +57,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -82,6 +83,8 @@
             <TextBox x:Name="franchiseIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.FranchiseId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="8" Grid.Column="1"/>
             <Label x:Name="recordsIconIdLabel" Content="Records Icon ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="9" Grid.Column="0"/>
             <TextBox x:Name="recordsIconIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.RecordsIconId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="9" Grid.Column="1"/>
+            <Label x:Name="masqueradeIdLabel" Content="Masquerade ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="10" Grid.Column="0"/>
+            <TextBox x:Name="masqueradeIdTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.MasqueradeId, Mode=TwoWay}" Width="50" Height="20" Grid.Row="10" Grid.Column="1"/>
         </Grid>
     </Grid>
 </UserControl>

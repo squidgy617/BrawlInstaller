@@ -31,6 +31,7 @@ namespace BrawlInstaller.Classes
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
         public List<FighterPacFile> PacFiles { get; set; } = new List<FighterPacFile>();
         public List<string> ExConfigs { get; set; } = new List<string>();
+        public string MasqueradeFile { get; set; } = string.Empty;
         public string Module { get; set; }
         public string Soundbank { get; set; }
         public string KirbySoundbank { get; set; }

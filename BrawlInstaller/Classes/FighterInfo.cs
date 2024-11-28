@@ -22,6 +22,8 @@ namespace BrawlInstaller.Classes
         public string CSSSlotConfig { get; set; }
         [JsonIgnore]
         public string SlotConfig { get; set; }
+        [JsonIgnore]
+        public string Masquerade { get; set; }
         // TODO: Should credits theme ID go in here too?
         public uint? VictoryThemeId { get; set; } = null;
         public uint? CreditsThemeId { get; set; } = null;

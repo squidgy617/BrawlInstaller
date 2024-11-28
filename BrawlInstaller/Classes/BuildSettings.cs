@@ -120,7 +120,7 @@ namespace BrawlInstaller.Classes
     {
         public string FighterFiles { get; set; } = "pf\\fighter";
         public string BrawlEx { get; set; } = "pf\\BrawlEx";
-        public string MasqueradePath { get; set; } = string.Empty;
+        public string MasqueradePath { get; set; } = "pf\\info\\costumeslots";
         public string Modules { get; set; } = "pf\\module";
         public string StageSlots { get; set; } = "pf\\stage\\stageslot";
         // This is the source of truth for where the "master" stage table is, there should only ever be one, it will be copied to all stage lists that have their own table
