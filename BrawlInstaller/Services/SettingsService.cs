@@ -396,8 +396,7 @@ namespace BrawlInstaller.Services
                 {
                     FighterFiles = "pf\\fighter",
                     BrawlEx = "pf\\BrawlEx",
-                    Modules = "pf\\module",
-                    HDTextures = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01"
+                    Modules = "pf\\module"
                 }
             };
             return buildSettings;

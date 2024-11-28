@@ -20,7 +20,7 @@
         <Label x:Name="buildPathLabel" Content="Build Path:" Grid.Column="0"/>
         <TextBox x:Name="buildPathTextBox" Text="{Binding AppSettings.BuildPath, Mode=TwoWay}" Width="360" Grid.Column="1"/>
         <Label x:Name="hdTexturePathLabel" Content="HD Texture Path:" Grid.Column="0" Grid.Row="1"/>
-        <TextBox x:Name="hdTexturePathTextBox" Width="360" Grid.Column="1" Grid.Row="1"/>
+        <TextBox x:Name="hdTexturePathTextBox" Text="{Binding AppSettings.HDTextures}" Width="360" Grid.Column="1" Grid.Row="1"/>
         <Button x:Name="refreshButton" Content="⟳" Style="{StaticResource miniButton}" Command="{Binding RefreshCommand}" Grid.Column="2"/>
     </Grid>
 </UserControl>

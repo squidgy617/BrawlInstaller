@@ -917,7 +917,7 @@ namespace BrawlInstaller.Services
             var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
             if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
             {
-                var imagePath = $"{_settingsService.BuildSettings.FilePathSettings.HDTextures}\\{definition.HDImageLocation}";
+                var imagePath = $"{_settingsService.AppSettings.HDTextures}\\{definition.HDImageLocation}";
                 if (!string.IsNullOrEmpty(name) && definition.CreateHDTextureFolder == true)
                     imagePath += $"\\{name}";
                 _fileService.CreateDirectory(imagePath);
@@ -1418,9 +1418,9 @@ namespace BrawlInstaller.Services
         /// <returns>List of HD textures</returns>
         private Dictionary<string, string> PreloadHDTextures()
         {
-            var directories = _fileService.GetDirectories(_settingsService.BuildSettings.FilePathSettings.HDTextures, "*", SearchOption.AllDirectories);
+            var directories = _fileService.GetDirectories(_settingsService.AppSettings.HDTextures, "*", SearchOption.AllDirectories);
             directories = directories.Where(x => !x.Contains(".git")).ToList();
-            directories = directories.Append(_settingsService.BuildSettings.FilePathSettings.HDTextures).ToList();
+            directories = directories.Append(_settingsService.AppSettings.HDTextures).ToList();
             var hdImages = new ConcurrentBag<string>();
             Parallel.ForEach(directories, directory =>
             {

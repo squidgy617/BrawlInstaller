@@ -35,7 +35,9 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService = settingsService;
 
+            // TODO: Change these!!
             _settingsService.AppSettings.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
+            _settingsService.AppSettings.HDTextures = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01";
             _settingsService.BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
 
             AppSettings = _settingsService.AppSettings;
