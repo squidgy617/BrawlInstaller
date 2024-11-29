@@ -69,7 +69,7 @@ namespace BrawlInstaller.ViewModels
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public ObservableCollection<string> Styles { get => new ObservableCollection<string>(CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList()); }
+        public ObservableCollection<string> Styles { get => CosmeticSettings != null ? new ObservableCollection<string>(CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList()) : new ObservableCollection<string>(); }
 
         [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
@@ -77,7 +77,7 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedCosmeticOption))]
         [DependsUpon(nameof(SelectedStyle))]
         [DependsUpon(nameof(CosmeticSettings))]
-        public ObservableCollection<CosmeticDefinition> DefinitionList { get => new ObservableCollection<CosmeticDefinition>(CosmeticSettings.Where(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption)); }
+        public ObservableCollection<CosmeticDefinition> DefinitionList { get => CosmeticSettings != null ? new ObservableCollection<CosmeticDefinition>(CosmeticSettings.Where(x => x.Style == SelectedStyle && x.CosmeticType == SelectedCosmeticOption)) : new ObservableCollection<CosmeticDefinition>(); }
 
         [DependsUpon(nameof(DefinitionList))]
         public CosmeticDefinition SelectedDefinition { get => _selectedDefinition; set { _selectedDefinition = value; OnPropertyChanged(nameof(SelectedDefinition)); } }

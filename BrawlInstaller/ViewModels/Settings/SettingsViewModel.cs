@@ -3,14 +3,18 @@ using BrawlInstaller.Common;
 using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -24,6 +28,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private BuildSettings _buildSettings;
+        private string _selectedSettingsOption;
 
         // Services
         ISettingsService _settingsService { get; }
@@ -31,6 +36,7 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand SaveSettingsCommand => new RelayCommand(param => SaveSettings());
         public ICommand LoadSettingsCommand => new RelayCommand(param => LoadSettings());
+        public ICommand ApplyDefaultSettingCommand => new RelayCommand(param => ApplyDefaultSetting());
 
         [ImportingConstructor]
         public SettingsViewModel(ISettingsService settingsService, ICosmeticSettingsViewModel cosmeticSettingsViewModel)
@@ -39,6 +45,8 @@ namespace BrawlInstaller.ViewModels
             CosmeticSettingsViewModel = cosmeticSettingsViewModel;
 
             BuildSettings = _settingsService.BuildSettings;
+
+            SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault();
 
             WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
             {
@@ -53,6 +61,8 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
+        public List<string> DefaultSettingsOptions { get => new List<string> { "ProjectPlus" }; }
+        public string SelectedSettingsOption { get => _selectedSettingsOption; set { _selectedSettingsOption = value; OnPropertyChanged(nameof(SelectedSettingsOption)); } }
 
         // Methods
 
@@ -69,8 +79,31 @@ namespace BrawlInstaller.ViewModels
 
         private void UpdateSettings()
         {
-            BuildSettings = _settingsService.BuildSettings;
+            LoadSettings();
+            _settingsService.BuildSettings = BuildSettings;
             OnPropertyChanged(nameof(BuildSettings));
+            WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
+        }
+
+        private void ApplyDefaultSetting()
+        {
+            var json = GetSelectedSettings("BuildSettings.json");
+            BuildSettings = JsonConvert.DeserializeObject<BuildSettings>(json);
+            OnPropertyChanged(nameof(BuildSettings));
+            WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
+        }
+
+        private string GetSelectedSettings(string file)
+        {
+            var json = string.Empty;
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"BrawlInstaller.Resources.DefaultSettings.{SelectedSettingsOption}.{file}"))
+            {
+                using (StreamReader streamReader = new StreamReader(stream))
+                {
+                    json = streamReader.ReadToEnd();
+                }
+            }
+            return json;
         }
     }
 

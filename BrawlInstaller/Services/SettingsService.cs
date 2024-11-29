@@ -66,6 +66,7 @@ namespace BrawlInstaller.Services
         {
             var jsonString = JsonConvert.SerializeObject(buildSettings, Formatting.Indented);
             File.WriteAllText(path, jsonString);
+            BuildSettings = buildSettings;
         }
 
         /// <summary>
@@ -92,6 +93,7 @@ namespace BrawlInstaller.Services
         {
             var fighterInfoSettings = JsonConvert.SerializeObject(fighterInfoList, Formatting.Indented);
             File.WriteAllText($"{AppSettings.BuildPath}\\FighterList.json", fighterInfoSettings);
+            FighterInfoList = fighterInfoList;
         }
 
         /// <summary>

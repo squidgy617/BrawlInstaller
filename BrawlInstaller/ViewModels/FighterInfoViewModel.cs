@@ -18,6 +18,7 @@ namespace BrawlInstaller.ViewModels
 
     }
 
+    // TODO: Should this work like regular settings, where it doesn't apply until you hit "Save"?
     [Export(typeof(IFighterInfoViewModel))]
     internal class FighterInfoViewModel : ViewModelBase, IFighterInfoViewModel
     {
