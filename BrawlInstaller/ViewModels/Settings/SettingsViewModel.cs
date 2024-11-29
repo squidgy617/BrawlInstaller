@@ -44,7 +44,7 @@ namespace BrawlInstaller.ViewModels
             _settingsService = settingsService;
             CosmeticSettingsViewModel = cosmeticSettingsViewModel;
 
-            BuildSettings = _settingsService.BuildSettings;
+            BuildSettings = _settingsService.BuildSettings.Copy();
 
             SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault();
 

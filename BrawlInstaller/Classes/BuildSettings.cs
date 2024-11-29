@@ -29,6 +29,12 @@ namespace BrawlInstaller.Classes
         public MiscSettings MiscSettings { get; set; }
         public FilePathSettings FilePathSettings { get; set; }
         public bool HDTextures { get; set; } = true;
+
+        public BuildSettings Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<BuildSettings>(JsonConvert.SerializeObject(this));
+            return copy;
+        }
     }
 
     public class InstallLocation
