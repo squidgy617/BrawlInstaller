@@ -133,8 +133,8 @@ namespace BrawlInstaller.ViewModels
             using (new CursorWait())
             {
                 FighterPackage = new FighterPackage();
-                FighterPackage.FighterInfo = SelectedFighter;
-                FighterPackage = _packageService.ExtractFighter(SelectedFighter);
+                FighterPackage.FighterInfo = SelectedFighter.Copy();
+                FighterPackage = _packageService.ExtractFighter(FighterPackage.FighterInfo);
                 _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
                 _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
                 // Set package path to internal fighter
@@ -332,7 +332,20 @@ namespace BrawlInstaller.ViewModels
             FighterPackagePath = string.Empty;
             // Update fighter list
             var newFighterInfo = FighterPackage.FighterInfo.Copy();
-            _settingsService.FighterInfoList.Add(newFighterInfo);
+            if (FighterPackage.PackageType == PackageType.New)
+            {
+                _settingsService.FighterInfoList.Add(newFighterInfo);
+            }
+            else
+            {
+                var match = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.FighterConfigId == newFighterInfo.Ids.FighterConfigId
+                && x.Ids.CSSSlotConfigId == newFighterInfo.Ids.CSSSlotConfigId && x.Ids.SlotConfigId == newFighterInfo.Ids.SlotConfigId
+                && x.Ids.CosmeticConfigId == newFighterInfo.Ids.CosmeticConfigId);
+                if (match != null)
+                {
+                    match = newFighterInfo;
+                }
+            }
             _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
             // Update rosters
             UpdateRoster(packageType, FighterPackage.FighterInfo);
