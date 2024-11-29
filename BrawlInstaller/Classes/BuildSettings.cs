@@ -102,22 +102,19 @@ namespace BrawlInstaller.Classes
     public class KirbyHatSettings
     {
         public bool InstallKirbyHats { get; set; } = false;
-        public string DefaultKirbyHat { get; set; } = "0x21";
     }
 
     public class SoundSettings
     {
         public SoundbankStyle SoundbankStyle { get; set; } = SoundbankStyle.InfoIndex;
-        public int SoundbankIncrement { get => SoundbankStyle == SoundbankStyle.InfoIndex ? 0 : 7; }
-        public string SoundbankFormat { get => SoundbankStyle == SoundbankStyle.InfoIndex ? "X3" : "D"; }
+        [JsonIgnore] public int SoundbankIncrement { get => SoundbankStyle == SoundbankStyle.InfoIndex ? 0 : 7; }
+        [JsonIgnore] public string SoundbankFormat { get => SoundbankStyle == SoundbankStyle.InfoIndex ? "X3" : "D"; }
     }
 
     public class MiscSettings
     {
         public bool InstallToSse { get; set; } = false;
-        public SSEUnlockStage SSEUnlockStage { get; set; } = SSEUnlockStage.End;
         public bool InstallTrophies { get; set; } = false;
-        public List<string> CustomStageLists { get; set; } = new List<string>();
         public bool UpdateCreditsModule { get; set; } = true;
         public bool SubspaceEx { get; set; } = true;
     }
