@@ -217,9 +217,9 @@ namespace BrawlInstaller.Classes
             //"NETBOOST.txt"
         };
 
-        private string GetFilePath(string name)
+        private string GetFilePath(string key)
         {
-            var path = FilePaths.FirstOrDefault(x => x.Name == name)?.Path;
+            var path = FilePaths.FirstOrDefault(x => x.Key == key)?.Path;
             return path;
         }
     }
@@ -232,14 +232,14 @@ namespace BrawlInstaller.Classes
 
     public class FilePath
     {
-        public FilePath(string name, string displayName, string path, string filter = "")
+        public FilePath(string key, string displayName, string path, string filter = "")
         {
-            Name = name;
+            Key = key;
             DisplayName = displayName;
             Path = path;
             Filter = filter;
         }
-        public string Name { get; set; }
+        public string Key { get; set; }
         public string DisplayName { get; set; }
         public string Path { get; set; }
         public string Filter { get; set; }
@@ -247,9 +247,9 @@ namespace BrawlInstaller.Classes
 
     public class AsmPath : FilePath
     {
-        public AsmPath(string name, string displayName, string path, string label = "", string filter = "ASM file (.asm)|*.asm") : base(name, displayName, path, filter)
+        public AsmPath(string key, string displayName, string path, string label = "", string filter = "ASM file (.asm)|*.asm") : base(key, displayName, path, filter)
         {
-            Name = name;
+            Key = key;
             DisplayName = displayName;
             Path = path;
             Filter = filter;

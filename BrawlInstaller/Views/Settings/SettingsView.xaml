@@ -9,19 +9,22 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <ContentControl Content="{Binding CosmeticSettingsViewModel}" Grid.ColumnSpan="2"/>
-        <Button x:Name="saveButton" Content="Save" Grid.Row="1" Command="{Binding SaveSettingsCommand}"/>
-        <Button x:Name="loadButton" Content="Load" Grid.Row="1" Grid.Column="1" Command="{Binding LoadSettingsCommand}"/>
-        <ComboBox x:Name="defaultSettingsDropDown" ItemsSource="{Binding DefaultSettingsOptions}" SelectedItem="{Binding SelectedSettingsOption}" Grid.Column="2" Grid.Row="1"/>
-        <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}" Grid.Column="3" Grid.Row="1"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <GroupBox Header="Cosmetic Settings">
+                    <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
+                </GroupBox>
+                <ListBox x:Name="filePathListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.FilePaths}" DisplayMemberPath="DisplayName" Width="120" Height="400" Grid.Row="1"/>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}"/>
+            <Button x:Name="loadButton" Content="Load" Command="{Binding LoadSettingsCommand}"/>
+            <ComboBox x:Name="defaultSettingsDropDown" ItemsSource="{Binding DefaultSettingsOptions}" SelectedItem="{Binding SelectedSettingsOption}"/>
+            <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
