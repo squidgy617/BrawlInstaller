@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel}"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -13,12 +13,38 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <GroupBox Header="Cosmetic Settings">
                     <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
                 </GroupBox>
-                <ListBox x:Name="filePathListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.FilePaths}" DisplayMemberPath="DisplayName" Width="120" Height="400" Grid.Row="1"/>
-            </StackPanel>
+                <GroupBox Header="File Paths" Grid.Row="1">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="100" HorizontalAlignment="Left">
+                        <ItemsControl ItemsSource="{Binding BuildSettings.FilePathSettings.FilePaths}" HorizontalAlignment="Left" MaxHeight="320">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="col1"/>
+                                            <ColumnDefinition SharedSizeGroup="col2"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding DisplayName}"/>
+                                        <TextBox Text="{Binding Path}" Grid.Column="1" Width="240"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </GroupBox>
+            </Grid>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}"/>
