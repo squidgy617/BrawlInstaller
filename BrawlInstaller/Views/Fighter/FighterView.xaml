@@ -117,7 +117,7 @@
                     <Label x:Name="cosmeticIdLabel" Content="Cosmetic ID:"/>
                     <TextBox x:Name="cosmeticIdTextBox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticId}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
                     <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFighterCommand}"/>
-                    <Button x:Name="saveButton" Content="Save" Command="{Binding SavePackageCommand}" Visibility="{Binding FighterPackagePath, Converter={StaticResource stringVisConverter}}"/>
+                    <Button x:Name="saveButton" Content="Save" Command="{Binding SavePackageCommand}" Visibility="{Binding FighterPackagePath, Converter={StaticResource stringVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                     <Button x:Name="importButton" Content="{Binding ImportButtonText}" Command="{Binding SaveCommand}"/>
                 </WrapPanel>
             </Grid>

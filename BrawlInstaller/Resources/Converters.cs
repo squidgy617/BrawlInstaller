@@ -195,16 +195,20 @@ namespace BrawlInstaller.Resources
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (parameter == null)
+            {
+                parameter = Visibility.Hidden;
+            }
             if (value == null)
             {
-                return Visibility.Hidden;
+                return (Visibility)parameter;
             }
             return Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((Visibility)value == Visibility.Hidden)
+            if ((Visibility)value == Visibility.Hidden || (Visibility)value == Visibility.Collapsed)
             {
                 return null;
             }
@@ -217,16 +221,20 @@ namespace BrawlInstaller.Resources
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (parameter == null)
+            {
+                parameter = Visibility.Hidden;
+            }
             if (string.IsNullOrEmpty(value?.ToString()))
             {
-                return Visibility.Collapsed;
+                return (Visibility)parameter;
             }
             return Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((Visibility)value == Visibility.Collapsed)
+            if ((Visibility)value == Visibility.Hidden || (Visibility)value == Visibility.Collapsed)
             {
                 return string.Empty;
             }
