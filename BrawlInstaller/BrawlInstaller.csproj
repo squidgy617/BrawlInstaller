@@ -89,6 +89,7 @@
     <Compile Include="Dialogs\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\FileType.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
     <Compile Include="Services\PsaService.cs" />
