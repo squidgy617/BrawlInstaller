@@ -20,20 +20,38 @@
                 </TabItem>
                 <TabItem Header="File Paths">
                     <StackPanel>
-                        <Grid x:Name="stageListsGrid">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Grid x:Name="stageListsGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
                                 <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left"/>
                                 <ListBox x:Name="stageListsListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
-                            <TextBox x:Name="stagePathTextBox" Text="{Binding SelectedStageListPath}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
-                        </Grid>
+                                <TextBox x:Name="stagePathTextBox" Text="{Binding SelectedStageListPath}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
+                            </Grid>
+                            <Grid x:Name="rosterFilesGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label x:Name="rosterFilesLabel" Content="Roster Files:" HorizontalAlignment="Left"/>
+                                <ListBox x:Name="rosterFilesListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.RosterFiles}" SelectedValue="{Binding SelectedRosterFile}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
+                                <Label x:Name="rosterPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
+                                <TextBox x:Name="rosterPathTextBox" Text="{Binding SelectedRosterFile.FilePath}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
+                                <CheckBox x:Name="rosterNewCharactersCheckBox" Content="Always add new characters" IsChecked="{Binding SelectedRosterFile.AddNewCharacters}" Grid.Column="1" Grid.Row="2" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
+                            </Grid>
+                        </StackPanel>
                         <ItemsControl x:Name="filePathsControl" ItemsSource="{Binding FilePathSettings}" HorizontalAlignment="Left" MaxHeight="400" VerticalAlignment="Top">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

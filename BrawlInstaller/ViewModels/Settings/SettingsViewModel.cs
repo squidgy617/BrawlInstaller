@@ -32,6 +32,7 @@ namespace BrawlInstaller.ViewModels
         private string _selectedSettingsOption;
         private CompositeCollection _filePathSettings;
         private string _selectedStageListPath;
+        private RosterFile _selectedRosterFile;
 
         // Services
         ISettingsService _settingsService { get; }
@@ -78,6 +79,9 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(BuildSettings))]
         public string SelectedStageListPath { get => _selectedStageListPath; set { _selectedStageListPath = value; OnPropertyChanged(nameof(SelectedStageListPath)); } }
+
+        [DependsUpon(nameof(BuildSettings))]
+        public RosterFile SelectedRosterFile { get => _selectedRosterFile; set { _selectedRosterFile = value; OnPropertyChanged(nameof(SelectedRosterFile)); } }
 
         // Methods
 
