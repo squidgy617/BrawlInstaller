@@ -162,7 +162,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string StageSlots { get => GetFilePath(FileType.StageSlots); }
         // This is the source of truth for where the "master" stage table is, there should only ever be one, it will be copied to all stage lists that have their own table
         // on save
-        [JsonIgnore] public string StageTablePath { get => GetFilePath(FileType.StageTablePath); }
+        [JsonIgnore] public string StageTablePath { get => GetAsmPath(FileType.StageTablePath); }
         [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
 
         [JsonProperty("RandomStageNamesLocations", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -187,20 +187,20 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string TracklistPath { get => GetFilePath(FileType.TracklistPath); }
         public string VictoryThemeTracklist { get; set; } = "Results";
         public string CreditsThemeTracklist { get; set; } = "Credits";
-        [JsonIgnore] public string CreditsThemeAsmFile { get => GetFilePath(FileType.CreditsThemeAsmFile); }
+        [JsonIgnore] public string CreditsThemeAsmFile { get => GetAsmPath(FileType.CreditsThemeAsmFile); }
         [JsonIgnore] public string ClassicIntroPath { get => GetFilePath(FileType.ClassicIntroPath); }
         [JsonIgnore] public string EndingPath { get => GetFilePath(FileType.EndingPath); }
-        [JsonIgnore] public string EndingAsmFile { get => GetFilePath(FileType.EndingAsmFile); }
+        [JsonIgnore] public string EndingAsmFile { get => GetAsmPath(FileType.EndingAsmFile); }
         [JsonIgnore] public string MoviePath { get => GetFilePath(FileType.MoviePath); }
         [JsonIgnore] public string BrstmPath { get => GetFilePath(FileType.BrstmPath); }
         [JsonIgnore] public string SoundbankPath { get => GetFilePath(FileType.SoundbankPath); }
         [JsonIgnore] public string StageAltListPath { get => GetFilePath(FileType.StageAltListPath); }
-        [JsonIgnore] public string ThrowReleaseAsmFile { get => GetFilePath(FileType.ThrowReleaseAsmFile); }
-        [JsonIgnore] public string FighterSpecificAsmFile { get => GetFilePath(FileType.FighterSpecificAsmFile); }
+        [JsonIgnore] public string ThrowReleaseAsmFile { get => GetAsmPath(FileType.ThrowReleaseAsmFile); }
+        [JsonIgnore] public string FighterSpecificAsmFile { get => GetAsmPath(FileType.FighterSpecificAsmFile); }
         [JsonIgnore] public string CreditsModule { get => GetFilePath(FileType.CreditsModule); }
         [JsonIgnore] public string SSEModule { get => GetFilePath(FileType.SSEModule); }
-        [JsonIgnore] public string LLoadAsmFile { get => GetFilePath(FileType.LLoadAsmFile); }
-        [JsonIgnore] public string SlotExAsmFile { get => GetFilePath(FileType.SlotExAsmFile); }
+        [JsonIgnore] public string LLoadAsmFile { get => GetAsmPath(FileType.LLoadAsmFile); }
+        [JsonIgnore] public string SlotExAsmFile { get => GetAsmPath(FileType.SlotExAsmFile); }
 
         // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -226,6 +226,12 @@ namespace BrawlInstaller.Classes
         private string GetFilePath(FileType fileType)
         {
             var path = FilePaths.FirstOrDefault(x => x.FileType == fileType)?.Path;
+            return path;
+        }
+
+        private string GetAsmPath(FileType fileType)
+        {
+            var path = AsmPaths.FirstOrDefault(x => x.FileType == fileType)?.Path;
             return path;
         }
     }

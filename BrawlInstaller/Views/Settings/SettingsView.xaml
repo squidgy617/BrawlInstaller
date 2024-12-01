@@ -19,45 +19,61 @@
                     <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
                 </TabItem>
                 <TabItem Header="File Paths">
-                    <ItemsControl ItemsSource="{Binding FilePathSettings}" HorizontalAlignment="Left" MaxHeight="400" VerticalAlignment="Top">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type classes:FilePath}">
-                                <Grid HorizontalAlignment="Right">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition SharedSizeGroup="col1"/>
-                                        <ColumnDefinition SharedSizeGroup="col2"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                    <TextBox Text="{Binding Path}" Grid.Column="1" Width="240"/>
-                                </Grid>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type classes:AsmPath}">
-                                <StackPanel Orientation="Vertical" Grid.Column="1">
+                    <StackPanel>
+                        <Grid x:Name="stageListsGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                                <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left"/>
+                                <ListBox x:Name="stageListsListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" Grid.Column="1" Height="120" Width="200"/>
+                                <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
+                            <TextBox x:Name="stagePathTextBox" Text="{Binding SelectedStageListPath}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
+                        </Grid>
+                        <ItemsControl x:Name="filePathsControl" ItemsSource="{Binding FilePathSettings}" HorizontalAlignment="Left" MaxHeight="400" VerticalAlignment="Top">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type classes:FilePath}">
                                     <Grid HorizontalAlignment="Right">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition SharedSizeGroup="col1"/>
                                             <ColumnDefinition SharedSizeGroup="col2"/>
                                         </Grid.ColumnDefinitions>
                                         <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                        <TextBox Text="{Binding Path}" Width="240" Grid.Column="1"/>
+                                        <TextBox Text="{Binding Path}" Grid.Column="1" Width="240"/>
                                     </Grid>
-                                    <Grid HorizontalAlignment="Right">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition SharedSizeGroup="col1"/>
-                                            <ColumnDefinition SharedSizeGroup="col2"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="Table Label:"/>
-                                        <TextBox Text="{Binding Label}" Width="100" Grid.Column="1"/>
-                                    </Grid>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.Resources>
-                    </ItemsControl>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type classes:AsmPath}">
+                                    <StackPanel Orientation="Vertical" Grid.Column="1">
+                                        <Grid HorizontalAlignment="Right">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition SharedSizeGroup="col1"/>
+                                                <ColumnDefinition SharedSizeGroup="col2"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
+                                            <TextBox Text="{Binding Path}" Width="240" Grid.Column="1"/>
+                                        </Grid>
+                                        <Grid HorizontalAlignment="Right">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition SharedSizeGroup="col1"/>
+                                                <ColumnDefinition SharedSizeGroup="col2"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Table Label:"/>
+                                            <TextBox Text="{Binding Label}" Width="100" Grid.Column="1"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
+                    </StackPanel>
                 </TabItem>
             </TabControl>
         </ScrollViewer>
