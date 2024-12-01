@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
+             xmlns:classes="clr-namespace:BrawlInstaller.Classes"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -18,24 +19,44 @@
                     <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
                 </TabItem>
                 <TabItem Header="File Paths">
-                    <ItemsControl ItemsSource="{Binding BuildSettings.FilePathSettings.FilePaths}" HorizontalAlignment="Left" MaxHeight="320" VerticalAlignment="Top">
+                    <ItemsControl ItemsSource="{Binding FilePathSettings}" HorizontalAlignment="Left" MaxHeight="400" VerticalAlignment="Top">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Vertical"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type classes:FilePath}">
+                                <Grid HorizontalAlignment="Right">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition SharedSizeGroup="col1"/>
                                         <ColumnDefinition SharedSizeGroup="col2"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Content="{Binding DisplayName}"/>
+                                    <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
                                     <TextBox Text="{Binding Path}" Grid.Column="1" Width="240"/>
                                 </Grid>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type classes:AsmPath}">
+                                <StackPanel Orientation="Vertical" Grid.Column="1">
+                                    <Grid HorizontalAlignment="Right">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="col1"/>
+                                            <ColumnDefinition SharedSizeGroup="col2"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
+                                        <TextBox Text="{Binding Path}" Width="240" Grid.Column="1"/>
+                                    </Grid>
+                                    <Grid HorizontalAlignment="Right">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="col1"/>
+                                            <ColumnDefinition SharedSizeGroup="col2"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Table Label:"/>
+                                        <TextBox Text="{Binding Label}" Width="100" Grid.Column="1"/>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
                     </ItemsControl>
                 </TabItem>
             </TabControl>

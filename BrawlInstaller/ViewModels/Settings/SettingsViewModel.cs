@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
 using static System.Net.Mime.MediaTypeNames;
@@ -29,6 +30,7 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private BuildSettings _buildSettings;
         private string _selectedSettingsOption;
+        private CompositeCollection _filePathSettings;
 
         // Services
         ISettingsService _settingsService { get; }
@@ -45,6 +47,12 @@ namespace BrawlInstaller.ViewModels
             CosmeticSettingsViewModel = cosmeticSettingsViewModel;
 
             BuildSettings = _settingsService.BuildSettings.Copy();
+
+            FilePathSettings = new CompositeCollection
+            {
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FilePaths },
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.AsmPaths }
+            };
 
             SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault();
 
@@ -63,6 +71,9 @@ namespace BrawlInstaller.ViewModels
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
         public List<string> DefaultSettingsOptions { get => new List<string> { "ProjectPlus" }; }
         public string SelectedSettingsOption { get => _selectedSettingsOption; set { _selectedSettingsOption = value; OnPropertyChanged(nameof(SelectedSettingsOption)); } }
+
+        [DependsUpon(nameof(BuildSettings))]
+        public CompositeCollection FilePathSettings { get => _filePathSettings; set { _filePathSettings = value; OnPropertyChanged(nameof(FilePathSettings)); } }
 
         // Methods
 
