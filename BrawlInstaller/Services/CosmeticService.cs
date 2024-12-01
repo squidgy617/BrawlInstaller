@@ -701,6 +701,18 @@ namespace BrawlInstaller.Services
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
+            // If we have neither an image nor a texture node matching the definition, but we do *have* a texture node, use it anyway
+            // This suggests that we got a texture from the cosmetics that didn't match the definition, which we should reimport, or it will be lost
+            else if (cosmetic.Texture != null)
+            {
+                cosmetic.Texture.Name = GetTextureName(definition, textureId, cosmetic);
+                var texture = ImportTexture(parentNode, cosmetic.Texture);
+                if (cosmetic.Palette != null)
+                {
+                    cosmetic.Palette.Name = texture.Name;
+                    var palette = ImportPalette(parentNode, cosmetic.Palette);
+                }
+            }
             // TODO: Verify this actually works
             // If we should only import one cosmetic and it's a color smashed texture, reimport
             else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
