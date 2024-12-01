@@ -13,38 +13,32 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <GroupBox Header="Cosmetic Settings">
+            <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TabItem Header="Cosmetics">
                     <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
-                </GroupBox>
-                <GroupBox Header="File Paths" Grid.Row="1">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="100" HorizontalAlignment="Left">
-                        <ItemsControl ItemsSource="{Binding BuildSettings.FilePathSettings.FilePaths}" HorizontalAlignment="Left" MaxHeight="320">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Vertical"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition SharedSizeGroup="col1"/>
-                                            <ColumnDefinition SharedSizeGroup="col2"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="{Binding DisplayName}"/>
-                                        <TextBox Text="{Binding Path}" Grid.Column="1" Width="240"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </GroupBox>
-            </Grid>
+                </TabItem>
+                <TabItem Header="File Paths">
+                    <ItemsControl ItemsSource="{Binding BuildSettings.FilePathSettings.FilePaths}" HorizontalAlignment="Left" MaxHeight="320" VerticalAlignment="Top">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="col1"/>
+                                        <ColumnDefinition SharedSizeGroup="col2"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="{Binding DisplayName}"/>
+                                    <TextBox Text="{Binding Path}" Grid.Column="1" Width="240"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </TabItem>
+            </TabControl>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}"/>
