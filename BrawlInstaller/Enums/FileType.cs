@@ -58,6 +58,8 @@ namespace BrawlInstaller.Enums
         [Description("GCT Code File")]
         GCTCodeFile,
         [Description("Stage List File")]
-        StageListFile
+        StageListFile,
+        [Description("GCTRealMate EXE File")]
+        GctRealMateExe
     }
 }

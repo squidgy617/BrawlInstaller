@@ -25,7 +25,6 @@ namespace BrawlInstaller.Classes
     public class BuildSettings
     {
         public List<CosmeticDefinition> CosmeticSettings { get; set; }
-        public ToolPathSettings ToolPathSettings { get; set; }
         public KirbyHatSettings KirbyHatSettings { get; set; }
         public SoundSettings SoundSettings { get; set; }
         public MiscSettings MiscSettings { get; set; }
@@ -91,16 +90,6 @@ namespace BrawlInstaller.Classes
         public bool AddTerminatorFrame { get; set; } = false;
     }
 
-    public class ToolPathSettings
-    {
-        public string KirbyHatExe { get; set; } = "";
-        public string AssemblyFunctionsExe { get; set; } = "";
-        public string SawndReplaceExe { get; set; } = "";
-        public string SfxChangeExe { get; set; } = "";
-        public string GfxChangeExe { get; set; } = "";
-        public string GctRealMateExe { get; set; } = "GCTRealMate.exe";
-    }
-
     public class KirbyHatSettings
     {
         public bool InstallKirbyHats { get; set; } = false;
@@ -141,7 +130,8 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.SoundbankPath, "pf\\sfx"),
             new FilePath(FileType.StageAltListPath, "pf\\stage\\stagelist"),
             new FilePath(FileType.CreditsModule, "pf\\module\\st_croll.rel", "REL file (.rel)|*.rel"),
-            new FilePath(FileType.SSEModule, "pf\\module\\sora_adv_stage.rel", "REL file (.rel)|*.rel")
+            new FilePath(FileType.SSEModule, "pf\\module\\sora_adv_stage.rel", "REL file (.rel)|*.rel"),
+            new FilePath(FileType.GctRealMateExe, "GCTRealMate.exe", "EXE file (.exe)|*.exe")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -207,6 +197,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string SSEModule { get => GetFilePath(FileType.SSEModule); }
         [JsonIgnore] public string LLoadAsmFile { get => GetAsmPath(FileType.LLoadAsmFile); }
         [JsonIgnore] public string SlotExAsmFile { get => GetAsmPath(FileType.SlotExAsmFile); }
+        [JsonIgnore] public string GctRealMateExe { get => GetFilePath(FileType.GctRealMateExe); }
 
         // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]

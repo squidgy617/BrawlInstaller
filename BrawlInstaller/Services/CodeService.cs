@@ -636,7 +636,7 @@ namespace BrawlInstaller.Services
         public void CompileCodes()
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
-            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.ToolPathSettings.GctRealMateExe))
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.GctRealMateExe))
             {
                 var args = "-g -l -q";
                 var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Select(s => $" \"{Path.Combine(buildPath, s.Path)}\"");
@@ -646,14 +646,14 @@ namespace BrawlInstaller.Services
                 }
                 Process gctRm = Process.Start(new ProcessStartInfo
                 {
-                    FileName = Path.Combine(buildPath, _settingsService.BuildSettings.ToolPathSettings.GctRealMateExe),
+                    FileName = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.GctRealMateExe),
                     WindowStyle = ProcessWindowStyle.Hidden,
                     Arguments = args
                 });
                 gctRm?.WaitForExit(5000);
                 if (gctRm?.HasExited == false)
                 {
-                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.ToolPathSettings.GctRealMateExe} encountered an error. Verify your code files are valid and don't contain errors.");
+                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.FilePathSettings.GctRealMateExe} encountered an error. Verify your code files are valid and don't contain errors.");
                     gctRm?.Kill();
                     throw error;
                 }
