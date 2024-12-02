@@ -11,6 +11,7 @@ using BrawlLib.Wii.Compression;
 using BrawlLib.SSBB.Types;
 using BrawlInstaller.StaticClasses;
 using System.Runtime.CompilerServices;
+using BrawlLib.Internal;
 
 namespace BrawlInstaller.Classes
 {
@@ -125,34 +126,34 @@ namespace BrawlInstaller.Classes
         [JsonProperty("FilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<FilePath> FilePaths { get; set; } = new List<FilePath>
         {
-            new FilePath(FileType.FighterFiles, "Fighter Files", "pf\\fighter"),
-            new FilePath(FileType.BrawlEx, "BrawlEx Folder", "pf\\BrawlEx"),
-            new FilePath(FileType.MasqueradePath, "Masquerade Folder", "pf\\info\\costumeslots"),
-            new FilePath(FileType.Modules, "Module Folder", "pf\\module"),
-            new FilePath(FileType.StageSlots, "Stage Slot Folder", "pf\\stage\\stageslot"),
-            new FilePath(FileType.StageParamPath, "Stage Param Folder", "pf\\stage\\stageinfo"),
-            new FilePath(FileType.StagePacPath, "Stage PAC Path", "pf\\stage\\melee"),
-            new FilePath(FileType.TracklistPath, "Tracklist Path", "pf\\sound\\tracklist"),
-            new FilePath(FileType.ClassicIntroPath, "Classic Intro Path", "pf\\menu\\intro\\enter"),
-            new FilePath(FileType.EndingPath, "Ending File Path", "pf\\menu\\intro\\ending"),
-            new FilePath(FileType.MoviePath, "Movie Path", "pf\\movie"),
-            new FilePath(FileType.BrstmPath, "BRSTM Path", "pf\\sound\\strm"),
-            new FilePath(FileType.SoundbankPath, "Soundbank Path", "pf\\sfx"),
-            new FilePath(FileType.StageAltListPath, "Stage Alt List Path", "pf\\stage\\stagelist"),
-            new FilePath(FileType.CreditsModule, "Credits Module", "pf\\module\\st_croll.rel", "REL file (.rel)|*.rel"),
-            new FilePath(FileType.SSEModule, "SSE Module", "pf\\module\\sora_adv_stage.rel", "REL file (.rel)|*.rel")
+            new FilePath(FileType.FighterFiles, "pf\\fighter"),
+            new FilePath(FileType.BrawlEx, "pf\\BrawlEx"),
+            new FilePath(FileType.MasqueradePath, "pf\\info\\costumeslots"),
+            new FilePath(FileType.Modules, "pf\\module"),
+            new FilePath(FileType.StageSlots, "pf\\stage\\stageslot"),
+            new FilePath(FileType.StageParamPath, "pf\\stage\\stageinfo"),
+            new FilePath(FileType.StagePacPath, "pf\\stage\\melee"),
+            new FilePath(FileType.TracklistPath, "pf\\sound\\tracklist"),
+            new FilePath(FileType.ClassicIntroPath, "pf\\menu\\intro\\enter"),
+            new FilePath(FileType.EndingPath, "pf\\menu\\intro\\ending"),
+            new FilePath(FileType.MoviePath, "pf\\movie"),
+            new FilePath(FileType.BrstmPath, "pf\\sound\\strm"),
+            new FilePath(FileType.SoundbankPath, "pf\\sfx"),
+            new FilePath(FileType.StageAltListPath, "pf\\stage\\stagelist"),
+            new FilePath(FileType.CreditsModule, "pf\\module\\st_croll.rel", "REL file (.rel)|*.rel"),
+            new FilePath(FileType.SSEModule, "pf\\module\\sora_adv_stage.rel", "REL file (.rel)|*.rel")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<AsmPath> AsmPaths { get; set; } = new List<AsmPath>()
         {
-            new AsmPath(FileType.StageTablePath, "Stage Table", "Source\\Project+\\StageTable.asm", "TABLE_STAGES:"),
-            new AsmPath(FileType.CreditsThemeAsmFile, "Credits Theme Table", "Source\\Project+\\ResultsMusic.asm", "ClassicResultsTable:"),
-            new AsmPath(FileType.EndingAsmFile, "Ending Table", "Source\\ProjectM\\CloneEngine.asm", "ENDINGTABLE:"),
-            new AsmPath(FileType.ThrowReleaseAsmFile, "Throw Release Table", "Source\\ProjectM\\Modifier\\ThrowRelease.asm", "ThrowReleaseTable:"),
-            new AsmPath(FileType.FighterSpecificAsmFile, "Fighter-Specific Codes", "Source\\ProjectM\\CloneEngine.asm"),
-            new AsmPath(FileType.LLoadAsmFile, "L-Load Table", "Source\\ProjectM\\CSS.asm", ".GOTO->Table_Skip"),
-            new AsmPath(FileType.SlotExAsmFile, "SlotEx Table", "Source\\P+Ex\\SlotEx.asm", "Table:")
+            new AsmPath(FileType.StageTablePath, "Source\\Project+\\StageTable.asm", "TABLE_STAGES:"),
+            new AsmPath(FileType.CreditsThemeAsmFile, "Source\\Project+\\ResultsMusic.asm", "ClassicResultsTable:"),
+            new AsmPath(FileType.EndingAsmFile, "Source\\ProjectM\\CloneEngine.asm", "ENDINGTABLE:"),
+            new AsmPath(FileType.ThrowReleaseAsmFile, "Source\\ProjectM\\Modifier\\ThrowRelease.asm", "ThrowReleaseTable:"),
+            new AsmPath(FileType.FighterSpecificAsmFile, "Source\\ProjectM\\CloneEngine.asm"),
+            new AsmPath(FileType.LLoadAsmFile, "Source\\ProjectM\\CSS.asm", ".GOTO->Table_Skip"),
+            new AsmPath(FileType.SlotExAsmFile, "Source\\P+Ex\\SlotEx.asm", "Table:")
         };
 
         [JsonIgnore] public string FighterFiles { get => GetFilePath(FileType.FighterFiles); }
@@ -163,7 +164,12 @@ namespace BrawlInstaller.Classes
         // This is the source of truth for where the "master" stage table is, there should only ever be one, it will be copied to all stage lists that have their own table
         // on save
         [JsonIgnore] public string StageTablePath { get => GetAsmPath(FileType.StageTablePath); }
-        [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<string> StageListPaths { get; set; } = new List<string> { "Source\\Project+\\StageTable.asm" };
+
+        [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
+        public List<FilePath> StageListPaths { get; set; } = new List<FilePath> 
+        { 
+            new FilePath(FileType.StageListFile, "Source\\Project+\\StageTable.asm")
+        };
 
         [JsonProperty("RandomStageNamesLocations", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<InstallLocation> RandomStageNamesLocations { get; set; } = new List<InstallLocation>
@@ -214,13 +220,12 @@ namespace BrawlInstaller.Classes
         };
 
         [JsonProperty("CodeFilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-        public List<string> CodeFilePaths { get; set; } = new List<string>
+        public List<FilePath> CodeFilePaths { get; set; } = new List<FilePath>
         {
-            "RSBE01.txt",
-            "BOOST.txt"
-            // TODO: Re-add these when done testing
-            //"NETPLAY.txt",
-            //"NETBOOST.txt"
+            new FilePath(FileType.GCTCodeFile, "RSBE01.txt"),
+            new FilePath(FileType.GCTCodeFile, "BOOST.txt"),
+            new FilePath(FileType.GCTCodeFile, "NETPLAY.txt"),
+            new FilePath(FileType.GCTCodeFile, "NETBOOST.txt")
         };
 
         private string GetFilePath(FileType fileType)
@@ -244,10 +249,10 @@ namespace BrawlInstaller.Classes
 
     public class FilePath
     {
-        public FilePath(FileType fileType, string displayName, string path, string filter = "")
+        public FilePath(FileType fileType, string path, string filter = "")
         {
             FileType = fileType;
-            DisplayName = displayName;
+            DisplayName = fileType.GetDescription();
             Path = path;
             Filter = filter;
         }
@@ -259,10 +264,10 @@ namespace BrawlInstaller.Classes
 
     public class AsmPath : FilePath
     {
-        public AsmPath(FileType fileType, string displayName, string path, string label = "", string filter = "ASM file (.asm)|*.asm") : base(fileType, displayName, path, filter)
+        public AsmPath(FileType fileType, string path, string label = "", string filter = "ASM file (.asm)|*.asm") : base(fileType, path, filter)
         {
             FileType = fileType;
-            DisplayName = displayName;
+            DisplayName = fileType.GetDescription();
             Path = path;
             Filter = filter;
             Label = label;

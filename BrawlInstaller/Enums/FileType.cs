@@ -54,6 +54,10 @@ namespace BrawlInstaller.Enums
         [Description("L-Load Table")]
         LLoadAsmFile,
         [Description("SlotEx Table")]
-        SlotExAsmFile
+        SlotExAsmFile,
+        [Description("GCT Code File")]
+        GCTCodeFile,
+        [Description("Stage List File")]
+        StageListFile
     }
 }

@@ -31,8 +31,9 @@ namespace BrawlInstaller.ViewModels
         private BuildSettings _buildSettings;
         private string _selectedSettingsOption;
         private CompositeCollection _filePathSettings;
-        private string _selectedStageListPath;
+        private FilePath _selectedStageListPath;
         private RosterFile _selectedRosterFile;
+        private FilePath _selectedCodeFile;
 
         // Services
         ISettingsService _settingsService { get; }
@@ -78,14 +79,17 @@ namespace BrawlInstaller.ViewModels
         public CompositeCollection FilePathSettings { get => _filePathSettings; set { _filePathSettings = value; OnPropertyChanged(nameof(FilePathSettings)); } }
 
         [DependsUpon(nameof(BuildSettings))]
-        public string SelectedStageListPath { get => _selectedStageListPath; set { _selectedStageListPath = value; OnPropertyChanged(nameof(SelectedStageListPath)); } }
+        public FilePath SelectedStageListPath { get => _selectedStageListPath; set { _selectedStageListPath = value; OnPropertyChanged(nameof(SelectedStageListPath)); } }
 
         [DependsUpon(nameof(BuildSettings))]
         public RosterFile SelectedRosterFile { get => _selectedRosterFile; set { _selectedRosterFile = value; OnPropertyChanged(nameof(SelectedRosterFile)); } }
 
+        [DependsUpon(nameof(BuildSettings))]
+        public FilePath SelectedCodeFilePath { get => _selectedCodeFile; set { _selectedCodeFile = value; OnPropertyChanged(nameof(SelectedCodeFilePath)); } }
+
         // Methods
 
-        // TODO: Should these save to a different location?
+            // TODO: Should these save to a different location?
         private void SaveSettings()
         {
             _settingsService.SaveSettings(BuildSettings, $"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");

@@ -639,7 +639,7 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.ToolPathSettings.GctRealMateExe))
             {
                 var args = "-g -l -q";
-                var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Select(s => $" \"{Path.Combine(buildPath, s)}\"");
+                var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Select(s => $" \"{Path.Combine(buildPath, s.Path)}\"");
                 foreach(var arg in argList)
                 {
                     args += arg;
