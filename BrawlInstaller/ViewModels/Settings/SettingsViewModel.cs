@@ -34,6 +34,7 @@ namespace BrawlInstaller.ViewModels
         private FilePath _selectedStageListPath;
         private RosterFile _selectedRosterFile;
         private FilePath _selectedCodeFile;
+        private InstallLocation _selectedRandomStageNameLocation;
 
         // Services
         ISettingsService _settingsService { get; }
@@ -87,9 +88,14 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(BuildSettings))]
         public FilePath SelectedCodeFilePath { get => _selectedCodeFile; set { _selectedCodeFile = value; OnPropertyChanged(nameof(SelectedCodeFilePath)); } }
 
+        [DependsUpon(nameof(BuildSettings))]
+        public InstallLocation SelectedRandomStageNameLocation { get => _selectedRandomStageNameLocation; set { _selectedRandomStageNameLocation = value; OnPropertyChanged(nameof(SelectedRandomStageNameLocation)); } }
+
+        public List<string> ExtensionOptions { get => new List<string> { "brres", "pac" }; }
+
         // Methods
 
-            // TODO: Should these save to a different location?
+        // TODO: Should these save to a different location?
         private void SaveSettings()
         {
             _settingsService.SaveSettings(BuildSettings, $"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");

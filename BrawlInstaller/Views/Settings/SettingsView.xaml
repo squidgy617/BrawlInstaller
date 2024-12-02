@@ -65,6 +65,28 @@
                                 <Label x:Name="codeFilesPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}"/>
                                 <TextBox x:Name="codeFilesPathTextBox" Text="{Binding SelectedCodeFilePath.Path}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}"/>
                             </Grid>
+                            <Grid x:Name="randomStageNameLocations">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label x:Name="randomStageNameLabel" HorizontalAlignment="Left" MaxWidth="100">
+                                    <TextBlock Text="Random Stage Name Locations:" TextWrapping="Wrap"/>
+                                </Label>
+                                <ListBox x:Name="randomStageNameListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.RandomStageNamesLocations}" SelectedValue="{Binding SelectedRandomStageNameLocation}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
+                                <Label x:Name="randomStageNamePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <TextBox x:Name="randomStageNameTextBox" Text="{Binding SelectedRandomStageNameLocation.FilePath}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="randomStageNameNodePathLabel" Content="Node Path:" Grid.Row="2" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <TextBox x:Name="randomStageNameNodePathTextBox" Text="{Binding SelectedRandomStageNameLocation.NodePath}" Width="200" Grid.Column="1" Grid.Row="2" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="randomStageNameExtensionLabel" Content="Extension:" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <ComboBox x:Name="randomStageNameExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedRandomStageNameLocation.FileExtension}" Width="120" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                            </Grid>
                         </StackPanel>
                         <Separator/>
                         <ItemsControl x:Name="filePathsControl" ItemsSource="{Binding FilePathSettings}" HorizontalAlignment="Left" MaxHeight="400" VerticalAlignment="Top">
