@@ -74,10 +74,22 @@ namespace BrawlInstaller.Services
         public BuildSettings LoadSettings(string path)
         {
             var buildSettings = new BuildSettings();
+            var defaultSettings = new BuildSettings();
             if (File.Exists(path))
             {
                 var text = File.ReadAllText(path);
                 buildSettings = JsonConvert.DeserializeObject<BuildSettings>(text);
+            }
+            // If any paths are missing, add them
+            var missingPaths = defaultSettings.FilePathSettings.FilePaths.Where(x => !buildSettings.FilePathSettings.FilePaths.Select(y => y.FileType).Contains(x.FileType));
+            foreach(var missingPath in missingPaths)
+            {
+                buildSettings.FilePathSettings.FilePaths.Add(missingPath);
+            }
+            var missingAsms = defaultSettings.FilePathSettings.AsmPaths.Where(x => !buildSettings.FilePathSettings.AsmPaths.Select(y => y.FileType).Contains(x.FileType));
+            foreach (var missingAsm in missingAsms)
+            {
+                buildSettings.FilePathSettings.AsmPaths.Add(missingAsm);
             }
             return buildSettings;
         }

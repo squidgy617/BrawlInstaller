@@ -24,11 +24,11 @@ namespace BrawlInstaller.Classes
 
     public class BuildSettings
     {
-        public List<CosmeticDefinition> CosmeticSettings { get; set; }
-        public KirbyHatSettings KirbyHatSettings { get; set; }
-        public SoundSettings SoundSettings { get; set; }
-        public MiscSettings MiscSettings { get; set; }
-        public FilePathSettings FilePathSettings { get; set; }
+        public List<CosmeticDefinition> CosmeticSettings { get; set; } = new List<CosmeticDefinition>();
+        public KirbyHatSettings KirbyHatSettings { get; set; } = new KirbyHatSettings();
+        public SoundSettings SoundSettings { get; set; } = new SoundSettings();
+        public MiscSettings MiscSettings { get; set; } = new MiscSettings();
+        public FilePathSettings FilePathSettings { get; set; } = new FilePathSettings();
         public bool HDTextures { get; set; } = true;
 
         public BuildSettings Copy()
