@@ -15,11 +15,23 @@
         </Grid.RowDefinitions>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TabItem Header="Cosmetics">
-                    <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
-                </TabItem>
-                <TabItem Header="File Paths">
+                <TabItem Header="Files">
                     <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="Install Trophies with Fighters" IsChecked="{Binding BuildSettings.MiscSettings.InstallTrophies}"/>
+                            <CheckBox Content="Update Credits Module with Fighters" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}"/>
+                            <CheckBox Content="Subspace EX build" IsChecked="{Binding BuildSettings.MiscSettings.SubspaceEx}"/>
+                            <CheckBox Content="Install Fighters to SSE" IsChecked="{Binding BuildSettings.MiscSettings.InstallToSse}"/>
+                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label x:Name="soundbankStyleLabel" Content="Soundbank Style:"/>
+                            <ComboBox x:Name="soundbankStyleDropDown" ItemsSource="{Binding SoundbankStyleOptions}" SelectedValuePath="Value" SelectedValue="{Binding BuildSettings.SoundSettings.SoundbankStyle}" DisplayMemberPath="Key" Grid.Column="1" Width="120"/>
+                        </Grid>
+                        <Separator/>
                         <StackPanel Orientation="Horizontal">
                             <Grid x:Name="stageListsGrid">
                                 <Grid.RowDefinitions>
@@ -129,6 +141,9 @@
                             </ItemsControl.Resources>
                         </ItemsControl>
                     </StackPanel>
+                </TabItem>
+                <TabItem Header="Cosmetics">
+                    <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
                 </TabItem>
             </TabControl>
         </ScrollViewer>

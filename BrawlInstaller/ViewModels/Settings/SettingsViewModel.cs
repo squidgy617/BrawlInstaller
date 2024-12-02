@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -92,6 +93,8 @@ namespace BrawlInstaller.ViewModels
         public InstallLocation SelectedRandomStageNameLocation { get => _selectedRandomStageNameLocation; set { _selectedRandomStageNameLocation = value; OnPropertyChanged(nameof(SelectedRandomStageNameLocation)); } }
 
         public List<string> ExtensionOptions { get => new List<string> { "brres", "pac" }; }
+
+        public Dictionary<string, SoundbankStyle> SoundbankStyleOptions { get => typeof(SoundbankStyle).GetDictionary<SoundbankStyle>(); }
 
         // Methods
 

@@ -29,6 +29,7 @@ namespace BrawlInstaller.Classes
         public SoundSettings SoundSettings { get; set; } = new SoundSettings();
         public MiscSettings MiscSettings { get; set; } = new MiscSettings();
         public FilePathSettings FilePathSettings { get; set; } = new FilePathSettings();
+        // TODO: Either add this to build settings, or make it an app setting right next to the HD texture path box
         public bool HDTextures { get; set; } = true;
 
         public BuildSettings Copy()
@@ -92,6 +93,7 @@ namespace BrawlInstaller.Classes
 
     public class KirbyHatSettings
     {
+        // TODO: Do we need this setting? If so it should prevent both read AND write to the .rel, and should be moved to misc settings
         public bool InstallKirbyHats { get; set; } = false;
     }
 
