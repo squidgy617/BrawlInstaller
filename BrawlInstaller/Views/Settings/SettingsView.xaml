@@ -145,6 +145,9 @@
                 <TabItem Header="Cosmetics">
                     <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
                 </TabItem>
+                <TabItem Header="Fighters">
+                    <ContentControl Content="{Binding FighterInfoViewModel}"/>
+                </TabItem>
             </TabControl>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" Grid.Row="1">

@@ -131,7 +131,7 @@
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterFileViewModel.cs" />
-    <Compile Include="ViewModels\FighterInfoViewModel.cs" />
+    <Compile Include="ViewModels\Settings\FighterInfoViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FranchiseIconViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -150,7 +150,7 @@
     <Compile Include="Views\Fighter\FighterFileView.xaml.cs">
       <DependentUpon>FighterFileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FighterInfoView.xaml.cs">
+    <Compile Include="Views\Settings\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Fighter\FighterSettingsView.xaml.cs">
@@ -240,7 +240,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FighterInfoView.xaml">
+    <Page Include="Views\Settings\FighterInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

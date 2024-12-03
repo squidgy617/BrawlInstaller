@@ -46,10 +46,11 @@ namespace BrawlInstaller.ViewModels
         public ICommand ApplyDefaultSettingCommand => new RelayCommand(param => ApplyDefaultSetting());
 
         [ImportingConstructor]
-        public SettingsViewModel(ISettingsService settingsService, ICosmeticSettingsViewModel cosmeticSettingsViewModel)
+        public SettingsViewModel(ISettingsService settingsService, ICosmeticSettingsViewModel cosmeticSettingsViewModel, IFighterInfoViewModel fighterInfoViewModel)
         {
             _settingsService = settingsService;
             CosmeticSettingsViewModel = cosmeticSettingsViewModel;
+            FighterInfoViewModel = fighterInfoViewModel;
 
             BuildSettings = _settingsService.BuildSettings.Copy();
 
@@ -71,6 +72,7 @@ namespace BrawlInstaller.ViewModels
 
         // ViewModels
         public ICosmeticSettingsViewModel CosmeticSettingsViewModel { get; }
+        public IFighterInfoViewModel FighterInfoViewModel { get; }
 
         // Properties
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
