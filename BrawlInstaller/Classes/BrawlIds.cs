@@ -12,24 +12,24 @@ namespace BrawlInstaller.Classes
     {
         [JsonIgnore]
         public List<BrawlId> Ids { get; set; } = new List<BrawlId>();
-        public int FighterConfigId { get => GetId(IdType.FighterConfig); set => SetId(IdType.FighterConfig, value); }
-        public int CosmeticConfigId { get => GetId(IdType.CosmeticConfig); set => SetId(IdType.CosmeticConfig, value); }
-        public int SlotConfigId { get => GetId(IdType.SlotConfig); set => SetId(IdType.SlotConfig, value); }
-        public int CSSSlotConfigId { get => GetId(IdType.CSSSlotConfig); set => SetId(IdType.CSSSlotConfig, value); }
-        public int CosmeticId { get => GetId(IdType.Cosmetic); set => SetId(IdType.Cosmetic, value); }
-        public int FranchiseId { get => GetId(IdType.Franchise); set => SetId(IdType.Franchise, value); }
-        public int TrophyThumbnailId { get => GetId(IdType.Thumbnail); set => SetId(IdType.Thumbnail, value); }
-        public int RecordsIconId { get => GetId(IdType.RecordsIcon); set => SetId(IdType.RecordsIcon, value); }
-        public int StageId { get => GetId(IdType.Stage); set => SetId(IdType.Stage, value); }
-        public int StageCosmeticId { get => GetId(IdType.StageCosmetic); set => SetId(IdType.StageCosmetic, value); }
-        public int MasqueradeId { get => GetId(IdType.Masquerade); set => SetId(IdType.Masquerade, value); }
+        public int? FighterConfigId { get => GetId(IdType.FighterConfig); set => SetId(IdType.FighterConfig, value); }
+        public int? CosmeticConfigId { get => GetId(IdType.CosmeticConfig); set => SetId(IdType.CosmeticConfig, value); }
+        public int? SlotConfigId { get => GetId(IdType.SlotConfig); set => SetId(IdType.SlotConfig, value); }
+        public int? CSSSlotConfigId { get => GetId(IdType.CSSSlotConfig); set => SetId(IdType.CSSSlotConfig, value); }
+        public int? CosmeticId { get => GetId(IdType.Cosmetic); set => SetId(IdType.Cosmetic, value); }
+        public int? FranchiseId { get => GetId(IdType.Franchise); set => SetId(IdType.Franchise, value); }
+        public int? TrophyThumbnailId { get => GetId(IdType.Thumbnail); set => SetId(IdType.Thumbnail, value); }
+        public int? RecordsIconId { get => GetId(IdType.RecordsIcon); set => SetId(IdType.RecordsIcon, value); }
+        public int? StageId { get => GetId(IdType.Stage); set => SetId(IdType.Stage, value); }
+        public int? StageCosmeticId { get => GetId(IdType.StageCosmetic); set => SetId(IdType.StageCosmetic, value); }
+        public int? MasqueradeId { get => GetId(IdType.Masquerade); set => SetId(IdType.Masquerade, value); }
 
-        private int GetId(IdType type)
+        private int? GetId(IdType type)
         {
-            return Ids.Any(x => x.Type == type) ? Ids.First(x => x.Type == type).Id : -1;
+            return Ids.Any(x => x.Type == type) ? Ids.First(x => x.Type == type).Id : null;
         }
 
-        private void SetId(IdType type, int newId)
+        private void SetId(IdType type, int? newId)
         {
             var match = Ids.Any(x => x.Type == type) ? Ids.FirstOrDefault(x => x.Type == type) : null;
             if (match != null)
@@ -38,9 +38,9 @@ namespace BrawlInstaller.Classes
                 Ids.Add(new BrawlId { Id = newId, Type = type });
         }
 
-        public int GetIdOfType(IdType type)
+        public int? GetIdOfType(IdType type)
         {
-            return Ids.FirstOrDefault(x => x.Type == type)?.Id ?? -1;
+            return Ids.FirstOrDefault(x => x.Type == type)?.Id ?? null;
         }
 
         public BrawlIds Copy()
@@ -57,6 +57,6 @@ namespace BrawlInstaller.Classes
     public class BrawlId
     {
         public IdType Type { get; set; }
-        public int Id { get; set; }
+        public int? Id { get; set; }
     }
 }

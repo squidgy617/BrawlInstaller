@@ -474,7 +474,7 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID associated with cosmetic</param>
         /// <param name="cosmetic">Cosmetic</param>
         /// <returns>Name of file for cosmetic</returns>
-        private string GetFileName(CosmeticDefinition definition, int id, Cosmetic cosmetic)
+        private string GetFileName(CosmeticDefinition definition, int? id, Cosmetic cosmetic)
         {
             return $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
         }
@@ -485,7 +485,7 @@ namespace BrawlInstaller.Services
         /// <param name="definition">Definition to use</param>
         /// <param name="id">ID associated with cosmetic</param>
         /// <returns>Name of file for cosmetic</returns>
-        private string GetFileName(CosmeticDefinition definition, int id)
+        private string GetFileName(CosmeticDefinition definition, int? id)
         {
             return $"{definition.Prefix}{FormatCosmeticId(definition, id)}.{definition.InstallLocation.FileExtension}";
         }
@@ -1054,9 +1054,9 @@ namespace BrawlInstaller.Services
         /// <param name="definition">Definition for cosmetic</param>
         /// <param name="cosmeticId">ID associated with cosmetic</param>
         /// <returns>Formatted cosmetic ID</returns>
-        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId)
+        private string FormatCosmeticId(CosmeticDefinition definition, int? cosmeticId)
         {
-            var id = (cosmeticId * definition.Multiplier).ToString("D" + definition.SuffixDigits);
+            var id = (cosmeticId * definition.Multiplier)?.ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -1067,9 +1067,9 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticId">ID associated with cosmetic</param>
         /// <param name="costumeIndex">Costume index of cosmetic</param>
         /// <returns>Formatted cosmetic ID</returns>
-        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, int costumeIndex)
+        private string FormatCosmeticId(CosmeticDefinition definition, int? cosmeticId, int costumeIndex)
         {
-            var id = ((cosmeticId * definition.Multiplier) + costumeIndex).ToString("D" + definition.SuffixDigits);
+            var id = ((cosmeticId * definition.Multiplier) + costumeIndex)?.ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -1080,7 +1080,7 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticId">ID associated with cosmetic</param>
         /// <param name="costumeIndex">Costume index associated with cosmetic</param>
         /// <returns></returns>
-        private string FormatCosmeticId(CosmeticDefinition definition, int cosmeticId, Cosmetic cosmetic)
+        private string FormatCosmeticId(CosmeticDefinition definition, int? cosmeticId, Cosmetic cosmetic)
         {
             if (definition.UseIndividualIds && !definition.Selectable)
             {
@@ -1090,7 +1090,7 @@ namespace BrawlInstaller.Services
             {
                 return cosmetic.TextureId?.ToString("D" + definition.SuffixDigits);
             }
-            var id = ((cosmeticId * definition.Multiplier) + (cosmetic.CostumeIndex ?? 0)).ToString("D" + definition.SuffixDigits);
+            var id = ((cosmeticId * definition.Multiplier) + (cosmetic.CostumeIndex ?? 0))?.ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -1100,7 +1100,7 @@ namespace BrawlInstaller.Services
         /// <param name="definition">Cosmetic definition</param>
         /// <param name="id">ID associated with cosmetics</param>
         /// <returns>List of files containing cosmetics</returns>
-        private List<string> GetCosmeticPaths(CosmeticDefinition definition, int id)
+        private List<string> GetCosmeticPaths(CosmeticDefinition definition, int? id)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var paths = new List<string>();
@@ -1192,7 +1192,7 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of texture to check ID range on</param>
         /// <param name="prefix">Prefix of cosmetic name</param>
         /// <returns>Whether cosmetic is within the ID range</returns>
-        private bool CheckIdRange(CosmeticDefinition definition, int id, string name, string prefix)
+        private bool CheckIdRange(CosmeticDefinition definition, int? id, string name, string prefix)
         {
             if (!name.StartsWith(prefix))
                 return false;
@@ -1213,7 +1213,7 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID associated with cosmetic</param>
         /// <param name="index">Frame index of PAT0</param>
         /// <returns>Whether cosmetic is within the ID range</returns>
-        private bool CheckIdRange(PatSettings patSettings, CosmeticDefinition definition, int id, int index)
+        private bool CheckIdRange(PatSettings patSettings, CosmeticDefinition definition, int? id, int index)
         {
             return CheckIdRange(idType: patSettings.IdType ?? definition.IdType, multiplier: patSettings.Multiplier ?? definition.Multiplier, id, index);
         }
@@ -1226,7 +1226,7 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID associated with cosmetic</param>
         /// <param name="index">Number to check is within range</param>
         /// <returns>Whether cosmetic is within the ID range</returns>
-        private bool CheckIdRange(IdType idType, int multiplier, int id, int index)
+        private bool CheckIdRange(IdType idType, int multiplier, int? id, int index)
         {
             // TODO: Do we really only check this for cosmetic IDs?
             if (idType != IdType.Cosmetic)
@@ -1245,7 +1245,7 @@ namespace BrawlInstaller.Services
         /// <param name="definition">Cosmetic definition</param>
         /// <param name="id">ID associated with cosmetic</param>
         /// <returns>Costume index of cosmetic</returns>
-        private int GetCostumeIndex(TEX0Node node, CosmeticDefinition definition, int id)
+        private int GetCostumeIndex(TEX0Node node, CosmeticDefinition definition, int? id)
         {
             string suffix;
             if (definition.SeparateFiles)
@@ -1267,11 +1267,11 @@ namespace BrawlInstaller.Services
         /// <param name="multiplier">Multiplier used for IDs</param>
         /// <param name="id">ID associated with texture</param>
         /// <returns></returns>
-        private int GetCostumeIndex(int index, int multiplier, int id)
+        private int GetCostumeIndex(int index, int multiplier, int? id)
         {
-            if (multiplier <= 1)
+            if (multiplier <= 1 || id == null)
                 return 0;
-            index = index - (id * multiplier);
+            index = index - (id.Value * multiplier);
             return index;
         }
 
@@ -1728,6 +1728,11 @@ namespace BrawlInstaller.Services
                 }
             }
             cosmeticList.MarkAllChanged();
+            // Mark color smashing as changed for all
+            foreach(var cosmetic in cosmeticList.Items)
+            {
+                cosmetic.ColorSmashChanged = true;
+            }
             return cosmeticList;
         }
 

@@ -311,7 +311,10 @@ namespace BrawlInstaller.Services
         /// <param name="path">Path to delete</param>
         public void DeleteDirectory(string path)
         {
-            Directory.Delete(path, true);
+            if (DirectoryExists(path))
+            {
+                Directory.Delete(path, true);
+            }
         }
 
         /// <summary>

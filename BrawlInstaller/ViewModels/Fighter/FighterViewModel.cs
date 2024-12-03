@@ -413,7 +413,7 @@ namespace BrawlInstaller.ViewModels
                 {
                     var newEntry = new RosterEntry
                     {
-                        Id = fighterInfo.Ids.CSSSlotConfigId,
+                        Id = fighterInfo.Ids.CSSSlotConfigId != null ? fighterInfo.Ids.CSSSlotConfigId.Value : 0,
                         Name = fighterInfo.DisplayName,
                         InCss = true,
                         InRandom = true
@@ -486,7 +486,7 @@ namespace BrawlInstaller.ViewModels
             {
                 var newEntry = new RosterEntry
                 {
-                    Id = SelectedFighter.Ids.CSSSlotConfigId,
+                    Id = SelectedFighter.Ids.CSSSlotConfigId != null ? SelectedFighter.Ids.CSSSlotConfigId.Value : 0,
                     InCss = true,
                     InRandom = true,
                     Name = SelectedFighter.DisplayName
@@ -515,7 +515,7 @@ namespace BrawlInstaller.ViewModels
                 {
                     var newEntry = new RosterEntry
                     {
-                        Id = fighter.Ids.CSSSlotConfigId,
+                        Id = fighter.Ids.CSSSlotConfigId != null ? fighter.Ids.CSSSlotConfigId.Value : 0,
                         Name = fighter.DisplayName,
                         InCss = true,
                         InRandom = true

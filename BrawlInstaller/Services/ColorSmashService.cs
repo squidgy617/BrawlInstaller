@@ -49,13 +49,15 @@ namespace BrawlInstaller.Services
         {
             var folder = bres.GetFolder<TEX0Node>();
             var paletteFolder = bres.GetFolder<PLT0Node>();
-            _fileService.DeleteDirectory(ColorSmashDirectory);
-            _fileService.CreateDirectory(ColorSmashDirectory);
-            _fileService.CreateDirectory(ColorSmashOutDirectory);
+            var colorSmashDirectory = Path.GetFullPath(ColorSmashDirectory);
+            var colorSmashOutDirectory = Path.GetFullPath(ColorSmashOutDirectory);
+            _fileService.DeleteDirectory(colorSmashDirectory);
+            _fileService.CreateDirectory(colorSmashDirectory);
+            _fileService.CreateDirectory(colorSmashOutDirectory);
             // Save images to color smash input folder
             foreach(var cosmetic in cosmetics)
             {
-                _fileService.SaveImage(cosmetic.Image, $"{ColorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
+                _fileService.SaveImage(cosmetic.Image, $"{colorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
             }
             // Get palette count
             var paletteCount = 0;
@@ -77,7 +79,7 @@ namespace BrawlInstaller.Services
                 currentTexture?.Dispose();
                 currentPalette?.Dispose();
                 // Import color smashed image
-                var file = $"{ColorSmashOutDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png";
+                var file = $"{colorSmashOutDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png";
                 var texture = ColorSmashTextureImport(bres, file, WiiPixelFormat.CI8, mipCount);
                 // Update and move texture node
                 texture.OriginalPath = "";
@@ -98,7 +100,7 @@ namespace BrawlInstaller.Services
                 if (texture.HasPalette)
                     texture.GetPaletteNode().IsDirty = true;
             }
-            _fileService.DeleteDirectory(ColorSmashDirectory);
+            _fileService.DeleteDirectory(colorSmashDirectory);
         }
 
         /// <summary>

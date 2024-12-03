@@ -74,7 +74,7 @@ namespace BrawlInstaller.Classes
         {
             var tableEntry = new AsmTableEntry
             {
-                Item = $"0x{StageIds.StageId:X2}{(StageIds.StageCosmeticId > -1 ? StageIds.StageCosmeticId.ToString("X2") : string.Empty)}",
+                Item = $"0x{StageIds.StageId:X2}{(StageIds.StageCosmeticId != null ? StageIds.StageCosmeticId?.ToString("X2") : string.Empty)}",
                 Comment = Name
             };
             return tableEntry;

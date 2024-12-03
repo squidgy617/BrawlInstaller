@@ -70,9 +70,9 @@ namespace BrawlInstaller.Services
             var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             // Get name for RSS
             var names = GetStageRandomNames();
-            if (names.Count > stage.Slot.StageIds.StageCosmeticId)
+            if (stage.Slot.StageIds.StageCosmeticId != null && names.Count > stage.Slot.StageIds.StageCosmeticId)
             {
-                stage.RandomName = names[stage.Slot.StageIds.StageCosmeticId];
+                stage.RandomName = names[stage.Slot.StageIds.StageCosmeticId.Value];
             }
             else
             {
@@ -199,9 +199,12 @@ namespace BrawlInstaller.Services
                         Params = GetStageParams(entry.Name, stage.AllParams)
                     };
                     // Get bin file
-                    var binFile = GetStageBinFile(stage.Slot.StageIds.StageId, newEntry);
-                    newEntry.BinFilePath = binFile;
-                    newEntry.BinFileName = binFile != null ? Regex.Replace(Path.GetFileNameWithoutExtension(binFile), "st_\\d+_", "") : "Unknown";
+                    if (stage.Slot.StageIds.StageId != null)
+                    {
+                        var binFile = GetStageBinFile(stage.Slot.StageIds.StageId.Value, newEntry);
+                        newEntry.BinFilePath = binFile;
+                        newEntry.BinFileName = binFile != null ? Regex.Replace(Path.GetFileNameWithoutExtension(binFile), "st_\\d+_", "") : "Unknown";
+                    }
                     // Add params to list if they are not already there
                     stage.StageEntries.Add(newEntry);
                     if (!stage.AllParams.Contains(newEntry.Params))
@@ -392,7 +395,7 @@ namespace BrawlInstaller.Services
             {
                 var path = $"{buildPath}\\{location.FilePath}";
                 var rootNode = _fileService.OpenFile(path);
-                if (rootNode != null)
+                if (rootNode != null && stage.Slot.StageIds.StageCosmeticId != null)
                 {
                     var namesNode = rootNode.FindChild(location.NodePath);
                     if (namesNode != null)
@@ -403,7 +406,7 @@ namespace BrawlInstaller.Services
                         {
                             names.Add("_");
                         }
-                        names[stage.Slot.StageIds.StageCosmeticId + presetCount] = stage.RandomName;
+                        names[stage.Slot.StageIds.StageCosmeticId.Value + presetCount] = stage.RandomName;
                         ((MSBinNode)namesNode)._strings = names;
                         namesNode.IsDirty = true;
                         _fileService.SaveFile(rootNode);
@@ -562,7 +565,7 @@ namespace BrawlInstaller.Services
                         var index = GetButtonFlagIndex(entry);
                         var fileName = $"st_{index:D2}_{entry.BinFileName}.bin";
                         var folderLetter = entry.IsRAlt ? "R" : (entry.IsLAlt ? "L" : string.Empty);
-                        var folderName = $"{stage.Slot.StageIds.StageId.ToString("X2")}_{folderLetter}";
+                        var folderName = $"{stage.Slot.StageIds.StageId?.ToString("X2")}_{folderLetter}";
                         var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageAltListPath, folderName, fileName);
                         binFile._origPath = installPath;
                         files.Add(binFile);

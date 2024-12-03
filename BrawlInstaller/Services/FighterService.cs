@@ -137,12 +137,12 @@ namespace BrawlInstaller.Services
         /// <param name="name">Ex config name</param>
         /// <param name="type">ID type used by config</param>
         /// <returns>Ex config ID</returns>
-        private int GetConfigId(string name, IdType type)
+        private int? GetConfigId(string name, IdType type)
         {
             var prefix = GetConfigPrefix(type);
-            if (int.TryParse(name.Replace(prefix, ""), System.Globalization.NumberStyles.HexNumber, null, out int id))
+            if (int.TryParse(name.Replace(prefix, ""), NumberStyles.HexNumber, null, out int id))
                 return id;
-            return -1;
+            return null;
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID of config</param>
         /// <param name="type">Type of ID</param>
         /// <returns>Path to Ex config</returns>
-        private string GetExConfig(int id, IdType type)
+        private string GetExConfig(int? id, IdType type)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -193,63 +193,63 @@ namespace BrawlInstaller.Services
         private BrawlIds LinkExConfigs(BrawlIds fighterIds, List<ResourceNode> cosmeticConfigs, List<ResourceNode> cssSlotConfigs, List<ResourceNode> slotConfigs)
         {
             // Find slot config ID if missing
-            if (fighterIds.FighterConfigId > -1 && fighterIds.SlotConfigId <= -1)
+            if (fighterIds.FighterConfigId != null && fighterIds.SlotConfigId == null)
             {
                 var foundConfig = slotConfigs.FirstOrDefault(x => ((SLTCNode)x).SetSlot && ((SLTCNode)x).CharSlot1 == fighterIds.FighterConfigId);
                 if (foundConfig != null)
                     fighterIds.SlotConfigId = GetConfigId(foundConfig.Name, IdType.SlotConfig);
             }
-            if (fighterIds.CosmeticConfigId > -1 && fighterIds.SlotConfigId <= -1)
+            if (fighterIds.CosmeticConfigId != null && fighterIds.SlotConfigId == null)
             {
-                var foundConfig = cosmeticConfigs.FirstOrDefault(x => ((COSCNode)x).Name.EndsWith(fighterIds.CosmeticConfigId.ToString("X2")) && ((COSCNode)x).HasSecondary);
+                var foundConfig = cosmeticConfigs.FirstOrDefault(x => ((COSCNode)x).Name.EndsWith(fighterIds.CosmeticConfigId?.ToString("X2")) && ((COSCNode)x).HasSecondary);
                 if (foundConfig != null)
                     fighterIds.SlotConfigId = ((COSCNode)foundConfig).CharSlot1;
             }
-            if (fighterIds.CSSSlotConfigId > -1 && fighterIds.SlotConfigId <= -1)
+            if (fighterIds.CSSSlotConfigId != null && fighterIds.SlotConfigId == null)
             {
-                var foundConfig = cssSlotConfigs.FirstOrDefault(x => ((CSSCNode)x).Name.EndsWith(fighterIds.CSSSlotConfigId.ToString("X2")) && ((CSSCNode)x).SetPrimarySecondary);
+                var foundConfig = cssSlotConfigs.FirstOrDefault(x => ((CSSCNode)x).Name.EndsWith(fighterIds.CSSSlotConfigId?.ToString("X2")) && ((CSSCNode)x).SetPrimarySecondary);
                 if (foundConfig != null)
                     fighterIds.SlotConfigId = ((CSSCNode)foundConfig).CharSlot1;
             }
             // If slot config ID is still missing, set it equal to fighter config ID
-            if (fighterIds.SlotConfigId <= -1 && fighterIds.FighterConfigId >= 0x3F)
+            if (fighterIds.SlotConfigId == null && fighterIds.FighterConfigId >= 0x3F)
                 fighterIds.SlotConfigId = fighterIds.FighterConfigId;
             // Find cosmetic config ID if missing
-            if (fighterIds.SlotConfigId > -1 && fighterIds.CosmeticConfigId <= -1)
+            if (fighterIds.SlotConfigId != null && fighterIds.CosmeticConfigId == null)
             {
                 var foundConfig = cosmeticConfigs.FirstOrDefault(x => ((COSCNode)x).HasSecondary && ((COSCNode)x).CharSlot1 == fighterIds.SlotConfigId);
                 if (foundConfig != null)
                     fighterIds.CosmeticConfigId = GetConfigId(foundConfig.Name, IdType.CosmeticConfig);
             }
-            if (fighterIds.CSSSlotConfigId > -1 && fighterIds.CosmeticConfigId <= -1)
+            if (fighterIds.CSSSlotConfigId != null && fighterIds.CosmeticConfigId == null)
             {
-                var foundConfig = cssSlotConfigs.FirstOrDefault(x => ((CSSCNode)x).Name.EndsWith(fighterIds.CSSSlotConfigId.ToString("X2")) && ((CSSCNode)x).SetCosmeticSlot);
+                var foundConfig = cssSlotConfigs.FirstOrDefault(x => ((CSSCNode)x).Name.EndsWith(fighterIds.CSSSlotConfigId?.ToString("X2")) && ((CSSCNode)x).SetCosmeticSlot);
                 if (foundConfig != null)
                     fighterIds.CosmeticConfigId = ((CSSCNode)foundConfig).CosmeticSlot;
             }
             // If cosmetic config ID is still missing, set it equal to slot config ID
-            if (fighterIds.CosmeticConfigId <= -1 && fighterIds.SlotConfigId >= 0x3F)
+            if (fighterIds.CosmeticConfigId == null && fighterIds.SlotConfigId >= 0x3F)
                 fighterIds.CosmeticConfigId = fighterIds.SlotConfigId;
             // Find CSS slot config ID if missing
-            if (fighterIds.SlotConfigId > -1 && fighterIds.CSSSlotConfigId <= -1)
+            if (fighterIds.SlotConfigId != null && fighterIds.CSSSlotConfigId == null)
             {
                 var foundConfig = cssSlotConfigs.FirstOrDefault(x => ((CSSCNode)x).SetPrimarySecondary && ((CSSCNode)x).CharSlot1 == fighterIds.SlotConfigId);
                 if (foundConfig != null)
                     fighterIds.CSSSlotConfigId = GetConfigId(foundConfig.Name, IdType.CSSSlotConfig);
             }
-            if (fighterIds.CosmeticConfigId > -1 && fighterIds.CSSSlotConfigId <= -1)
+            if (fighterIds.CosmeticConfigId != null && fighterIds.CSSSlotConfigId == null)
             {
                 var foundConfig = cssSlotConfigs.FirstOrDefault(x => ((CSSCNode)x).SetCosmeticSlot && ((CSSCNode)x).CosmeticSlot == fighterIds.CosmeticConfigId);
                 if (foundConfig != null)
                     fighterIds.CSSSlotConfigId = ((CSSCNode)foundConfig).CosmeticSlot;
             }
             // If CSS slot config ID is still missing, set it equal to one of the other IDs
-            if (fighterIds.CSSSlotConfigId <= -1 && (fighterIds.CosmeticConfigId >= 0x3F || fighterIds.SlotConfigId >= 0x3F))
+            if (fighterIds.CSSSlotConfigId == null -1 && (fighterIds.CosmeticConfigId >= 0x3F || fighterIds.SlotConfigId >= 0x3F))
                 fighterIds.CSSSlotConfigId = fighterIds.CosmeticConfigId != -1 ? fighterIds.CosmeticConfigId : fighterIds.SlotConfigId;
             // Find fighter ID if missing
-            if (fighterIds.SlotConfigId > -1 && fighterIds.FighterConfigId <= -1)
+            if (fighterIds.SlotConfigId != null && fighterIds.FighterConfigId == null)
             {
-                var foundConfig = slotConfigs.FirstOrDefault(x => ((SLTCNode)x).SetSlot && ((SLTCNode)x).Name.EndsWith(fighterIds.SlotConfigId.ToString("X2")));
+                var foundConfig = slotConfigs.FirstOrDefault(x => ((SLTCNode)x).SetSlot && ((SLTCNode)x).Name.EndsWith(fighterIds.SlotConfigId?.ToString("X2")));
                 if (foundConfig != null)
                     fighterIds.FighterConfigId = Convert.ToInt32(((SLTCNode)foundConfig).CharSlot1);
             }
@@ -316,7 +316,7 @@ namespace BrawlInstaller.Services
             if (rootNode != null)
             {
                 var coscNode = (COSCNode)rootNode;
-                if (fighterIds.SlotConfigId <= -1 && coscNode.HasSecondary)
+                if (fighterIds.SlotConfigId == null && coscNode.HasSecondary)
                     fighterIds.SlotConfigId = coscNode.CharSlot1;
                 fighterIds.CosmeticId = coscNode.CosmeticID;
                 fighterIds.FranchiseId = coscNode.FranchiseIconID + 1;
@@ -328,9 +328,9 @@ namespace BrawlInstaller.Services
             if (rootNode != null)
             {
                 var csscNode = (CSSCNode)rootNode;
-                if (fighterIds.SlotConfigId <= -1 && csscNode.SetPrimarySecondary)
+                if (fighterIds.SlotConfigId == null && csscNode.SetPrimarySecondary)
                     fighterIds.CSSSlotConfigId = csscNode.CharSlot1;
-                if (fighterIds.CosmeticConfigId <= -1 && csscNode.SetCosmeticSlot)
+                if (fighterIds.CosmeticConfigId == null && csscNode.SetCosmeticSlot)
                     fighterIds.CosmeticConfigId = csscNode.CosmeticSlot;
             }
             fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
@@ -338,7 +338,7 @@ namespace BrawlInstaller.Services
             if (rootNode != null)
             {
                 var slotNode = (SLTCNode)rootNode;
-                if (fighterIds.FighterConfigId <= -1 && slotNode.SetSlot)
+                if (fighterIds.FighterConfigId == null && slotNode.SetSlot)
                     fighterIds.FighterConfigId = Convert.ToInt32(slotNode.CharSlot1);
                 fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
             }
@@ -519,7 +519,7 @@ namespace BrawlInstaller.Services
         {
             var fighterInfo = fighterPackage.FighterInfo;
             var buildPath = _settingsService.AppSettings.BuildPath;
-            if (_settingsService.BuildSettings.MiscSettings.UpdateCreditsModule)
+            if (_settingsService.BuildSettings.MiscSettings.UpdateCreditsModule && fighterInfo.Ids.SlotConfigId != null)
             {
                 var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.CreditsModule);
                 var rootNode = _fileService.OpenFile(modulePath);
@@ -532,7 +532,7 @@ namespace BrawlInstaller.Services
                         var section = module.Sections[7];
                         var sectionData = _fileService.ReadRawData(section);
                         // Slot ID + 0x200 is position to modify
-                        var fighterPosition = 0x200 + fighterInfo.Ids.SlotConfigId;
+                        var fighterPosition = 0x200 + fighterInfo.Ids.SlotConfigId.Value;
                         if (sectionData.Length > fighterPosition)
                         {
                             // Insert cosmetic config ID
@@ -864,11 +864,11 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fighterId">Fighter ID</param>
         /// <returns>Hat data</returns>
-        private HatInfoPack GetKirbyHatData(int fighterId)
+        private HatInfoPack GetKirbyHatData(int? fighterId)
         {
             // Open rel
             HatInfoPack hatData = null;
-            if (_settingsService.BuildSettings.MiscSettings.InstallKirbyHats)
+            if (_settingsService.BuildSettings.MiscSettings.InstallKirbyHats && fighterId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var modulePath = _settingsService.BuildSettings.FilePathSettings.Modules;
@@ -900,9 +900,9 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="kirbyHatData">Kirby hat data to use. If null, hat will be removed.</param>
         /// <param name="fighterId">Fighter ID to update</param>
-        private void UpdateKirbyHatData(HatInfoPack kirbyHatData, int fighterId)
+        private void UpdateKirbyHatData(HatInfoPack kirbyHatData, int? fighterId)
         {
-            if (_settingsService.BuildSettings.MiscSettings.InstallKirbyHats)
+            if (_settingsService.BuildSettings.MiscSettings.InstallKirbyHats && fighterId != null)
             {
                 // Open rel
                 var buildPath = _settingsService.AppSettings.BuildPath;
@@ -1356,24 +1356,27 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fighterId">Fighter ID</param>
         /// <returns>Throw release point</returns>
-        private Position GetThrowReleasePoint(int fighterId)
+        private Position GetThrowReleasePoint(int? fighterId)
         {
             var throwRelease = new Position(0.0, 0.0);
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
-            var codePath = Path.Combine(buildPath, asmPath);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
-            if (table.Count > fighterId * 2)
+            if (fighterId != null)
             {
-                var x = table[fighterId * 2];
-                var y = "0.0";
-                if (table.Count > (fighterId * 2) + 1)
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
+                var codePath = Path.Combine(buildPath, asmPath);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+                if (table.Count > fighterId * 2)
                 {
-                    y = table[(fighterId * 2) + 1];
+                    var x = table[fighterId.Value * 2];
+                    var y = "0.0";
+                    if (table.Count > (fighterId * 2) + 1)
+                    {
+                        y = table[(fighterId.Value * 2) + 1];
+                    }
+                    throwRelease.X = Convert.ToDouble(x);
+                    throwRelease.Y = Convert.ToDouble(y);
                 }
-                throwRelease.X = Convert.ToDouble(x);
-                throwRelease.Y = Convert.ToDouble(y);
             }
             return throwRelease;
         }
@@ -1383,21 +1386,24 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="cssSlotId">CSS slot ID of fighter</param>
         /// <returns>Ex slot IDs for fighter</returns>
-        private List<uint> GetExSlots(int cssSlotId)
+        private List<uint> GetExSlots(int? cssSlotId)
         {
             var exSlots = new List<uint>();
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
-            var codePath = Path.Combine(buildPath, asmPath);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, "Table:");
-            if (table.Count > cssSlotId)
+            if (cssSlotId != null)
             {
-                var fullString = table[cssSlotId].Replace("0x", "");
-                exSlots = Enumerable.Range(0, fullString.Length)
-                     .Where(x => x % 2 == 0)
-                     .Select(x => Convert.ToUInt32(fullString.Substring(x, 2), 16))
-                     .ToList();
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
+                var codePath = Path.Combine(buildPath, asmPath);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, "Table:");
+                if (table.Count > cssSlotId)
+                {
+                    var fullString = table[cssSlotId.Value].Replace("0x", "");
+                    exSlots = Enumerable.Range(0, fullString.Length)
+                         .Where(x => x % 2 == 0)
+                         .Select(x => Convert.ToUInt32(fullString.Substring(x, 2), 16))
+                         .ToList();
+                }
             }
             return exSlots;
         }
@@ -1407,17 +1413,20 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="cssSlotId">CSS slot ID of fighter</param>
         /// <returns>CSS slot ID of fighter L-load</returns>
-        private int? GetLLoad(int cssSlotId)
+        private int? GetLLoad(int? cssSlotId)
         {
             int? id = null;
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
-            var codePath = Path.Combine(buildPath, asmPath);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
-            if (table.Count > cssSlotId)
+            if (cssSlotId != null)
             {
-                id = Convert.ToInt32(table[cssSlotId].Replace("0x", ""), 16);
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
+                var codePath = Path.Combine(buildPath, asmPath);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
+                if (table.Count > cssSlotId)
+                {
+                    id = Convert.ToInt32(table[cssSlotId.Value].Replace("0x", ""), 16);
+                }
             }
             return id;
         }
@@ -1429,34 +1438,37 @@ namespace BrawlInstaller.Services
         private void UpdateExSlotsTable(FighterPackage fighterPackage)
         {
             var cssSlotId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
-            var codePath = Path.Combine(buildPath, asmPath);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, "Table:");
-            // Convert to ASM table
-            var fighterInfoTable = _settingsService.FighterInfoList;
-            var asmTable = new List<AsmTableEntry>();
-            foreach (var entry in table)
+            if (cssSlotId != null)
             {
-                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.CSSSlotConfigId == asmTable.Count)?.DisplayName;
-                var newEntry = new AsmTableEntry
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
+                var codePath = Path.Combine(buildPath, asmPath);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, "Table:");
+                // Convert to ASM table
+                var fighterInfoTable = _settingsService.FighterInfoList;
+                var asmTable = new List<AsmTableEntry>();
+                foreach (var entry in table)
                 {
-                    Item = entry,
-                    Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
-                };
-                asmTable.Add(newEntry);
+                    var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.CSSSlotConfigId == asmTable.Count)?.DisplayName;
+                    var newEntry = new AsmTableEntry
+                    {
+                        Item = entry,
+                        Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
+                    };
+                    asmTable.Add(newEntry);
+                }
+                // Update fighter slot
+                if (asmTable.Count > cssSlotId + 1)
+                {
+                    var exSlots = fighterPackage.FighterSettings.ExSlotIds;
+                    asmTable[cssSlotId.Value].Item = $"0x{exSlots[0]:X2}{exSlots[1]:X2}{exSlots[2]:X2}{exSlots[3]:X2}";
+                    asmTable[cssSlotId.Value].Comment = fighterPackage.FighterInfo.DisplayName;
+                }
+                // Write table
+                code = _codeService.ReplaceTable(code, "Table:", asmTable, DataSize.Word, 4);
+                _fileService.SaveTextFile(codePath, code);
             }
-            // Update fighter slot
-            if (asmTable.Count > cssSlotId + 1)
-            {
-                var exSlots = fighterPackage.FighterSettings.ExSlotIds;
-                asmTable[cssSlotId].Item = $"0x{exSlots[0]:X2}{exSlots[1]:X2}{exSlots[2]:X2}{exSlots[3]:X2}";
-                asmTable[cssSlotId].Comment = fighterPackage.FighterInfo.DisplayName;
-            }
-            // Write table
-            code = _codeService.ReplaceTable(code, "Table:", asmTable, DataSize.Word, 4);
-            _fileService.SaveTextFile(codePath, code);
         }
 
         /// <summary>
@@ -1466,33 +1478,36 @@ namespace BrawlInstaller.Services
         private void UpdateLLoadTable(FighterPackage fighterPackage)
         {
             var cssSlotId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
-            var codePath = Path.Combine(buildPath, asmPath);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
-            // Convert to ASM table
-            var fighterInfoTable = _settingsService.FighterInfoList;
-            var asmTable = new List<AsmTableEntry>();
-            foreach(var entry in table)
+            if (cssSlotId != null)
             {
-                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.CSSSlotConfigId == asmTable.Count)?.DisplayName;
-                var newEntry = new AsmTableEntry
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
+                var codePath = Path.Combine(buildPath, asmPath);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
+                // Convert to ASM table
+                var fighterInfoTable = _settingsService.FighterInfoList;
+                var asmTable = new List<AsmTableEntry>();
+                foreach (var entry in table)
                 {
-                    Item = entry,
-                    Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
-                };
-                asmTable.Add(newEntry);
+                    var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.CSSSlotConfigId == asmTable.Count)?.DisplayName;
+                    var newEntry = new AsmTableEntry
+                    {
+                        Item = entry,
+                        Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
+                    };
+                    asmTable.Add(newEntry);
+                }
+                // Update fighter slot
+                if (asmTable.Count > cssSlotId + 1)
+                {
+                    asmTable[cssSlotId.Value].Item = $"0x{fighterPackage.FighterSettings.LLoadCharacterId:X2}";
+                    asmTable[cssSlotId.Value].Comment = fighterPackage.FighterInfo.DisplayName;
+                }
+                // Write table
+                code = _codeService.ReplaceTable(code, ".GOTO->Table_Skip", asmTable, DataSize.Byte, 4);
+                _fileService.SaveTextFile(codePath, code);
             }
-            // Update fighter slot
-            if (asmTable.Count > cssSlotId + 1)
-            {
-                asmTable[cssSlotId].Item = $"0x{fighterPackage.FighterSettings.LLoadCharacterId:X2}";
-                asmTable[cssSlotId].Comment = fighterPackage.FighterInfo.DisplayName;
-            }
-            // Write table
-            code = _codeService.ReplaceTable(code, ".GOTO->Table_Skip", asmTable, DataSize.Byte, 4);
-            _fileService.SaveTextFile(codePath, code);
         }
 
         /// <summary>
@@ -1503,39 +1518,42 @@ namespace BrawlInstaller.Services
         private void UpdateThrowReleaseTable(FighterInfo fighterInfo, Position throwReleasePoint)
         {
             var fighterId = fighterInfo.Ids.FighterConfigId;
-            // Get table
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
-            var codePath = Path.Combine(buildPath, asmPath);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
-            // Convert to ASM table
-            var fighterInfoTable = _settingsService.FighterInfoList;
-            var asmTable = new List<AsmTableEntry>();
-            foreach (var entry in table)
+            if (fighterId != null)
             {
-                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.FighterConfigId * 2 == asmTable.Count)?.DisplayName;
-                var newEntry = new AsmTableEntry
+                // Get table
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
+                var codePath = Path.Combine(buildPath, asmPath);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+                // Convert to ASM table
+                var fighterInfoTable = _settingsService.FighterInfoList;
+                var asmTable = new List<AsmTableEntry>();
+                foreach (var entry in table)
                 {
-                    Item = entry,
-                    Comment = !string.IsNullOrEmpty(comment) ? comment : asmTable.Count % 2 == 0 ? "Unknown" : string.Empty
-                };
-                asmTable.Add(newEntry);
+                    var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.FighterConfigId * 2 == asmTable.Count)?.DisplayName;
+                    var newEntry = new AsmTableEntry
+                    {
+                        Item = entry,
+                        Comment = !string.IsNullOrEmpty(comment) ? comment : asmTable.Count % 2 == 0 ? "Unknown" : string.Empty
+                    };
+                    asmTable.Add(newEntry);
+                }
+                // Update fighter slot
+                if (asmTable.Count > (fighterId * 2) + 1)
+                {
+                    var x = $"{throwReleasePoint.X}";
+                    x = x.Contains(".") ? x : x += ".0";
+                    asmTable[fighterId.Value * 2].Item = x;
+                    asmTable[fighterId.Value * 2].Comment = fighterInfo.DisplayName;
+                    var y = $"{throwReleasePoint.Y}";
+                    y = y.Contains(".") ? y : y += ".0";
+                    asmTable[(fighterId.Value * 2) + 1].Item = y;
+                }
+                // Write table
+                code = _codeService.ReplaceTable(code, "ThrowReleaseTable:", asmTable, DataSize.Float, 2, 12);
+                _fileService.SaveTextFile(codePath, code);
             }
-            // Update fighter slot
-            if (asmTable.Count > (fighterId * 2) + 1)
-            {
-                var x = $"{throwReleasePoint.X}";
-                x = x.Contains(".") ? x : x += ".0";
-                asmTable[fighterId * 2].Item = x;
-                asmTable[fighterId * 2].Comment = fighterInfo.DisplayName;
-                var y = $"{throwReleasePoint.Y}";
-                y = y.Contains(".") ? y : y += ".0";
-                asmTable[(fighterId * 2) + 1].Item = y;
-            }
-            // Write table
-            code = _codeService.ReplaceTable(code, "ThrowReleaseTable:", asmTable, DataSize.Float, 2, 12);
-            _fileService.SaveTextFile(codePath, code);
         }
 
         /// <summary>
@@ -1593,9 +1611,9 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="cosmeticConfigId">Cosmetic config ID of fighter</param>
         /// <returns>Ending ID</returns>
-        private int GetEndingId(int cosmeticConfigId)
+        private int GetEndingId(int? cosmeticConfigId)
         {
-            if (cosmeticConfigId > -1)
+            if (cosmeticConfigId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
@@ -1604,7 +1622,7 @@ namespace BrawlInstaller.Services
                 var table = _codeService.ReadTable(code, "ENDINGTABLE:");
                 if (table.Count > cosmeticConfigId)
                 {
-                    var result = int.TryParse(table[cosmeticConfigId], out int endingId);
+                    var result = int.TryParse(table[cosmeticConfigId.Value], out int endingId);
                     if (result)
                     {
                         return endingId;
@@ -1657,7 +1675,7 @@ namespace BrawlInstaller.Services
             var fighterInfo = fighterPackage.FighterInfo;
             var cosmeticConfigId = fighterInfo.Ids.CosmeticConfigId;
             var endingId = fighterInfo.EndingId;
-            if (cosmeticConfigId > -1)
+            if (cosmeticConfigId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
@@ -1695,8 +1713,8 @@ namespace BrawlInstaller.Services
                 // Update fighter slot
                 if (asmTable.Count > cosmeticConfigId)
                 {
-                    asmTable[cosmeticConfigId].Item = $"{fighterInfo.EndingId:D}";
-                    asmTable[cosmeticConfigId].Comment = fighterInfo.DisplayName;
+                    asmTable[cosmeticConfigId.Value].Item = $"{fighterInfo.EndingId:D}";
+                    asmTable[cosmeticConfigId.Value].Comment = fighterInfo.DisplayName;
                 }
                 // Write table
                 code = _codeService.ReplaceTable(code, "ENDINGTABLE:", asmTable, DataSize.Byte, 8);
@@ -1788,15 +1806,18 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="cosmeticId">Cosmetic ID of fighter</param>
         /// <returns>Path to classic intro</returns>
-        private string GetClassicIntro(int cosmeticId)
+        private string GetClassicIntro(int? cosmeticId)
         {
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var classicPath = _settingsService.BuildSettings.FilePathSettings.ClassicIntroPath;
-            var path = Path.Combine(buildPath, classicPath);
-            var filePath = Path.Combine(path, $"chr{(cosmeticId + 1):D4}.brres");
-            if (_fileService.FileExists(filePath))
+            if (cosmeticId != null)
             {
-                return filePath;
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var classicPath = _settingsService.BuildSettings.FilePathSettings.ClassicIntroPath;
+                var path = Path.Combine(buildPath, classicPath);
+                var filePath = Path.Combine(path, $"chr{(cosmeticId + 1):D4}.brres");
+                if (_fileService.FileExists(filePath))
+                {
+                    return filePath;
+                }
             }
             return null;
         }
@@ -1805,7 +1826,7 @@ namespace BrawlInstaller.Services
         /// Delete classic intro for fighter
         /// </summary>
         /// <param name="cosmeticId">Cosmetic ID of fighter</param>
-        private void DeleteClassicIntro(int cosmeticId)
+        private void DeleteClassicIntro(int? cosmeticId)
         {
             var classicIntro = GetClassicIntro(cosmeticId);
             _fileService.DeleteFile(classicIntro);
@@ -1816,10 +1837,10 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="rootNode">Root node of opened classic intro file</param>
         /// <param name="cosmeticId">Cosmetic ID of fighter</param>
-        private string ImportClassicIntro(ResourceNode rootNode, int cosmeticId)
+        private string ImportClassicIntro(ResourceNode rootNode, int? cosmeticId)
         {
             var path = string.Empty;
-            if (rootNode != null)
+            if (rootNode != null && cosmeticId != null)
             {
                 var id = cosmeticId + 1;
                 // Rename nodes
@@ -1894,10 +1915,10 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="slotId">Slot ID</param>
         /// <returns>Credits theme</returns>
-        private TracklistSong GetCreditsTheme(int slotId)
+        private TracklistSong GetCreditsTheme(int? slotId)
         {
             var creditsTheme = new TracklistSong();
-            if (slotId > -1)
+            if (slotId != null)
             {
                 // Read the credits theme table
                 var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
@@ -1906,7 +1927,7 @@ namespace BrawlInstaller.Services
                 // Ensure slot ID is within range of table
                 if (table.Count > slotId)
                 {
-                    var id = table[slotId];
+                    var id = table[slotId.Value];
                     // Find matching table entry
                     var result = uint.TryParse(id.Replace("0x", string.Empty), NumberStyles.HexNumber, null, out uint foundId);
                     if (result)
@@ -1936,34 +1957,38 @@ namespace BrawlInstaller.Services
         private uint ImportCreditsTheme(TracklistSong tracklistSong, ResourceNode brstmNode, FighterInfo fighterInfo)
         {
             var slotId = fighterInfo.Ids.SlotConfigId;
-            var id = _tracklistService.ImportTracklistSong(tracklistSong, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist, brstmNode);
-            // Read the credits theme table
-            var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
-            var code = _codeService.ReadCode(codePath);
-            var table = _codeService.ReadTable(code, "ClassicResultsTable:");
-            // Convert to AsmTable
-            var fighterInfoTable = _settingsService.FighterInfoList;
-            var asmTable = new List<AsmTableEntry>();
-            foreach(var entry in table)
+            if (slotId != null)
             {
-                var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.SlotConfigId == asmTable.Count)?.DisplayName;
-                var newEntry = new AsmTableEntry
+                var id = _tracklistService.ImportTracklistSong(tracklistSong, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist, brstmNode);
+                // Read the credits theme table
+                var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
+                var code = _codeService.ReadCode(codePath);
+                var table = _codeService.ReadTable(code, "ClassicResultsTable:");
+                // Convert to AsmTable
+                var fighterInfoTable = _settingsService.FighterInfoList;
+                var asmTable = new List<AsmTableEntry>();
+                foreach (var entry in table)
                 {
-                    Item = entry,
-                    Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
-                };
-                asmTable.Add(newEntry);
+                    var comment = fighterInfoTable.FirstOrDefault(x => x.Ids.SlotConfigId == asmTable.Count)?.DisplayName;
+                    var newEntry = new AsmTableEntry
+                    {
+                        Item = entry,
+                        Comment = !string.IsNullOrEmpty(comment) ? comment : "Unknown"
+                    };
+                    asmTable.Add(newEntry);
+                }
+                // Update fighter slot
+                if (asmTable.Count > slotId)
+                {
+                    asmTable[slotId.Value].Item = $"0x{tracklistSong.SongId:X4}";
+                    asmTable[slotId.Value].Comment = fighterInfo.DisplayName;
+                }
+                // Write table
+                code = _codeService.ReplaceTable(code, "ClassicResultsTable:", asmTable, DataSize.Halfword, 4);
+                _fileService.SaveTextFile(codePath, code);
+                return id;
             }
-            // Update fighter slot
-            if (asmTable.Count > slotId)
-            {
-                asmTable[slotId].Item = $"0x{tracklistSong.SongId:X4}";
-                asmTable[slotId].Comment = fighterInfo.DisplayName;
-            }
-            // Write table
-            code = _codeService.ReplaceTable(code, "ClassicResultsTable:", asmTable, DataSize.Halfword, 4);
-            _fileService.SaveTextFile(codePath, code);
-            return id;
+            return tracklistSong.SongId;
         }
 
         /// <summary>
@@ -2059,7 +2084,7 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter package with SSE settings</returns>
         private FighterPackage GetSSESettings(FighterPackage fighterPackage)
         {
-            if (_settingsService.BuildSettings.MiscSettings.SubspaceEx)
+            if (_settingsService.BuildSettings.MiscSettings.SubspaceEx && fighterPackage.FighterInfo.Ids.CSSSlotConfigId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SSEModule);
@@ -2074,14 +2099,14 @@ namespace BrawlInstaller.Services
                         {
                             var sectionData = _fileService.ReadRawData(section);
                             // Get unlock conditions
-                            var unlockPosition = ((fighterPackage.FighterInfo.Ids.CSSSlotConfigId - 0x2A) * 4) + 0x178;
+                            var unlockPosition = ((fighterPackage.FighterInfo.Ids.CSSSlotConfigId.Value - 0x2A) * 4) + 0x178;
                             if (fighterPackage.FighterInfo.Ids.CSSSlotConfigId > 0x2A && sectionData.Length > unlockPosition)
                             {
                                 var unlockBytes = sectionData.Skip(unlockPosition).Take(4).ToArray();
                                 fighterPackage.FighterSettings.DoorId = Convert.ToUInt32(BitConverter.ToString(unlockBytes, 0, 4).Replace("-", ""), 16);
                             }
                             // Get sub character
-                            var subcharacterPosition = fighterPackage.FighterInfo.Ids.CSSSlotConfigId + 0x84;
+                            var subcharacterPosition = fighterPackage.FighterInfo.Ids.CSSSlotConfigId.Value + 0x84;
                             if (sectionData.Length > subcharacterPosition)
                             {
                                 fighterPackage.FighterSettings.SSESubCharacterId = sectionData[subcharacterPosition];
@@ -2100,7 +2125,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to update</param>
         private void UpdateSSEModule(FighterPackage fighterPackage)
         {
-            if (_settingsService.BuildSettings.MiscSettings.SubspaceEx)
+            if (_settingsService.BuildSettings.MiscSettings.SubspaceEx && fighterPackage.FighterInfo.Ids.CSSSlotConfigId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SSEModule);
@@ -2115,14 +2140,14 @@ namespace BrawlInstaller.Services
                         {
                             byte[] sectionData = _fileService.ReadRawData(section);
                             // Set unlock conditions
-                            var unlockPosition = ((fighterPackage.FighterInfo.Ids.CSSSlotConfigId - 0x2A) * 4) + 0x178;
+                            var unlockPosition = ((fighterPackage.FighterInfo.Ids.CSSSlotConfigId.Value - 0x2A) * 4) + 0x178;
                             if (fighterPackage.FighterInfo.Ids.CSSSlotConfigId > 0x2A && sectionData.Length > unlockPosition)
                             {
                                 byte[] newBytes = BitConverter.GetBytes(fighterPackage.FighterSettings.DoorId).Reverse().ToArray();
                                 newBytes.CopyTo(sectionData, unlockPosition);
                             }
                             // Set sub character
-                            var subcharacterPosition = fighterPackage.FighterInfo.Ids.CSSSlotConfigId + 0x84;
+                            var subcharacterPosition = fighterPackage.FighterInfo.Ids.CSSSlotConfigId.Value + 0x84;
                             if (sectionData.Length > subcharacterPosition && fighterPackage.FighterSettings.SSESubCharacterId != null)
                             {
                                 sectionData[subcharacterPosition] = (byte)fighterPackage.FighterSettings.SSESubCharacterId;
@@ -2150,10 +2175,10 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="module">Module to update</param>
         /// <param name="fighterId">Fighter ID to insert</param>
-        private RELNode UpdateModule(RELNode relNode, int fighterId)
+        private RELNode UpdateModule(RELNode relNode, int? fighterId)
         {
             var isExModule = false;
-            if (relNode != null)
+            if (relNode != null && fighterId != null)
             {
                 // First, check for Section [8] - indicates Ex module
                 if (relNode.Sections.Length >= 9)
