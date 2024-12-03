@@ -25,7 +25,6 @@ namespace BrawlInstaller.Classes
     public class BuildSettings
     {
         public List<CosmeticDefinition> CosmeticSettings { get; set; } = new List<CosmeticDefinition>();
-        public KirbyHatSettings KirbyHatSettings { get; set; } = new KirbyHatSettings();
         public SoundSettings SoundSettings { get; set; } = new SoundSettings();
         public MiscSettings MiscSettings { get; set; } = new MiscSettings();
         public FilePathSettings FilePathSettings { get; set; } = new FilePathSettings();
@@ -91,12 +90,6 @@ namespace BrawlInstaller.Classes
         public bool AddTerminatorFrame { get; set; } = false;
     }
 
-    public class KirbyHatSettings
-    {
-        // TODO: Do we need this setting? If so it should prevent both read AND write to the .rel, and should be moved to misc settings
-        public bool InstallKirbyHats { get; set; } = false;
-    }
-
     public class SoundSettings
     {
         public SoundbankStyle SoundbankStyle { get; set; } = SoundbankStyle.InfoIndex;
@@ -110,6 +103,7 @@ namespace BrawlInstaller.Classes
         public bool InstallTrophies { get; set; } = false;
         public bool UpdateCreditsModule { get; set; } = true;
         public bool SubspaceEx { get; set; } = true;
+        public bool InstallKirbyHats { get; set; } = false;
     }
 
     public class FilePathSettings
