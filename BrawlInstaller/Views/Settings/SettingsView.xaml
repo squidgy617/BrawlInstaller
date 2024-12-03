@@ -18,9 +18,9 @@
                 <TabItem Header="General">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <CheckBox Content="Install Kirby Hats with Fighters" IsChecked="{Binding BuildSettings.MiscSettings.InstallKirbyHats}"/>
-                            <CheckBox Content="Update Credits Module with Fighters" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}"/>
-                            <CheckBox Content="Subspace EX build" IsChecked="{Binding BuildSettings.MiscSettings.SubspaceEx}"/>
+                            <CheckBox Content="Kirby Hat EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.InstallKirbyHats}"/>
+                            <CheckBox Content="Credits EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}"/>
+                            <CheckBox Content="Subspace EX" IsChecked="{Binding BuildSettings.MiscSettings.SubspaceEx}"/>
                             <CheckBox Content="Install Fighters to SSE" IsChecked="{Binding BuildSettings.MiscSettings.InstallToSse}"/>
                         </StackPanel>
                         <Grid>

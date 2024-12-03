@@ -868,26 +868,29 @@ namespace BrawlInstaller.Services
         {
             // Open rel
             HatInfoPack hatData = null;
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var modulePath = _settingsService.BuildSettings.FilePathSettings.Modules;
-            var path = Path.Combine(buildPath, modulePath, "ft_kirby.rel");
-            var rootNode = _fileService.OpenFile(path);
-            if (rootNode != null)
+            if (_settingsService.BuildSettings.MiscSettings.InstallKirbyHats)
             {
-                // Load hat entries
-                var hatManager = new KirbyHatManager();
-                var result = hatManager.loadHatEntriesFromREL((RELNode)rootNode);
-                if (result)
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var modulePath = _settingsService.BuildSettings.FilePathSettings.Modules;
+                var path = Path.Combine(buildPath, modulePath, "ft_kirby.rel");
+                var rootNode = _fileService.OpenFile(path);
+                if (rootNode != null)
                 {
-                    // Check if hat exists
-                    var foundHat = hatManager.fighterIDToInfoPacks.ContainsKey((uint)fighterId);
-                    if (foundHat)
+                    // Load hat entries
+                    var hatManager = new KirbyHatManager();
+                    var result = hatManager.loadHatEntriesFromREL((RELNode)rootNode);
+                    if (result)
                     {
-                        // Load hat data
-                        hatData = hatManager.fighterIDToInfoPacks[(uint)fighterId];
+                        // Check if hat exists
+                        var foundHat = hatManager.fighterIDToInfoPacks.ContainsKey((uint)fighterId);
+                        if (foundHat)
+                        {
+                            // Load hat data
+                            hatData = hatManager.fighterIDToInfoPacks[(uint)fighterId];
+                        }
                     }
+                    _fileService.CloseFile(rootNode);
                 }
-                _fileService.CloseFile(rootNode);
             }
             return hatData;
         }
@@ -899,43 +902,46 @@ namespace BrawlInstaller.Services
         /// <param name="fighterId">Fighter ID to update</param>
         private void UpdateKirbyHatData(HatInfoPack kirbyHatData, int fighterId)
         {
-            // Open rel
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var modulePath = _settingsService.BuildSettings.FilePathSettings.Modules;
-            var path = Path.Combine(buildPath, modulePath, "ft_kirby.rel");
-            var rootNode = _fileService.OpenFile(path);
-            if (rootNode != null)
+            if (_settingsService.BuildSettings.MiscSettings.InstallKirbyHats)
             {
-                // Load hat entries
-                var hatManager = new KirbyHatManager();
-                var result = hatManager.loadHatEntriesFromREL((RELNode)rootNode);
-                if (result)
+                // Open rel
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var modulePath = _settingsService.BuildSettings.FilePathSettings.Modules;
+                var path = Path.Combine(buildPath, modulePath, "ft_kirby.rel");
+                var rootNode = _fileService.OpenFile(path);
+                if (rootNode != null)
                 {
-                    // Search for hat
-                    var foundHat = hatManager.fighterIDToInfoPacks.ContainsKey((uint)fighterId);
-                    if (foundHat)
+                    // Load hat entries
+                    var hatManager = new KirbyHatManager();
+                    var result = hatManager.loadHatEntriesFromREL((RELNode)rootNode);
+                    if (result)
                     {
-                        // Replace hat if it exists and new one is provided
-                        if (kirbyHatData != null)
+                        // Search for hat
+                        var foundHat = hatManager.fighterIDToInfoPacks.ContainsKey((uint)fighterId);
+                        if (foundHat)
                         {
-                            hatManager.fighterIDToInfoPacks[(uint)fighterId] = kirbyHatData;
+                            // Replace hat if it exists and new one is provided
+                            if (kirbyHatData != null)
+                            {
+                                hatManager.fighterIDToInfoPacks[(uint)fighterId] = kirbyHatData;
+                            }
+                            // If hat passed is null, remove existing hat
+                            else
+                            {
+                                hatManager.eraseHat((uint)fighterId);
+                            }
                         }
-                        // If hat passed is null, remove existing hat
-                        else
+                        // If hat doesn't exist and is not null, add new one
+                        else if (kirbyHatData != null)
                         {
-                            hatManager.eraseHat((uint)fighterId);
+                            hatManager.fighterIDToInfoPacks.Add((uint)fighterId, kirbyHatData);
                         }
+                        // Write to rel
+                        hatManager.writeTablesToREL((RELNode)rootNode);
                     }
-                    // If hat doesn't exist and is not null, add new one
-                    else if (kirbyHatData != null)
-                    {
-                        hatManager.fighterIDToInfoPacks.Add((uint)fighterId, kirbyHatData);
-                    }
-                    // Write to rel
-                    hatManager.writeTablesToREL((RELNode)rootNode);
+                    _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
                 }
-                _fileService.SaveFile(rootNode);
-                _fileService.CloseFile(rootNode);
             }
         }
 
@@ -2125,7 +2131,7 @@ namespace BrawlInstaller.Services
                             // TODO: Test this
                             var fighterCount = sectionData[0];
                             var fighterTable = sectionData.Skip(2).Take(126).ToList(); // There are 126 slots in sora_adv_stage.rel
-                            if (fighterPackage.PackageType == PackageType.New && !fighterTable.Contains((byte)fighterPackage.FighterInfo.Ids.SlotConfigId))
+                            if (_settingsService.BuildSettings.MiscSettings.InstallToSse && fighterPackage.PackageType == PackageType.New && !fighterTable.Contains((byte)fighterPackage.FighterInfo.Ids.SlotConfigId))
                             {
                                 sectionData[fighterTable.IndexOf(0) + 2] = (byte)fighterPackage.FighterInfo.Ids.SlotConfigId;
                                 sectionData[0] = (byte)(fighterCount + 1);
