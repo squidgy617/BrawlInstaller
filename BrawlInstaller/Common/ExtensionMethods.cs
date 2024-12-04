@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using BrawlInstaller.Classes;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 
@@ -46,6 +47,104 @@ namespace BrawlInstaller.Common
                 var bitmap = new Bitmap(outStream);
                 return new Bitmap(bitmap);
             }
+        }
+    }
+
+    public static class FCFGNodeExtensions
+    {
+        public static FighterAttributes ToFighterAttributes(this FCFGNode node)
+        {
+            var fighterAttributes = new FighterAttributes
+            {
+                CanCrawl = node.CanCrawl,
+                CanFTilt = node.CanFTilt,
+                CanGlide = node.CanGlide,
+                CanWallCling = node.CanWallCling,
+                CanWallJump = node.CanWallJump,
+                CanZAir = node.CanZAir,
+                AirJumpCount = node.AirJumpCount,
+                DAIntoCrouch = node.DAIntoCrouch,
+                FSmashCount = node.FSmashCount,
+                HasRapidJab = node.HasRapidJab,
+                JabCount = node.JabCount,
+                JabFlag = node.JabFlag,
+                HasCostume00 = node.HasCostume00,
+                HasCostume01 = node.HasCostume01,
+                HasCostume02 = node.HasCostume02,
+                HasCostume03 = node.HasCostume03,
+                HasCostume04 = node.HasCostume04,
+                HasCostume05 = node.HasCostume05,
+                HasCostume06 = node.HasCostume06,
+                HasCostume07 = node.HasCostume07,
+                HasCostume08 = node.HasCostume08,
+                HasCostume09 = node.HasCostume09,
+                HasCostume10 = node.HasCostume10,
+                HasCostume11 = node.HasCostume11,
+                UnknownFlagA = node.UnknownFlagA,
+                UnknownFlagB = node.UnknownFlagB,
+                UnknownFlagC = node.UnknownFlagC,
+                UnknownFlagD = node.UnknownFlagD,
+                HasPac = node.HasPac,
+                HasModule = node.HasModule,
+                MotionEtcType = node.MotionEtcType,
+                UnknownLoadFlagA = node.UnknownLoadFlagA,
+                UnknownLoadFlagB = node.UnknownLoadFlagB,
+                EntryLoadType = node.EntryLoadType,
+                ResultLoadType = node.ResultLoadType,
+                FinalLoadType = node.FinalLoadType,
+                FinalSmashMusic = node.FinalSmashMusic,
+                AIController = node.AIController,
+                EntryFlag = node.EntryFlag,
+                IkPhysics = node.IkPhysics,
+                TextureLoader = node.TextureLoader,
+                ThrownType = node.ThrownType,
+                GrabSize = node.GrabSize,
+                WorkManage = node.WorkManage
+            };
+            return fighterAttributes;
+        }
+    }
+
+    public static class SLTCNodeExtensions
+    {
+        public static SlotAttributes ToSlotAttributes(this SLTCNode node)
+        {
+            var slotAttributes = new SlotAttributes
+            {
+                Records = node.Records,
+                AnnouncerID = node.AnnouncerID,
+                CameraDistance1 = node.CameraDistance1,
+                CameraDistance2 = node.CameraDistance2,
+                CameraDistance3 = node.CameraDistance3,
+                CameraDistance4 = node.CameraDistance4
+            };
+            return slotAttributes;
+        }
+    }
+
+    public static class COSCNodeExtensions
+    {
+        public static CosmeticAttributes ToCosmeticAttributes(this COSCNode node)
+        {
+            var cosmeticAttributes = new CosmeticAttributes
+            {
+                AnnouncerID = node.AnnouncerID
+            };
+            return cosmeticAttributes;
+        }
+    }
+
+    public static class CSSCNodeExtensions
+    {
+        public static CSSSlotAttributes ToCSSSlotAttributes(this CSSCNode node)
+        {
+            var cssSlotAttributes = new CSSSlotAttributes
+            {
+                Records = node.Records,
+                WiimoteSFX = node.WiimoteSFX,
+                Status = node.Status
+            };
+            return cssSlotAttributes;
         }
     }
 

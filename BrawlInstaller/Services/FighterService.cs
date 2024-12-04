@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.StaticClasses;
 using BrawlLib.SSBB;
@@ -322,6 +323,7 @@ namespace BrawlInstaller.Services
                 fighterIds.FranchiseId = coscNode.FranchiseIconID + 1;
                 fighterInfo.DisplayName = coscNode.CharacterName;
                 fighterInfo.EntryName = coscNode.CharacterName;
+                fighterInfo.CosmeticAttributes = coscNode.ToCosmeticAttributes();
             }
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
             rootNode = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig);
@@ -332,6 +334,7 @@ namespace BrawlInstaller.Services
                     fighterIds.CSSSlotConfigId = csscNode.CharSlot1;
                 if (fighterIds.CosmeticConfigId == null && csscNode.SetCosmeticSlot)
                     fighterIds.CosmeticConfigId = csscNode.CosmeticSlot;
+                fighterInfo.CSSSlotAttributes = csscNode.ToCSSSlotAttributes();
             }
             fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
             rootNode = slotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.SlotConfig);
@@ -341,18 +344,20 @@ namespace BrawlInstaller.Services
                 if (fighterIds.FighterConfigId == null && slotNode.SetSlot)
                     fighterIds.FighterConfigId = Convert.ToInt32(slotNode.CharSlot1);
                 fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
+                fighterInfo.SlotAttributes = slotNode.ToSlotAttributes();
             }
             fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
             rootNode = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig);
             if (rootNode != null)
             {
                 var fighterNode = (FCFGNode)rootNode;
-                fighterInfo.InternalName = fighterNode.InternalFighterName;
+                fighterInfo.InternalName = fighterNode.FighterName;
                 fighterInfo.SoundbankId = fighterNode.SoundBank;
                 fighterInfo.OriginalSoundbankId = fighterNode.SoundBank;
                 fighterInfo.KirbySoundbankId = fighterNode.KirbySoundBank;
                 fighterInfo.OriginalKirbySoundbankId = fighterNode.KirbySoundBank;
                 fighterInfo.KirbyLoadType = fighterNode.KirbyLoadType;
+                fighterInfo.FighterAttributes = fighterNode.ToFighterAttributes();
             }
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);

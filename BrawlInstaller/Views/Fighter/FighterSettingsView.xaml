@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
+             xmlns:wpg="clr-namespace:System.Windows.Controls"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterSettingsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -169,5 +171,19 @@
                 </Expander>
             </StackPanel>
         </GroupBox>
+        <TabControl Grid.Column="4" Grid.RowSpan="10">
+            <TabItem Header="Fighter">
+                <wpg:WpfPropertyGrid x:Name="fighterAttributeGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.FighterAttributes}" Height="420" Width="170"/>
+            </TabItem>
+            <TabItem Header="Slot">
+                <wpg:WpfPropertyGrid x:Name="slotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.SlotAttributes}" Height="420" Width="170"/>
+            </TabItem>
+            <TabItem Header="Cosmetic">
+                <wpg:WpfPropertyGrid x:Name="cosmeticAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CosmeticAttributes}" Height="420" Width="170"/>
+            </TabItem>
+            <TabItem Header="CSS Slot">
+                <wpg:WpfPropertyGrid x:Name="cssSlotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CSSSlotAttributes}" Height="420" Width="170"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>
