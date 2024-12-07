@@ -99,7 +99,8 @@ namespace BrawlInstaller.Common
                 TextureLoader = node.TextureLoader,
                 ThrownType = node.ThrownType,
                 GrabSize = node.GrabSize,
-                WorkManage = node.WorkManage
+                WorkManage = node.WorkManage,
+                Version = node.Version
             };
             return fighterAttributes;
         }
@@ -111,12 +112,23 @@ namespace BrawlInstaller.Common
         {
             var slotAttributes = new SlotAttributes
             {
+                SetSlot = node.SetSlot,
+                CharSlot1 = node.CharSlot1,
+                CharSlot2 = node.CharSlot2,
+                CharSlot3 = node.CharSlot3,
+                CharSlot4 = node.CharSlot4,
                 Records = node.Records,
                 AnnouncerID = node.AnnouncerID,
                 CameraDistance1 = node.CameraDistance1,
                 CameraDistance2 = node.CameraDistance2,
                 CameraDistance3 = node.CameraDistance3,
-                CameraDistance4 = node.CameraDistance4
+                CameraDistance4 = node.CameraDistance4,
+                Size = node._size,
+                Version = node._version,
+                Unknown0x25 = node._unknown0x25,
+                Unknown0x26 = node._unknown0x26,
+                Unknown0x27 = node._unknown0x27,
+                Unknown0x2C = node._unknown0x2C
             };
             return slotAttributes;
         }
@@ -128,7 +140,17 @@ namespace BrawlInstaller.Common
         {
             var cosmeticAttributes = new CosmeticAttributes
             {
-                AnnouncerID = node.AnnouncerID
+                HasSecondary = node.HasSecondary,
+                CharSlot1 = node.CharSlot1,
+                CharSlot2 = node.CharSlot2,
+                AnnouncerID = node.AnnouncerID,
+                Size = node._size,
+                Version = node._version,
+                Unknown0x11 = node._unknown0x11,
+                Unknown0x15 = node._unknown0x15,
+                Unknown0x16 = node._unknown0x16,
+                Unknown0x17 = node._unknown0x17,
+                Unknown0x1C = node._unknown0x1C
             };
             return cosmeticAttributes;
         }
@@ -140,9 +162,17 @@ namespace BrawlInstaller.Common
         {
             var cssSlotAttributes = new CSSSlotAttributes
             {
+                SetPrimarySecondary = node.SetPrimarySecondary,
+                CharSlot1 = node.CharSlot1,
+                CharSlot2 = node.CharSlot2,
+                SetCosmeticSlot = node.SetCosmeticSlot,
+                CosmeticSlot = node.CosmeticSlot,
                 Records = node.Records,
                 WiimoteSFX = node.WiimoteSFX,
-                Status = node.Status
+                Unknown0x18 = node._unknown0x18,
+                Version = node._version,
+                Status = node.Status,
+                Size = node._size
             };
             return cssSlotAttributes;
         }

@@ -28,8 +28,14 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Label x:Name="soundbankStyleLabel" Content="Soundbank Style:"/>
                             <ComboBox x:Name="soundbankStyleDropDown" ItemsSource="{Binding SoundbankStyleOptions}" SelectedValuePath="Value" SelectedValue="{Binding BuildSettings.SoundSettings.SoundbankStyle}" DisplayMemberPath="Key" Grid.Column="1" Width="120"/>
+                            <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1"/>
+                            <TextBox x:Name="exConfigVersionTextBox" Text="{Binding BuildSettings.MiscSettings.DefaultExConfigVersion}" Grid.Column="1" Grid.Row="1"/>
                         </Grid>
                         <Separator/>
                         <StackPanel Orientation="Horizontal">

@@ -104,6 +104,7 @@ namespace BrawlInstaller.Classes
         public bool UpdateCreditsModule { get; set; } = true;
         public bool SubspaceEx { get; set; } = true;
         public bool InstallKirbyHats { get; set; } = false;
+        public uint DefaultExConfigVersion { get; set; } = 1;
     }
 
     public class FilePathSettings

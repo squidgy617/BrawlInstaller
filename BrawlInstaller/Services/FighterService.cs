@@ -245,7 +245,7 @@ namespace BrawlInstaller.Services
                     fighterIds.CSSSlotConfigId = ((CSSCNode)foundConfig).CosmeticSlot;
             }
             // If CSS slot config ID is still missing, set it equal to one of the other IDs
-            if (fighterIds.CSSSlotConfigId == null -1 && (fighterIds.CosmeticConfigId >= 0x3F || fighterIds.SlotConfigId >= 0x3F))
+            if (fighterIds.CSSSlotConfigId == null && (fighterIds.CosmeticConfigId >= 0x3F || fighterIds.SlotConfigId >= 0x3F))
                 fighterIds.CSSSlotConfigId = fighterIds.CosmeticConfigId != -1 ? fighterIds.CosmeticConfigId : fighterIds.SlotConfigId;
             // Find fighter ID if missing
             if (fighterIds.SlotConfigId != null && fighterIds.FighterConfigId == null)
@@ -967,10 +967,6 @@ namespace BrawlInstaller.Services
             // Then, get new files for install, in case any of them would be deleted
             var pacFiles = UpdatePacFiles(fighterPackage);
             var module = _fileService.OpenFile(fighterPackage.Module);
-            var fighterConfig = _fileService.OpenFile(fighterPackage.FighterInfo.FighterConfig);
-            var cosmeticConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CosmeticConfig);
-            var cssSlotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
-            var slotConfig = _fileService.OpenFile(fighterPackage.FighterInfo.SlotConfig);
             var masquerade = _fileService.OpenFile(fighterPackage.FighterInfo.Masquerade);
             var soundbank = _fileService.OpenFile(fighterPackage.Soundbank);
             var kirbySoundbank = _fileService.OpenFile(fighterPackage.KirbySoundbank);
@@ -1013,26 +1009,30 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(pacFile);
             }
             // Update and import ex configs
+            var updateLinks = fighterPackage.PackageType == PackageType.New;
+            var cssSlotConfig = fighterPackage.FighterInfo.CSSSlotAttributes?.ToCSSCNode(fighterPackage.FighterInfo, updateLinks);
             if (cssSlotConfig != null)
             {
-                cssSlotConfig = UpdateCostumeConfig((CSSCNode)cssSlotConfig, fighterPackage.Costumes);
+                cssSlotConfig = UpdateCostumeConfig(cssSlotConfig, fighterPackage.Costumes);
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig\\CSSSlot{fighterPackage.FighterInfo.Ids.CSSSlotConfigId:X2}.dat";
                 _fileService.SaveFileAs(cssSlotConfig, configPath);
                 _fileService.CloseFile(cssSlotConfig);
             }
+            var fighterConfig = fighterPackage.FighterInfo.FighterAttributes?.ToFCFGNode(fighterPackage.FighterInfo);
             if (fighterConfig != null)
             {
-                fighterConfig = UpdateFighterConfig(fighterConfig, fighterPackage.FighterInfo);
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\FighterConfig\\Fighter{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}.dat";
                 _fileService.SaveFileAs(fighterConfig, configPath);
                 _fileService.CloseFile(fighterConfig);
             }
+            var slotConfig = fighterPackage.FighterInfo.SlotAttributes?.ToSLTCNode(fighterPackage.FighterInfo, updateLinks);
             if (slotConfig != null)
             {
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\SlotConfig\\Slot{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}.dat";
                 _fileService.SaveFileAs(slotConfig, configPath);
                 _fileService.CloseFile(slotConfig);
             }
+            var cosmeticConfig = fighterPackage.FighterInfo.CosmeticAttributes?.ToCOSCNode(fighterPackage.FighterInfo, updateLinks);
             if (cosmeticConfig != null)
             {
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CosmeticConfig\\Cosmetic{fighterPackage.FighterInfo.Ids.CosmeticConfigId:X2}.dat";
@@ -1140,7 +1140,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="rootNode">Root node of file</param>
         /// <param name="costumes">Costumes to place in config</param>
-        private ResourceNode UpdateCostumeConfig(CSSCNode rootNode, List<Costume> costumes)
+        private CSSCNode UpdateCostumeConfig(CSSCNode rootNode, List<Costume> costumes)
         {
             if (rootNode != null)
             {
@@ -1177,25 +1177,6 @@ namespace BrawlInstaller.Services
                         Color = costume.Color
                     };
                 }
-            }
-            return rootNode;
-        }
-
-        /// <summary>
-        /// Update fighter config
-        /// </summary>
-        /// <param name="rootNode">Config to update</param>
-        /// <param name="fighterInfo">Fighter info</param>
-        /// <returns>Updated config</returns>
-        private ResourceNode UpdateFighterConfig(ResourceNode rootNode, FighterInfo fighterInfo)
-        {
-            if (rootNode != null)
-            {
-                var node = (FCFGNode) rootNode;
-                node.SoundBank = (uint)fighterInfo.SoundbankId;
-                node.KirbySoundBank = (uint)fighterInfo.KirbySoundbankId;
-                node.HasKirbyHat = fighterInfo.KirbyLoadType != FCFGNode.KirbyLoadFlags.None;
-                node.KirbyLoadType = fighterInfo.KirbyLoadType;
             }
             return rootNode;
         }
