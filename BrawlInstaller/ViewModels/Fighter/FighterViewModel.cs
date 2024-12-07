@@ -149,7 +149,7 @@ namespace BrawlInstaller.ViewModels
             var file = _dialogService.OpenFileDialog("Select a fighter package to load", "FIGHTERPACKAGE file (.fighterpackage)|*.fighterpackage");
             if (!string.IsNullOrEmpty(file))
             {
-                FighterPackage = new FighterPackage();
+                FighterPackage = new FighterPackage { PackageType = PackageType.New };
                 FighterPackage = _packageService.LoadFighterPackage(file);
                 // Prompt if user wants to load franchise icon
                 var franchiseIcon = FighterPackage.Cosmetics.ChangedItems.FirstOrDefault(x => x.CosmeticType == CosmeticType.FranchiseIcon);
@@ -374,6 +374,8 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
                 // Set package path to new file
                 FighterPackagePath = file;
+                // Set package to new
+                FighterPackage.PackageType = PackageType.New;
             }
             OnPropertyChanged(nameof(FighterPackage));
         }

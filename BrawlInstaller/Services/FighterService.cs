@@ -1304,17 +1304,8 @@ namespace BrawlInstaller.Services
             fighterPackage.PacFiles = GetPacFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y.PacFiles).Select(z => z.FilePath).Contains(x.FilePath)).ToList();
             fighterPackage.PacFiles.AddRange(GetKirbyFiles(fighterInfo.InternalName, false)?.Where(x => !costumes.SelectMany(y => y?.PacFiles).Select(z => z?.FilePath).Contains(x?.FilePath)).ToList());
             fighterPackage.Module = GetModule(fighterInfo.InternalName);
-            fighterPackage.ExConfigs = new List<string>();
 
             // Set fighter info
-            if (fighterInfo.FighterConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.FighterConfig);
-            if (fighterInfo.CosmeticConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.CosmeticConfig);
-            if (fighterInfo.CSSSlotConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.CSSSlotConfig);
-            if (fighterInfo.SlotConfig != "")
-                fighterPackage.ExConfigs.Add(fighterInfo.SlotConfig);
             if (fighterInfo.Masquerade != "")
                 fighterPackage.MasqueradeFile = fighterInfo.Masquerade;
 

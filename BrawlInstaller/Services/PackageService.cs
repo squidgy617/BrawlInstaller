@@ -238,12 +238,6 @@ namespace BrawlInstaller.Services
                         fighterPackage.PacFiles.Add(newPacFile);
                     }
                 }
-                // Get Ex configs
-                fighterPackage.ExConfigs.AddRange(_fileService.GetFiles($"{path}\\ExConfigs", "*.dat"));
-                fighterPackage.FighterInfo.FighterConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Fighter"));
-                fighterPackage.FighterInfo.CosmeticConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Cosmetic"));
-                fighterPackage.FighterInfo.SlotConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Slot"));
-                fighterPackage.FighterInfo.CSSSlotConfig = fighterPackage.ExConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("CSSSlot"));
                 // Get module
                 fighterPackage.Module = _fileService.GetFiles($"{path}\\Module", "*.rel").FirstOrDefault();
                 // Get ending pac files
@@ -305,10 +299,6 @@ namespace BrawlInstaller.Services
                 }
             }
             // Export other files
-            foreach(var config in fighterPackage.ExConfigs)
-            {
-                _fileService.CopyFile(config, $"{path}\\ExConfigs\\{Path.GetFileName(config)}");
-            }
             var files = new List<(string Folder, string File)>
             {
                 ("Module", fighterPackage.Module),
@@ -319,10 +309,6 @@ namespace BrawlInstaller.Services
                 ("CreditsTheme", fighterPackage.CreditsTheme.SongFile),
                 ("VictoryTheme", fighterPackage.VictoryTheme.SongFile)
             };
-            foreach(var config in fighterPackage.ExConfigs)
-            {
-                files.Add(("ExConfigs", config));
-            }
             foreach(var endingPacFile in fighterPackage.EndingPacFiles)
             {
                 files.Add(("EndingPacFiles",  endingPacFile));

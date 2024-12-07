@@ -39,20 +39,6 @@
                 <Button x:Name="removePacFileButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePacFileCommand}"/>
             </StackPanel>
         </StackPanel>
-        <Label x:Name="exConfigsLabel" Content="Ex Configs:" Grid.Column="2"/>
-        <StackPanel Orientation="Horizontal" Grid.Column="3">
-            <ListBox x:Name="exConfigsListBox" ItemsSource="{Binding ExConfigs}" Width="120" Height="100" SelectedValue="{Binding SelectedExConfig}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource filePathConverter}}" ToolTip="{Binding Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem},AncestorLevel=1}}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <StackPanel>
-                <Button x:Name="addExConfigsButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddExConfigsCommand}"/>
-                <Button x:Name="removeExConfigButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveExConfigCommand}"/>
-            </StackPanel>
-        </StackPanel>
         <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}">
             <TextBox x:Name="pacFileFolderTextBox" HorizontalContentAlignment="Right" Text="{Binding SelectedPacFile.Subdirectory}" Width="50"/>

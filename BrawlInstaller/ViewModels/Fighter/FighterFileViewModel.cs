@@ -36,8 +36,6 @@ namespace BrawlInstaller.ViewModels
         public ICommand ChangedThemeCommand => new RelayCommand(param => ChangedThemeId(param));
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
         public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
-        public ICommand AddExConfigsCommand => new RelayCommand(param => AddExConfigs());
-        public ICommand RemoveExConfigCommand => new RelayCommand(param => RemoveExConfig());
         public ICommand AddEndingPacFilesCommand => new RelayCommand(param => AddEndingPacFiles());
         public ICommand RemoveEndingPacFileCommand => new RelayCommand(param => RemoveEndingPacFile());
 
@@ -67,9 +65,6 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<FighterPacFile> PacFiles { get => FighterPackage != null ? new ObservableCollection<FighterPacFile>(FighterPackage?.PacFiles) : new ObservableCollection<FighterPacFile>(); }
-
-        [DependsUpon(nameof(FighterPackage))]
-        public ObservableCollection<string> ExConfigs { get => FighterPackage != null ? new ObservableCollection<string>(FighterPackage?.ExConfigs) : new ObservableCollection<string>(); }
 
         [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<string> EndingPacFiles { get => FighterPackage != null ? new ObservableCollection<string>(FighterPackage?.EndingPacFiles) : new ObservableCollection<string>(); }
@@ -109,23 +104,6 @@ namespace BrawlInstaller.ViewModels
         public void RemovePacFile()
         {
             FighterPackage.PacFiles.Remove(SelectedPacFile);
-            OnPropertyChanged(nameof(FighterPackage));
-        }
-
-        public void AddExConfigs()
-        {
-            var files = _dialogService.OpenMultiFileDialog("Select Ex configs", "DAT files (.dat)|*.dat");
-            foreach (var file in files)
-            {
-                var exConfig = file;
-                FighterPackage.ExConfigs.Add(exConfig);
-            }
-            OnPropertyChanged(nameof(FighterPackage));
-        }
-
-        public void RemoveExConfig()
-        {
-            FighterPackage.ExConfigs.Remove(SelectedExConfig);
             OnPropertyChanged(nameof(FighterPackage));
         }
 
