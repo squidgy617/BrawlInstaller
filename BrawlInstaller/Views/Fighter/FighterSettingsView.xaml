@@ -174,16 +174,28 @@
         <StackPanel Grid.Column="4" Grid.RowSpan="10">
             <TabControl>
                 <TabItem Header="Fighter">
-                    <wpg:WpfPropertyGrid x:Name="fighterAttributeGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.FighterAttributes}" Height="420" Width="170"/>
+                    <StackPanel>
+                        <Button Content="Generate" Command="{Binding GenerateFighterAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.FighterAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+                        <wpg:WpfPropertyGrid x:Name="fighterAttributeGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.FighterAttributes}" Height="420" Width="170"/>
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="Slot">
-                    <wpg:WpfPropertyGrid x:Name="slotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.SlotAttributes}" Height="420" Width="170"/>
+                    <StackPanel>
+                        <Button Content="Generate" Command="{Binding GenerateSlotAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.SlotAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+                        <wpg:WpfPropertyGrid x:Name="slotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.SlotAttributes}" Height="420" Width="170"/>
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="Cosmetic">
-                    <wpg:WpfPropertyGrid x:Name="cosmeticAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CosmeticAttributes}" Height="420" Width="170"/>
+                    <StackPanel>
+                        <Button Content="Generate" Command="{Binding GenerateCosmeticAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.CosmeticAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+                        <wpg:WpfPropertyGrid x:Name="cosmeticAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CosmeticAttributes}" Height="420" Width="170"/>
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="CSS Slot">
-                    <wpg:WpfPropertyGrid x:Name="cssSlotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CSSSlotAttributes}" Height="420" Width="170"/>
+                    <StackPanel>
+                        <Button Content="Generate" Command="{Binding GenerateCSSSlotAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.CSSSlotAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+                        <wpg:WpfPropertyGrid x:Name="cssSlotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CSSSlotAttributes}" Height="420" Width="170"/>
+                    </StackPanel>
                 </TabItem>
             </TabControl>
             <Button x:Name="importConfigsButton" Content="Import Configs" Width="Auto" Command="{Binding ImportExConfigsCommand}"/>

@@ -8,6 +8,7 @@
     <BooleanToVisibilityConverter x:Key="boolVisConverter"/>
     <local:NullBoolConverter x:Key="nullBoolConverter"/>
     <local:NullVisibilityConverter x:Key="nullVisConverter"/>
+    <local:NotNullVisibilityConverter x:Key="notNullVisConverter"/>
     <local:StringVisibilityConverter x:Key="stringVisConverter"/>
     <local:GameCubeButtonConverter x:Key="gameCubeButtonsConverter"/>
     <local:HexShortConverter x:Key="hexShortConverter"/>

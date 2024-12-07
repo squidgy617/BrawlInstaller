@@ -39,6 +39,10 @@ namespace BrawlInstaller.ViewModels
         public ICommand LoadKirbyHatCommand => new RelayCommand(param => LoadKirbyHat());
         public ICommand ClearKirbyHatCommand => new RelayCommand(param => ClearKirbyHat());
         public ICommand ImportExConfigsCommand => new RelayCommand(param => ImportExConfigs());
+        public ICommand GenerateFighterAttributesCommand => new RelayCommand(param => GenerateFighterAttributes());
+        public ICommand GenerateSlotAttributesCommand => new RelayCommand(param => GenerateSlotAttributes());
+        public ICommand GenerateCosmeticAttributesCommand => new RelayCommand(param => GenerateCosmeticAttributes());
+        public ICommand GenerateCSSSlotAttributesCommand => new RelayCommand(param => GenerateCSSSlotAttributes());
 
         // Importing constructor
         [ImportingConstructor]
@@ -88,6 +92,27 @@ namespace BrawlInstaller.ViewModels
         {
             var files = _dialogService.OpenMultiFileDialog("Select ex configs to import", "DAT file (.dat)|*.dat");
             FighterPackage.FighterInfo = _fighterService.GetFighterAttributes(FighterPackage.FighterInfo, files);
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void GenerateFighterAttributes()
+        {
+            FighterPackage.FighterInfo.FighterAttributes = new FighterAttributes();
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+        public void GenerateSlotAttributes()
+        {
+            FighterPackage.FighterInfo.SlotAttributes = new SlotAttributes();
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+        public void GenerateCosmeticAttributes()
+        {
+            FighterPackage.FighterInfo.CosmeticAttributes = new CosmeticAttributes();
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+        public void GenerateCSSSlotAttributes()
+        {
+            FighterPackage.FighterInfo.CSSSlotAttributes = new CSSSlotAttributes();
             OnPropertyChanged(nameof(FighterPackage));
         }
     }
