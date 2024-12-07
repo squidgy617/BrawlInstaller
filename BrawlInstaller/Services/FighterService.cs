@@ -51,6 +51,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetAllFighterInfo()"/>
         List<FighterInfo> GetAllFighterInfo();
 
+        /// <inheritdoc cref="FighterService.GetFighterAttributes(FighterInfo, List{string})"/>
+        FighterInfo GetFighterAttributes(FighterInfo fighterInfo, List<string> exConfigs);
+
         /// <inheritdoc cref="FighterService.GetFighterFiles(FighterPackage)"/>
         FighterPackage GetFighterFiles(FighterPackage fighterPackage);
 
@@ -412,6 +415,41 @@ namespace BrawlInstaller.Services
             foreach (var config in cssSlotConfigs)
                 _fileService.CloseFile(config);
             return fighterInfo.ToList();
+        }
+
+        /// <summary>
+        /// Get fighter attributes from ex configs and apply to fighter info
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info to apply attributes to</param>
+        /// <param name="exConfigs">Configs to get attributes from</param>
+        /// <returns>Fighter info with attributes</returns>
+        public FighterInfo GetFighterAttributes(FighterInfo fighterInfo, List<string> exConfigs)
+        {
+            foreach (var config in exConfigs)
+            {
+                var rootNode = _fileService.OpenFile(config);
+                if (rootNode != null)
+                {
+                    if (rootNode.GetType() == typeof(FCFGNode))
+                    {
+                        fighterInfo.FighterAttributes = ((FCFGNode)rootNode).ToFighterAttributes();
+                    }
+                    else if (rootNode.GetType() == typeof(SLTCNode))
+                    {
+                        fighterInfo.SlotAttributes = ((SLTCNode)rootNode).ToSlotAttributes();
+                    }
+                    else if (rootNode.GetType() == typeof(COSCNode))
+                    {
+                        fighterInfo.CosmeticAttributes = ((COSCNode)rootNode).ToCosmeticAttributes();
+                    }
+                    else if (rootNode.GetType() == typeof(CSSCNode))
+                    {
+                        fighterInfo.CSSSlotAttributes = ((CSSCNode)rootNode).ToCSSSlotAttributes();
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+            return fighterInfo;
         }
 
         /// <summary>

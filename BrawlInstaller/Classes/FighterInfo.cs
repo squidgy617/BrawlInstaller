@@ -340,19 +340,19 @@ namespace BrawlInstaller.Classes
         [Browsable(false)]
         public uint Version { get; set; } = 2;
 
-        [Category("Unknown")]
+        [Browsable(false)]
         public byte Unknown0x11 { get; set; } = 1;
 
-        [Category("Unknown")]
+        [Browsable(false)]
         public byte Unknown0x15 { get; set; } = 0;
 
-        [Category("Unknown")]
+        [Browsable(false)]
         public byte Unknown0x16 { get; set; } = 0;
 
-        [Category("Unknown")]
+        [Browsable(false)]
         public byte Unknown0x17 { get; set; } = 0;
 
-        [Category("Unknown")]
+        [Browsable(false)]
         public uint Unknown0x1C { get; set; } = 0x2633;
 
         public CosmeticAttributes Copy()

@@ -171,19 +171,22 @@
                 </Expander>
             </StackPanel>
         </GroupBox>
-        <TabControl Grid.Column="4" Grid.RowSpan="10">
-            <TabItem Header="Fighter">
-                <wpg:WpfPropertyGrid x:Name="fighterAttributeGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.FighterAttributes}" Height="420" Width="170"/>
-            </TabItem>
-            <TabItem Header="Slot">
-                <wpg:WpfPropertyGrid x:Name="slotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.SlotAttributes}" Height="420" Width="170"/>
-            </TabItem>
-            <TabItem Header="Cosmetic">
-                <wpg:WpfPropertyGrid x:Name="cosmeticAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CosmeticAttributes}" Height="420" Width="170"/>
-            </TabItem>
-            <TabItem Header="CSS Slot">
-                <wpg:WpfPropertyGrid x:Name="cssSlotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CSSSlotAttributes}" Height="420" Width="170"/>
-            </TabItem>
-        </TabControl>
+        <StackPanel Grid.Column="4" Grid.RowSpan="10">
+            <TabControl>
+                <TabItem Header="Fighter">
+                    <wpg:WpfPropertyGrid x:Name="fighterAttributeGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.FighterAttributes}" Height="420" Width="170"/>
+                </TabItem>
+                <TabItem Header="Slot">
+                    <wpg:WpfPropertyGrid x:Name="slotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.SlotAttributes}" Height="420" Width="170"/>
+                </TabItem>
+                <TabItem Header="Cosmetic">
+                    <wpg:WpfPropertyGrid x:Name="cosmeticAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CosmeticAttributes}" Height="420" Width="170"/>
+                </TabItem>
+                <TabItem Header="CSS Slot">
+                    <wpg:WpfPropertyGrid x:Name="cssSlotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CSSSlotAttributes}" Height="420" Width="170"/>
+                </TabItem>
+            </TabControl>
+            <Button x:Name="importConfigsButton" Content="Import Configs" Width="Auto" Command="{Binding ImportExConfigsCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>

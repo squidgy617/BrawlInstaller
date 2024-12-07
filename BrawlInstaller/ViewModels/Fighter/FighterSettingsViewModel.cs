@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand LoadKirbyHatCommand => new RelayCommand(param => LoadKirbyHat());
         public ICommand ClearKirbyHatCommand => new RelayCommand(param => ClearKirbyHat());
+        public ICommand ImportExConfigsCommand => new RelayCommand(param => ImportExConfigs());
 
         // Importing constructor
         [ImportingConstructor]
@@ -79,6 +81,13 @@ namespace BrawlInstaller.ViewModels
         public void ClearKirbyHat()
         {
             FighterPackage.FighterSettings.KirbyHatData = null;
+            OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void ImportExConfigs()
+        {
+            var files = _dialogService.OpenMultiFileDialog("Select ex configs to import", "DAT file (.dat)|*.dat");
+            FighterPackage.FighterInfo = _fighterService.GetFighterAttributes(FighterPackage.FighterInfo, files);
             OnPropertyChanged(nameof(FighterPackage));
         }
     }
