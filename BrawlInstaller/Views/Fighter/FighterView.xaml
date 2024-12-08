@@ -65,39 +65,35 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.ColumnSpan="2">
-                        <Grid>
-                            <ContentControl Content="{Binding CostumeViewModel}"/>
-                        </Grid>
-                    </GroupBox>
-                    <StackPanel Grid.Column="2" Grid.RowSpan="2">
-                        <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" Margin="3,2,2,2">
-                            <ContentControl Content="{Binding FranchiseIconViewModel}"/>
-                        </GroupBox>
-                        <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" Margin="3,2,2,2">
-                            <ContentControl Content="{Binding CosmeticViewModel}"/>
-                        </GroupBox>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
-                        <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files">
-                            <ContentControl Content="{Binding FighterFileViewModel}"/>
-                        </GroupBox>
-                        <GroupBox x:Name="fighterSettingsGroupBox" Header="Fighter Settings">
-                            <ContentControl Content="{Binding FighterSettingsViewModel}"/>
-                        </GroupBox>
-                    </StackPanel>
-                </Grid>
+                <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <TabItem Header="Costumes/Cosmetics">
+                        <StackPanel>
+                            <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.ColumnSpan="2">
+                                <Grid>
+                                    <ContentControl Content="{Binding CostumeViewModel}"/>
+                                </Grid>
+                            </GroupBox>
+                            <StackPanel Orientation="Horizontal">
+                                <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" Margin="3,2,2,2">
+                                    <ContentControl Content="{Binding CosmeticViewModel}"/>
+                                </GroupBox>
+                                <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" Margin="3,2,2,2">
+                                    <ContentControl Content="{Binding FranchiseIconViewModel}"/>
+                                </GroupBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Files/Settings">
+                        <StackPanel Orientation="Horizontal">
+                            <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files">
+                                <ContentControl Content="{Binding FighterFileViewModel}"/>
+                            </GroupBox>
+                            <GroupBox x:Name="fighterSettingsGroupBox" Header="Fighter Settings">
+                                <ContentControl Content="{Binding FighterSettingsViewModel}"/>
+                            </GroupBox>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
             </ScrollViewer>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
