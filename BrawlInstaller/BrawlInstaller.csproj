@@ -134,6 +134,7 @@
       <DependentUpon>FileBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\WpfPropertyGrid.cs" />
+    <Compile Include="Validation\BuildFilePathValidationRules.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />

@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:classes="clr-namespace:BrawlInstaller.Classes"
              xmlns:userControls="clr-namespace:BrawlInstaller.UserControls"
-             xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel}"
+             xmlns:validationRules="clr-namespace:BrawlInstaller.Validation"
+             xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" xmlns:resources="clr-namespace:BrawlInstaller.Resources" d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel}"
              mc:Ignorable="d"
              Name="settingsView"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -122,8 +123,29 @@
                                             <ColumnDefinition SharedSizeGroup="col1"/>
                                             <ColumnDefinition SharedSizeGroup="col2"/>
                                         </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
                                         <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                        <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
+                                        <userControls:FileBox x:Name="fileBox" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1">
+                                            <userControls:FileBox.Resources>
+                                                <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                                                <resources:BindingProxy x:Key="proxy2" Data="{Binding DataContext, ElementName=settingsView}"/>
+                                            </userControls:FileBox.Resources>
+                                            <userControls:FileBox.Text>
+                                                <Binding Path="Path">
+                                                    <Binding.ValidationRules>
+                                                        <validationRules:BuildFilePathRule>
+                                                            <validationRules:BuildFilePathRule.Wrapper>
+                                                                <validationRules:BuildFilePathWrapper FilePath="{Binding Data.Path, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.BuildPath, Source={StaticResource proxy2}}"/>
+                                                            </validationRules:BuildFilePathRule.Wrapper>
+                                                        </validationRules:BuildFilePathRule>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </userControls:FileBox.Text>
+                                        </userControls:FileBox>
+                                        <Label Target="{Binding ElementName=fileBox}" Style="{StaticResource errorText}" Width="240" Grid.Column="1" Grid.Row="1"/>
                                     </Grid>
                                 </DataTemplate>
                                 <DataTemplate DataType="{x:Type classes:AsmPath}">
