@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:classes="clr-namespace:BrawlInstaller.Classes"
+             xmlns:userControls="clr-namespace:BrawlInstaller.UserControls"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:SettingsViewModel}"
              mc:Ignorable="d"
+             Name="settingsView"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -121,7 +123,7 @@
                                             <ColumnDefinition SharedSizeGroup="col2"/>
                                         </Grid.ColumnDefinitions>
                                         <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                        <TextBox Text="{Binding Path}" Grid.Column="1" Width="240"/>
+                                        <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
                                     </Grid>
                                 </DataTemplate>
                                 <DataTemplate DataType="{x:Type classes:AsmPath}">
@@ -132,7 +134,7 @@
                                                 <ColumnDefinition SharedSizeGroup="col2"/>
                                             </Grid.ColumnDefinitions>
                                             <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                            <TextBox Text="{Binding Path}" Width="240" Grid.Column="1"/>
+                                            <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
                                         </Grid>
                                         <Grid HorizontalAlignment="Right">
                                             <Grid.ColumnDefinitions>

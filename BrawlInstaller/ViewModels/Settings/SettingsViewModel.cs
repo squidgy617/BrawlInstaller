@@ -75,6 +75,7 @@ namespace BrawlInstaller.ViewModels
         public IFighterInfoViewModel FighterInfoViewModel { get; }
 
         // Properties
+        public AppSettings AppSettings { get => _settingsService.AppSettings; }
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
         public List<string> DefaultSettingsOptions { get => new List<string> { "ProjectPlus" }; }
         public string SelectedSettingsOption { get => _selectedSettingsOption; set { _selectedSettingsOption = value; OnPropertyChanged(nameof(SelectedSettingsOption)); } }

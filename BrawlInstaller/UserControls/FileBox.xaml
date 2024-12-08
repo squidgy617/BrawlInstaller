@@ -12,7 +12,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="textBox" Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="{Binding Path=TextBoxWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+        <TextBox x:Name="textBox" Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="{Binding Path=TextBoxWidth, RelativeSource={RelativeSource AncestorType=UserControl}}" IsReadOnly="{Binding Path=IsReadOnly, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
         <Button Content="..." Grid.Column="1" Style="{StaticResource condensedButton}" Click="BrowseButton_Click"/>
         <Button Content="✕" Grid.Column="2" Style="{StaticResource condensedButton}" Click="ClearButton_Click"/>
     </Grid>
