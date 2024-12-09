@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
@@ -44,6 +45,14 @@ namespace BrawlInstaller.ViewModels
         public ICommand SaveSettingsCommand => new RelayCommand(param => SaveSettings());
         public ICommand LoadSettingsCommand => new RelayCommand(param => LoadSettings());
         public ICommand ApplyDefaultSettingCommand => new RelayCommand(param => ApplyDefaultSetting());
+        public ICommand AddStageListCommand => new RelayCommand(param => AddStageList());
+        public ICommand RemoveStageListCommand => new RelayCommand(param => RemoveStageList());
+        public ICommand AddRosterCommand => new RelayCommand(param => AddRosterFile());
+        public ICommand RemoveRosterCommand => new RelayCommand(param => RemoveRosterFile());
+        public ICommand AddCodeFileCommand => new RelayCommand(param => AddCodePath());
+        public ICommand RemoveCodeFileCommand => new RelayCommand(param => RemoveCodePath());
+        public ICommand AddRandomStageNameLocationCommand => new RelayCommand(param => AddRandomStageNameLocation());
+        public ICommand RemoveRandomStageNameLocationCommand => new RelayCommand(param => RemoveRandomStageNameLocation());
 
         [ImportingConstructor]
         public SettingsViewModel(ISettingsService settingsService, ICosmeticSettingsViewModel cosmeticSettingsViewModel, IFighterInfoViewModel fighterInfoViewModel)
@@ -84,15 +93,27 @@ namespace BrawlInstaller.ViewModels
         public CompositeCollection FilePathSettings { get => _filePathSettings; set { _filePathSettings = value; OnPropertyChanged(nameof(FilePathSettings)); } }
 
         [DependsUpon(nameof(BuildSettings))]
+        public ObservableCollection<FilePath> StageListPaths { get => BuildSettings.FilePathSettings.StageListPaths != null ? new ObservableCollection<FilePath>(BuildSettings.FilePathSettings.StageListPaths) : new ObservableCollection<FilePath>(); }
+
+        [DependsUpon(nameof(StageListPaths))]
         public FilePath SelectedStageListPath { get => _selectedStageListPath; set { _selectedStageListPath = value; OnPropertyChanged(nameof(SelectedStageListPath)); } }
 
         [DependsUpon(nameof(BuildSettings))]
+        public ObservableCollection<RosterFile> RosterFiles { get => BuildSettings.FilePathSettings.RosterFiles != null ? new ObservableCollection<RosterFile>(BuildSettings.FilePathSettings.RosterFiles) : new ObservableCollection<RosterFile>(); }
+
+        [DependsUpon(nameof(RosterFiles))]
         public RosterFile SelectedRosterFile { get => _selectedRosterFile; set { _selectedRosterFile = value; OnPropertyChanged(nameof(SelectedRosterFile)); } }
 
         [DependsUpon(nameof(BuildSettings))]
+        public ObservableCollection<FilePath> CodeFilePaths { get => BuildSettings.FilePathSettings.CodeFilePaths != null ? new ObservableCollection<FilePath>(BuildSettings.FilePathSettings.CodeFilePaths) : new ObservableCollection<FilePath>(); }
+
+        [DependsUpon(nameof(CodeFilePaths))]
         public FilePath SelectedCodeFilePath { get => _selectedCodeFile; set { _selectedCodeFile = value; OnPropertyChanged(nameof(SelectedCodeFilePath)); } }
 
         [DependsUpon(nameof(BuildSettings))]
+        public ObservableCollection<InstallLocation> RandomStageNamesLocations { get => BuildSettings.FilePathSettings.RandomStageNamesLocations != null ? new ObservableCollection<InstallLocation>(BuildSettings.FilePathSettings.RandomStageNamesLocations) : new ObservableCollection<InstallLocation>(); }
+
+        [DependsUpon(nameof(RandomStageNamesLocations))]
         public InstallLocation SelectedRandomStageNameLocation { get => _selectedRandomStageNameLocation; set { _selectedRandomStageNameLocation = value; OnPropertyChanged(nameof(SelectedRandomStageNameLocation)); } }
 
         public List<string> ExtensionOptions { get => new List<string> { "brres", "pac" }; }
@@ -139,6 +160,74 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             return json;
+        }
+
+        public void AddStageList()
+        {
+            var stageLists = BuildSettings.FilePathSettings.StageListPaths;
+            stageLists.Add(new FilePath(FileType.StageListFile, ""));
+            OnPropertyChanged(nameof(StageListPaths));
+        }
+
+        public void RemoveStageList()
+        {
+            var stageLists = BuildSettings.FilePathSettings.StageListPaths;
+            if (stageLists.Count > 0 && SelectedStageListPath != null)
+            {
+                stageLists.Remove(SelectedStageListPath);
+                OnPropertyChanged(nameof(StageListPaths));
+            }
+        }
+
+        public void AddRosterFile()
+        {
+            var rosterFiles = BuildSettings.FilePathSettings.RosterFiles;
+            rosterFiles.Add(new RosterFile());
+            OnPropertyChanged(nameof(RosterFiles));
+        }
+
+        public void RemoveRosterFile()
+        {
+            var rosterFiles = BuildSettings.FilePathSettings.RosterFiles;
+            if (rosterFiles.Count > 0 && SelectedRosterFile != null)
+            {
+                rosterFiles.Remove(SelectedRosterFile);
+                OnPropertyChanged(nameof(RosterFiles));
+            }
+        }
+
+        public void AddCodePath()
+        {
+            var codeFilePaths = BuildSettings.FilePathSettings.CodeFilePaths;
+            codeFilePaths.Add(new FilePath(FileType.GCTCodeFile, ""));
+            OnPropertyChanged(nameof(CodeFilePaths));
+        }
+
+        public void RemoveCodePath()
+        {
+            var codeFilePaths = BuildSettings.FilePathSettings.CodeFilePaths;
+            if (codeFilePaths.Count > 0 && SelectedCodeFilePath != null)
+            {
+                codeFilePaths.Remove(SelectedCodeFilePath);
+                OnPropertyChanged(nameof(CodeFilePaths));
+            }
+        }
+
+        public void AddRandomStageNameLocation()
+        {
+            var randomStageNameLocations = BuildSettings.FilePathSettings.RandomStageNamesLocations;
+            randomStageNameLocations.Add(new InstallLocation());
+            OnPropertyChanged(nameof(RandomStageNamesLocations));
+        }
+
+        public void RemoveRandomStageNameLocation()
+        {
+            var randomStageNameLocations = BuildSettings.FilePathSettings.RandomStageNamesLocations;
+            if (randomStageNameLocations.Count > 0 && SelectedRandomStageNameLocation != null)
+            {
+                randomStageNameLocations.Remove(SelectedRandomStageNameLocation);
+                OnPropertyChanged(nameof(RandomStageNamesLocations));
+            }
         }
     }
 

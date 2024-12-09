@@ -51,9 +51,10 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left"/>
-                                <ListBox x:Name="stageListsListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
+                                <ListBox x:Name="stageListsListBox" ItemsSource="{Binding StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
                                 <userControls:FileBox x:Name="stagePathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="ASM file (.asm)|*.asm">
                                     <userControls:FileBox.Resources>
@@ -72,6 +73,10 @@
                                     </userControls:FileBox.Text>
                                 </userControls:FileBox>
                                 <Label Target="{Binding ElementName=stagePathTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
+                                <StackPanel Grid.Column="2">
+                                    <Button x:Name="addStageListButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddStageListCommand}"/>
+                                    <Button x:Name="removeStageListButton" Style="{StaticResource miniButton}" Content="-" Command="{Binding RemoveStageListCommand}"/>
+                                </StackPanel>
                             </Grid>
                             <Grid x:Name="rosterFilesGrid">
                                 <Grid.RowDefinitions>
@@ -83,9 +88,10 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Label x:Name="rosterFilesLabel" Content="Roster Files:" HorizontalAlignment="Left"/>
-                                <ListBox x:Name="rosterFilesListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.RosterFiles}" SelectedValue="{Binding SelectedRosterFile}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
+                                <ListBox x:Name="rosterFilesListBox" ItemsSource="{Binding RosterFiles}" SelectedValue="{Binding SelectedRosterFile}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="rosterPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
                                 <userControls:FileBox x:Name="rosterPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Roster file (*.dat, *.bx)|*.dat;*.bx">
                                     <userControls:FileBox.Resources>
@@ -105,6 +111,10 @@
                                 </userControls:FileBox>
                                 <Label Target="{Binding ElementName=rosterPathTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
                                 <CheckBox x:Name="rosterNewCharactersCheckBox" Content="Always add new characters" IsChecked="{Binding SelectedRosterFile.AddNewCharacters}" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
+                                <StackPanel Grid.Column="2">
+                                    <Button x:Name="addRosterButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddRosterCommand}"/>
+                                    <Button x:Name="removeRosterButton" Style="{StaticResource miniButton}" Content="-" Command="{Binding RemoveRosterCommand}"/>
+                                </StackPanel>
                             </Grid>
                             <Grid x:Name="codeFilesGrid">
                                 <Grid.RowDefinitions>
@@ -115,9 +125,10 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Label x:Name="codeFilesLabel" Content="Code Files:" HorizontalAlignment="Left"/>
-                                <ListBox x:Name="codeFilesListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.CodeFilePaths}" SelectedValue="{Binding SelectedCodeFilePath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
+                                <ListBox x:Name="codeFilesListBox" ItemsSource="{Binding CodeFilePaths}" SelectedValue="{Binding SelectedCodeFilePath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="codeFilesPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}"/>
                                 <userControls:FileBox x:Name="codeFilesPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="TXT file (.txt)|*.txt">
                                     <userControls:FileBox.Resources>
@@ -136,6 +147,10 @@
                                     </userControls:FileBox.Text>
                                 </userControls:FileBox>
                                 <Label Target="{Binding ElementName=codeFilesPathTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
+                                <StackPanel Grid.Column="2">
+                                    <Button x:Name="addCodePathButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddCodeFileCommand}"/>
+                                    <Button x:Name="removeCodePathButton" Style="{StaticResource miniButton}" Content="-" Command="{Binding RemoveCodeFileCommand}"/>
+                                </StackPanel>
                             </Grid>
                             <Grid x:Name="randomStageNameLocations">
                                 <Grid.RowDefinitions>
@@ -148,11 +163,12 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Label x:Name="randomStageNameLabel" HorizontalAlignment="Left" MaxWidth="100">
                                     <TextBlock Text="Random Stage Name Locations:" TextWrapping="Wrap"/>
                                 </Label>
-                                <ListBox x:Name="randomStageNameListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.RandomStageNamesLocations}" SelectedValue="{Binding SelectedRandomStageNameLocation}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
+                                <ListBox x:Name="randomStageNameListBox" ItemsSource="{Binding RandomStageNamesLocations}" SelectedValue="{Binding SelectedRandomStageNameLocation}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="randomStageNamePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
                                 <userControls:FileBox x:Name="randomStageNameTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}" Filter="Archive files (*.pac, *.brres)|*.pac;*.brres" ExcludePath="{Binding AppSettings.BuildPath}">
                                     <userControls:FileBox.Resources>
@@ -175,6 +191,10 @@
                                 <TextBox x:Name="randomStageNameNodePathTextBox" Text="{Binding SelectedRandomStageNameLocation.NodePath}" Width="200" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
                                 <Label x:Name="randomStageNameExtensionLabel" Content="Extension:" Grid.Row="4" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
                                 <ComboBox x:Name="randomStageNameExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedRandomStageNameLocation.FileExtension}" Width="120" Grid.Column="1" Grid.Row="4" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <StackPanel Grid.Column="2">
+                                    <Button x:Name="addRandomStageNameButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddRandomStageNameLocationCommand}"/>
+                                    <Button x:Name="removeRandomStageNameButton" Style="{StaticResource miniButton}" Content="-" Command="{Binding RemoveRandomStageNameLocationCommand}"/>
+                                </StackPanel>
                             </Grid>
                         </StackPanel>
                         <Separator/>
