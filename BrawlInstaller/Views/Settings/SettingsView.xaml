@@ -46,6 +46,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -54,10 +55,27 @@
                                 <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left"/>
                                 <ListBox x:Name="stageListsListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
-                                <TextBox x:Name="stagePathTextBox" Text="{Binding SelectedStageListPath.Path}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
+                                <userControls:FileBox x:Name="stagePathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="ASM file (.asm)|*.asm">
+                                    <userControls:FileBox.Resources>
+                                        <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                                    </userControls:FileBox.Resources>
+                                    <userControls:FileBox.Text>
+                                        <Binding Path="SelectedStageListPath.Path">
+                                            <Binding.ValidationRules>
+                                                <validationRules:BuildFilePathRule>
+                                                    <validationRules:BuildFilePathRule.Wrapper>
+                                                        <validationRules:BuildFilePathWrapper FilePath="{Binding Data.SelectedStageListPath.Path, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.BuildPath, Source={StaticResource proxy}}"/>
+                                                    </validationRules:BuildFilePathRule.Wrapper>
+                                                </validationRules:BuildFilePathRule>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </userControls:FileBox.Text>
+                                </userControls:FileBox>
+                                <Label Target="{Binding ElementName=stagePathTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
                             </Grid>
                             <Grid x:Name="rosterFilesGrid">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
@@ -69,11 +87,28 @@
                                 <Label x:Name="rosterFilesLabel" Content="Roster Files:" HorizontalAlignment="Left"/>
                                 <ListBox x:Name="rosterFilesListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.RosterFiles}" SelectedValue="{Binding SelectedRosterFile}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="rosterPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
-                                <TextBox x:Name="rosterPathTextBox" Text="{Binding SelectedRosterFile.FilePath}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
-                                <CheckBox x:Name="rosterNewCharactersCheckBox" Content="Always add new characters" IsChecked="{Binding SelectedRosterFile.AddNewCharacters}" Grid.Column="1" Grid.Row="2" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
+                                <userControls:FileBox x:Name="rosterPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Roster file (*.dat, *.bx)|*.dat;*.bx">
+                                    <userControls:FileBox.Resources>
+                                        <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                                    </userControls:FileBox.Resources>
+                                    <userControls:FileBox.Text>
+                                        <Binding Path="SelectedRosterFile.FilePath">
+                                            <Binding.ValidationRules>
+                                                <validationRules:BuildFilePathRule>
+                                                    <validationRules:BuildFilePathRule.Wrapper>
+                                                        <validationRules:BuildFilePathWrapper FilePath="{Binding Data.SelectedRosterFile.FilePath, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.BuildPath, Source={StaticResource proxy}}"/>
+                                                    </validationRules:BuildFilePathRule.Wrapper>
+                                                </validationRules:BuildFilePathRule>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </userControls:FileBox.Text>
+                                </userControls:FileBox>
+                                <Label Target="{Binding ElementName=rosterPathTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
+                                <CheckBox x:Name="rosterNewCharactersCheckBox" Content="Always add new characters" IsChecked="{Binding SelectedRosterFile.AddNewCharacters}" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
                             </Grid>
                             <Grid x:Name="codeFilesGrid">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
@@ -84,10 +119,27 @@
                                 <Label x:Name="codeFilesLabel" Content="Code Files:" HorizontalAlignment="Left"/>
                                 <ListBox x:Name="codeFilesListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.CodeFilePaths}" SelectedValue="{Binding SelectedCodeFilePath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="codeFilesPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}"/>
-                                <TextBox x:Name="codeFilesPathTextBox" Text="{Binding SelectedCodeFilePath.Path}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}"/>
+                                <userControls:FileBox x:Name="codeFilesPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="TXT file (.txt)|*.txt">
+                                    <userControls:FileBox.Resources>
+                                        <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                                    </userControls:FileBox.Resources>
+                                    <userControls:FileBox.Text>
+                                        <Binding Path="SelectedCodeFilePath.Path">
+                                            <Binding.ValidationRules>
+                                                <validationRules:BuildFilePathRule>
+                                                    <validationRules:BuildFilePathRule.Wrapper>
+                                                        <validationRules:BuildFilePathWrapper FilePath="{Binding Data.SelectedCodeFilePath.Path, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.BuildPath, Source={StaticResource proxy}}"/>
+                                                    </validationRules:BuildFilePathRule.Wrapper>
+                                                </validationRules:BuildFilePathRule>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </userControls:FileBox.Text>
+                                </userControls:FileBox>
+                                <Label Target="{Binding ElementName=codeFilesPathTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
                             </Grid>
                             <Grid x:Name="randomStageNameLocations">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
@@ -102,11 +154,27 @@
                                 </Label>
                                 <ListBox x:Name="randomStageNameListBox" ItemsSource="{Binding BuildSettings.FilePathSettings.RandomStageNamesLocations}" SelectedValue="{Binding SelectedRandomStageNameLocation}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="randomStageNamePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
-                                <TextBox x:Name="randomStageNameTextBox" Text="{Binding SelectedRandomStageNameLocation.FilePath}" Width="200" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
-                                <Label x:Name="randomStageNameNodePathLabel" Content="Node Path:" Grid.Row="2" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
-                                <TextBox x:Name="randomStageNameNodePathTextBox" Text="{Binding SelectedRandomStageNameLocation.NodePath}" Width="200" Grid.Column="1" Grid.Row="2" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
-                                <Label x:Name="randomStageNameExtensionLabel" Content="Extension:" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
-                                <ComboBox x:Name="randomStageNameExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedRandomStageNameLocation.FileExtension}" Width="120" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <userControls:FileBox x:Name="randomStageNameTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}" Filter="Archive files (*.pac, *.brres)|*.pac;*.brres" ExcludePath="{Binding AppSettings.BuildPath}">
+                                    <userControls:FileBox.Resources>
+                                        <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                                    </userControls:FileBox.Resources>
+                                    <userControls:FileBox.Text>
+                                        <Binding Path="SelectedRandomStageNameLocation.FilePath">
+                                            <Binding.ValidationRules>
+                                                <validationRules:BuildFilePathRule>
+                                                    <validationRules:BuildFilePathRule.Wrapper>
+                                                        <validationRules:BuildFilePathWrapper FilePath="{Binding Data.SelectedRandomStageNameLocation.FilePath, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.BuildPath, Source={StaticResource proxy}}"/>
+                                                    </validationRules:BuildFilePathRule.Wrapper>
+                                                </validationRules:BuildFilePathRule>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </userControls:FileBox.Text>
+                                </userControls:FileBox>
+                                <Label Target="{Binding ElementName=randomStageNameTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
+                                <Label x:Name="randomStageNameNodePathLabel" Content="Node Path:" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <TextBox x:Name="randomStageNameNodePathTextBox" Text="{Binding SelectedRandomStageNameLocation.NodePath}" Width="200" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="randomStageNameExtensionLabel" Content="Extension:" Grid.Row="4" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <ComboBox x:Name="randomStageNameExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedRandomStageNameLocation.FileExtension}" Width="120" Grid.Column="1" Grid.Row="4" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
                             </Grid>
                         </StackPanel>
                         <Separator/>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace BrawlInstaller.Validation
         {
             var path = (string)value;
 
-            if (!string.IsNullOrEmpty(Wrapper.BuildPath) && (path.Contains(Wrapper.BuildPath) || Wrapper.BuildPath.Contains(path)))
+            if (!string.IsNullOrEmpty(Wrapper.BuildPath) && !string.IsNullOrEmpty(path) && (path.Contains(Wrapper.BuildPath) || Wrapper.BuildPath.Contains(path) || Path.IsPathRooted(path)))
             {
                 return new ValidationResult(false, "Path must be within build and cannot be root folder of build.");
             }
