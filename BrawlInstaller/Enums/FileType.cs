@@ -27,7 +27,7 @@ namespace BrawlInstaller.Enums
         TracklistPath,
         [Description("Classic Intro Folder")]
         ClassicIntroPath,
-        [Description("EndingPath")]
+        [Description("Ending Folder")]
         EndingPath,
         [Description("Movie Folder")]
         MoviePath,

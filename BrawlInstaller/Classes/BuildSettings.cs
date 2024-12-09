@@ -260,6 +260,7 @@ namespace BrawlInstaller.Classes
             Filter = filter;
             Label = label;
         }
+        // TODO: Use the label!!
         public string Label { get; set; }
     }
 }
