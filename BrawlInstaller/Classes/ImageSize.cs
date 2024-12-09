@@ -8,13 +8,13 @@ namespace BrawlInstaller.Classes
 {
     public class ImageSize
     {
-        public ImageSize(int width, int height)
+        public ImageSize(int? width, int? height)
         {
             Width = width;
             Height = height;
         }
 
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int? Width { get; set; }
+        public int? Height { get; set; }
     }
 }
