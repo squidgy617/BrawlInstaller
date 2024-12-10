@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Dialogs;
+using BrawlLib.SSBB.ResourceNodes;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="DialogService.OpenDropDownDialog<T>(object, string, string, string)"/>
         object OpenDropDownDialog<T>(IEnumerable<T> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
+
+        /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(List{ResourceNode}, string, string)"/>
+        ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item");
     }
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
@@ -175,6 +179,27 @@ namespace BrawlInstaller.Services
             if (result == true)
             {
                 return dialog.SelectedItem;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Open node selector dialog
+        /// </summary>
+        /// <param name="nodeList">List of nodes to display</param>
+        /// <param name="title">Title</param>
+        /// <param name="caption">Caption</param>
+        /// <returns>Selected node</returns>
+        public ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item")
+        {
+            var dialog = new NodeSelectorWindow();
+            dialog.Title = title;
+            dialog.Message = caption;
+            dialog.ListItems = nodeList;
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                return dialog.SelectedItem as ResourceNode;
             }
             return null;
         }

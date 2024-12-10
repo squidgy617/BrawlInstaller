@@ -40,6 +40,8 @@ namespace BrawlInstaller.ViewModels
 
         // Services
         ISettingsService _settingsService { get; }
+        IFileService _fileService { get; }
+        IDialogService _dialogService { get; }
 
         // Commands
         public ICommand SaveSettingsCommand => new RelayCommand(param => SaveSettings());
@@ -53,11 +55,15 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveCodeFileCommand => new RelayCommand(param => RemoveCodePath());
         public ICommand AddRandomStageNameLocationCommand => new RelayCommand(param => AddRandomStageNameLocation());
         public ICommand RemoveRandomStageNameLocationCommand => new RelayCommand(param => RemoveRandomStageNameLocation());
+        public ICommand SelectRandomStageNameLocationCommand => new RelayCommand(param => SelectRandomStageNameLocation());
+        public ICommand ClearRandomStageNameNodeCommand => new RelayCommand(param => ClearRandomStageNameNode());
 
         [ImportingConstructor]
-        public SettingsViewModel(ISettingsService settingsService, ICosmeticSettingsViewModel cosmeticSettingsViewModel, IFighterInfoViewModel fighterInfoViewModel)
+        public SettingsViewModel(ISettingsService settingsService, IFileService fileService, IDialogService dialogService, ICosmeticSettingsViewModel cosmeticSettingsViewModel, IFighterInfoViewModel fighterInfoViewModel)
         {
             _settingsService = settingsService;
+            _fileService = fileService;
+            _dialogService = dialogService;
             CosmeticSettingsViewModel = cosmeticSettingsViewModel;
             FighterInfoViewModel = fighterInfoViewModel;
 
@@ -226,6 +232,35 @@ namespace BrawlInstaller.ViewModels
             if (randomStageNameLocations.Count > 0 && SelectedRandomStageNameLocation != null)
             {
                 randomStageNameLocations.Remove(SelectedRandomStageNameLocation);
+                OnPropertyChanged(nameof(RandomStageNamesLocations));
+            }
+        }
+
+        public void SelectRandomStageNameLocation()
+        {
+            if (SelectedRandomStageNameLocation != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var rootNode = _fileService.OpenFile(Path.Combine(buildPath, SelectedRandomStageNameLocation.FilePath));
+                if (rootNode != null)
+                {
+                    var nodes = _fileService.GetNodes(rootNode);
+                    var result = _dialogService.OpenNodeSelectorDialog(nodes);
+                    if (result != null)
+                    {
+                        SelectedRandomStageNameLocation.NodePath = result.TreePath;
+                        OnPropertyChanged(nameof(RandomStageNamesLocations));
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+        }
+
+        public void ClearRandomStageNameNode()
+        {
+            if (SelectedRandomStageNameLocation != null)
+            {
+                SelectedRandomStageNameLocation.NodePath = string.Empty;
                 OnPropertyChanged(nameof(RandomStageNamesLocations));
             }
         }

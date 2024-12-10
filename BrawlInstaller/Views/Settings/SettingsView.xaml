@@ -188,7 +188,11 @@
                                 </userControls:FileBox>
                                 <Label Target="{Binding ElementName=randomStageNameTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
                                 <Label x:Name="randomStageNameNodePathLabel" Content="Node Path:" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
-                                <TextBox x:Name="randomStageNameNodePathTextBox" Text="{Binding SelectedRandomStageNameLocation.NodePath}" Width="200" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}">
+                                    <TextBox x:Name="randomStageNameNodePathTextBox" Text="{Binding SelectedRandomStageNameLocation.NodePath}" Width="160" IsReadOnly="True"/>
+                                    <Button x:Name="randomStageNameNodePathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectRandomStageNameLocationCommand}"/>
+                                    <Button x:Name="randomStageNodePathClearButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearRandomStageNameNodeCommand}"/>
+                                </StackPanel>
                                 <Label x:Name="randomStageNameExtensionLabel" Content="Extension:" Grid.Row="4" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
                                 <ComboBox x:Name="randomStageNameExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedRandomStageNameLocation.FileExtension}" Width="120" Grid.Column="1" Grid.Row="4" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
                                 <StackPanel Grid.Column="2">

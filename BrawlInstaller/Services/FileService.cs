@@ -83,6 +83,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.ExtractZipFile(string, string)"/>
         string ExtractZipFile(string inFile, string outDirectory);
+
+        /// <inheritdoc cref="FileService.GetNodes(ResourceNode)"/>
+        List<ResourceNode> GetNodes(ResourceNode rootNode);
     }
     // TODO: Backup system, only back up files in build
     [Export(typeof(IFileService))]
@@ -425,6 +428,17 @@ namespace BrawlInstaller.Services
                 return outDirectory;
             }
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Get all top-level nodes from a file
+        /// </summary>
+        /// <param name="rootNode">Root node of file</param>
+        /// <returns>List of top-level nodes</returns>
+        public List<ResourceNode> GetNodes(ResourceNode rootNode)
+        {
+            var allNodes = rootNode.Children;
+            return allNodes;
         }
     }
 }

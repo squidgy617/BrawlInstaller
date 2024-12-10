@@ -97,6 +97,9 @@
     <Compile Include="Dialogs\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\NodeSelectorWindow.xaml.cs">
+      <DependentUpon>NodeSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums\FileType.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
@@ -203,6 +206,10 @@
     <Page Include="Dialogs\MessageWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\NodeSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\StringInputWindow.xaml">
       <SubType>Designer</SubType>
