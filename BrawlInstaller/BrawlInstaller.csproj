@@ -349,7 +349,70 @@
     <Resource Include="Resources\SharedTEX0.png" />
     <Resource Include="Resources\TEX0.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icons\ADSJ.png" />
+    <Resource Include="Icons\AI.png" />
+    <Resource Include="Icons\AIPD.png" />
+    <Resource Include="Icons\ARC.png" />
+    <Resource Include="Icons\ATKD.png" />
+    <Resource Include="Icons\B.png" />
+    <Resource Include="Icons\BGMG.png" />
+    <Resource Include="Icons\BLOC.png" />
+    <Resource Include="Icons\BLOCEntry.png" />
+    <Resource Include="Icons\BRES.png" />
+    <Resource Include="Icons\CE.png" />
+    <Resource Include="Icons\CHR.png" />
+    <Resource Include="Icons\CLR.png" />
+    <Resource Include="Icons\Coll.png" />
+    <Resource Include="Icons\customSongVolumeEditor1.VolumeIcon.bmp" />
+    <Resource Include="Icons\EFLS.png" />
+    <Resource Include="Icons\ENEMY.png" />
+    <Resource Include="Icons\Event.png" />
+    <Resource Include="Icons\Folder.png" />
+    <Resource Include="Icons\G.png" />
+    <Resource Include="Icons\GBLK.png" />
+    <Resource Include="Icons\GCAM.png" />
+    <Resource Include="Icons\GDBF.png" />
+    <Resource Include="Icons\GDOR.png" />
+    <Resource Include="Icons\GEG1.png" />
+    <Resource Include="Icons\GIB2.png" />
+    <Resource Include="Icons\GITM.png" />
+    <Resource Include="Icons\GMOT.png" />
+    <Resource Include="Icons\GMOV.png" />
+    <Resource Include="Icons\GMPS.png" />
+    <Resource Include="Icons\GSND.png" />
+    <Resource Include="Icons\GWAT.png" />
+    <Resource Include="Icons\IMG.png" />
+    <Resource Include="Icons\itembox.png" />
+    <Resource Include="Icons\MDef.png" />
+    <Resource Include="Icons\MDefAction.png" />
+    <Resource Include="Icons\MDL0.png" />
+    <Resource Include="Icons\MSG.png" />
+    <Resource Include="Icons\PAT.png" />
+    <Resource Include="Icons\plt.png" />
+    <Resource Include="Icons\PLT0.png" />
+    <Resource Include="Icons\Redirect.png" />
+    <Resource Include="Icons\REFF.png" />
+    <Resource Include="Icons\REFFEntry.png" />
+    <Resource Include="Icons\REFT.png" />
+    <Resource Include="Icons\REL.png" />
+    <Resource Include="Icons\RSAR.png" />
+    <Resource Include="Icons\RSTM.png" />
+    <Resource Include="Icons\S.png" />
+    <Resource Include="Icons\SCLA.png" />
+    <Resource Include="Icons\SCN0.png" />
+    <Resource Include="Icons\SharedTEX0.png" />
+    <Resource Include="Icons\SHP.png" />
+    <Resource Include="Icons\SRT.png" />
+    <Resource Include="Icons\STDT.png" />
+    <Resource Include="Icons\STPM.png" />
+    <Resource Include="Icons\T.png" />
+    <Resource Include="Icons\TEX0.png" />
+    <Resource Include="Icons\TPL.png" />
+    <Resource Include="Icons\U8.png" />
+    <Resource Include="Icons\Unknown.png" />
+    <Resource Include="Icons\VIS.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if EXIST "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" (

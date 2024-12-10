@@ -15,4 +15,5 @@
     <local:HexUIntConverter x:Key="hexUIntConverter"/>
     <local:HexUInt2CharConverter x:Key="hexUInt2CharConverter"/>
     <local:ColorRGBAPixelConverter x:Key="colorRGBAConverter"/>
+    <local:ResourceTypeUriStringConverter x:Key="nodeUriStringConverter"/>
 </ResourceDictionary>

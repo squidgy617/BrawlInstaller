@@ -1,16 +1,22 @@
 ﻿using BrawlInstaller.Enums;
 using BrawlLib.Imaging;
+using BrawlLib.Internal;
+using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Resources
 {
@@ -287,13 +293,13 @@ namespace BrawlInstaller.Resources
         }
     }
 
-    [ValueConversion(typeof(Color), typeof(RGBAPixel))]
+    [ValueConversion(typeof(System.Windows.Media.Color), typeof(RGBAPixel))]
     public class ColorRGBAPixelConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var parsed = (RGBAPixel)value;
-            var color = new Color
+            var color = new System.Windows.Media.Color
             {
                 R = parsed.R,
                 G = parsed.G,
@@ -305,7 +311,7 @@ namespace BrawlInstaller.Resources
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var parsed = (Color)value;
+            var parsed = (System.Windows.Media.Color)value;
             var color = new RGBAPixel
             {
                 R = parsed.R,
@@ -314,6 +320,25 @@ namespace BrawlInstaller.Resources
                 A = parsed.A
             };
             return color;
+        }
+    }
+
+    [ValueConversion(typeof(ResourceType), typeof(string))]
+    public class ResourceTypeUriStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != null)
+            {
+                var resourceType = (ResourceType)value;
+                return $"pack://application:,,,/Icons/{resourceType}.png";
+            }
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
         }
     }
 }
