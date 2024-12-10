@@ -240,12 +240,11 @@ namespace BrawlInstaller.Classes
         public FilePath(FileType fileType, string path, string filter = "")
         {
             FileType = fileType;
-            DisplayName = fileType.GetDescription();
             Path = path;
             Filter = filter;
         }
         public FileType FileType { get; set; }
-        public string DisplayName { get; set; }
+        [JsonIgnore] public string DisplayName { get => FileType.GetDescription(); }
         public string Path { get; set; }
         public string Filter { get; set; }
     }
@@ -255,7 +254,6 @@ namespace BrawlInstaller.Classes
         public AsmPath(FileType fileType, string path, string label = "", string filter = "ASM file (.asm)|*.asm") : base(fileType, path, filter)
         {
             FileType = fileType;
-            DisplayName = fileType.GetDescription();
             Path = path;
             Filter = filter;
             Label = label;
