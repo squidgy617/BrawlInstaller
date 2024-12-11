@@ -245,7 +245,7 @@ namespace BrawlInstaller.ViewModels
                 if (rootNode != null)
                 {
                     var nodes = _fileService.GetNodes(rootNode);
-                    var result = _dialogService.OpenNodeSelectorDialog(nodes);
+                    var result = _dialogService.OpenNodeSelectorDialog(nodes, "Select Node", "Select node containing random stage names");
                     if (result != null)
                     {
                         SelectedRandomStageNameLocation.NodePath = result.TreePath;

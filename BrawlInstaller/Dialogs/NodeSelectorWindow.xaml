@@ -16,7 +16,7 @@
                 <Image x:Name="icon" Visibility="Collapsed"/>
                 <TextBlock x:Name="message" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="Select an item" Margin="5" TextWrapping="Wrap"/>
             </StackPanel>
-            <TreeView x:Name="treeView" Width="150" HorizontalAlignment="Center">
+            <TreeView x:Name="treeView" Width="200" Height="344" HorizontalAlignment="Center">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
