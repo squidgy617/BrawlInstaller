@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlLib.SSBB.ResourceNodes;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Newtonsoft.Json;
@@ -245,7 +246,8 @@ namespace BrawlInstaller.ViewModels
                 if (rootNode != null)
                 {
                     var nodes = _fileService.GetNodes(rootNode);
-                    var result = _dialogService.OpenNodeSelectorDialog(nodes, "Select Node", "Select node containing random stage names");
+                    var allowedNodes = new List<Type> { typeof(MSBinNode) };
+                    var result = _dialogService.OpenNodeSelectorDialog(nodes, "Select Node", "Select node containing random stage names", allowedNodes);
                     if (result != null)
                     {
                         SelectedRandomStageNameLocation.NodePath = result.TreePath;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BrawlLib.SSBB.ResourceNodes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -89,6 +90,8 @@ namespace BrawlInstaller.Dialogs
 
         public object SelectedItem { get => treeView.SelectedItem; }
 
+        public List<Type> AllowedNodeTypes { get; set; } = new List<Type>();
+
         private void button_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
@@ -97,6 +100,18 @@ namespace BrawlInstaller.Dialogs
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (!AllowedNodeTypes.Any() || (SelectedItem != null && AllowedNodeTypes.Contains(SelectedItem.GetType())))
+            {
+                button.IsEnabled = true;
+            }
+            else
+            {
+                button.IsEnabled = false;
+            }
         }
     }
 }

@@ -16,7 +16,7 @@
                 <Image x:Name="icon" Visibility="Collapsed"/>
                 <TextBlock x:Name="message" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="Select an item" Margin="5" TextWrapping="Wrap"/>
             </StackPanel>
-            <TreeView x:Name="treeView" Width="200" Height="344" HorizontalAlignment="Center">
+            <TreeView x:Name="treeView" Width="200" Height="344" HorizontalAlignment="Center" SelectedItemChanged="treeView_SelectedItemChanged">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
@@ -28,7 +28,7 @@
             </TreeView>
             <Image x:Name="image" Visibility="Collapsed" Width="64" Height="64" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="button" Content="OK" HorizontalAlignment="Center" VerticalAlignment="Center" Click="button_Click" Width="70" Height="25" Margin="5" IsDefault="True"/>
+                <Button x:Name="button" IsEnabled="False" Content="OK" HorizontalAlignment="Center" VerticalAlignment="Center" Click="button_Click" Width="70" Height="25" Margin="5" IsDefault="True"/>
                 <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Click="cancelButton_Click" Width="70" Height="25" Margin="5" IsCancel="True"/>
             </StackPanel>
         </StackPanel>

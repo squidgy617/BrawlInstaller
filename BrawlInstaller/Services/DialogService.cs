@@ -35,8 +35,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenDropDownDialog<T>(object, string, string, string)"/>
         object OpenDropDownDialog<T>(IEnumerable<T> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
-        /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(List{ResourceNode}, string, string)"/>
-        ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item");
+        /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(List{ResourceNode}, string, string, List{ResourceType})"/>
+        ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null);
     }
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
@@ -190,12 +190,16 @@ namespace BrawlInstaller.Services
         /// <param name="title">Title</param>
         /// <param name="caption">Caption</param>
         /// <returns>Selected node</returns>
-        public ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item")
+        public ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null)
         {
             var dialog = new NodeSelectorWindow();
             dialog.Title = title;
             dialog.Message = caption;
             dialog.ListItems = nodeList;
+            if (allowedNodeTypes != null)
+            {
+                dialog.AllowedNodeTypes = allowedNodeTypes;
+            }
             var result = dialog.ShowDialog();
             if (result == true)
             {
