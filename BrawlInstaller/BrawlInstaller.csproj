@@ -107,6 +107,7 @@
     <Compile Include="Services\TracklistService.cs" />
     <Compile Include="StaticClasses\DefaultCosmetics.cs" />
     <Compile Include="StaticClasses\EffectPacs.cs" />
+    <Compile Include="StaticClasses\Icons.cs" />
     <Compile Include="StaticClasses\ModuleIdLocations.cs" />
     <Compile Include="StaticClasses\Paths.cs" />
     <Compile Include="StaticClasses\ReservedIds.cs" />
@@ -344,10 +345,6 @@
       <Project>{9DFD4208-0F96-4AE5-B6C6-444C54CDE312}</Project>
       <Name>lavaKirbyHatManagerV2</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\SharedTEX0.png" />
-    <Resource Include="Resources\TEX0.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\ADSJ.png" />

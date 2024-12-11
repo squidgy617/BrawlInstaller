@@ -1,4 +1,5 @@
-﻿using BrawlInstaller.Enums;
+﻿using BrawlCrate.UI;
+using BrawlInstaller.Enums;
 using BrawlLib.Imaging;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
@@ -331,7 +332,7 @@ namespace BrawlInstaller.Resources
             if (value != null)
             {
                 var resourceType = (ResourceType)value;
-                return $"pack://application:,,,/Icons/{resourceType}.png";
+                return $"pack://application:,,,/Icons/{Icons.GetIconString(resourceType)}.png";
             }
             return null;
         }

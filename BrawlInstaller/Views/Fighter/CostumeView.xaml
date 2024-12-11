@@ -152,10 +152,10 @@
                                             <Style TargetType="{x:Type Image}">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Path=SharesData}" Value="True">
-                                                        <Setter Property="Source" Value="pack://application:,,,/Resources/SharedTEX0.png"/>
+                                                        <Setter Property="Source" Value="pack://application:,,,/Icons/SharedTEX0.png"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Path=SharesData}" Value="False">
-                                                        <Setter Property="Source" Value="pack://application:,,,/Resources/TEX0.png"/>
+                                                        <Setter Property="Source" Value="pack://application:,,,/Icons/TEX0.png"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
