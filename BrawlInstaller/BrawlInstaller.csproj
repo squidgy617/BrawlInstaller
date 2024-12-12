@@ -129,6 +129,7 @@
     <Compile Include="Validation\BuildFilePathValidationRules.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
     <Compile Include="ViewModels\Dialogs\DropDownViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
