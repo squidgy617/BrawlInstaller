@@ -91,15 +91,6 @@
     <Compile Include="Classes\PSA.cs" />
     <Compile Include="Classes\Roster.cs" />
     <Compile Include="Classes\Tracklists.cs" />
-    <Compile Include="Dialogs\DropDownWindow.xaml.cs">
-      <DependentUpon>DropDownWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\MessageWindow.xaml.cs">
-      <DependentUpon>MessageWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\NodeSelectorWindow.xaml.cs">
-      <DependentUpon>NodeSelectorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Enums\FileType.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
@@ -115,9 +106,6 @@
     <Compile Include="Classes\TrackedList.cs" />
     <Compile Include="Common\CompositionBootstrapper.cs" />
     <Compile Include="Common\ExtensionMethods.cs" />
-    <Compile Include="Dialogs\StringInputWindow.xaml.cs">
-      <DependentUpon>StringInputWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Enums\GamecubeButtons.cs" />
     <Compile Include="Helpers\CursorWait.cs" />
     <Compile Include="Resources\Converters.cs" />
@@ -216,22 +204,6 @@
     <Compile Include="Views\Dialogs\StringInputView.xaml.cs">
       <DependentUpon>StringInputView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\DropDownWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\MessageWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NodeSelectorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\StringInputWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

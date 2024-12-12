@@ -1,5 +1,4 @@
-﻿using BrawlInstaller.Dialogs;
-using BrawlInstaller.ViewModels;
+﻿using BrawlInstaller.ViewModels;
 using BrawlLib.SSBB.ResourceNodes;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
