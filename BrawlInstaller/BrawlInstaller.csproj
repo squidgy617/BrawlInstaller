@@ -140,11 +140,14 @@
     <Compile Include="UserControls\WpfPropertyGrid.cs" />
     <Compile Include="Validation\BuildFilePathValidationRules.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
+    <Compile Include="ViewModels\Dialogs\DropDownViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterFileViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\MessageViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\NodeSelectorViewModel.cs" />
     <Compile Include="ViewModels\Settings\FighterInfoViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FranchiseIconViewModel.cs" />
@@ -155,6 +158,10 @@
     <Compile Include="ViewModels\Stage\StageEditorViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageListViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\StringInputViewModel.cs" />
+    <Compile Include="Views\Dialogs\DropDownView.xaml.cs">
+      <DependentUpon>DropDownView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Fighter\CosmeticView.xaml.cs">
       <DependentUpon>CosmeticView.xaml</DependentUpon>
     </Compile>
@@ -163,6 +170,12 @@
     </Compile>
     <Compile Include="Views\Fighter\FighterFileView.xaml.cs">
       <DependentUpon>FighterFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\MessageView.xaml.cs">
+      <DependentUpon>MessageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\NodeSelectorView.xaml.cs">
+      <DependentUpon>NodeSelectorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
@@ -199,6 +212,9 @@
     </Compile>
     <Compile Include="Views\Stage\StageView.xaml.cs">
       <DependentUpon>StageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\StringInputView.xaml.cs">
+      <DependentUpon>StringInputView.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DropDownWindow.xaml">
       <SubType>Designer</SubType>
@@ -246,6 +262,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\DropDownView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Fighter\CosmeticView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -255,6 +275,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Fighter\FighterFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\MessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\NodeSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -303,6 +331,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Stage\StageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\StringInputView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

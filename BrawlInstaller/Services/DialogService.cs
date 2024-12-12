@@ -1,6 +1,8 @@
 ﻿using BrawlInstaller.Dialogs;
+using BrawlInstaller.ViewModels;
 using BrawlLib.SSBB.ResourceNodes;
 using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -8,7 +10,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BrawlInstaller.Services
 {
@@ -32,8 +37,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenStringInputDialog(string, string)"/>
         string OpenStringInputDialog(string title, string caption);
 
-        /// <inheritdoc cref="DialogService.OpenDropDownDialog<T>(object, string, string, string)"/>
-        object OpenDropDownDialog<T>(IEnumerable<T> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
+        /// <inheritdoc cref="DialogService.OpenDropDownDialog(IEnumerable{object}, string, string, string)"/>
+        object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
         /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(List{ResourceNode}, string, string, List{ResourceType})"/>
         ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null);
@@ -41,10 +46,33 @@ namespace BrawlInstaller.Services
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
     {
+        // ViewModels
+        IMessageViewModel _messageViewModel { get; }
+        IStringInputViewModel _stringInputViewModel { get; }
+        IDropDownViewModel _dropDownViewModel { get; }
+        INodeSelectorViewModel _nodeSelectorViewModel { get; }
+
         [ImportingConstructor]
-        public DialogService() { }
+        public DialogService(IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel) 
+        {
+            _messageViewModel = messageViewModel;
+            _stringInputViewModel = stringInputViewModel;
+            _dropDownViewModel = dropDownViewModel;
+            _nodeSelectorViewModel = nodeSelectorViewModel;
+        }
 
         // Methods
+
+        /// <summary>
+        /// Generate a window with basic parameters
+        /// </summary>
+        /// <param name="title">Title for window</param>
+        /// <returns>New window</returns>
+        private Window GenerateWindow(string title = "Title")
+        {
+            var dialog = new Window { Width = 300, Height = 172, Title = title, SizeToContent = SizeToContent.WidthAndHeight, ResizeMode = ResizeMode.NoResize };
+            return dialog;
+        }
 
         /// <summary>
         /// Show generic message dialog
@@ -68,17 +96,15 @@ namespace BrawlInstaller.Services
         /// <returns>Whether user gave a positive response to message</returns>
         public bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information, BitmapImage bitmapImage=null)
         {
-            var dialog = new MessageWindow();
-            dialog.Title = caption;
-            dialog.Caption = text;
-            dialog.MessageBoxButton = buttonType;
-            dialog.MessageIcon = image;
-            dialog.Image = bitmapImage;
-            var result = dialog.ShowDialog();
-            if (result == true)
-                return true;
-            else
-                return false;
+            var dialog = GenerateWindow(caption);
+            _messageViewModel.Caption = text;
+            _messageViewModel.MessageBoxButton = buttonType;
+            _messageViewModel.MessageIcon = image;
+            _messageViewModel.Image = bitmapImage;
+            _messageViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _messageViewModel;
+            dialog.ShowDialog();
+            return _messageViewModel.DialogResult;
         }
 
         /// <summary>
@@ -148,13 +174,18 @@ namespace BrawlInstaller.Services
         /// <returns>User string input</returns>
         public string OpenStringInputDialog(string title = "String Input", string caption = "Enter a string")
         {
-            var dialog = new StringInputWindow();
-            dialog.Title = title;
-            dialog.Caption = caption;
-            var result = dialog.ShowDialog();
-            if (result == true)
+            var dialog = GenerateWindow(title);
+            _stringInputViewModel.Caption = caption;
+            _stringInputViewModel.MessageBoxButton = MessageBoxButton.OKCancel;
+            _stringInputViewModel.MessageIcon = MessageBoxImage.None;
+            _stringInputViewModel.Image = null;
+            _stringInputViewModel.StringInput = string.Empty;
+            _stringInputViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _stringInputViewModel;
+            dialog.ShowDialog();
+            if (_stringInputViewModel.DialogResult)
             {
-                return dialog.ResponseText;
+                return _stringInputViewModel.StringInput;
             }
             return null;
         }
@@ -167,18 +198,21 @@ namespace BrawlInstaller.Services
         /// <param name="title">Title displayed in dialog</param>
         /// <param name="caption">Caption displayed in dialog</param>
         /// <returns></returns>
-        public object OpenDropDownDialog<T>(IEnumerable<T> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item")
+        public object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item")
         {
-            var dialog = new DropDownWindow();
-            dialog.Title = title;
-            dialog.Message = caption;
-            dialog.ListItems = list;
-            dialog.DisplayMemberPath = displayMemberPath;
-            dialog.SelectedItem = list.FirstOrDefault();
-            var result = dialog.ShowDialog();
-            if (result == true)
+            var dialog = GenerateWindow(title);
+            _dropDownViewModel.Caption = caption;
+            _dropDownViewModel.MessageBoxButton = MessageBoxButton.OKCancel;
+            _dropDownViewModel.MessageIcon = MessageBoxImage.None;
+            _dropDownViewModel.Image = null;
+            _dropDownViewModel.ListItems = list;
+            _dropDownViewModel.DisplayMemberPath = displayMemberPath;
+            _dropDownViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _dropDownViewModel;
+            dialog.ShowDialog();
+            if (_dropDownViewModel.DialogResult)
             {
-                return dialog.SelectedItem;
+                return _dropDownViewModel.SelectedItem;
             }
             return null;
         }
@@ -192,18 +226,19 @@ namespace BrawlInstaller.Services
         /// <returns>Selected node</returns>
         public ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null)
         {
-            var dialog = new NodeSelectorWindow();
-            dialog.Title = title;
-            dialog.Message = caption;
-            dialog.ListItems = nodeList;
-            if (allowedNodeTypes != null)
+            var dialog = GenerateWindow(title);
+            _nodeSelectorViewModel.Caption = caption;
+            _nodeSelectorViewModel.MessageBoxButton = MessageBoxButton.OKCancel;
+            _nodeSelectorViewModel.MessageIcon = MessageBoxImage.None;
+            _nodeSelectorViewModel.Image = null;
+            _nodeSelectorViewModel.ListItems = nodeList;
+            _nodeSelectorViewModel.AllowedTypes = allowedNodeTypes;
+            _nodeSelectorViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _nodeSelectorViewModel;
+            dialog.ShowDialog();
+            if (_nodeSelectorViewModel.DialogResult)
             {
-                dialog.AllowedNodeTypes = allowedNodeTypes;
-            }
-            var result = dialog.ShowDialog();
-            if (result == true)
-            {
-                return dialog.SelectedItem as ResourceNode;
+                return _nodeSelectorViewModel.SelectedItem;
             }
             return null;
         }

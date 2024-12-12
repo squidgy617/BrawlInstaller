@@ -49,4 +49,16 @@
     <DataTemplate DataType="{x:Type viewModels:StageCosmeticViewModel}">
         <views:StageCosmeticView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:MessageViewModel}">
+        <views:MessageView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:StringInputViewModel}">
+        <views:StringInputView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:DropDownViewModel}">
+        <views:DropDownView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:NodeSelectorViewModel}">
+        <views:NodeSelectorView/>
+    </DataTemplate>
 </ResourceDictionary>
