@@ -207,7 +207,7 @@
                         </StackPanel>
                         <Label x:Name="patPathLabel" Content="Node Path:" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
-                            <TextBox x:Name="patPathTextBox" Text="{Binding SelectedPatSettings.Path}" Width="180"/>
+                            <TextBox x:Name="patPathTextBox" IsReadOnly="True" Text="{Binding SelectedPatSettings.Path}" Width="180"/>
                             <Button x:Name="patPathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectPatNodePathCommand}"/>
                             <Button x:Name="patClearPathButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearPatNodePathCommand}"/>
                         </StackPanel>
