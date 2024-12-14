@@ -242,18 +242,13 @@ namespace BrawlInstaller.ViewModels
             if (SelectedRandomStageNameLocation != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
-                var rootNode = _fileService.OpenFile(Path.Combine(buildPath, SelectedRandomStageNameLocation.FilePath));
-                if (rootNode != null)
+                var path = Path.Combine(buildPath, SelectedRandomStageNameLocation.FilePath);
+                var allowedNodes = new List<Type> { typeof(MSBinNode) };
+                var result = _dialogService.OpenNodeSelectorDialog(path, "Select Node", "Select node containing random stage names", allowedNodes);
+                if (!string.IsNullOrEmpty(result))
                 {
-                    var nodes = _fileService.GetNodes(rootNode);
-                    var allowedNodes = new List<Type> { typeof(MSBinNode) };
-                    var result = _dialogService.OpenNodeSelectorDialog(nodes, "Select Node", "Select node containing random stage names", allowedNodes);
-                    if (result != null)
-                    {
-                        SelectedRandomStageNameLocation.NodePath = result.TreePath;
-                        OnPropertyChanged(nameof(RandomStageNamesLocations));
-                    }
-                    _fileService.CloseFile(rootNode);
+                    SelectedRandomStageNameLocation.NodePath = result;
+                    OnPropertyChanged(nameof(RandomStageNamesLocations));
                 }
             }
         }

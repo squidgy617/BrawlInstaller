@@ -39,8 +39,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenDropDownDialog(IEnumerable{object}, string, string, string)"/>
         object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
-        /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(List{ResourceNode}, string, string, List{ResourceType})"/>
-        ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null);
+        /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(string, string, string, List{ResourceType})"/>
+        string OpenNodeSelectorDialog(string filePath, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null);
     }
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
@@ -51,9 +51,13 @@ namespace BrawlInstaller.Services
         IDropDownViewModel _dropDownViewModel { get; }
         INodeSelectorViewModel _nodeSelectorViewModel { get; }
 
+        // Services
+        IFileService _fileService { get; }
+
         [ImportingConstructor]
-        public DialogService(IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel) 
+        public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel) 
         {
+            _fileService = fileService;
             _messageViewModel = messageViewModel;
             _stringInputViewModel = stringInputViewModel;
             _dropDownViewModel = dropDownViewModel;
@@ -219,11 +223,37 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Open node selector dialog
         /// </summary>
+        /// <param name="filePath">File to open node selector for</param>
+        /// <param name="title">Title to display</param>
+        /// <param name="caption">Caption to display</param>
+        /// <param name="allowedNodeTypes">Node types allowed to be selected</param>
+        /// <returns></returns>
+        public string OpenNodeSelectorDialog(string filePath, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null)
+        {
+            var rootNode = _fileService.OpenFile(filePath);
+            if (rootNode != null)
+            {
+                var nodeList = new List<ResourceNode> { rootNode };
+                var selectedNode = OpenNodeSelectorDialog(nodeList, title, caption, allowedNodeTypes);
+                var nodePath = string.Empty;
+                if (selectedNode != null)
+                {
+                    nodePath = selectedNode.TreePath;
+                }
+                _fileService.CloseFile(rootNode);
+                return nodePath;
+            }
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Open node selector dialog
+        /// </summary>
         /// <param name="nodeList">List of nodes to display</param>
         /// <param name="title">Title</param>
         /// <param name="caption">Caption</param>
         /// <returns>Selected node</returns>
-        public ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null)
+        private ResourceNode OpenNodeSelectorDialog(List<ResourceNode> nodeList, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null)
         {
             var dialog = GenerateWindow(title);
             _nodeSelectorViewModel.Caption = caption;
