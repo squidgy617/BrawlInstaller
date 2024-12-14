@@ -47,6 +47,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
         public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
         public ICommand AddPatSettingsCommand => new RelayCommand(param => AddPatSettings());
+        public ICommand RemovePatSettingsCommand => new RelayCommand(param => RemovePatSettings());
         public ICommand AddDefinitionCommand => new RelayCommand(param => AddDefinition());
         public ICommand RemoveDefinitionCommand => new RelayCommand(param => RemoveDefinition());
         public ICommand CopyDefinitionCommand => new RelayCommand(param => CopyDefinition());
@@ -183,6 +184,15 @@ namespace BrawlInstaller.ViewModels
         {
             SelectedDefinition.PatSettings.Add(new PatSettings());
             OnPropertyChanged(nameof(SelectedDefinition));
+        }
+
+        public void RemovePatSettings()
+        {
+            if (SelectedPatSettings != null)
+            {
+                SelectedDefinition.PatSettings.Remove(SelectedPatSettings);
+                OnPropertyChanged(nameof(SelectedDefinition));
+            }
         }
 
         public void AddDefinition()

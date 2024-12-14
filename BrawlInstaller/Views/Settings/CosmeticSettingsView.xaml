@@ -178,7 +178,7 @@
                 <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1"/>
                 <CheckBox x:Name="alwaysInheritCheckBox" Content="Use other style if not available" IsChecked="{Binding SelectedDefinition.AlwaysInheritStyle}" Grid.Row="1" Grid.Column="1"/>
             </Grid>
-            <Expander x:Name="patExpander" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6" IsExpanded="True">
+            <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -200,7 +200,10 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60"/>
-                        <Button x:Name="addPatSettingsButton" Content="+" Style="{StaticResource miniButton}" Grid.Column="1" Command="{Binding AddPatSettingsCommand}"/>
+                        <StackPanel Grid.Column="1">
+                            <Button x:Name="addPatSettingsButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddPatSettingsCommand}"/>
+                            <Button x:Name="removePatSettingsButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePatSettingsCommand}"/>
+                        </StackPanel>
                         <TextBox x:Name="patPathTextBox" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
                     </Grid>
                     <Grid Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
@@ -228,7 +231,7 @@
                     </Grid>
                     
                 </Grid>
-            </Expander>
+            </GroupBox>
         </Grid>
     </Grid>
 </UserControl>
