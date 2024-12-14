@@ -18,6 +18,9 @@ namespace BrawlInstaller.Validation
         public static readonly DependencyProperty BuildPathProperty =
             DependencyProperty.Register(nameof(BuildPath), typeof(string), typeof(BuildFilePathWrapper), new FrameworkPropertyMetadata(string.Empty));
 
+        public static readonly DependencyProperty ErrorTextProperty =
+            DependencyProperty.Register(nameof(ErrorText), typeof(string), typeof(BuildFilePathWrapper), new FrameworkPropertyMetadata(string.Empty));
+
         public string FilePath
         {
             get { return (string)GetValue(FilePathProperty); }
@@ -28,6 +31,12 @@ namespace BrawlInstaller.Validation
         {
             get { return (string)GetValue(BuildPathProperty); }
             set { SetValue(BuildPathProperty, value); }
+        }
+
+        public string ErrorText
+        {
+            get { return (string)GetValue(ErrorTextProperty); }
+            set { SetValue(ErrorTextProperty, value); }
         }
     }
 
@@ -46,7 +55,7 @@ namespace BrawlInstaller.Validation
 
             if (!string.IsNullOrEmpty(Wrapper.BuildPath) && !string.IsNullOrEmpty(path) && (path.Contains(Wrapper.BuildPath) || Wrapper.BuildPath.Contains(path) || Path.IsPathRooted(path)))
             {
-                return new ValidationResult(false, "Path must be within build and cannot be root folder of build.");
+                return new ValidationResult(false, !string.IsNullOrEmpty(Wrapper?.ErrorText) ? Wrapper.ErrorText : "Path must be within build and cannot be root folder of build.");
             }
             return ValidationResult.ValidResult;
         }
