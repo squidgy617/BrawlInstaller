@@ -39,8 +39,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenDropDownDialog(IEnumerable{object}, string, string, string)"/>
         object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
-        /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(string, string, string, List{ResourceType})"/>
-        string OpenNodeSelectorDialog(string filePath, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null);
+        /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(string, string, string, List{Type})"/>
+        (string NodePath, bool Result) OpenNodeSelectorDialog(string filePath, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null);
     }
     [Export(typeof(IDialogService))]
     internal class DialogService : IDialogService
@@ -228,8 +228,9 @@ namespace BrawlInstaller.Services
         /// <param name="caption">Caption to display</param>
         /// <param name="allowedNodeTypes">Node types allowed to be selected</param>
         /// <returns></returns>
-        public string OpenNodeSelectorDialog(string filePath, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null)
+        public (string NodePath, bool Result) OpenNodeSelectorDialog(string filePath, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null)
         {
+            var result = false;
             var rootNode = _fileService.OpenFile(filePath);
             if (rootNode != null)
             {
@@ -239,11 +240,16 @@ namespace BrawlInstaller.Services
                 if (selectedNode != null)
                 {
                     nodePath = selectedNode.TreePath;
+                    if (nodePath == rootNode.Name)
+                    {
+                        nodePath = string.Empty;
+                    }
+                    result = true;
                 }
                 _fileService.CloseFile(rootNode);
-                return nodePath;
+                return (nodePath, result);
             }
-            return string.Empty;
+            return (string.Empty, result);
         }
 
         /// <summary>
@@ -262,6 +268,7 @@ namespace BrawlInstaller.Services
             _nodeSelectorViewModel.Image = null;
             _nodeSelectorViewModel.ListItems = nodeList;
             _nodeSelectorViewModel.AllowedTypes = allowedNodeTypes;
+            _nodeSelectorViewModel.SelectedItem = null;
             _nodeSelectorViewModel.OnRequestClose += (s, e) => dialog.Close();
             dialog.Content = _nodeSelectorViewModel;
             dialog.ShowDialog();

@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.Types;
 using BrawlLib.Wii.Compression;
 using BrawlLib.Wii.Textures;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +50,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddDefinitionCommand => new RelayCommand(param => AddDefinition());
         public ICommand RemoveDefinitionCommand => new RelayCommand(param => RemoveDefinition());
         public ICommand CopyDefinitionCommand => new RelayCommand(param => CopyDefinition());
+        public ICommand SelectCosmeticNodePathCommand => new RelayCommand(param => SelectCosmeticNodePath());
+        public ICommand ClearCosmeticNodePathCommand => new RelayCommand(param => ClearCosmeticNodePath());
 
         [ImportingConstructor]
         public CosmeticSettingsViewModel(IDialogService dialogService, ISettingsService settingsService)
@@ -207,6 +211,31 @@ namespace BrawlInstaller.ViewModels
                 SelectedDefinition = newDefinition;
                 OnPropertyChanged(nameof(CosmeticSettings));
                 OnPropertyChanged(nameof(DefinitionList));
+                OnPropertyChanged(nameof(SelectedDefinition));
+            }
+        }
+
+        public void SelectCosmeticNodePath()
+        {
+            if (SelectedDefinition != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var path = Path.Combine(buildPath, SelectedDefinition.InstallLocation.FilePath);
+                var allowedNodes = new List<Type> { typeof(ARCNode), typeof(BRRESNode) };
+                var result = _dialogService.OpenNodeSelectorDialog(path, "Select Node", "Select node containing cosmetics", allowedNodes);
+                if (result.Result)
+                {
+                    SelectedDefinition.InstallLocation.NodePath = result.NodePath;
+                    OnPropertyChanged(nameof(SelectedDefinition));
+                }
+            }
+        }
+
+        public void ClearCosmeticNodePath()
+        {
+            if (SelectedDefinition != null)
+            {
+                SelectedDefinition.InstallLocation.NodePath = string.Empty;
                 OnPropertyChanged(nameof(SelectedDefinition));
             }
         }

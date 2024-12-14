@@ -95,7 +95,11 @@
                 <Label Target="{Binding ElementName=filePathTextBox}" Style="{StaticResource errorText}" Width="200"/>
             </StackPanel>
             <Label x:Name="nodePathLabel" Content="Node Path:" Grid.Row="1"/>
-            <TextBox x:Name="nodePathTextBox" Text="{Binding SelectedDefinition.InstallLocation.NodePath}" Grid.Column="1" Grid.Row="1" Width="120"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                <TextBox x:Name="nodePathTextBox" Text="{Binding SelectedDefinition.InstallLocation.NodePath}" Width="120" IsReadOnly="True"/>
+                <Button x:Name="nodePathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectCosmeticNodePathCommand}"/>
+                <Button x:Name="nodePathClearButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearCosmeticNodePathCommand}"/>
+            </StackPanel>
             <Label x:Name="fileExtensionLabel" Content="Extension:" Grid.Row="2"/>
             <ComboBox x:Name="fileExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedDefinition.InstallLocation.FileExtension}" Grid.Row="2" Grid.Column="1" Width="120"/>
             <Label x:Name="modelPathLabel" Content="Model Path:" Grid.Row="3"/>
