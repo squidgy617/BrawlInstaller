@@ -52,6 +52,9 @@ namespace BrawlInstaller.ViewModels
         public ICommand CopyDefinitionCommand => new RelayCommand(param => CopyDefinition());
         public ICommand SelectCosmeticNodePathCommand => new RelayCommand(param => SelectCosmeticNodePath());
         public ICommand ClearCosmeticNodePathCommand => new RelayCommand(param => ClearCosmeticNodePath());
+        public ICommand SelectModelPathCommand => new RelayCommand(param => SelectModelPath());
+        public ICommand ClearModelPathCommand => new RelayCommand(param => ClearModelPath());
+        public ICommand NullModelPathCommand => new RelayCommand(param => NullModelPath());
 
         [ImportingConstructor]
         public CosmeticSettingsViewModel(IDialogService dialogService, ISettingsService settingsService)
@@ -236,6 +239,40 @@ namespace BrawlInstaller.ViewModels
             if (SelectedDefinition != null)
             {
                 SelectedDefinition.InstallLocation.NodePath = string.Empty;
+                OnPropertyChanged(nameof(SelectedDefinition));
+            }
+        }
+
+        public void SelectModelPath()
+        {
+            if (SelectedDefinition != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var path = Path.Combine(buildPath, SelectedDefinition.InstallLocation.FilePath);
+                var allowedNodes = new List<Type> { typeof(ARCNode), typeof(BRRESNode) };
+                var result = _dialogService.OpenNodeSelectorDialog(path, "Select Node", "Select node containing models", allowedNodes);
+                if (result.Result)
+                {
+                    SelectedDefinition.ModelPath = result.NodePath;
+                    OnPropertyChanged(nameof(SelectedDefinition));
+                }
+            }
+        }
+
+        public void ClearModelPath()
+        {
+            if (SelectedDefinition != null)
+            {
+                SelectedDefinition.ModelPath = string.Empty;
+                OnPropertyChanged(nameof(SelectedDefinition));
+            }
+        }
+
+        public void NullModelPath()
+        {
+            if (SelectedDefinition != null)
+            {
+                SelectedDefinition.ModelPath = null;
                 OnPropertyChanged(nameof(SelectedDefinition));
             }
         }

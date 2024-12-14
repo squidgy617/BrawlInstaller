@@ -7,6 +7,7 @@
              xmlns:userControls="clr-namespace:BrawlInstaller.UserControls"
              xmlns:validationRules="clr-namespace:BrawlInstaller.Validation"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:CosmeticSettingsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -107,9 +108,20 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="modelPathTextBox" Text="{Binding SelectedDefinition.ModelPath}" Width="120" IsEnabled="{Binding ElementName=modelPathCheckBox, Path=IsChecked}"/>
-                <CheckBox x:Name="modelPathCheckBox" Grid.Column="1" IsChecked="{Binding SelectedDefinition.ModelPath, Mode=OneWay, Converter={StaticResource nullBoolConverter}}"/>
+                <StackPanel Orientation="Horizontal" IsEnabled="{Binding ElementName=modelPathCheckBox, Path=IsChecked}">
+                    <TextBox x:Name="modelPathTextBox" Text="{Binding SelectedDefinition.ModelPath}" Width="120"/>
+                    <Button x:Name="modelPathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectModelPathCommand}"/>
+                    <Button x:Name="modelPathClearButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearModelPathCommand}"/>
+                </StackPanel>
+                <CheckBox x:Name="modelPathCheckBox" Grid.Column="1" IsChecked="{Binding SelectedDefinition.ModelPath, Mode=OneWay, Converter={StaticResource nullBoolConverter}}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Unchecked">
+                            <i:InvokeCommandAction Command="{Binding NullModelPathCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
             </Grid>
             <Label x:Name="hdPathLabel" Content="HD Image Path:" Grid.Row="4"/>
             <TextBox x:Name="hdPathTextBox" Text="{Binding SelectedDefinition.HDImageLocation}" Grid.Row="4" Grid.Column="1" Width="180"/>

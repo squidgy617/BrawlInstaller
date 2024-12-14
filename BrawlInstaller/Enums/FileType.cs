@@ -9,7 +9,7 @@ namespace BrawlInstaller.Enums
 {
     public enum FileType
     {
-        [Description("Fighter FIles")]
+        [Description("Fighter Files")]
         FighterFiles,
         [Description("BrawlEx Folder")]
         BrawlEx,
