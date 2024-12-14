@@ -50,6 +50,13 @@ namespace BrawlInstaller.UserControls
             BindsTwoWayByDefault = true
         });
 
+        public static readonly DependencyProperty FolderButtonVisibilityProperty = DependencyProperty.Register("FolderButtonEnabled", typeof(Visibility), typeof(FileBox), new FrameworkPropertyMetadata
+        {
+            DefaultValue = Visibility.Collapsed,
+            PropertyChangedCallback = OnFolderButtonVisibilityPropertyChanged,
+            BindsTwoWayByDefault = true
+        });
+
         private static void OnTextPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var control = sender as FileBox;
@@ -107,7 +114,27 @@ namespace BrawlInstaller.UserControls
             }
         }
 
+        private static void OnFolderButtonVisibilityPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var control = sender as FileBox;
+
+            control.SetCurrentValue(FolderButtonVisibilityProperty, e.NewValue);
+        }
+
+        public Visibility FolderButtonVisibility
+        {
+            get
+            {
+                return (Visibility)GetValue(FolderButtonVisibilityProperty);
+            }
+            set
+            {
+                SetCurrentValue(FolderButtonVisibilityProperty, value);
+            }
+        }
+
         public string Title { get; set; } = "Select a file";
+        public string FolderTitle { get; set; } = "Select a folder";
         public int TextBoxWidth { get; set; } = 60;
         public bool IsReadOnly { get; set; } = true;
 
@@ -147,6 +174,22 @@ namespace BrawlInstaller.UserControls
                     {
                         Text = Text.Replace(Path.GetFullPath(ExcludePath), "");
                     }
+                }
+            }
+        }
+
+        private void FolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new VistaFolderBrowserDialog();
+            dialog.Description = FolderTitle;
+
+            var result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Text = Path.GetFullPath(dialog.SelectedPath);
+                if (!string.IsNullOrEmpty(ExcludePath))
+                {
+                    Text = Text.Replace(Path.GetFullPath(ExcludePath), "");
                 }
             }
         }

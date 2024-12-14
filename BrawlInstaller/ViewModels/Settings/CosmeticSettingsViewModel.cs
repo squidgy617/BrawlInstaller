@@ -39,6 +39,7 @@ namespace BrawlInstaller.ViewModels
 
         // Services
         IDialogService _dialogService { get; }
+        ISettingsService _settingsService { get; }
 
         // Commands
         public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
@@ -49,9 +50,10 @@ namespace BrawlInstaller.ViewModels
         public ICommand CopyDefinitionCommand => new RelayCommand(param => CopyDefinition());
 
         [ImportingConstructor]
-        public CosmeticSettingsViewModel(IDialogService dialogService)
+        public CosmeticSettingsViewModel(IDialogService dialogService, ISettingsService settingsService)
         {
             _dialogService = dialogService;
+            _settingsService = settingsService;
 
             WeakReferenceMessenger.Default.Register<SettingsLoadedMessage>(this, (recipient, message) =>
             {
@@ -60,6 +62,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
+        public AppSettings AppSettings { get => _settingsService.AppSettings; }
         public List<CosmeticDefinition> CosmeticSettings { get => _cosmeticSettings; set { _cosmeticSettings = value; OnPropertyChanged(nameof(CosmeticSettings)); } }
 
         [DependsUpon(nameof(CosmeticSettings))]

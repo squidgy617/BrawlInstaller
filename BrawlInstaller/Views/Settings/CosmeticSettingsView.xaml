@@ -4,6 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
+             xmlns:userControls="clr-namespace:BrawlInstaller.UserControls"
+             xmlns:validationRules="clr-namespace:BrawlInstaller.Validation"
+             xmlns:resources="clr-namespace:BrawlInstaller.Resources"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:CosmeticSettingsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -48,7 +51,7 @@
                 <ListBox x:Name="definitionListBox" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Width="180" Height="120" Grid.RowSpan="3"/>
                 <Button x:Name="definitionAddButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddDefinitionCommand}" Grid.Column="1"/>
                 <Button x:Name="definitionRemoveButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveDefinitionCommand}" Grid.Column="1" Grid.Row="1"/>
-                <Button x:Name="definitionCopyButton" Content="🗐" Style="{StaticResource miniButton}" Command="{Binding CopyDefinitionCommand}" Grid.Column="1" Grid.Row="2"/>
+                <Button x:Name="definitionCopyButton" Content="📋" Style="{StaticResource miniButton}" Command="{Binding CopyDefinitionCommand}" Grid.Column="1" Grid.Row="2"/>
             </Grid>
         </Grid>
         <Grid x:Name="definitionSettingsGrid" Grid.Column="1" Visibility="{Binding SelectedDefinition, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
@@ -72,7 +75,25 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="filePathLabel" Content="Install Location:"/>
-            <TextBox x:Name="filePathTextBox" Text="{Binding SelectedDefinition.InstallLocation.FilePath}" Grid.Column="1" Width="180"/>
+            <StackPanel Grid.Column="1">
+                <userControls:FileBox x:Name="filePathTextBox" Title="Select file where cosmetics are located" FolderTitle="Select folder where cosmetics are located" TextBoxWidth="180" FolderButtonVisibility="Visible" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Archive files (*.pac, *.brres)|*.pac;*.brres">
+                    <userControls:FileBox.Resources>
+                        <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                    </userControls:FileBox.Resources>
+                    <userControls:FileBox.Text>
+                        <Binding Path="SelectedDefinition.InstallLocation.FilePath">
+                            <Binding.ValidationRules>
+                                <validationRules:BuildFilePathRule>
+                                    <validationRules:BuildFilePathRule.Wrapper>
+                                        <validationRules:BuildFilePathWrapper FilePath="{Binding Data.SelectedDefinition.InstallLocation.FilePath, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.BuildPath, Source={StaticResource proxy}}"/>
+                                    </validationRules:BuildFilePathRule.Wrapper>
+                                </validationRules:BuildFilePathRule>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </userControls:FileBox.Text>
+                </userControls:FileBox>
+                <Label Target="{Binding ElementName=filePathTextBox}" Style="{StaticResource errorText}" Width="200"/>
+            </StackPanel>
             <Label x:Name="nodePathLabel" Content="Node Path:" Grid.Row="1"/>
             <TextBox x:Name="nodePathTextBox" Text="{Binding SelectedDefinition.InstallLocation.NodePath}" Grid.Column="1" Grid.Row="1" Width="120"/>
             <Label x:Name="fileExtensionLabel" Content="Extension:" Grid.Row="2"/>
