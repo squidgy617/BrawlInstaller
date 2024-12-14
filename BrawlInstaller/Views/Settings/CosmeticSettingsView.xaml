@@ -189,7 +189,6 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="patPathsLabel" Content="Paths:"/>
                     <Grid x:Name="patSettingsGrid" Grid.Column="1" Grid.RowSpan="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -198,13 +197,20 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60"/>
-                        <StackPanel Grid.Column="1">
+                        <Label x:Name="patPathsLabel" Content="Paths:"/>
+                        <ListBox x:Name="patPathsListBox" Grid.Column="1" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60"/>
+                        <StackPanel Grid.Column="2">
                             <Button x:Name="addPatSettingsButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddPatSettingsCommand}"/>
                             <Button x:Name="removePatSettingsButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePatSettingsCommand}"/>
                         </StackPanel>
-                        <TextBox x:Name="patPathTextBox" Text="{Binding SelectedPatSettings.Path}" Width="180" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
+                        <Label x:Name="patPathLabel" Content="Node Path:" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
+                            <TextBox x:Name="patPathTextBox" Text="{Binding SelectedPatSettings.Path}" Width="180"/>
+                            <Button x:Name="patPathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectPatNodePathCommand}"/>
+                            <Button x:Name="patClearPathButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearPatNodePathCommand}"/>
+                        </StackPanel>
                     </Grid>
                     <Grid Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
                         <Grid.ColumnDefinitions>

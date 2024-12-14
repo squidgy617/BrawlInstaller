@@ -56,6 +56,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand SelectModelPathCommand => new RelayCommand(param => SelectModelPath());
         public ICommand ClearModelPathCommand => new RelayCommand(param => ClearModelPath());
         public ICommand NullModelPathCommand => new RelayCommand(param => NullModelPath());
+        public ICommand SelectPatNodePathCommand => new RelayCommand(param => SelectPatNodePath());
+        public ICommand ClearPatNodePathCommand => new RelayCommand(param => ClearPatNodePath());
 
         [ImportingConstructor]
         public CosmeticSettingsViewModel(IDialogService dialogService, ISettingsService settingsService)
@@ -283,6 +285,31 @@ namespace BrawlInstaller.ViewModels
             if (SelectedDefinition != null)
             {
                 SelectedDefinition.ModelPath = null;
+                OnPropertyChanged(nameof(SelectedDefinition));
+            }
+        }
+
+        public void SelectPatNodePath()
+        {
+            if (SelectedPatSettings != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var path = Path.Combine(buildPath, SelectedDefinition.InstallLocation.FilePath);
+                var allowedNodes = new List<Type> { typeof(PAT0TextureNode) };
+                var result = _dialogService.OpenNodeSelectorDialog(path, "Select Node", "Select node containing PAT0 texture entries", allowedNodes);
+                if (result.Result)
+                {
+                    SelectedPatSettings.Path = result.NodePath;
+                    OnPropertyChanged(nameof(SelectedDefinition));
+                }
+            }
+        }
+
+        public void ClearPatNodePath()
+        {
+            if (SelectedPatSettings != null)
+            {
+                SelectedPatSettings.Path = string.Empty;
                 OnPropertyChanged(nameof(SelectedDefinition));
             }
         }
