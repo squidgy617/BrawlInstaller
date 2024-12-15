@@ -28,7 +28,7 @@
             <Label x:Name="fighterListLabel" HorizontalAlignment="Left" Content="Fighters:" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
             <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
             <Button x:Name="loadButton" Content="Load" Grid.Row="2" Command="{Binding LoadFightersCommand}"/>
-            <Button x:Name="saveButton" Content="Save" Grid.Row="2" Grid.Column="1" Command="{Binding SaveFightersCommand}"/>
+            <!--<Button x:Name="saveButton" Content="Save" Grid.Row="2" Grid.Column="1" Command="{Binding SaveFightersCommand}"/>-->
             <Grid x:Name="buttonGrid" Grid.Row="1" Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

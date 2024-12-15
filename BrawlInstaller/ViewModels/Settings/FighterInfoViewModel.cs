@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static BrawlInstaller.ViewModels.MainControlsViewModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -50,6 +51,21 @@ namespace BrawlInstaller.ViewModels
             WeakReferenceMessenger.Default.Register<UpdateFighterListMessage>(this, (recipient, message) =>
             {
                 UpdateFighterList(message);
+            });
+
+            WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
+            });
+
+            WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
+            {
+                SaveFighters();
+            });
+
+            WeakReferenceMessenger.Default.Register<SettingsLoadedMessage>(this, (recipient, message) =>
+            {
+                GetFighters();
             });
         }
 
@@ -153,6 +169,13 @@ namespace BrawlInstaller.ViewModels
         {
             FighterInfoList = new ObservableCollection<FighterInfo>(message.Value.Copy());
             OnPropertyChanged(nameof(FighterInfoList));
+        }
+
+        private void UpdateSettings()
+        {
+            GetFighters();
+            OnPropertyChanged(nameof(FighterInfoList));
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
     }
 }

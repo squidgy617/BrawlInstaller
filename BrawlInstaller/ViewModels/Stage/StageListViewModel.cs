@@ -260,7 +260,7 @@ namespace BrawlInstaller.ViewModels
             StageTable = _stageService.GetStageSlots();
             StageLists = _stageService.GetStageLists(StageTable);
             SelectedStageList = StageLists.FirstOrDefault();
-            SelectedPage = SelectedStageList.Pages.FirstOrDefault();
+            SelectedPage = SelectedStageList?.Pages?.FirstOrDefault();
             IncompleteStageIds = _stageService.GetIncompleteStageIds();
             OnPropertyChanged(nameof(StageTable));
             OnPropertyChanged(nameof(StageLists));

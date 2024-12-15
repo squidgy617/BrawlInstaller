@@ -133,11 +133,13 @@ namespace BrawlInstaller.ViewModels
         private void SaveSettings()
         {
             _settingsService.SaveSettings(BuildSettings, $"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+            WeakReferenceMessenger.Default.Send(new SettingsSavedMessage(BuildSettings));
         }
 
         private void LoadSettings()
         {
             BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+            WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }
 
         private void UpdateSettings()
@@ -267,6 +269,13 @@ namespace BrawlInstaller.ViewModels
     public class SettingsLoadedMessage : ValueChangedMessage<BuildSettings>
     {
         public SettingsLoadedMessage(BuildSettings buildSettings) : base(buildSettings)
+        {
+        }
+    }
+
+    public class SettingsSavedMessage : ValueChangedMessage<BuildSettings>
+    {
+        public SettingsSavedMessage(BuildSettings buildSettings) : base(buildSettings)
         {
         }
     }
