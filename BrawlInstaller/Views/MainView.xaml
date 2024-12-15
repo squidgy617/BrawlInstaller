@@ -13,10 +13,10 @@
         </Grid.RowDefinitions>
         <ContentControl x:Name="MainControlsView" Content="{Binding MainControlsViewModel}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="Auto" Height="Auto"/>
         <TabControl x:Name="MainTabControl" Grid.Row="1" SelectedIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <TabItem Header="Fighters" IsEnabled="{Binding BuildSettingsExist}">
+            <TabItem Header="Fighters" IsEnabled="{Binding BuildSettingsExist}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="FighterView" Content="{Binding FighterViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
-            <TabItem Header="Stages" IsEnabled="{Binding BuildSettingsExist}">
+            <TabItem Header="Stages" IsEnabled="{Binding BuildSettingsExist}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="StageView" Content="{Binding StageViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
             <TabItem Header="Settings">
