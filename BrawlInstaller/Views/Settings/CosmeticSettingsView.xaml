@@ -78,6 +78,13 @@
             <Label x:Name="filePathLabel" Content="Install Location:"/>
             <StackPanel Grid.Column="1">
                 <userControls:FileBox x:Name="filePathTextBox" Title="Select file where cosmetics are located" FolderTitle="Select folder where cosmetics are located" TextBoxWidth="180" FolderButtonVisibility="Visible" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Archive files (*.pac, *.brres)|*.pac;*.brres">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="FilePathChanged">
+                            <i:InvokeCommandAction Command="{Binding ClearCosmeticNodePathCommand}"/>
+                            <i:InvokeCommandAction Command="{Binding NullModelPathCommand}"/>
+                            <i:InvokeCommandAction Command="{Binding ResetPatSettingsCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <userControls:FileBox.Resources>
                         <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
                     </userControls:FileBox.Resources>

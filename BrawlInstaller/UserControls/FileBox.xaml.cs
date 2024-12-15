@@ -138,8 +138,11 @@ namespace BrawlInstaller.UserControls
         public int TextBoxWidth { get; set; } = 60;
         public bool IsReadOnly { get; set; } = true;
 
+        public event EventHandler FilePathChanged;
+
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
+            FilePathChanged?.Invoke(this, EventArgs.Empty);
             Text = string.Empty;
         }
 
@@ -154,6 +157,7 @@ namespace BrawlInstaller.UserControls
                 var result = dialog.ShowDialog();
                 if (result == true)
                 {
+                    FilePathChanged?.Invoke(this, EventArgs.Empty);
                     Text = Path.GetFullPath(dialog.FileName);
                     if (!string.IsNullOrEmpty(ExcludePath))
                     {
@@ -170,6 +174,7 @@ namespace BrawlInstaller.UserControls
                 var result = dialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
+                    FilePathChanged?.Invoke(this, EventArgs.Empty);
                     Text = Path.GetFullPath(dialog.SelectedPath);
                     if (!string.IsNullOrEmpty(ExcludePath))
                     {
@@ -188,6 +193,7 @@ namespace BrawlInstaller.UserControls
             var result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
+                FilePathChanged?.Invoke(this, EventArgs.Empty);
                 Text = Path.GetFullPath(dialog.SelectedPath);
                 if (!string.IsNullOrEmpty(ExcludePath))
                 {
