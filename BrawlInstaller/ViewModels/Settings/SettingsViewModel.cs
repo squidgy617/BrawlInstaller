@@ -70,12 +70,6 @@ namespace BrawlInstaller.ViewModels
 
             BuildSettings = _settingsService.BuildSettings.Copy();
 
-            FilePathSettings = new CompositeCollection
-            {
-                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FilePaths },
-                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.AsmPaths }
-            };
-
             SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault();
 
             WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
@@ -97,7 +91,12 @@ namespace BrawlInstaller.ViewModels
         public string SelectedSettingsOption { get => _selectedSettingsOption; set { _selectedSettingsOption = value; OnPropertyChanged(nameof(SelectedSettingsOption)); } }
 
         [DependsUpon(nameof(BuildSettings))]
-        public CompositeCollection FilePathSettings { get => _filePathSettings; set { _filePathSettings = value; OnPropertyChanged(nameof(FilePathSettings)); } }
+        public CompositeCollection FilePathSettings { get => new CompositeCollection
+            {
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FilePaths },
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.AsmPaths }
+            };
+        }
 
         [DependsUpon(nameof(BuildSettings))]
         public ObservableCollection<FilePath> StageListPaths { get => BuildSettings.FilePathSettings.StageListPaths != null ? new ObservableCollection<FilePath>(BuildSettings.FilePathSettings.StageListPaths) : new ObservableCollection<FilePath>(); }
@@ -139,6 +138,7 @@ namespace BrawlInstaller.ViewModels
         private void LoadSettings()
         {
             BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+            OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }
 

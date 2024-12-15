@@ -278,11 +278,18 @@
                 </TabItem>
             </TabControl>
         </ScrollViewer>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}"/>
-            <Button x:Name="loadButton" Content="Load" Command="{Binding LoadSettingsCommand}"/>
-            <ComboBox x:Name="defaultSettingsDropDown" ItemsSource="{Binding DefaultSettingsOptions}" SelectedItem="{Binding SelectedSettingsOption}"/>
-            <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}"/>
-        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <WrapPanel Orientation="Horizontal">
+                <Button x:Name="loadButton" Content="Reset" Command="{Binding LoadSettingsCommand}" VerticalAlignment="Bottom"/>
+                <Label x:Name="defaultSettingsLabel" Content="Defaults:" VerticalAlignment="Bottom"/>
+                <ComboBox x:Name="defaultSettingsDropDown" ItemsSource="{Binding DefaultSettingsOptions}" SelectedItem="{Binding SelectedSettingsOption}" VerticalAlignment="Bottom" Width="100"/>
+                <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}" VerticalAlignment="Bottom"/>
+            </WrapPanel>
+            <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        </Grid>
     </Grid>
 </UserControl>
