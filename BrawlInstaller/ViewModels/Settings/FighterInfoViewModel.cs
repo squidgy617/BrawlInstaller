@@ -18,11 +18,11 @@ namespace BrawlInstaller.ViewModels
 
     }
 
-    // TODO: Should this work like regular settings, where it doesn't apply until you hit "Save"?
     [Export(typeof(IFighterInfoViewModel))]
     internal class FighterInfoViewModel : ViewModelBase, IFighterInfoViewModel
     {
         // Private properties
+        private ObservableCollection<FighterInfo> _fighterInfoList;
         private FighterInfo _selectedFighterInfo;
 
         // Services
@@ -54,7 +54,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public ObservableCollection<FighterInfo> FighterInfoList { get => new ObservableCollection<FighterInfo>(_settingsService.FighterInfoList); }
+        public ObservableCollection<FighterInfo> FighterInfoList { get => _fighterInfoList; set { _fighterInfoList = value; OnPropertyChanged(nameof(FighterInfoList)); } }
 
         [DependsUpon(nameof(FighterInfoList))]
         public FighterInfo SelectedFighterInfo { get => _selectedFighterInfo; set { _selectedFighterInfo = value; OnPropertyChanged(nameof(SelectedFighterInfo)); } }
@@ -74,28 +74,26 @@ namespace BrawlInstaller.ViewModels
                     FranchiseId = 0
                 }
             };
-            _settingsService.FighterInfoList.Add(newFighter);
+            FighterInfoList.Add(newFighter);
             SelectedFighterInfo = newFighter;
             OnPropertyChanged(nameof(FighterInfoList));
             OnPropertyChanged(nameof(SelectedFighterInfo));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void RemoveFighter()
         {
-            _settingsService.FighterInfoList.Remove(SelectedFighterInfo);
+            FighterInfoList.Remove(SelectedFighterInfo);
             OnPropertyChanged(nameof(FighterInfoList));
             OnPropertyChanged(nameof(SelectedFighterInfo));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void GetFighters()
         {
             var list = _settingsService.LoadFighterInfoSettings();
             _settingsService.FighterInfoList = list;
+            FighterInfoList = new ObservableCollection<FighterInfo>(list.Copy());
             OnPropertyChanged(nameof(FighterInfoList));
             OnPropertyChanged(nameof(SelectedFighterInfo));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void LoadFighters()
@@ -124,37 +122,36 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             currentFighterList.AddRange(newFighterList.OrderBy(x => x.Ids.FighterConfigId));
-            _settingsService.FighterInfoList = currentFighterList;
+            FighterInfoList = new ObservableCollection<FighterInfo>(currentFighterList);
             OnPropertyChanged(nameof(FighterInfoList));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         // TODO: Include default fighter info stuff, make another pass at IDs that differ between builds
         private void SaveFighters() 
         {
             _settingsService.SaveFighterInfoSettings(FighterInfoList.ToList());
+            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void MoveUp()
         {
             var selected = SelectedFighterInfo;
-            _settingsService.FighterInfoList.MoveUp(SelectedFighterInfo);
+            FighterInfoList.MoveUp(SelectedFighterInfo);
             SelectedFighterInfo = selected;
             OnPropertyChanged(nameof(FighterInfoList));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void MoveDown()
         {
             var selected = SelectedFighterInfo;
-            _settingsService.FighterInfoList.MoveDown(SelectedFighterInfo);
+            FighterInfoList.MoveDown(SelectedFighterInfo);
             SelectedFighterInfo = selected;
             OnPropertyChanged(nameof(FighterInfoList));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
         private void UpdateFighterList(UpdateFighterListMessage message)
         {
+            FighterInfoList = new ObservableCollection<FighterInfo>(message.Value.Copy());
             OnPropertyChanged(nameof(FighterInfoList));
         }
     }

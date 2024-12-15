@@ -332,7 +332,7 @@ namespace BrawlInstaller.ViewModels
             FighterPackagePath = string.Empty;
             // Update fighter list
             var newFighterInfo = FighterPackage.FighterInfo.Copy();
-            if (FighterPackage.PackageType == PackageType.New)
+            if (packageType == PackageType.New)
             {
                 _settingsService.FighterInfoList.Add(newFighterInfo);
             }

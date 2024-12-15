@@ -315,4 +315,17 @@ namespace BrawlInstaller.Common
             }
         }
     }
+
+    public static class FighterInfoListExtensions
+    {
+        public static List<FighterInfo> Copy(this List<FighterInfo> list)
+        {
+            var newList = new List<FighterInfo>();
+            foreach(var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
 }
