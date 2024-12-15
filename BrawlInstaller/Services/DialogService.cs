@@ -249,6 +249,7 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(rootNode);
                 return (nodePath, result);
             }
+            ShowMessage($"File {filePath} could not be found. Verify that the file exists.", "File could not be found", MessageBoxImage.Error);
             return (string.Empty, result);
         }
 
