@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BrawlInstaller"
         xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280">
+        Title="BrawlInstaller" Height="720" Width="1280">
     <Grid>
         <ContentControl x:Name="MainView" Content="{Binding MainViewModel}" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
     </Grid>
