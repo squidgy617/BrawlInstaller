@@ -37,7 +37,7 @@
         <Button x:Name="kirbyHatBrowseButton" Content="Browse..." Command="{Binding LoadKirbyHatCommand}" Grid.Column="2" Grid.Row="2"/>
         <Button x:Name="kirbyHatClearButton" Content="Clear" Command="{Binding ClearKirbyHatCommand}" Grid.Column="3" Grid.Row="2"/>
         <Label x:Name="kirbyHatLoadTypeLabel" Content="Kirby Hat Load Type:" Grid.Row="3"/>
-        <ComboBox x:Name="kirbyHatLoadTypeDropDown" ItemsSource="{Binding KirbyLoadFlagOptions}" SelectedValue="{Binding FighterPackage.FighterInfo.KirbyLoadType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Row="3" Grid.Column="1"/>
+        <ComboBox x:Name="kirbyHatLoadTypeDropDown" ItemsSource="{Binding KirbyLoadFlagOptions}" SelectedValue="{Binding FighterPackage.FighterInfo.KirbyLoadType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Row="3" Grid.Column="1" IsEnabled="{Binding KirbyHatTypeEnabled}"/>
         <Label x:Name="throwReleaseLabel" Content="Throw Release Point:" Grid.Row="4"/>
         <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="4" Grid.Column="1"/>
         <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="4" Grid.Column="2"/>

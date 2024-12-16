@@ -67,6 +67,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, KirbyLoadFlags> KirbyLoadFlagOptions { get => typeof(KirbyLoadFlags).GetDictionary<KirbyLoadFlags>(); }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public bool KirbyHatTypeEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
+
         // Methods
         public void LoadFighterSettings(FighterLoadedMessage message)
         {
