@@ -50,13 +50,13 @@
         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="2" Grid.Column="0"/>
         <userControls:FileBox x:Name="moduleFileBox" Text="{Binding FighterPackage.Module, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="REL file (.rel)|*.rel"/>
         <Label x:Name="soundbankLabel" Content="Soundbank:" Grid.Row="3" Grid.Column="0"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3">
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding SoundbankControlsEnabled}">
             <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding FighterPackage.Soundbank, Mode=TwoWay}" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
             <Label x:Name="soundbankIdLabel" Content="ID:"/>
             <TextBox x:Name="soundbankTextBox" Text="{Binding FighterPackage.FighterInfo.SoundbankId, Converter={StaticResource hexUInt2CharConverter}}"/>
         </StackPanel>
         <Label x:Name="kirbySoundbankLabel" Content="Kirby Soundbank:" Grid.Row="4" Grid.Column="0"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3">
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding SoundbankControlsEnabled}">
             <userControls:FileBox x:Name="kirbySoundbankFileBox" Text="{Binding FighterPackage.KirbySoundbank, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
             <Label x:Name="kirbySoundbankIdLabel" Content="ID:"/>
             <TextBox x:Name="kirbySoundbankTextBox" Text="{Binding FighterPackage.FighterInfo.KirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}}"/>
@@ -94,7 +94,7 @@
         </GroupBox>
         <GroupBox Header="Music" Grid.Row="6" Grid.ColumnSpan="4">
             <StackPanel Orientation="Horizontal">
-                <Grid x:Name="victoryThemeGrid">
+                <Grid x:Name="victoryThemeGrid" IsEnabled="{Binding VictoryThemeControlsEnabled}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>

@@ -94,6 +94,7 @@ namespace BrawlInstaller.ViewModels
             var files = _dialogService.OpenMultiFileDialog("Select ex configs to import", "DAT file (.dat)|*.dat");
             FighterPackage.FighterInfo = _fighterService.GetFighterAttributes(FighterPackage.FighterInfo, files);
             OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
 
         public void GenerateFighterAttributes()

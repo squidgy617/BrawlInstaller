@@ -49,6 +49,12 @@ namespace BrawlInstaller.ViewModels
             {
                 LoadFighterFiles(message);
             });
+
+            WeakReferenceMessenger.Default.Register<AttributesUpdatedMessage>(this, (recipient, message) =>
+            {
+                OnPropertyChanged(nameof(SoundbankControlsEnabled));
+                OnPropertyChanged(nameof(VictoryThemeControlsEnabled));
+            });
         }
 
         // Properties
@@ -68,6 +74,12 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<string> EndingPacFiles { get => FighterPackage != null ? new ObservableCollection<string>(FighterPackage?.EndingPacFiles) : new ObservableCollection<string>(); }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool SoundbankControlsEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool VictoryThemeControlsEnabled { get => FighterPackage?.FighterInfo?.SlotAttributes != null; }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
