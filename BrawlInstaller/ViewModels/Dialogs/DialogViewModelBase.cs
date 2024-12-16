@@ -52,7 +52,7 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public string Caption { get => _caption; set { _caption = value; OnPropertyChanged(nameof(Caption)); } }
+        public string Caption { get => _caption; set { _caption = value.Replace("\n", "\n\n"); OnPropertyChanged(nameof(Caption)); } }
 
         public MessageBoxButton MessageBoxButton { get => _messageBoxButton; set { _messageBoxButton = value; OnPropertyChanged(nameof(MessageBoxButton)); } }
 
