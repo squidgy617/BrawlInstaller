@@ -331,7 +331,7 @@ namespace BrawlInstaller.ViewModels
             // Set package path to internal fighter
             FighterPackagePath = string.Empty;
             // Update fighter list
-            var newFighterInfo = FighterPackage.FighterInfo.Copy();
+            var newFighterInfo = FighterPackage.FighterInfo.CopyNoAttributes();
             if (packageType == PackageType.New)
             {
                 _settingsService.FighterInfoList.Add(newFighterInfo);

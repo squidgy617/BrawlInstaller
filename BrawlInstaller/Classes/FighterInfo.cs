@@ -81,6 +81,16 @@ namespace BrawlInstaller.Classes
             };
             return newFighterInfo;
         }
+
+        public FighterInfo CopyNoAttributes()
+        {
+            var newFighterInfo = Copy();
+            newFighterInfo.FighterAttributes = null;
+            newFighterInfo.CosmeticAttributes = null;
+            newFighterInfo.CSSSlotAttributes = null;
+            newFighterInfo.SlotAttributes = null;
+            return newFighterInfo;
+        }
     }
 
     public class FighterAttributes
