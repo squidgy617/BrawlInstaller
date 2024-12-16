@@ -36,6 +36,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="SettingsService.LoadFighterInfoSettings()"/>
         List<FighterInfo> LoadFighterInfoSettings();
+
+        /// <inheritdoc cref="SettingsService.GetBuildFilePath(string)"/>
+        string GetBuildFilePath(string path);
     }
     [Export(typeof(ISettingsService))]
     internal class SettingsService : ISettingsService
@@ -119,6 +122,16 @@ namespace BrawlInstaller.Services
                 fighterList = JsonConvert.DeserializeObject<List<FighterInfo>>(text);
             }
             return fighterList;
+        }
+
+        /// <summary>
+        /// Get the build path of a file from a partial path
+        /// </summary>
+        /// <param name="path">Partial path of file</param>
+        /// <returns>Full build path of file</returns>
+        public string GetBuildFilePath(string path)
+        {
+            return Path.Combine(AppSettings.BuildPath, path);
         }
     }
 }

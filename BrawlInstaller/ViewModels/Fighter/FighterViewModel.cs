@@ -51,6 +51,7 @@ namespace BrawlInstaller.ViewModels
         ISettingsService _settingsService { get; }
         IDialogService _dialogService { get; }
         IFighterService _fighterService { get; }
+        IFileService _fileService { get; }
 
         // Commands
         public ICommand LoadCommand => new RelayCommand(param => LoadFighter());
@@ -70,12 +71,15 @@ namespace BrawlInstaller.ViewModels
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
-        public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFighterService fighterService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel)
+        public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFighterService fighterService, IFileService fileService,
+            IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel, 
+            IFighterSettingsViewModel fighterSettingsViewModel)
         {
             _packageService = packageService;
             _settingsService = settingsService;
             _dialogService = dialogService;
             _fighterService = fighterService;
+            _fileService = fileService;
             FranchiseIconViewModel = franchiseIconViewModel;
             CostumeViewModel = costumeViewModel;
             CosmeticViewModel = cosmeticViewmodel;
@@ -113,8 +117,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public string FighterPackagePath { get => _fighterPackagePath; set { _fighterPackagePath = value; OnPropertyChanged(nameof(FighterPackagePath)); } }
 
+        [DependsUpon(nameof(FighterPackage))]
         [DependsUpon(nameof(FighterPackagePath))]
-        public bool InternalPackage { get => string.IsNullOrEmpty(FighterPackagePath); }
+        public bool InternalPackage { get => string.IsNullOrEmpty(FighterPackagePath) && !(FighterPackage?.PackageType == PackageType.New); }
 
         public List<Roster> Rosters { get => _rosters; set { _rosters = value; OnPropertyChanged(nameof(Rosters)); } }
 
@@ -126,6 +131,9 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedRoster))]
         public RosterEntry SelectedRosterEntry { get => _selectedRosterEntry; set { _selectedRosterEntry = value; OnPropertyChanged(nameof(SelectedRosterEntry)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool ImportButtonEnabled { get => FighterPackage?.PackageType == PackageType.Update || _fileService.DirectoryExists(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BrawlEx)); }
 
         // Methods
         public void LoadFighter()
