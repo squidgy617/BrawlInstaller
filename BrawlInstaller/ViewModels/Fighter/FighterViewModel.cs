@@ -259,6 +259,10 @@ namespace BrawlInstaller.ViewModels
         // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
         public void SaveFighter()
         {
+            if (Validate() != true)
+            {
+                return;
+            }
             var packageType = FighterPackage.PackageType;
             // Set costume indexes for cosmetics
             foreach(var costume in FighterPackage.Costumes)
@@ -546,6 +550,33 @@ namespace BrawlInstaller.ViewModels
         private void SaveRosters()
         {
             _fighterService.SaveRosters(Rosters);
+        }
+
+        public bool Validate()
+        {
+            var missingPaths = GetMissingPaths();
+            if (missingPaths.Count > 0)
+            {
+                var pathString = string.Join("\n", missingPaths);
+                return _dialogService.ShowMessage($"Some paths in settings were missing. Installing a fighter without these paths may have unexpected results. Continue anyway?\nMissing Paths:\n{pathString}", 
+                    "Missing Paths", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            }
+            return true;
+        }
+
+        private List<string> GetMissingPaths()
+        {
+            var missingPaths = new List<string>();
+            var paths = _settingsService.GetAllPaths();
+            foreach (var path in paths)
+            {
+                var buildFilePath = _settingsService.GetBuildFilePath(path);
+                if (!_fileService.FileOrDirectoryExists(buildFilePath))
+                {
+                    missingPaths.Add(buildFilePath);
+                }
+            }
+            return missingPaths;
         }
     }
 

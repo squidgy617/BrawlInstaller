@@ -39,6 +39,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="SettingsService.GetBuildFilePath(string)"/>
         string GetBuildFilePath(string path);
+
+        /// <inheritdoc cref="SettingsService.GetAllPaths()"/>
+        List<string> GetAllPaths();
     }
     [Export(typeof(ISettingsService))]
     internal class SettingsService : ISettingsService
@@ -132,6 +135,22 @@ namespace BrawlInstaller.Services
         public string GetBuildFilePath(string path)
         {
             return Path.Combine(AppSettings.BuildPath, path);
+        }
+
+        /// <summary>
+        /// Get all paths in settings
+        /// </summary>
+        /// <returns>List of all paths</returns>
+        public List<string> GetAllPaths()
+        {
+            var paths = BuildSettings.FilePathSettings.FilePaths.Select(x => x.Path);
+            paths.Concat(BuildSettings.FilePathSettings.CodeFilePaths.Select(x => x.Path));
+            paths.Concat(BuildSettings.CosmeticSettings.Select(x => x.InstallLocation.FilePath));
+            paths.Concat(BuildSettings.FilePathSettings.StageListPaths.Select(x => x.Path));
+            paths.Concat(BuildSettings.FilePathSettings.CodeFilePaths.Select(x => x.Path));
+            paths.Concat(BuildSettings.FilePathSettings.RosterFiles.Select(x => x.FilePath));
+            paths.Concat(BuildSettings.FilePathSettings.RandomStageNamesLocations.Select(x => x.FilePath));
+            return paths.ToList();
         }
     }
 }

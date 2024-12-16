@@ -78,6 +78,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.FileExists(string)"/>
         bool FileExists(string path);
 
+        /// <inheritdoc cref="FileService.FileOrDirectoryExists(string)"/>
+        bool FileOrDirectoryExists(string path);
+
         /// <inheritdoc cref="FileService.GenerateZipFileFromDirectory(string, string)"/>
         string GenerateZipFileFromDirectory(string inDirectory, string outFile);
 
@@ -359,6 +362,16 @@ namespace BrawlInstaller.Services
         public bool FileExists(string path)
         {
             return File.Exists(path);
+        }
+
+        /// <summary>
+        /// Check if file or directory exists for the path
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns>Whether file/directory exists or not</returns>
+        public bool FileOrDirectoryExists(string path)
+        {
+            return FileExists(path) || DirectoryExists(path);
         }
 
         /// <summary>
