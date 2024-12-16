@@ -190,6 +190,12 @@ namespace BrawlInstaller.Services
                     fighterPackage.FighterInfo = JsonConvert.DeserializeObject<FighterInfo>(fighterInfoJson);
                     fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
                     fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
+                    // Set IDs to null
+                    var types = new List<IdType> { IdType.FighterConfig, IdType.CosmeticConfig, IdType.CSSSlotConfig, IdType.SlotConfig, IdType.Cosmetic };
+                    foreach(var id in fighterPackage?.FighterInfo?.Ids?.Ids.Where(x => types.Contains(x.Type)))
+                    {
+                        id.Id = null;
+                    }
                 }
                 // Get fighter settings
                 var fighterSettingsPath = _fileService.GetFiles(path, "FighterSettings.json").FirstOrDefault();
