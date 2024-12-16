@@ -42,6 +42,7 @@ namespace BrawlInstaller.ViewModels
         // Private Properties
         private CosmeticList _franchiseIconList;
         private Cosmetic _selectedFranchiseIcon;
+        private FighterPackage _fighterPackage;
 
         // Services
         ICosmeticService _cosmeticService;
@@ -61,14 +62,23 @@ namespace BrawlInstaller.ViewModels
             {
                 LoadIcons(message);
             });
+
+            WeakReferenceMessenger.Default.Register<AttributesUpdatedMessage>(this, (recipient, message) =>
+            {
+                OnPropertyChanged(nameof(FranchiseIconSelectorEnabled));
+            });
         }
 
         // Properties
+        public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
         public CosmeticList FranchiseIconList { get => _franchiseIconList; set { _franchiseIconList = value; OnPropertyChanged(nameof(FranchiseIcons)); } }
 
         [DependsUpon(nameof(FranchiseIconList))]
         public ObservableCollection<Cosmetic> FranchiseIcons { get => new ObservableCollection<Cosmetic>(FranchiseIconList.Items); }
         public Cosmetic SelectedFranchiseIcon { get => _selectedFranchiseIcon; set { _selectedFranchiseIcon = value; OnPropertyChanged(nameof(SelectedFranchiseIcon)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool FranchiseIconSelectorEnabled { get => FighterPackage?.FighterInfo?.CosmeticAttributes != null; }
 
         // Methods
         public void LoadIcons(FighterLoadedMessage message)
@@ -90,9 +100,11 @@ namespace BrawlInstaller.ViewModels
                 fighterPackage.Cosmetics.RemoveChange(icon);
                 fighterPackage.FighterInfo.Ids.FranchiseId = newId;
             }
+            FighterPackage = fighterPackage;
             SelectedFranchiseIcon = FranchiseIcons.FirstOrDefault(x => x.Id == message.Value.FighterInfo.Ids.FranchiseId);
             OnPropertyChanged(nameof(FranchiseIconList));
             OnPropertyChanged(nameof(SelectedFranchiseIcon));
+            OnPropertyChanged(nameof(FighterPackage));
         }
 
         public void SelectModel()

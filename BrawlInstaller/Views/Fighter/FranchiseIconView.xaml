@@ -24,7 +24,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="franchiseIconLabel" Grid.Column="0" Content="Icon:"/>
-        <Grid x:Name="franchiseIconIdGrid" Grid.Column="1">
+        <Grid x:Name="franchiseIconIdGrid" Grid.Column="1" IsEnabled="{Binding FranchiseIconSelectorEnabled}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -41,7 +41,7 @@
             </Grid>
             <Label Target="{Binding ElementName=franchiseIconIdTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="2"/>
         </Grid>
-        <TextBox x:Name="franchiseIconIdTextBox" Grid.Column="2" Width="60">
+        <TextBox x:Name="franchiseIconIdTextBox" Grid.Column="2" Width="60" IsEnabled="{Binding FranchiseIconSelectorEnabled}">
             <TextBox.Resources>
                 <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
             </TextBox.Resources>
