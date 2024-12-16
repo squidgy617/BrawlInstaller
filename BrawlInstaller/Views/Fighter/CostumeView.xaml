@@ -19,7 +19,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="costumeGrid" Grid.RowSpan="3">
+        <Grid x:Name="costumeGrid" Grid.RowSpan="3" IsEnabled="{Binding CostumeEditorEnabled}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>

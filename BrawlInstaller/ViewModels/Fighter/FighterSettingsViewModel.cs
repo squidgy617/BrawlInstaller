@@ -4,6 +4,7 @@ using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -99,21 +100,33 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage.FighterInfo.FighterAttributes = new FighterAttributes();
             OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
         public void GenerateSlotAttributes()
         {
             FighterPackage.FighterInfo.SlotAttributes = new SlotAttributes();
             OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
         public void GenerateCosmeticAttributes()
         {
             FighterPackage.FighterInfo.CosmeticAttributes = new CosmeticAttributes();
             OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
         public void GenerateCSSSlotAttributes()
         {
             FighterPackage.FighterInfo.CSSSlotAttributes = new CSSSlotAttributes();
             OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
+        }
+    }
+
+    // Messages
+    public class AttributesUpdatedMessage : ValueChangedMessage<FighterInfo>
+    {
+        public AttributesUpdatedMessage(FighterInfo fighterInfo) : base(fighterInfo)
+        {
         }
     }
 }

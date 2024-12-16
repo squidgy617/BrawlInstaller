@@ -94,6 +94,7 @@ namespace BrawlInstaller.ViewModels
             _cosmeticService = cosmeticService;
             _fileService = fileService;
             _fighterService = fighterService;
+            _fileService = fileService;
 
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
 
@@ -103,7 +104,11 @@ namespace BrawlInstaller.ViewModels
             {
                 LoadCostumes(message);
             });
-            _fileService = fileService;
+
+            WeakReferenceMessenger.Default.Register<AttributesUpdatedMessage>(this, (recipient, message) =>
+            {
+                OnPropertyChanged(nameof(CostumeEditorEnabled));
+            });
         }
 
         // Properties
@@ -195,6 +200,9 @@ namespace BrawlInstaller.ViewModels
                 }
             }
         }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool CostumeEditorEnabled { get => !string.IsNullOrEmpty(FighterPackage?.FighterInfo?.Masquerade) || FighterPackage?.FighterInfo?.CSSSlotAttributes != null; }
 
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
