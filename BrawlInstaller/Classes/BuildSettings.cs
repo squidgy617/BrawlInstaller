@@ -88,6 +88,7 @@ namespace BrawlInstaller.Classes
         public int? Multiplier { get; set; } = null;
         public int? Offset { get; set; } = null;
         public bool AddTerminatorFrame { get; set; } = false;
+        public bool NormalizeTextureIds { get; set; } = false;
     }
 
     public class SoundSettings

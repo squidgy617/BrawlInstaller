@@ -734,7 +734,10 @@ namespace BrawlInstaller.Services
                     if (node != null)
                     {
                         CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
-                        // NormalizeCosmeticIds(definition, (PAT0TextureNode)node);
+                        if (patSetting.NormalizeTextureIds == true)
+                        {
+                            NormalizeCosmeticIds(definition, (PAT0TextureNode)node);
+                        }
                     }
                 }
             }
