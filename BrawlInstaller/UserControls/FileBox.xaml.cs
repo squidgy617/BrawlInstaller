@@ -199,6 +199,7 @@ namespace BrawlInstaller.UserControls
                 {
                     Text = Text.Replace(Path.GetFullPath(ExcludePath), "");
                     Text = Text.TrimStart('\\', '/');
+                    Text += "\\";
                 }
             }
         }
