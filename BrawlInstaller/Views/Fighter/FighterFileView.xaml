@@ -111,13 +111,7 @@
                     <TextBox x:Name="victoryThemePathTextBox" Text="{Binding FighterPackage.VictoryTheme.SongPath, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="120"/>
                     <userControls:FileBox x:Name="victoryThemeFileBox" Text="{Binding FighterPackage.VictoryTheme.SongFile, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="TLST file (.tlst)|*.tlst"/>
                     <Label x:Name="victoryThemeIdLabel" Content="ID:" Grid.Row="3"/>
-                    <TextBox x:Name="victoryThemeIdTextBox" Text="{Binding FighterPackage.VictoryTheme.SongId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}}" Grid.Row="3" Grid.Column="1" Width="120">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="LostFocus">
-                                <i:InvokeCommandAction CommandParameter="{Binding ElementName=victoryThemeIdTextBox, Path=Text}" Command="{Binding ChangedThemeCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
+                    <TextBox x:Name="victoryThemeIdTextBox" Text="{Binding VictoryThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120"/>
                 </Grid>
                 <Grid x:Name="creditsThemeGrid">
                     <Grid.RowDefinitions>
@@ -136,13 +130,7 @@
                     <TextBox x:Name="creditsThemePathTextBox" Text="{Binding FighterPackage.CreditsTheme.SongPath, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="120"/>
                     <userControls:FileBox x:Name="creditsThemeFileBox" Text="{Binding FighterPackage.CreditsTheme.SongFile, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="TLST file (.tlst)|*.tlst"/>
                     <Label x:Name="creditsThemeIdLabel" Content="ID:" Grid.Row="3"/>
-                    <TextBox x:Name="creditsThemeIdTextBox" Text="{Binding FighterPackage.CreditsTheme.SongId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}}" Grid.Row="3" Grid.Column="1" Width="120">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="LostFocus">
-                                <i:InvokeCommandAction CommandParameter="{Binding ElementName=creditsThemeIdTextBox, Path=Text}" Command="{Binding ChangedThemeCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
+                    <TextBox x:Name="creditsThemeIdTextBox" Text="{Binding CreditsThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120"/>
                 </Grid>
             </StackPanel>
         </GroupBox>

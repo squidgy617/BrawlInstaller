@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,7 +34,6 @@ namespace BrawlInstaller.ViewModels
         IFighterService _fighterService { get; }
 
         // Commands
-        public ICommand ChangedThemeCommand => new RelayCommand(param => ChangedThemeId(param));
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
         public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
         public ICommand AddEndingPacFilesCommand => new RelayCommand(param => AddEndingPacFiles());
@@ -81,21 +81,34 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public bool VictoryThemeControlsEnabled { get => FighterPackage?.FighterInfo?.SlotAttributes != null; }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public uint? VictoryThemeId { get => FighterPackage?.VictoryTheme?.SongId; set { ChangedThemeId(FighterPackage?.VictoryTheme, value); OnPropertyChanged(nameof(VictoryThemeId)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public uint? CreditsThemeId { get => FighterPackage?.CreditsTheme?.SongId; set { ChangedThemeId(FighterPackage?.CreditsTheme, value); OnPropertyChanged(nameof(CreditsThemeId)); } }
+
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
         {
             FighterPackage = message.Value;
         }
 
-        public void ChangedThemeId(object idObject)
+        public void ChangedThemeId(TracklistSong tracklist, uint? songId)
         {
-            var idString = idObject as string;
-            var result = uint.TryParse(idString.Replace("0x", string.Empty), NumberStyles.HexNumber, null, out uint id);
-            if (result)
+            if (tracklist != null)
             {
-                if (id < 0x0000F000)
+                if (songId != null)
                 {
-                    _dialogService.ShowMessage("ID is less than minimum custom ID value of 0xF000. Tracklist entries will not be created for non-custom IDs. If you'd like to import a song, change the ID to 0xF000 or greater.", "Song Will Not Import");
+                    var idString = songId.ToString();
+                    var result = uint.TryParse(idString.Replace("0x", string.Empty), NumberStyles.Number, null, out uint id);
+                    if (result)
+                    {
+                        if (id < 0x0000F000)
+                        {
+                            _dialogService.ShowMessage("ID is less than minimum custom ID value of 0xF000. Tracklist entries will not be created for non-custom IDs. If you'd like to import a song, change the ID to 0xF000 or greater.", "Song Will Not Import");
+                        }
+                    }
+                    tracklist.SongId = (uint)songId;
                 }
             }
         }
