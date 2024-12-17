@@ -554,14 +554,24 @@ namespace BrawlInstaller.ViewModels
 
         public bool Validate()
         {
+            var result = true;
             var missingPaths = GetMissingPaths();
             if (missingPaths.Count > 0)
             {
                 var pathString = string.Join("\n", missingPaths);
-                return _dialogService.ShowMessage($"Some paths in settings were missing. Installing a fighter without these paths may have unexpected results. Continue anyway?\nMissing Paths:\n{pathString}", 
+                result = _dialogService.ShowMessage($"Some paths in settings are missing. Installing a fighter without these paths may have unexpected results. Continue anyway?\nMissing Paths:\n{pathString}", 
                     "Missing Paths", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == false) return false;
             }
-            return true;
+            var missingCosmetics = GetMissingCosmetics();
+            if (missingCosmetics.Count > 0)
+            {
+                var cosmeticString = string.Join("\n", missingCosmetics.Select(x => $"Type: {x.CosmeticType.GetDescription()} Style: {x.Style}"));
+                result = _dialogService.ShowMessage($"Some cosmetics marked as required are missing. Installing a fighter without these cosmetics may have unexpected results. Continue anyway?\nMissing Cosmetics:\n{cosmeticString}",
+                    "Missing Cosmetics", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == false) return false;
+            }
+            return result;
         }
 
         private List<string> GetMissingPaths()
@@ -577,6 +587,22 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             return missingPaths;
+        }
+
+        private List<(CosmeticType CosmeticType, string Style)> GetMissingCosmetics()
+        {
+            var missingCosmetics = new List<(CosmeticType CosmeticType, string Style)>();
+            var definitionGroups = _settingsService.BuildSettings.CosmeticSettings.Where(x => x.FighterCosmetic && x.Required).GroupBy(x => new { x.CosmeticType, x.Style });
+            foreach (var group in definitionGroups)
+            {
+                // If no cosmetics are found for a group (including inherited styles), add it to list
+                if (!FighterPackage.Cosmetics.Items.Any(x => x.Style == group.Key.Style && x.CosmeticType == group.Key.CosmeticType)
+                    && !FighterPackage.Cosmetics.InheritedStyles.Any(x => x.Key.Item1 == group.Key.CosmeticType && x.Key.Item2 == group.Key.Style))
+                {
+                    missingCosmetics.Add((group.Key.CosmeticType, group.Key.Style));
+                }
+            }
+            return missingCosmetics;
         }
     }
 
