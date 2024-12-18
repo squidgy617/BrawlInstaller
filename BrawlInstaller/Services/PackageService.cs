@@ -3,6 +3,7 @@ using BrawlInstaller.Enums;
 using BrawlInstaller.StaticClasses;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
+using lKHM;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -306,7 +307,7 @@ namespace BrawlInstaller.Services
                 }
             }
             // Update and export pac files
-            var pacFileNodes = _fighterService.UpdatePacFiles(fighterPackage);
+            var pacFileNodes = _fighterService.UpdatePacFiles(fighterPackage, false);
             foreach(var file in pacFileNodes)
             {
                 _fileService.SaveFile(file);

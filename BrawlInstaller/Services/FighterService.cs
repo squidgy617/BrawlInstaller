@@ -99,8 +99,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetUsedInternalNames()"/>
         List<string> GetUsedInternalNames();
 
-        /// <inheritdoc cref="FighterService.UpdatePacFiles(FighterPackage)"/>
-        List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage);
+        /// <inheritdoc cref="FighterService.UpdatePacFiles(FighterPackage, bool)"/>
+        List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage, bool updatePaths = true);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -610,7 +610,7 @@ namespace BrawlInstaller.Services
         /// <param name="pacFiles">PAC files to import</param>
         /// <param name="costumes">Costumes to import PAC files for</param>
         /// <param name="fighterInfo">Fighter info</param>
-        public List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage)
+        public List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage, bool updatePaths = true)
         {
             var pacFiles = fighterPackage.PacFiles;
             var costumes = fighterPackage.Costumes;
@@ -714,7 +714,10 @@ namespace BrawlInstaller.Services
                     file.node._origPath = file.pacFile.SavePath;
                     file.pacFile.SavePath = string.Empty;
                 }
-                file.pacFile.FilePath = file.node._origPath;
+                if (updatePaths)
+                {
+                    file.pacFile.FilePath = file.node._origPath;
+                }
             }
             return files.Select(x => x.node).ToList();
         }
