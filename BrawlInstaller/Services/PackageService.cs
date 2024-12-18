@@ -327,6 +327,11 @@ namespace BrawlInstaller.Services
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);
+            // Update info
+            fighterPackage.FighterInfo.OriginalSoundbankId = fighterPackage.FighterInfo.SoundbankId;
+            fighterPackage.FighterInfo.OriginalKirbySoundbankId = fighterPackage.FighterInfo.KirbySoundbankId;
+            fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
+            fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.OriginalKirbyEffectPacId;
             // Delete fighter package file if it exists
             _fileService.DeleteFile(outFile);
             // Generate fighter package file
