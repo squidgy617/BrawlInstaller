@@ -80,13 +80,13 @@ namespace BrawlInstaller.ViewModels
         public bool SoundbankControlsEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
 
         [DependsUpon(nameof(FighterPackage))]
-        public uint? SoundbankId { get => FighterPackage?.FighterInfo?.SoundbankId; set { ChangedSoundbankId(FighterPackage.FighterInfo.SoundbankId, value); OnPropertyChanged(nameof(SoundbankId)); } }
+        public uint? SoundbankId { get => FighterPackage?.FighterInfo?.SoundbankId; set { ChangedSoundbankId(FighterPackage.FighterInfo.OriginalSoundbankId, value); OnPropertyChanged(nameof(SoundbankId)); } }
 
         [DependsUpon(nameof(SoundbankId))]
         public bool SoundbankIdControlEnabled { get => SoundbankId == null || SoundbankId >= 324; }
 
         [DependsUpon(nameof(FighterPackage))]
-        public uint? KirbySoundbankId { get => FighterPackage?.FighterInfo?.KirbySoundbankId; set { ChangedKirbySoundbankId(FighterPackage.FighterInfo.KirbySoundbankId, value); OnPropertyChanged(nameof(KirbySoundbankId)); } }
+        public uint? KirbySoundbankId { get => FighterPackage?.FighterInfo?.KirbySoundbankId; set { ChangedKirbySoundbankId(FighterPackage.FighterInfo.OriginalKirbySoundbankId, value); OnPropertyChanged(nameof(KirbySoundbankId)); } }
 
         [DependsUpon(nameof(KirbySoundbankId))]
         public bool KirbySoundbankIdControlEnabled { get => KirbySoundbankId == null || KirbySoundbankId >= 324; }
@@ -128,7 +128,7 @@ namespace BrawlInstaller.ViewModels
 
         public void ChangedSoundbankId(uint? oldSoundbankId, uint? newSoundbankId)
         {
-            if (newSoundbankId != null && newSoundbankId < 324)
+            if (oldSoundbankId != null && newSoundbankId != null && newSoundbankId < 324)
             {
                 _dialogService.ShowMessage("Cannot change to a non-custom soundbank. Custom soundbanks start at 0x144 (324).", "Non-Custom Soundbank ID", MessageBoxImage.Error);
                 FighterPackage.FighterInfo.SoundbankId = oldSoundbankId;
@@ -141,7 +141,7 @@ namespace BrawlInstaller.ViewModels
 
         public void ChangedKirbySoundbankId(uint? oldSoundbankId, uint? newSoundbankId)
         {
-            if (newSoundbankId != null && newSoundbankId < 324)
+            if (oldSoundbankId != null && newSoundbankId != null && newSoundbankId < 324)
             {
                 _dialogService.ShowMessage("Cannot change to a non-custom soundbank. Custom soundbanks start at 0x144 (324).", "Non-Custom Soundbank ID", MessageBoxImage.Error);
                 FighterPackage.FighterInfo.KirbySoundbankId = oldSoundbankId;
