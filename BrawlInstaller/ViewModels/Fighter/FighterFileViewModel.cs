@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
@@ -79,6 +80,18 @@ namespace BrawlInstaller.ViewModels
         public bool SoundbankControlsEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
 
         [DependsUpon(nameof(FighterPackage))]
+        public uint? SoundbankId { get => FighterPackage?.FighterInfo?.SoundbankId; set { ChangedSoundbankId(FighterPackage.FighterInfo.SoundbankId, value); OnPropertyChanged(nameof(SoundbankId)); } }
+
+        [DependsUpon(nameof(SoundbankId))]
+        public bool SoundbankIdControlEnabled { get => SoundbankId == null || SoundbankId >= 324; }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public uint? KirbySoundbankId { get => FighterPackage?.FighterInfo?.KirbySoundbankId; set { ChangedKirbySoundbankId(FighterPackage.FighterInfo.KirbySoundbankId, value); OnPropertyChanged(nameof(KirbySoundbankId)); } }
+
+        [DependsUpon(nameof(KirbySoundbankId))]
+        public bool KirbySoundbankIdControlEnabled { get => KirbySoundbankId == null || KirbySoundbankId >= 324; }
+
+        [DependsUpon(nameof(FighterPackage))]
         public bool VictoryThemeControlsEnabled { get => FighterPackage?.FighterInfo?.SlotAttributes != null; }
 
         [DependsUpon(nameof(FighterPackage))]
@@ -110,6 +123,32 @@ namespace BrawlInstaller.ViewModels
                     }
                     tracklist.SongId = (uint)songId;
                 }
+            }
+        }
+
+        public void ChangedSoundbankId(uint? oldSoundbankId, uint? newSoundbankId)
+        {
+            if (newSoundbankId != null && newSoundbankId < 324)
+            {
+                _dialogService.ShowMessage("Cannot change to a non-custom soundbank. Custom soundbanks start at 0x144 (324).", "Non-Custom Soundbank ID", MessageBoxImage.Error);
+                FighterPackage.FighterInfo.SoundbankId = oldSoundbankId;
+            }
+            else
+            {
+                FighterPackage.FighterInfo.SoundbankId = newSoundbankId;
+            }
+        }
+
+        public void ChangedKirbySoundbankId(uint? oldSoundbankId, uint? newSoundbankId)
+        {
+            if (newSoundbankId != null && newSoundbankId < 324)
+            {
+                _dialogService.ShowMessage("Cannot change to a non-custom soundbank. Custom soundbanks start at 0x144 (324).", "Non-Custom Soundbank ID", MessageBoxImage.Error);
+                FighterPackage.FighterInfo.KirbySoundbankId = oldSoundbankId;
+            }
+            else
+            {
+                FighterPackage.FighterInfo.KirbySoundbankId = newSoundbankId;
             }
         }
 
