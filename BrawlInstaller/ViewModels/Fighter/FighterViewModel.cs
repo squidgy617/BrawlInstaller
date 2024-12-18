@@ -573,6 +573,16 @@ namespace BrawlInstaller.ViewModels
                     "Missing Cosmetics", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == false) return false;
             }
+            if (FighterPackage.PackageType == PackageType.New)
+            {
+                var idConflicts = GetIdConflicts();
+                if (idConflicts.Count > 0)
+                {
+                    var idString = string.Join("\n", idConflicts.Select(x => $"Type: {x.Type.GetDescription()} ID: {x.Id}"));
+                    result = _dialogService.ShowMessage($"Some IDs conflict with existing fighters in your build or IDs reserved by bosses. Installing a fighter with ID conflicts could cause unexpected results. Continue anyway?\nID Conflicts:\n{idString}",
+                        "ID Conflicts", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                }
+            }
             return result;
         }
 
@@ -605,6 +615,20 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             return missingCosmetics;
+        }
+
+        private List<BrawlId> GetIdConflicts()
+        {
+            var idConflicts = new List<BrawlId>();
+            var usedIds = _fighterService.GetUsedFighterIds();
+            foreach(var id in FighterPackage.FighterInfo.Ids.Ids)
+            {
+                if (usedIds.Any(x => x.Type == id.Type && x.Id == id.Id))
+                {
+                    idConflicts.Add(id);
+                }
+            }
+            return idConflicts;
         }
     }
 
