@@ -98,6 +98,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetUsedInternalNames()"/>
         List<string> GetUsedInternalNames();
+
+        /// <inheritdoc cref="FighterService.UpdatePacFiles(FighterPackage)"/>
+        List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -607,7 +610,7 @@ namespace BrawlInstaller.Services
         /// <param name="pacFiles">PAC files to import</param>
         /// <param name="costumes">Costumes to import PAC files for</param>
         /// <param name="fighterInfo">Fighter info</param>
-        private List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage)
+        public List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage)
         {
             var pacFiles = fighterPackage.PacFiles;
             var costumes = fighterPackage.Costumes;
@@ -702,7 +705,15 @@ namespace BrawlInstaller.Services
             {
                 var folder = file.name.Contains("Kirby") ? "kirby" : fighterInfo.InternalName;
                 folder += $"\\{file.pacFile.Subdirectory}";
-                file.node._origPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{folder}\\{file.name}";
+                if (string.IsNullOrEmpty(file.pacFile.SavePath))
+                {
+                    file.node._origPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{folder}\\{file.name}";
+                }
+                else
+                {
+                    file.node._origPath = file.pacFile.SavePath;
+                    file.pacFile.SavePath = string.Empty;
+                }
                 file.pacFile.FilePath = file.node._origPath;
             }
             return files.Select(x => x.node).ToList();

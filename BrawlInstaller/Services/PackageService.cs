@@ -289,12 +289,12 @@ namespace BrawlInstaller.Services
             _cosmeticService.ExportCosmetics($"{path}\\Cosmetics", fighterPackage.Cosmetics);
             var fighterInfo = JsonConvert.SerializeObject(fighterPackage.FighterInfo, Formatting.Indented);
             var fighterSettings = JsonConvert.SerializeObject(fighterPackage.FighterSettings, Formatting.Indented);
-            // Export pac files
+            // Set pac files for export
             foreach(var pacFile in fighterPackage.PacFiles)
             {
-                _fileService.CopyFile(pacFile.FilePath, $"{path}\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}.pac");
+                pacFile.SavePath = $"{path}\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}.pac";
             }
-            // Export costumes
+            // Set costumes for export
             var costumeJson = JsonConvert.SerializeObject(fighterPackage.Costumes, Formatting.Indented);
             _fileService.SaveTextFile($"{path}\\Costumes\\Costumes.json", costumeJson);
             foreach (var costume in fighterPackage.Costumes)
@@ -302,8 +302,15 @@ namespace BrawlInstaller.Services
                 var costumePath = $"{path}\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
                 foreach (var pacFile in costume.PacFiles)
                 {
-                    _fileService.CopyFile(pacFile.FilePath, $"{costumePath}\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}{costume.CostumeId:D2}.pac");
+                    pacFile.SavePath = $"{costumePath}\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}{costume.CostumeId:D2}.pac";
                 }
+            }
+            // Update and export pac files
+            var pacFileNodes = _fighterService.UpdatePacFiles(fighterPackage);
+            foreach(var file in pacFileNodes)
+            {
+                _fileService.SaveFile(file);
+                _fileService.CloseFile(file);
             }
             // Export other files
             var files = new List<(string Folder, string File)>

@@ -50,6 +50,7 @@ namespace BrawlInstaller.Classes
         public string Prefix { get; set; }
         public string Suffix { get; set; }
         public string Subdirectory { get; set; } = string.Empty;
+        [JsonIgnore] public string SavePath { get; set; } = string.Empty; // Path to save the file, if one is specified
     }
 
     public class Costume
