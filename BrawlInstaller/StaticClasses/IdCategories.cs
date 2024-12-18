@@ -9,6 +9,7 @@ namespace BrawlInstaller.StaticClasses
 {
     public static class IdCategories
     {
-        public static List<IdType> FighterIdTypes = new List<IdType> { IdType.FighterConfig, IdType.CosmeticConfig, IdType.CSSSlotConfig, IdType.SlotConfig };
+        public static List<IdType> FighterConfigTypes = new List<IdType> { IdType.FighterConfig, IdType.CosmeticConfig, IdType.CSSSlotConfig, IdType.SlotConfig };
+        public static List<IdType> FighterIdTypes = new List<IdType> { IdType.FighterConfig, IdType.CosmeticConfig, IdType.CSSSlotConfig, IdType.SlotConfig, IdType.Cosmetic };
     }
 }

@@ -92,6 +92,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.UpdateIdsToFirstUnused(FighterInfo)"/>
         FighterInfo UpdateIdsToFirstUnused(FighterInfo fighterInfo);
+
+        /// <inheritdoc cref="FighterService.GetUsedFighterIds()"/>
+        List<BrawlId> GetUsedFighterIds();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2407,22 +2410,48 @@ namespace BrawlInstaller.Services
         /// <returns>First unused IDs</returns>
         private (int ConfigId, int CosmeticId) GetUnusedFighterIds()
         {
-            var configId = 0x3F;
-            var cosmeticId = 121;
-            var buildFighters = GetAllFighterInfo();
-            var settingsFighters = _settingsService.FighterInfoList;
-            var buildFighterIds = buildFighters.SelectMany(x => x.Ids.Ids.Where(y => IdCategories.FighterIdTypes.Contains(y.Type))).Select(x => x.Id).Distinct();
-            var settingsFighterIds = settingsFighters.SelectMany(x => x.Ids.Ids.Where(y => IdCategories.FighterIdTypes.Contains(y.Type))).Select(x => x.Id).Distinct();
+            var configId = 0x3F; // 0x3F is first custom Ex config ID
+            var cosmeticId = 0; // TODO: Should this start at 110? 109 is last ID used by game
+            var idList = GetUsedFighterIds();
+            var usedIds = idList.Where(x => IdCategories.FighterConfigTypes.Contains(x.Type)).Select(x => x.Id);
             // Get config ID
-            while (buildFighterIds.Contains(configId) || settingsFighterIds.Contains(configId))
+            while (usedIds.Contains(configId))
             {
                 configId++;
             }
-            while (buildFighterIds.Contains(cosmeticId) || settingsFighterIds.Contains(cosmeticId))
+            usedIds = idList.Where(x => x.Type == IdType.Cosmetic).Select(x => x.Id);
+            while (usedIds.Contains(cosmeticId))
             {
                 cosmeticId++;
             }
             return (configId, cosmeticId);
+        }
+
+        /// <summary>
+        /// Get used fighter IDs in build
+        /// </summary>
+        /// <returns>List of used fighter IDs</returns>
+        public List<BrawlId> GetUsedFighterIds()
+        {
+            var buildFighters = GetAllFighterInfo();
+            var settingsFighters = _settingsService.FighterInfoList;
+            // Get used IDs
+            var usedIds = buildFighters.SelectMany(x => x.Ids.Ids.Where(y => y.Id != null && IdCategories.FighterIdTypes.Contains(y.Type)));
+            usedIds = usedIds.Concat(settingsFighters.SelectMany(x => x.Ids.Ids.Where(y => y.Id != null && IdCategories.FighterIdTypes.Contains(y.Type))));
+            // Get reserved config IDs
+            var reservedIds = new List<BrawlId>();
+            foreach(var id in ReservedIds.ReservedFighterConfigIds)
+            {
+                reservedIds.Add(new BrawlId { Id = id, Type = IdType.FighterConfig });
+            }
+            // Get reserved cosmetic IDs
+            foreach (var id in ReservedIds.ReservedFighterCosmeticIds)
+            {
+                reservedIds.Add(new BrawlId { Id = id, Type = IdType.Cosmetic });
+            }
+            usedIds = usedIds.Concat(reservedIds).ToList();
+            usedIds = usedIds.Distinct();
+            return usedIds.ToList();
         }
 
         #region Fighter-Specific Settings
