@@ -24,6 +24,7 @@ using BrawlInstaller.Helpers;
 using System.Windows;
 using System.Windows.Forms;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
+using BrawlLib.SSBB.Types;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -581,6 +582,13 @@ namespace BrawlInstaller.ViewModels
                     var idString = string.Join("\n", idConflicts.Select(x => $"Type: {x.Type.GetDescription()} ID: {x.Id}"));
                     result = _dialogService.ShowMessage($"Some IDs conflict with existing fighters in your build or IDs reserved by bosses. Installing a fighter with ID conflicts could cause unexpected results. Continue anyway?\nID Conflicts:\n{idString}",
                         "ID Conflicts", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == false) return false;
+                }
+                var usedNames = _fighterService.GetUsedInternalNames();
+                if (usedNames.Contains(FighterPackage.FighterInfo.InternalName.ToLower()))
+                {
+                    result = _dialogService.ShowMessage($"The internal name {FighterPackage.FighterInfo.InternalName} is already used in the build. Installing a fighter with the same internal name as a fighter could cause unexpected results. Continue anyway?",
+                        "Name Conflict", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     if (result == false) return false;
                 }
             }

@@ -14,6 +14,7 @@ namespace BrawlInstaller.Classes
     public class FighterInfo
     {
         public string EntryName { get; set; }
+        // Should this be configurable somewhere in the editor?
         public string InternalName { get; set; }
         public string DisplayName { get; set; }
         public BrawlIds Ids { get; set; } = new BrawlIds();

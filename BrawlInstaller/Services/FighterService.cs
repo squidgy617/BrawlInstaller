@@ -95,6 +95,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetUsedFighterIds()"/>
         List<BrawlId> GetUsedFighterIds();
+
+        /// <inheritdoc cref="FighterService.GetUsedInternalNames()"/>
+        List<string> GetUsedInternalNames();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2452,6 +2455,20 @@ namespace BrawlInstaller.Services
             usedIds = usedIds.Concat(reservedIds).ToList();
             usedIds = usedIds.Distinct();
             return usedIds.ToList();
+        }
+
+        /// <summary>
+        /// Get used internal names of fighters
+        /// </summary>
+        /// <returns>Used internal names</returns>
+        public List<string> GetUsedInternalNames()
+        {
+            var buildFighterFolders = _fileService.GetDirectories(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterFiles), "*", SearchOption.TopDirectoryOnly);
+            var settingsFighters = _settingsService.FighterInfoList;
+            var usedNames = settingsFighters.Select(x => x.InternalName.ToLower());
+            usedNames = usedNames.Concat(buildFighterFolders.Select(x => Path.GetFileName(x).ToLower()));
+            usedNames = usedNames.Concat(ReservedIds.ReservedInternalNames);
+            return usedNames.ToList();
         }
 
         #region Fighter-Specific Settings

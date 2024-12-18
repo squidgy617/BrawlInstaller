@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BrawlInstaller.StaticClasses
 {
-    // TODO: Possibly make this configurable eventually?
+    // TODO: Possibly make this configurable eventually? Maybe we don't have to because they can just add entries to the fighter list for that?
     public static class ReservedIds
     {
         public static List<int> ReservedStageCosmeticIds = new List<int> { 80, 81, 82, 83, 84, 85, 100, 101, 102 }; // Things like stage builder, home run contest, etc
@@ -36,5 +36,6 @@ namespace BrawlInstaller.StaticClasses
             109, // Crazy Hand
             127 // Causes issues with stock icons?
         };
+        public static List<string> ReservedInternalNames = new List<string> { "zakoball", "zakoboy", "zakochild", "zakogirl" };
     }
 }
