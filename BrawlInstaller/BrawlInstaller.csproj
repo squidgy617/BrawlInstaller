@@ -99,6 +99,7 @@
     <Compile Include="StaticClasses\DefaultCosmetics.cs" />
     <Compile Include="StaticClasses\EffectPacs.cs" />
     <Compile Include="StaticClasses\Icons.cs" />
+    <Compile Include="StaticClasses\IdCategories.cs" />
     <Compile Include="StaticClasses\ModuleIdLocations.cs" />
     <Compile Include="StaticClasses\Paths.cs" />
     <Compile Include="StaticClasses\ReservedIds.cs" />

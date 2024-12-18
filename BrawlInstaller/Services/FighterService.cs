@@ -86,6 +86,12 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.SaveRosters(List{Roster})"/>
         void SaveRosters(List<Roster> rosters);
+
+        /// <inheritdoc cref="FighterService.UpdateNullIdsToFirstUnused(FighterInfo)"/>
+        FighterInfo UpdateNullIdsToFirstUnused(FighterInfo fighterInfo);
+
+        /// <inheritdoc cref="FighterService.UpdateIdsToFirstUnused(FighterInfo)"/>
+        FighterInfo UpdateIdsToFirstUnused(FighterInfo fighterInfo);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2345,6 +2351,78 @@ namespace BrawlInstaller.Services
                     _fileService.CloseFile(rosterFile);
                 }
             }
+        }
+
+        /// <summary>
+        /// Update null IDs in fighter info to first unused IDs
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info to update</param>
+        /// <returns>Fighter info with updated IDs</returns>
+        public FighterInfo UpdateNullIdsToFirstUnused(FighterInfo fighterInfo)
+        {
+            var newIds = GetUnusedFighterIds();
+            if (fighterInfo.Ids.FighterConfigId == null)
+            {
+                fighterInfo.Ids.FighterConfigId = newIds.ConfigId;
+            }
+            if (fighterInfo.Ids.CosmeticConfigId == null)
+            {
+                fighterInfo.Ids.CosmeticConfigId = newIds.ConfigId;
+            }
+            if (fighterInfo.Ids.SlotConfigId == null)
+            {
+                fighterInfo.Ids.SlotConfigId = newIds.ConfigId;
+            }
+            if (fighterInfo.Ids.CSSSlotConfigId == null)
+            {
+                fighterInfo.Ids.CSSSlotConfigId = newIds.ConfigId;
+            }
+            if (fighterInfo.Ids.CosmeticId == null)
+            {
+                fighterInfo.Ids.CosmeticId = newIds.CosmeticId;
+            }
+            return fighterInfo;
+        }
+
+        /// <summary>
+        /// Update fighter info to use first available IDs
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info to update</param>
+        /// <returns>Updated fighter info</returns>
+        public FighterInfo UpdateIdsToFirstUnused(FighterInfo fighterInfo)
+        {
+            // Set IDs to first available
+            fighterInfo.Ids.FighterConfigId = null;
+            fighterInfo.Ids.CosmeticConfigId = null;
+            fighterInfo.Ids.SlotConfigId = null;
+            fighterInfo.Ids.CSSSlotConfigId = null;
+            fighterInfo.Ids.CosmeticId = null;
+            fighterInfo = UpdateNullIdsToFirstUnused(fighterInfo);
+            return fighterInfo;
+        }
+
+        /// <summary>
+        /// Get first unused IDs in build
+        /// </summary>
+        /// <returns>First unused IDs</returns>
+        private (int ConfigId, int CosmeticId) GetUnusedFighterIds()
+        {
+            var configId = 0x3F;
+            var cosmeticId = 121;
+            var buildFighters = GetAllFighterInfo();
+            var settingsFighters = _settingsService.FighterInfoList;
+            var buildFighterIds = buildFighters.SelectMany(x => x.Ids.Ids.Where(y => IdCategories.FighterIdTypes.Contains(y.Type))).Select(x => x.Id).Distinct();
+            var settingsFighterIds = settingsFighters.SelectMany(x => x.Ids.Ids.Where(y => IdCategories.FighterIdTypes.Contains(y.Type))).Select(x => x.Id).Distinct();
+            // Get config ID
+            while (buildFighterIds.Contains(configId) || settingsFighterIds.Contains(configId))
+            {
+                configId++;
+            }
+            while (buildFighterIds.Contains(cosmeticId) || settingsFighterIds.Contains(cosmeticId))
+            {
+                cosmeticId++;
+            }
+            return (configId, cosmeticId);
         }
 
         #region Fighter-Specific Settings

@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Enums;
+using BrawlInstaller.StaticClasses;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using Newtonsoft.Json;
@@ -110,6 +111,8 @@ namespace BrawlInstaller.Services
         public void SaveFighter(FighterPackage fighterPackage)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
+            // Get unused IDs for null IDs
+            fighterPackage.FighterInfo = _fighterService.UpdateNullIdsToFirstUnused(fighterPackage.FighterInfo);
             // Only update cosmetics that have changed
             var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => fighterPackage.Cosmetics.ChangedItems
             .Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)).ToList();
@@ -190,12 +193,8 @@ namespace BrawlInstaller.Services
                     fighterPackage.FighterInfo = JsonConvert.DeserializeObject<FighterInfo>(fighterInfoJson);
                     fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
                     fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
-                    // Set IDs to null
-                    var types = new List<IdType> { IdType.FighterConfig, IdType.CosmeticConfig, IdType.CSSSlotConfig, IdType.SlotConfig, IdType.Cosmetic };
-                    foreach(var id in fighterPackage?.FighterInfo?.Ids?.Ids.Where(x => types.Contains(x.Type)))
-                    {
-                        id.Id = null;
-                    }
+                    // Set IDs to first available
+                    fighterPackage.FighterInfo = _fighterService.UpdateIdsToFirstUnused(fighterPackage.FighterInfo);
                 }
                 // Get fighter settings
                 var fighterSettingsPath = _fileService.GetFiles(path, "FighterSettings.json").FirstOrDefault();

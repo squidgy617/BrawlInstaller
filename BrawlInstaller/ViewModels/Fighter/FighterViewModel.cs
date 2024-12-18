@@ -189,6 +189,8 @@ namespace BrawlInstaller.ViewModels
             FighterPackage.PackageType = PackageType.New;
             _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
             _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
+            // Set IDs to first available
+            FighterPackage.FighterInfo = _fighterService.UpdateIdsToFirstUnused(FighterPackage.FighterInfo);
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
