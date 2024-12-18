@@ -106,6 +106,8 @@ namespace BrawlInstaller.Services
             return movesetDataNode;
         }
 
+        //TODO: Should custom GFX/SFX IDs be driven by settings?
+
         /// <summary>
         /// Update GFX Effect.pac IDs in raw moveset data
         /// </summary>
