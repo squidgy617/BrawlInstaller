@@ -69,7 +69,7 @@ namespace BrawlInstaller.ViewModels
         public int? SelectedFighterEffectPac { get => FighterPackage?.FighterInfo?.EffectPacId; set { ChangedFighterEffectPac(FighterPackage.FighterInfo.OriginalEffectPacId, value); OnPropertyChanged(nameof(SelectedFighterEffectPac)); } }
 
         [DependsUpon(nameof(FighterPackage))]
-        public int? SelectedKirbyEffectPac { get => FighterPackage?.FighterInfo?.KirbyEffectPacId; set { ChangedFighterEffectPac(FighterPackage.FighterInfo.OriginalKirbyEffectPacId, value); OnPropertyChanged(nameof(SelectedKirbyEffectPac)); } }
+        public int? SelectedKirbyEffectPac { get => FighterPackage?.FighterInfo?.KirbyEffectPacId; set { ChangedKirbyEffectPac(FighterPackage.FighterInfo.OriginalKirbyEffectPacId, value); OnPropertyChanged(nameof(SelectedKirbyEffectPac)); } }
 
         [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, KirbyLoadFlags> KirbyLoadFlagOptions { get => typeof(KirbyLoadFlags).GetDictionary<KirbyLoadFlags>(); }
@@ -82,7 +82,7 @@ namespace BrawlInstaller.ViewModels
         {
             var newId = newEffectPacId;
             // If we are going from a custom/vanilla ID to a vanilla/custom one, display a message
-            if (oldEffectPacId != newEffectPacId && (oldEffectPacId < 311 || newEffectPacId < 311))
+            if (oldEffectPacId != null && oldEffectPacId != newEffectPacId && (oldEffectPacId < 311 || newEffectPacId < 311))
             {
                 var result = _dialogService.ShowMessage("You are either changing to a different vanilla Effect.pac or switching between a custom and vanilla Effect.pac. GFX IDs will be updated correctly, however if the fighter uses traces/sword trails, these will NOT be updated. Are you sure you want to proceed?",
                     "Trace IDs cannot be changed", MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -98,7 +98,7 @@ namespace BrawlInstaller.ViewModels
         {
             var newId = newEffectPacId;
             // If we are going from a custom/vanilla ID to a vanilla/custom one, display a message
-            if (oldEffectPacId != newEffectPacId && (oldEffectPacId < 311 || newEffectPacId < 311))
+            if (oldEffectPacId != null && oldEffectPacId != newEffectPacId && (oldEffectPacId < 311 || newEffectPacId < 311))
             {
                 var result = _dialogService.ShowMessage("You are either changing to a different vanilla Effect.pac or switching between a custom and vanilla Effect.pac. GFX IDs will be updated correctly, however if the fighter uses traces/sword trails, these will NOT be updated. Are you sure you want to proceed?",
                     "Trace IDs cannot be changed", MessageBoxButton.YesNo, MessageBoxImage.Warning);
