@@ -35,9 +35,7 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService = settingsService;
 
-            // TODO: Change these!!
-            _settingsService.AppSettings.BuildPath = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild\\Builds\\P+Ex\\";
-            _settingsService.AppSettings.HDTextures = "F:\\ryant\\Documents\\Ryan\\Brawl Mods\\SmashBuild Launcher - For Netplay\\User\\Load\\Textures\\RSBE01";
+            _settingsService.AppSettings = _settingsService.LoadAppSettings();
             _settingsService.BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
 
             AppSettings = _settingsService.AppSettings;
@@ -50,6 +48,7 @@ namespace BrawlInstaller.ViewModels
         private void RefreshSettings()
         {
             _settingsService.AppSettings = AppSettings;
+            _settingsService.SaveAppSettings(AppSettings);
             _settingsService.LoadSettings(AppSettings.BuildPath);
             _settingsService.LoadFighterInfoSettings();
             WeakReferenceMessenger.Default.Send(new UpdateSettingsMessage(AppSettings));

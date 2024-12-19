@@ -12,6 +12,7 @@ using System.IO;
 using System.Drawing;
 using BrawlLib.Wii.Textures;
 using BrawlInstaller.Enums;
+using BrawlInstaller.StaticClasses;
 
 namespace BrawlInstaller.Services
 {
@@ -28,8 +29,14 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="SettingsService.SaveSettings(BuildSettings, string)"/>
         void SaveSettings(BuildSettings buildSettings, string path);
 
+        /// <inheritdoc cref="SettingsService.SaveAppSettings(AppSettings)"/>
+        void SaveAppSettings(AppSettings appSettings);
+
         /// <inheritdoc cref="SettingsService.LoadSettings(string)"/>
         BuildSettings LoadSettings(string path);
+
+        /// <inheritdoc cref="SettingsService.LoadAppSettings()"/>
+        AppSettings LoadAppSettings();
 
         /// <inheritdoc cref="SettingsService.SaveFighterInfoSettings(List{FighterInfo})"/>
         void SaveFighterInfoSettings(List<FighterInfo> fighterInfoList);
@@ -73,6 +80,17 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Save app settings
+        /// </summary>
+        /// <param name="appSettings">App settings to save</param>
+        public void SaveAppSettings(AppSettings appSettings)
+        {
+            var jsonString = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
+            File.WriteAllText(Paths.AppSettingsPath, jsonString);
+            AppSettings = appSettings;
+        }
+
+        /// <summary>
         /// Load build settings
         /// </summary>
         /// <param name="path">Path to load from</param>
@@ -98,6 +116,22 @@ namespace BrawlInstaller.Services
                 buildSettings.FilePathSettings.AsmPaths.Add(missingAsm);
             }
             return buildSettings;
+        }
+
+        /// <summary>
+        /// Load app settings
+        /// </summary>
+        /// <returns>App settings</returns>
+        public AppSettings LoadAppSettings()
+        {
+            var appSettings = new AppSettings();
+            if (File.Exists(Paths.AppSettingsPath))
+            {
+                var text = File.ReadAllText(Paths.AppSettingsPath);
+                appSettings = JsonConvert.DeserializeObject<AppSettings>(text);
+            }
+            AppSettings = appSettings;
+            return appSettings;
         }
 
         /// <summary>
