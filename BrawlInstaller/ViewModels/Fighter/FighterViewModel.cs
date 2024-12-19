@@ -600,7 +600,7 @@ namespace BrawlInstaller.ViewModels
             }
             if (messages.Count > 0)
             {
-                result = _dialogService.ShowMessages("Multiple validation errors have occurred. Installing fighters with these errors could have unexpected results. It is strongly recommended that you correct these errors before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                result = _dialogService.ShowMessages("Validation errors have occurred. Installing fighters with these errors could have unexpected results. It is strongly recommended that you correct these errors before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
             }
             return result;
         }
