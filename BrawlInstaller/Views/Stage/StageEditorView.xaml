@@ -317,10 +317,10 @@
                                         <Button x:Name="substageAddButton" Content="+" Style="{StaticResource miniButton}" Grid.Column="1" Grid.Row="2" Command="{Binding AddSubstageCommand}"/>
                                         <Button x:Name="substageRemoveButton" Content="-" Style="{StaticResource miniButton}" Grid.Column="1" Grid.Row="3" IsEnabled="{Binding SelectedSubstage, Converter={StaticResource nullBoolConverter}}" Command="{Binding RemoveSubstageCommand}"/>
                                     </Grid>
-                                    <Label x:Name="substageSuffixLabel" Content="Suffix:" Grid.Column="1" Grid.Row="1"/>
-                                    <TextBox x:Name="substageSuffixTextBox" Text="{Binding SelectedSubstage.Name}" Grid.Column="2" Width="120" Grid.Row="1"/>
-                                    <Label x:Name="substageFileLabel" Content="Path:" Grid.Column="1" Grid.Row="2"/>
-                                    <userControls:FileBox x:Name="substageFileBox" Text="{Binding SelectedSubstage.PacFile}" Filter="PAC file (.pac)|*.pac" Grid.Row="2" Grid.Column="2" TextBoxWidth="120"/>
+                                    <Label x:Name="substageSuffixLabel" Content="Suffix:" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
+                                    <TextBox x:Name="substageSuffixTextBox" Text="{Binding SelectedSubstage.Name}" Grid.Column="2" Width="120" Grid.Row="1" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
+                                    <Label x:Name="substageFileLabel" Content="Path:" Grid.Column="1" Grid.Row="2" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
+                                    <userControls:FileBox x:Name="substageFileBox" Text="{Binding SelectedSubstage.PacFile}" Filter="PAC file (.pac)|*.pac" Grid.Row="2" Grid.Column="2" TextBoxWidth="120" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
                                 </Grid>
                             </Grid>
                         </GroupBox>
