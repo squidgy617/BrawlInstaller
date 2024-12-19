@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using BrawlInstaller.Common;
 using System.IO.Compression;
+using System.Net.Cache;
 
 namespace BrawlInstaller.Services
 {
@@ -229,6 +230,7 @@ namespace BrawlInstaller.Services
         {
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
+            bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.UriSource = new Uri(filePath);
             bitmap.EndInit();
