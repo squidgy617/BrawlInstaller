@@ -25,6 +25,7 @@ using System.Windows;
 using System.Windows.Forms;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
 using BrawlLib.SSBB.Types;
+using BrawlInstaller.StaticClasses;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -596,7 +597,14 @@ namespace BrawlInstaller.ViewModels
             if (soundbankIdConflict.Count > 0)
             {
                 var soundbankString = string.Join("\n", soundbankIdConflict.Select(x => $"0x{x:X2}"));
-                result = _dialogService.ShowMessage($"Soundbank ID conflicts with an existing soundbank in your build. Installing a fighter with a conflicting soundbank ID could have unexpected results. Continue anyway?\nID Conflicts:\n{soundbankString}", "Soundbank ID Conflict", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                result = _dialogService.ShowMessage($"Soundbank IDs conflict with existing soundbanks in your build. Installing a fighter with a conflicting soundbank ID could have unexpected results. Continue anyway?\nID Conflicts:\n{soundbankString}", "Soundbank ID Conflict", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == false) return false;
+            }
+            var effectPacIdConflicts = GetEffectPacIdConflicts();
+            if (effectPacIdConflicts.Count > 0)
+            {
+                var effectPacString = string.Join("\n", effectPacIdConflicts.Select(x => EffectPacs.FighterEffectPacs.FirstOrDefault(y => y.Value == x)));
+                result = _dialogService.ShowMessage($"Effect.pacs conflict with existing Effect.pacs in your build. Installing a fighter with a conflicting Effect.pac could have unexpected results. Continue anyway?\nEffect.pac Conflicts:\n{effectPacString}", "Effect.pac ID conflicts", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == false) return false;
             }
             return result;
@@ -650,10 +658,12 @@ namespace BrawlInstaller.ViewModels
         private List<uint> GetSoundbankIdConflicts()
         {
             var soundbankIdConflicts = new List<uint>();
-            if (FighterPackage.FighterInfo.SoundbankId != FighterPackage.FighterInfo.OriginalSoundbankId || FighterPackage.FighterInfo.KirbySoundbankId != FighterPackage.FighterInfo.OriginalKirbySoundbankId)
+            if (FighterPackage.FighterInfo.SoundbankId != FighterPackage.FighterInfo.OriginalSoundbankId 
+                || FighterPackage.FighterInfo.KirbySoundbankId != FighterPackage.FighterInfo.OriginalKirbySoundbankId
+                || FighterPackage.PackageType == PackageType.New)
             {
                 var usedSoundbankIds = _fighterService.GetUsedSoundbankIds();
-                if (FighterPackage.FighterInfo.SoundbankId != FighterPackage.FighterInfo.OriginalSoundbankId)
+                if (FighterPackage.FighterInfo.SoundbankId != FighterPackage.FighterInfo.OriginalSoundbankId || FighterPackage.PackageType == PackageType.New)
                 {
                     var soundbankIdConflict = usedSoundbankIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.SoundbankId);
                     if (soundbankIdConflict != null)
@@ -661,7 +671,7 @@ namespace BrawlInstaller.ViewModels
                         soundbankIdConflicts.Add((uint)soundbankIdConflict);
                     }
                 }
-                if (FighterPackage.FighterInfo.KirbySoundbankId != FighterPackage.FighterInfo.OriginalKirbySoundbankId)
+                if (FighterPackage.FighterInfo.KirbySoundbankId != FighterPackage.FighterInfo.OriginalKirbySoundbankId || FighterPackage.PackageType == PackageType.New)
                 {
                     var soundbankIdConflict = usedSoundbankIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.KirbySoundbankId);
                     if (soundbankIdConflict != null)
@@ -671,6 +681,34 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             return soundbankIdConflicts;
+        }
+
+        private List<int> GetEffectPacIdConflicts()
+        {
+            var effectPacIdConflicts = new List<int>();
+            if (FighterPackage.FighterInfo.EffectPacId != FighterPackage.FighterInfo.OriginalEffectPacId 
+                || FighterPackage.FighterInfo.KirbyEffectPacId != FighterPackage.FighterInfo.OriginalKirbyEffectPacId
+                || FighterPackage.PackageType == PackageType.New)
+            {
+                var usedEffectPacIds = _fighterService.GetUsedEffectPacs();
+                if (FighterPackage.FighterInfo.EffectPacId != FighterPackage.FighterInfo.OriginalEffectPacId || FighterPackage.PackageType == PackageType.New)
+                {
+                    var effectPacIdConflict = usedEffectPacIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.EffectPacId);
+                    if (effectPacIdConflict != null)
+                    {
+                        effectPacIdConflicts.Add((int)effectPacIdConflict);
+                    }
+                }
+                if (FighterPackage.FighterInfo.KirbyEffectPacId != FighterPackage.FighterInfo.OriginalKirbyEffectPacId || FighterPackage.PackageType == PackageType.New)
+                {
+                    var effectPacIdConflict = usedEffectPacIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.KirbyEffectPacId);
+                    if (effectPacIdConflict != null)
+                    {
+                        effectPacIdConflicts.Add((int)effectPacIdConflict);
+                    }
+                }
+            }
+            return effectPacIdConflicts;
         }
     }
 

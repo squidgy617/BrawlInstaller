@@ -107,6 +107,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetUsedSoundbankIds()"/>
         List<uint?> GetUsedSoundbankIds();
+
+        /// <inheritdoc cref="FighterService.GetUsedEffectPacs()"/>
+        List<int?> GetUsedEffectPacs();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2531,6 +2534,38 @@ namespace BrawlInstaller.Services
             var settingsFighters = _settingsService.FighterInfoList;
             var usedIds = settingsFighters.Select(x => x.SoundbankId);
             usedIds = usedIds.Concat(buildSoundbankIds);
+            return usedIds.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Get all Effect.pac IDs used in build
+        /// </summary>
+        /// <returns>All Effect.pac IDs used in build</returns>
+        public List<int?> GetUsedEffectPacs()
+        {
+            var buildIds = new List<int?>();
+            var settingsFighters = _settingsService.FighterInfoList;
+            foreach(var directory in _fileService.GetDirectories(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterFiles), "*", SearchOption.TopDirectoryOnly))
+            {
+                var file = _fileService.GetFiles(directory, "Fit*.pac").FirstOrDefault();
+                var rootNode = _fileService.OpenFile(file);
+                if (rootNode != null)
+                {
+                    var effectNode = GetEffectPacNode(rootNode);
+                    if (effectNode != null)
+                    {
+                        // Check dictionary for Effect.pac ID
+                        var result = EffectPacs.FighterEffectPacs.TryGetValue(effectNode.Name, out int id);
+                        if (result)
+                        {
+                            buildIds.Add(id);
+                        }
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+            var usedIds = _settingsService.FighterInfoList.Select(x => x.EffectPacId);
+            usedIds = usedIds.Concat(buildIds);
             return usedIds.Distinct().ToList();
         }
 
