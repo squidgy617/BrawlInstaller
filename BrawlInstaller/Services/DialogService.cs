@@ -1,4 +1,5 @@
-﻿using BrawlInstaller.ViewModels;
+﻿using BrawlInstaller.Classes;
+using BrawlInstaller.ViewModels;
 using BrawlLib.SSBB.ResourceNodes;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
@@ -23,6 +24,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxButton, MessageBoxImage, BitmapImage)"/>
         bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information, BitmapImage bitmapImage=null);
+
+        /// <inheritdoc cref="DialogService.ShowMessages(string, string, List{DialogMessage}, MessageBoxButton, MessageBoxImage, BitmapImage)"/>
+        bool ShowMessages(string text, string caption, List<DialogMessage> messages, MessageBoxButton buttonType, MessageBoxImage image = MessageBoxImage.Information, BitmapImage bitmapImage = null);
 
         /// <inheritdoc cref="DialogService.OpenFileDialog(string, string)"/>
         string OpenFileDialog(string title, string filter);
@@ -50,18 +54,20 @@ namespace BrawlInstaller.Services
         IStringInputViewModel _stringInputViewModel { get; }
         IDropDownViewModel _dropDownViewModel { get; }
         INodeSelectorViewModel _nodeSelectorViewModel { get; }
+        IMultiMessageViewModel _multiMessageViewModel { get; }
 
         // Services
         IFileService _fileService { get; }
 
         [ImportingConstructor]
-        public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel) 
+        public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel, IMultiMessageViewModel multiMessageViewModel) 
         {
             _fileService = fileService;
             _messageViewModel = messageViewModel;
             _stringInputViewModel = stringInputViewModel;
             _dropDownViewModel = dropDownViewModel;
             _nodeSelectorViewModel = nodeSelectorViewModel;
+            _multiMessageViewModel = multiMessageViewModel;
         }
 
         // Methods
@@ -108,6 +114,30 @@ namespace BrawlInstaller.Services
             dialog.Content = _messageViewModel;
             dialog.ShowDialog();
             return _messageViewModel.DialogResult;
+        }
+
+        /// <summary>
+        /// Show configurable multi message dialog
+        /// </summary>
+        /// <param name="text">Caption text</param>
+        /// <param name="caption">Title of window</param>
+        /// <param name="messages">List of messages to display</param>
+        /// <param name="buttonType">Button type to use</param>
+        /// <param name="image">Icon to display</param>
+        /// <param name="bitmapImage">Image to display</param>
+        /// <returns>Whether user gave a positive response to message</returns>
+        public bool ShowMessages(string text, string caption, List<DialogMessage> messages, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information, BitmapImage bitmapImage = null)
+        {
+            var dialog = GenerateWindow(caption);
+            _multiMessageViewModel.Caption = text;
+            _multiMessageViewModel.MessageBoxButton = buttonType;
+            _multiMessageViewModel.MessageIcon = image;
+            _multiMessageViewModel.Image = bitmapImage;
+            _multiMessageViewModel.Messages = messages;
+            _multiMessageViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _multiMessageViewModel;
+            dialog.ShowDialog();
+            return _multiMessageViewModel.DialogResult;
         }
 
         /// <summary>

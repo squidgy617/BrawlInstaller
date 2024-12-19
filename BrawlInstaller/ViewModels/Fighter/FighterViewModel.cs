@@ -558,22 +558,19 @@ namespace BrawlInstaller.ViewModels
 
         public bool Validate()
         {
+            var messages = new List<DialogMessage>();
             var result = true;
             var missingPaths = GetMissingPaths();
             if (missingPaths.Count > 0)
             {
                 var pathString = string.Join("\n", missingPaths);
-                result = _dialogService.ShowMessage($"Some paths in settings are missing. Installing a fighter without these paths may have unexpected results. Continue anyway?\nMissing Paths:\n{pathString}", 
-                    "Missing Paths", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == false) return false;
+                messages.Add(new DialogMessage("Paths", $"Some paths in settings are missing:\n\n{pathString}"));
             }
             var missingCosmetics = GetMissingCosmetics();
             if (missingCosmetics.Count > 0)
             {
                 var cosmeticString = string.Join("\n", missingCosmetics.Select(x => $"Type: {x.CosmeticType.GetDescription()} Style: {x.Style}"));
-                result = _dialogService.ShowMessage($"Some cosmetics marked as required are missing. Installing a fighter without these cosmetics may have unexpected results. Continue anyway?\nMissing Cosmetics:\n{cosmeticString}",
-                    "Missing Cosmetics", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == false) return false;
+                messages.Add(new DialogMessage("Cosmetics", $"Some cosmetics marked as required are missing:\n\n{cosmeticString}"));
             }
             if (FighterPackage.PackageType == PackageType.New)
             {
@@ -581,31 +578,29 @@ namespace BrawlInstaller.ViewModels
                 if (idConflicts.Count > 0)
                 {
                     var idString = string.Join("\n", idConflicts.Select(x => $"Type: {x.Type.GetDescription()} ID: {x.Id}"));
-                    result = _dialogService.ShowMessage($"Some IDs conflict with existing fighters in your build or IDs reserved by bosses. Installing a fighter with ID conflicts could cause unexpected results. Continue anyway?\nID Conflicts:\n{idString}",
-                        "ID Conflicts", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    if (result == false) return false;
+                    messages.Add(new DialogMessage("ID Conflicts", $"Some IDs conflict with existing fighters in your build or IDs reserved by bosses:\n\n{idString}"));
                 }
                 var usedNames = _fighterService.GetUsedInternalNames();
                 if (usedNames.Contains(FighterPackage?.FighterInfo?.InternalName?.ToLower()))
                 {
-                    result = _dialogService.ShowMessage($"The internal name {FighterPackage.FighterInfo.InternalName} is already used in the build. Installing a fighter with the same internal name as a fighter could cause unexpected results. Continue anyway?",
-                        "Name Conflict", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    if (result == false) return false;
+                    messages.Add(new DialogMessage("Internal Name", $"The internal name {FighterPackage.FighterInfo.InternalName} is already used in the build."));
                 }
             }
             var soundbankIdConflict = GetSoundbankIdConflicts();
             if (soundbankIdConflict.Count > 0)
             {
                 var soundbankString = string.Join("\n", soundbankIdConflict.Select(x => $"0x{x:X2}"));
-                result = _dialogService.ShowMessage($"Soundbank IDs conflict with existing soundbanks in your build. Installing a fighter with a conflicting soundbank ID could have unexpected results. Continue anyway?\nID Conflicts:\n{soundbankString}", "Soundbank ID Conflict", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == false) return false;
+                messages.Add(new DialogMessage("Soundbank IDs", $"Soundbank IDs conflict with existing soundbanks in your build:\n\n{soundbankString}"));
             }
             var effectPacIdConflicts = GetEffectPacIdConflicts();
             if (effectPacIdConflicts.Count > 0)
             {
                 var effectPacString = string.Join("\n", effectPacIdConflicts.Select(x => EffectPacs.FighterEffectPacs.FirstOrDefault(y => y.Value == x).Key));
-                result = _dialogService.ShowMessage($"Effect.pacs conflict with existing Effect.pacs in your build. Installing a fighter with a conflicting Effect.pac could have unexpected results. Continue anyway?\nEffect.pac Conflicts:\n{effectPacString}", "Effect.pac ID conflicts", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == false) return false;
+                messages.Add(new DialogMessage("Effect.pacs", $"Effect.pacs conflict with existing Effect.pacs in your build:\n\n{effectPacString}"));
+            }
+            if (messages.Count > 0)
+            {
+                result = _dialogService.ShowMessages("Multiple validation errors have occurred. Installing fighters with these errors could have unexpected results. It is strongly recommended that you correct these errors before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
             }
             return result;
         }

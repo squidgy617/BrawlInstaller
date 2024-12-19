@@ -61,4 +61,7 @@
     <DataTemplate DataType="{x:Type viewModels:NodeSelectorViewModel}">
         <views:NodeSelectorView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:MultiMessageViewModel}">
+        <views:MultiMessageView/>
+    </DataTemplate>
 </ResourceDictionary>

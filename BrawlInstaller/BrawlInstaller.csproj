@@ -84,6 +84,7 @@
     <Compile Include="Classes\CosmeticTexture.cs" />
     <Compile Include="Classes\BrawlIds.cs" />
     <Compile Include="Classes\DataSize.cs" />
+    <Compile Include="Classes\DialogMessage.cs" />
     <Compile Include="Classes\FighterInfo.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
     <Compile Include="Classes\ImageSize.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="ViewModels\Fighter\FighterFileViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\NodeSelectorViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\MultiMessageViewModel.cs" />
     <Compile Include="ViewModels\Settings\FighterInfoViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FranchiseIconViewModel.cs" />
@@ -166,6 +168,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\NodeSelectorView.xaml.cs">
       <DependentUpon>NodeSelectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\MultiMessageView.xaml.cs">
+      <DependentUpon>MultiMessageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
@@ -257,6 +262,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\NodeSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\MultiMessageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
