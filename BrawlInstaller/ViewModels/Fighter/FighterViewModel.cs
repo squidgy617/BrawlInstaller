@@ -585,12 +585,19 @@ namespace BrawlInstaller.ViewModels
                     if (result == false) return false;
                 }
                 var usedNames = _fighterService.GetUsedInternalNames();
-                if (usedNames.Contains(FighterPackage.FighterInfo.InternalName.ToLower()))
+                if (usedNames.Contains(FighterPackage?.FighterInfo?.InternalName?.ToLower()))
                 {
                     result = _dialogService.ShowMessage($"The internal name {FighterPackage.FighterInfo.InternalName} is already used in the build. Installing a fighter with the same internal name as a fighter could cause unexpected results. Continue anyway?",
                         "Name Conflict", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     if (result == false) return false;
                 }
+            }
+            var soundbankIdConflict = GetSoundbankIdConflicts();
+            if (soundbankIdConflict.Count > 0)
+            {
+                var soundbankString = string.Join("\n", soundbankIdConflict.Select(x => $"0x{x:X2}"));
+                result = _dialogService.ShowMessage($"Soundbank ID conflicts with an existing soundbank in your build. Installing a fighter with a conflicting soundbank ID could have unexpected results. Continue anyway?\nID Conflicts:\n{soundbankString}", "Soundbank ID Conflict", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == false) return false;
             }
             return result;
         }
@@ -638,6 +645,32 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             return idConflicts;
+        }
+
+        private List<uint> GetSoundbankIdConflicts()
+        {
+            var soundbankIdConflicts = new List<uint>();
+            if (FighterPackage.FighterInfo.SoundbankId != FighterPackage.FighterInfo.OriginalSoundbankId || FighterPackage.FighterInfo.KirbySoundbankId != FighterPackage.FighterInfo.OriginalKirbySoundbankId)
+            {
+                var usedSoundbankIds = _fighterService.GetUsedSoundbankIds();
+                if (FighterPackage.FighterInfo.SoundbankId != FighterPackage.FighterInfo.OriginalSoundbankId)
+                {
+                    var soundbankIdConflict = usedSoundbankIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.SoundbankId);
+                    if (soundbankIdConflict != null)
+                    {
+                        soundbankIdConflicts.Add((uint)soundbankIdConflict);
+                    }
+                }
+                if (FighterPackage.FighterInfo.KirbySoundbankId != FighterPackage.FighterInfo.OriginalKirbySoundbankId)
+                {
+                    var soundbankIdConflict = usedSoundbankIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.KirbySoundbankId);
+                    if (soundbankIdConflict != null)
+                    {
+                        soundbankIdConflicts.Add((uint)soundbankIdConflict);
+                    }
+                }
+            }
+            return soundbankIdConflicts;
         }
     }
 

@@ -12,6 +12,7 @@ using BrawlLib.SSBB.Types;
 using BrawlInstaller.StaticClasses;
 using System.Runtime.CompilerServices;
 using BrawlLib.Internal;
+using System.Globalization;
 
 namespace BrawlInstaller.Classes
 {
@@ -97,6 +98,7 @@ namespace BrawlInstaller.Classes
         public SoundbankStyle SoundbankStyle { get; set; } = SoundbankStyle.InfoIndex;
         [JsonIgnore] public int SoundbankIncrement { get => SoundbankStyle == SoundbankStyle.InfoIndex ? 0 : 7; }
         [JsonIgnore] public string SoundbankFormat { get => SoundbankStyle == SoundbankStyle.InfoIndex ? "X3" : "D"; }
+        [JsonIgnore] public NumberStyles SoundbankNumberStyle { get => SoundbankStyle == SoundbankStyle.InfoIndex ? NumberStyles.HexNumber : NumberStyles.Integer; }
     }
 
     public class MiscSettings

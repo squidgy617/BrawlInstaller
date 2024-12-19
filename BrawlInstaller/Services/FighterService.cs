@@ -104,6 +104,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.UpdatePacFiles(FighterPackage, bool)"/>
         List<ResourceNode> UpdatePacFiles(FighterPackage fighterPackage, bool updatePaths = true);
+
+        /// <inheritdoc cref="FighterService.GetUsedSoundbankIds()"/>
+        List<uint?> GetUsedSoundbankIds();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2501,6 +2504,34 @@ namespace BrawlInstaller.Services
             usedNames = usedNames.Concat(buildFighterFolders.Select(x => Path.GetFileName(x).ToLower()));
             usedNames = usedNames.Concat(ReservedIds.ReservedInternalNames);
             return usedNames.ToList();
+        }
+
+        /// <summary>
+        /// Get used soundbank IDs in build
+        /// </summary>
+        /// <returns>Used soundbank IDs</returns>
+        public List<uint?> GetUsedSoundbankIds()
+        {
+            var buildSoundbanks = _fileService.GetFiles(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.SoundbankPath), "*.sawnd");
+            var buildSoundbankIds = new List<uint?>();
+            foreach(var soundbank in buildSoundbanks)
+            {
+                var stringToParse = Path.GetFileNameWithoutExtension(soundbank);
+                var index = stringToParse.IndexOf("_");
+                if (index >= 0)
+                {
+                    stringToParse = stringToParse.Substring(0, index);
+                }
+                var result = uint.TryParse(stringToParse, _settingsService.BuildSettings.SoundSettings.SoundbankNumberStyle, null, out uint id);
+                if (result == true)
+                {
+                    buildSoundbankIds.Add((uint)(id - _settingsService.BuildSettings.SoundSettings.SoundbankIncrement));
+                }
+            }
+            var settingsFighters = _settingsService.FighterInfoList;
+            var usedIds = settingsFighters.Select(x => x.SoundbankId);
+            usedIds = usedIds.Concat(buildSoundbankIds);
+            return usedIds.Distinct().ToList();
         }
 
         #region Fighter-Specific Settings
