@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:StageListViewModel}"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="userControl">

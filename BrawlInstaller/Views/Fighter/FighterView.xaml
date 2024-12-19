@@ -35,7 +35,17 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Label x:Name="fighterListLabel" Content="All Fighters:" HorizontalAlignment="Left"/>
-                        <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="120" Height="400"/>
+                        <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" Width="120" Height="400">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding EntryName}">
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedFighter, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" Command="{Binding DataContext.LoadCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                         <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource miniButton}"/>
                         <Button x:Name="copyFighterButton" Grid.Column="1" Grid.Row="1" Content="→" VerticalAlignment="Center" Command="{Binding CopyFighterCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
                         <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}" Width="120"/>
@@ -54,7 +64,7 @@
             </ScrollViewer>
             <StackPanel Grid.Row="1">
                 <Button x:Name="browseButton" Content="Browse..." Command="{Binding OpenFighterCommand}"/>
-                <Button x:Name="loadButton" Content="Load" Command="{Binding LoadCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
+                <Button x:Name="loadButton" Content="Load" CommandParameter="{Binding SelectedFighter}" Command="{Binding LoadCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
                 <Button x:Name="newButton" Content="New" Command="{Binding NewFighterCommand}"/>
             </StackPanel>
         </Grid>

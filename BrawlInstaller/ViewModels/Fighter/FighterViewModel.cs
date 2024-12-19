@@ -56,7 +56,7 @@ namespace BrawlInstaller.ViewModels
         IFileService _fileService { get; }
 
         // Commands
-        public ICommand LoadCommand => new RelayCommand(param => LoadFighter());
+        public ICommand LoadCommand => new RelayCommand(param => LoadFighter(param));
         public ICommand SaveCommand => new RelayCommand(param => SaveFighter());
         public ICommand DeleteCommand => new RelayCommand(param => DeleteFighter());
         public ICommand RefreshFightersCommand => new RelayCommand(param => GetFighters());
@@ -138,19 +138,23 @@ namespace BrawlInstaller.ViewModels
         public bool ImportButtonEnabled { get => FighterPackage?.PackageType == PackageType.Update || _fileService.DirectoryExists(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BrawlEx)); }
 
         // Methods
-        public void LoadFighter()
+        public void LoadFighter(object param)
         {
-            using (new CursorWait())
+            if (param != null)
             {
-                FighterPackage = new FighterPackage();
-                FighterPackage.FighterInfo = SelectedFighter.Copy();
-                FighterPackage = _packageService.ExtractFighter(FighterPackage.FighterInfo);
-                _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
-                _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
-                // Set package path to internal fighter
-                FighterPackagePath = string.Empty;
-                OnPropertyChanged(nameof(FighterPackage));
-                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+                using (new CursorWait())
+                {
+                    var info = (FighterInfo)param;
+                    FighterPackage = new FighterPackage();
+                    FighterPackage.FighterInfo = info.Copy();
+                    FighterPackage = _packageService.ExtractFighter(FighterPackage.FighterInfo);
+                    _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
+                    _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
+                    // Set package path to internal fighter
+                    FighterPackagePath = string.Empty;
+                    OnPropertyChanged(nameof(FighterPackage));
+                    WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+                }
             }
         }
 
