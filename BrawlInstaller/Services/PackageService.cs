@@ -206,6 +206,8 @@ namespace BrawlInstaller.Services
                     var fighterSettingsJson = _fileService.ReadTextFile(fighterSettingsPath);
                     fighterPackage.FighterSettings = JsonConvert.DeserializeObject<FighterSettings>(fighterSettingsJson);
                 }
+                // Get Kirby hat data
+                fighterPackage.FighterSettings.KirbyHatData = _fighterService.ConvertXMLToKirbyHatData(Path.Combine(path, "KirbyHat.xml"));
                 // Get cosmetics
                 fighterPackage.Cosmetics = _cosmeticService.LoadCosmetics($"{path}\\Cosmetics");
                 // Get costumes
@@ -332,6 +334,8 @@ namespace BrawlInstaller.Services
             {
                 _fileService.CopyFile(file.File, $"{path}\\{file.Folder}\\{Path.GetFileName(file.File)}");
             }
+            // Export Kirby hat data
+            _fighterService.ExportKirbyHatDataToXml($"{path}\\KirbyHat.xml", fighterPackage.FighterSettings.KirbyHatData);
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);

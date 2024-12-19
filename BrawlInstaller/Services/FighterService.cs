@@ -66,6 +66,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetFighterSettings(FighterPackage)"/>
         FighterSettings GetFighterSettings(FighterPackage fighterPackage);
 
+        /// <inheritdoc cref="FighterService.ExportKirbyHatDataToXml(string, HatInfoPack)"/>
+        void ExportKirbyHatDataToXml(string xmlPath, HatInfoPack kirbyHatData);
+
         /// <inheritdoc cref="FighterService.ConvertXMLToKirbyHatData(string)"/>
         HatInfoPack ConvertXMLToKirbyHatData(string xmlPath);
 
@@ -912,6 +915,21 @@ namespace BrawlInstaller.Services
                 }
             }
             return files;
+        }
+
+        /// <summary>
+        /// Export Kirby hat data to XML
+        /// </summary>
+        /// <param name="xmlPath">Path to export to</param>
+        /// <param name="kirbyHatData">Data to export</param>
+        public void ExportKirbyHatDataToXml(string xmlPath, HatInfoPack kirbyHatData)
+        {
+            var hatDictionary = new SortedDictionary<uint, HatInfoPack>
+            {
+                { 0, kirbyHatData }
+            };
+            var hatIdList = new List<uint> { 0 };
+            HatXMLParser.exportHatsToXML(xmlPath, hatIdList.ToArray(), hatDictionary);
         }
 
         /// <summary>
