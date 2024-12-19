@@ -115,7 +115,7 @@ namespace BrawlInstaller.ViewModels
         public List<StageSlot> UnusedSlots { get => StageTable.Where(x => !SelectedStageList?.Pages?.SelectMany(z => z.StageSlots).ToList().Contains(x) == true).ToList(); }
 
         [DependsUpon(nameof(StageTable))]
-        public StageSlot SelectedStageTableEntry { get => _selectedStageTableEntry; set { _selectedStageTableEntry = value; OnPropertyChanged(nameof(_selectedStageTableEntry)); } }
+        public StageSlot SelectedStageTableEntry { get => _selectedStageTableEntry; set { _selectedStageTableEntry = value; OnPropertyChanged(nameof(SelectedStageTableEntry)); } }
 
         public List<int> IncompleteStageIds { get => _incompleteStageIds; set { _incompleteStageIds = value; OnPropertyChanged(nameof(IncompleteStageIds)); } }
 
