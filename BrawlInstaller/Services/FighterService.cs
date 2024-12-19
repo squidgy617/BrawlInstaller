@@ -2543,9 +2543,9 @@ namespace BrawlInstaller.Services
         /// <returns>All Effect.pac IDs used in build</returns>
         public List<int?> GetUsedEffectPacs()
         {
-            var buildIds = new List<int?>();
+            var buildIds = new ConcurrentBag<int?>();
             var settingsFighters = _settingsService.FighterInfoList;
-            foreach(var directory in _fileService.GetDirectories(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterFiles), "*", SearchOption.TopDirectoryOnly))
+            Parallel.ForEach(_fileService.GetDirectories(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterFiles), "*", SearchOption.TopDirectoryOnly), directory =>
             {
                 var file = _fileService.GetFiles(directory, "Fit*.pac").FirstOrDefault();
                 var rootNode = _fileService.OpenFile(file);
@@ -2563,9 +2563,9 @@ namespace BrawlInstaller.Services
                     }
                     _fileService.CloseFile(rootNode);
                 }
-            }
+            });
             var usedIds = _settingsService.FighterInfoList.Select(x => x.EffectPacId);
-            usedIds = usedIds.Concat(buildIds);
+            usedIds = usedIds.Concat(buildIds.ToList());
             return usedIds.Distinct().ToList();
         }
 

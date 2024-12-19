@@ -603,7 +603,7 @@ namespace BrawlInstaller.ViewModels
             var effectPacIdConflicts = GetEffectPacIdConflicts();
             if (effectPacIdConflicts.Count > 0)
             {
-                var effectPacString = string.Join("\n", effectPacIdConflicts.Select(x => EffectPacs.FighterEffectPacs.FirstOrDefault(y => y.Value == x)));
+                var effectPacString = string.Join("\n", effectPacIdConflicts.Select(x => EffectPacs.FighterEffectPacs.FirstOrDefault(y => y.Value == x).Key));
                 result = _dialogService.ShowMessage($"Effect.pacs conflict with existing Effect.pacs in your build. Installing a fighter with a conflicting Effect.pac could have unexpected results. Continue anyway?\nEffect.pac Conflicts:\n{effectPacString}", "Effect.pac ID conflicts", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == false) return false;
             }
@@ -665,7 +665,7 @@ namespace BrawlInstaller.ViewModels
                 var usedSoundbankIds = _fighterService.GetUsedSoundbankIds();
                 if (FighterPackage.FighterInfo.SoundbankId != FighterPackage.FighterInfo.OriginalSoundbankId || FighterPackage.PackageType == PackageType.New)
                 {
-                    var soundbankIdConflict = usedSoundbankIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.SoundbankId);
+                    var soundbankIdConflict = usedSoundbankIds.AsParallel().FirstOrDefault(x => x == FighterPackage.FighterInfo.SoundbankId);
                     if (soundbankIdConflict != null)
                     {
                         soundbankIdConflicts.Add((uint)soundbankIdConflict);
@@ -673,7 +673,7 @@ namespace BrawlInstaller.ViewModels
                 }
                 if (FighterPackage.FighterInfo.KirbySoundbankId != FighterPackage.FighterInfo.OriginalKirbySoundbankId || FighterPackage.PackageType == PackageType.New)
                 {
-                    var soundbankIdConflict = usedSoundbankIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.KirbySoundbankId);
+                    var soundbankIdConflict = usedSoundbankIds.AsParallel().FirstOrDefault(x => x == FighterPackage.FighterInfo.KirbySoundbankId);
                     if (soundbankIdConflict != null)
                     {
                         soundbankIdConflicts.Add((uint)soundbankIdConflict);
@@ -693,7 +693,7 @@ namespace BrawlInstaller.ViewModels
                 var usedEffectPacIds = _fighterService.GetUsedEffectPacs();
                 if (FighterPackage.FighterInfo.EffectPacId != FighterPackage.FighterInfo.OriginalEffectPacId || FighterPackage.PackageType == PackageType.New)
                 {
-                    var effectPacIdConflict = usedEffectPacIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.EffectPacId);
+                    var effectPacIdConflict = usedEffectPacIds.AsParallel().FirstOrDefault(x => x == FighterPackage.FighterInfo.EffectPacId);
                     if (effectPacIdConflict != null)
                     {
                         effectPacIdConflicts.Add((int)effectPacIdConflict);
@@ -701,7 +701,7 @@ namespace BrawlInstaller.ViewModels
                 }
                 if (FighterPackage.FighterInfo.KirbyEffectPacId != FighterPackage.FighterInfo.OriginalKirbyEffectPacId || FighterPackage.PackageType == PackageType.New)
                 {
-                    var effectPacIdConflict = usedEffectPacIds.FirstOrDefault(x => x == FighterPackage.FighterInfo.KirbyEffectPacId);
+                    var effectPacIdConflict = usedEffectPacIds.AsParallel().FirstOrDefault(x => x == FighterPackage.FighterInfo.KirbyEffectPacId);
                     if (effectPacIdConflict != null)
                     {
                         effectPacIdConflicts.Add((int)effectPacIdConflict);
