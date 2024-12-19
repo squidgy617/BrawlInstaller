@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:StageListViewModel}"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="userControl">
@@ -33,7 +34,17 @@
                 </StackPanel>
                 <StackPanel x:Name="stageTableStackPanel" Grid.Row="1">
                     <Label x:Name="stageTableLabel" Content="All Stages:" HorizontalAlignment="Left"/>
-                    <ListBox x:Name="stageTableListBox" ItemsSource="{Binding StageTable}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedStageTableEntry}" Width="120" Height="400"/>
+                    <ListBox x:Name="stageTableListBox" ItemsSource="{Binding StageTable}" SelectedValue="{Binding SelectedStageTableEntry}" Width="120" Height="400">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedStageTableEntry, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" Command="{Binding DataContext.LoadStageCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                    </TextBlock.InputBindings>    
+                                </TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
                 <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Button x:Name="setStageUnusedButton" Content="→" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding AddStageToListCommand}" IsEnabled="{Binding SelectedStageTableEntry, Converter={StaticResource nullBoolConverter}}"/>
@@ -51,7 +62,17 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" DisplayMemberPath="Name" Width="120" Height="400"/>
+                                <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" Width="120" Height="400">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}">
+                                                <TextBlock.InputBindings>
+                                                    <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedStageSlot, Source={x:Reference userControl}}" Command="{Binding DataContext.LoadStageCommand, Source={x:Reference userControl}}"/>
+                                                </TextBlock.InputBindings>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
                                 <Grid x:Name="stageListButtonsGrid" Grid.Column="1" IsEnabled="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot, Converter={StaticResource nullBoolConverter}}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -70,7 +91,7 @@
             </Grid>
         </ScrollViewer>
         <StackPanel Grid.Row="1">
-            <Button x:Name="loadStageButton" Content="Load" Command="{Binding LoadStageCommand}" IsEnabled="{Binding SelectedStageTableEntry, Converter={StaticResource nullBoolConverter}}"/>
+            <Button x:Name="loadStageButton" Content="Load" CommandParameter="{Binding SelectedStageTableEntry}" Command="{Binding LoadStageCommand}" IsEnabled="{Binding SelectedStageTableEntry, Converter={StaticResource nullBoolConverter}}"/>
             <Button x:Name="newStageButton" Content="New" Command="{Binding NewStageCommand}"/>
         </StackPanel>
     </Grid>
