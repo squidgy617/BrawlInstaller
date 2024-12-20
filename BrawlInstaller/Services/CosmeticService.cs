@@ -502,7 +502,8 @@ namespace BrawlInstaller.Services
         /// <returns></returns>
         private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode rootNode)
         {
-            if (rootNode.GetType() != typeof(ARCNode))
+            // TODO: For some reason this was changed in commit 19bae7576120b363bda353617612f133c9a99598 to check for an ARCNode, but this never applies for ARC nodes, so changed it to BRRES. May need to verify everything works right.
+            if (rootNode.GetType() != typeof(BRRESNode))
             {
                 var usedIds = GetUsedCosmeticIds(definition, rootNode);
                 while (usedIds.Contains(id))
