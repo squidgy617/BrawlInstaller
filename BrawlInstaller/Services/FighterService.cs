@@ -1148,17 +1148,21 @@ namespace BrawlInstaller.Services
             if (soundbank != null)
             {
                 var name = GetSoundbankName(fighterPackage.FighterInfo.SoundbankId);
-                soundbank._origPath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
+                var path = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
+                soundbank._origPath = path;
                 _fileService.SaveFile(soundbank);
                 _fileService.CloseFile(soundbank);
+                fighterPackage.Soundbank = path;
             }
             // Rename and import Kirby soundbank
             if (kirbySoundbank != null)
             {
                 var name = GetSoundbankName(fighterPackage.FighterInfo.KirbySoundbankId);
-                kirbySoundbank._origPath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
+                var path = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, name);
+                kirbySoundbank._origPath = path;
                 _fileService.SaveFile(kirbySoundbank);
                 _fileService.CloseFile(kirbySoundbank);
+                fighterPackage.KirbySoundbank = path;
             }
             // Import victory theme
             fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme);
