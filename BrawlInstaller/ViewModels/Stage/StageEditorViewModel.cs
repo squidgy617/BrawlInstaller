@@ -3,6 +3,7 @@ using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
 using BrawlLib.Internal;
+using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
@@ -54,6 +55,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddSubstageCommand => new RelayCommand(param => AddSubstage());
         public ICommand RemoveSubstageCommand => new RelayCommand(param => RemoveSubstage());
         public ICommand DeleteStageCommand => new RelayCommand(param => DeleteStage());
+        public ICommand ImportParamsCommand => new RelayCommand(param => ImportParams());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -266,6 +268,26 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(SelectedStageEntry));
             OnPropertyChanged(nameof(Substages));
+        }
+
+        private void ImportParams()
+        {
+            if (Stage?.StageEntries != null)
+            {
+                var stageParams = _dialogService.OpenMultiFileDialog("Select param files", "PARAM file (.param)|*.param");
+                foreach (var param in stageParams)
+                {
+                    var rootNode = _fileService.OpenFile(param);
+                    if (rootNode != null)
+                    {
+                        var newParams = ((STEXNode)rootNode).ToStageParams();
+                        Stage.AllParams.Add(newParams);
+                        Stage.StageEntries.Add(new StageEntry { Params = newParams });
+                    }
+                }
+                OnPropertyChanged(nameof(ParamList));
+                OnPropertyChanged(nameof(StageEntries));
+            }
         }
 
         private void DeleteStage()

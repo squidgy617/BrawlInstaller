@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using BrawlInstaller.Classes;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
+using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 
 namespace BrawlInstaller.Common
 {
@@ -175,6 +176,37 @@ namespace BrawlInstaller.Common
                 Size = node._size
             };
             return cssSlotAttributes;
+        }
+    }
+
+    public static class STEXNodeExtensions
+    {
+        public static StageParams ToStageParams(this STEXNode node)
+        {
+            var stageParams = new StageParams
+            {
+                Name = node.Name,
+                IsFlat = node.IsFlat,
+                IsFixedCamera = node.IsFixedCamera,
+                IsSlowStart = node.IsSlowStart,
+                PacName = node.StageName,
+                Module = node.Module,
+                CharacterOverlay = node.CharacterOverlay,
+                SoundBank = node.SoundBank,
+                EffectBank = node.EffectBank,
+                MemoryAllocation = node.MemoryAllocation,
+                WildSpeed = node.WildSpeed,
+                IsDualLoad = node.IsDualLoad,
+                IsDualShuffle = node.IsDualShuffle,
+                IsOldSubStage = node.IsOldSubstage,
+                VariantType = node.SubstageVarianceType,
+                SubstageRange = node.SubstageRange
+            };
+            foreach(var child in node.Children)
+            {
+                stageParams.Substages.Add(new Substage { Name = child.Name });
+            }
+            return stageParams;
         }
     }
 

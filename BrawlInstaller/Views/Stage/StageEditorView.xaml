@@ -51,7 +51,10 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <ListBox x:Name="entriesListBox" ItemsSource="{Binding StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Params.Name" Width="120" MinHeight="120" Grid.RowSpan="4"/>
+                        <StackPanel Grid.RowSpan="4">
+                            <ListBox x:Name="entriesListBox" ItemsSource="{Binding StageEntries}" SelectedValue="{Binding SelectedStageEntry}" DisplayMemberPath="Params.Name" Width="120" MinHeight="120"/>
+                            <Button x:Name="importParamsButton" Width="Auto" Content="Import Params" Command="{Binding ImportParamsCommand}"/>
+                        </StackPanel>
                         <Button x:Name="entryUpButton" Content="↑" Style="{StaticResource sideButton}" Grid.Column="1" IsEnabled="{Binding SelectedStageEntry, Converter={StaticResource nullBoolConverter}}" Command="{Binding MoveEntryUpCommand}"/>
                         <Button x:Name="entryDownButton" Content="↓" Style="{StaticResource sideButton}" Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedStageEntry, Converter={StaticResource nullBoolConverter}}" Command="{Binding MoveEntryDownCommand}"/>
                         <Button x:Name="entryAddButton" Content="+" Style="{StaticResource miniButton}" Grid.Column="1" Grid.Row="2" Command="{Binding AddStageEntryCommand}"/>
