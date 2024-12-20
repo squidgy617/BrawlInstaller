@@ -118,7 +118,7 @@ namespace BrawlInstaller.ViewModels
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
 
         [DependsUpon(nameof(FighterPackage))]
-        public ObservableCollection<Costume> Costumes { get => _costumes; set { _costumes = value; OnPropertyChanged(nameof(Costumes)); } }
+        public ObservableCollection<Costume> Costumes { get => FighterPackage != null ? new ObservableCollection<Costume>(FighterPackage.Costumes) : new ObservableCollection<Costume>(); }
 
         [DependsUpon(nameof(Costumes))]
         public Costume SelectedCostume { get => _selectedCostume; set { _selectedCostume = value; OnPropertyChanged(nameof(SelectedCostume)); } }
@@ -211,7 +211,6 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage = message.Value;
             BuildSettings = _settingsService.BuildSettings;
-            Costumes = new ObservableCollection<Costume>(message.Value.Costumes);
             SelectedCostume = Costumes.FirstOrDefault();
 
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;

@@ -328,4 +328,43 @@ namespace BrawlInstaller.Common
             return newList;
         }
     }
+
+    public static class CosmeticListExtensions
+    {
+        public static List<Cosmetic> Copy(this List<Cosmetic> list)
+        {
+            var newList = new List<Cosmetic>();
+            foreach(var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
+
+    public static class CostumeListExtensions
+    {
+        public static List<Costume> Copy(this List<Costume> list)
+        {
+            var newList = new List<Costume>();
+            foreach (var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
+
+    public static class FighterPacFileListExtensions
+    {
+        public static List<FighterPacFile> Copy(this List<FighterPacFile> list)
+        {
+            var newList = new List<FighterPacFile>();
+            foreach (var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
 }

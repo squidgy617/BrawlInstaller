@@ -1142,6 +1142,7 @@ namespace BrawlInstaller.Services
                 var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.Modules}\\ft_{fighterPackage.FighterInfo.InternalName.ToLower()}.rel";
                 _fileService.SaveFileAs(module, path);
                 _fileService.CloseFile(module);
+                fighterPackage.Module = path;
             }
             // Rename and import soundbank
             if (soundbank != null)

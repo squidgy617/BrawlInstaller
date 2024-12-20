@@ -147,7 +147,9 @@ namespace BrawlInstaller.ViewModels
                     var info = (FighterInfo)param;
                     FighterPackage = new FighterPackage();
                     FighterPackage.FighterInfo = info.Copy();
-                    FighterPackage = _packageService.ExtractFighter(FighterPackage.FighterInfo);
+                    var package = _packageService.ExtractFighter(FighterPackage.FighterInfo);
+                    // TODO: Do we need to copy on load? Mostly helps with validating the copy method is actually good
+                    FighterPackage = package.Copy();
                     _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
                     _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
                     // Set package path to internal fighter
@@ -267,8 +269,6 @@ namespace BrawlInstaller.ViewModels
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
         }
 
-        // TODO: Copy fighter package before save, only update after save completes successfully
-        // TODO: When adding a new fighter, franchise icon will be added to the end of the list automatically, so we'll need to prompt the user whether they want to install or not
         public void SaveFighter()
         {
             if (Validate() != true)
@@ -284,8 +284,10 @@ namespace BrawlInstaller.ViewModels
                     cosmetic.CostumeIndex = CostumeViewModel.Costumes.IndexOf(costume) + 1;
                 }
             }
+            // Create copy of package before save
+            var packageToSave = FighterPackage.Copy();
             // Set franchise icon up
-            foreach(var icon in FranchiseIconViewModel.FranchiseIconList.ChangedItems)
+            foreach (var icon in FranchiseIconViewModel.FranchiseIconList.ChangedItems)
             {
                 var newIcon = new Cosmetic
                 {
@@ -301,10 +303,10 @@ namespace BrawlInstaller.ViewModels
                 };
                 // Only add it to cosmetic list if it is actually in the list
                 if (FranchiseIconViewModel.FranchiseIconList.Items.Contains(icon))
-                    FighterPackage.Cosmetics.Add(newIcon);
+                    packageToSave.Cosmetics.Add(newIcon);
                 // If it was removed, just add it to the change list
                 else
-                    FighterPackage.Cosmetics.ItemChanged(newIcon);
+                    packageToSave.Cosmetics.ItemChanged(newIcon);
                 if (!string.IsNullOrEmpty(icon.ModelPath))
                 {
                     var newModel = new Cosmetic
@@ -317,31 +319,33 @@ namespace BrawlInstaller.ViewModels
                         Id = icon.Id
                     };
                     if (FranchiseIconViewModel.FranchiseIconList.Items.Contains(icon))
-                        FighterPackage.Cosmetics.Add(newModel);
+                        packageToSave.Cosmetics.Add(newModel);
                     else
-                        FighterPackage.Cosmetics.ItemChanged(newModel);
+                        packageToSave.Cosmetics.ItemChanged(newModel);
                 }
             }
-            FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
+            packageToSave.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? packageToSave.FighterInfo.Ids.FranchiseId;
             // Prompt for items to delete if applicable
-            if (FighterPackage.VictoryTheme != null && FighterPackage.VictoryTheme.SongPath != _oldVictoryThemePath)
+            if (packageToSave.VictoryTheme != null && packageToSave.VictoryTheme.SongPath != _oldVictoryThemePath)
             {
                 var delete = _dialogService.ShowMessage($"Victory theme has changed. Would you like to delete the old theme at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
                 if (!delete)
                 {
-                    FighterPackage.FighterDeleteOptions.DeleteVictoryTheme = false;
+                    packageToSave.FighterDeleteOptions.DeleteVictoryTheme = false;
                 }
             }
-            if (FighterPackage.CreditsTheme != null && FighterPackage.CreditsTheme.SongPath != _oldCreditsThemePath)
+            if (packageToSave.CreditsTheme != null && packageToSave.CreditsTheme.SongPath != _oldCreditsThemePath)
             {
                 var delete = _dialogService.ShowMessage($"Credits theme has changed. Would you like to delete the old theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
                 if (!delete)
                 {
-                    FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = false;
+                    packageToSave.FighterDeleteOptions.DeleteCreditsTheme = false;
                 }
             }
             // Save fighter
-            _packageService.SaveFighter(FighterPackage);
+            _packageService.SaveFighter(packageToSave);
+            // Save was successful, so load changes
+            FighterPackage = packageToSave;
             // Remove added franchise icons from package
             FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
             // Clear changes on all cosmetics
@@ -390,10 +394,14 @@ namespace BrawlInstaller.ViewModels
         {
             if (!string.IsNullOrEmpty(file))
             {
+                // Create copy of fighter package before save
+                var packageToSave = FighterPackage.Copy();
                 var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
-                FighterPackage.Cosmetics.Add(franchiseIcon);
-                FighterPackage.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
-                _packageService.ExportFighter(FighterPackage, file);
+                packageToSave.Cosmetics.Add(franchiseIcon);
+                packageToSave.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
+                _packageService.ExportFighter(packageToSave, file);
+                // Save successful, so load package
+                FighterPackage = packageToSave;
                 // Remove added franchise icons from package
                 FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
                 // Set package path to new file

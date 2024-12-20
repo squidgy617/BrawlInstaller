@@ -14,6 +14,7 @@ using lKHM;
 using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 using System.ComponentModel;
 using BrawlInstaller.Services;
+using BrawlInstaller.Common;
 
 namespace BrawlInstaller.Classes
 {
@@ -42,6 +43,31 @@ namespace BrawlInstaller.Classes
         public FighterSettings FighterSettings { get; set; } = new FighterSettings();
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
         public PackageType PackageType { get; set; } = PackageType.Update;
+
+        public FighterPackage Copy()
+        {
+            var costumes = Costumes.Copy();
+            var fighterPackage = new FighterPackage
+            {
+                FighterInfo = FighterInfo.Copy(),
+                Costumes = costumes,
+                Cosmetics = Cosmetics.Copy(costumes),
+                PacFiles = PacFiles.Copy(),
+                MasqueradeFile = MasqueradeFile,
+                Module = Module,
+                Soundbank = Soundbank,
+                KirbySoundbank = KirbySoundbank,
+                ClassicIntro = ClassicIntro,
+                EndingPacFiles = EndingPacFiles.ToList(),
+                EndingMovie = EndingMovie,
+                CreditsTheme = CreditsTheme.Copy(),
+                VictoryTheme = VictoryTheme.Copy(),
+                FighterSettings = FighterSettings.Copy(),
+                FighterDeleteOptions = FighterDeleteOptions.Copy(),
+                PackageType = PackageType
+            };
+            return fighterPackage;
+        }
     }
 
     public class FighterPacFile
@@ -51,6 +77,13 @@ namespace BrawlInstaller.Classes
         public string Suffix { get; set; }
         public string Subdirectory { get; set; } = string.Empty;
         [JsonIgnore] public string SavePath { get; set; } = string.Empty; // Path to save the file, if one is specified
+
+        public FighterPacFile Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<FighterPacFile>(JsonConvert.SerializeObject(this));
+            copy.SavePath = SavePath;
+            return copy;
+        }
     }
 
     public class Costume
@@ -59,11 +92,59 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public List<FighterPacFile> PacFiles { get; set; } = new List<FighterPacFile>();
         public byte Color { get; set; }
         public int CostumeId { get; set; }
+
+        public Costume Copy()
+        {
+            return new Costume
+            {
+                Cosmetics = Cosmetics.ToList(),
+                PacFiles = PacFiles.Copy(),
+                Color = Color,
+                CostumeId = CostumeId
+            };
+        }
     }
 
     public class CosmeticList : TrackedList<Cosmetic>
     {
         public Dictionary<(CosmeticType, string), string> InheritedStyles { get; set; } = new Dictionary<(CosmeticType, string), string>();
+
+        public CosmeticList Copy(List<Costume> costumes = null)
+        {
+            var copy = new CosmeticList();
+            copy.InheritedStyles = InheritedStyles.ToDictionary(entry => entry.Key, entry => entry.Value);
+            // Change any items that are in changed item list but AREN'T in regular items - done this way to preserve references
+            foreach(var cosmetic in ChangedItems.Where(x => !Items.Contains(x)))
+            {
+                var cosmeticCopy = cosmetic.Copy();
+                copy.ItemChanged(cosmeticCopy);
+            }
+            // Copy items that are in regular item list
+            foreach (var cosmetic in Items)
+            {
+                var cosmeticCopy = cosmetic.Copy();
+                copy.Items.Add(cosmeticCopy);
+                // Copy cosmetics to costumes as needed to preserve references
+                if (costumes != null)
+                {
+                    foreach (var costume in costumes)
+                    {
+                        var index = costume.Cosmetics.IndexOf(cosmetic);
+                        if (index > -1)
+                        {
+                            costume.Cosmetics.RemoveAt(index);
+                            costume.Cosmetics.Insert(index, cosmeticCopy);
+                        }
+                    }
+                }
+                // Change those that are in changed items
+                if (ChangedItems.Contains(cosmetic))
+                {
+                    copy.ItemChanged(cosmeticCopy);
+                }
+            }
+            return copy;
+        }
     }
 
     public class Cosmetic
@@ -88,6 +169,21 @@ namespace BrawlInstaller.Classes
         public int? TextureId { get; set; }
         public bool ColorSmashChanged { get; set; } = false;
         public bool SelectionOption { get; set; } = false;
+
+        public Cosmetic Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<Cosmetic>(JsonConvert.SerializeObject(this));
+            copy.Image = Image;
+            copy.HDImage = HDImage;
+            copy.ImagePath = ImagePath;
+            copy.HDImagePath = HDImagePath;
+            copy.Texture = Texture;
+            copy.Palette = Palette;
+            copy.Model = Model;
+            copy.ModelPath = ModelPath;
+            copy.ColorSequence = ColorSequence;
+            return copy;
+        }
     }
 
     public class FranchiseCosmetic : Cosmetic
@@ -111,6 +207,13 @@ namespace BrawlInstaller.Classes
         public int? SSESubCharacterId { get; set; } = 0;
         public int? LLoadCharacterId { get; set; } = 0;
         public List<uint> ExSlotIds { get; set; } = new List<uint> { 0xFF, 0xFF, 0xFF, 0xFF };
+
+        public FighterSettings Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<FighterSettings>(JsonConvert.SerializeObject(this));
+            copy.KirbyHatData = KirbyHatData;
+            return copy;
+        }
     }
 
     public class LucarioSettings
@@ -118,12 +221,22 @@ namespace BrawlInstaller.Classes
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public bool UseGfxFix { get; set; } = false;
         public bool UseKirbyGfxFix { get; set; } = false;
+
+        public LucarioSettings Copy()
+        {
+            return JsonConvert.DeserializeObject<LucarioSettings>(JsonConvert.SerializeObject(this));
+        }
     }
 
     public class SamusSettings
     {
         public bool UseGfxFix { get; set; } = false;
         public bool UseKirbyGfxFix { get; set; } = false;
+
+        public SamusSettings Copy()
+        {
+            return JsonConvert.DeserializeObject<SamusSettings>(JsonConvert.SerializeObject(this));
+        }
     }
 
     public class JigglypuffSettings
@@ -132,21 +245,41 @@ namespace BrawlInstaller.Classes
         public int? EFLSId { get; set; } = null;
         // TODO: Somehow update these when soundbank ID is changed, probably at UI level
         public List<int?> SfxIds { get; set; } = new List<int?> { null, null, null, null };
+
+        public JigglypuffSettings Copy()
+        {
+            return JsonConvert.DeserializeObject<JigglypuffSettings>(JsonConvert.SerializeObject(this));
+        }
     }
 
     public class DededeSettings
     {
         public bool UseFix { get; set; } = false;
+
+        public DededeSettings Copy()
+        {
+            return JsonConvert.DeserializeObject<DededeSettings>(JsonConvert.SerializeObject(this));
+        }
     }
 
     public class BowserSettings
     {
         public int? BoneId { get; set; } = null;
+
+        public BowserSettings Copy()
+        {
+            return JsonConvert.DeserializeObject<BowserSettings>(JsonConvert.SerializeObject(this));
+        }
     }
 
     public class FighterDeleteOptions
     {
         public bool DeleteVictoryTheme { get; set; } = true;
         public bool DeleteCreditsTheme { get; set; } = true;
+
+        public FighterDeleteOptions Copy()
+        {
+            return JsonConvert.DeserializeObject<FighterDeleteOptions>(JsonConvert.SerializeObject(this));
+        }
     }
 }

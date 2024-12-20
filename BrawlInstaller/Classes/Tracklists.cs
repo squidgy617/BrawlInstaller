@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 using BrawlLib.BrawlManagerLib.Songs;
+using Newtonsoft.Json;
 
 namespace BrawlInstaller.Classes
 {
@@ -39,8 +40,13 @@ namespace BrawlInstaller.Classes
                 SongSwitch = SongSwitch,
                 DisableStockPinch = DisableStockPinch,
                 HiddenFromTracklist = HiddenFromTracklist
-        };
+            };
             return newEntry;
+        }
+
+        public TracklistSong Copy()
+        {
+            return JsonConvert.DeserializeObject<TracklistSong>(JsonConvert.SerializeObject(this));
         }
     }
 }
