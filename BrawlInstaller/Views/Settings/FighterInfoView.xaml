@@ -92,13 +92,13 @@
             <Label x:Name="masqueradeIdLabel" Content="Masquerade ID:" Grid.Row="10" Grid.Column="0"/>
             <TextBox x:Name="masqueradeIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.Ids.MasqueradeId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="10" Grid.Column="1"/>
             <Label x:Name="victoryThemeIdLabel" Content="Victory Theme ID:"   Grid.Row="11" Grid.Column="0"/>
-            <TextBox x:Name="victoryThemeIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.VictoryThemeId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="11" Grid.Column="1"/>
+            <TextBox x:Name="victoryThemeIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.VictoryThemeId, Converter={StaticResource hexUIntConverter}, Mode=TwoWay}" Width="100" Height="20" Grid.Row="11" Grid.Column="1"/>
             <Label x:Name="creditsThemeIdLabel" Content="Credits Theme ID:"   Grid.Row="12" Grid.Column="0"/>
-            <TextBox x:Name="creditsThemeIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.CreditsThemeId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="12" Grid.Column="1"/>
+            <TextBox x:Name="creditsThemeIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.CreditsThemeId, Converter={StaticResource hexUIntConverter}, Mode=TwoWay}" Width="100" Height="20" Grid.Row="12" Grid.Column="1"/>
             <Label x:Name="soundbankIdLabel" Content="Soundbank ID:"   Grid.Row="13" Grid.Column="0"/>
-            <TextBox x:Name="soundbankIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.SoundbankId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="13" Grid.Column="1"/>
+            <TextBox x:Name="soundbankIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.SoundbankId, Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay}" Width="50" Height="20" Grid.Row="13" Grid.Column="1"/>
             <Label x:Name="kirbySoundbankIdLabel" Content="Kirby Soundbank ID:"   Grid.Row="14" Grid.Column="0"/>
-            <TextBox x:Name="kirbySoundbankIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.KirbySoundbankId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="14" Grid.Column="1"/>
+            <TextBox x:Name="kirbySoundbankIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.KirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay}" Width="50" Height="20" Grid.Row="14" Grid.Column="1"/>
             <Label x:Name="effectPacIdLabel" Content="Effect PAC ID:"   Grid.Row="15" Grid.Column="0"/>
             <TextBox x:Name="effectPacIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.EffectPacId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="15" Grid.Column="1"/>
             <Label x:Name="kirbyEffectPacIdLabel" Content="Kirby Effect PAC ID:"   Grid.Row="16" Grid.Column="0"/>
