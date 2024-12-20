@@ -44,7 +44,6 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="cosmetics">Cosmetics to color smash</param>
         /// <param name="bres">Parent BRRES for textures</param>
-        // TODO: handle errors
         public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
         {
             var folder = bres.GetFolder<TEX0Node>();
@@ -67,6 +66,11 @@ namespace BrawlInstaller.Services
             var mipCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).LevelOfDetail).Max();
             // Color smash
             ColorSmasher(paletteCount);
+            // Check for errors
+            if (_fileService.GetFiles(colorSmashDirectory, "*.png").Any())
+            {
+                throw new Exception("Error while trying to color smash. Please ensure all cosmetics are color smashable.");
+            }
             foreach(var cosmetic in cosmetics)
             {
                 var currentTexture = GetTexture(bres, cosmetic.Texture.Name);
