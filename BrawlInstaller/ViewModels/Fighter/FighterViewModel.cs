@@ -193,6 +193,10 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage = new FighterPackage();
             FighterPackage.PackageType = PackageType.New;
+            FighterPackage.FighterInfo.FighterAttributes = new FighterAttributes();
+            FighterPackage.FighterInfo.CosmeticAttributes = new CosmeticAttributes();
+            FighterPackage.FighterInfo.SlotAttributes = new SlotAttributes();
+            FighterPackage.FighterInfo.CSSSlotAttributes = new CSSSlotAttributes();
             _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
             _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
             // Set IDs to first available
