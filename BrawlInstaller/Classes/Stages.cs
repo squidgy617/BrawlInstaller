@@ -2,6 +2,7 @@
 using BrawlLib.Imaging;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +20,19 @@ namespace BrawlInstaller.Classes
         public CosmeticList Cosmetics { get; set; } = new CosmeticList();
         public List<StageEntry> StageEntries { get; set; } = new List<StageEntry>();
         public List<StageParams> AllParams { get; set; } = new List<StageParams>();
+
+        public StageInfo Copy()
+        {
+            var copy = new StageInfo
+            {
+                RandomName = RandomName,
+                Slot = Slot.Copy(),
+                Cosmetics = Cosmetics.Copy(),
+                StageEntries = StageEntries.Copy()
+            };
+            copy.AllParams = copy.StageEntries.Select(x => x.Params).ToList();
+            return copy;
+        }
     }
 
     public class StageList
@@ -99,9 +113,34 @@ namespace BrawlInstaller.Classes
         public ushort ButtonFlags { get; set; } = 0x0000;
         public string BinFileName { get; set; } = "Unknown";
         public string BinFilePath { get; set; } = null;
-        public bool IsRAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0; }
-        public bool IsLAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) != 0; }
+        [JsonIgnore] public bool IsRAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0; }
+        [JsonIgnore] public bool IsLAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) != 0; }
         public StageParams Params { get; set; } = new StageParams();
+
+        public StageEntry Copy()
+        {
+            var copy = new StageEntry
+            {
+                ButtonFlags = ButtonFlags,
+                BinFileName = BinFileName,
+                BinFilePath = BinFilePath,
+                Params = Params.Copy()
+            };
+            return copy;
+        }
+    }
+
+    public static class StageEntryListExtensions
+    {
+        public static List<StageEntry> Copy(this List<StageEntry> stageEntryList)
+        {
+            var list = new List<StageEntry>();
+            foreach (var entry in stageEntryList)
+            {
+                list.Add(entry.Copy());
+            }
+            return list;
+        }
     }
 
     public class StageParams
@@ -113,7 +152,7 @@ namespace BrawlInstaller.Classes
         public string TrackListFile { get; set; } = null;
         public string Module { get; set; } = string.Empty;
         public string ModuleFile { get; set; } = null;
-        public RGBAPixel CharacterOverlay { get; set; } = new RGBAPixel { R = 0, G = 0, B = 0, A = 0 };
+        [JsonIgnore] public RGBAPixel CharacterOverlay { get; set; } = new RGBAPixel { R = 0, G = 0, B = 0, A = 0 };
         public ushort SoundBank { get; set; } = 0xFFFF;
         public string SoundBankFile { get; set; } = null;
         public ushort EffectBank { get; set; } = 0x0032;
@@ -163,11 +202,27 @@ namespace BrawlInstaller.Classes
             }
             return newParam;
         }
+
+        public StageParams Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<StageParams>(JsonConvert.SerializeObject(this));
+            copy.CharacterOverlay = CharacterOverlay;
+            return copy;
+        }
     }
 
     public class Substage
     {
         public string Name { get; set; } = "00";
         public string PacFile { get; set; } = null;
+
+        public Substage Copy()
+        {
+            return new Substage
+            {
+                Name = Name,
+                PacFile = PacFile
+            };
+        }
     }
 }

@@ -136,12 +136,18 @@ namespace BrawlInstaller.ViewModels
         public void DeleteStageSlot(StageDeletedMessage message)
         {
             var stageSlot = message.Value;
-            StageTable.Remove(stageSlot);
+            foreach(var slot in StageTable.Where(x => x.StageIds.StageId == stageSlot.StageIds.StageId && x.StageIds.StageCosmeticId == stageSlot.StageIds.StageCosmeticId).ToList())
+            {
+                StageTable.Remove(slot);
+            }
             foreach(var list in StageLists)
             {
                 foreach(var page in list.Pages)
                 {
-                    page.StageSlots.Remove(stageSlot);
+                    foreach (var slot in page.StageSlots.Where(x => x.StageIds.StageId == stageSlot.StageIds.StageId && x.StageIds.StageCosmeticId == stageSlot.StageIds.StageCosmeticId).ToList())
+                    {
+                        page.StageSlots.Remove(slot);
+                    }
                 }
             }
             OnPropertyChanged(nameof(StageTable));
@@ -233,7 +239,9 @@ namespace BrawlInstaller.ViewModels
                     Stage = stage;
                     stage.Slot = selectedSlot;
                     stage = _stageService.GetStageData(stage);
-                    WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
+                    // TODO: Do we need to copy stage on load? Right now just useful for debugging
+                    var stageCopy = stage.Copy();
+                    WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stageCopy));
                 }
             }
         }

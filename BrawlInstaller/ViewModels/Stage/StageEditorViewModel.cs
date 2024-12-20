@@ -140,8 +140,10 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveStage(StageInfo stage)
         {
+            // Create copy of stage before save
+            var stageToSave = stage.Copy();
             var deleteOptions = new List<string>();
-            deleteOptions = _stageService.SaveStage(stage);
+            deleteOptions = _stageService.SaveStage(stageToSave);
 
             // Prompt user for delete options
             foreach (var item in deleteOptions)
@@ -153,8 +155,14 @@ namespace BrawlInstaller.ViewModels
                 }
             }
 
+            // Stage saving was successful, so load changes
+            Stage = stageToSave;
+            stage = Stage;
+
             stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
             stage.Cosmetics.ClearChanges();
+
+            OnPropertyChanged(nameof(Stage));
             // Update stage list
             WeakReferenceMessenger.Default.Send(new StageSavedMessage(stage));
         }
@@ -296,6 +304,8 @@ namespace BrawlInstaller.ViewModels
                 Stage = null;
                 OnPropertyChanged(nameof(Stage));
                 SaveStage(deleteStage);
+                Stage = null;
+                OnPropertyChanged(nameof(Stage));
                 // Update stage lists
                 WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
             }
