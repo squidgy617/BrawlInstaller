@@ -66,11 +66,6 @@ namespace BrawlInstaller.Services
             var mipCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).LevelOfDetail).Max();
             // Color smash
             ColorSmasher(paletteCount);
-            // Check for errors
-            if (_fileService.GetFiles(colorSmashDirectory, "*.png").Any())
-            {
-                throw new Exception("Error while trying to color smash. Please ensure all cosmetics are color smashable.");
-            }
             foreach(var cosmetic in cosmetics)
             {
                 var currentTexture = GetTexture(bres, cosmetic.Texture.Name);
@@ -160,6 +155,11 @@ namespace BrawlInstaller.Services
                 Arguments = $"-c RGB5A3 -n {paletteCount}"
             });
             cSmash?.WaitForExit();
+            // If there are any images in the "in" folder that don't exist in the "out" folder, throw an error
+            if (_fileService.GetFiles(ColorSmashDirectory, "*.png").Any(x => !_fileService.GetFiles(ColorSmashOutDirectory, "*.png").Select(y => Path.GetFileNameWithoutExtension(y)).Contains(Path.GetFileNameWithoutExtension(x))))
+            {
+                throw new Exception("Error while trying to color smash. Please ensure all cosmetics are color smashable.");
+            }
         }
     }
 }
