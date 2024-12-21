@@ -16,7 +16,10 @@ namespace BrawlInstaller.StaticClasses
             (CosmeticType.StageFranchiseIcon, "Icon"),
             (CosmeticType.StageName, "Name"),
             (CosmeticType.StageGameLogo, "Game Logo"),
-            (CosmeticType.StageAltName, "Alt Name")
+            (CosmeticType.StageAltName, "Alt Name"),
+            (CosmeticType.StageRandomBanner, "Random Banner"),
+            (CosmeticType.StageReplayBanner, "Replay Banner"),
+            (CosmeticType.StageStats, "Stats")
         };
 
         public static List<(CosmeticType CosmeticType, string Style)> DefaultCostumeCosmetics = new List<(CosmeticType CosmeticType, string Style)>
