@@ -23,5 +23,6 @@
         <Label x:Name="hdTexturePathLabel" Content="HD Texture Path:" Grid.Column="0" Grid.Row="1"/>
         <userControls:FileBox x:Name="hdTexturePathTextBox" Text="{Binding AppSettings.HDTextures}" TextBoxWidth="360" Grid.Column="1" Grid.Row="1"/>
         <Button x:Name="refreshButton" Content="Apply" Command="{Binding RefreshCommand}" Grid.Column="2"/>
+        <CheckBox x:Name="hdTextureCheckBox" Content="Modify HD Textures" IsChecked="{Binding AppSettings.ModifyHDTextures}" Grid.Column="2" Grid.Row="1"/>
     </Grid>
 </UserControl>

@@ -333,7 +333,7 @@ namespace BrawlInstaller.Services
         private void DeleteHDTexture(TEX0Node texNode)
         {
             var name = texNode.DolphinTextureName;
-            if (_settingsService.BuildSettings.HDTextures)
+            if (_settingsService.AppSettings.ModifyHDTextures)
             {
                 var deleteFiles = HDImages.Where(x => x.Key == name);
                 foreach (var deleteFile in deleteFiles)
@@ -933,7 +933,7 @@ namespace BrawlInstaller.Services
         {
             // Save HD cosmetic if it exists
             var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
-            if (_settingsService.BuildSettings.HDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
+            if (_settingsService.AppSettings.ModifyHDTextures && !string.IsNullOrEmpty(cosmetic.HDImagePath) && !string.IsNullOrEmpty(texture?.DolphinTextureName))
             {
                 var imagePath = $"{_settingsService.AppSettings.HDTextures}\\{definition.HDImageLocation}";
                 if (!string.IsNullOrEmpty(name) && definition.CreateHDTextureFolder == true)
@@ -1026,7 +1026,7 @@ namespace BrawlInstaller.Services
                     if (!definition.FirstOnly && !definition.SeparateFiles)
                         ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition, id);
                     // Save HD cosmetics if they exist
-                    if (_settingsService.BuildSettings.HDTextures)
+                    if (_settingsService.AppSettings.ModifyHDTextures)
                         foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                         {
                             ImportHDTexture(rootNode, definition, cosmetic, id, name);
@@ -1046,7 +1046,7 @@ namespace BrawlInstaller.Services
                     FileCache.Add(rootNode);
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
-                    if (_settingsService.BuildSettings.HDTextures)
+                    if (_settingsService.AppSettings.ModifyHDTextures)
                     {
                         ImportHDTexture(rootNode, definition, cosmetic, id, name);
                     }
@@ -1494,7 +1494,7 @@ namespace BrawlInstaller.Services
             var textures = GetTextures(definition, node, brawlIds, restrictRange);
             foreach(var texture in textures)
             {
-                var hdTexture = _settingsService.BuildSettings.HDTextures ? GetHDTexture(texture.Texture?.DolphinTextureName) : "";
+                var hdTexture = _settingsService.AppSettings.ModifyHDTextures ? GetHDTexture(texture.Texture?.DolphinTextureName) : "";
                 cosmetics.Add(new Cosmetic
                 {
                     CosmeticType = definition.CosmeticType,
@@ -1561,7 +1561,7 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.FighterCosmetic).ToList();
             // Load HD textures in advance
-            if (_settingsService.BuildSettings.HDTextures)
+            if (_settingsService.AppSettings.ModifyHDTextures)
                 PreloadHDTextures();
             return GetCosmetics(fighterIds, definitions, true);
         }
@@ -1576,7 +1576,7 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.StageCosmetic).ToList();
             // Load HD textures in advance
-            if (_settingsService.BuildSettings.HDTextures)
+            if (_settingsService.AppSettings.ModifyHDTextures)
                 PreloadHDTextures();
             return GetCosmetics(stageIds, definitions, true);
         }
@@ -1591,7 +1591,7 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList();
             // Load HD textures in advance
-            if (_settingsService.BuildSettings.HDTextures && loadHdTextures)
+            if (_settingsService.AppSettings.ModifyHDTextures && loadHdTextures)
                 PreloadHDTextures();
             // Get all franchise icons
             var allIcons = GetCosmetics(new BrawlIds(), definitions, false);
