@@ -210,7 +210,7 @@
                         </Grid.ColumnDefinitions>
                         <Label x:Name="patPathsLabel" Content="Paths:"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1">
-                            <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="60"/>
+                            <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="120"/>
                             <StackPanel>
                                 <Button x:Name="addPatSettingsButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddPatSettingsCommand}"/>
                                 <Button x:Name="removePatSettingsButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePatSettingsCommand}"/>

@@ -44,6 +44,12 @@ namespace BrawlInstaller.Enums
         [Description("Stage Game Logo")]
         StageGameLogo,
         [Description("Stage Alt Name")]
-        StageAltName
+        StageAltName,
+        [Description("Stage Random Banner")]
+        StageRandomBanner,
+        [Description("Stage Replay Banner")]
+        StageReplayBanner,
+        [Description("Stage Stats")]
+        StageStats
     }
 }
