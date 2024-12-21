@@ -185,6 +185,7 @@
                 <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1"/>
                 <CheckBox x:Name="alwaysInheritCheckBox" Content="Use other style if not available" IsChecked="{Binding SelectedDefinition.AlwaysInheritStyle}" Grid.Row="1" Grid.Column="1"/>
                 <CheckBox x:Name="requiredCheckBox" Content="Required" IsChecked="{Binding SelectedDefinition.Required}" Grid.Column="2"/>
+                <CheckBox x:Name="enabledCheckBox" Content="Enabled" IsChecked="{Binding SelectedDefinition.Enabled}" Grid.Column="2" Grid.Row="1"/>
             </Grid>
             <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6">
                 <Grid>

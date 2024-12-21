@@ -67,6 +67,7 @@ namespace BrawlInstaller.Classes
         public ARCFileType FileType { get; set; } = ARCFileType.MiscData;
         public bool AlwaysInheritStyle { get; set; } = false;
         public bool Required { get; set; } = false;
+        public bool Enabled { get; set; } = true;
         [JsonIgnore] public bool UseIndividualIds { get => CosmeticType == CosmeticType.FranchiseIcon || Selectable; }
         [JsonIgnore] public bool FighterCosmetic { get => CosmeticType != CosmeticType.FranchiseIcon && !StageCosmetic; }
         [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon || CosmeticType == CosmeticType.StageName || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName; }

@@ -959,7 +959,7 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of character for HD textures</param>
         public void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name = null)
         {
-            foreach(var definition in definitions)
+            foreach(var definition in definitions.Where(x => x.Enabled != false))
             {
                 ImportCosmetics(definition, cosmeticList, ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, name);
             }
