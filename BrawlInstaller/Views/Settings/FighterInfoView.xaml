@@ -26,8 +26,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Label x:Name="fighterListLabel" HorizontalAlignment="Left" Content="Fighters:" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
-            <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="Auto" Height="Auto" MaxHeight="400"/>
-            <Button x:Name="loadButton" Content="Load" Grid.Row="2" Command="{Binding LoadFightersCommand}"/>
+            <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="150" Height="400" MaxHeight="400"/>
+            <Button x:Name="loadButton" Content="Find Missing Fighters" Width="Auto" Grid.Row="2" Command="{Binding LoadFightersCommand}"/>
             <!--<Button x:Name="saveButton" Content="Save" Grid.Row="2" Grid.Column="1" Command="{Binding SaveFightersCommand}"/>-->
             <Grid x:Name="buttonGrid" Grid.Row="1" Grid.Column="2">
                 <Grid.RowDefinitions>
@@ -100,9 +100,9 @@
             <Label x:Name="kirbySoundbankIdLabel" Content="Kirby Soundbank ID:"   Grid.Row="14" Grid.Column="0"/>
             <TextBox x:Name="kirbySoundbankIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.KirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay}" Width="50" Height="20" Grid.Row="14" Grid.Column="1"/>
             <Label x:Name="effectPacIdLabel" Content="Effect PAC ID:"   Grid.Row="15" Grid.Column="0"/>
-            <TextBox x:Name="effectPacIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.EffectPacId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="15" Grid.Column="1"/>
+            <ComboBox x:Name="effectPacIdTextBox" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedFighterEffectPac, Mode=TwoWay}" Width="100" Height="20" Grid.Row="15" Grid.Column="1"/>
             <Label x:Name="kirbyEffectPacIdLabel" Content="Kirby Effect PAC ID:"   Grid.Row="16" Grid.Column="0"/>
-            <TextBox x:Name="kirbyEffectPacIdTextBox"   TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.KirbyEffectPacId, TargetNullValue='', Mode=TwoWay}" Width="50" Height="20" Grid.Row="16" Grid.Column="1"/>
+            <ComboBox x:Name="kirbyEffectPacIdTextBox" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedFighterInfo.KirbyEffectPacId, Mode=TwoWay}" Width="100" Height="20" Grid.Row="16" Grid.Column="1"/>
         </Grid>
     </Grid>
 </UserControl>

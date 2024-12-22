@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,14 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterInfoList))]
         public FighterInfo SelectedFighterInfo { get => _selectedFighterInfo; set { _selectedFighterInfo = value; OnPropertyChanged(nameof(SelectedFighterInfo)); } }
+
+        public Dictionary<string, int> FighterEffectPacs { get => EffectPacs.FighterEffectPacs; }
+
+        [DependsUpon(nameof(SelectedFighterInfo))]
+        public int? SelectedFighterEffectPac { get => SelectedFighterInfo?.EffectPacId; set { SelectedFighterInfo.EffectPacId = value; OnPropertyChanged(nameof(SelectedFighterEffectPac)); } }
+
+        [DependsUpon(nameof(SelectedFighterInfo))]
+        public int? SelectedKirbyEffectPac { get => SelectedFighterInfo?.KirbyEffectPacId; set { SelectedFighterInfo.KirbyEffectPacId = value; OnPropertyChanged(nameof(SelectedKirbyEffectPac)); } }
 
         // Methods
         private void AddFighter()
