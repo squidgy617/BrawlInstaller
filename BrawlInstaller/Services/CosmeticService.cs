@@ -502,6 +502,7 @@ namespace BrawlInstaller.Services
         /// <returns></returns>
         private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode rootNode)
         {
+            id = id + definition.Offset;
             // TODO: For some reason this was changed in commit 19bae7576120b363bda353617612f133c9a99598 to check for an ARCNode, but this never applies for ARC nodes, so changed it to BRRES. May need to verify everything works right.
             if (rootNode.GetType() != typeof(BRRESNode))
             {
@@ -607,7 +608,7 @@ namespace BrawlInstaller.Services
                     if (texture != null && texture.Name.StartsWith("TEMPNAME"))
                     {
                         var palette = node._paletteNode;
-                        var id = 0;
+                        var id = definition.Offset;
                         // If the frame index is used by a texture that doesn't appear in the PAT0, use the first unused ID
                         if (usedIdList.Contains((int)node.FrameIndex))
                         {
@@ -680,7 +681,6 @@ namespace BrawlInstaller.Services
                 }
             }
             var parentNode = (BRRESNode)node;
-            id = definition.Offset + id;
             var textureId = GetUnusedCosmeticId(definition, id, rootNode);
             // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
@@ -734,7 +734,7 @@ namespace BrawlInstaller.Services
                     node = rootNode.FindChild(path);
                     if (node != null)
                     {
-                        CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, id, cosmetic), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
+                        CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, id, cosmetic, patSetting.Offset ?? definition.Offset), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
                         if (patSetting.NormalizeTextureIds == true)
                         {
                             NormalizeCosmeticIds(definition, (PAT0TextureNode)node);
@@ -1062,7 +1062,7 @@ namespace BrawlInstaller.Services
         /// <returns>Formatted cosmetic ID</returns>
         private string FormatCosmeticId(CosmeticDefinition definition, int? cosmeticId)
         {
-            var id = (cosmeticId * definition.Multiplier)?.ToString("D" + definition.SuffixDigits);
+            var id = ((cosmeticId * definition.Multiplier) + definition.Offset)?.ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -1075,7 +1075,7 @@ namespace BrawlInstaller.Services
         /// <returns>Formatted cosmetic ID</returns>
         private string FormatCosmeticId(CosmeticDefinition definition, int? cosmeticId, int costumeIndex)
         {
-            var id = ((cosmeticId * definition.Multiplier) + costumeIndex)?.ToString("D" + definition.SuffixDigits);
+            var id = ((cosmeticId * definition.Multiplier) + definition.Offset + costumeIndex)?.ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -1096,7 +1096,7 @@ namespace BrawlInstaller.Services
             {
                 return cosmetic.TextureId?.ToString("D" + definition.SuffixDigits);
             }
-            var id = ((cosmeticId * definition.Multiplier) + (cosmetic.CostumeIndex ?? 0))?.ToString("D" + definition.SuffixDigits);
+            var id = ((cosmeticId * definition.Multiplier) + definition.Offset + (cosmetic.CostumeIndex ?? 0))?.ToString("D" + definition.SuffixDigits);
             return id;
         }
 
@@ -1206,7 +1206,7 @@ namespace BrawlInstaller.Services
             if (suffix != "" && int.TryParse(suffix, out int index))
             {
                 index = Convert.ToInt32(suffix);
-                return CheckIdRange(definition.IdType, definition.Multiplier, id, index);
+                return CheckIdRange(definition.IdType, definition.Multiplier, id, index, definition.Offset);
             }
             return false;
         }
@@ -1221,7 +1221,7 @@ namespace BrawlInstaller.Services
         /// <returns>Whether cosmetic is within the ID range</returns>
         private bool CheckIdRange(PatSettings patSettings, CosmeticDefinition definition, int? id, int index)
         {
-            return CheckIdRange(idType: patSettings.IdType ?? definition.IdType, multiplier: patSettings.Multiplier ?? definition.Multiplier, id, index);
+            return CheckIdRange(idType: patSettings.IdType ?? definition.IdType, multiplier: patSettings.Multiplier ?? definition.Multiplier, id, index, patSettings.Offset ?? definition.Offset);
         }
 
         /// <summary>
@@ -1232,13 +1232,13 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID associated with cosmetic</param>
         /// <param name="index">Number to check is within range</param>
         /// <returns>Whether cosmetic is within the ID range</returns>
-        private bool CheckIdRange(IdType idType, int multiplier, int? id, int index)
+        private bool CheckIdRange(IdType idType, int multiplier, int? id, int index, int offset)
         {
             // TODO: Do we really only check this for cosmetic IDs?
             if (idType != IdType.Cosmetic)
-                return index == id;
-            var minRange = id * multiplier;
-            var maxRange = multiplier > 1 ? minRange + multiplier : id;
+                return index == (id * multiplier) + offset;
+            var minRange = (id * multiplier) + offset;
+            var maxRange = multiplier > 1 ? minRange + multiplier + offset : id + offset;
             if (index <= maxRange && index > minRange)
                 return true;
             return false;
@@ -1261,7 +1261,7 @@ namespace BrawlInstaller.Services
             var isNumeric = int.TryParse(suffix, out int index);
             if (isNumeric)
             {
-                return GetCostumeIndex(index, definition.Multiplier, id);
+                return GetCostumeIndex(index, definition.Multiplier, id, definition.Offset);
             }
             return 0;
         }
@@ -1273,11 +1273,11 @@ namespace BrawlInstaller.Services
         /// <param name="multiplier">Multiplier used for IDs</param>
         /// <param name="id">ID associated with texture</param>
         /// <returns></returns>
-        private int GetCostumeIndex(int index, int multiplier, int? id)
+        private int GetCostumeIndex(int index, int multiplier, int? id, int offset)
         {
             if (multiplier <= 1 || id == null)
                 return 0;
-            index = index - (id.Value * multiplier);
+            index = index - ((id.Value * multiplier) + offset);
             return index;
         }
 
@@ -1305,14 +1305,14 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticId">ID associated with cosmetic</param>
         /// <param name="costumeIndex">Costume index for cosmetic</param>
         /// <returns>Full ID of cosmetic</returns>
-        private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, Cosmetic cosmetic)
+        private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, Cosmetic cosmetic, int offset)
         {
             // If the cosmetic is selectable, always use the original ID, not the selected ID
             if (definition.UseIndividualIds && !definition.Selectable)
             {
                 cosmeticId = cosmetic.Id ?? 0;
             }
-            var id = (cosmeticId * definition.Multiplier) + (cosmetic?.CostumeIndex ?? 0);
+            var id = (cosmeticId * definition.Multiplier) + offset + (cosmetic?.CostumeIndex ?? 0);
             return id;
         }
 
@@ -1328,7 +1328,7 @@ namespace BrawlInstaller.Services
         {
             // Try to get all textures for cosmetic definition
             var nodes = new List<CosmeticTexture>();
-            var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
+            var id = brawlIds.GetIdOfType(definition.IdType);
             if (id > -1 || !restrictRange)
             {
                 // If the definition contains PatSettings, check the PAT0 first
@@ -1339,7 +1339,7 @@ namespace BrawlInstaller.Services
                     if (pat != null)
                     {
                         var patEntries = new List<ResourceNode>();
-                        id = brawlIds.GetIdOfType(patSettings.IdType ?? definition.IdType) + (patSettings.Offset ?? definition.Offset);
+                        id = brawlIds.GetIdOfType(patSettings.IdType ?? definition.IdType);
                         patEntries = pat.Children.Where(x => !restrictRange || CheckIdRange(patSettings, definition, id, Convert.ToInt32(((PAT0TextureEntryNode)x).FrameIndex))).ToList();
                         foreach (PAT0TextureEntryNode patEntry in patEntries)
                         {
@@ -1350,7 +1350,7 @@ namespace BrawlInstaller.Services
                                 nodes.Add(new CosmeticTexture
                                 {
                                     Texture = patEntry._textureNode,
-                                    CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), patSettings.Multiplier ?? definition.Multiplier, id),
+                                    CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), patSettings.Multiplier ?? definition.Multiplier, id, patSettings.Offset ?? definition.Offset),
                                     Id = (int)patEntry.FrameIndex,
                                     TextureId = GetCosmeticId(patEntry._textureNode?.Name, definition)
                                 });
@@ -1406,7 +1406,7 @@ namespace BrawlInstaller.Services
         {
             // Try to get all models for cosmetic definition
             var nodes = new List<MDL0Node>();
-            var id = brawlIds.GetIdOfType(definition.IdType) + definition.Offset;
+            var id = brawlIds.GetIdOfType(definition.IdType);
             if (id > -1 || !restrictRange)
             {
                 var start = definition.ModelPath != null ? node.FindChild(definition.ModelPath) : node;
@@ -1639,7 +1639,7 @@ namespace BrawlInstaller.Services
                 // Order them to ensure that cosmetics with multiple definitions favor definitions that have multiple cosmetics
                 foreach (var cosmetic in cosmeticGroup.OrderByDescending(x => !x.SeparateFiles).OrderByDescending(x => !x.FirstOnly))
                 {
-                    var id = brawlIds.GetIdOfType(cosmetic.IdType) + cosmetic.Offset;
+                    var id = brawlIds.GetIdOfType(cosmetic.IdType);
                     if (id > -1 || !restrictRange)
                     {
                         // Check all paths for the cosmetic definition
