@@ -61,7 +61,8 @@ namespace BrawlInstaller.Classes
                     SlotConfigId = Ids.SlotConfigId,
                     CosmeticId = Ids.CosmeticId,
                     RecordsIconId = Ids.RecordsIconId,
-                    FranchiseId = Ids.FranchiseId
+                    FranchiseId = Ids.FranchiseId,
+                    MasqueradeId = Ids.MasqueradeId
                 },
                 VictoryThemeId = VictoryThemeId,
                 CreditsThemeId = CreditsThemeId,
