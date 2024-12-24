@@ -614,8 +614,8 @@ namespace BrawlInstaller.Services
                         // Values are comma-separated
                         foreach (var item in workingText.Split(','))
                         {
-                            // Remove everything after tabs or newlines
-                            var value = item.Trim().Split('\t', '\n', '\r')[0];
+                            // Remove everything after tabs, newlines, or spaces
+                            var value = item.Trim().Split('\t', '\n', '\r', ' ')[0];
                             // Only gather up to table size
                             if (table.Count >= count)
                             {
