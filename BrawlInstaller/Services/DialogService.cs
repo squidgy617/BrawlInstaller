@@ -258,16 +258,22 @@ namespace BrawlInstaller.Services
             return null;
         }
 
+        /// <summary>
+        /// Open a dialog to view textures
+        /// </summary>
+        /// <param name="filePath">Path of file to view textures from</param>
+        /// <param name="title">Title to display</param>
+        /// <param name="caption">Caption to display</param>
         public void OpenTextureViewer(string filePath, string title = "Select a texture", string caption = "Select a texture")
         {
             var rootNode = _fileService.OpenFile(filePath);
             if (rootNode != null)
             {
                 var textures = rootNode.GetChildrenRecursive().Where(x => x.GetType() == typeof(TEX0Node)).ToList();
-                var bitmaps = new List<BitmapImage>();
+                var bitmaps = new List<DialogImage>();
                 foreach(TEX0Node texture in textures)
                 {
-                    bitmaps.Add(texture.GetImage(0).ToBitmapImage());
+                    bitmaps.Add(new DialogImage { DisplayName = texture.Name, Image = texture.GetImage(0).ToBitmapImage() } );
                 }
                 var dialog = GenerateWindow(title);
                 _imageDropDownViewModel.Caption = caption;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,14 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         [DependsUpon(nameof(SelectedItem))]
-        new public BitmapImage Image { get => (BitmapImage)SelectedItem; }
+        new public BitmapImage Image { get => ((DialogImage)SelectedItem).Image; }
+
+        new public string DisplayMemberPath { get => "DisplayName"; }
+    }
+
+    public class DialogImage
+    {
+        public string DisplayName { get; set; }
+        public BitmapImage Image { get; set; }
     }
 }

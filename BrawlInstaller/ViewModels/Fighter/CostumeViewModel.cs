@@ -660,7 +660,7 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedPacFile != null)
             {
-                _dialogService.OpenTextureViewer(SelectedPacFile.FilePath);
+                _dialogService.OpenTextureViewer(SelectedPacFile.FilePath, "Texture Viewer", "Select a texture to view");
             }
         }
     }
