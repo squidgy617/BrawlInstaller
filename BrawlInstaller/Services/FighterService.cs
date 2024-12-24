@@ -1536,7 +1536,7 @@ namespace BrawlInstaller.Services
                     asmTable[cssSlotId.Value].Comment = fighterPackage.FighterInfo.DisplayName;
                 }
                 // Write table
-                code = _codeService.ReplaceTable(code, "Table:", asmTable, DataSize.Word, 4);
+                code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.SlotExTableLabel, asmTable, DataSize.Word, 4);
                 _fileService.SaveTextFile(codePath, code);
             }
         }
@@ -1575,7 +1575,7 @@ namespace BrawlInstaller.Services
                     asmTable[cssSlotId.Value].Comment = fighterPackage.FighterInfo.DisplayName;
                 }
                 // Write table
-                code = _codeService.ReplaceTable(code, ".GOTO->Table_Skip", asmTable, DataSize.Byte, 4);
+                code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.LLoadTableLabel, asmTable, DataSize.Byte, 4);
                 _fileService.SaveTextFile(codePath, code);
             }
         }
@@ -1621,7 +1621,7 @@ namespace BrawlInstaller.Services
                     asmTable[(fighterId.Value * 2) + 1].Item = y;
                 }
                 // Write table
-                code = _codeService.ReplaceTable(code, "ThrowReleaseTable:", asmTable, DataSize.Float, 2, 12);
+                code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.ThrowReleaseTableLabel, asmTable, DataSize.Float, 2, 12);
                 _fileService.SaveTextFile(codePath, code);
             }
         }
@@ -1787,7 +1787,7 @@ namespace BrawlInstaller.Services
                     asmTable[cosmeticConfigId.Value].Comment = fighterInfo.DisplayName;
                 }
                 // Write table
-                code = _codeService.ReplaceTable(code, "ENDINGTABLE:", asmTable, DataSize.Byte, 8);
+                code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.EndingTableLabel, asmTable, DataSize.Byte, 8);
                 _fileService.SaveTextFile(path, code);
                 // Update and import pac files
                 if (endingPacFiles.Count > 0)
@@ -2054,7 +2054,7 @@ namespace BrawlInstaller.Services
                     asmTable[slotId.Value].Comment = fighterInfo.DisplayName;
                 }
                 // Write table
-                code = _codeService.ReplaceTable(code, "ClassicResultsTable:", asmTable, DataSize.Halfword, 4);
+                code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTableLabel, asmTable, DataSize.Halfword, 4);
                 _fileService.SaveTextFile(codePath, code);
                 return id;
             }

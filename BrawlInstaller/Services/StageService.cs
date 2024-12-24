@@ -652,7 +652,7 @@ namespace BrawlInstaller.Services
             if (_fileService.FileExists(tableFilepath))
             {
                 var tableFileText = _codeService.ReadCode(tableFilepath);
-                tableFileText = _codeService.ReplaceTable(tableFileText, "TABLE_STAGES:", stageTableAsm, DataSize.Halfword, 4);
+                tableFileText = _codeService.ReplaceTable(tableFileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
                 _fileService.SaveTextFile(tableFilepath, tableFileText);
             }
             // Update indexes
@@ -667,7 +667,7 @@ namespace BrawlInstaller.Services
                 foreach (var page in stageList.Pages)
                 {
                     // Update stage table if it exists
-                    fileText = _codeService.ReplaceTable(fileText, "TABLE_STAGES:", stageTableAsm, DataSize.Halfword, 4);
+                    fileText = _codeService.ReplaceTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
                     // Update stage list
                     var pageEntriesAsm = page.ConvertToAsmTable();
                     fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntriesAsm, DataSize.Byte);
