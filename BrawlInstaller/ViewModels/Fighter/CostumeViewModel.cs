@@ -386,6 +386,7 @@ namespace BrawlInstaller.ViewModels
             Costumes.MoveUp(selectedCostume);
             FighterPackage.Costumes.MoveUp(selectedCostume);
             SelectedCostume = selectedCostume;
+            OnPropertyChanged(nameof(Costumes));
         }
 
         public void MoveCostumeDown()
@@ -395,6 +396,7 @@ namespace BrawlInstaller.ViewModels
             Costumes.MoveDown(selectedCostume);
             FighterPackage.Costumes.MoveDown(selectedCostume);
             SelectedCostume = selectedCostume;
+            OnPropertyChanged(nameof(Costumes));
         }
 
         public void MoveCosmeticUp()
@@ -575,6 +577,7 @@ namespace BrawlInstaller.ViewModels
             Costumes.Add(newCostume);
             FighterPackage.Costumes.Add(newCostume);
             SelectedCostume = newCostume;
+            OnPropertyChanged(nameof(Costumes));
         }
 
         public void RemoveCostumes(object selectedItems)
@@ -588,6 +591,13 @@ namespace BrawlInstaller.ViewModels
                     FlipColorSmashedCosmetics(cosmetic);
                 }
             }
+            // Select previous costume, if available
+            var index = FighterPackage.Costumes.IndexOf(costumes.FirstOrDefault());
+            if (index > 0)
+            {
+                SelectedCostume = FighterPackage.Costumes[index - 1];
+            }
+            // Remove costumes
             foreach (var costume in costumes)
             {
                 foreach (var cosmetic in costume.Cosmetics)
@@ -600,6 +610,7 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedCosmetic));
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
+            OnPropertyChanged(nameof(Costumes));
         }
 
         private List<int> GetCostumeIds()
