@@ -133,6 +133,7 @@
     <Compile Include="ViewModels\Dialogs\DropDownViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ImageDropDownViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
@@ -171,6 +172,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\MultiMessageView.xaml.cs">
       <DependentUpon>MultiMessageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ImageDropDownView.xaml.cs">
+      <DependentUpon>ImageDropDownView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
@@ -266,6 +270,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\MultiMessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ImageDropDownView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

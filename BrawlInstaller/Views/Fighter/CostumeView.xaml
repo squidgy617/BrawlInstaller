@@ -77,9 +77,11 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Button x:Name="addPacFilesButton" Content="+" Command="{Binding AddPacFilesCommand}" Grid.Row="0" Style="{StaticResource miniButton}"/>
                     <Button x:Name="removePacFilesButton" Content="-" Command="{Binding RemovePacFileCommand}" Grid.Row="1" Style="{StaticResource miniButton}"/>
+                    <Button x:Name="viewButton" Content="🔍" Command="{Binding ViewTexturesCommand}" Grid.Row="2" Style="{StaticResource miniButton}"/>
                 </Grid>
             </Grid>
             <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="2" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}"/>

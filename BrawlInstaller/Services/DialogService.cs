@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Common;
 using BrawlInstaller.ViewModels;
 using BrawlLib.SSBB.ResourceNodes;
 using Microsoft.Win32;
@@ -43,6 +44,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenDropDownDialog(IEnumerable{object}, string, string, string)"/>
         object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
+        /// <inheritdoc cref="DialogService.OpenTextureViewer(string, string, string)"/>
+        void OpenTextureViewer(string filePath, string title = "Select a texture", string caption = "Select a texture");
+
         /// <inheritdoc cref="DialogService.OpenNodeSelectorDialog(string, string, string, List{Type})"/>
         (string NodePath, bool Result) OpenNodeSelectorDialog(string filePath, string title = "Select an item", string caption = "Select an item", List<Type> allowedNodeTypes = null);
     }
@@ -55,12 +59,15 @@ namespace BrawlInstaller.Services
         IDropDownViewModel _dropDownViewModel { get; }
         INodeSelectorViewModel _nodeSelectorViewModel { get; }
         IMultiMessageViewModel _multiMessageViewModel { get; }
+        IImageDropDownViewModel _imageDropDownViewModel { get; }
 
         // Services
         IFileService _fileService { get; }
 
         [ImportingConstructor]
-        public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel, IMultiMessageViewModel multiMessageViewModel) 
+        public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, 
+            IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel, IMultiMessageViewModel multiMessageViewModel,
+            IImageDropDownViewModel imageDropDownViewModel) 
         {
             _fileService = fileService;
             _messageViewModel = messageViewModel;
@@ -68,6 +75,7 @@ namespace BrawlInstaller.Services
             _dropDownViewModel = dropDownViewModel;
             _nodeSelectorViewModel = nodeSelectorViewModel;
             _multiMessageViewModel = multiMessageViewModel;
+            _imageDropDownViewModel = imageDropDownViewModel;
         }
 
         // Methods
@@ -248,6 +256,30 @@ namespace BrawlInstaller.Services
                 return _dropDownViewModel.SelectedItem;
             }
             return null;
+        }
+
+        public void OpenTextureViewer(string filePath, string title = "Select a texture", string caption = "Select a texture")
+        {
+            var rootNode = _fileService.OpenFile(filePath);
+            if (rootNode != null)
+            {
+                var textures = rootNode.GetChildrenRecursive().Where(x => x.GetType() == typeof(TEX0Node)).ToList();
+                var bitmaps = new List<BitmapImage>();
+                foreach(TEX0Node texture in textures)
+                {
+                    bitmaps.Add(texture.GetImage(0).ToBitmapImage());
+                }
+                var dialog = GenerateWindow(title);
+                _imageDropDownViewModel.Caption = caption;
+                _imageDropDownViewModel.MessageBoxButton = MessageBoxButton.OK;
+                _imageDropDownViewModel.MessageIcon = MessageBoxImage.None;
+                _imageDropDownViewModel.ListItems = bitmaps;
+                _imageDropDownViewModel.SelectedItem = bitmaps.FirstOrDefault();
+                _imageDropDownViewModel.OnRequestClose += (s, e) => dialog.Close();
+                dialog.Content = _imageDropDownViewModel;
+                dialog.ShowDialog();
+                _fileService.CloseFile(rootNode);
+            }
         }
 
         /// <summary>

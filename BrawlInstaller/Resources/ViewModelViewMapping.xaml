@@ -64,4 +64,7 @@
     <DataTemplate DataType="{x:Type viewModels:MultiMessageViewModel}">
         <views:MultiMessageView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:ImageDropDownViewModel}">
+        <views:ImageDropDownView/>
+    </DataTemplate>
 </ResourceDictionary>

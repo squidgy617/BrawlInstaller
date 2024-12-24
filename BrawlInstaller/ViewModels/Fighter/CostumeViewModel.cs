@@ -84,6 +84,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
         public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
         public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
+        public ICommand ViewTexturesCommand => new RelayCommand(param => ViewTextures());
 
         // Importing constructor
         [ImportingConstructor]
@@ -653,6 +654,14 @@ namespace BrawlInstaller.ViewModels
             }
             OnPropertyChanged(nameof(Styles));
             OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        private void ViewTextures()
+        {
+            if (SelectedPacFile != null)
+            {
+                _dialogService.OpenTextureViewer(SelectedPacFile.FilePath);
+            }
         }
     }
 }
