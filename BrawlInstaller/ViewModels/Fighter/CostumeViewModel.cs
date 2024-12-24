@@ -34,7 +34,7 @@ namespace BrawlInstaller.ViewModels
         List<string> Styles { get; }
         string SelectedStyle { get; }
         List<BrawlExColorID> Colors { get; }
-        List<Cosmetic> CosmeticList { get; }
+        ObservableCollection<Cosmetic> CosmeticList { get; }
         Cosmetic SelectedCosmeticNode { get; set; }
         ICommand ReplaceCosmeticCommand { get; }
         ICommand CostumeUpCommand { get; }
@@ -164,8 +164,8 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedCosmeticOption))]
         [DependsUpon(nameof(SelectedStyle))]
         [DependsUpon(nameof(InheritedStyle))]
-        public List<Cosmetic> CosmeticList { get => Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
-                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle).ToList(); }
+        public ObservableCollection<Cosmetic> CosmeticList { get => new ObservableCollection<Cosmetic>(Costumes?.SelectMany(x => x.Cosmetics).OrderBy(x => x.InternalIndex)
+                .Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle)); }
         
         public Cosmetic SelectedCosmeticNode { get => _selectedCosmeticNode; set { _selectedCosmeticNode = value; OnPropertyChanged(nameof(SelectedCosmeticNode)); } }
 
@@ -258,7 +258,7 @@ namespace BrawlInstaller.ViewModels
 
         private void FlipColorSmashedCosmetics(Cosmetic cosmetic)
         {
-            var group = _cosmeticService.GetSharesDataGroups(CosmeticList).FirstOrDefault(x => x.Contains(cosmetic));
+            var group = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList()).FirstOrDefault(x => x.Contains(cosmetic));
             if (group != null && ((group.Count > 1 && cosmetic?.SharesData == false) || (group.Count == 2 && cosmetic?.SharesData == true)))
             {
                 group.ForEach(x => { x.SharesData = false; x.ColorSmashChanged = true; MoveCosmeticToEnd(x); });
@@ -403,7 +403,7 @@ namespace BrawlInstaller.ViewModels
         public void MoveCosmeticUp()
         {
             // Get node groups
-            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList());
             var selectedNodes = new List<Cosmetic>();
             var nodesToMove = new List<Cosmetic>();
             // Select related nodes if this is the root of a color smash group
@@ -440,7 +440,7 @@ namespace BrawlInstaller.ViewModels
         public void MoveCosmeticDown()
         {
             // Get node groups
-            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList());
             var selectedNodes = new List<Cosmetic>();
             var nodesToMove = new List<Cosmetic>();
             // Select related nodes if this is the root of a color smash group
@@ -538,7 +538,7 @@ namespace BrawlInstaller.ViewModels
                 return;
             }
             // Get groups
-            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList);
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList());
             var nodeGroup = nodeGroups.FirstOrDefault(x => x.Contains(nodes.LastOrDefault())) ?? nodes;
             // If a group's root is selected, the entire group will be affected
             var mixedGroup = nodes.Any(x => x.SharesData == false) && nodeGroup.Any(x => x.SharesData == true);

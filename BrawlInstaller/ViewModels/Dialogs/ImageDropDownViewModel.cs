@@ -28,7 +28,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         [DependsUpon(nameof(SelectedItem))]
-        new public BitmapImage Image { get => ((DialogImage)SelectedItem).Image; }
+        new public BitmapImage Image { get => SelectedItem != null ? ((DialogImage)SelectedItem).Image : null; }
 
         new public string DisplayMemberPath { get => "DisplayName"; }
     }
