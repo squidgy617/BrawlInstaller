@@ -179,7 +179,7 @@ namespace BrawlInstaller.ViewModels
             var selectedIndex = FighterInfoList.IndexOf(SelectedFighterInfo);
             FighterInfoList = new ObservableCollection<FighterInfo>(message.Value.Copy());
             OnPropertyChanged(nameof(FighterInfoList));
-            if (FighterInfoList.Count > selectedIndex)
+            if (selectedIndex > -1 && FighterInfoList.Count > selectedIndex)
             {
                 SelectedFighterInfo = FighterInfoList[selectedIndex];
                 OnPropertyChanged(nameof(SelectedFighterInfo));

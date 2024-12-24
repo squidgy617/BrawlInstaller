@@ -402,6 +402,11 @@ namespace BrawlInstaller.ViewModels
 
         public void MoveCosmeticUp()
         {
+            // Update internal indexes
+            foreach(var cosmetic in CosmeticList)
+            {
+                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+            }
             // Get node groups
             var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList());
             var selectedNodes = new List<Cosmetic>();
@@ -439,6 +444,11 @@ namespace BrawlInstaller.ViewModels
 
         public void MoveCosmeticDown()
         {
+            // Update internal indexes
+            foreach (var cosmetic in CosmeticList)
+            {
+                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+            }
             // Get node groups
             var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList());
             var selectedNodes = new List<Cosmetic>();
@@ -476,6 +486,11 @@ namespace BrawlInstaller.ViewModels
 
         private void MoveCosmeticToEnd(Cosmetic selectedCosmetic)
         {
+            // Update internal indexes
+            foreach (var cosmetic in CosmeticList)
+            {
+                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+            }
             var cosmeticsToMove = CosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex);
             if (cosmeticsToMove.Any())
             {
