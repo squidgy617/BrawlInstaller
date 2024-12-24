@@ -1435,7 +1435,7 @@ namespace BrawlInstaller.Services
                 var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
                 var codePath = Path.Combine(buildPath, asmPath);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.ThrowReleaseTableLabel);
                 if (table.Count > fighterId * 2)
                 {
                     var x = table[fighterId.Value * 2];
@@ -1465,7 +1465,7 @@ namespace BrawlInstaller.Services
                 var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
                 var codePath = Path.Combine(buildPath, asmPath);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, "Table:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.SlotExTableLabel);
                 if (table.Count > cssSlotId)
                 {
                     var fullString = table[cssSlotId.Value].Replace("0x", "");
@@ -1492,7 +1492,7 @@ namespace BrawlInstaller.Services
                 var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
                 var codePath = Path.Combine(buildPath, asmPath);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.LLoadTableLabel);
                 if (table.Count > cssSlotId)
                 {
                     id = Convert.ToInt32(table[cssSlotId.Value].Replace("0x", ""), 16);
@@ -1514,7 +1514,7 @@ namespace BrawlInstaller.Services
                 var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;
                 var codePath = Path.Combine(buildPath, asmPath);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, "Table:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.SlotExTableLabel);
                 // Convert to ASM table
                 var fighterInfoTable = _settingsService.FighterInfoList;
                 var asmTable = new List<AsmTableEntry>();
@@ -1554,7 +1554,7 @@ namespace BrawlInstaller.Services
                 var asmPath = _settingsService.BuildSettings.FilePathSettings.LLoadAsmFile;
                 var codePath = Path.Combine(buildPath, asmPath);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, ".GOTO->Table_Skip");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.LLoadTableLabel);
                 // Convert to ASM table
                 var fighterInfoTable = _settingsService.FighterInfoList;
                 var asmTable = new List<AsmTableEntry>();
@@ -1595,7 +1595,7 @@ namespace BrawlInstaller.Services
                 var asmPath = _settingsService.BuildSettings.FilePathSettings.ThrowReleaseAsmFile;
                 var codePath = Path.Combine(buildPath, asmPath);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, "ThrowReleaseTable:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.ThrowReleaseTableLabel);
                 // Convert to ASM table
                 var fighterInfoTable = _settingsService.FighterInfoList;
                 var asmTable = new List<AsmTableEntry>();
@@ -1689,7 +1689,7 @@ namespace BrawlInstaller.Services
                 var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
                 var path = Path.Combine(buildPath, endingAsm);
                 var code = _codeService.ReadCode(path);
-                var table = _codeService.ReadTable(code, "ENDINGTABLE:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.EndingTableLabel);
                 if (table.Count > cosmeticConfigId)
                 {
                     var result = int.TryParse(table[cosmeticConfigId.Value], out int endingId);
@@ -1751,7 +1751,7 @@ namespace BrawlInstaller.Services
                 var endingAsm = _settingsService.BuildSettings.FilePathSettings.EndingAsmFile;
                 var path = Path.Combine(buildPath, endingAsm);
                 var code = _codeService.ReadCode(path);
-                var table = _codeService.ReadTable(code, "ENDINGTABLE:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.EndingTableLabel);
                 // Convert to AsmTable
                 var fighterInfoTable = _settingsService.FighterInfoList;
                 var asmTable = new List<AsmTableEntry>();
@@ -1993,7 +1993,7 @@ namespace BrawlInstaller.Services
                 // Read the credits theme table
                 var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, "ClassicResultsTable:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTableLabel);
                 // Ensure slot ID is within range of table
                 if (table.Count > slotId)
                 {
@@ -2033,7 +2033,7 @@ namespace BrawlInstaller.Services
                 // Read the credits theme table
                 var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
                 var code = _codeService.ReadCode(codePath);
-                var table = _codeService.ReadTable(code, "ClassicResultsTable:");
+                var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTableLabel);
                 // Convert to AsmTable
                 var fighterInfoTable = _settingsService.FighterInfoList;
                 var asmTable = new List<AsmTableEntry>();

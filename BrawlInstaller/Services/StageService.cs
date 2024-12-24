@@ -367,7 +367,7 @@ namespace BrawlInstaller.Services
             if (_fileService.FileExists(filePath))
             {
                 var fileText = _fileService.ReadTextFile(filePath);
-                var idList = _codeService.ReadTable(fileText, "TABLE_STAGES:");
+                var idList = _codeService.ReadTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel);
                 foreach(var id in idList)
                 {
                     var newIds = new BrawlIds();

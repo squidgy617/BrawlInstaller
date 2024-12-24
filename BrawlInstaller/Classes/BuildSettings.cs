@@ -155,6 +155,7 @@ namespace BrawlInstaller.Classes
         // This is the source of truth for where the "master" stage table is, there should only ever be one, it will be copied to all stage lists that have their own table
         // on save
         [JsonIgnore] public string StageTablePath { get => GetAsmPath(FileType.StageTablePath); }
+        [JsonIgnore] public string StageTableLabel { get => GetLabel(FileType.StageTablePath); }
 
         [JsonProperty("StageListPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
         public List<FilePath> StageListPaths { get; set; } = new List<FilePath> 
@@ -185,19 +186,24 @@ namespace BrawlInstaller.Classes
         public string VictoryThemeTracklist { get; set; } = "Results";
         public string CreditsThemeTracklist { get; set; } = "Credits";
         [JsonIgnore] public string CreditsThemeAsmFile { get => GetAsmPath(FileType.CreditsThemeAsmFile); }
+        [JsonIgnore] public string CreditsThemeTableLabel { get => GetLabel(FileType.CreditsThemeAsmFile); }
         [JsonIgnore] public string ClassicIntroPath { get => GetFilePath(FileType.ClassicIntroPath); }
         [JsonIgnore] public string EndingPath { get => GetFilePath(FileType.EndingPath); }
         [JsonIgnore] public string EndingAsmFile { get => GetAsmPath(FileType.EndingAsmFile); }
+        [JsonIgnore] public string EndingTableLabel { get => GetLabel(FileType.EndingAsmFile); }
         [JsonIgnore] public string MoviePath { get => GetFilePath(FileType.MoviePath); }
         [JsonIgnore] public string BrstmPath { get => GetFilePath(FileType.BrstmPath); }
         [JsonIgnore] public string SoundbankPath { get => GetFilePath(FileType.SoundbankPath); }
         [JsonIgnore] public string StageAltListPath { get => GetFilePath(FileType.StageAltListPath); }
         [JsonIgnore] public string ThrowReleaseAsmFile { get => GetAsmPath(FileType.ThrowReleaseAsmFile); }
+        [JsonIgnore] public string ThrowReleaseTableLabel { get => GetLabel(FileType.ThrowReleaseAsmFile); }
         [JsonIgnore] public string FighterSpecificAsmFile { get => GetAsmPath(FileType.FighterSpecificAsmFile); }
         [JsonIgnore] public string CreditsModule { get => GetFilePath(FileType.CreditsModule); }
         [JsonIgnore] public string SSEModule { get => GetFilePath(FileType.SSEModule); }
         [JsonIgnore] public string LLoadAsmFile { get => GetAsmPath(FileType.LLoadAsmFile); }
+        [JsonIgnore] public string LLoadTableLabel { get => GetLabel(FileType.LLoadAsmFile); }
         [JsonIgnore] public string SlotExAsmFile { get => GetAsmPath(FileType.SlotExAsmFile); }
+        [JsonIgnore] public string SlotExTableLabel { get => GetLabel(FileType.SlotExAsmFile); }
         [JsonIgnore] public string GctRealMateExe { get => GetFilePath(FileType.GctRealMateExe); }
 
         // TODO: Should SSE roster be handled like all of these?
@@ -230,6 +236,12 @@ namespace BrawlInstaller.Classes
         {
             var path = AsmPaths.FirstOrDefault(x => x.FileType == fileType)?.Path;
             return path;
+        }
+
+        private string GetLabel(FileType fileType)
+        {
+            var label = AsmPaths.FirstOrDefault(x => x.FileType == fileType)?.Label;
+            return label;
         }
     }
 
