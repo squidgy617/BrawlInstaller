@@ -155,7 +155,7 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo.OriginalSoundbankId = fighterPackage.FighterInfo.SoundbankId;
             fighterPackage.FighterInfo.OriginalKirbySoundbankId = fighterPackage.FighterInfo.KirbySoundbankId;
             // Update fighter settings
-            _fighterService.UpdateFighterSettings(fighterPackage, oldFighter);
+            _fighterService.UpdateFighterSettings(fighterPackage);
             // Update credits module
             if (changedDefinitions.Any(x => x.CosmeticType == CosmeticType.CreditsIcon))
             {
