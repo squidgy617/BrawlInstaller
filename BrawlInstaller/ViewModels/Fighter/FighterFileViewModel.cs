@@ -39,6 +39,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemovePacFileCommand => new RelayCommand(param => RemovePacFile());
         public ICommand AddEndingPacFilesCommand => new RelayCommand(param => AddEndingPacFiles());
         public ICommand RemoveEndingPacFileCommand => new RelayCommand(param => RemoveEndingPacFile());
+        public ICommand UpdateTracklistSongFileCommand => new RelayCommand(param => UpdateTracklistSongFile((TracklistSong)param));
 
         // Importing constructor
         [ImportingConstructor]
@@ -118,11 +119,23 @@ namespace BrawlInstaller.ViewModels
                     {
                         if (id < 0x0000F000)
                         {
+                            tracklist.SongFile = null;
+                            tracklist.SongPath = string.Empty;
+                            OnPropertyChanged(nameof(FighterPackage));
                             _dialogService.ShowMessage("ID is less than minimum custom ID value of 0xF000. Tracklist entries will not be created for non-custom IDs. If you'd like to import a song, change the ID to 0xF000 or greater.", "Song Will Not Import");
                         }
                     }
                     tracklist.SongId = (uint)songId;
                 }
+            }
+        }
+
+        public void UpdateTracklistSongFile(TracklistSong song)
+        {
+            if (song.SongId < 0xF000)
+            {
+                song.SongId = 0xF000;
+                OnPropertyChanged(nameof(FighterPackage));
             }
         }
 

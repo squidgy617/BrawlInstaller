@@ -179,14 +179,14 @@ namespace BrawlInstaller.Services
                 // Generate tracklist node from object
                 var newNode = tracklistSong.ConvertToNode();
                 // If song ID is taken, generate a new one
-                if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
+                if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId.Value))
                 {
                     tracklistSong.SongId = 0x0000F000;
-                    while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId))
+                    while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId.Value))
                     {
                         tracklistSong.SongId++;
                     }
-                    newNode.SongID = tracklistSong.SongId;
+                    newNode.SongID = tracklistSong.SongId.Value;
                 }
                 if (tracklistSong.Index <= -1)
                 {
@@ -200,7 +200,7 @@ namespace BrawlInstaller.Services
                 _fileService.SaveFile(rootNode);
                 _fileService.CloseFile(rootNode);
             }
-            return tracklistSong.SongId;
+            return tracklistSong.SongId.Value;
         }
 
         /// <summary>
@@ -213,6 +213,10 @@ namespace BrawlInstaller.Services
         public uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode)
         {
             var id = tracklistSong.SongId;
+            if (id == null)
+            {
+                return 0x0000;
+            }
             // Only add the song if it's using a custom TLST ID, otherwise it's a vBrawl song and should not be added
             if (tracklistSong.SongId >= 0x0000F000)
             {
@@ -228,7 +232,7 @@ namespace BrawlInstaller.Services
                     tracklistSong.SongFile = path;
                 }
             }
-            return id;
+            return id.Value;
         }
     }
 }

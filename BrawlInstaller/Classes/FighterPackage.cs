@@ -206,6 +206,8 @@ namespace BrawlInstaller.Classes
         public uint DoorId { get; set; } = 0;
         public int? SSESubCharacterId { get; set; } = 0;
         public int? LLoadCharacterId { get; set; } = 0;
+
+        [JsonProperty("ExSlotIds", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
         public List<uint> ExSlotIds { get; set; } = new List<uint> { 0xFF, 0xFF, 0xFF, 0xFF };
 
         public FighterSettings Copy()
@@ -218,6 +220,7 @@ namespace BrawlInstaller.Classes
 
     public class LucarioSettings
     {
+        [JsonProperty("BoneIds", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public bool UseGfxFix { get; set; } = false;
         public bool UseKirbyGfxFix { get; set; } = false;
@@ -241,9 +244,12 @@ namespace BrawlInstaller.Classes
 
     public class JigglypuffSettings
     {
+        [JsonProperty("BoneIds", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public int? EFLSId { get; set; } = null;
+
         // TODO: Somehow update these when soundbank ID is changed, probably at UI level
+        [JsonProperty("SfxIds", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<int?> SfxIds { get; set; } = new List<int?> { null, null, null, null };
 
         public JigglypuffSettings Copy()

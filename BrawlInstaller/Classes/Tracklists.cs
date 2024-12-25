@@ -18,7 +18,7 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; } = string.Empty;
         public string SongPath { get; set; } = string.Empty;
         public string SongFile { get; set; } = null;
-        public uint SongId { get; set; } = 0x0000FF00;
+        public uint? SongId { get; set; } = null;
         public short SongDelay { get; set; } = 0;
         public byte Volume { get; set; } = 80;
         public byte Frequency { get; set; } = 40;
@@ -32,7 +32,7 @@ namespace BrawlInstaller.Classes
             var newEntry = new TLSTEntryNode
             {
                 Name = Name,
-                SongID = SongId,
+                SongID = SongId.Value,
                 SongFileName = SongPath,
                 SongDelay = SongDelay,
                 Volume = Volume,

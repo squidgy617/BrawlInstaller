@@ -14,6 +14,7 @@ using BrawlInstaller.Classes;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
+using Newtonsoft.Json;
 
 namespace BrawlInstaller.Common
 {
@@ -397,6 +398,14 @@ namespace BrawlInstaller.Common
                 newList.Add(item.Copy());
             }
             return newList;
+        }
+    }
+
+    public static class ObjectExtensions
+    {
+        public static bool Compare(this object object1, object object2)
+        {
+            return JsonConvert.SerializeObject(object1) == JsonConvert.SerializeObject(object2);
         }
     }
 }

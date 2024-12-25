@@ -57,11 +57,11 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetFighterFiles(FighterPackage)"/>
         FighterPackage GetFighterFiles(FighterPackage fighterPackage);
 
-        /// <inheritdoc cref="FighterService.ImportFighterFiles(FighterPackage)"/>
-        void ImportFighterFiles(FighterPackage fighterPackage);
+        /// <inheritdoc cref="FighterService.ImportFighterFiles(FighterPackage, FighterPackage)"/>
+        void ImportFighterFiles(FighterPackage fighterPackage, FighterPackage oldFighter);
 
-        /// <inheritdoc cref="FighterService.UpdateFighterSettings(FighterPackage)"/>
-        void UpdateFighterSettings(FighterPackage fighterPackage);
+        /// <inheritdoc cref="FighterService.UpdateFighterSettings(FighterPackage, FighterPackage)"/>
+        void UpdateFighterSettings(FighterPackage fighterPackage, FighterPackage oldFighter);
 
         /// <inheritdoc cref="FighterService.GetFighterSettings(FighterPackage)"/>
         FighterSettings GetFighterSettings(FighterPackage fighterPackage);
@@ -1042,16 +1042,10 @@ namespace BrawlInstaller.Services
         /// Import updated fighter files
         /// </summary>
         /// <param name="fighterPackage">Fighter package to import files for</param>
-        public void ImportFighterFiles(FighterPackage fighterPackage)
+        public void ImportFighterFiles(FighterPackage fighterPackage, FighterPackage oldFighter)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
-            // First, get fighter package with all of the old values
-            var oldFighter = new FighterPackage();
-            oldFighter.FighterInfo = new FighterInfo();
-            oldFighter.FighterInfo.Ids = fighterPackage.FighterInfo.Ids.Copy();
-            oldFighter.FighterInfo = GetFighterInfo(oldFighter.FighterInfo);
-            oldFighter = GetFighterFiles(oldFighter);
             // Then, get new files for install, in case any of them would be deleted
             var pacFiles = UpdatePacFiles(fighterPackage);
             var module = _fileService.OpenFile(fighterPackage.Module);
@@ -1180,28 +1174,32 @@ namespace BrawlInstaller.Services
         /// Update fighter settings in build
         /// </summary>
         /// <param name="fighterPackage">Fighter package to update settings for</param>
-        public void UpdateFighterSettings(FighterPackage fighterPackage)
+        public void UpdateFighterSettings(FighterPackage fighterPackage, FighterPackage oldFighter)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var fighterSettings = fighterPackage.FighterSettings;
+            var oldSettings = oldFighter.FighterSettings;
 
             // Update Kirby hat
             UpdateKirbyHatData(fighterSettings.KirbyHatData, fighterPackage.FighterInfo.Ids.FighterConfigId);
 
             // Update throw release point
-            UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
+            if (!fighterSettings.ThrowReleasePoint.Compare(oldSettings.ThrowReleasePoint))
+                UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
 
             // Update L-Load
-            UpdateLLoadTable(fighterPackage);
+            if (fighterSettings.LLoadCharacterId != oldSettings.LLoadCharacterId)
+                UpdateLLoadTable(fighterPackage);
 
             // Update Slot Ex table
-            UpdateExSlotsTable(fighterPackage);
+            if (!fighterSettings.ExSlotIds.SequenceEqual(oldSettings.ExSlotIds))
+                UpdateExSlotsTable(fighterPackage);
 
             // Update SSE settings
             UpdateSSEModule(fighterPackage);
 
             // Update fighter specific settings
-            UpdateFighterSpecificSettings(fighterPackage);
+            UpdateFighterSpecificSettings(fighterPackage, oldSettings);
         }
 
         /// <summary>
@@ -1744,7 +1742,7 @@ namespace BrawlInstaller.Services
         {
             var fighterInfo = fighterPackage.FighterInfo;
             var cosmeticConfigId = fighterInfo.Ids.CosmeticConfigId;
-            var endingId = fighterInfo.EndingId;
+            var endingId = fighterInfo.EndingId > -1 ? fighterInfo.EndingId : 1;
             if (cosmeticConfigId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
@@ -1780,15 +1778,16 @@ namespace BrawlInstaller.Services
                 {
                     fighterInfo.EndingId = -1;
                 }
-                // Update fighter slot
-                if (asmTable.Count > cosmeticConfigId)
+                // Update fighter slot if ending ID changed and there are ending files or fighter is being deleted
+                if (asmTable.Count > cosmeticConfigId && asmTable[cosmeticConfigId.Value].Item != $"{fighterInfo.EndingId:D}"
+                    && (endingPacFiles.Count > 0 || fighterPackage.PackageType == PackageType.Delete))
                 {
                     asmTable[cosmeticConfigId.Value].Item = $"{fighterInfo.EndingId:D}";
                     asmTable[cosmeticConfigId.Value].Comment = fighterInfo.DisplayName;
+                    // Write table
+                    code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.EndingTableLabel, asmTable, DataSize.Byte, 8);
+                    _fileService.SaveTextFile(path, code);
                 }
-                // Write table
-                code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.EndingTableLabel, asmTable, DataSize.Byte, 8);
-                _fileService.SaveTextFile(path, code);
                 // Update and import pac files
                 if (endingPacFiles.Count > 0)
                 {
@@ -2047,18 +2046,18 @@ namespace BrawlInstaller.Services
                     };
                     asmTable.Add(newEntry);
                 }
-                // Update fighter slot
-                if (asmTable.Count > slotId)
+                // Update fighter slot if credits theme is different
+                if (asmTable.Count > slotId && asmTable[slotId.Value].Item != $"0x{id:X4}")
                 {
-                    asmTable[slotId.Value].Item = $"0x{tracklistSong.SongId:X4}";
+                    asmTable[slotId.Value].Item = $"0x{id:X4}";
                     asmTable[slotId.Value].Comment = fighterInfo.DisplayName;
+                    // Write table
+                    code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTableLabel, asmTable, DataSize.Halfword, 4);
+                    _fileService.SaveTextFile(codePath, code);
                 }
-                // Write table
-                code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTableLabel, asmTable, DataSize.Halfword, 4);
-                _fileService.SaveTextFile(codePath, code);
                 return id;
             }
-            return tracklistSong.SongId;
+            return tracklistSong.SongId.Value;
         }
 
         /// <summary>
@@ -2671,7 +2670,7 @@ namespace BrawlInstaller.Services
         /// Update fighter specific settings in build
         /// </summary>
         /// <param name="fighterPackage">Fighter package to update settings for</param>
-        private void UpdateFighterSpecificSettings(FighterPackage fighterPackage)
+        private void UpdateFighterSpecificSettings(FighterPackage fighterPackage, FighterSettings oldSettings)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var fighterSettings = fighterPackage.FighterSettings;
@@ -2682,247 +2681,264 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(code))
             {
                 // Update Lucario settings
-                // Lucario Bone ID Fix
-                var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
-                var registerList = new List<string> { "r3", "r7", "r3", "r7" };
-                for (int i = 0; i < 4; i++)
+                if (!fighterSettings.LucarioSettings.Compare(oldSettings.LucarioSettings))
                 {
-                    if (fighterSettings.LucarioSettings?.BoneIds[i] != null)
+                    // Lucario Bone ID Fix
+                    var macroList = new List<string> { "80AA9D60", "80AA9D98", "80AAA768", "80AAA7A0" };
+                    var registerList = new List<string> { "r3", "r7", "r3", "r7" };
+                    var positionList = new List<int> { 0, 3, 0, 5 };
+                    for (int i = 0; i < 4; i++)
                     {
-                        var lucarioBoneMacro = new AsmMacro
+                        if (fighterSettings.LucarioSettings?.BoneIds[i] != null)
                         {
-                            MacroName = "BoneIDFixA",
-                            Parameters = new List<string>
+                            var lucarioBoneMacro = new AsmMacro
                             {
-                                registerList[i],
-                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                                $"0x{fighterSettings.LucarioSettings.BoneIds[i]:X2}"
-                            },
-                            Comment = fighterPackage.FighterInfo.DisplayName
-                        };
-                        code = _codeService.InsertUpdateMacro(code, macroList[i], lucarioBoneMacro, 1, 3);
+                                MacroName = "BoneIDFixA",
+                                Parameters = new List<string>
+                                {
+                                    registerList[i],
+                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    $"0x{fighterSettings.LucarioSettings.BoneIds[i]:X2}"
+                                },
+                                Comment = fighterPackage.FighterInfo.DisplayName
+                            };
+                            code = _codeService.InsertUpdateMacro(code, macroList[i], lucarioBoneMacro, 1, positionList[i]);
+                        }
+                        else
+                        {
+                            code = _codeService.RemoveMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFixA", 1);
+                        }
                     }
-                    else
+                    // Lucario GFX fix
+                    if (fighterSettings.LucarioSettings?.UseGfxFix == true && fighterPackage.FighterInfo.EffectPacId != null)
                     {
-                        code = _codeService.RemoveMacro(code, macroList[i], $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFixA", 1);
-                    }
-                }
-                // Lucario GFX fix
-                if (fighterSettings.LucarioSettings?.UseGfxFix == true && fighterPackage.FighterInfo.EffectPacId != null)
-                {
-                    var lucarioGfxMacro = new AsmMacro
-                    {
-                        MacroName = "GFXFix",
-                        Parameters = new List<string>
+                        var lucarioGfxMacro = new AsmMacro
+                        {
+                            MacroName = "GFXFix",
+                            Parameters = new List<string>
                             {
                                 $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
                                 $"0x{fighterPackage.FighterInfo.EffectPacId:X2}"
                             },
-                        Comment = fighterPackage.FighterInfo.DisplayName
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 0, 0);
-                }
-                else
-                {
-                    code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
-                }
-                // Lucario Kirby Hat GFX Fix
-                if (fighterSettings.LucarioSettings?.UseKirbyGfxFix == true && fighterPackage.FighterInfo.KirbyEffectPacId != null)
-                {
-                    var lucarioKirbyGfxMacro = new AsmMacro
+                            Comment = fighterPackage.FighterInfo.DisplayName
+                        };
+                        code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 0, 0);
+                    }
+                    else
                     {
-                        MacroName = "GFXFix",
-                        Parameters = new List<string>
+                        code = _codeService.RemoveMacro(code, "80AA95B8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                    }
+                    // Lucario Kirby Hat GFX Fix
+                    if (fighterSettings.LucarioSettings?.UseKirbyGfxFix == true && fighterPackage.FighterInfo.KirbyEffectPacId != null)
+                    {
+                        var lucarioKirbyGfxMacro = new AsmMacro
                         {
-                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterPackage.FighterInfo.KirbyEffectPacId:X2}"
-                        },
-                        Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80AA95AC", lucarioKirbyGfxMacro, 0, 7);
-                }
-                else
-                {
-                    code = _codeService.RemoveMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                            MacroName = "GFXFix",
+                            Parameters = new List<string>
+                            {
+                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                $"0x{fighterPackage.FighterInfo.KirbyEffectPacId:X2}"
+                            },
+                            Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
+                        };
+                        code = _codeService.InsertUpdateMacro(code, "80AA95AC", lucarioKirbyGfxMacro, 0, 7);
+                    }
+                    else
+                    {
+                        code = _codeService.RemoveMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                    }
                 }
                 // Update Samus settings
-                // Samus GFX Fix
-                if (fighterSettings.SamusSettings?.UseGfxFix == true && fighterPackage.FighterInfo.EffectPacId != null)
+                if (!fighterSettings.SamusSettings.Compare(oldSettings.SamusSettings))
                 {
-                    var samusGfxMacro = new AsmMacro
+                    // Samus GFX Fix
+                    if (fighterSettings.SamusSettings?.UseGfxFix == true && fighterPackage.FighterInfo.EffectPacId != null)
                     {
-                        MacroName = "GFXFix",
-                        Parameters = new List<string>
+                        var samusGfxMacro = new AsmMacro
+                        {
+                            MacroName = "GFXFix",
+                            Parameters = new List<string>
                             {
                                 $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
                                 $"0x{fighterPackage.FighterInfo.EffectPacId:X2}"
                             },
-                        Comment = fighterPackage.FighterInfo.DisplayName
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80A0AAA8", samusGfxMacro, 0, 9);
-                }
-                else
-                {
-                    code = _codeService.RemoveMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
-                }
-                // Samus Kirby hat GFX Fix
-                if (fighterSettings.SamusSettings?.UseKirbyGfxFix == true && fighterPackage.FighterInfo.KirbyEffectPacId != null)
-                {
-                    var samusKirbyGfxMacro = new AsmMacro
+                            Comment = fighterPackage.FighterInfo.DisplayName
+                        };
+                        code = _codeService.InsertUpdateMacro(code, "80A0AAA8", samusGfxMacro, 0, 9);
+                    }
+                    else
                     {
-                        MacroName = "GFXFix",
-                        Parameters = new List<string>
+                        code = _codeService.RemoveMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                    }
+                    // Samus Kirby hat GFX Fix
+                    if (fighterSettings.SamusSettings?.UseKirbyGfxFix == true && fighterPackage.FighterInfo.KirbyEffectPacId != null)
+                    {
+                        var samusKirbyGfxMacro = new AsmMacro
+                        {
+                            MacroName = "GFXFix",
+                            Parameters = new List<string>
                         {
                             $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
                             $"0x{fighterPackage.FighterInfo.KirbyEffectPacId:X2}"
                         },
-                        Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80A0AB1C", samusKirbyGfxMacro, 0, 17);
-                }
-                else
-                {
-                    code = _codeService.RemoveMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
-                }
-                // Jigglypuff rollout bone fix
-                foreach(var item in _jigglypuffCloneBoneList)
-                {
-                    if (fighterSettings.JigglypuffSettings?.BoneIds[item.BoneIdIndex] != null)
+                            Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
+                        };
+                        code = _codeService.InsertUpdateMacro(code, "80A0AB1C", samusKirbyGfxMacro, 0, 17);
+                    }
+                    else
                     {
-                        var jigglypuffBoneMacro = new AsmMacro
+                        code = _codeService.RemoveMacro(code, "80A0AB1C", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "GFXFix", 0);
+                    }
+                }
+                // Update Jigglypuff settings
+                if (!fighterSettings.JigglypuffSettings.Compare(oldSettings.JigglypuffSettings))
+                {
+                    // Jigglypuff rollout bone fix
+                    foreach (var item in _jigglypuffCloneBoneList)
+                    {
+                        if (fighterSettings.JigglypuffSettings?.BoneIds[item.BoneIdIndex] != null)
                         {
-                            MacroName = "CloneBones",
-                            Parameters = new List<string>
+                            var jigglypuffBoneMacro = new AsmMacro
                             {
-                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                                $"0x{fighterSettings.JigglypuffSettings.BoneIds[item.BoneIdIndex]:X2}",
-                                item.Register
-                            },
-                            Comment = fighterPackage.FighterInfo.DisplayName
-                        };
-                        code = _codeService.InsertUpdateMacro(code, item.Address, jigglypuffBoneMacro, 0, 0);
+                                MacroName = "CloneBones",
+                                Parameters = new List<string>
+                                {
+                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    $"0x{fighterSettings.JigglypuffSettings.BoneIds[item.BoneIdIndex]:X2}",
+                                    item.Register
+                                },
+                                Comment = fighterPackage.FighterInfo.DisplayName
+                            };
+                            code = _codeService.InsertUpdateMacro(code, item.Address, jigglypuffBoneMacro, 0, 0);
+                        }
+                        else
+                        {
+                            code = _codeService.RemoveMacro(code, item.Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneBones", 0);
+                        }
+                    }
+                    // Jigglypuff GFX Fix
+                    var cloneGfxList = new List<(string Register, string Address)>
+                    {
+                        ("r29", "80ACB67C"),
+                        ("r4", "80ACD1EC"),
+                        ("r4", "80ACEE68")
+                    };
+                    if (fighterSettings.JigglypuffSettings?.EFLSId != null && fighterPackage.FighterInfo.EffectPacId != null)
+                    {
+                        foreach (var item in cloneGfxList)
+                        {
+                            var jigglypuffGfxMacro = new AsmMacro
+                            {
+                                MacroName = "CloneGFX",
+                                Parameters = new List<string>
+                                {
+                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    $"0x{fighterPackage.FighterInfo.EffectPacId:X2}",
+                                    $"0x{fighterSettings.JigglypuffSettings?.EFLSId:X2}",
+                                    item.Register
+                                },
+                                Comment = fighterPackage.FighterInfo.DisplayName
+                            };
+                            code = _codeService.InsertUpdateMacro(code, item.Address, jigglypuffGfxMacro, 0, 0);
+                        }
                     }
                     else
                     {
-                        code = _codeService.RemoveMacro(code, item.Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneBones", 0);
-                    }
-                }
-                // Jigglypuff GFX Fix
-                var cloneGfxList = new List<(string Register, string Address)>
-                {
-                    ("r29", "80ACB67C"),
-                    ("r4", "80ACD1EC"),
-                    ("r4", "80ACEE68")
-                };
-                if (fighterSettings.JigglypuffSettings?.EFLSId != null && fighterPackage.FighterInfo.EffectPacId != null)
-                {
-                    foreach(var item in cloneGfxList)
-                    {
-                        var jigglypuffGfxMacro = new AsmMacro
+                        foreach (var item in cloneGfxList)
                         {
-                            MacroName = "CloneGFX",
-                            Parameters = new List<string>
-                        {
-                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterPackage.FighterInfo.EffectPacId:X2}",
-                            $"0x{fighterSettings.JigglypuffSettings?.EFLSId:X2}",
-                            item.Register
-                        },
-                            Comment = fighterPackage.FighterInfo.DisplayName
-                        };
-                        code = _codeService.InsertUpdateMacro(code, item.Address, jigglypuffGfxMacro, 0, 0);
+                            code = _codeService.RemoveMacro(code, item.Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneGFX", 0);
+                        }
                     }
-                }
-                else
-                {
-                    foreach(var item in cloneGfxList)
+                    // Jigglypuff SFX fix
+                    var cloneSfxList = new List<(string Register, string Address, int Index)>
                     {
-                        code = _codeService.RemoveMacro(code, item.Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneGFX", 0);
-                    }
-                }
-                // Jigglypuff SFX fix
-                var cloneSfxList = new List<(string Register, string Address, int Index)>
-                {
-                    ("r4", "80ACAE3C", 1),
-                    ("r4", "80ACAE60", 2),
-                    ("r3", "80ACF704", 0),
-                    ("r3", "80ACA09C", 0)
-                };
-                for (var i = 0; i < 4; i++)
-                {
-                    if (fighterSettings.JigglypuffSettings?.SfxIds[i] != null)
+                        ("r4", "80ACAE3C", 1),
+                        ("r4", "80ACAE60", 2),
+                        ("r3", "80ACF704", 0),
+                        ("r3", "80ACA09C", 0)
+                    };
+                    for (var i = 0; i < 4; i++)
                     {
-                        var jigglypuffSfxMacro = new AsmMacro
+                        if (fighterSettings.JigglypuffSettings?.SfxIds[i] != null)
                         {
-                            MacroName = "CloneSFX",
-                            Parameters = new List<string>
+                            var jigglypuffSfxMacro = new AsmMacro
+                            {
+                                MacroName = "CloneSFX",
+                                Parameters = new List<string>
+                                {
+                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    $"0x{fighterSettings.JigglypuffSettings.SfxIds[i]:X2}",
+                                    cloneSfxList[i].Register
+                                },
+                                Comment = fighterPackage.FighterInfo.DisplayName
+                            };
+                            code = _codeService.InsertUpdateMacro(code, cloneSfxList[i].Address, jigglypuffSfxMacro, 0, cloneSfxList[i].Index);
+                        }
+                        else
                         {
-                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterSettings.JigglypuffSettings.SfxIds[i]:X2}",
-                            cloneSfxList[i].Register
-                        },
-                            Comment = fighterPackage.FighterInfo.DisplayName
-                        };
-                        code = _codeService.InsertUpdateMacro(code, cloneSfxList[i].Address, jigglypuffSfxMacro, 0, cloneSfxList[i].Index);
-                    }
-                    else
-                    {
-                        code = _codeService.RemoveMacro(code, cloneSfxList[i].Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneSFX", 0);
+                            code = _codeService.RemoveMacro(code, cloneSfxList[i].Address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "CloneSFX", 0);
+                        }
                     }
                 }
                 // Dedede fixes
-                var dededeAddresses = new List<string>
+                if (!fighterSettings.DededeSettings.Compare(oldSettings.DededeSettings))
                 {
-                    "80aa1544",
-                    "80aa0af0",
-                    "80aa0d4c",
-                    "8088f768",
-                    "8088e758",
-                    "8088f120",
-                    "8088fa50",
-                    "80890050"
-                };
-                if (fighterSettings.DededeSettings?.UseFix == true)
-                {
-                    foreach(var address in dededeAddresses)
+                    var dededeAddresses = new List<string>
                     {
-                        var dededeFixMacro = new AsmMacro
+                        "80aa1544",
+                        "80aa0af0",
+                        "80aa0d4c",
+                        "8088f768",
+                        "8088e758",
+                        "8088f120",
+                        "8088fa50",
+                        "80890050"
+                    };
+                    if (fighterSettings.DededeSettings?.UseFix == true)
+                    {
+                        foreach (var address in dededeAddresses)
                         {
-                            MacroName = "DededeFix",
-                            Parameters = new List<string>
-                        {
-                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}"
-                        },
-                            Comment = fighterPackage.FighterInfo.DisplayName
-                        };
-                        code = _codeService.InsertUpdateMacro(code, address, dededeFixMacro, 0, 0);
+                            var dededeFixMacro = new AsmMacro
+                            {
+                                MacroName = "DededeFix",
+                                Parameters = new List<string>
+                                {
+                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}"
+                                },
+                                Comment = fighterPackage.FighterInfo.DisplayName
+                            };
+                            code = _codeService.InsertUpdateMacro(code, address, dededeFixMacro, 0, 0);
+                        }
                     }
-                }
-                else
-                {
-                    foreach(var address in dededeAddresses)
+                    else
                     {
-                        code = _codeService.RemoveMacro(code, address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "DededeFix", 0);
+                        foreach (var address in dededeAddresses)
+                        {
+                            code = _codeService.RemoveMacro(code, address, $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "DededeFix", 0);
+                        }
                     }
                 }
                 // Bowser fixes
-                if (fighterSettings.BowserSettings?.BoneId != null)
+                if (!fighterSettings.BowserSettings.Compare(oldSettings.BowserSettings))
                 {
-                    var bowserBoneIdFixMacro = new AsmMacro
+                    if (fighterSettings.BowserSettings?.BoneId != null)
                     {
-                        MacroName = "BoneIDFix",
-                        Parameters = new List<string>
+                        var bowserBoneIdFixMacro = new AsmMacro
                         {
-                            $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
-                            $"0x{fighterSettings.BowserSettings.BoneId:X2}"
-                        },
-                        Comment = fighterPackage.FighterInfo.DisplayName
-                    };
-                    code = _codeService.InsertUpdateMacro(code, "80A391F8", bowserBoneIdFixMacro, 0, 0);
-                }
-                else
-                {
-                    code = _codeService.RemoveMacro(code, "80A391F8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFix", 0);
+                            MacroName = "BoneIDFix",
+                            Parameters = new List<string>
+                            {
+                                $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                $"0x{fighterSettings.BowserSettings.BoneId:X2}"
+                            },
+                            Comment = fighterPackage.FighterInfo.DisplayName
+                        };
+                        code = _codeService.InsertUpdateMacro(code, "80A391F8", bowserBoneIdFixMacro, 0, 0);
+                    }
+                    else
+                    {
+                        code = _codeService.RemoveMacro(code, "80A391F8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "BoneIDFix", 0);
+                    }
                 }
             }
             _fileService.SaveTextFile(path, code);

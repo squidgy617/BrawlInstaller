@@ -23,8 +23,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="PackageService.ExtractFighter(FighterInfo)"/>
         FighterPackage ExtractFighter(FighterInfo fighterInfo);
 
-        /// <inheritdoc cref="PackageService.SaveFighter(FighterPackage)"/>
-        void SaveFighter(FighterPackage fighterPackage);
+        /// <inheritdoc cref="PackageService.SaveFighter(FighterPackage, FighterPackage)"/>
+        void SaveFighter(FighterPackage fighterPackage, FighterPackage oldFighter);
 
         /// <inheritdoc cref="PackageService.ExportFighter(FighterPackage, string)"/>
         void ExportFighter(FighterPackage fighterPackage, string outFile);
@@ -109,7 +109,7 @@ namespace BrawlInstaller.Services
         /// Save fighter to build
         /// </summary>
         /// <param name="fighterPackage">Fighter package to save</param>
-        public void SaveFighter(FighterPackage fighterPackage)
+        public void SaveFighter(FighterPackage fighterPackage, FighterPackage oldFighter)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             // Get unused IDs for null IDs
@@ -148,14 +148,14 @@ namespace BrawlInstaller.Services
             // Import cosmetics
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
             // Import fighter files
-            _fighterService.ImportFighterFiles(fighterPackage);
+            _fighterService.ImportFighterFiles(fighterPackage, oldFighter);
             // Set original Effect.pac and soundbank ID to current
             fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
             fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
             fighterPackage.FighterInfo.OriginalSoundbankId = fighterPackage.FighterInfo.SoundbankId;
             fighterPackage.FighterInfo.OriginalKirbySoundbankId = fighterPackage.FighterInfo.KirbySoundbankId;
             // Update fighter settings
-            _fighterService.UpdateFighterSettings(fighterPackage);
+            _fighterService.UpdateFighterSettings(fighterPackage, oldFighter);
             // Update credits module
             if (changedDefinitions.Any(x => x.CosmeticType == CosmeticType.CreditsIcon))
             {
@@ -263,8 +263,10 @@ namespace BrawlInstaller.Services
                 {
                     fighterPackage.VictoryTheme = new TracklistSong
                     {
+                        Name = fighterPackage.FighterInfo.DisplayName,
                         SongFile = victoryTheme,
-                        SongPath = $"Victory!/{Path.GetFileNameWithoutExtension(victoryTheme)}"
+                        SongPath = !string.IsNullOrEmpty(victoryTheme) ? $"Victory!/{Path.GetFileNameWithoutExtension(victoryTheme)}" : string.Empty,
+                        SongId = fighterPackage.FighterInfo.VictoryThemeId
                     };
                 }
                 var creditsTheme = _fileService.GetFiles($"{path}\\CreditsTheme", "*.brstm").FirstOrDefault();
@@ -272,8 +274,10 @@ namespace BrawlInstaller.Services
                 {
                     fighterPackage.CreditsTheme = new TracklistSong
                     {
+                        Name = !string.IsNullOrEmpty(creditsTheme) ? Path.GetFileNameWithoutExtension(creditsTheme) : fighterPackage.FighterInfo.DisplayName,
                         SongFile = creditsTheme,
-                        SongPath = $"Credits/{Path.GetFileNameWithoutExtension(creditsTheme)}"
+                        SongPath = !string.IsNullOrEmpty(creditsTheme) ? $"Credits/{Path.GetFileNameWithoutExtension(creditsTheme)}" : string.Empty,
+                        SongId = fighterPackage.FighterInfo.CreditsThemeId
                     };
                 }
                 fighterPackage.PackageType = PackageType.New;
@@ -290,7 +294,6 @@ namespace BrawlInstaller.Services
         {
             var path = _settingsService.AppSettings.TempPath + "\\FighterPackageExport";
             _cosmeticService.ExportCosmetics($"{path}\\Cosmetics", fighterPackage.Cosmetics);
-            var fighterInfo = JsonConvert.SerializeObject(fighterPackage.FighterInfo, Formatting.Indented);
             var fighterSettings = JsonConvert.SerializeObject(fighterPackage.FighterSettings, Formatting.Indented);
             // Set pac files for export
             foreach(var pacFile in fighterPackage.PacFiles)
@@ -336,6 +339,10 @@ namespace BrawlInstaller.Services
             }
             // Export Kirby hat data
             _fighterService.ExportKirbyHatDataToXml($"{path}\\KirbyHat.xml", fighterPackage.FighterSettings.KirbyHatData);
+            // Set theme IDs
+            fighterPackage.FighterInfo.VictoryThemeId = fighterPackage.VictoryTheme.SongId;
+            fighterPackage.FighterInfo.CreditsThemeId = fighterPackage.CreditsTheme.SongId;
+            var fighterInfo = JsonConvert.SerializeObject(fighterPackage.FighterInfo, Formatting.Indented);
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);

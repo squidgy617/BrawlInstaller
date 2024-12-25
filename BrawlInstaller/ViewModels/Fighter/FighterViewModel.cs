@@ -40,6 +40,7 @@ namespace BrawlInstaller.ViewModels
     internal class FighterViewModel : ViewModelBase, IFighterViewModel
     {
         // Private properties
+        private FighterPackage _oldFighterPackage;
         private FighterInfo _selectedFighter;
         private string _oldVictoryThemePath;
         private string _oldCreditsThemePath;
@@ -109,6 +110,7 @@ namespace BrawlInstaller.ViewModels
         public IFighterSettingsViewModel FighterSettingsViewModel { get; }
 
         // Properties
+        public FighterPackage OldFighterPackage { get => _oldFighterPackage; set { _oldFighterPackage = value; OnPropertyChanged(nameof(OldFighterPackage)); } }
         public FighterPackage FighterPackage { get; set; }
         public ObservableCollection<FighterInfo> FighterList { get => new ObservableCollection<FighterInfo>(_settingsService.FighterInfoList); }
         public FighterInfo SelectedFighter { get => _selectedFighter; set { _selectedFighter = value; OnPropertyChanged(nameof(SelectedFighter)); } }
@@ -150,6 +152,7 @@ namespace BrawlInstaller.ViewModels
                     var package = _packageService.ExtractFighter(FighterPackage.FighterInfo);
                     // TODO: Do we need to copy on load? Mostly helps with validating the copy method is actually good
                     FighterPackage = package.Copy();
+                    OldFighterPackage = FighterPackage.Copy();
                     _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
                     _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
                     // Set package path to internal fighter
@@ -250,7 +253,7 @@ namespace BrawlInstaller.ViewModels
             FighterPackage = null;
             OnPropertyChanged(nameof(FighterPackage));
             // Save
-            _packageService.SaveFighter(deletePackage);
+            _packageService.SaveFighter(deletePackage, OldFighterPackage);
             // Remove from fighter list
             var foundFighters = FighterList.Where(x => x.Ids.FighterConfigId == deletePackage.FighterInfo.Ids.FighterConfigId 
             && x.Ids.CSSSlotConfigId == deletePackage.FighterInfo.Ids.CSSSlotConfigId
@@ -343,7 +346,7 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             // Save fighter
-            _packageService.SaveFighter(packageToSave);
+            _packageService.SaveFighter(packageToSave, OldFighterPackage);
             // Save was successful, so load changes
             FighterPackage = packageToSave;
             // Remove added franchise icons from package
