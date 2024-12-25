@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.StaticClasses;
 using BrawlLib.Internal;
@@ -154,8 +155,9 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
             fighterPackage.FighterInfo.OriginalSoundbankId = fighterPackage.FighterInfo.SoundbankId;
             fighterPackage.FighterInfo.OriginalKirbySoundbankId = fighterPackage.FighterInfo.KirbySoundbankId;
-            // Update fighter settings
-            _fighterService.UpdateFighterSettings(fighterPackage);
+            // Update fighter settings if they have changed or if fighter name has changed
+            if (!fighterPackage.FighterSettings.Compare(oldFighter.FighterSettings) || fighterPackage.FighterInfo.DisplayName != oldFighter.FighterInfo.DisplayName)
+                _fighterService.UpdateFighterSettings(fighterPackage);
             // Update credits module
             if (changedDefinitions.Any(x => x.CosmeticType == CosmeticType.CreditsIcon))
             {

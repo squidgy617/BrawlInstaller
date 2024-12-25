@@ -1774,8 +1774,10 @@ namespace BrawlInstaller.Services
                 {
                     fighterInfo.EndingId = -1;
                 }
-                // Update fighter slot if ending ID changed and there are ending files or fighter is being deleted
-                if (asmTable.Count > cosmeticConfigId && (endingPacFiles.Count > 0 || fighterPackage.PackageType == PackageType.Delete))
+                // Update fighter slot if ending ID changed and there are ending files and ending ID or name has changed or fighter is being deleted
+                if (asmTable.Count > cosmeticConfigId && ((endingPacFiles.Count > 0 && 
+                    (asmTable[cosmeticConfigId.Value].Item != $"0x{fighterInfo.EndingId:D}") || asmTable[cosmeticConfigId.Value].Comment != fighterInfo.DisplayName)
+                    || fighterPackage.PackageType == PackageType.Delete))
                 {
                     asmTable[cosmeticConfigId.Value].Item = $"{fighterInfo.EndingId:D}";
                     asmTable[cosmeticConfigId.Value].Comment = fighterInfo.DisplayName;
@@ -2041,8 +2043,8 @@ namespace BrawlInstaller.Services
                     };
                     asmTable.Add(newEntry);
                 }
-                // Update fighter slot if credits theme is different
-                if (asmTable.Count > slotId)
+                // Update fighter slot if credits theme or display name are different
+                if (asmTable.Count > slotId && (asmTable[slotId.Value].Item != $"0x{id:X4}") || asmTable[slotId.Value].Comment != fighterInfo.DisplayName)
                 {
                     asmTable[slotId.Value].Item = $"0x{id:X4}";
                     asmTable[slotId.Value].Comment = fighterInfo.DisplayName;
