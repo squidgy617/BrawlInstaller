@@ -14,7 +14,18 @@ namespace BrawlInstaller.Classes
     public class FighterInfo
     {
         public string EntryName { get; set; }
-        // Should this be configurable somewhere in the editor?
+        public string FighterFileName { get; set; }
+        public string FullPacFileName { get; set; }
+        [JsonIgnore] public string PacFileName { get => FullPacFileName?.Substring(FullPacFileName.LastIndexOf('/') + 1, FullPacFileName.LastIndexOf('.') - FullPacFileName.LastIndexOf('/') - 1); }
+        [JsonIgnore] public string PacExtension { get => FullPacFileName?.Substring(FullPacFileName.LastIndexOf('.'), FullPacFileName.Length - FullPacFileName.LastIndexOf('.')); }
+        [JsonIgnore] public string PartialPacName { get => PacFileName?.Substring(3, PacFileName.Length - 3); } 
+        [JsonIgnore] public string PacFolder { get => FullPacFileName?.Substring(0, FullPacFileName.LastIndexOf("/")); }
+        public string FullKirbyPacFileName { get; set; }
+        [JsonIgnore] public string KirbyPacFileName { get => FullKirbyPacFileName?.Substring(FullKirbyPacFileName.LastIndexOf('/') + 1, FullKirbyPacFileName.LastIndexOf('.') - FullKirbyPacFileName.LastIndexOf('/') - 1); }
+        [JsonIgnore] public string KirbyPacExtension { get => FullKirbyPacFileName?.Substring(FullKirbyPacFileName.LastIndexOf('.'), FullKirbyPacFileName.Length - FullKirbyPacFileName.LastIndexOf('.')); }
+        [JsonIgnore] public string PartialKirbyPacName { get => KirbyPacFileName?.Substring(3, KirbyPacFileName.Length - 3); }
+        [JsonIgnore] public string KirbyPacFolder { get => FullKirbyPacFileName?.Substring(0, FullKirbyPacFileName.LastIndexOf("/")); }
+        public string ModuleFileName { get; set; }
         public string InternalName { get; set; }
         public string DisplayName { get; set; }
         public BrawlIds Ids { get; set; } = new BrawlIds();
@@ -28,7 +39,6 @@ namespace BrawlInstaller.Classes
         public string SlotConfig { get; set; }
         [JsonIgnore]
         public string Masquerade { get; set; }
-        // TODO: Should credits theme ID go in here too?
         public uint? VictoryThemeId { get; set; } = null;
         public uint? CreditsThemeId { get; set; } = null;
         public uint? SoundbankId { get; set; } = null;
@@ -51,6 +61,10 @@ namespace BrawlInstaller.Classes
             var newFighterInfo = new FighterInfo
             {
                 EntryName = EntryName,
+                FighterFileName = FighterFileName,
+                FullPacFileName = FullPacFileName,
+                FullKirbyPacFileName = FullKirbyPacFileName,
+                ModuleFileName = ModuleFileName,
                 InternalName = InternalName,
                 DisplayName = DisplayName,
                 Ids = new BrawlIds
@@ -152,11 +166,11 @@ namespace BrawlInstaller.Classes
         public FCFGNode ToFCFGNode(FighterInfo fighterInfo)
         {
             var node = ToFCFGNode();
-            node.FighterName = fighterInfo.InternalName;
-            node.PacName = node.AutoPacName;
-            node.KirbyPacName = node.AutoKirbyPacName;
-            node.ModuleName = node.AutoModuleName;
-            node.InternalFighterName = node.AutoInternalFighterName;
+            node.FighterName = fighterInfo.FighterFileName;
+            node.PacName = fighterInfo.FullPacFileName;
+            node.KirbyPacName = fighterInfo.FullKirbyPacFileName;
+            node.ModuleName = fighterInfo.ModuleFileName;
+            node.InternalFighterName = fighterInfo.InternalName;
             node.KirbyLoadType = fighterInfo.KirbyLoadType;
             node.SoundBank = (uint)fighterInfo.SoundbankId;
             node.KirbySoundBank = (uint)fighterInfo.KirbySoundbankId;

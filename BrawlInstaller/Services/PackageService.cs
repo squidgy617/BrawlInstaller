@@ -71,9 +71,9 @@ namespace BrawlInstaller.Services
             fighterPackage = _fighterService.GetFighterFiles(fighterPackage);
 
             // Get Effect.pac IDs
-            fighterPackage.FighterInfo.EffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterInfo.InternalName);
+            fighterPackage.FighterInfo.EffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterInfo.PacFileName);
             fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
-            fighterPackage.FighterInfo.KirbyEffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, $"Kirby{fighterInfo.InternalName}");
+            fighterPackage.FighterInfo.KirbyEffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterInfo.KirbyPacFileName);
             fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
 
             // Get fighter settings
@@ -229,7 +229,7 @@ namespace BrawlInstaller.Services
                             var pacFiles = _fileService.GetFiles(dir, "*.pac");
                             foreach (var pacFile in pacFiles)
                             {
-                                var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.InternalName, costume.CostumeId.ToString("D4"), true);
+                                var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.PartialPacName, costume.CostumeId.ToString("D4"), true);
                                 costume.PacFiles.Add(newPacFile);
                             }
                         }
@@ -246,7 +246,7 @@ namespace BrawlInstaller.Services
                     var pacFiles = _fileService.GetFiles(dir, "*.pac");
                     foreach (var pacFile in pacFiles)
                     {
-                        var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.InternalName, "PacFiles", false);
+                        var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.PartialPacName, "PacFiles", false);
                         fighterPackage.PacFiles.Add(newPacFile);
                     }
                 }
@@ -300,7 +300,7 @@ namespace BrawlInstaller.Services
             // Set pac files for export
             foreach(var pacFile in fighterPackage.PacFiles)
             {
-                pacFile.SavePath = $"{path}\\PacFiles\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}.pac";
+                pacFile.SavePath = $"{path}\\PacFiles\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}.{fighterPackage.FighterInfo.PacExtension}";
             }
             // Set costumes for export
             var costumeJson = JsonConvert.SerializeObject(fighterPackage.Costumes, Formatting.Indented);
@@ -310,7 +310,7 @@ namespace BrawlInstaller.Services
                 var costumePath = $"{path}\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
                 foreach (var pacFile in costume.PacFiles)
                 {
-                    pacFile.SavePath = $"{costumePath}\\{pacFile.Subdirectory}\\{pacFile.Prefix}{fighterPackage.FighterInfo.InternalName}{pacFile.Suffix}{costume.CostumeId:D2}.pac";
+                    pacFile.SavePath = $"{costumePath}\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}{costume.CostumeId:D2}.{fighterPackage.FighterInfo.PacExtension}";
                 }
             }
             // Update and export pac files

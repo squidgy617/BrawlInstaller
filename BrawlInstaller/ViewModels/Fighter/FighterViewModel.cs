@@ -600,9 +600,9 @@ namespace BrawlInstaller.ViewModels
                     messages.Add(new DialogMessage("ID Conflicts", $"Some IDs conflict with existing fighters in your build or IDs reserved by bosses:\n\n{idString}"));
                 }
                 var usedNames = _fighterService.GetUsedInternalNames();
-                if (usedNames.Contains(FighterPackage?.FighterInfo?.InternalName?.ToLower()))
+                if (usedNames.Contains(FighterPackage?.FighterInfo?.PartialPacName?.ToLower()))
                 {
-                    messages.Add(new DialogMessage("Internal Name", $"The internal name {FighterPackage.FighterInfo.InternalName} is already used in the build."));
+                    messages.Add(new DialogMessage("Internal Name", $"The internal name {FighterPackage.FighterInfo.PartialPacName} is already used in the build."));
                 }
             }
             var soundbankIdConflict = GetSoundbankIdConflicts();

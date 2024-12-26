@@ -244,7 +244,6 @@ namespace BrawlInstaller.ViewModels
             {
                 var pacFile = new FighterPacFile { FilePath = file };
                 pacFile = _fighterService.GetFighterPacName(pacFile, FighterPackage.FighterInfo);
-                pacFile.Subdirectory = string.Empty;
                 SelectedCostume.PacFiles.Add(pacFile);
             }
             OnPropertyChanged(nameof(PacFiles));
