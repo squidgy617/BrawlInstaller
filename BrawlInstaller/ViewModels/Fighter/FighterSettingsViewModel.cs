@@ -77,6 +77,12 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public bool KirbyHatTypeEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public bool InternalNameEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool DisplayNameEnabled { get => FighterPackage?.FighterInfo?.CosmeticAttributes != null; }
+
         // Methods
         public void ChangedFighterEffectPac(int? oldEffectPacId, int? newEffectPacId)
         {
