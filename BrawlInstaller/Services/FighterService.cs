@@ -2503,9 +2503,10 @@ namespace BrawlInstaller.Services
         public List<string> GetUsedInternalNames()
         {
             var buildFighterFolders = _fileService.GetDirectories(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterFiles), "*", SearchOption.TopDirectoryOnly);
+            var buildFighterNames = buildFighterFolders.Where(x => _fileService.GetFiles(x, "*.pac").Count > 0).Select(x => Path.GetFileName(x).ToLower());
             var settingsFighters = _settingsService.FighterInfoList;
             var usedNames = settingsFighters.Select(x => x.InternalName.ToLower());
-            usedNames = usedNames.Concat(buildFighterFolders.Select(x => Path.GetFileName(x).ToLower()));
+            usedNames = usedNames.Concat(buildFighterNames);
             usedNames = usedNames.Concat(ReservedIds.ReservedInternalNames);
             return usedNames.ToList();
         }
