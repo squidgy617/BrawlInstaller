@@ -83,6 +83,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public bool DisplayNameEnabled { get => FighterPackage?.FighterInfo?.CosmeticAttributes != null; }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public string FighterFileName { get => FighterPackage?.FighterInfo?.FighterFileName; set { FighterPackage.FighterInfo.FighterFileName = value; UpdateFighterName(); OnPropertyChanged(nameof(FighterFileName)); } }
+
         // Methods
         public void ChangedFighterEffectPac(int? oldEffectPacId, int? newEffectPacId)
         {
@@ -168,6 +171,18 @@ namespace BrawlInstaller.ViewModels
             FighterPackage.FighterInfo.CSSSlotAttributes = new CSSSlotAttributes();
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
+        }
+        public void UpdateFighterName()
+        {
+            if (FighterPackage?.FighterInfo?.FighterFileName != null)
+            {
+                var fileName = FighterPackage?.FighterInfo?.FighterFileName;
+                FighterPackage.FighterInfo.FullPacFileName = $"{fileName.ToLower()}/Fit{fileName}.pac";
+                FighterPackage.FighterInfo.FullKirbyPacFileName = $"kirby/FitKirby{fileName}.pac";
+                FighterPackage.FighterInfo.ModuleFileName = $"ft_{fileName.ToLower()}.rel";
+                FighterPackage.FighterInfo.InternalName = fileName.ToUpper();
+                OnPropertyChanged(nameof(FighterPackage));
+            }
         }
     }
 

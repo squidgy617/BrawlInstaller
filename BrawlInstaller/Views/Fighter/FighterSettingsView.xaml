@@ -44,7 +44,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="fighterFileNameLabel" Content="Fighter File Name:"/>
-                <TextBox x:Name="fighterFileNameTextBox" Text="{Binding FighterPackage.FighterInfo.FighterFileName}" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
+                <TextBox x:Name="fighterFileNameTextBox" Text="{Binding FighterFileName, UpdateSourceTrigger=LostFocus}" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
                 <Label x:Name="pacFileNameLabel" Content="Pac File Name:" Grid.Row="1"/>
                 <TextBox x:Name="pacFileNameTextBox" Text="{Binding FighterPackage.FighterInfo.FullPacFileName}" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
                 <Label x:Name="kirbyPacFileNameLabel" Content="Kirby Pac File Name:" Grid.Row="2"/>

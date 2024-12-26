@@ -84,6 +84,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedFighterInfo))]
         public int? SelectedKirbyEffectPac { get => SelectedFighterInfo?.KirbyEffectPacId; set { SelectedFighterInfo.KirbyEffectPacId = value; OnPropertyChanged(nameof(SelectedKirbyEffectPac)); } }
 
+        [DependsUpon(nameof(SelectedFighterInfo))]
+        public string FighterFileName { get => SelectedFighterInfo?.FighterFileName; set { SelectedFighterInfo.FighterFileName = value; UpdateFighterName(); OnPropertyChanged(nameof(FighterFileName)); } }
+
         // Methods
         private void AddFighter()
         {
@@ -191,6 +194,19 @@ namespace BrawlInstaller.ViewModels
             GetFighters();
             OnPropertyChanged(nameof(FighterInfoList));
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+        }
+
+        public void UpdateFighterName()
+        {
+            if (SelectedFighterInfo?.FighterFileName != null)
+            {
+                var fileName = SelectedFighterInfo?.FighterFileName;
+                SelectedFighterInfo.FullPacFileName = $"{fileName.ToLower()}/Fit{fileName}.pac";
+                SelectedFighterInfo.FullKirbyPacFileName = $"kirby/FitKirby{fileName}.pac";
+                SelectedFighterInfo.ModuleFileName = $"ft_{fileName.ToLower()}.rel";
+                SelectedFighterInfo.InternalName = fileName.ToUpper();
+                OnPropertyChanged(nameof(SelectedFighterInfo));
+            }
         }
     }
 }

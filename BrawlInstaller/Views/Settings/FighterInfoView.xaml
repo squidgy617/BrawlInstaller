@@ -89,7 +89,7 @@
                     <Label x:Name="displayNameLabel" Content="Name:"   Grid.Row="1" Grid.Column="0"/>
                     <TextBox x:Name="displayNameTextBox"  TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.DisplayName, Mode=TwoWay}"  Width="120" Grid.Row="1" Grid.Column="1"/>
                     <Label x:Name="fighterFileNameLabel" Content="Fighter File Name:"   Grid.Row="2" Grid.Column="0"/>
-                    <TextBox x:Name="fighterFileNameTextBox"  TextWrapping="Wrap" Text="{Binding SelectedFighterInfo.FighterFileName, Mode=TwoWay}"  Width="120" Grid.Row="2" Grid.Column="1"/>
+                    <TextBox x:Name="fighterFileNameTextBox"  TextWrapping="Wrap" Text="{Binding FighterFileName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"  Width="120" Grid.Row="2" Grid.Column="1"/>
                     <Label x:Name="pacFileNameLabel" Content="Pac File Name:" Grid.Row="3"/>
                     <TextBox x:Name="pacFileNameTextBox" Text="{Binding SelectedFighterInfo.FullPacFileName}" Width="120" Grid.Row="3" Grid.Column="1"/>
                     <Label x:Name="kirbyPacFileNameLabel" Content="Kirby Pac File Name:" Grid.Row="4"/>
