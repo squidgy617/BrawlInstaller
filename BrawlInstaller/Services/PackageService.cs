@@ -260,23 +260,35 @@ namespace BrawlInstaller.Services
                 fighterPackage.ClassicIntro = _fileService.GetFiles($"{path}\\ClassicIntro", "*.brres").FirstOrDefault();
                 fighterPackage.EndingMovie = _fileService.GetFiles($"{path}\\EndingMovie", "*.thp").FirstOrDefault();
                 // Get victory and credits themes
+                var victoryThemeJson = _fileService.GetFiles(path, "VictoryTheme.json").FirstOrDefault();
                 var victoryTheme = _fileService.GetFiles($"{path}\\VictoryTheme", "*.brstm").FirstOrDefault();
-                if (!string.IsNullOrEmpty(victoryTheme))
+                if (!string.IsNullOrEmpty(victoryThemeJson))
+                {
+                    fighterPackage.VictoryTheme = JsonConvert.DeserializeObject<TracklistSong>(_fileService.ReadTextFile(victoryThemeJson));
+                    fighterPackage.VictoryTheme.SongFile = victoryTheme;
+                }
+                else
                 {
                     fighterPackage.VictoryTheme = new TracklistSong
                     {
-                        Name = fighterPackage.FighterInfo.DisplayName,
+                        Name = !string.IsNullOrEmpty(victoryTheme) ? fighterPackage.FighterInfo.DisplayName : string.Empty,
                         SongFile = victoryTheme,
                         SongPath = !string.IsNullOrEmpty(victoryTheme) ? $"Victory!/{Path.GetFileNameWithoutExtension(victoryTheme)}" : string.Empty,
                         SongId = fighterPackage.FighterInfo.VictoryThemeId
                     };
                 }
+                var creditsThemeJson = _fileService.GetFiles(path, "CreditsTheme.json").FirstOrDefault();
                 var creditsTheme = _fileService.GetFiles($"{path}\\CreditsTheme", "*.brstm").FirstOrDefault();
-                if (!string.IsNullOrEmpty(creditsTheme))
+                if (!string.IsNullOrEmpty(creditsThemeJson))
+                {
+                    fighterPackage.CreditsTheme = JsonConvert.DeserializeObject<TracklistSong>(_fileService.ReadTextFile(creditsThemeJson));
+                    fighterPackage.CreditsTheme.SongFile = creditsTheme;
+                }
+                else
                 {
                     fighterPackage.CreditsTheme = new TracklistSong
                     {
-                        Name = !string.IsNullOrEmpty(creditsTheme) ? Path.GetFileNameWithoutExtension(creditsTheme) : fighterPackage.FighterInfo.DisplayName,
+                        Name = !string.IsNullOrEmpty(creditsTheme) ? (!string.IsNullOrEmpty(creditsTheme) ? Path.GetFileNameWithoutExtension(creditsTheme) : fighterPackage.FighterInfo.DisplayName) : string.Empty,
                         SongFile = creditsTheme,
                         SongPath = !string.IsNullOrEmpty(creditsTheme) ? $"Credits/{Path.GetFileNameWithoutExtension(creditsTheme)}" : string.Empty,
                         SongId = fighterPackage.FighterInfo.CreditsThemeId
@@ -300,7 +312,7 @@ namespace BrawlInstaller.Services
             // Set pac files for export
             foreach(var pacFile in fighterPackage.PacFiles)
             {
-                pacFile.SavePath = $"{path}\\PacFiles\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}.{fighterPackage.FighterInfo.PacExtension}";
+                pacFile.SavePath = $"{path}\\PacFiles\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}{fighterPackage.FighterInfo.PacExtension}";
             }
             // Set costumes for export
             var costumeJson = JsonConvert.SerializeObject(fighterPackage.Costumes, Formatting.Indented);
@@ -310,7 +322,7 @@ namespace BrawlInstaller.Services
                 var costumePath = $"{path}\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
                 foreach (var pacFile in costume.PacFiles)
                 {
-                    pacFile.SavePath = $"{costumePath}\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}{costume.CostumeId:D2}.{fighterPackage.FighterInfo.PacExtension}";
+                    pacFile.SavePath = $"{costumePath}\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}{costume.CostumeId:D2}{fighterPackage.FighterInfo.PacExtension}";
                 }
             }
             // Update and export pac files
@@ -345,6 +357,17 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo.VictoryThemeId = fighterPackage.VictoryTheme.SongId;
             fighterPackage.FighterInfo.CreditsThemeId = fighterPackage.CreditsTheme.SongId;
             var fighterInfo = JsonConvert.SerializeObject(fighterPackage.FighterInfo, Formatting.Indented);
+            // Export tracklist info
+            if (fighterPackage.VictoryTheme != null)
+            {
+                var victoryThemeJson = JsonConvert.SerializeObject(fighterPackage.VictoryTheme.CopyNoFile(), Formatting.Indented);
+                _fileService.SaveTextFile($"{path}\\VictoryTheme.json", victoryThemeJson);
+            }
+            if (fighterPackage.CreditsTheme != null)
+            {
+                var creditsThemeJson = JsonConvert.SerializeObject(fighterPackage.CreditsTheme.CopyNoFile(), Formatting.Indented);
+                _fileService.SaveTextFile($"{path}\\CreditsTheme.json", creditsThemeJson);
+            }
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);

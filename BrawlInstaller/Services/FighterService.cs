@@ -872,12 +872,15 @@ namespace BrawlInstaller.Services
         /// <param name="kirbyHatData">Data to export</param>
         public void ExportKirbyHatDataToXml(string xmlPath, HatInfoPack kirbyHatData)
         {
-            var hatDictionary = new SortedDictionary<uint, HatInfoPack>
+            if (kirbyHatData != null)
             {
-                { 0, kirbyHatData }
-            };
-            var hatIdList = new List<uint> { 0 };
-            HatXMLParser.exportHatsToXML(xmlPath, hatIdList.ToArray(), hatDictionary);
+                var hatDictionary = new SortedDictionary<uint, HatInfoPack>
+                {
+                    { 0, kirbyHatData }
+                };
+                var hatIdList = new List<uint> { 0 };
+                HatXMLParser.exportHatsToXML(xmlPath, hatIdList.ToArray(), hatDictionary);
+            }
         }
 
         /// <summary>
@@ -887,11 +890,15 @@ namespace BrawlInstaller.Services
         /// <returns>Parsed Kirby hat data</returns>
         public HatInfoPack ConvertXMLToKirbyHatData(string xmlPath)
         {
-            // Parse XML
-            var dictionary = new SortedDictionary<uint, HatInfoPack>();
-            HatXMLParser.parseHatsFromXML(xmlPath, dictionary);
-            // Return first item
-            return dictionary.FirstOrDefault().Value;
+            if (_fileService.FileExists(xmlPath))
+            {
+                // Parse XML
+                var dictionary = new SortedDictionary<uint, HatInfoPack>();
+                HatXMLParser.parseHatsFromXML(xmlPath, dictionary);
+                // Return first item
+                return dictionary.FirstOrDefault().Value;
+            }
+            return null;
         }
 
         /// <summary>

@@ -48,5 +48,12 @@ namespace BrawlInstaller.Classes
         {
             return JsonConvert.DeserializeObject<TracklistSong>(JsonConvert.SerializeObject(this));
         }
+
+        public TracklistSong CopyNoFile()
+        {
+            var copy = Copy();
+            copy.SongFile = null;
+            return copy;
+        }
     }
 }
