@@ -564,7 +564,7 @@ namespace BrawlInstaller.Services
                     pacFile.FileType = pacFile.GetFileType(prefix, fighterInfo);
                     if (nameLocation + newName.Length < fileName.Length)
                     {
-                        pacFile.Suffix = fileName.Substring(nameLocation + newName.Length);
+                        pacFile.Suffix = fileName.Substring(nameLocation + name.Length);
                     }
                 }
                 return pacFile;

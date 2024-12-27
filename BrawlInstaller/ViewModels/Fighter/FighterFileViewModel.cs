@@ -102,7 +102,8 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public uint? CreditsThemeId { get => FighterPackage?.CreditsTheme?.SongId; set { ChangedThemeId(FighterPackage?.CreditsTheme, value); OnPropertyChanged(nameof(CreditsThemeId)); } }
 
-        public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>(); }
+        [DependsUpon(nameof(FighterPackage))]
+        public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>().ToDictionary(x => FighterPackage != null ? FighterPacFile.GetPrefix(x.Value, FighterPackage?.FighterInfo) : x.Key, x => x.Value); }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)

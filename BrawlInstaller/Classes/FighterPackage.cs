@@ -99,6 +99,21 @@ namespace BrawlInstaller.Classes
             }
         }
 
+        public static string GetPrefix(FighterFileType fileType, FighterInfo fighterInfo)
+        {
+            switch (fileType)
+            {
+                case FighterFileType.FighterPacFile:
+                    return fighterInfo.PacFileName;
+                case FighterFileType.KirbyPacFile:
+                    return fighterInfo.KirbyPacFileName;
+                case FighterFileType.ItemPacFile:
+                    return $"Itm{fighterInfo.PartialPacName}";
+                default:
+                    return fighterInfo.PacFileName;
+            }
+        }
+
         public FighterFileType GetFileType(string pacPrefix, FighterInfo fighterInfo)
         {
                 if (pacPrefix == fighterInfo.PacFileName)

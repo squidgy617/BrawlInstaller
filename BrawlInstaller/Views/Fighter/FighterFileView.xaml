@@ -41,8 +41,7 @@
         </StackPanel>
         <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}">
-            <ComboBox x:Name="pacFilePrefixComboBox" HorizontalAlignment="Right" ItemsSource="{Binding FighterFileTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedPacFile.FileType}" Width="50"/>
-            <TextBlock x:Name="pacFileNameTextBlock" Text="{Binding FighterPackage.FighterInfo.FighterFileName}" VerticalAlignment="Center"/>
+            <ComboBox x:Name="pacFilePrefixComboBox" HorizontalAlignment="Right" ItemsSource="{Binding FighterFileTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedPacFile.FileType}" Width="100"/>
             <TextBox x:Name="pacFileSuffixTextBox" Text="{Binding SelectedPacFile.Suffix}" Width="50"/>
         </StackPanel>
         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="2" Grid.Column="0"/>
