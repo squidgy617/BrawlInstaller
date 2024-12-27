@@ -73,7 +73,7 @@ namespace BrawlInstaller.Classes
     public class FighterPacFile
     {
         public string FilePath { get; set; }
-        public string Prefix { get; set; }
+        public FighterFileType FileType { get; set; }
         public string Suffix { get; set; }
         [JsonIgnore] public string SavePath { get; set; } = string.Empty; // Path to save the file, if one is specified
 
@@ -82,6 +82,33 @@ namespace BrawlInstaller.Classes
             var copy = JsonConvert.DeserializeObject<FighterPacFile>(JsonConvert.SerializeObject(this));
             copy.SavePath = SavePath;
             return copy;
+        }
+
+        public string GetPrefix(FighterInfo fighterInfo)
+        {
+            switch (FileType)
+            {
+                case FighterFileType.FighterPacFile:
+                    return fighterInfo.PacFileName;
+                case FighterFileType.KirbyPacFile:
+                    return fighterInfo.KirbyPacFileName;
+                case FighterFileType.ItemPacFile:
+                    return $"Itm{fighterInfo.PartialPacName}";
+                default:
+                    return fighterInfo.PacFileName;
+            }
+        }
+
+        public FighterFileType GetFileType(string pacPrefix, FighterInfo fighterInfo)
+        {
+                if (pacPrefix == fighterInfo.PacFileName)
+                    return FighterFileType.FighterPacFile;
+                else if (pacPrefix == fighterInfo.KirbyPacFileName)
+                    return FighterFileType.KirbyPacFile;
+                else if (pacPrefix == $"Itm{fighterInfo.PartialPacName}")
+                    return FighterFileType.ItemPacFile;
+                else
+                    return FighterFileType.FighterPacFile;
         }
     }
 

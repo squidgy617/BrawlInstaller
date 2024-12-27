@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using Newtonsoft.Json.Linq;
@@ -100,6 +101,8 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public uint? CreditsThemeId { get => FighterPackage?.CreditsTheme?.SongId; set { ChangedThemeId(FighterPackage?.CreditsTheme, value); OnPropertyChanged(nameof(CreditsThemeId)); } }
+
+        public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>(); }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)

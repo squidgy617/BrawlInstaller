@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -206,6 +207,8 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public bool CostumeEditorEnabled { get => !string.IsNullOrEmpty(FighterPackage?.FighterInfo?.Masquerade) || FighterPackage?.FighterInfo?.CSSSlotAttributes != null; }
+
+        public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>(); }
 
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)

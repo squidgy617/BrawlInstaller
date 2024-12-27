@@ -229,7 +229,8 @@ namespace BrawlInstaller.Services
                             var pacFiles = _fileService.GetFiles(dir, "*.pac");
                             foreach (var pacFile in pacFiles)
                             {
-                                var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.PartialPacName, costume.CostumeId.ToString("D4"), true);
+                                var newPacFile = new FighterPacFile { FilePath = pacFile };
+                                newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, true);
                                 costume.PacFiles.Add(newPacFile);
                             }
                         }
@@ -246,7 +247,8 @@ namespace BrawlInstaller.Services
                     var pacFiles = _fileService.GetFiles(dir, "*.pac");
                     foreach (var pacFile in pacFiles)
                     {
-                        var newPacFile = _fighterService.GetFighterPacFile(pacFile, fighterPackage.FighterInfo.PartialPacName, "PacFiles", false);
+                        var newPacFile = new FighterPacFile { FilePath = pacFile };
+                        newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, false);
                         fighterPackage.PacFiles.Add(newPacFile);
                     }
                 }
@@ -312,7 +314,7 @@ namespace BrawlInstaller.Services
             // Set pac files for export
             foreach(var pacFile in fighterPackage.PacFiles)
             {
-                pacFile.SavePath = $"{path}\\PacFiles\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}{fighterPackage.FighterInfo.PacExtension}";
+                pacFile.SavePath = $"{path}\\PacFiles\\{pacFile.GetPrefix(fighterPackage.FighterInfo)}{pacFile.Suffix}{fighterPackage.FighterInfo.PacExtension}";
             }
             // Set costumes for export
             var costumeJson = JsonConvert.SerializeObject(fighterPackage.Costumes, Formatting.Indented);
@@ -322,7 +324,7 @@ namespace BrawlInstaller.Services
                 var costumePath = $"{path}\\Costumes\\PacFiles\\{costume.CostumeId:D4}";
                 foreach (var pacFile in costume.PacFiles)
                 {
-                    pacFile.SavePath = $"{costumePath}\\{pacFile.Prefix}{fighterPackage.FighterInfo.PartialPacName}{pacFile.Suffix}{costume.CostumeId:D2}{fighterPackage.FighterInfo.PacExtension}";
+                    pacFile.SavePath = $"{costumePath}\\{pacFile.GetPrefix(fighterPackage.FighterInfo)}{pacFile.Suffix}{costume.CostumeId:D2}{fighterPackage.FighterInfo.PacExtension}";
                 }
             }
             // Update and export pac files

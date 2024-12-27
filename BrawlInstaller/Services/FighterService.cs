@@ -75,8 +75,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.UpdateCreditsModule(FighterPackage)"/>
         void UpdateCreditsModule(FighterPackage fighterPackage);
 
-        /// <inheritdoc cref="FighterService.GetFighterPacFile(string, string, string, bool)"/>
-        FighterPacFile GetFighterPacFile(string filePath, string name, string folderName, bool removeCostumeId = true);
+        /// <inheritdoc cref="FighterService.GetFighterPacFile(string, string, FighterInfo, bool, string)"/>
+        FighterPacFile GetFighterPacFile(string filePath, string name, FighterInfo fighterInfo, bool removeCostumeId = true, string newName = null);
 
         /// <inheritdoc cref="FighterService.GetRosters()"/>
         List<Roster> GetRosters();
@@ -503,18 +503,9 @@ namespace BrawlInstaller.Services
             };
             var name = Path.GetFileNameWithoutExtension(pacFile.FilePath);
             var oldFighterName = name;
-            // Remove prefix
-            var prefix = new Regex("(Itm|Fit)");
-            oldFighterName = prefix.Replace(oldFighterName, string.Empty, 1);
             // Remove numbers
             var numbers = new Regex("\\d");
             oldFighterName = numbers.Replace(oldFighterName, string.Empty);
-            // Remove Kirby if fighter is not Kirby
-            if (fighterInfo.PartialPacName.ToLower() != "kirby")
-            {
-                var kirby = new Regex("Kirby");
-                oldFighterName = kirby.Replace(oldFighterName, string.Empty);
-            }
             // Remove modifiers
             var index = 0;
             foreach (var modifier in modifierStrings)
@@ -527,27 +518,37 @@ namespace BrawlInstaller.Services
             {
                 oldFighterName = oldFighterName.Substring(0, index);
             }
-            // Replace first match of name with the new fighter name
-            // TODO: We check for Kirby to ensure we don't overwrite filenames for Kirby's other fighter files, is there a better way to do this?
+            // Remove prefix
+            var cleanName = oldFighterName;
+            var prefix = new Regex("(Itm|Fit)");
+            cleanName = prefix.Replace(cleanName, string.Empty, 1);
+            // Remove Kirby if fighter is not Kirby
             if (fighterInfo.PartialPacName.ToLower() != "kirby")
             {
-                var regex = new Regex(oldFighterName);
-                name = regex.Replace(name, fighterInfo.PartialPacName, 1);
+                var kirby = new Regex("Kirby");
+                cleanName = kirby.Replace(cleanName, string.Empty);
             }
-            return GetFighterPacFile(pacFile.FilePath, oldFighterName, oldFighterName, removeCostumeId);
+            var newName = oldFighterName.Replace(cleanName, fighterInfo.PartialPacName);
+            // Replace first match of name with the new fighter name
+            var newPacFile = GetFighterPacFile(pacFile.FilePath, oldFighterName, fighterInfo, removeCostumeId, newName);
+            return newPacFile;
         }
 
         /// <summary>
         /// Get fighter pac file object from file
         /// </summary>
         /// <param name="filePath">Path to file</param>
-        /// <param name="name">Internal name of fighter</param>
-        /// <param name="folderName">Name of PAC file root folder</param>
+        /// <param name="name">Pac name of fighter</param>
+        /// <param name="fighterInfo">Fighter info of fighter</param>
+        /// <param name="removeCostumeId">Remove costume ID when getting pac name</param>
+        /// <param name="newName">Name to replace pac name with when getting prefix</param>
         /// <returns>Fighter pac file object</returns>
-        public FighterPacFile GetFighterPacFile(string filePath, string name, string folderName, bool removeCostumeId=true)
+        public FighterPacFile GetFighterPacFile(string filePath, string name, FighterInfo fighterInfo, bool removeCostumeId=true, string newName = null)
         {
-            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(folderName))
+            if (!string.IsNullOrEmpty(name))
             {
+                if (string.IsNullOrEmpty(newName))
+                    newName = name;
                 var pacFile = new FighterPacFile { FilePath = filePath };
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
                 var nameLocation = fileName.IndexOf(name, StringComparison.OrdinalIgnoreCase);
@@ -559,10 +560,11 @@ namespace BrawlInstaller.Services
                     {
                         fileName = fileName.Substring(0, fileName.Length - 2);
                     }
-                    pacFile.Prefix = fileName.Substring(0, nameLocation);
-                    if (nameLocation + name.Length < fileName.Length)
+                    var prefix = fileName.Replace(name, newName).Substring(0, newName.Length);
+                    pacFile.FileType = pacFile.GetFileType(prefix, fighterInfo);
+                    if (nameLocation + newName.Length < fileName.Length)
                     {
-                        pacFile.Suffix = fileName.Substring(nameLocation + name.Length);
+                        pacFile.Suffix = fileName.Substring(nameLocation + newName.Length);
                     }
                 }
                 return pacFile;
@@ -621,7 +623,7 @@ namespace BrawlInstaller.Services
             foreach(var pacFile in pacFiles)
             {
                 var file = _fileService.OpenFile(pacFile.FilePath);
-                var name = pacFile.Prefix + fighterInfo.PartialPacName + pacFile.Suffix + fighterInfo.PacExtension;
+                var name = pacFile.GetPrefix(fighterInfo) + pacFile.Suffix + fighterInfo.PacExtension;
                 if (file != null)
                 {
                     files.Add((file, name, pacFile));
@@ -665,7 +667,7 @@ namespace BrawlInstaller.Services
                 foreach(var pacFile in costume.PacFiles)
                 {
                     var file = _fileService.OpenFile(pacFile.FilePath);
-                    var name = pacFile.Prefix + fighterInfo.PartialPacName + pacFile.Suffix + costume.CostumeId.ToString("D2") + fighterInfo.PacExtension;
+                    var name = pacFile.GetPrefix(fighterInfo) + pacFile.Suffix + costume.CostumeId.ToString("D2") + fighterInfo.PacExtension;
                     // Update GFX if they are per-costume
                     var efNode = file.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
                     && ((ARCNode)x).FileType == ARCFileType.EffectData && Regex.Match(x.Name, ".+[X]\\d{2}$").Success);
@@ -674,7 +676,7 @@ namespace BrawlInstaller.Services
                         // Update Effect.pac name
                         var effectPacName = string.Empty;
                         // Differentiate between Kirby and non-Kirby Effect.pac IDs to ensure everything is named properly
-                        if (pacFile.Prefix.ToLower() != "fitkirby")
+                        if (pacFile.FileType != FighterFileType.KirbyPacFile)
                         {
                             effectPacName = GetEffectPacName(fighterPackage.FighterInfo.EffectPacId);
                         }
@@ -704,7 +706,7 @@ namespace BrawlInstaller.Services
             foreach(var file in files)
             {
                 var folder = file.name.Contains("Kirby") ? fighterInfo.KirbyPacFolder : fighterInfo.PacFolder;
-                folder += file.pacFile.Prefix == "Itm" ? "\\item" : string.Empty;
+                folder += file.pacFile.FileType == FighterFileType.ItemPacFile ? "\\item" : string.Empty;
                 if (string.IsNullOrEmpty(file.pacFile.SavePath))
                 {
                     file.node._origPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{folder}\\{file.name}";
@@ -833,10 +835,9 @@ namespace BrawlInstaller.Services
             // Get pac files
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.PacFolder}";
             var files = new List<FighterPacFile>();
-            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => Path.GetFileName(x).StartsWith(fighterInfo.PacFileName, StringComparison.InvariantCultureIgnoreCase)
-            || Path.GetFileName(x).StartsWith($"Itm{fighterInfo.PartialPacName}", StringComparison.InvariantCultureIgnoreCase)).ToList())
+            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => Path.GetFileName(x).StartsWith(fighterInfo.PacFileName, StringComparison.InvariantCultureIgnoreCase)))
             {
-                var pacFile = GetFighterPacFile(file, fighterInfo.PartialPacName, fighterInfo.PacFolder, removeCostumeId);
+                var pacFile = GetFighterPacFile(file, fighterInfo.PacFileName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
                 {
                     files.Add(pacFile);
@@ -846,7 +847,7 @@ namespace BrawlInstaller.Services
             path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.PacFolder}\\item";
             foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => Path.GetFileName(x).StartsWith($"Itm{fighterInfo.PartialPacName}", StringComparison.InvariantCultureIgnoreCase)))
             {
-                var pacFile = GetFighterPacFile(file, fighterInfo.PartialPacName, fighterInfo.PacFolder, removeCostumeId);
+                var pacFile = GetFighterPacFile(file, "Itm" + fighterInfo.PartialPacName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
                 {
                     files.Add(pacFile);
@@ -856,7 +857,7 @@ namespace BrawlInstaller.Services
             path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.KirbyPacFolder}";
             foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => Path.GetFileName(x).StartsWith(fighterInfo.KirbyPacFileName, StringComparison.InvariantCultureIgnoreCase)).ToList())
             {
-                var pacFile = GetFighterPacFile(file, fighterInfo.PartialPacName, fighterInfo.KirbyPacFolder, removeCostumeId);
+                var pacFile = GetFighterPacFile(file, fighterInfo.KirbyPacFileName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
                 {
                     files.Add(pacFile);
