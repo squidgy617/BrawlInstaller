@@ -1118,6 +1118,35 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo.EndingId = ImportEndingPacFiles(endingFiles, fighterPackage);
             // Import ending movie
             fighterPackage.EndingMovie = ImportEndingMovie(endingMovie, fighterPackage.FighterInfo.FighterFileName);
+            // TODO: Placeholder, handle target test files. Eventually we'll want to actually manage these properly in a package
+            UpdateTargetTestFiles(fighterPackage);
+        }
+
+        private void UpdateTargetTestFiles(FighterPackage fighterPackage)
+        {
+            if (fighterPackage.PackageType == PackageType.New)
+            {
+                var filePath = Path.Combine(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TargetBreakFolder), $"{fighterPackage.FighterInfo.FighterFileName}.asl");
+                if (!_fileService.FileExists(filePath))
+                {
+                    var newNode = new ASLSNode();
+                    newNode.Name = fighterPackage.FighterInfo.FighterFileName;
+                    for(var i = 0; i < 4; i++)
+                    {
+                        newNode.AddChild(new ASLSEntryNode { ButtonFlags = (ushort)i });
+                    }
+                    _fileService.SaveFileAs(newNode, filePath);
+                    _fileService.CloseFile(newNode);
+                }
+            }
+            else if (fighterPackage.PackageType == PackageType.Delete)
+            {
+                var filePath = Path.Combine(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TargetBreakFolder), $"{fighterPackage.FighterInfo.FighterFileName}.asl");
+                if (_fileService.FileExists(filePath))
+                {
+                    _fileService.DeleteFile(filePath);
+                }
+            }
         }
 
         /// <summary>
