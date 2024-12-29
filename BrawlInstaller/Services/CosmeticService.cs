@@ -95,6 +95,23 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Import a texture from image data
+        /// </summary>
+        /// <param name="destinationNode">Destination for imported texture node</param>
+        /// <param name="cosmeticImage">Bitmap image data</param>
+        /// <param name="format">Encoding format to use</param>
+        /// <param name="size">Dimensions to scale image to</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node ImportTexture(BRRESNode destinationNode, BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size)
+        {
+            var path = $"{_settingsService.AppSettings.TempPath}\\tempNode.png";
+            _fileService.SaveImage(cosmeticImage, path);
+            var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size);
+            _fileService.DeleteFile($"{_settingsService.AppSettings.TempPath}\\tempNode.png");
+            return node;
+        }
+
+        /// <summary>
         /// Reimport a texture that is already imported
         /// </summary>
         /// <param name="destinationNode">Destination for imported texture node</param>
@@ -696,6 +713,7 @@ namespace BrawlInstaller.Services
                     var palette = ImportPalette(parentNode, cosmetic.Palette);
                 }
             }
+            // TODO: Could the below two if statements be consolidated into one? Do we even need the image path?
             // If we have an image from filesystem, import that
             else if (cosmetic.ImagePath != "")
             {
@@ -704,17 +722,15 @@ namespace BrawlInstaller.Services
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
-            // If we have neither an image nor a texture node matching the definition, but we do *have* a texture node, use it anyway
-            // This suggests that we got a texture from the cosmetics that didn't match the definition, which we should reimport, or it will be lost
+            // If we have neither an image nor a texture node matching the definition, but we do *have* a texture node, reimport it
+            // This suggests that we got a texture from the cosmetics that didn't match the definition,
+            // or we updated the HD texture but didn't change the texture itself, which we should reimport, or it will be lost
             else if (cosmetic.Texture != null)
             {
-                cosmetic.Texture.Name = GetTextureName(definition, textureId, cosmetic);
-                var texture = ImportTexture(parentNode, cosmetic.Texture);
-                if (cosmetic.Palette != null)
-                {
-                    cosmetic.Palette.Name = texture.Name;
-                    var palette = ImportPalette(parentNode, cosmetic.Palette);
-                }
+                var texture = ImportTexture(parentNode, cosmetic.Image, definition.Format, definition.Size);
+                texture.Name = GetTextureName(definition, textureId, cosmetic);
+                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
             // TODO: Verify this actually works
             // If we should only import one cosmetic and it's a color smashed texture, reimport
@@ -959,7 +975,7 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of character for HD textures</param>
         public void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name = null)
         {
-            foreach(var definition in definitions.Where(x => x.Enabled != false))
+            foreach(var definition in definitions.Where(x => x.Enabled != false).OrderByDescending(x => x.CosmeticType).ThenByDescending(x => x.Style).ThenByDescending(x => x.Size.Width + x.Size.Height))
             {
                 ImportCosmetics(definition, cosmeticList, ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, name);
             }
@@ -1636,8 +1652,8 @@ namespace BrawlInstaller.Services
             Parallel.ForEach(definitions.GroupBy(c => new { c.CosmeticType, c.Style }).ToList(), cosmeticGroup =>
             {
                 // Check each definition in the group for cosmetics
-                // Order them to ensure that cosmetics with multiple definitions favor definitions that have multiple cosmetics
-                foreach (var cosmetic in cosmeticGroup.OrderByDescending(x => !x.SeparateFiles).OrderByDescending(x => !x.FirstOnly))
+                // Order them to ensure that cosmetics with multiple definitions favor definitions that have multiple cosmetics, also order by size to ensure highest-quality cosmetic is loaded first
+                foreach (var cosmetic in cosmeticGroup.OrderByDescending(x => !x.SeparateFiles).ThenByDescending(x => !x.FirstOnly).ThenByDescending(x => x.Size.Width + x.Size.Height))
                 {
                     var id = brawlIds.GetIdOfType(cosmetic.IdType);
                     if (id > -1 || !restrictRange)
