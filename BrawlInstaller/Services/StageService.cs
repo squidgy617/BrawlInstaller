@@ -34,8 +34,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="StageService.SaveStageLists(List{StageList}, List{StageSlot})"/>
         void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable);
 
-        /// <inheritdoc cref="StageService.SaveStage(StageInfo)"/>
-        List<string> SaveStage(StageInfo stage);
+        /// <inheritdoc cref="StageService.SaveStage(StageInfo, bool)"/>
+        List<string> SaveStage(StageInfo stage, bool updateRandomName = true);
     }
 
     [Export(typeof(IStageService))]
@@ -711,7 +711,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="stage">Stage to save</param>
         /// <returns>List of delete options</returns>
-        public List<string> SaveStage(StageInfo stage)
+        public List<string> SaveStage(StageInfo stage, bool updateRandomName = true)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             // Only update cosmetics that have changed
@@ -723,7 +723,10 @@ namespace BrawlInstaller.Services
 
             // TODO: only do if name is changed
             // Save stage random name
-            SaveStageRandomName(stage);
+            if (updateRandomName)
+            {
+                SaveStageRandomName(stage);
+            }
 
             // TODO: Make sure to update stage list object to use the correct name if stage entries were renamed
 

@@ -35,6 +35,7 @@ namespace BrawlInstaller.ViewModels
         private StageEntry _selectedStageEntry;
         private Substage _selectedSubstage;
         private List<string> _tracklists;
+        private string _originalRandomName;
 
         // Services
         IStageService _stageService { get; }
@@ -135,6 +136,7 @@ namespace BrawlInstaller.ViewModels
         public void LoadStage(StageLoadedMessage message)
         {
             Stage = message.Value;
+            _originalRandomName = Stage.RandomName;
             Tracklists = _tracklistService.GetTracklists();
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(Tracklists));
@@ -145,7 +147,7 @@ namespace BrawlInstaller.ViewModels
             // Create copy of stage before save
             var stageToSave = stage.Copy();
             var deleteOptions = new List<string>();
-            deleteOptions = _stageService.SaveStage(stageToSave);
+            deleteOptions = _stageService.SaveStage(stageToSave, _originalRandomName != stageToSave.RandomName);
 
             // Prompt user for delete options
             foreach (var item in deleteOptions)
