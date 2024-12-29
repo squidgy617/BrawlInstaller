@@ -257,7 +257,12 @@ namespace BrawlInstaller.Services
         {
             if (destinationNode != null)
             {
-                var node = new PAT0TextureEntryNode();
+                // Check if node exists before adding
+                var node = destinationNode.Children.FirstOrDefault(x => ((PAT0TextureEntryNode)x).FrameIndex == frameIndex) as PAT0TextureEntryNode;
+                if (node == null)
+                {
+                    node = new PAT0TextureEntryNode();
+                }
                 var pat0Node = destinationNode?.Parent?.Parent as PAT0Node;
                 destinationNode.AddChild(node);
                 node.FrameIndex = frameIndex;
@@ -311,14 +316,24 @@ namespace BrawlInstaller.Services
                             }
                         }
                     }
-                    // Remove pat entries
-                    patTexture.Children.RemoveAll(x => patEntries.Contains(x));
-                    // Update the FrameCount
-                    var pat0 = patTexture.Parent.Parent;
-                    if (pat0 != null)
+                    // Only remove if we shouldn't use terminator frames, otherwise it'll end up using the previous frame's stuff
+                    if (!patSetting.AddTerminatorFrame)
                     {
-                        pat0.IsDirty = true;
-                        ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
+                        // Remove pat entries
+                        patTexture.Children.RemoveAll(x => patEntries.Contains(x));
+                        // Update the FrameCount
+                        var pat0 = patTexture.Parent.Parent;
+                        if (pat0 != null)
+                        {
+                            pat0.IsDirty = true;
+                            ((PAT0Node)pat0).FrameCount = (int)patTexture.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
+                        }
+                    }
+                    // Otherwise blank out the texture and palette
+                    foreach(PAT0TextureEntryNode patEntry in patEntries)
+                    {
+                        patEntry.Texture = "Placeholder";
+                        patEntry.Palette = string.Empty;
                     }
                 }
             }
