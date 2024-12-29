@@ -169,6 +169,8 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(Stage));
             // Update stage list
             WeakReferenceMessenger.Default.Send(new StageSavedMessage(stage));
+            // Update loaded stage
+            WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
         }
 
         private void MoveEntryUp()
