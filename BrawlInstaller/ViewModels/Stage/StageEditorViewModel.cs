@@ -358,7 +358,7 @@ namespace BrawlInstaller.ViewModels
             var imageData = _fileService.LoadImage(imagePath);
             var bitmap = imageData.ToBitmap();
             var pixelData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            var pixelFormat = PixelFormats.Pbgra32;
+            var pixelFormat = PixelFormats.Bgra32;
             var bitmapSource = BitmapSource.Create(bitmap.Width, bitmap.Height, 1, 1, pixelFormat, null, pixelData.Scan0, pixelData.Stride * bitmap.Height, pixelData.Stride);
             var encoder = new JpegBitmapEncoder();
             using (MemoryStream outStream = new MemoryStream())
