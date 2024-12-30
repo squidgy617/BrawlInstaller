@@ -14,6 +14,11 @@ using System.Windows.Media.Imaging;
 using BrawlInstaller.Common;
 using System.IO.Compression;
 using System.Net.Cache;
+using BrawlLib.Internal;
+using System.Security.Cryptography;
+using Force.Crc32;
+using System.Drawing.Imaging;
+using BrawlInstaller.Classes;
 
 namespace BrawlInstaller.Services
 {
@@ -90,6 +95,18 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.GetNodes(ResourceNode)"/>
         List<ResourceNode> GetNodes(ResourceNode rootNode);
+
+        /// <inheritdoc cref="FileService.DecryptBinFile(string)"/>
+        byte[] DecryptBinFile(string filePath);
+
+        /// <inheritdoc cref="FileService.DecryptBinData(byte[])"/>
+        byte[] DecryptBinData(byte[] binData);
+
+        /// <inheritdoc cref="FileService.EncryptBinData(byte[])"/>
+        byte[] EncryptBinData(byte[] binData);
+
+        /// <inheritdoc cref="FileService.ReadAllBytes(string)"/>
+        byte[] ReadAllBytes(string filePath);
     }
     // TODO: Backup system, only back up files in build
     [Export(typeof(IFileService))]
@@ -454,6 +471,99 @@ namespace BrawlInstaller.Services
         {
             var allNodes = rootNode.Children;
             return allNodes;
+        }
+
+        /// <summary>
+        /// Decrypt a bin file
+        /// </summary>
+        /// <param name="filePath">Path to bin file</param>
+        /// <returns>Decrypted bin file data</returns>
+        public byte[] DecryptBinFile(string filePath)
+        {
+            var sourceData = File.ReadAllBytes(filePath);
+            return DecryptBinData(sourceData);
+        }
+
+        /// <summary>
+        /// Decrypt bin data
+        /// </summary>
+        /// <param name="binData">Bin data to decrypt</param>
+        /// <returns>Decrypted bin data</returns>
+        public byte[] DecryptBinData(byte[] binData)
+        {
+            byte[] Key = new byte[] { 0xAB, 0x01, 0xB9, 0xD8, 0xE1, 0x62, 0x2B, 0x08, 0xAF, 0xBA, 0xD8, 0x4D, 0xBF, 0xC2, 0xA5, 0x5D };
+            byte[] IV = new byte[] { 0x4E, 0x03, 0x41, 0xDE, 0xE6, 0xBB, 0xAA, 0x41, 0x64, 0x19, 0xB3, 0xEA, 0xE8, 0xF5, 0x3B, 0xD9 };
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Key;
+                aes.IV = IV;
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.None;
+
+                ICryptoTransform decryptor = aes.CreateDecryptor();
+                byte[] decryptedData = decryptor.TransformFinalBlock(binData, 0, binData.Length);
+                return decryptedData;
+            }
+        }
+
+        /// <summary>
+        /// Encrypt bin data
+        /// </summary>
+        /// <param name="binData">Decrypted bin data</param>
+        /// <returns>Encrypted bin data</returns>
+        public byte[] EncryptBinData(byte[] binData)
+        {
+            byte[] Key = new byte[] { 0xAB, 0x01, 0xB9, 0xD8, 0xE1, 0x62, 0x2B, 0x08, 0xAF, 0xBA, 0xD8, 0x4D, 0xBF, 0xC2, 0xA5, 0x5D };
+            byte[] IV = new byte[] { 0x4E, 0x03, 0x41, 0xDE, 0xE6, 0xBB, 0xAA, 0x41, 0x64, 0x19, 0xB3, 0xEA, 0xE8, 0xF5, 0x3B, 0xD9 };
+
+            using (Aes aes = Aes.Create())
+            {
+                UpdateCRC(binData);
+                aes.Key = Key;
+                aes.IV = IV;
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.None;
+
+                ICryptoTransform encryptor = aes.CreateEncryptor();
+                byte[] encryptedData = encryptor.TransformFinalBlock(binData, 0, binData.Length);
+                return encryptedData;
+            }
+        }
+
+        private static void UpdateCRC(byte[] data)
+        {
+            // Set bytes at offset 0x10 to 0xDEADBEEF
+            data[0x10] = 0xDE;
+            data[0x11] = 0xAD;
+            data[0x12] = 0xBE;
+            data[0x13] = 0xEF;
+
+            // Calculate CRC32
+            uint crc = Crc32Algorithm.Compute(data);
+            byte[] crcBytes = BitConverter.GetBytes(crc);
+
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(crcBytes); // Convert to big-endian
+            }
+
+            // Update the data at offset 0x10
+            Array.Copy(crcBytes, 0, data, 0x10, 4);
+        }
+
+        /// <summary>
+        /// Read all bytes of a file
+        /// </summary>
+        /// <param name="filePath">Path to file</param>
+        /// <returns>Bytes of file</returns>
+        public byte[] ReadAllBytes(string filePath)
+        {
+            if (FileExists(filePath))
+            {
+                return File.ReadAllBytes(filePath);
+            }
+            return null;
         }
     }
 }

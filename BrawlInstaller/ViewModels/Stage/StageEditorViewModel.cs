@@ -57,6 +57,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveSubstageCommand => new RelayCommand(param => RemoveSubstage());
         public ICommand DeleteStageCommand => new RelayCommand(param => DeleteStage());
         public ICommand ImportParamsCommand => new RelayCommand(param => ImportParams());
+        public ICommand UpdateListAltImageCommand => new RelayCommand(param => UpdateListAltImage());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -334,6 +335,19 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(Stage));
                 // Update stage lists
                 WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
+            }
+        }
+
+        private void UpdateListAltImage()
+        {
+            if (SelectedStageEntry?.ListAlt != null)
+            {
+                var image = _dialogService.OpenFileDialog("Select an image", "JPEG file (.jpg)|*.jpg");
+                if (!string.IsNullOrEmpty(image))
+                {
+                    SelectedStageEntry.ListAlt.ImageData = _fileService.ReadAllBytes(image);
+                    OnPropertyChanged(nameof(SelectedStageEntry));
+                }
             }
         }
     }
