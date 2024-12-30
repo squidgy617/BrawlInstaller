@@ -342,10 +342,12 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedStageEntry?.ListAlt != null)
             {
-                var image = _dialogService.OpenFileDialog("Select an image", "JPEG file (.jpg)|*.jpg");
+                var image = _dialogService.OpenFileDialog("Select an image", "PNG file (.png)|*.png");
                 if (!string.IsNullOrEmpty(image))
                 {
-                    SelectedStageEntry.ListAlt.ImageData = _fileService.ReadAllBytes(image);
+                    var encoder = new JpegBitmapEncoder();
+                    var bitmap = _fileService.LoadImage(image);
+                    SelectedStageEntry.ListAlt.ImageData = bitmap.ToByteArray(encoder);
                     OnPropertyChanged(nameof(SelectedStageEntry));
                 }
             }
