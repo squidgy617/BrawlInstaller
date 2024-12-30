@@ -125,7 +125,7 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedStageEntry))]
         [DependsUpon(nameof(SelectedButtonFlags))]
         public string BinIndexString { get => RListAlt ? StageEntries.Where(x => x.IsRAlt).ToList().IndexOf(SelectedStageEntry).ToString("D2")
-                : (LListAlt ? StageEntries.Where(x => x.IsRAlt).ToList().IndexOf(SelectedStageEntry).ToString("D2") : "");
+                : (LListAlt ? StageEntries.Where(x => x.IsLAlt).ToList().IndexOf(SelectedStageEntry).ToString("D2") : "");
         }
 
         public List<string> Tracklists { get => _tracklists; set { _tracklists = value; OnPropertyChanged(nameof(Tracklists)); } }
