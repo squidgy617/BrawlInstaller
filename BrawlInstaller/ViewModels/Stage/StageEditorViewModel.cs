@@ -11,12 +11,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 
@@ -345,11 +347,25 @@ namespace BrawlInstaller.ViewModels
                 var image = _dialogService.OpenFileDialog("Select an image", "PNG file (.png)|*.png");
                 if (!string.IsNullOrEmpty(image))
                 {
-                    var encoder = new JpegBitmapEncoder();
-                    var bitmap = _fileService.LoadImage(image);
-                    SelectedStageEntry.ListAlt.ImageData = bitmap.ToByteArray(encoder);
+                    SelectedStageEntry.ListAlt.ImageData = GetBinThumbnailData(image);
                     OnPropertyChanged(nameof(SelectedStageEntry));
                 }
+            }
+        }
+
+        private byte[] GetBinThumbnailData(string imagePath)
+        {
+            var imageData = _fileService.LoadImage(imagePath);
+            var bitmap = imageData.ToBitmap();
+            var pixelData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            var pixelFormat = PixelFormats.Pbgra32;
+            var bitmapSource = BitmapSource.Create(bitmap.Width, bitmap.Height, 1, 1, pixelFormat, null, pixelData.Scan0, pixelData.Stride * bitmap.Height, pixelData.Stride);
+            var encoder = new JpegBitmapEncoder();
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(outStream);
+                return outStream.ToArray();
             }
         }
     }
