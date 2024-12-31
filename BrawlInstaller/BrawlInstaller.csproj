@@ -103,6 +103,7 @@
     <Compile Include="Services\TracklistService.cs" />
     <Compile Include="StaticClasses\DefaultCosmetics.cs" />
     <Compile Include="StaticClasses\EffectPacs.cs" />
+    <Compile Include="StaticClasses\Encryption.cs" />
     <Compile Include="StaticClasses\Icons.cs" />
     <Compile Include="StaticClasses\IdCategories.cs" />
     <Compile Include="StaticClasses\ModuleIdLocations.cs" />

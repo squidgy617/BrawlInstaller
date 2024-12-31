@@ -591,7 +591,7 @@ namespace BrawlInstaller.Services
                 if (entry.IsRAlt || entry.IsLAlt)
                 {
                     var binFile = _fileService.OpenFile(entry.ListAlt.BinFilePath);
-                    if (binFile != null)
+                    if (binFile != null && entry.ListAlt.Image != null)
                     {
                         UpdateBinFile(binFile, entry.ListAlt);
                         var index = GetButtonFlagIndex(entry);
