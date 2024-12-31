@@ -2,11 +2,13 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlLib.BrawlManagerLib;
+using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,6 +16,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Services
 {
@@ -36,6 +39,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="StageService.SaveStage(StageInfo, bool)"/>
         List<string> SaveStage(StageInfo stage, bool updateRandomName = true);
+
+        /// <inheritdoc cref="StageService.GetListAlt(string)"/>
+        ListAlt GetListAlt(string binFile);
     }
 
     [Export(typeof(IStageService))]
@@ -201,9 +207,7 @@ namespace BrawlInstaller.Services
                     // Get bin file
                     if (stage.Slot.StageIds.StageId != null)
                     {
-                        var binFile = GetStageBinFile(stage.Slot.StageIds.StageId.Value, newEntry);
-                        newEntry.BinFilePath = binFile;
-                        newEntry.BinFileName = binFile != null ? Regex.Replace(Path.GetFileNameWithoutExtension(binFile), "st_\\d+_", "") : "Unknown";
+                        newEntry.ListAlt = GetListAlt(stage.Slot.StageIds.StageId.Value, newEntry);
                     }
                     // Add params to list if they are not already there
                     stage.StageEntries.Add(newEntry);
@@ -233,7 +237,7 @@ namespace BrawlInstaller.Services
         /// Get bin file associated with a stage entry
         /// </summary>
         /// <param name="stageId">ID of stage associated with stage entry</param>
-        /// <param name="buttonFlags">Button flags associated with stage entry</param>
+        /// <param name="entry">Stage entry</param>
         /// <returns>Bin file path</returns>
         private string GetStageBinFile(int stageId, StageEntry entry)
         {
@@ -257,6 +261,45 @@ namespace BrawlInstaller.Services
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get list alt for stage entry
+        /// </summary>
+        /// <param name="stageId">ID of stage associated with stage entry</param>
+        /// <param name="entry">Stage entry</param>
+        /// <returns>List alt</returns>
+        private ListAlt GetListAlt(int stageId, StageEntry entry)
+        {
+            var binFile = GetStageBinFile(stageId, entry);
+            return GetListAlt(binFile);
+        }
+
+        /// <summary>
+        /// Get list alt for stage entry
+        /// </summary>
+        /// <param name="binFile">Path to bin file</param>
+        /// <returns>List alt</returns>
+        public ListAlt GetListAlt(string binFile)
+        {
+            var listAlt = new ListAlt();
+            if (!string.IsNullOrEmpty(binFile))
+            {
+                listAlt.BinFileName = Regex.Replace(Path.GetFileNameWithoutExtension(binFile), "st_\\d+_", "");
+                listAlt.BinFilePath = binFile;
+                var binData = _fileService.DecryptBinFile(binFile);
+                // Get the name
+                var nameData = binData.AsSpan(0x70, 32).ToArray().Where(x => x != 0x0);
+                listAlt.Name = Encoding.ASCII.GetString(nameData.ToArray());
+                // Get the image data
+                var jpegHeader = new byte[4] { 0xFF, 0xD8, 0xFF, 0xE0 };
+                var jpegTrailer = new byte[2] { 0xFF, 0xD9 };
+                var imageStart = binData.IndexOf(jpegHeader);
+                var imageEnd = binData.IndexOf(jpegTrailer) + 2;
+                var imageData = binData.AsSpan(imageStart, imageEnd - imageStart);
+                listAlt.ImageData = imageData.ToArray();
+            }
+            return listAlt;
         }
 
         /// <summary>
@@ -512,6 +555,7 @@ namespace BrawlInstaller.Services
             }
         }
 
+        // TODO: This should update the paths in the stage object for every file that gets its path changed
         /// <summary>
         /// Open all files associated with a stage
         /// </summary>
@@ -559,11 +603,12 @@ namespace BrawlInstaller.Services
                 // Open bin files
                 if (entry.IsRAlt || entry.IsLAlt)
                 {
-                    var binFile = _fileService.OpenFile(entry.BinFilePath);
-                    if (binFile != null)
+                    var binFile = _fileService.OpenFile(entry.ListAlt.BinFilePath);
+                    if (binFile != null && entry.ListAlt.Image != null)
                     {
+                        UpdateBinFile(binFile, entry.ListAlt);
                         var index = GetButtonFlagIndex(entry);
-                        var fileName = $"st_{index:D2}_{entry.BinFileName}.bin";
+                        var fileName = $"st_{index:D2}_{entry.ListAlt.BinFileName}.bin";
                         var folderLetter = entry.IsRAlt ? "R" : (entry.IsLAlt ? "L" : string.Empty);
                         var folderName = $"{stage.Slot.StageIds.StageId?.ToString("X2")}_{folderLetter}";
                         var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageAltListPath, folderName, fileName);
@@ -585,6 +630,65 @@ namespace BrawlInstaller.Services
                 }
             }
             return files;
+        }
+
+        /// <summary>
+        /// Update bin file with list alt parameters
+        /// </summary>
+        /// <param name="node">Node of bin file to update</param>
+        /// <param name="listAlt">List alt to apply changes from</param>
+        /// <returns>Updated node</returns>
+        private void UpdateBinFile(ResourceNode node, ListAlt listAlt)
+        {
+            var data = _fileService.ReadRawData(node);
+            if (data != null)
+            {
+                var decryptedData = _fileService.DecryptBinData(data);
+                // Get name
+                var nameStart = 0x70;
+                var nameEnd = nameStart + 32;
+                var name = Encoding.BigEndianUnicode.GetBytes(listAlt.Name.ToCharArray()).ToList();
+                // Pad name
+                while (name.Count < 32)
+                {
+                    name.Add(0x0);
+                }
+                var jpegHeader = new byte[4] { 0xFF, 0xD8, 0xFF, 0xE0 };
+                // Get beginning of file
+                var fileStart = decryptedData.AsSpan(0, nameStart);
+                // Get image location
+                var imageStart = decryptedData.IndexOf(jpegHeader);
+                // Get data between name and image
+                var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
+                // Get image data from our list alt
+                var imageData = listAlt.ImageData;
+                // Combine data leading up to image
+                var partialData = fileStart.ToArray().Append(name.ToArray()).Append(miscData.ToArray());
+                // Store image starting position
+                var newImageStart = BitConverter.GetBytes(partialData.Length - 0x54).Reverse().ToArray(); // Starting position has 0x54 subtracted for some reason
+                // Add image data
+                var newData = partialData.Append(imageData).ToList();
+                // If data is not multiple of 16, pad it
+                while (newData.Count % 16 != 0)
+                {
+                    newData.Add(0);
+                }
+                // Store image ending position
+                var newImageEnd = BitConverter.GetBytes(newData.Count - 0x34).Reverse().ToArray(); // Ending position has 0x34 subtracted for some reason
+                // Pad with 32 0x0s
+                newData.AddRange(Enumerable.Repeat((byte)0x0, 32).ToList());
+                // Convert to byte array
+                var finalData = newData.ToArray();
+                // Update image length fields
+                newImageEnd.CopyTo(finalData, 0x58); // Ending position
+                newImageStart.CopyTo(finalData, 0x5C); // Starting position
+                // Encrypt
+                if (!finalData.SequenceEqual(decryptedData))
+                {
+                    var encryptedData = _fileService.EncryptBinData(finalData);
+                    _fileService.ReplaceNodeRaw(node, encryptedData);
+                }
+            }
         }
 
         /// <summary>
@@ -616,7 +720,7 @@ namespace BrawlInstaller.Services
                 path = stageEntry.Params.SoundBankFile;
                 _fileService.DeleteFile(path);
                 // Delete bin file
-                path = stageEntry.BinFilePath;
+                path = stageEntry.ListAlt.BinFilePath;
                 _fileService.DeleteFile(path);
                 // Add modules and tracklists to delete options
                 if (stageEntry.Params.ModuleFile != null && _fileService.FileExists(stageEntry.Params.ModuleFile) && !toDelete.Contains(stageEntry.Params.ModuleFile))

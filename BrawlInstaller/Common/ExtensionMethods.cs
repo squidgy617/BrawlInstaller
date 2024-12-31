@@ -22,9 +22,14 @@ namespace BrawlInstaller.Common
     {
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
         {
+            return ToBitmapImage(bitmap, ImageFormat.Png);
+        }
+
+        public static BitmapImage ToBitmapImage(this Bitmap bitmap, ImageFormat format)
+        {
             using (MemoryStream memory = new MemoryStream())
             {
-                bitmap.Save(memory, ImageFormat.Png);
+                bitmap.Save(memory, format);
                 memory.Position = 0;
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
@@ -41,13 +46,27 @@ namespace BrawlInstaller.Common
     {
         public static Bitmap ToBitmap(this BitmapImage image)
         {
+            return ToBitmap(image, new PngBitmapEncoder());
+        }
+
+        public static Bitmap ToBitmap(this BitmapImage image, BitmapEncoder encoder)
+        {
             using (MemoryStream outStream = new MemoryStream())
             {
-                BitmapEncoder encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(image));
                 encoder.Save(outStream);
                 var bitmap = new Bitmap(outStream);
                 return new Bitmap(bitmap);
+            }
+        }
+
+        public static byte[] ToByteArray(this BitmapImage image, BitmapEncoder encoder)
+        {
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                encoder.Frames.Add(BitmapFrame.Create(image));
+                encoder.Save(outStream);
+                return outStream.ToArray();
             }
         }
     }

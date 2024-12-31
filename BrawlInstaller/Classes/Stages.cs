@@ -5,11 +5,16 @@ using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
+using System.Windows.Interop;
+using BrawlInstaller.Common;
 
 namespace BrawlInstaller.Classes
 {
@@ -111,8 +116,7 @@ namespace BrawlInstaller.Classes
     public class StageEntry
     {
         public ushort ButtonFlags { get; set; } = 0x0000;
-        public string BinFileName { get; set; } = "Unknown";
-        public string BinFilePath { get; set; } = null;
+        public ListAlt ListAlt { get; set; } = new ListAlt();
         [JsonIgnore] public bool IsRAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0; }
         [JsonIgnore] public bool IsLAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) != 0; }
         public StageParams Params { get; set; } = new StageParams();
@@ -122,8 +126,7 @@ namespace BrawlInstaller.Classes
             var copy = new StageEntry
             {
                 ButtonFlags = ButtonFlags,
-                BinFileName = BinFileName,
-                BinFilePath = BinFilePath,
+                ListAlt = ListAlt.Copy(),
                 Params = Params.Copy()
             };
             return copy;
@@ -223,6 +226,47 @@ namespace BrawlInstaller.Classes
                 Name = Name,
                 PacFile = PacFile
             };
+        }
+    }
+
+    public class ListAlt
+    {
+        public string BinFileName { get; set; } = "Unknown";
+        public string BinFilePath { get; set; } = string.Empty;
+        public string Name { get; set; } = "Unknown";
+        public BitmapImage Image
+        {
+            get
+            {
+                if (ImageData != null)
+                {
+                    using (MemoryStream stream = new MemoryStream(ImageData.ToArray()))
+                    {
+                        var bitmap = System.Drawing.Image.FromStream(stream, true, true);
+                        var bitmapImage = ((Bitmap)bitmap).ToBitmapImage(ImageFormat.Jpeg);
+                        return bitmapImage;
+                    }
+                }
+                return null;
+            } 
+        }
+        public byte[] ImageData { get; set; }
+
+        public ListAlt Copy()
+        {
+            var copy = new ListAlt
+            {
+                BinFileName = BinFileName,
+                BinFilePath = BinFilePath,
+                Name = Name
+            };
+            if (ImageData != null)
+            {
+                var imageData = new byte[ImageData.Length];
+                ImageData.CopyTo(imageData, 0);
+                copy.ImageData = imageData;
+            }
+            return copy;
         }
     }
 }

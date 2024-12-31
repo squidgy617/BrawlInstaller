@@ -11,12 +11,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 
@@ -57,6 +59,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveSubstageCommand => new RelayCommand(param => RemoveSubstage());
         public ICommand DeleteStageCommand => new RelayCommand(param => DeleteStage());
         public ICommand ImportParamsCommand => new RelayCommand(param => ImportParams());
+        public ICommand UpdateListAltImageCommand => new RelayCommand(param => UpdateListAltImage());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -124,10 +127,13 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedStageEntry))]
         [DependsUpon(nameof(SelectedButtonFlags))]
         public string BinIndexString { get => RListAlt ? StageEntries.Where(x => x.IsRAlt).ToList().IndexOf(SelectedStageEntry).ToString("D2")
-                : (LListAlt ? StageEntries.Where(x => x.IsRAlt).ToList().IndexOf(SelectedStageEntry).ToString("D2") : "");
+                : (LListAlt ? StageEntries.Where(x => x.IsLAlt).ToList().IndexOf(SelectedStageEntry).ToString("D2") : "");
         }
 
         public List<string> Tracklists { get => _tracklists; set { _tracklists = value; OnPropertyChanged(nameof(Tracklists)); } }
+
+        [DependsUpon(nameof(SelectedStageEntry))]
+        public string SelectedBinFilePath { get => SelectedStageEntry?.ListAlt?.BinFilePath; set { SelectedStageEntry.ListAlt.BinFilePath = value; UpdateListAlt(value); OnPropertyChanged(nameof(SelectedBinFilePath)); } }
 
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
@@ -334,6 +340,44 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(Stage));
                 // Update stage lists
                 WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
+            }
+        }
+
+        private void UpdateListAltImage()
+        {
+            if (SelectedStageEntry?.ListAlt != null)
+            {
+                var image = _dialogService.OpenFileDialog("Select an image", "PNG file (.png)|*.png");
+                if (!string.IsNullOrEmpty(image))
+                {
+                    SelectedStageEntry.ListAlt.ImageData = GetBinThumbnailData(image);
+                    OnPropertyChanged(nameof(SelectedStageEntry));
+                }
+            }
+        }
+
+        private byte[] GetBinThumbnailData(string imagePath)
+        {
+            var imageData = _fileService.LoadImage(imagePath);
+            var bitmap = imageData.ToBitmap();
+            var pixelData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            var pixelFormat = PixelFormats.Bgra32;
+            var bitmapSource = BitmapSource.Create(bitmap.Width, bitmap.Height, 1, 1, pixelFormat, null, pixelData.Scan0, pixelData.Stride * bitmap.Height, pixelData.Stride);
+            var encoder = new JpegBitmapEncoder();
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(outStream);
+                return outStream.ToArray();
+            }
+        }
+
+        private void UpdateListAlt(string filePath)
+        {
+            if (SelectedStageEntry?.ListAlt != null)
+            {
+                SelectedStageEntry.ListAlt = _stageService.GetListAlt(filePath);
+                OnPropertyChanged(nameof(SelectedStageEntry));
             }
         }
     }
