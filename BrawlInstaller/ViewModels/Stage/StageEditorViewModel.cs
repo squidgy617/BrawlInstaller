@@ -132,6 +132,9 @@ namespace BrawlInstaller.ViewModels
 
         public List<string> Tracklists { get => _tracklists; set { _tracklists = value; OnPropertyChanged(nameof(Tracklists)); } }
 
+        [DependsUpon(nameof(SelectedStageEntry))]
+        public string SelectedBinFilePath { get => SelectedStageEntry?.ListAlt?.BinFilePath; set { SelectedStageEntry.ListAlt.BinFilePath = value; UpdateListAlt(value); OnPropertyChanged(nameof(SelectedBinFilePath)); } }
+
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
 
@@ -366,6 +369,15 @@ namespace BrawlInstaller.ViewModels
                 encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
                 encoder.Save(outStream);
                 return outStream.ToArray();
+            }
+        }
+
+        private void UpdateListAlt(string filePath)
+        {
+            if (SelectedStageEntry?.ListAlt != null)
+            {
+                SelectedStageEntry.ListAlt = _stageService.GetListAlt(filePath);
+                OnPropertyChanged(nameof(SelectedStageEntry));
             }
         }
     }

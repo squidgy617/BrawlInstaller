@@ -39,6 +39,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="StageService.SaveStage(StageInfo, bool)"/>
         List<string> SaveStage(StageInfo stage, bool updateRandomName = true);
+
+        /// <inheritdoc cref="StageService.GetListAlt(string)"/>
+        ListAlt GetListAlt(string binFile);
     }
 
     [Export(typeof(IStageService))]
@@ -265,11 +268,21 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="stageId">ID of stage associated with stage entry</param>
         /// <param name="entry">Stage entry</param>
-        /// <returns></returns>
+        /// <returns>List alt</returns>
         private ListAlt GetListAlt(int stageId, StageEntry entry)
         {
-            var listAlt = new ListAlt();
             var binFile = GetStageBinFile(stageId, entry);
+            return GetListAlt(binFile);
+        }
+
+        /// <summary>
+        /// Get list alt for stage entry
+        /// </summary>
+        /// <param name="binFile">Path to bin file</param>
+        /// <returns>List alt</returns>
+        public ListAlt GetListAlt(string binFile)
+        {
+            var listAlt = new ListAlt();
             if (!string.IsNullOrEmpty(binFile))
             {
                 listAlt.BinFileName = Regex.Replace(Path.GetFileNameWithoutExtension(binFile), "st_\\d+_", "");
