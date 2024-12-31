@@ -517,6 +517,11 @@ namespace BrawlInstaller.Services
             byte[] Key = new byte[] { 0xAB, 0x01, 0xB9, 0xD8, 0xE1, 0x62, 0x2B, 0x08, 0xAF, 0xBA, 0xD8, 0x4D, 0xBF, 0xC2, 0xA5, 0x5D };
             byte[] IV = new byte[] { 0x4E, 0x03, 0x41, 0xDE, 0xE6, 0xBB, 0xAA, 0x41, 0x64, 0x19, 0xB3, 0xEA, 0xE8, 0xF5, 0x3B, 0xD9 };
 
+            // Update size fields
+            var size = BitConverter.GetBytes(binData.Length - 0x20).Reverse().ToArray(); // these fields are technically size - 0x20 for some reason
+            size.CopyTo(binData, 0x18); // Size
+            size.CopyTo(binData, 0x1C); // Compressed size - we just use the normal size
+
             using (Aes aes = Aes.Create())
             {
                 UpdateCRC(binData);

@@ -649,21 +649,30 @@ namespace BrawlInstaller.Services
                 var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
                 // Get image data from our list alt
                 var imageData = listAlt.ImageData;
-                // Combine all data
-                var newData = fileStart.ToArray().Append(name.ToArray()).Append(miscData.ToArray()).Append(imageData).ToList();
+                // Combine data leading up to image
+                var partialData = fileStart.ToArray().Append(name.ToArray()).Append(miscData.ToArray());
+                // Store image starting position
+                var newImageStart = BitConverter.GetBytes(partialData.Length - 0x54).Reverse().ToArray(); // Starting position has 0x54 subtracted for some reason
+                // Add image data
+                var newData = partialData.Append(imageData).ToList();
                 // If data is not multiple of 16, pad it
                 while (newData.Count % 16 != 0)
                 {
                     newData.Add(0);
                 }
+                // Store image ending position
+                var newImageEnd = BitConverter.GetBytes(newData.Count - 0x34).Reverse().ToArray(); // Ending position has 0x34 subtracted for some reason
                 // Pad with 32 0x0s
                 newData.AddRange(Enumerable.Repeat((byte)0x0, 32).ToList());
+                // Convert to byte array
+                var finalData = newData.ToArray();
+                // Update image length fields
+                newImageEnd.CopyTo(finalData, 0x58); // Ending position
+                newImageStart.CopyTo(finalData, 0x5C); // Starting position
                 // Encrypt
-                if (!newData.SequenceEqual(decryptedData))
+                if (!finalData.SequenceEqual(decryptedData))
                 {
-                    File.WriteAllBytes("decryptedData.bin", decryptedData);
-                    File.WriteAllBytes("newData.bin", newData.ToArray());
-                    var encryptedData = _fileService.EncryptBinData(newData.ToArray());
+                    var encryptedData = _fileService.EncryptBinData(finalData);
                     _fileService.ReplaceNodeRaw(node, encryptedData);
                 }
             }
