@@ -544,6 +544,7 @@ namespace BrawlInstaller.Services
                     id = id + definition.Multiplier;
                 }
             }
+            id = id - definition.Offset;
             return id;
         }
 
