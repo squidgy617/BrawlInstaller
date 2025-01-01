@@ -112,6 +112,13 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to save</param>
         public void SaveFighter(FighterPackage fighterPackage, FighterPackage oldFighter)
         {
+            // Get old fighter if none exists
+            if (oldFighter == null)
+            {
+                oldFighter = new FighterPackage();
+                oldFighter.FighterInfo = fighterPackage.FighterInfo.Copy();
+                oldFighter.FighterInfo = _fighterService.GetFighterInfo(oldFighter.FighterInfo);
+            }
             var buildPath = _settingsService.AppSettings.BuildPath;
             // Get unused IDs for null IDs
             fighterPackage.FighterInfo = _fighterService.UpdateNullIdsToFirstUnused(fighterPackage.FighterInfo);
@@ -156,7 +163,7 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo.OriginalSoundbankId = fighterPackage.FighterInfo.SoundbankId;
             fighterPackage.FighterInfo.OriginalKirbySoundbankId = fighterPackage.FighterInfo.KirbySoundbankId;
             // Update fighter settings if they have changed or if fighter name has changed
-            if (!fighterPackage.FighterSettings.Compare(oldFighter.FighterSettings) || fighterPackage.FighterInfo.DisplayName != oldFighter.FighterInfo.DisplayName)
+            if (fighterPackage.PackageType == PackageType.New || !fighterPackage.FighterSettings.Compare(oldFighter.FighterSettings) || fighterPackage.FighterInfo.DisplayName != oldFighter.FighterInfo.DisplayName)
                 _fighterService.UpdateFighterSettings(fighterPackage);
             // Update credits module
             if (changedDefinitions.Any(x => x.CosmeticType == CosmeticType.CreditsIcon))
