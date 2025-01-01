@@ -840,12 +840,11 @@ namespace BrawlInstaller.Services
                     RemoveTextures((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
                 }
                 RemoveModels((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
-            }
-            // If location is an ARC node, remove entire BRRES
-            if (originalNode.GetType() == typeof(ARCNode))
-            {
-                originalNode.Children.Remove(parentNode);
-                parentNode.Dispose();
+                // If location is an ARC node, remove entire BRRES
+                if (originalNode.GetType() == typeof(ARCNode))
+                {
+                    originalNode.Children.Remove(parentNode);
+                }
             }
         }
 
