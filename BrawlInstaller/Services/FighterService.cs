@@ -1752,7 +1752,7 @@ namespace BrawlInstaller.Services
                 }
                 // Update fighter slot if ending ID changed and there are ending files and ending ID or name has changed or fighter is being deleted
                 if (asmTable.Count > cosmeticConfigId && ((endingPacFiles.Count > 0 && 
-                    (asmTable[cosmeticConfigId.Value].Item != $"0x{fighterInfo.EndingId:D}") || asmTable[cosmeticConfigId.Value].Comment != fighterInfo.DisplayName)
+                    (asmTable[cosmeticConfigId.Value].Item != fighterInfo.EndingId.ToString()) || asmTable[cosmeticConfigId.Value].Comment != fighterInfo.DisplayName)
                     || fighterPackage.PackageType == PackageType.Delete))
                 {
                     asmTable[cosmeticConfigId.Value].Item = $"{fighterInfo.EndingId:D}";
@@ -1786,6 +1786,7 @@ namespace BrawlInstaller.Services
                             }
                         }
                         // Save
+                        file.Name = $"Ending{filePrefix}{endingId:D2}";
                         file._origPath = Path.Combine(savePath, $"Ending{filePrefix}{endingId:D2}.pac");
                         _fileService.SaveFile(file);
                         _fileService.CloseFile(file);

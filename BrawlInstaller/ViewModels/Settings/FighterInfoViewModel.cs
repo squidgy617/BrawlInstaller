@@ -145,6 +145,11 @@ namespace BrawlInstaller.ViewModels
                 // Otherwise, replace the match
                 else
                 {
+                    // Set fields that aren't grabbed from GetAllFighterInfo
+                    fighter.EffectPacId = fighterMatch.EffectPacId;
+                    fighter.KirbyEffectPacId = fighterMatch.KirbyEffectPacId;
+                    fighter.Ids.MasqueradeId = fighterMatch.Ids.MasqueradeId;
+                    fighter.CreditsThemeId = fighterMatch.CreditsThemeId;
                     currentFighterList.Insert(currentFighterList.IndexOf(fighterMatch), fighter);
                     currentFighterList.Remove(fighterMatch);
                 }
