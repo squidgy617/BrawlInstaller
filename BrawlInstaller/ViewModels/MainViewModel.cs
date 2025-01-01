@@ -59,7 +59,8 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public bool BuildSettingsExist { get => _fileService.FileExists(Path.Combine(_settingsService.AppSettings.BuildPath, "BuildSettings.json")); }
+        public bool BuildSettingsExist { get => _fileService.FileExists(_settingsService.BuildSettingsPath); }
+        public bool BuildPathExists { get => !string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath) && _fileService.DirectoryExists(_settingsService.AppSettings.BuildPath); }
 
         // Viewmodels
         public IMainControlsViewModel MainControlsViewModel { get; set; }
@@ -71,6 +72,7 @@ namespace BrawlInstaller.ViewModels
         private void UpdateSettings()
         {
             OnPropertyChanged(nameof(BuildSettingsExist));
+            OnPropertyChanged(nameof(BuildPathExists));
         }
 
         // Global error handler

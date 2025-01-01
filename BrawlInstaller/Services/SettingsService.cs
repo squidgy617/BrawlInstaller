@@ -23,6 +23,8 @@ namespace BrawlInstaller.Services
         BuildSettings BuildSettings { get; set; }
         AppSettings AppSettings { get; set; }
         List<FighterInfo> FighterInfoList { get; set; }
+        string BuildSettingsPath { get; }
+        string FighterListPath { get; }
 
         // Methods
 
@@ -63,6 +65,9 @@ namespace BrawlInstaller.Services
         public BuildSettings BuildSettings { get; set; } = null;
         public AppSettings AppSettings { get; set; } = new AppSettings();
         public List<FighterInfo> FighterInfoList { get; set; } = new List<FighterInfo>();
+        public string BuildSettingsFolder { get => "BrawlInstaller"; }
+        public string BuildSettingsPath { get => Path.Combine(AppSettings?.BuildPath, BuildSettingsFolder, "BuildSettings.json"); }
+        public string FighterListPath { get => Path.Combine(AppSettings?.BuildPath, BuildSettingsFolder, "FighterList.json"); }
 
         // Methods
 
@@ -141,7 +146,7 @@ namespace BrawlInstaller.Services
         public void SaveFighterInfoSettings(List<FighterInfo> fighterInfoList)
         {
             var fighterInfoSettings = JsonConvert.SerializeObject(fighterInfoList, Formatting.Indented);
-            File.WriteAllText($"{AppSettings.BuildPath}\\FighterList.json", fighterInfoSettings);
+            File.WriteAllText(FighterListPath, fighterInfoSettings);
             FighterInfoList = fighterInfoList;
         }
 
@@ -152,7 +157,7 @@ namespace BrawlInstaller.Services
         public List<FighterInfo> LoadFighterInfoSettings()
         {
             var fighterList = new List<FighterInfo>();
-            var path = $"{AppSettings.BuildPath}\\FighterList.json";
+            var path = FighterListPath;
             if (File.Exists(path))
             {
                 var text = File.ReadAllText(path);

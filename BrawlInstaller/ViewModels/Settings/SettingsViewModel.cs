@@ -131,13 +131,13 @@ namespace BrawlInstaller.ViewModels
         // TODO: Should these save to a different location?
         private void SaveSettings()
         {
-            _settingsService.SaveSettings(BuildSettings, $"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+            _settingsService.SaveSettings(BuildSettings, _settingsService.BuildSettingsPath);
             WeakReferenceMessenger.Default.Send(new SettingsSavedMessage(BuildSettings));
         }
 
         private void LoadSettings()
         {
-            BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+            BuildSettings = _settingsService.LoadSettings(_settingsService.BuildSettingsPath);
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }

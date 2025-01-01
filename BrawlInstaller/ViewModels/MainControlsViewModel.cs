@@ -36,7 +36,7 @@ namespace BrawlInstaller.ViewModels
             _settingsService = settingsService;
 
             _settingsService.AppSettings = _settingsService.LoadAppSettings();
-            _settingsService.BuildSettings = _settingsService.LoadSettings($"{_settingsService.AppSettings.BuildPath}\\BuildSettings.json");
+            _settingsService.BuildSettings = _settingsService.LoadSettings(_settingsService.BuildSettingsPath);
 
             AppSettings = _settingsService.AppSettings;
         }
