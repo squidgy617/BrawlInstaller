@@ -257,14 +257,14 @@ namespace BrawlInstaller.Services
         {
             if (destinationNode != null)
             {
+                var pat0Node = destinationNode?.Parent?.Parent as PAT0Node;
                 // Check if node exists before adding
                 var node = destinationNode.Children.FirstOrDefault(x => ((PAT0TextureEntryNode)x).FrameIndex == frameIndex) as PAT0TextureEntryNode;
                 if (node == null)
                 {
                     node = new PAT0TextureEntryNode();
+                    destinationNode.AddChild(node);
                 }
-                var pat0Node = destinationNode?.Parent?.Parent as PAT0Node;
-                destinationNode.AddChild(node);
                 node.FrameIndex = frameIndex;
                 node.Texture = texture;
                 node.Palette = palette;
@@ -535,8 +535,7 @@ namespace BrawlInstaller.Services
         private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode rootNode)
         {
             id = id + definition.Offset;
-            // TODO: For some reason this was changed in commit 19bae7576120b363bda353617612f133c9a99598 to check for an ARCNode, but this never applies for ARC nodes, so changed it to BRRES. May need to verify everything works right.
-            if (rootNode.GetType() != typeof(BRRESNode))
+            if (rootNode.GetType() != typeof(ARCNode))
             {
                 var usedIds = GetUsedCosmeticIds(definition, rootNode);
                 while (usedIds.Contains(id))
