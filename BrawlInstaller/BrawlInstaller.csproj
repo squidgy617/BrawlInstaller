@@ -358,8 +358,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus\BuildSettings.json" />
-    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx\FighterList.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
