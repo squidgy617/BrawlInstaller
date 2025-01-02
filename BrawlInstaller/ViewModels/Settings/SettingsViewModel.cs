@@ -156,6 +156,7 @@ namespace BrawlInstaller.ViewModels
             BuildSettings = JsonConvert.DeserializeObject<BuildSettings>(json);
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
+            WeakReferenceMessenger.Default.Send(new LoadDefaultSettingsMessage(SelectedSettingsOption));
         }
 
         private string GetSelectedSettings(string file)
@@ -276,6 +277,13 @@ namespace BrawlInstaller.ViewModels
     public class SettingsSavedMessage : ValueChangedMessage<BuildSettings>
     {
         public SettingsSavedMessage(BuildSettings buildSettings) : base(buildSettings)
+        {
+        }
+    }
+
+    public class LoadDefaultSettingsMessage : ValueChangedMessage<string>
+    {
+        public LoadDefaultSettingsMessage(string selectedOption) : base(selectedOption)
         {
         }
     }

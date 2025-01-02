@@ -3,11 +3,14 @@ using BrawlInstaller.Common;
 using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -67,6 +70,11 @@ namespace BrawlInstaller.ViewModels
             WeakReferenceMessenger.Default.Register<SettingsLoadedMessage>(this, (recipient, message) =>
             {
                 GetFighters();
+            });
+
+            WeakReferenceMessenger.Default.Register<LoadDefaultSettingsMessage>(this, (recipient, message) =>
+            {
+                ApplyDefaultSetting(message.Value);
             });
         }
 
@@ -212,6 +220,26 @@ namespace BrawlInstaller.ViewModels
                 SelectedFighterInfo.InternalName = fileName.ToUpper();
                 OnPropertyChanged(nameof(SelectedFighterInfo));
             }
+        }
+
+        private void ApplyDefaultSetting(string selectedOption)
+        {
+            var json = GetSelectedSettings("FighterList.json", selectedOption);
+            FighterInfoList = JsonConvert.DeserializeObject<ObservableCollection<FighterInfo>>(json);
+            OnPropertyChanged(nameof(FighterInfoList));
+        }
+
+        private string GetSelectedSettings(string file, string selectedOption)
+        {
+            var json = string.Empty;
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"BrawlInstaller.Resources.DefaultSettings.{selectedOption}.{file}"))
+            {
+                using (StreamReader streamReader = new StreamReader(stream))
+                {
+                    json = streamReader.ReadToEnd();
+                }
+            }
+            return json;
         }
     }
 }
