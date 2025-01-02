@@ -137,7 +137,7 @@ namespace BrawlInstaller.ViewModels
         public RosterEntry SelectedRosterEntry { get => _selectedRosterEntry; set { _selectedRosterEntry = value; OnPropertyChanged(nameof(SelectedRosterEntry)); } }
 
         [DependsUpon(nameof(FighterPackage))]
-        public bool ImportButtonEnabled { get => FighterPackage?.PackageType == PackageType.Update || _fileService.DirectoryExists(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BrawlEx)); }
+        public bool ImportButtonEnabled { get => FighterPackage?.PackageType == PackageType.Update || (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.BrawlEx) && _fileService.DirectoryExists(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BrawlEx))); }
 
         // Methods
         public void LoadFighter(object param)
