@@ -675,16 +675,7 @@ namespace BrawlInstaller.Services
                     if (efNode != null)
                     {
                         // Update Effect.pac name
-                        var effectPacName = string.Empty;
-                        // Differentiate between Kirby and non-Kirby Effect.pac IDs to ensure everything is named properly
-                        if (pacFile.FileType != FighterFileType.KirbyPacFile)
-                        {
-                            effectPacName = GetEffectPacName(fighterPackage.FighterInfo.EffectPacId);
-                        }
-                        else
-                        {
-                            effectPacName = GetEffectPacName(fighterPackage.FighterInfo.KirbyEffectPacId);
-                        }
+                        var effectPacName = $"ef_{fighterPackage.FighterInfo.FighterFileName.ToLower()}";
                         efNode.Name = effectPacName + "X" + costume.CostumeId.ToString("D2");
                         // Update EFLS and REF nodes
                         foreach (var node in efNode.Children.Where(x => x.GetType() == typeof(EFLSNode) || x.GetType() == typeof(REFFNode)))
