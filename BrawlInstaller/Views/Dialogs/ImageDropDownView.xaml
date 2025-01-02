@@ -15,7 +15,7 @@
                 <TextBlock x:Name="caption" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="{Binding Caption}" Margin="5" TextWrapping="Wrap"/>
             </StackPanel>
             <ComboBox x:Name="dropDown" ItemsSource="{Binding ListItems}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="{Binding DisplayMemberPath}" Width="150" HorizontalAlignment="Center"/>
-            <Image x:Name="image" Source="{Binding Image}" Width="64" Height="64" HorizontalAlignment="Center"/>
+            <Image x:Name="image" Source="{Binding Image}" Width="240" Height="240" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button x:Name="button" Content="{Binding OkButtonCaption}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ConfirmCommand}" Width="70" Height="25" Margin="5" IsDefault="True" IsEnabled="{Binding SelectedItem, Converter={StaticResource nullBoolConverter}}"/>
                 <Button x:Name="cancelButton" Content="{Binding CancelButtonCaption}" Visibility="{Binding CancelButtonVisibility}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CancelCommand}" Width="70" Height="25" Margin="5" IsCancel="True"/>
