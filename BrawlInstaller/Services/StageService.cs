@@ -526,32 +526,35 @@ namespace BrawlInstaller.Services
         /// <param name="stage">Stage to save</param>
         private void SaveStageEntries(StageInfo stage)
         {
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            // Generate new ASL
-            var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}\\{stage.Slot.StageIds.StageId:X2}.asl";
-            var node = new ASLSNode();
-            // Add entries to ASL
-            foreach (var entry in stage.StageEntries)
+            if (stage.StageEntries.Count > 0)
             {
-                var newEntry = new ASLSEntryNode
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                // Generate new ASL
+                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageSlots}\\{stage.Slot.StageIds.StageId:X2}.asl";
+                var node = new ASLSNode();
+                // Add entries to ASL
+                foreach (var entry in stage.StageEntries)
                 {
-                    ButtonFlags = entry.ButtonFlags,
-                    Name = entry.Params.Name
-                };
-                node.AddChild(newEntry);
-            }
-            // Save ASL
-            _fileService.SaveFileAs(node, path);
-            _fileService.CloseFile(node);
-            // Generate param files
-            foreach (var param in stage.AllParams)
-            {
-                // Generate param file
-                var newParam = param.ConvertToNode();
-                // Save params
-                var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath, $"{param.Name}.param");
-                _fileService.SaveFileAs(newParam, paramPath);
-                _fileService.CloseFile(newParam);
+                    var newEntry = new ASLSEntryNode
+                    {
+                        ButtonFlags = entry.ButtonFlags,
+                        Name = entry.Params.Name
+                    };
+                    node.AddChild(newEntry);
+                }
+                // Save ASL
+                _fileService.SaveFileAs(node, path);
+                _fileService.CloseFile(node);
+                // Generate param files
+                foreach (var param in stage.AllParams)
+                {
+                    // Generate param file
+                    var newParam = param.ConvertToNode();
+                    // Save params
+                    var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath, $"{param.Name}.param");
+                    _fileService.SaveFileAs(newParam, paramPath);
+                    _fileService.CloseFile(newParam);
+                }
             }
         }
 
