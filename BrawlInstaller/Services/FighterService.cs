@@ -378,12 +378,13 @@ namespace BrawlInstaller.Services
                 fighterInfo.ModuleFileName = fighterNode.ModuleName;
                 fighterInfo.InternalName = fighterNode.InternalFighterName;
                 fighterInfo.SoundbankId = fighterNode.SoundBank;
-                fighterInfo.OriginalSoundbankId = fighterNode.SoundBank;
                 fighterInfo.KirbySoundbankId = fighterNode.KirbySoundBank;
-                fighterInfo.OriginalKirbySoundbankId = fighterNode.KirbySoundBank;
                 fighterInfo.KirbyLoadType = fighterNode.KirbyLoadType;
                 fighterInfo.FighterAttributes = fighterNode.ToFighterAttributes();
             }
+            // Set original IDs
+            fighterInfo.OriginalSoundbankId = fighterInfo.SoundbankId;
+            fighterInfo.OriginalKirbySoundbankId = fighterInfo.KirbySoundbankId;
             fighterInfo.Ids = fighterIds;
             fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
             // Get masquerade file
