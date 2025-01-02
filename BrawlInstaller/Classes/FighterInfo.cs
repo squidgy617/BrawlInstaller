@@ -78,6 +78,7 @@ namespace BrawlInstaller.Classes
                     FranchiseId = Ids.FranchiseId,
                     MasqueradeId = Ids.MasqueradeId
                 },
+                Masquerade = Masquerade,
                 VictoryThemeId = VictoryThemeId,
                 CreditsThemeId = CreditsThemeId,
                 SoundbankId = SoundbankId,
