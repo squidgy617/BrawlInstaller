@@ -13,21 +13,21 @@ namespace BrawlInstaller.Classes
 {
     public class FighterInfo
     {
-        public string EntryName { get; set; }
-        public string FighterFileName { get; set; }
-        public string FullPacFileName { get; set; }
+        public string EntryName { get; set; } = "New Fighter";
+        public string FighterFileName { get; set; } = "NewFighter";
+        public string FullPacFileName { get; set; } = "new/FitNewFighter.pac";
         [JsonIgnore] public string PacFileName { get => FullPacFileName?.Substring(FullPacFileName.LastIndexOf('/') + 1, FullPacFileName.LastIndexOf('.') - FullPacFileName.LastIndexOf('/') - 1); }
         [JsonIgnore] public string PacExtension { get => FullPacFileName?.Substring(FullPacFileName.LastIndexOf('.'), FullPacFileName.Length - FullPacFileName.LastIndexOf('.')); }
         [JsonIgnore] public string PartialPacName { get => PacFileName?.Substring(3, PacFileName.Length - 3); } 
         [JsonIgnore] public string PacFolder { get => FullPacFileName?.Substring(0, FullPacFileName.LastIndexOf("/")); }
-        public string FullKirbyPacFileName { get; set; }
+        public string FullKirbyPacFileName { get; set; } = "kirby/FitKirbyNewFighter.pac";
         [JsonIgnore] public string KirbyPacFileName { get => FullKirbyPacFileName?.Substring(FullKirbyPacFileName.LastIndexOf('/') + 1, FullKirbyPacFileName.LastIndexOf('.') - FullKirbyPacFileName.LastIndexOf('/') - 1); }
         [JsonIgnore] public string KirbyPacExtension { get => FullKirbyPacFileName?.Substring(FullKirbyPacFileName.LastIndexOf('.'), FullKirbyPacFileName.Length - FullKirbyPacFileName.LastIndexOf('.')); }
         [JsonIgnore] public string PartialKirbyPacName { get => KirbyPacFileName?.Substring(3, KirbyPacFileName.Length - 3); }
         [JsonIgnore] public string KirbyPacFolder { get => FullKirbyPacFileName?.Substring(0, FullKirbyPacFileName.LastIndexOf("/")); }
-        public string ModuleFileName { get; set; }
-        public string InternalName { get; set; }
-        public string DisplayName { get; set; }
+        public string ModuleFileName { get; set; } = "ft_newfighter.rel";
+        public string InternalName { get; set; } = "NEWFIGHTER";
+        public string DisplayName { get; set; } = "New Fighter";
         public BrawlIds Ids { get; set; } = new BrawlIds();
         [JsonIgnore]
         public string FighterConfig { get; set; }
