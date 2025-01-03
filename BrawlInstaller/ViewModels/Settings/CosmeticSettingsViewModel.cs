@@ -84,7 +84,7 @@ namespace BrawlInstaller.ViewModels
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public ObservableCollection<string> Styles { get => new ObservableCollection<string>(DefaultCosmetics.DefaultCostumeCosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
+        public ObservableCollection<string> Styles { get => new ObservableCollection<string>(DefaultCosmetics.AllDefaultCosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
                 .Concat(CosmeticSettings != null ? new List<string>(CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList()) : new List<string>()).Distinct()); }
 
         [DependsUpon(nameof(Styles))]

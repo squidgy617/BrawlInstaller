@@ -12,6 +12,8 @@ namespace BrawlInstaller.StaticClasses
         public static List<(CosmeticType CosmeticType, string Style)> DefaultStageCosmetics = new List<(CosmeticType CosmeticType, string Style)>
         {
             (CosmeticType.StagePreview, "P+"),
+            (CosmeticType.StagePreview, "REMIX"),
+            (CosmeticType.StagePreview, "vBrawl"),
             (CosmeticType.StageIcon, "P+"),
             (CosmeticType.StageFranchiseIcon, "Icon"),
             (CosmeticType.StageName, "P+"),
@@ -48,5 +50,7 @@ namespace BrawlInstaller.StaticClasses
             (CosmeticType.RecordsIcon, "P+"),
             (CosmeticType.CreditsIcon, "vBrawl")
         };
+
+        public static List<(CosmeticType CosmeticType, string Style)> AllDefaultCosmetics { get => DefaultStageCosmetics.Concat(DefaultCostumeCosmetics).Concat(DefaultFighterCosmetics).ToList(); }
     }
 }
