@@ -49,8 +49,8 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService.AppSettings = AppSettings;
             _settingsService.SaveAppSettings(AppSettings);
-            _settingsService.LoadSettings(AppSettings.BuildPath);
-            _settingsService.LoadFighterInfoSettings();
+            _settingsService.BuildSettings = _settingsService.LoadSettings(_settingsService.BuildSettingsPath);
+            _settingsService.FighterInfoList = _settingsService.LoadFighterInfoSettings();
             WeakReferenceMessenger.Default.Send(new UpdateSettingsMessage(AppSettings));
         }
 

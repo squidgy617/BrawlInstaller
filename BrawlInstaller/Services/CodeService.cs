@@ -599,7 +599,7 @@ namespace BrawlInstaller.Services
                 var result = Regex.Match(workingText, "(half|word|byte|float)\\s*[[]\\d+[]]");
                 // If another label appears before the table counter, then it is an empty table
                 var nextLabelPosition = workingText.IndexOf(':', label.Length);
-                if (result.Success && result.Index < nextLabelPosition)
+                if (result.Success && (result.Index < nextLabelPosition || nextLabelPosition == -1))
                 {
                     var match = result.Value;
                     var start = match.IndexOf('[') + 1;
