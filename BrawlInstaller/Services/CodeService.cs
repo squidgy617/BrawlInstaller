@@ -551,7 +551,7 @@ namespace BrawlInstaller.Services
                 index += formattedTable.Length;
             }
             // Add return
-            fileText = fileText.Insert(index, newLine);
+            //fileText = fileText.Insert(index, newLine);
             return fileText;
         }
 
@@ -569,12 +569,25 @@ namespace BrawlInstaller.Services
             var labelPosition = fileText.IndexOf(label);
             if (labelPosition > -1)
             {
-                // Find the end of the next label
-                var nextLabelPosition = fileText.IndexOf(':', labelPosition + label.Length);
-                // Find the start of the next label
-                var nextLabelStart = fileText.LastIndexOf(newLine, nextLabelPosition);
-                // Replace all table text with whitespace
-                newText = fileText.Remove(labelPosition, nextLabelStart - labelPosition);
+                // Get only table and onward
+                var workingText = fileText.Substring(labelPosition, fileText.Length - labelPosition);
+                // Get table length
+                var result = Regex.Match(workingText, "(half|word|byte|float)\\s*[[]\\d+[]]");
+                // If length is missing, it's an empty table
+                if (!result.Success)
+                {
+                    newText = fileText.Remove(labelPosition, fileText.IndexOf(newLine, labelPosition) - labelPosition + newLine.Length);
+                }
+                else
+                {
+                    // TODO: use table size to count commas, once we have a number of commas equal to our count, next newline is end of table
+                    // Find the end of the next label
+                    var nextLabelPosition = fileText.IndexOf(':', labelPosition + label.Length);
+                    // Find the start of the next label
+                    var nextLabelStart = nextLabelPosition != -1 ? fileText.LastIndexOf(newLine, nextLabelPosition) : fileText.Length;
+                    // Replace all table text with whitespace
+                    newText = fileText.Remove(labelPosition, nextLabelStart - labelPosition);
+                }
             }
             return newText;
         }
