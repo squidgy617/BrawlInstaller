@@ -470,7 +470,7 @@ namespace BrawlInstaller.Services
             var names = new List<string>();
             var buildPath = _settingsService.AppSettings.BuildPath;
             var randomStageLocation = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations.FirstOrDefault();
-            var path = $"{buildPath}\\{randomStageLocation.FilePath}";
+            var path = $"{buildPath}\\{randomStageLocation?.FilePath}";
             var rootNode = _fileService.OpenFile(path);
             if (rootNode != null)
             {
