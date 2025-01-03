@@ -131,7 +131,7 @@
                                 <Label x:Name="codeFilesLabel" Content="Code Files:" HorizontalAlignment="Left"/>
                                 <ListBox x:Name="codeFilesListBox" ItemsSource="{Binding CodeFilePaths}" SelectedValue="{Binding SelectedCodeFilePath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="codeFilesPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}"/>
-                                <userControls:FileBox x:Name="codeFilesPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="TXT file (.txt)|*.txt">
+                                <userControls:FileBox x:Name="codeFilesPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Assembly code file (*.txt, *.asm)|*.txt;*.asm">
                                     <userControls:FileBox.Resources>
                                         <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
                                     </userControls:FileBox.Resources>

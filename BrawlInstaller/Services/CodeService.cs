@@ -580,13 +580,29 @@ namespace BrawlInstaller.Services
                 }
                 else
                 {
-                    // TODO: use table size to count commas, once we have a number of commas equal to our count, next newline is end of table
-                    // Find the end of the next label
-                    var nextLabelPosition = fileText.IndexOf(':', labelPosition + label.Length);
-                    // Find the start of the next label
-                    var nextLabelStart = nextLabelPosition != -1 ? fileText.LastIndexOf(newLine, nextLabelPosition) : fileText.Length;
-                    // Replace all table text with whitespace
-                    newText = fileText.Remove(labelPosition, nextLabelStart - labelPosition);
+                    var match = result.Value;
+                    var start = match.IndexOf('[') + 1;
+                    var end = match.IndexOf(']');
+                    var countString = match.Substring(start, end - start);
+                    // Search for end of table
+                    if (int.TryParse(countString, out int count))
+                    {
+                        var tableStart = fileText.IndexOf(countString, labelPosition + label.Length) + countString.Length + 1;
+                        // Count items by commas
+                        var itemCount = 0;
+                        var i = tableStart;
+                        while (itemCount < count - 1)
+                        {
+                            if (fileText[i] == ',')
+                            {
+                                itemCount++;
+                            }
+                            i++;
+                        }
+                        // Skip one newline, the next newline after that is the end of our table
+                        var tableEnd = fileText.IndexOf(newLine, fileText.IndexOf(newLine, i) + 2);
+                        newText = fileText.Remove(labelPosition, tableEnd - labelPosition + 2);
+                    }
                 }
             }
             return newText;
