@@ -45,6 +45,7 @@ namespace BrawlInstaller.StaticClasses
         public static List<(CosmeticType CosmeticType, string Style)> DefaultFighterCosmetics = new List<(CosmeticType CosmeticType, string Style)>
         {
             (CosmeticType.RecordsIcon, "vBrawl"),
+            (CosmeticType.RecordsIcon, "P+"),
             (CosmeticType.CreditsIcon, "vBrawl")
         };
     }
