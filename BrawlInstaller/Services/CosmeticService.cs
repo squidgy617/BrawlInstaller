@@ -1140,7 +1140,7 @@ namespace BrawlInstaller.Services
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var paths = new List<string>();
-            if (definition.InstallLocation.FilePath.EndsWith("\\"))
+            if (definition.InstallLocation.FilePath.EndsWith("\\") && _fileService.DirectoryExists(definition.InstallLocation.FilePath))
             {
                 var directoryInfo = new DirectoryInfo(Path.Combine(buildPath, definition.InstallLocation.FilePath));
                 var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);

@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.Types;
 using BrawlLib.Wii.Compression;
@@ -83,7 +84,8 @@ namespace BrawlInstaller.ViewModels
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
         [DependsUpon(nameof(SelectedCosmeticOption))]
-        public ObservableCollection<string> Styles { get => CosmeticSettings != null ? new ObservableCollection<string>(CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList()) : new ObservableCollection<string>(); }
+        public ObservableCollection<string> Styles { get => new ObservableCollection<string>(DefaultCosmetics.DefaultCostumeCosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
+                .Concat(CosmeticSettings != null ? new List<string>(CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style).Distinct().ToList()) : new List<string>()).Distinct()); }
 
         [DependsUpon(nameof(Styles))]
         public string SelectedStyle { get => _selectedStyle; set { _selectedStyle = value; OnPropertyChanged(nameof(SelectedStyle)); } }
