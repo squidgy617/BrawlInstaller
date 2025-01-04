@@ -550,8 +550,9 @@ namespace BrawlInstaller.Services
                 fileText = fileText.Insert(index, formattedTable);
                 index += formattedTable.Length;
             }
-            // Add return
-            fileText = fileText.Insert(index, newLine);
+            // Add return if table has actual content
+            if (table.Count > 0)
+                fileText = fileText.Insert(index, newLine);
             return fileText;
         }
 
@@ -573,8 +574,23 @@ namespace BrawlInstaller.Services
             var labelPosition = fileText.IndexOf(label);
             if (labelPosition > -1)
             {
-                // Get only table and onward
-                var workingText = fileText.Substring(labelPosition, fileText.Length - labelPosition);
+                // Get start of table
+                var cleanText = Regex.Replace(fileText, "([|]|[#]|[//]).*(\n|\r)", "");
+                var cleanLabelPosition = cleanText.IndexOf(label);
+                var workingText = string.Empty;
+                var j = cleanLabelPosition + label.Length;
+                // Go until we hit non-whitespace character
+                while (cleanText[j] < cleanText.Length && char.IsWhiteSpace(cleanText[j]))
+                {
+                    workingText += cleanText[j];
+                    j++;
+                }
+                // Then go until we hit whitespace again
+                while (cleanText[j] < cleanText.Length && !char.IsWhiteSpace(cleanText[j]))
+                {
+                    workingText += cleanText[j];
+                    j++;
+                }
                 // Get table length
                 var result = Regex.Match(workingText, "(half|word|byte|float)\\s*[[]\\d+[]]");
                 // If length is missing, it's an empty table
