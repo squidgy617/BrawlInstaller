@@ -31,16 +31,22 @@ namespace BrawlInstaller.Classes
         }
         public void Add(T item, bool change=true)
         {
-            Items.Add(item);
-            if (change)
-                ItemChanged(item);
+            if (item != null)
+            {
+                Items.Add(item);
+                if (change)
+                    ItemChanged(item);
+            }
         }
 
         public void Remove(T item, bool change = true)
         {
-            if (change)
-                ItemChanged(item);
-            Items.Remove(item);
+            if (item != null)
+            {
+                if (change)
+                    ItemChanged(item);
+                Items.Remove(item);
+            }
         }
 
         public void RemoveChange(T item)
