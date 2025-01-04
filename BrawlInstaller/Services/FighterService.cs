@@ -1470,7 +1470,7 @@ namespace BrawlInstaller.Services
         private void UpdateExSlotsTable(FighterPackage fighterPackage)
         {
             var cssSlotId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
-            if (cssSlotId != null)
+            if (cssSlotId != null && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.SlotExAsmFile))
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
                 var asmPath = _settingsService.BuildSettings.FilePathSettings.SlotExAsmFile;

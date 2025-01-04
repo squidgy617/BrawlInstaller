@@ -483,7 +483,7 @@ namespace BrawlInstaller.Services
         {
             // Get position of our label
             var labelPosition = fileText.IndexOf(label);
-            if (labelPosition > -1)
+            if (labelPosition > -1 && !string.IsNullOrEmpty(fileText))
             {
                 fileText = RemoveTable(fileText, label);
                 fileText = WriteTable(fileText, label, table, labelPosition, dataSize, width, padding);
@@ -551,7 +551,7 @@ namespace BrawlInstaller.Services
                 index += formattedTable.Length;
             }
             // Add return
-            //fileText = fileText.Insert(index, newLine);
+            fileText = fileText.Insert(index, newLine);
             return fileText;
         }
 
@@ -563,6 +563,10 @@ namespace BrawlInstaller.Services
         /// <returns>Text with table removed</returns>
         private string RemoveTable(string fileText, string label)
         {
+            if (string.IsNullOrEmpty(fileText))
+            {
+                return fileText;
+            }
             var newLine = "\r\n";
             var newText = fileText;
             // Get position of our label
@@ -588,42 +592,57 @@ namespace BrawlInstaller.Services
                     if (int.TryParse(countString, out int count))
                     {
                         var tableStart = fileText.IndexOf(countString, labelPosition + label.Length) + countString.Length + 1;
-                        // Count items by commas
+                        // Count items in table
                         var itemCount = 0;
                         var i = tableStart;
                         var inComment = false;
-                        while (itemCount < count - 1)
+                        var charList = new List<char> { ',', '|', '#', '\n' };
+                        var tableEntry = false;
+                        while (itemCount < count && i < fileText.Length)
                         {
-                            if (fileText[i] == ',' && !inComment)
-                            {
-                                itemCount++;
-                            }
-                            else if (fileText[i] == '#')
+                            if (fileText[i] == '#')
                             {
                                 inComment = true;
                             }
-                            else if (inComment && fileText[i] == '\r')
+                            if (inComment && fileText[i] == '\n')
                             {
                                 inComment = false;
                             }
+                            // If it's one of the special characters, it's not a table entry
+                            if (charList.Contains(fileText[i]))
+                            {
+                                // If we were in a table entry before, increment the count
+                                if (tableEntry)
+                                {
+                                    itemCount++;
+                                }
+                                tableEntry = false;
+                            }
+                            // If it's not one of the special characters, it's a table entry
+                            else if (!inComment && !charList.Contains(fileText[i]) && !char.IsWhiteSpace(fileText[i]))
+                            {
+                                tableEntry = true;
+                            }
                             i++;
                         }
-                        // Skip one newline, the next newline after that is the end of our table
-                        var nextStop = fileText.IndexOf(newLine, i);
-                        var tableEnd = -1;
-                        if (nextStop > -1)
+                        // Jump to newline if there is one
+                        if (fileText.IndexOf(newLine, i) > -1)
                         {
-                            var lastStop = fileText.IndexOf(newLine, nextStop + 2);
-                            if (lastStop > -1)
-                            {
-                                tableEnd = fileText.IndexOf(newLine, nextStop + 2) - labelPosition + 2;
-                            }
+                            i = fileText.IndexOf(newLine, i);
                         }
-                        if (tableEnd == -1)
+                        // Otherwise, set to end of file
+                        else
                         {
-                            tableEnd = fileText.Length;
+                            i = fileText.Length;
                         }
-                        newText = fileText.Remove(labelPosition, tableEnd);
+                        var tableEnd = i;
+                        // Go until we hit non-whitespace characters - that's the next piece of actual code
+                        while (tableEnd < fileText.Length && char.IsWhiteSpace(fileText[tableEnd]))
+                        {
+                            tableEnd++;
+                        }
+                        // Remove the table
+                        newText = fileText.Remove(labelPosition, tableEnd - labelPosition);
                     }
                 }
             }
