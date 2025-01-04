@@ -591,17 +591,35 @@ namespace BrawlInstaller.Services
                         // Count items by commas
                         var itemCount = 0;
                         var i = tableStart;
+                        var inComment = false;
                         while (itemCount < count - 1)
                         {
-                            if (fileText[i] == ',')
+                            if (fileText[i] == ',' && !inComment)
                             {
                                 itemCount++;
+                            }
+                            else if (fileText[i] == '#')
+                            {
+                                inComment = true;
+                            }
+                            else if (inComment && fileText[i] == '\r')
+                            {
+                                inComment = false;
                             }
                             i++;
                         }
                         // Skip one newline, the next newline after that is the end of our table
-                        var tableEnd = fileText.IndexOf(newLine, fileText.IndexOf(newLine, i) + 2);
-                        newText = fileText.Remove(labelPosition, tableEnd - labelPosition + 2);
+                        var nextStop = fileText.IndexOf(newLine, i);
+                        var tableEnd = 0;
+                        if (nextStop > -1)
+                        {
+                            tableEnd = fileText.IndexOf(newLine, nextStop + 2) - labelPosition + 2;
+                        }
+                        else
+                        {
+                            tableEnd = fileText.Length;
+                        }
+                        newText = fileText.Remove(labelPosition, tableEnd);
                     }
                 }
             }
