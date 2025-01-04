@@ -610,12 +610,16 @@ namespace BrawlInstaller.Services
                         }
                         // Skip one newline, the next newline after that is the end of our table
                         var nextStop = fileText.IndexOf(newLine, i);
-                        var tableEnd = 0;
+                        var tableEnd = -1;
                         if (nextStop > -1)
                         {
-                            tableEnd = fileText.IndexOf(newLine, nextStop + 2) - labelPosition + 2;
+                            var lastStop = fileText.IndexOf(newLine, nextStop + 2);
+                            if (lastStop > -1)
+                            {
+                                tableEnd = fileText.IndexOf(newLine, nextStop + 2) - labelPosition + 2;
+                            }
                         }
-                        else
+                        if (tableEnd == -1)
                         {
                             tableEnd = fileText.Length;
                         }
