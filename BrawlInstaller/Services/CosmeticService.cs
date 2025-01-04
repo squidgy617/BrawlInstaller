@@ -399,6 +399,24 @@ namespace BrawlInstaller.Services
                 // Remove regular textures
                 foreach(var tex in toRemove)
                 {
+                    // Update names where texture is getting removed, in case they are named wrong
+                    // This way when it gets reimported, they'll have the correct name
+                    foreach(var patSetting in definition.PatSettings)
+                    {
+                        var patTexture = GetPatTextureNode(parentNode.RootNode, patSetting);
+                        if (patTexture != null)
+                        {
+                            foreach (PAT0TextureEntryNode child in patTexture.Children)
+                            {
+                                child.GetImage(0);
+                                if (child._textureNode == tex)
+                                {
+                                    child.Texture = GetTextureName(definition, id);
+                                    child.Palette = child.Texture;
+                                }
+                            }
+                        }
+                    }
                     folder.RemoveChild(tex);
                 }
             }
