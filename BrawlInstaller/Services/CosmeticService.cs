@@ -766,10 +766,6 @@ namespace BrawlInstaller.Services
                     if (node != null)
                     {
                         CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, id, cosmetic, patSetting.Offset ?? definition.Offset), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
-                        if (patSetting.NormalizeTextureIds == true)
-                        {
-                            NormalizeCosmeticIds(definition, (PAT0TextureNode)node);
-                        }
                     }
                 }
             }
@@ -1020,6 +1016,15 @@ namespace BrawlInstaller.Services
                 var rootNode = GetCosmeticFile(definition, id);
                 if (rootNode != null)
                 {
+                    // Normalize IDs
+                    foreach(var patSetting in definition.PatSettings)
+                    {
+                        if (patSetting.NormalizeTextureIds == true)
+                        {
+                            var patTexture = GetPatTextureNode(rootNode, patSetting);
+                            NormalizeCosmeticIds(definition, (PAT0TextureNode)patTexture);
+                        }
+                    }
                     // If cosmetics are supposed to use their own IDs, remove each one individually instead of removing all
                     if (!definition.UseIndividualIds)
                     {
