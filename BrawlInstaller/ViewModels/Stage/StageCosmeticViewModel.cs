@@ -114,7 +114,7 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(Stage));
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
             OnPropertyChanged(nameof(SelectedCosmeticOption));
-            SelectedStyle = Styles.FirstOrDefault();
+            SelectedStyle = Styles.FirstOrDefault(x => Stage.Cosmetics.Items.Select(y => y.Style).Contains(x)) ?? Styles.FirstOrDefault();
             OnPropertyChanged(nameof(SelectedStyle));
         }
 
