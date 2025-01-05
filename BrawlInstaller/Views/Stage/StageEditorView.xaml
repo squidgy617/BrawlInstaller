@@ -37,9 +37,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Label x:Name="nameLabel" Content="Name:"/>
+                    <Label x:Name="nameLabel" Content="Name:" ToolTip="Name to use for stage on random stage select screen"/>
                     <TextBox x:Name="nameTextBox" Text="{Binding Stage.RandomName}" Grid.Column="1" Width="120"/>
-                    <Label x:Name="entriesLabel" Content="Entries:" Grid.Row="1"/>
+                    <Label x:Name="entriesLabel" Content="Entries:" Grid.Row="1" ToolTip="Stage entries for this slot"/>
                     <Grid x:Name="entriesListBoxGrid" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -93,19 +93,19 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label x:Name="paramLabel" Content="Params:"/>
+                                <Label x:Name="paramLabel" Content="Params:" ToolTip="Parameters to use for this entry"/>
                                 <ComboBox x:Name="paramComboBox" ItemsSource="{Binding ParamList}" SelectedItem="{Binding SelectedStageEntry.Params}" DisplayMemberPath="Name" Grid.Column="1" Width="160"/>
                                 <Button x:Name="paramAddButton" Content="+" Style="{StaticResource miniButton}" Grid.Column="2" Command="{Binding AddStageParamCommand}"/>
                                 <Button x:Name="paramRemoveButton" Content="-" Style="{StaticResource miniButton}" Grid.Column="3" Command="{Binding RemoveStageParamCommand}"/>
-                                <Label x:Name="entryNameLabel" Content="Entry Name:" Grid.Row="1"/>
+                                <Label x:Name="entryNameLabel" Content="Entry Name:" Grid.Row="1" ToolTip="Name to use for this entry"/>
                                 <TextBox x:Name="entryNameTextBox" Text="{Binding SelectedStageEntry.Params.Name}" Grid.Column="1" Grid.Row="1" Width="160"/>
-                                <Label x:Name="pacNameLabel" Content="PAC File:" Grid.Row="2"/>
+                                <Label x:Name="pacNameLabel" Content="PAC File:" Grid.Row="2" ToolTip="PAC file to use for this entry"/>
                                 <TextBox x:Name="pacNameTextBox" Text="{Binding SelectedStageEntry.Params.PacName}" Grid.Row="2" Grid.Column="1" Width="160"/>
                                 <userControls:FileBox x:Name="pacFileBox" Text="{Binding SelectedStageEntry.Params.PacFile}" Filter="PAC file (.pac)|*.pac" Grid.Row="3" Grid.Column="1" TextBoxWidth="160" Grid.ColumnSpan="3"/>
-                                <Label x:Name="moduleLabel" Content="Module:" Grid.Row="4"/>
+                                <Label x:Name="moduleLabel" Content="Module:" Grid.Row="4" ToolTip="Module to use for this entry"/>
                                 <TextBox x:Name="moduleTextBox" Text="{Binding SelectedStageEntry.Params.Module}" Grid.Column="1" Grid.Row="4" Width="160"/>
                                 <userControls:FileBox x:Name="moduleFileBox" Text="{Binding SelectedStageEntry.Params.ModuleFile}" Filter="REL file (.rel)|*.rel" Grid.Row="5" Grid.Column="1" TextBoxWidth="160" Grid.ColumnSpan="3"/>
-                                <Label x:Name="tracklistLabel" Content="Tracklist:" Grid.Row="6"/>
+                                <Label x:Name="tracklistLabel" Content="Tracklist:" Grid.Row="6" ToolTip="Tracklist to use for this entry"/>
                                 <ComboBox x:Name="tracklistComboBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedStageEntry.Params.TrackListFile}" Grid.Column="1" Grid.Row="6" Width="160">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
@@ -113,16 +113,16 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                                <Label x:Name="soundBankLabel" Content="Soundbank:" Grid.Row="7"/>
+                                <Label x:Name="soundBankLabel" Content="Soundbank:" Grid.Row="7" ToolTip="Sounbank to use for this entry"/>
                                 <TextBox x:Name="soundbankTextBox" Text="{Binding SelectedStageEntry.Params.SoundBank, Converter={StaticResource hexShortConverter}}" Grid.Row="7" Grid.Column="1" Width="60"/>
                                 <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding SelectedStageEntry.Params.SoundBankFile}" Filter="SAWND file (.sawnd)|*.sawnd" Grid.Row="8" Grid.Column="1" TextBoxWidth="160" Grid.ColumnSpan="3"/>
-                                <Label x:Name="effectBankLabel" Content="Effect Bank:" Grid.Row="9"/>
+                                <Label x:Name="effectBankLabel" Content="Effect Bank:" Grid.Row="9" ToolTip="Effect bank to use for this entry"/>
                                 <TextBox x:Name="effectBankTextBox" Text="{Binding SelectedStageEntry.Params.EffectBank, Converter={StaticResource hexShortConverter}}" Grid.Row="9" Grid.Column="1" Width="60"/>
-                                <Label x:Name="memoryAllocationLabel" Content="Memory Allocation:" Grid.Row="10"/>
+                                <Label x:Name="memoryAllocationLabel" Content="Memory Allocation:" Grid.Row="10" ToolTip="Memory allocation for this entry"/>
                                 <TextBox x:Name="memoryAllocationTextBox" Text="{Binding SelectedStageEntry.Params.MemoryAllocation, Converter={StaticResource hexUIntConverter}}" Grid.Row="10" Grid.Column="1" Width="80"/>
-                                <Label x:Name="wildSpeedLabel" Content="Wild Speed:" Grid.Row="11"/>
+                                <Label x:Name="wildSpeedLabel" Content="Wild Speed:" Grid.Row="11" ToolTip="Wild speed for this entry"/>
                                 <TextBox x:Name="wildSpeedTextBox" Text="{Binding SelectedStageEntry.Params.WildSpeed}" Grid.Row="11" Grid.Column="1"/>
-                                <Label x:Name="characterOverlayLabel" Content="Character Overlay:" Grid.Row="12"/>
+                                <Label x:Name="characterOverlayLabel" Content="Character Overlay:" Grid.Row="12" ToolTip="Character overly for this entry"/>
                                 <colorpicker:PortableColorPicker x:Name="characterOverlayPicker" Grid.Row="12" Grid.Column="1" SelectedColor="{Binding SelectedStageEntry.Params.CharacterOverlay, Mode=TwoWay, Converter={StaticResource colorRGBAConverter}}"/>
                                 <Grid x:Name="stageFlagsGrid" Grid.Row="13" Grid.ColumnSpan="2">
                                     <Grid.ColumnDefinitions>
@@ -137,7 +137,7 @@
                             </Grid>
                         </GroupBox>
                         <StackPanel Orientation="Horizontal" Grid.Column="1" Visibility="{Binding SelectedStageEntry, Converter={StaticResource nullVisConverter}}">
-                            <GroupBox x:Name="altButtonsGroupBox" Header="ASL Flags">
+                            <GroupBox x:Name="altButtonsGroupBox" Header="ASL Flags" ToolTip="Flags dictating how entry is selected on stage select screen">
                                 <Grid x:Name="altButtonsGrid">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -252,7 +252,7 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Label x:Name="binNameLabel" Content="Bin File:"/>
+                                    <Label x:Name="binNameLabel" Content="Bin File:" ToolTip="Bin file to use for stage list alt"/>
                                     <StackPanel Orientation="Horizontal" Grid.Column="1">
                                         <TextBlock Text="st_" VerticalAlignment="Center"/>
                                         <TextBlock Text="{Binding BinIndexString}" VerticalAlignment="Center"/>
@@ -261,9 +261,9 @@
                                         <TextBlock Text=".bin" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <userControls:FileBox x:Name="binFileBox" Text="{Binding SelectedBinFilePath}" Filter="BIN file (.bin)|*.bin" Grid.Row="1" Grid.Column="1" TextBoxWidth="160"/>
-                                    <Label x:Name="listAltNameLabel" Content="Name:" Grid.Row="2"/>
+                                    <Label x:Name="listAltNameLabel" Content="Name:" Grid.Row="2" ToolTip="Name to display for stage list alt"/>
                                     <TextBox x:Name="listAltNameTextBox" Text="{Binding SelectedStageEntry.ListAlt.Name}" Grid.Row="2" Grid.Column="1" Width="120" MaxLength="16"/>
-                                    <Label x:Name="listAltImageLabel" Content="Image:" Grid.Row="3"/>
+                                    <Label x:Name="listAltImageLabel" Content="Image:" Grid.Row="3" ToolTip="Thumbnail to display for stage list alt"/>
                                     <StackPanel Grid.Row="3" Grid.Column="1">
                                         <Image x:Name="listAltImage" Source="{Binding SelectedStageEntry.ListAlt.Image}" Width="80" Height="60"/>
                                         <Button x:Name="listAltImageButton" Content="Browse..." Command="{Binding UpdateListAltImageCommand}"/>
@@ -285,9 +285,9 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label x:Name="varianceTypeLabel" Content="Variance Type:"/>
+                                <Label x:Name="varianceTypeLabel" Content="Variance Type:" ToolTip="Type of variance to use for substages"/>
                                 <ComboBox x:Name="varianceTypeComboBox" ItemsSource="{Binding VariantTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedStageEntry.Params.VariantType}" Width="120" Grid.Column="1"/>
-                                <Label x:Name="substageRangeLabel" Content="Substage Range:" Grid.Row="1"/>
+                                <Label x:Name="substageRangeLabel" Content="Substage Range:" Grid.Row="1" ToolTip="Number of substages"/>
                                 <TextBox x:Name="substageRangeTextBox" Text="{Binding SelectedStageEntry.Params.SubstageRange}" Grid.Row="1" Grid.Column="1"/>
                                 <Grid x:Name="substageFlagGrid" Grid.Row="2" Grid.ColumnSpan="2">
                                     <Grid.ColumnDefinitions>
@@ -330,9 +330,9 @@
                                         <Button x:Name="substageAddButton" Content="+" Style="{StaticResource miniButton}" Grid.Column="1" Grid.Row="2" Command="{Binding AddSubstageCommand}"/>
                                         <Button x:Name="substageRemoveButton" Content="-" Style="{StaticResource miniButton}" Grid.Column="1" Grid.Row="3" IsEnabled="{Binding SelectedSubstage, Converter={StaticResource nullBoolConverter}}" Command="{Binding RemoveSubstageCommand}"/>
                                     </Grid>
-                                    <Label x:Name="substageSuffixLabel" Content="Suffix:" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
+                                    <Label x:Name="substageSuffixLabel" Content="Suffix:" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}" ToolTip="Suffix appended to PAC name for this substage"/>
                                     <TextBox x:Name="substageSuffixTextBox" Text="{Binding SelectedSubstage.Name}" Grid.Column="2" Width="120" Grid.Row="1" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
-                                    <Label x:Name="substageFileLabel" Content="Path:" Grid.Column="1" Grid.Row="2" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
+                                    <Label x:Name="substageFileLabel" Content="Path:" Grid.Column="1" Grid.Row="2" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}" ToolTip="PAC file to use for substage"/>
                                     <userControls:FileBox x:Name="substageFileBox" Text="{Binding SelectedSubstage.PacFile}" Filter="PAC file (.pac)|*.pac" Grid.Row="2" Grid.Column="2" TextBoxWidth="120" Visibility="{Binding SelectedSubstage, Converter={StaticResource nullVisConverter}}"/>
                                 </Grid>
                             </Grid>

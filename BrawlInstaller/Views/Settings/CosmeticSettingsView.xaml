@@ -26,9 +26,9 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label x:Name="cosmeticTypeLabel" Content="Type:" Grid.Row="0" Grid.Column="0"/>
+            <Label x:Name="cosmeticTypeLabel" Content="Type:" Grid.Row="0" Grid.Column="0" ToolTip="Type of cosmetic"/>
             <ComboBox x:Name="cosmeticOptionsDropDown" Width="120" ItemsSource="{Binding CosmeticOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCosmeticOption, Mode=TwoWay}" SelectedIndex="0" IsSynchronizedWithCurrentItem="True" Grid.Row="0" Grid.Column="1"/>
-            <Label x:Name="cosmeticStyleLabel" Content="Style:" Grid.Column="0" Grid.Row="1"/>
+            <Label x:Name="cosmeticStyleLabel" Content="Style:" Grid.Column="0" Grid.Row="1" ToolTip="Style of cosmetic"/>
             <Grid x:Name="stylesGrid" Grid.Column="1" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -75,7 +75,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label x:Name="filePathLabel" Content="Install Location:"/>
+            <Label x:Name="filePathLabel" Content="Install Location:" ToolTip="Location to install cosmetics to. Can be a file or a folder."/>
             <StackPanel Grid.Column="1">
                 <userControls:FileBox x:Name="filePathTextBox" Title="Select file where cosmetics are located" FolderTitle="Select folder where cosmetics are located" TextBoxWidth="180" FolderButtonVisibility="Visible" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Archive files (*.pac, *.brres)|*.pac;*.brres">
                     <i:Interaction.Triggers>
@@ -102,15 +102,15 @@
                 </userControls:FileBox>
                 <Label Target="{Binding ElementName=filePathTextBox}" Style="{StaticResource errorText}" Width="200"/>
             </StackPanel>
-            <Label x:Name="nodePathLabel" Content="Node Path:" Grid.Row="1"/>
+            <Label x:Name="nodePathLabel" Content="Node Path:" Grid.Row="1" ToolTip="Node to install cosmetic to, if cosmetic is located in a file. If blank, cosmetic will be installed to root node."/>
             <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                 <TextBox x:Name="nodePathTextBox" Text="{Binding SelectedDefinition.InstallLocation.NodePath}" Width="120" IsReadOnly="True"/>
                 <Button x:Name="nodePathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectCosmeticNodePathCommand}"/>
                 <Button x:Name="nodePathClearButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearCosmeticNodePathCommand}"/>
             </StackPanel>
-            <Label x:Name="fileExtensionLabel" Content="Extension:" Grid.Row="2"/>
+            <Label x:Name="fileExtensionLabel" Content="Extension:" Grid.Row="2" ToolTip="File extension to use for file containing cosmetics"/>
             <ComboBox x:Name="fileExtensionDropDown" ItemsSource="{Binding ExtensionOptions}" SelectedValue="{Binding SelectedDefinition.InstallLocation.FileExtension}" Grid.Row="2" Grid.Column="1" Width="120"/>
-            <Label x:Name="modelPathLabel" Content="Model Path:" Grid.Row="3"/>
+            <Label x:Name="modelPathLabel" Content="Model Path:" Grid.Row="3" ToolTip="Path where MDL0 files should be installed to for this cosmetic, if any."/>
             <Grid x:Name="modelPathGrid" Grid.Row="3" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -130,7 +130,7 @@
                     </i:Interaction.Triggers>
                 </CheckBox>
             </Grid>
-            <Label x:Name="hdPathLabel" Content="HD Image Path:" Grid.Row="4"/>
+            <Label x:Name="hdPathLabel" Content="HD Image Path:" Grid.Row="4" ToolTip="Path within HD texture folder where HD textures should be installed to when they are changed"/>
             <StackPanel  Grid.Row="4" Grid.Column="1" >
                 <userControls:FileBox x:Name="hdPathTextBox" TextBoxWidth="180" ExcludePath="{Binding AppSettings.HDTextures}">
                     <userControls:FileBox.Resources>
@@ -150,25 +150,25 @@
                 </userControls:FileBox>
                 <Label Target="{Binding ElementName=hdPathTextBox}" Style="{StaticResource errorText}" Width="200"/>
             </StackPanel>
-            <Label x:Name="prefixLabel" Content="Prefix:" Grid.Row="5"/>
+            <Label x:Name="prefixLabel" Content="Prefix:" Grid.Row="5" ToolTip="Prefix used by textures associated with cosmetic"/>
             <TextBox x:Name="prefixTextBox" Text="{Binding SelectedDefinition.Prefix}" Grid.Row="5" Grid.Column="1" Width="120"/>
-            <Label x:Name="idTypeLabel" Content="ID Type:" Grid.Row="0" Grid.Column="2"/>
+            <Label x:Name="idTypeLabel" Content="ID Type:" Grid.Row="0" Grid.Column="2" ToolTip="Type of ID when naming textures and updating frame indexes"/>
             <ComboBox x:Name="idTypeDropDown" ItemsSource="{Binding IdTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.IdType}" Grid.Row="0" Grid.Column="3" Width="120"/>
-            <Label x:Name="multiplierLabel" Content="ID Multiplier" Grid.Row="1" Grid.Column="2"/>
+            <Label x:Name="multiplierLabel" Content="ID Multiplier" Grid.Row="1" Grid.Column="2" ToolTip="How much to multiply ID by when naming cosmetic"/>
             <TextBox x:Name="multiplierTextBox" Text="{Binding SelectedDefinition.Multiplier}" Grid.Row="1" Grid.Column="3" Width="60"/>
-            <Label x:Name="offsetLabel" Content="ID Offset:" Grid.Row="2" Grid.Column="2"/>
+            <Label x:Name="offsetLabel" Content="ID Offset:" Grid.Row="2" Grid.Column="2" ToolTip="Offset to add to ID when naming cosmetic. Added after multiplier is applied."/>
             <TextBox x:Name="offsetTextBox" Text="{Binding SelectedDefinition.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
-            <Label x:Name="suffixLabel" Content="ID Length:" Grid.Row="3" Grid.Column="2"/>
+            <Label x:Name="suffixLabel" Content="ID Length:" Grid.Row="3" Grid.Column="2" ToolTip="Minimum length for IDs in texture names. Will be padded with 0s to meet specified length."/>
             <TextBox x:Name="suffixTextBox" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
-            <Label x:Name="formatLabel" Content="Format:" Grid.Row="0" Grid.Column="4"/>
+            <Label x:Name="formatLabel" Content="Format:" Grid.Row="0" Grid.Column="4" ToolTip="Graphics format to use for textures"/>
             <ComboBox x:Name="formatDropDown" ItemsSource="{Binding Formats}" Grid.Row="0" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
-            <Label x:Name="widthLabel" Content="Width:" Grid.Row="1" Grid.Column="4"/>
+            <Label x:Name="widthLabel" Content="Width:" Grid.Row="1" Grid.Column="4" ToolTip="Width to resize textures to. If blank, texture width will not be changed"/>
             <TextBox x:Name="widthTextBox" Text="{Binding SelectedDefinition.Size.Width, Mode=TwoWay}" Grid.Column="5" Grid.Row="1" Width="60"/>
-            <Label x:Name="heightLabel" Content="Height:" Grid.Row="2" Grid.Column="4"/>
+            <Label x:Name="heightLabel" Content="Height:" Grid.Row="2" Grid.Column="4" ToolTip="Height to resize textures to. If blank, texture height will not be changed"/>
             <TextBox x:Name="heightTextBox" Text="{Binding SelectedDefinition.Size.Height, Mode=TwoWay}" Grid.Column="6" Grid.Row="2" Width="60"/>
-            <Label x:Name="compressionLabel" Content="Compression:" Grid.Row="3" Grid.Column="4"/>
+            <Label x:Name="compressionLabel" Content="Compression:" Grid.Row="3" Grid.Column="4" ToolTip="Compression to use for files associated with cosmetics, if any"/>
             <ComboBox x:Name="compressionDropDown" ItemsSource="{Binding CompressionTypes}" Grid.Row="3" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.CompressionType}" Width="120"/>
-            <Label x:Name="fileTypeLabel" Content="File Type:" Grid.Row="4" Grid.Column="4"/>
+            <Label x:Name="fileTypeLabel" Content="File Type:" Grid.Row="4" Grid.Column="4" ToolTip="Type of archive used for cosmetics"/>
             <ComboBox x:Name="fileTypeDropDown" ItemsSource="{Binding FileTypes}" Grid.Row="4" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.FileType}" Width="120"/>
             <Grid x:Name="checkboxesGrid" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="5">
                 <Grid.ColumnDefinitions>
@@ -180,14 +180,14 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <CheckBox x:Name="firstOnlyCheckBox" Content="Use First Image Only" IsChecked="{Binding SelectedDefinition.FirstOnly}"/>
-                <CheckBox x:Name="separateFilesCheckBox" Content="Create Separate File for Each Image" IsChecked="{Binding SelectedDefinition.SeparateFiles}" Grid.Column="1"/>
-                <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1"/>
-                <CheckBox x:Name="alwaysInheritCheckBox" Content="Use other style if not available" IsChecked="{Binding SelectedDefinition.AlwaysInheritStyle}" Grid.Row="1" Grid.Column="1"/>
-                <CheckBox x:Name="requiredCheckBox" Content="Required" IsChecked="{Binding SelectedDefinition.Required}" Grid.Column="2"/>
-                <CheckBox x:Name="enabledCheckBox" Content="Enabled" IsChecked="{Binding SelectedDefinition.Enabled}" Grid.Column="2" Grid.Row="1"/>
+                <CheckBox x:Name="firstOnlyCheckBox" Content="Use First Image Only" IsChecked="{Binding SelectedDefinition.FirstOnly}" ToolTip="When installing a group of cosmetics to this location (such as for costumes), only install the first image"/>
+                <CheckBox x:Name="separateFilesCheckBox" Content="Create Separate File for Each Image" IsChecked="{Binding SelectedDefinition.SeparateFiles}" Grid.Column="1" ToolTip="Store each cosmetic in it's own archive file. Often used for BPs."/>
+                <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1" ToolTip="Create a new folder within the specified HD texture folder when installed. Only works for cosmetics associated with fighter."/>
+                <CheckBox x:Name="alwaysInheritCheckBox" Content="Use other style if not available" IsChecked="{Binding SelectedDefinition.AlwaysInheritStyle}" Grid.Row="1" Grid.Column="1" ToolTip="When loading a character package, if this style isn't available, copy cosmetics of the same type from another style"/>
+                <CheckBox x:Name="requiredCheckBox" Content="Required" IsChecked="{Binding SelectedDefinition.Required}" Grid.Column="2" ToolTip="If checked, user will be warned when saving a fighter or stage without these cosmetics"/>
+                <CheckBox x:Name="enabledCheckBox" Content="Enabled" IsChecked="{Binding SelectedDefinition.Enabled}" Grid.Column="2" Grid.Row="1" ToolTip="If unchecked, these cosmetics will not be loaded or saved when editing a fighter, stage, etc"/>
             </Grid>
-            <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6">
+            <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6" ToolTip="Settings for texture pattern animations (PAT0)">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -208,7 +208,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="patPathsLabel" Content="Paths:"/>
+                        <Label x:Name="patPathsLabel" Content="Paths:" ToolTip="Texture pattern animation locations for cosmetic"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1">
                             <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="120"/>
                             <StackPanel>
@@ -216,7 +216,7 @@
                                 <Button x:Name="removePatSettingsButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePatSettingsCommand}"/>
                             </StackPanel>
                         </StackPanel>
-                        <Label x:Name="patPathLabel" Content="Node Path:" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}"/>
+                        <Label x:Name="patPathLabel" Content="Node Path:" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}" ToolTip="Texture pattern node to modify for this cosmetic"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
                             <TextBox x:Name="patPathTextBox" IsReadOnly="True" Text="{Binding SelectedPatSettings.Path}" Width="180"/>
                             <Button x:Name="patPathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectPatNodePathCommand}"/>
@@ -235,17 +235,17 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Label x:Name="patIdTypeLabel" Content="ID Type:"/>
+                        <Label x:Name="patIdTypeLabel" Content="ID Type:" ToolTip="Type of ID to use for frame indexes for this cosmetic"/>
                         <ComboBox x:Name="patIdComboBox" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedPatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="1" Width="120" IsEnabled="{Binding PatControlsEnabled}"/>
-                        <Label x:Name="patMultiplierLabel" Content="ID Multiplier:" Grid.Row="1"/>
+                        <Label x:Name="patMultiplierLabel" Content="ID Multiplier:" Grid.Row="1" ToolTip="Amount to multiply ID by when using it for frame index"/>
                         <TextBox x:Name="patMultiplerTextBox" Text="{Binding SelectedPatSettings.Multiplier}" Grid.Row="1" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
-                        <Label x:Name="patOffsetLabel" Content="ID Offset:" Grid.Row="2"/>
+                        <Label x:Name="patOffsetLabel" Content="ID Offset:" Grid.Row="2" ToolTip="Amount to add to ID when using it for frame index. Applied after multiplier"/>
                         <TextBox x:Name="patOffsetTextBox" Text="{Binding SelectedPatSettings.Offset}" Grid.Row="2" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
-                        <Label x:Name="framesPerImageLabel" Content="Frames Per Image:" Grid.Row="3"/>
+                        <Label x:Name="framesPerImageLabel" Content="Frames Per Image:" Grid.Row="3" ToolTip="How many frames of animation each cosmetic gets"/>
                         <TextBox x:Name="framesPerImageTextBox" Text="{Binding SelectedPatSettings.FramesPerImage}" Width="60" Grid.Column="1" Grid.Row="3"/>
-                        <CheckBox x:Name="copyPatSettingsCheckBox" Content="Copy From Cosmetic Settings" IsChecked="{Binding CopyPatSettings, Mode=TwoWay}" Grid.Column="2" Margin="2"/>
-                        <CheckBox x:Name="terminatorFrameCheckBox" Content="Create terminator frames" IsChecked="{Binding SelectedPatSettings.AddTerminatorFrame, Mode=TwoWay}" Grid.Column="2" Grid.Row="1"/>
-                        <CheckBox x:Name="normalizeTextureIdsCheckBox" Content="Normalize texture IDs" IsChecked="{Binding SelectedPatSettings.NormalizeTextureIds}" Grid.Column="2" Grid.Row="2"/>
+                        <CheckBox x:Name="copyPatSettingsCheckBox" Content="Copy From Cosmetic Settings" IsChecked="{Binding CopyPatSettings, Mode=TwoWay}" Grid.Column="2" Margin="2" ToolTip="Copy settings from main cosmetic settings"/>
+                        <CheckBox x:Name="terminatorFrameCheckBox" Content="Create terminator frames" IsChecked="{Binding SelectedPatSettings.AddTerminatorFrame, Mode=TwoWay}" Grid.Column="2" Grid.Row="1" ToolTip="Create buffer frames when new cosmetics are added"/>
+                        <CheckBox x:Name="normalizeTextureIdsCheckBox" Content="Normalize texture IDs" IsChecked="{Binding SelectedPatSettings.NormalizeTextureIds}" Grid.Column="2" Grid.Row="2" ToolTip="When cosmetics are changed, update all textures to have the same ID as their associated animation frame"/>
                     </Grid>
                     
                 </Grid>

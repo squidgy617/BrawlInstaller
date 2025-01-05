@@ -32,7 +32,7 @@
                     <Button x:Name="stageListSaveButton" Content="Save" Command="{Binding SaveStageListCommand}"/>
                 </StackPanel>
                 <StackPanel x:Name="stageTableStackPanel" Grid.Row="1">
-                    <Label x:Name="stageTableLabel" Content="All Stages:" HorizontalAlignment="Left"/>
+                    <Label x:Name="stageTableLabel" Content="All Stages:" HorizontalAlignment="Left" ToolTip="All stages in build"/>
                     <ListBox x:Name="stageTableListBox" ItemsSource="{Binding StageTable}" SelectedValue="{Binding SelectedStageTableEntry}" Width="120" Height="400">
                         <ListBox.ItemTemplate>
                             <DataTemplate>

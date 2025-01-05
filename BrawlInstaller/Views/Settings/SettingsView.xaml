@@ -22,10 +22,10 @@
                 <TabItem Header="General">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <CheckBox Content="Kirby Hat EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.InstallKirbyHats}"/>
-                            <CheckBox Content="Credits EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}"/>
-                            <CheckBox Content="Subspace EX" IsChecked="{Binding BuildSettings.MiscSettings.SubspaceEx}"/>
-                            <CheckBox Content="Install Fighters to SSE" IsChecked="{Binding BuildSettings.MiscSettings.InstallToSse}"/>
+                            <CheckBox Content="Kirby Hat EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.InstallKirbyHats}" ToolTip="Check if build uses Kirby Hat system from P+Ex 1.5 and up"/>
+                            <CheckBox Content="Credits EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}" ToolTip="Check if build uses Credits module system from P+Ex 1.5 and up"/>
+                            <CheckBox Content="Subspace EX" IsChecked="{Binding BuildSettings.MiscSettings.SubspaceEx}" ToolTip="Check if build uses Subspace EX"/>
+                            <CheckBox Content="Install Fighters to SSE" IsChecked="{Binding BuildSettings.MiscSettings.InstallToSse}" ToolTip="Check to install fighters to SSE mode when they are installed"/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -36,9 +36,9 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Label x:Name="soundbankStyleLabel" Content="Soundbank Style:"/>
+                            <Label x:Name="soundbankStyleLabel" Content="Soundbank Style:" ToolTip="Whether soundbanks are named based on their info index or their group ID"/>
                             <ComboBox x:Name="soundbankStyleDropDown" ItemsSource="{Binding SoundbankStyleOptions}" SelectedValuePath="Value" SelectedValue="{Binding BuildSettings.SoundSettings.SoundbankStyle}" DisplayMemberPath="Key" Grid.Column="1" Width="120"/>
-                            <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1"/>
+                            <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1" ToolTip="BrawlEx version to use for Ex configs by default. Currently does nothing."/>
                             <TextBox x:Name="exConfigVersionTextBox" Text="{Binding BuildSettings.MiscSettings.DefaultExConfigVersion}" Grid.Column="1" Grid.Row="1"/>
                         </Grid>
                         <Separator/>
@@ -54,9 +54,9 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left"/>
+                                <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left" ToolTip="Stage lists in build"/>
                                 <ListBox x:Name="stageListsListBox" ItemsSource="{Binding StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
-                                <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ToolTip="Stage list file"/>
                                 <userControls:FileBox x:Name="stagePathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="ASM file (.asm)|*.asm">
                                     <userControls:FileBox.Resources>
                                         <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
@@ -91,9 +91,9 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label x:Name="rosterFilesLabel" Content="Roster Files:" HorizontalAlignment="Left"/>
+                                <Label x:Name="rosterFilesLabel" Content="Roster Files:" HorizontalAlignment="Left" ToolTip="Roster files in build"/>
                                 <ListBox x:Name="rosterFilesListBox" ItemsSource="{Binding RosterFiles}" SelectedValue="{Binding SelectedRosterFile}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
-                                <Label x:Name="rosterPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="rosterPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}" ToolTip="Roster file"/>
                                 <userControls:FileBox x:Name="rosterPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Roster file (*.dat, *.bx)|*.dat;*.bx">
                                     <userControls:FileBox.Resources>
                                         <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
@@ -111,7 +111,7 @@
                                     </userControls:FileBox.Text>
                                 </userControls:FileBox>
                                 <Label Target="{Binding ElementName=rosterPathTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
-                                <CheckBox x:Name="rosterNewCharactersCheckBox" Content="Always add new characters" IsChecked="{Binding SelectedRosterFile.AddNewCharacters}" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}"/>
+                                <CheckBox x:Name="rosterNewCharactersCheckBox" Content="Always add new characters" IsChecked="{Binding SelectedRosterFile.AddNewCharacters}" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRosterFile, Converter={StaticResource nullVisConverter}}" ToolTip="Check to always add new fighters to this roster when they are installed"/>
                                 <StackPanel Grid.Column="2">
                                     <Button x:Name="addRosterButton" Style="{StaticResource miniButton}" Content="+" Command="{Binding AddRosterCommand}"/>
                                     <Button x:Name="removeRosterButton" Style="{StaticResource miniButton}" Content="-" Command="{Binding RemoveRosterCommand}"/>
@@ -128,9 +128,9 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label x:Name="codeFilesLabel" Content="Code Files:" HorizontalAlignment="Left"/>
+                                <Label x:Name="codeFilesLabel" Content="Code Files:" HorizontalAlignment="Left" ToolTip="Files to compile to GCT format when codes are changed"/>
                                 <ListBox x:Name="codeFilesListBox" ItemsSource="{Binding CodeFilePaths}" SelectedValue="{Binding SelectedCodeFilePath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
-                                <Label x:Name="codeFilesPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="codeFilesPathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}" ToolTip="Code file path"/>
                                 <userControls:FileBox x:Name="codeFilesPathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedCodeFilePath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Assembly code file (*.txt, *.asm)|*.txt;*.asm">
                                     <userControls:FileBox.Resources>
                                         <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
@@ -166,11 +166,11 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Label x:Name="randomStageNameLabel" HorizontalAlignment="Left" MaxWidth="100">
+                                <Label x:Name="randomStageNameLabel" HorizontalAlignment="Left" MaxWidth="100" ToolTip="Location containing names used for stages on random stage select screen">
                                     <TextBlock Text="Random Stage Name Locations:" TextWrapping="Wrap"/>
                                 </Label>
                                 <ListBox x:Name="randomStageNameListBox" ItemsSource="{Binding RandomStageNamesLocations}" SelectedValue="{Binding SelectedRandomStageNameLocation}" DisplayMemberPath="FilePath" Grid.Column="1" Height="120" Width="200"/>
-                                <Label x:Name="randomStageNamePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="randomStageNamePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}" ToolTip="File containing random stage names"/>
                                 <userControls:FileBox x:Name="randomStageNameTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}" Filter="Archive files (*.pac, *.brres)|*.pac;*.brres" ExcludePath="{Binding AppSettings.BuildPath}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="FilePathChanged">
@@ -193,7 +193,7 @@
                                     </userControls:FileBox.Text>
                                 </userControls:FileBox>
                                 <Label Target="{Binding ElementName=randomStageNameTextBox}" Style="{StaticResource errorText}" Width="200" Grid.Column="1" Grid.Row="2"/>
-                                <Label x:Name="randomStageNameNodePathLabel" Content="Node Path:" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}"/>
+                                <Label x:Name="randomStageNameNodePathLabel" Content="Node Path:" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}" ToolTip="Node within file containing random stage names"/>
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" Visibility="{Binding SelectedRandomStageNameLocation, Converter={StaticResource nullVisConverter}}">
                                     <TextBox x:Name="randomStageNameNodePathTextBox" Text="{Binding SelectedRandomStageNameLocation.NodePath}" Width="160" IsReadOnly="True"/>
                                     <Button x:Name="randomStageNameNodePathButton" Content="..." Style="{StaticResource condensedButton}" Command="{Binding SelectRandomStageNameLocationCommand}"/>
@@ -285,7 +285,7 @@
             </Grid.ColumnDefinitions>
             <WrapPanel Orientation="Horizontal">
                 <Button x:Name="loadButton" Content="Reset" Command="{Binding LoadSettingsCommand}" VerticalAlignment="Bottom"/>
-                <Label x:Name="defaultSettingsLabel" Content="Defaults:" VerticalAlignment="Bottom"/>
+                <Label x:Name="defaultSettingsLabel" Content="Defaults:" VerticalAlignment="Bottom" ToolTip="Select a default set of settings to apply"/>
                 <ComboBox x:Name="defaultSettingsDropDown" ItemsSource="{Binding DefaultSettingsOptions}" SelectedItem="{Binding SelectedSettingsOption}" VerticalAlignment="Bottom" Width="100"/>
                 <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}" VerticalAlignment="Bottom"/>
             </WrapPanel>

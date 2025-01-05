@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label x:Name="franchiseIconLabel" Grid.Column="0" Content="Icon:"/>
+        <Label x:Name="franchiseIconLabel" Grid.Column="0" Content="Icon:" ToolTip="Select icon to use for fighter"/>
         <Grid x:Name="franchiseIconIdGrid" Grid.Column="1" IsEnabled="{Binding FranchiseIconSelectorEnabled}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -57,7 +57,7 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <Label x:Name="modelLabel" Grid.Column="0" Content="Model:" Grid.Row="1"/>
+        <Label x:Name="modelLabel" Grid.Column="0" Content="Model:" Grid.Row="1" ToolTip="Model to use for franchise icon"/>
         <Grid x:Name="modelGrid" Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -85,9 +85,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label x:Name="franchiseIconImageLabel" HorizontalAlignment="Left" Content="Image:"/>
+            <Label x:Name="franchiseIconImageLabel" HorizontalAlignment="Left" Content="Image:" ToolTip="Image used for franchise icon"/>
             <Image x:Name="franchiseIconImage" Height="64" Width="64" Source="{Binding SelectedFranchiseIcon.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="0" Grid.Row="1"/>
-            <Label x:Name="franchiseIconHDImageLabel" HorizontalAlignment="Left" Content="HD Image:" Grid.Column="1" Margin="8,0,0,0"/>
+            <Label x:Name="franchiseIconHDImageLabel" HorizontalAlignment="Left" Content="HD Image:" Grid.Column="1" Margin="8,0,0,0" ToolTip="HD image to use for franchise icon"/>
             <Border Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Gray" Height="64" Width="64" Margin="8,0,0,0">
                 <Image x:Name="franchiseIconTransparentImage" Height="64" Width="64" Source="{Binding SelectedFranchiseIcon.HDImage}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </Border>

@@ -34,7 +34,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="fighterListLabel" Content="All Fighters:" HorizontalAlignment="Left"/>
+                        <Label x:Name="fighterListLabel" Content="All Fighters:" HorizontalAlignment="Left" ToolTip="All fighters in build"/>
                         <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" Width="120" Height="400">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -57,8 +57,8 @@
                             <Button x:Name="addButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddFighterCommand}"/>
                             <Button x:Name="removeButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveFighterCommand}"/>
                         </StackPanel>
-                        <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="2" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}"/>
-                        <CheckBox x:Name="inRandomCheckBox" Grid.Column="2" Grid.Row="3" IsChecked="{Binding SelectedRosterEntry.InRandom}" Content="In Random" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}"/>
+                        <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="2" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to CSS"/>
+                        <CheckBox x:Name="inRandomCheckBox" Grid.Column="2" Grid.Row="3" IsChecked="{Binding SelectedRosterEntry.InRandom}" Content="In Random" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to random selection"/>
                     </Grid>
                 </GroupBox>
             </ScrollViewer>
@@ -112,15 +112,15 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="deleteButton" Content="Delete" VerticalAlignment="Bottom" HorizontalAlignment="Left" Command="{Binding DeleteCommand}" Visibility="{Binding InternalPackage, Converter={StaticResource boolVisConverter}}"/>
                 <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                    <Label x:Name="fighterConfigIdLabel" Content="Fighter ID:"/>
+                    <Label x:Name="fighterConfigIdLabel" Content="Fighter ID:" ToolTip="Fighter ID used by fighter"/>
                     <TextBox x:Name="fighterConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.FighterConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                    <Label x:Name="cosmeticConfigIdLabel" Content="Cosmetic Config ID:"/>
+                    <Label x:Name="cosmeticConfigIdLabel" Content="Cosmetic Config ID:" ToolTip="Cosmetic config ID used by fighter"/>
                     <TextBox x:Name="cosmeticConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                    <Label x:Name="slotConfigIdLabel" Content="Slot ID:"/>
+                    <Label x:Name="slotConfigIdLabel" Content="Slot ID:" ToolTip="Slot ID used by fighter"/>
                     <TextBox x:Name="slotConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.SlotConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                    <Label x:Name="cssSlotConfigIdLabel" Content="CSS Slot ID:"/>
+                    <Label x:Name="cssSlotConfigIdLabel" Content="CSS Slot ID:" ToolTip="CSS slot ID used by fighter"/>
                     <TextBox x:Name="cssSlotConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.CSSSlotConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
-                    <Label x:Name="cosmeticIdLabel" Content="Cosmetic ID:"/>
+                    <Label x:Name="cosmeticIdLabel" Content="Cosmetic ID:" ToolTip="Cosmetic ID used by fighter"/>
                     <TextBox x:Name="cosmeticIdTextBox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticId}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
                     <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFighterCommand}"/>
                     <Button x:Name="saveButton" Content="Save" Command="{Binding SavePackageCommand}" Visibility="{Binding FighterPackagePath, Converter={StaticResource stringVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>

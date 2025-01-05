@@ -25,7 +25,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0"/>
+        <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0" ToolTip="PAC files associated with fighter that aren't associated with a costume"/>
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2">
             <ListBox x:Name="pacFileListBox" ItemsSource="{Binding PacFiles}" SelectedItem="{Binding SelectedPacFile}" Width="120" Height="100">
                 <ListBox.ItemTemplate>
@@ -39,23 +39,23 @@
                 <Button x:Name="removePacFileButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePacFileCommand}"/>
             </StackPanel>
         </StackPanel>
-        <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}"/>
+        <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}" ToolTip="Name to use for selected PAC file"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}">
             <ComboBox x:Name="pacFilePrefixComboBox" HorizontalAlignment="Right" ItemsSource="{Binding FighterFileTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedPacFile.FileType}" Width="100"/>
             <TextBox x:Name="pacFileSuffixTextBox" Text="{Binding SelectedPacFile.Suffix}" Width="50"/>
         </StackPanel>
-        <Label x:Name="moduleLabel" Content="Module:" Grid.Row="2" Grid.Column="0"/>
+        <Label x:Name="moduleLabel" Content="Module:" Grid.Row="2" Grid.Column="0" ToolTip="Module file to associate with fighter"/>
         <userControls:FileBox x:Name="moduleFileBox" Text="{Binding FighterPackage.Module, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="REL file (.rel)|*.rel"/>
-        <Label x:Name="soundbankLabel" Content="Soundbank:" Grid.Row="3" Grid.Column="0"/>
+        <Label x:Name="soundbankLabel" Content="Soundbank:" Grid.Row="3" Grid.Column="0" ToolTip="Soundbank to associate with fighter"/>
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding SoundbankControlsEnabled}">
             <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding FighterPackage.Soundbank, Mode=TwoWay}" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
-            <Label x:Name="soundbankIdLabel" Content="ID:"/>
+            <Label x:Name="soundbankIdLabel" Content="ID:" ToolTip="ID to use for fighter's soundbank"/>
             <TextBox x:Name="soundbankTextBox" Text="{Binding SoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding SoundbankIdControlEnabled}"/>
         </StackPanel>
-        <Label x:Name="kirbySoundbankLabel" Content="Kirby Soundbank:" Grid.Row="4" Grid.Column="0"/>
+        <Label x:Name="kirbySoundbankLabel" Content="Kirby Soundbank:" Grid.Row="4" Grid.Column="0" ToolTip="Soundbank to use for Kirby hat ability associated with fighter"/>
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding SoundbankControlsEnabled}">
             <userControls:FileBox x:Name="kirbySoundbankFileBox" Text="{Binding FighterPackage.KirbySoundbank, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
-            <Label x:Name="kirbySoundbankIdLabel" Content="ID:"/>
+            <Label x:Name="kirbySoundbankIdLabel" Content="ID:" ToolTip="ID to use for Kirby hat soundbank"/>
             <TextBox x:Name="kirbySoundbankTextBox" Text="{Binding KirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding KirbySoundbankIdControlEnabled}"/>
         </StackPanel>
         <GroupBox Header="Classic/All-Star Files" x:Name="classicFileGroupBox" Grid.Row="5" Grid.ColumnSpan="4">
@@ -69,9 +69,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label x:Name="classicIntroLabel" Content="Classic Intro:"/>
+                <Label x:Name="classicIntroLabel" Content="Classic Intro:" ToolTip="Classic intro BRRES associated with fighter"/>
                 <userControls:FileBox x:Name="classicIntroFileBox" Text="{Binding FighterPackage.ClassicIntro, Mode=TwoWay}" Grid.Column="1" TextBoxWidth="120" Filter="PAC file (.pac)|*.pac"/>
-                <Label x:Name="endingLabel" Content="Ending PAC Files:" Grid.Row="1"/>
+                <Label x:Name="endingLabel" Content="Ending PAC Files:" Grid.Row="1" ToolTip="Classic/All-Star ending files associated with fighter"/>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                     <ListBox x:Name="endingListBox" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding EndingPacFiles}" Width="120" Height="80" SelectedValue="{Binding SelectedEndingPacFile}">
                         <ListBox.ItemTemplate>
@@ -85,7 +85,7 @@
                         <Button x:Name="removeEndingPacFile" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveEndingPacFileCommand}"/>
                     </StackPanel>
                 </StackPanel>
-                <Label x:Name="endingMovieLabel" Content="Ending Movie:" Grid.Row="2"/>
+                <Label x:Name="endingMovieLabel" Content="Ending Movie:" Grid.Row="2" ToolTip="Ending movie to associate with fighter"/>
                 <userControls:FileBox x:Name="endingMovieFileBox" Text="{Binding FighterPackage.EndingMovie, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" TextBoxWidth="120" Filter="THP file (.thp)|*.thp"/>
             </Grid>
         </GroupBox>
@@ -102,9 +102,9 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="victoryThemeLabel" Content="Victory Theme:"/>
+                    <Label x:Name="victoryThemeLabel" Content="Victory Theme:" ToolTip="Internal name of fighter victory theme"/>
                     <TextBox x:Name="victoryThemeTextBox" Text="{Binding FighterPackage.VictoryTheme.Name, Mode=TwoWay}" Grid.Column="1" Width="120"/>
-                    <Label x:Name="victoryThemePathLabel" Content="Path:" Grid.Row="1" Grid.Column="0"/>
+                    <Label x:Name="victoryThemePathLabel" Content="Path:" Grid.Row="1" Grid.Column="0" ToolTip="File to use for victory theme"/>
                     <TextBox x:Name="victoryThemePathTextBox" Text="{Binding FighterPackage.VictoryTheme.SongPath, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="120"/>
                     <userControls:FileBox x:Name="victoryThemeFileBox" Text="{Binding FighterPackage.VictoryTheme.SongFile, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="TLST file (.tlst)|*.tlst">
                         <i:Interaction.Triggers>
@@ -113,7 +113,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </userControls:FileBox>
-                    <Label x:Name="victoryThemeIdLabel" Content="ID:" Grid.Row="3"/>
+                    <Label x:Name="victoryThemeIdLabel" Content="ID:" Grid.Row="3" ToolTip="ID to use for victory theme. If above 0xF000, ID conflicts will be resolved automatically and any included song file will be installed. If below, song will be pulled from disk."/>
                     <TextBox x:Name="victoryThemeIdTextBox" Text="{Binding VictoryThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120"/>
                 </Grid>
                 <Grid x:Name="creditsThemeGrid">
@@ -127,9 +127,9 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="creditsThemeLabel" Content="Credits Theme:"/>
+                    <Label x:Name="creditsThemeLabel" Content="Credits Theme:" ToolTip="Internal name of fighter credits theme"/>
                     <TextBox x:Name="creditsThemeTextBox" Text="{Binding FighterPackage.CreditsTheme.Name, Mode=TwoWay}" Grid.Column="1" Width="120"/>
-                    <Label x:Name="creditsThemePathLabel" Content="Path:" Grid.Row="1" Grid.Column="0"/>
+                    <Label x:Name="creditsThemePathLabel" Content="Path:" Grid.Row="1" Grid.Column="0" ToolTip="File to use for credits theme"/>
                     <TextBox x:Name="creditsThemePathTextBox" Text="{Binding FighterPackage.CreditsTheme.SongPath, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="120"/>
                     <userControls:FileBox x:Name="creditsThemeFileBox" Text="{Binding FighterPackage.CreditsTheme.SongFile, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="TLST file (.tlst)|*.tlst">
                         <i:Interaction.Triggers>
@@ -138,7 +138,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </userControls:FileBox>
-                    <Label x:Name="creditsThemeIdLabel" Content="ID:" Grid.Row="3"/>
+                    <Label x:Name="creditsThemeIdLabel" Content="ID:" Grid.Row="3" ToolTip="ID to use for victory theme. If above 0xF000, ID conflicts will be resolved automatically and any included song file will be installed. If below, song will be pulled from disk."/>
                     <TextBox x:Name="creditsThemeIdTextBox" Text="{Binding CreditsThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120"/>
                 </Grid>
             </StackPanel>

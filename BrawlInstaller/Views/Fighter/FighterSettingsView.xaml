@@ -43,40 +43,40 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="fighterFileNameLabel" Content="Fighter File Name:"/>
+                <Label x:Name="fighterFileNameLabel" Content="Fighter File Name:" ToolTip="Main fighter name to use for fighter files. On update, updates all other name fields automatically. Only enabled if fighter attributes are present."/>
                 <TextBox x:Name="fighterFileNameTextBox" Text="{Binding FighterFileName, UpdateSourceTrigger=LostFocus}" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
-                <Label x:Name="pacFileNameLabel" Content="Pac File Name:" Grid.Row="1"/>
+                <Label x:Name="pacFileNameLabel" Content="Pac File Name:" Grid.Row="1" ToolTip="Name pattern to use for fighter PAC files. Only enabled if fighter attributes are present."/>
                 <TextBox x:Name="pacFileNameTextBox" Text="{Binding FighterPackage.FighterInfo.FullPacFileName}" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
-                <Label x:Name="kirbyPacFileNameLabel" Content="Kirby Pac File Name:" Grid.Row="2"/>
+                <Label x:Name="kirbyPacFileNameLabel" Content="Kirby Pac File Name:" Grid.Row="2" ToolTip="Name pattern to use for Kirby hat PAC files for fighter. Only enabled if fighter attributes are present."/>
                 <TextBox x:Name="kirbyPacFileNameTextBox" Text="{Binding FighterPackage.FighterInfo.FullKirbyPacFileName}" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
-                <Label x:Name="moduleNameLabel" Content="Module File Name:" Grid.Row="3"/>
+                <Label x:Name="moduleNameLabel" Content="Module File Name:" Grid.Row="3" ToolTip="Name to use for fighter module file. Only enabled if fighter attributes are present."/>
                 <TextBox x:Name="moduleNameTextBox" Text="{Binding FighterPackage.FighterInfo.ModuleFileName}" Grid.Row="3" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
-                <Label x:Name="internalNameLabel" Content="Internal Name:" Grid.Row="4"/>
+                <Label x:Name="internalNameLabel" Content="Internal Name:" Grid.Row="4" ToolTip="Internal name of fighter. Only enabled if fighter attributes are present."/>
                 <TextBox x:Name="internalNameTextBox" Text="{Binding FighterPackage.FighterInfo.InternalName}" Grid.Row="4" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
-                <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="5"/>
+                <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="5" ToolTip="Display name for fighter. Only enabled if cosmetic attributes are present."/>
                 <TextBox x:Name="displayNameTextBox" Text="{Binding FighterPackage.FighterInfo.DisplayName}" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding DisplayNameEnabled}" Width="120"/>
             </Grid>
         </GroupBox>
-        <Label x:Name="effectPacLabel" Content="Effect PAC:" Grid.Row="1"/>
+        <Label x:Name="effectPacLabel" Content="Effect PAC:" Grid.Row="1" ToolTip="Effect.pac to use for fighter"/>
         <ComboBox x:Name="effectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedFighterEffectPac, UpdateSourceTrigger=LostFocus}" Grid.Row="1" Grid.Column="1" Width="120" Grid.ColumnSpan="3"/>
-        <Label x:Name="kirbyEffectPacLabel" Content="Kirby Effect PAC:" Grid.Row="2"/>
+        <Label x:Name="kirbyEffectPacLabel" Content="Kirby Effect PAC:" Grid.Row="2" ToolTip="Effect.pac to use for fighter Kirby hat"/>
         <ComboBox x:Name="kirbyEffectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedKirbyEffectPac, UpdateSourceTrigger=LostFocus}" Grid.Column="1" Grid.Row="2" Width="120" Grid.ColumnSpan="3"/>
-        <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:" Grid.Row="3"/>
+        <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:" Grid.Row="3" ToolTip="Kirby hat data to associate with fighter. Can import XML files generated from lavaKirbyHatManager V2."/>
         <TextBlock x:Name="kirbyHatKindTextBlock" VerticalAlignment="Center" Text="{Binding FighterPackage.FighterSettings.KirbyHatData.TopStatusKind}" Grid.Row="3" Grid.Column="1"/>
         <Button x:Name="kirbyHatBrowseButton" Content="Browse..." Command="{Binding LoadKirbyHatCommand}" Grid.Column="2" Grid.Row="3"/>
         <Button x:Name="kirbyHatClearButton" Content="Clear" Command="{Binding ClearKirbyHatCommand}" Grid.Column="3" Grid.Row="3"/>
-        <Label x:Name="kirbyHatLoadTypeLabel" Content="Kirby Hat Load Type:" Grid.Row="4"/>
+        <Label x:Name="kirbyHatLoadTypeLabel" Content="Kirby Hat Load Type:" Grid.Row="4" ToolTip="Load type for Kirby hats. Only enabled if fighter attributes are present."/>
         <ComboBox x:Name="kirbyHatLoadTypeDropDown" ItemsSource="{Binding KirbyLoadFlagOptions}" SelectedValue="{Binding FighterPackage.FighterInfo.KirbyLoadType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Row="4" Grid.Column="1" IsEnabled="{Binding KirbyHatTypeEnabled}"/>
-        <Label x:Name="throwReleaseLabel" Content="Throw Release Point:" Grid.Row="5"/>
+        <Label x:Name="throwReleaseLabel" Content="Throw Release Point:" Grid.Row="5" ToolTip="Throw release point to use for fighter"/>
         <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="5" Grid.Column="1"/>
         <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="5" Grid.Column="2"/>
-        <Label x:Name="lLoadLabel" Content="L-Load ID:" Grid.Row="6"/>
+        <Label x:Name="lLoadLabel" Content="L-Load ID:" Grid.Row="6" ToolTip="CSS slot ID of fighter to use as an L-load for this fighter"/>
         <ComboBox x:Name="lLoadTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.LLoadCharacterId, Converter={StaticResource hexConverter}, TargetNullValue='', Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="6" Grid.Column="1"/>
-        <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="7"/>
+        <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="7" ToolTip="Door ID to use for unlocking character in SSE"/>
         <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="7" Grid.Column="1"/>
-        <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="8"/>
+        <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="8" ToolTip="CSS slot ID of character to use as sub-character for SSE mode"/>
         <ComboBox x:Name="ssesubcharacterIdTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Row="8" Grid.Column="1" Width="60"/>
-        <GroupBox Header="Alternate Slots" Grid.Row="9" Grid.ColumnSpan="4">
+        <GroupBox Header="Alternate Slots" Grid.Row="9" Grid.ColumnSpan="4" ToolTip="For SlotEx system used for fighters like Pokemon Trainer and the alloys in P+Ex">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -88,19 +88,19 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Upper-Left ID:"/>
+                <Label Content="Upper-Left ID:" ToolTip="Alternate fighter located in upper-left of portrait"/>
                 <ComboBox IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.ExSlotIds[3], Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Column="1"/>
-                <Label Content="Upper-Right ID:" Grid.Column="2"/>
+                <Label Content="Upper-Right ID:" Grid.Column="2" ToolTip="Alternate fighter located in upper-right of portrait"/>
                 <ComboBox IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.ExSlotIds[1], Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Column="3"/>
-                <Label Content="Lower-Left ID:" Grid.Row="1"/>
+                <Label Content="Lower-Left ID:" Grid.Row="1" ToolTip="Alternate fighter located in lower-left of portrait"/>
                 <ComboBox IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.ExSlotIds[2], Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="1" Grid.Column="1"/>
-                <Label Content="Lower-Right ID:" Grid.Row="1" Grid.Column="2"/>
+                <Label Content="Lower-Right ID:" Grid.Row="1" Grid.Column="2" ToolTip="Alternate fighter in lower-right of portrait"/>
                 <ComboBox IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.ExSlotIds[0], Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="1" Grid.Column="3"/>
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="10" Grid.ColumnSpan="4">
+        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="10" Grid.ColumnSpan="4" ToolTip="Fighter-specific code settings">
             <StackPanel>
-                <Expander x:Name="lucarioExpander" Header="Lucario Clone Settings">
+                <Expander x:Name="lucarioExpander" Header="Lucario Clone Settings" ToolTip="Settings for Lucario clones">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -114,18 +114,18 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Label x:Name="lucarioBoneIdLabel" Content="Aura Sphere Bone IDs:"/>
+                        <Label x:Name="lucarioBoneIdLabel" Content="Aura Sphere Bone IDs:" ToolTip="Bone IDs to use for Lucario Aura Sphere bone fix"/>
                         <TextBox x:Name="lucarioBoneId1TextBox" Text="{Binding FighterPackage.FighterSettings.LucarioSettings.BoneIds[0], TargetNullValue=''}" Grid.Column="1"/>
                         <TextBox x:Name="lucarioBoneId2TextBox" Text="{Binding FighterPackage.FighterSettings.LucarioSettings.BoneIds[1], TargetNullValue=''}" Grid.Column="1" Grid.Row="1"/>
                         <TextBox x:Name="lucarioBoneId3TextBox" Text="{Binding FighterPackage.FighterSettings.LucarioSettings.BoneIds[2], TargetNullValue=''}" Grid.Column="1" Grid.Row="2"/>
                         <TextBox x:Name="lucarioBoneId4TextBox" Text="{Binding FighterPackage.FighterSettings.LucarioSettings.BoneIds[3], TargetNullValue=''}" Grid.Column="1" Grid.Row="3"/>
-                        <Label x:Name="lucarioGfxLabel" Content="Use GFX Fix" Grid.Row="4"/>
+                        <Label x:Name="lucarioGfxLabel" Content="Use GFX Fix" Grid.Row="4" ToolTip="Check to use the Lucario GFX fix for this fighter"/>
                         <CheckBox x:Name="lucarioGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.LucarioSettings.UseGfxFix}" Grid.Row="4" Grid.Column="1"/>
-                        <Label x:Name="lucarioKirbyGfxIdLabel" Content="Use Kirby Hat GFX Fix" Grid.Row="5"/>
+                        <Label x:Name="lucarioKirbyGfxIdLabel" Content="Use Kirby Hat GFX Fix" Grid.Row="5" ToolTip="Check to use the Kirby Lucario GFX fix for this fighter"/>
                         <CheckBox x:Name="lucarioKirbyGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.LucarioSettings.UseKirbyGfxFix}" Grid.Row="5" Grid.Column="1"/>
                     </Grid>
                 </Expander>
-                <Expander x:Name="samusExpander" Header="Samus Clone Settings">
+                <Expander x:Name="samusExpander" Header="Samus Clone Settings" ToolTip="Settings for Samus clones">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -135,13 +135,13 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="samusGfxLabel" Content="Use GFX Fix"/>
+                        <Label x:Name="samusGfxLabel" Content="Use GFX Fix" ToolTip="Check to use Samus GFX fix"/>
                         <CheckBox x:Name="samusGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.SamusSettings.UseGfxFix}" Grid.Column="1"/>
-                        <Label x:Name="samusKirbyGfxLabel" Content="Use Kirby Hat GFX Fix" Grid.Row="1"/>
+                        <Label x:Name="samusKirbyGfxLabel" Content="Use Kirby Hat GFX Fix" Grid.Row="1" ToolTip="Check to use Samus Kirby Hat GFX fix"/>
                         <CheckBox x:Name="samusKirbyGfxCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.SamusSettings.UseKirbyGfxFix}" Grid.Row="1" Grid.Column="1"/>
                     </Grid>
                 </Expander>
-                <Expander x:Name="jigglypuffExpander" Header="Jigglypuff Clone Settings">
+                <Expander x:Name="jigglypuffExpander" Header="Jigglypuff Clone Settings" ToolTip="Settings for Jigglypuff clones">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -158,43 +158,43 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="jigglypuffMainBoneLabel" Content="Main Bone ID:"/>
+                        <Label x:Name="jigglypuffMainBoneLabel" Content="Main Bone ID:" ToolTip="Main Bone ID to use for Jigglypuff Rollout Bone fix"/>
                         <TextBox x:Name="jigglypuffMainBoneTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[0], TargetNullValue=''}" Grid.Column="1"/>
-                        <Label x:Name="jigglypuffXRotNLabel" Content="XRotN ID:" Grid.Row="1"/>
+                        <Label x:Name="jigglypuffXRotNLabel" Content="XRotN ID:" Grid.Row="1" ToolTip="XRotN bone ID"/>
                         <TextBox x:Name="jigglypuffXRotNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[1], TargetNullValue=''}" Grid.Column="1" Grid.Row="1"/>
-                        <Label x:Name="jigglypuffYRotNLabel" Content="YRotN ID:" Grid.Row="2"/>
+                        <Label x:Name="jigglypuffYRotNLabel" Content="YRotN ID:" Grid.Row="2" ToolTip="YRotN bone ID"/>
                         <TextBox x:Name="jigglypuffYRotNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[2], TargetNullValue=''}" Grid.Column="1" Grid.Row="2"/>
-                        <Label x:Name="jigglypuffBodyNLabel" Content="BodyN ID:" Grid.Row="3"/>
+                        <Label x:Name="jigglypuffBodyNLabel" Content="BodyN ID:" Grid.Row="3" ToolTip="BodyN bone ID"/>
                         <TextBox x:Name="jigglypuffBodyNTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.BoneIds[3], TargetNullValue=''}" Grid.Column="1" Grid.Row="3"/>
-                        <Label x:Name="jigglypuffGfxFixLabel" Content="EFLS ID:" Grid.Row="4"/>
+                        <Label x:Name="jigglypuffGfxFixLabel" Content="EFLS ID:" Grid.Row="4" ToolTip="EFLS ID to use for Jigglypuff GFX fix"/>
                         <TextBox x:Name="jigglypuffGfxFixTextBox" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.EFLSId, TargetNullValue=''}" Grid.Row="4" Grid.Column="1"/>
-                        <Label x:Name="jigglypuffSfxFixLabel1" Content="SFX ID 1:" Grid.Row="5"/>
+                        <Label x:Name="jigglypuffSfxFixLabel1" Content="SFX ID 1:" Grid.Row="5" ToolTip="First SFX ID to use for Jigglypuff SFX fix"/>
                         <TextBox x:Name="jigglypuffSfxFixTextBox1" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.SfxIds[0], TargetNullValue=''}" Grid.Row="5" Grid.Column="1"/>
-                        <Label x:Name="jigglypuffSfxFixLabel2" Content="SFX ID 2:" Grid.Row="6"/>
+                        <Label x:Name="jigglypuffSfxFixLabel2" Content="SFX ID 2:" Grid.Row="6" ToolTip="Second SFX ID to use for Jigglypuff SFX fix"/>
                         <TextBox x:Name="jigglypuffSfxFixTextBox2" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.SfxIds[1], TargetNullValue=''}" Grid.Row="6" Grid.Column="1"/>
-                        <Label x:Name="jigglypuffSfxFixLabel3" Content="SFX ID 3:" Grid.Row="7"/>
+                        <Label x:Name="jigglypuffSfxFixLabel3" Content="SFX ID 3:" Grid.Row="7" ToolTip="Third SFX ID to use for Jigglypuff SFX fix"/>
                         <TextBox x:Name="jigglypuffSfxFixTextBox3" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.SfxIds[2], TargetNullValue=''}" Grid.Row="7" Grid.Column="1"/>
-                        <Label x:Name="jigglypuffSfxFixLabel4" Content="SFX ID 4:" Grid.Row="8"/>
+                        <Label x:Name="jigglypuffSfxFixLabel4" Content="SFX ID 4:" Grid.Row="8" ToolTip="Fourth SFX ID to use for Jigglypuff SFX fix"/>
                         <TextBox x:Name="jigglypuffSfxFixTextBox4" Text="{Binding FighterPackage.FighterSettings.JigglypuffSettings.SfxIds[3], TargetNullValue=''}" Grid.Row="8" Grid.Column="1"/>
                     </Grid>
                 </Expander>
-                <Expander x:Name="dededeExpander" Header="Dedede Clone Settings">
+                <Expander x:Name="dededeExpander" Header="Dedede Clone Settings" ToolTip="Settings for Dedede clones">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="dededeFixLabel" Content="Use Fix"/>
+                        <Label x:Name="dededeFixLabel" Content="Use Fix" ToolTip="Check to use Dedede GFX fix"/>
                         <CheckBox x:Name="dededeFixCheckBox" IsChecked="{Binding FighterPackage.FighterSettings.DededeSettings.UseFix}" Grid.Column="1"/>
                     </Grid>
                 </Expander>
-                <Expander x:Name="bowserExpander" Header="Bowser Clone Settings">
+                <Expander x:Name="bowserExpander" Header="Bowser Clone Settings" ToolTip="Settings for Bowser clones">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="bowserBoneIdLabel" Content="Fire Breath Bone ID:"/>
+                        <Label x:Name="bowserBoneIdLabel" Content="Fire Breath Bone ID:" ToolTip="Bone ID to use for Bowser fire breath GFX fix"/>
                         <TextBox x:Name="bowserBoneIdTextBox" Text="{Binding FighterPackage.FighterSettings.BowserSettings.BoneId, TargetNullValue=''}" Grid.Column="1"/>
                     </Grid>
                 </Expander>
@@ -202,25 +202,25 @@
         </GroupBox>
         <StackPanel Grid.Column="4" Grid.RowSpan="12">
             <TabControl>
-                <TabItem Header="Fighter">
+                <TabItem Header="Fighter" ToolTip="Fighter attributes">
                     <StackPanel>
                         <Button Content="Generate" Command="{Binding GenerateFighterAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.FighterAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                         <wpg:WpfPropertyGrid x:Name="fighterAttributeGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.FighterAttributes}" Height="400" Width="170"/>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Slot">
+                <TabItem Header="Slot" ToolTip="Slot attributes">
                     <StackPanel>
                         <Button Content="Generate" Command="{Binding GenerateSlotAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.SlotAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                         <wpg:WpfPropertyGrid x:Name="slotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.SlotAttributes}" Height="400" Width="170"/>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Cosmetic">
+                <TabItem Header="Cosmetic" ToolTip="Cosmetic attributes">
                     <StackPanel>
                         <Button Content="Generate" Command="{Binding GenerateCosmeticAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.CosmeticAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                         <wpg:WpfPropertyGrid x:Name="cosmeticAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CosmeticAttributes}" Height="400" Width="170"/>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="CSS Slot">
+                <TabItem Header="CSS Slot" ToolTip="CSS slot attributes">
                     <StackPanel>
                         <Button Content="Generate" Command="{Binding GenerateCSSSlotAttributesCommand}" Visibility="{Binding FighterPackage.FighterInfo.CSSSlotAttributes, Converter={StaticResource notNullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                         <wpg:WpfPropertyGrid x:Name="cssSlotAttributesGrid" ToolbarVisible="False" SelectedObject="{Binding FighterPackage.FighterInfo.CSSSlotAttributes}" Height="400" Width="170"/>
