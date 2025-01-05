@@ -54,8 +54,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.ImportFighterFiles(FighterPackage, FighterPackage)"/>
         void ImportFighterFiles(FighterPackage fighterPackage, FighterPackage oldFighter);
 
-        /// <inheritdoc cref="FighterService.UpdateFighterSettings(FighterPackage)"/>
-        void UpdateFighterSettings(FighterPackage fighterPackage);
+        /// <inheritdoc cref="FighterService.UpdateFighterSettings(FighterPackage, bool)"/>
+        void UpdateFighterSettings(FighterPackage fighterPackage, bool updateSettings);
 
         /// <inheritdoc cref="FighterService.GetFighterSettings(FighterPackage)"/>
         FighterSettings GetFighterSettings(FighterPackage fighterPackage);
@@ -1145,7 +1145,8 @@ namespace BrawlInstaller.Services
         /// Update fighter settings in build
         /// </summary>
         /// <param name="fighterPackage">Fighter package to update settings for</param>
-        public void UpdateFighterSettings(FighterPackage fighterPackage)
+        /// <param name="updateSettings">Whether or not to update settings for fighter</param>
+        public void UpdateFighterSettings(FighterPackage fighterPackage, bool updateSettings)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var fighterSettings = fighterPackage.FighterSettings;
@@ -1153,20 +1154,23 @@ namespace BrawlInstaller.Services
             // Update Kirby hat
             UpdateKirbyHatData(fighterSettings.KirbyHatData, fighterPackage.FighterInfo.Ids.FighterConfigId);
 
-            // Update throw release point
-            UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
+            if (updateSettings)
+            {
+                // Update throw release point
+                UpdateThrowReleaseTable(fighterPackage.FighterInfo, fighterPackage.FighterSettings.ThrowReleasePoint);
 
-            // Update L-Load
-            UpdateLLoadTable(fighterPackage);
+                // Update L-Load
+                UpdateLLoadTable(fighterPackage);
 
-            // Update Slot Ex table
-            UpdateExSlotsTable(fighterPackage);
+                // Update Slot Ex table
+                UpdateExSlotsTable(fighterPackage);
 
-            // Update SSE settings
-            UpdateSSEModule(fighterPackage);
+                // Update SSE settings
+                UpdateSSEModule(fighterPackage);
 
-            // Update fighter specific settings
-            UpdateFighterSpecificSettings(fighterPackage);
+                // Update fighter specific settings
+                UpdateFighterSpecificSettings(fighterPackage);
+            }
         }
 
         /// <summary>

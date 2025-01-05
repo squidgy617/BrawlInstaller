@@ -163,8 +163,8 @@ namespace BrawlInstaller.Services
             fighterPackage.FighterInfo.OriginalSoundbankId = fighterPackage.FighterInfo.SoundbankId;
             fighterPackage.FighterInfo.OriginalKirbySoundbankId = fighterPackage.FighterInfo.KirbySoundbankId;
             // Update fighter settings if they have changed or if fighter name has changed
-            if (fighterPackage.PackageType == PackageType.New || !fighterPackage.FighterSettings.Compare(oldFighter.FighterSettings) || fighterPackage.FighterInfo.DisplayName != oldFighter.FighterInfo.DisplayName)
-                _fighterService.UpdateFighterSettings(fighterPackage);
+            var updateSettings = fighterPackage.PackageType == PackageType.New || !fighterPackage.FighterSettings.Compare(oldFighter.FighterSettings) || fighterPackage.FighterInfo.DisplayName != oldFighter.FighterInfo.DisplayName;
+            _fighterService.UpdateFighterSettings(fighterPackage, updateSettings);
             // Update credits module
             if (changedDefinitions.Any(x => x.CosmeticType == CosmeticType.CreditsIcon))
             {
