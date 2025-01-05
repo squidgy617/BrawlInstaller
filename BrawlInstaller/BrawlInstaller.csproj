@@ -360,6 +360,10 @@
     </None>
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\REMIX\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\REMIX\FighterList.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
