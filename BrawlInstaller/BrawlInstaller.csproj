@@ -374,7 +374,7 @@
       <Name>BrawlLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\lavaKirbyHatManagerV2\lavaKirbyHatManagerV2.csproj">
-      <Project>{9DFD4208-0F96-4AE5-B6C6-444C54CDE312}</Project>
+      <Project>{9dfd4208-0f96-4ae5-b6c6-444c54cde312}</Project>
       <Name>lavaKirbyHatManagerV2</Name>
     </ProjectReference>
   </ItemGroup>
