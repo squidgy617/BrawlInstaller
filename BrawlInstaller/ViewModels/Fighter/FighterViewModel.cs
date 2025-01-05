@@ -270,6 +270,7 @@ namespace BrawlInstaller.ViewModels
             UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
             OnPropertyChanged(nameof(FighterList));
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+            _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 
         public void SaveFighter()
@@ -385,6 +386,7 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(FighterList));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+            _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 
         public void ExportFighter()
@@ -573,6 +575,7 @@ namespace BrawlInstaller.ViewModels
         private void SaveRosters()
         {
             _fighterService.SaveRosters(Rosters);
+            _dialogService.ShowMessage("Saved rosters.", "Saved");
         }
 
         public bool Validate()

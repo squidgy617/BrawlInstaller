@@ -133,6 +133,7 @@ namespace BrawlInstaller.ViewModels
         {
             _settingsService.SaveSettings(BuildSettings, _settingsService.BuildSettingsPath);
             WeakReferenceMessenger.Default.Send(new SettingsSavedMessage(BuildSettings));
+            _dialogService.ShowMessage("Settings saved.", "Saved");
         }
 
         private void LoadSettings()

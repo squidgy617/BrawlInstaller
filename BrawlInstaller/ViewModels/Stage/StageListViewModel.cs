@@ -226,6 +226,7 @@ namespace BrawlInstaller.ViewModels
         private void SaveStageList()
         {
             _stageService.SaveStageLists(StageLists, StageTable.ToList());
+            _dialogService.ShowMessage("Stage lists saved.", "Saved");
         }
 
         public void LoadStage(object param)
