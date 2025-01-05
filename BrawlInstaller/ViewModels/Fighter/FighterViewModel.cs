@@ -100,6 +100,10 @@ namespace BrawlInstaller.ViewModels
             {
                 UpdateSettings();
             });
+            WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
+            });
         }
 
         // ViewModels

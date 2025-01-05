@@ -2273,58 +2273,61 @@ namespace BrawlInstaller.Services
             var rosters = new List<Roster>();
             foreach(var rosterFile in _settingsService.BuildSettings.FilePathSettings.RosterFiles)
             {
-                var path = Path.Combine(_settingsService.AppSettings.BuildPath, rosterFile.FilePath);
-                var rootNode = _fileService.OpenFile(path);
-                if (rootNode != null)
+                if (rosterFile.FilePath != null)
                 {
-                    var roster = new Roster();
-                    roster.Name = rootNode.Name;
-                    roster.FilePath = rosterFile.FilePath;
-                    roster.AddNewCharacters = rosterFile.AddNewCharacters;
-                    // Get CSS entries
-                    var csNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Character Select");
-                    if (csNode != null)
+                    var path = Path.Combine(_settingsService.AppSettings.BuildPath, rosterFile?.FilePath);
+                    var rootNode = _fileService.OpenFile(path);
+                    if (rootNode != null)
                     {
-                        foreach(RSTCEntryNode child in csNode.Children)
+                        var roster = new Roster();
+                        roster.Name = rootNode.Name;
+                        roster.FilePath = rosterFile.FilePath;
+                        roster.AddNewCharacters = rosterFile.AddNewCharacters;
+                        // Get CSS entries
+                        var csNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Character Select");
+                        if (csNode != null)
                         {
-                            var newEntry = new RosterEntry
-                            {
-                                Id = child.FighterID,
-                                Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == child.FighterID)?.DisplayName ?? child.Name,
-                                InCss = true,
-                                InRandom = false
-                            };
-                            roster.Entries.Add(newEntry);
-                        }
-                    }
-                    // Get random entries
-                    var randomNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Random Character List");
-                    if (randomNode != null)
-                    {
-                        foreach (RSTCEntryNode child in randomNode.Children)
-                        {
-                            // Add an entry if one isn't already in the roster
-                            var entry = roster.Entries.FirstOrDefault(x => x.Id == child.FighterID);
-                            if (entry == null)
+                            foreach (RSTCEntryNode child in csNode.Children)
                             {
                                 var newEntry = new RosterEntry
                                 {
                                     Id = child.FighterID,
                                     Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == child.FighterID)?.DisplayName ?? child.Name,
-                                    InCss = false,
-                                    InRandom = true
+                                    InCss = true,
+                                    InRandom = false
                                 };
                                 roster.Entries.Add(newEntry);
                             }
-                            // Otherwise, update existing entry
-                            else
+                        }
+                        // Get random entries
+                        var randomNode = rootNode.Children.FirstOrDefault(x => x.GetType() == typeof(RSTCGroupNode) && ((RSTCGroupNode)x).GroupType == "Random Character List");
+                        if (randomNode != null)
+                        {
+                            foreach (RSTCEntryNode child in randomNode.Children)
                             {
-                                entry.InRandom = true;
+                                // Add an entry if one isn't already in the roster
+                                var entry = roster.Entries.FirstOrDefault(x => x.Id == child.FighterID);
+                                if (entry == null)
+                                {
+                                    var newEntry = new RosterEntry
+                                    {
+                                        Id = child.FighterID,
+                                        Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == child.FighterID)?.DisplayName ?? child.Name,
+                                        InCss = false,
+                                        InRandom = true
+                                    };
+                                    roster.Entries.Add(newEntry);
+                                }
+                                // Otherwise, update existing entry
+                                else
+                                {
+                                    entry.InRandom = true;
+                                }
                             }
                         }
+                        rosters.Add(roster);
+                        _fileService.CloseFile(rootNode);
                     }
-                    rosters.Add(roster);
-                    _fileService.CloseFile(rootNode);
                 }
             }
             return rosters;
