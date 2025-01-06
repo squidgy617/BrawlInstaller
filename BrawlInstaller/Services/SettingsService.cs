@@ -79,6 +79,10 @@ namespace BrawlInstaller.Services
         /// <param name="path">Path to save to</param>
         public void SaveSettings(BuildSettings buildSettings, string path)
         {
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
             var jsonString = JsonConvert.SerializeObject(buildSettings, Formatting.Indented);
             File.WriteAllText(path, jsonString);
             BuildSettings = buildSettings;

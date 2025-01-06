@@ -102,7 +102,7 @@ namespace BrawlInstaller.ViewModels
             });
             WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
             {
-                UpdateSettings();
+                SettingsSaved();
             });
         }
 
@@ -490,6 +490,16 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage = null;
             GetFighters();
+            Rosters = _fighterService.GetRosters();
+            SelectedRoster = Rosters.FirstOrDefault();
+            OnPropertyChanged(nameof(FighterPackage));
+            OnPropertyChanged(nameof(Rosters));
+            OnPropertyChanged(nameof(SelectedRoster));
+        }
+
+        private void SettingsSaved()
+        {
+            FighterPackage = null;
             Rosters = _fighterService.GetRosters();
             SelectedRoster = Rosters.FirstOrDefault();
             OnPropertyChanged(nameof(FighterPackage));
