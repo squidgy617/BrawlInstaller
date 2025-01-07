@@ -181,7 +181,7 @@ namespace BrawlInstaller.Services
                         if (sw.ElapsedMilliseconds >= 10000)
                         {
                             sw.Stop();
-                            var error = new CompilerTimeoutException($"Module {node.FileName} could not be closed after 10 seconds. Please try again.");
+                            var error = new Exception($"Module {node.FileName} could not be closed after 10 seconds. Please try again.");
                             throw error;
                         }
                         node.Dispose();

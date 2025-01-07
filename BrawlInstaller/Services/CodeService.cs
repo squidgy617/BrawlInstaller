@@ -725,7 +725,7 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.GctRealMateExe))
             {
                 var args = "-g -l -q";
-                var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Select(s => $" \"{Path.Combine(buildPath, s.Path)}\"");
+                var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Where(x => _fileService.FileExists(_settingsService.GetBuildFilePath(x.Path))).Select(s => $" \"{Path.Combine(buildPath, s.Path)}\"");
                 foreach(var arg in argList)
                 {
                     args += arg;
@@ -739,7 +739,7 @@ namespace BrawlInstaller.Services
                 gctRm?.WaitForExit(5000);
                 if (gctRm?.HasExited == false)
                 {
-                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.FilePathSettings.GctRealMateExe} encountered an error. Verify your code files are valid and don't contain errors.");
+                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.FilePathSettings.GctRealMateExe} encountered an error. Verify you are using the latest GCTRealMate and that your code files are valid and don't contain errors.");
                     gctRm?.Kill();
                     throw error;
                 }
