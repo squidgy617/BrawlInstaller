@@ -201,7 +201,7 @@ namespace BrawlInstaller.Services
                 {
                     var newEntry = new StageEntry
                     {
-                        ButtonFlags = (ushort)(entry.ButtonFlags > 0x4000 ? 0x4000 : entry.ButtonFlags > 0x8000 ? 0x8000 : entry.ButtonFlags),
+                        ButtonFlags = (ushort)(entry.ButtonFlags >= 0x8000 ? 0x8000 : entry.ButtonFlags >= 0x4000 ? 0x4000 : entry.ButtonFlags),
                         Params = GetStageParams(entry.Name, stage.AllParams)
                     };
                     // Get bin file
@@ -847,14 +847,14 @@ namespace BrawlInstaller.Services
 
             // Update button flags for list alts based on order they are in list
             var rListAlts = stage.StageEntries.Where(x => x.IsRAlt).ToList();
-            var lListAlts = stage.StageEntries.Where(x => x.IsLAlt);
+            var lListAlts = stage.StageEntries.Where(x => x.IsLAlt).ToList();
             foreach(var alt in rListAlts)
             {
                 alt.ButtonFlags = (ushort)(0x4000 + rListAlts.IndexOf(alt));
             }
             foreach (var alt in lListAlts)
             {
-                alt.ButtonFlags = (ushort)(0x8000 + rListAlts.IndexOf(alt));
+                alt.ButtonFlags = (ushort)(0x8000 + lListAlts.IndexOf(alt));
             }
 
             return SaveStageInfo(stage);
