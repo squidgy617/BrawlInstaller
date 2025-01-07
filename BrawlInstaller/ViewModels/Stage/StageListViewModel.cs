@@ -51,7 +51,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand MoveDownCommand => new RelayCommand(param => MoveStageDown());
         public ICommand AddStageToListCommand => new RelayCommand(param =>  AddStageToList());
         public ICommand RemoveStageFromListCommand => new RelayCommand(param => RemoveStageFromList());
-        public ICommand SaveStageListCommand => new RelayCommand(param => SaveStageList());
+        public ICommand SaveStageListCommand => new RelayCommand(param => { SaveStageList(); _dialogService.ShowMessage("Stage lists saved.", "Saved"); });
         public ICommand LoadStageCommand => new RelayCommand(param => LoadStage(param));
         public ICommand NewStageCommand => new RelayCommand(param =>  NewStage());
 
@@ -230,7 +230,6 @@ namespace BrawlInstaller.ViewModels
         private void SaveStageList()
         {
             _stageService.SaveStageLists(StageLists, StageTable.ToList());
-            _dialogService.ShowMessage("Stage lists saved.", "Saved");
         }
 
         public void LoadStage(object param)
