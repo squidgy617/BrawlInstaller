@@ -194,8 +194,8 @@ namespace BrawlInstaller.Services
                             continue;
                         }
                     }
-
                 }
+                sw.Stop();
             }
             else
             {
