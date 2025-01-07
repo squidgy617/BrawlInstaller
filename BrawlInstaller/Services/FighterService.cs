@@ -1032,6 +1032,17 @@ namespace BrawlInstaller.Services
                 _fileService.SaveFile(pacFile);
                 _fileService.CloseFile(pacFile);
             }
+            // Delete pac folders if empty
+            var pacPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterPackage.FighterInfo.PacFolder}";
+            if (_fileService.DirectoryExists(pacPath) && _fileService.GetFiles(pacPath, "*").Count == 0)
+            {
+                _fileService.DeleteDirectory(pacPath);
+            }
+            var itemPath = Path.Combine(pacPath, "item");
+            if (_fileService.DirectoryExists(itemPath) && _fileService.GetFiles(itemPath, "*").Count == 0)
+            {
+                _fileService.DeleteDirectory(itemPath);
+            }
             // Update and import ex configs
             var updateLinks = fighterPackage.PackageType == PackageType.New;
             var cssSlotConfig = fighterPackage.FighterInfo.CSSSlotAttributes?.ToCSSCNode(fighterPackage.FighterInfo, updateLinks);
