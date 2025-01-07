@@ -22,6 +22,17 @@ namespace BrawlInstaller.Classes
         public string HDTextures { get; set; } = string.Empty;
         public bool ModifyHDTextures { get; set; } = false;
         [JsonIgnore] public string TempPath { get => Paths.TempPath; }
+
+        public AppSettings Copy()
+        {
+            var copy = new AppSettings
+            {
+                BuildPath = BuildPath,
+                HDTextures = HDTextures,
+                ModifyHDTextures = ModifyHDTextures
+            };
+            return copy;
+        }
     }
 
     public class BuildSettings
