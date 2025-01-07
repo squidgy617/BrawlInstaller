@@ -220,7 +220,7 @@ namespace BrawlInstaller.ViewModels
             var deletePackage = new FighterPackage
             {
                 PackageType = PackageType.Delete,
-                FighterInfo = FighterPackage.FighterInfo.Copy()
+                FighterInfo = FighterPackage.FighterInfo.CopyNoAttributes()
             };
             deletePackage.FighterInfo.DisplayName = "Unknown";
             // Mark all cosmetics as changed
