@@ -20,6 +20,8 @@ using Force.Crc32;
 using System.Drawing.Imaging;
 using BrawlInstaller.Classes;
 using BrawlInstaller.StaticClasses;
+using System.Diagnostics;
+using BrawlInstaller.Exceptions;
 
 namespace BrawlInstaller.Services
 {
@@ -167,7 +169,38 @@ namespace BrawlInstaller.Services
         /// <param name="node">Root node of file to close</param>
         public void CloseFile(ResourceNode node)
         {
-            node.Dispose();
+            // TODO: Figure out what actually causes this error. For now, this should force modules to eventually close like they should
+            if (node.GetType() == typeof(RELNode))
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                while (true)
+                {
+                    try
+                    {
+                        if (sw.ElapsedMilliseconds >= 10000)
+                        {
+                            sw.Stop();
+                            var error = new CompilerTimeoutException($"Module {node.FileName} could not be closed after 10 seconds. Please try again.");
+                            throw error;
+                        }
+                        node.Dispose();
+                        break;
+                    }
+                    catch(InvalidOperationException ex)
+                    {
+                        if (ex.Message == "Collection was modified; enumeration operation may not execute.")
+                        {
+                            continue;
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                node.Dispose();
+            }
         }
 
         /// <summary>
