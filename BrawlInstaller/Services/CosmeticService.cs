@@ -546,20 +546,21 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Return the first available cosmetic ID
         /// </summary>
-        /// <param name="definition"></param>
-        /// <param name="id"></param>
-        /// <param name="rootNode"></param>
+        /// <param name="definition">Definition of cosmetic</param>
+        /// <param name="id">ID to compare</param>
+        /// <param name="node">Node to check for cosmetics</param>
         /// <returns></returns>
-        private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode rootNode)
+        private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode node)
         {
             id = id + definition.Offset;
-            if (rootNode.GetType() != typeof(ARCNode))
+            if (node.GetType() == typeof(ARCNode))
             {
-                var usedIds = GetUsedCosmeticIds(definition, rootNode);
-                while (usedIds.Contains(id))
-                {
-                    id = id + definition.Multiplier;
-                }
+                node = node.FindChild(definition.InstallLocation.NodePath);
+            }
+            var usedIds = GetUsedCosmeticIds(definition, node);
+            while (usedIds.Contains(id))
+            {
+                id = id + definition.Multiplier;
             }
             id = id - definition.Offset;
             return id;
@@ -569,12 +570,11 @@ namespace BrawlInstaller.Services
         /// Get cosmetic IDs used by textures in cosmetic definition
         /// </summary>
         /// <param name="definition">Definition to use</param>
-        /// <param name="rootNode">Root node of file to check</param>
+        /// <param name="node">Node containing cosmetics to check</param>
         /// <returns>List of used cosmetic IDs</returns>
-        private List<int> GetUsedCosmeticIds(CosmeticDefinition definition, ResourceNode rootNode)
+        private List<int> GetUsedCosmeticIds(CosmeticDefinition definition, ResourceNode node)
         {
             var idList = new List<int>();
-            var node = rootNode.FindChild(definition.InstallLocation.NodePath);
             if (node != null)
             {
                 var textureFolder = ((BRRESNode)node).GetFolder<TEX0Node>();
@@ -731,7 +731,7 @@ namespace BrawlInstaller.Services
                 }
             }
             var parentNode = (BRRESNode)node;
-            var textureId = GetUnusedCosmeticId(definition, id, rootNode);
+            var textureId = GetUnusedCosmeticId(definition, id, node);
             // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
                 (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
