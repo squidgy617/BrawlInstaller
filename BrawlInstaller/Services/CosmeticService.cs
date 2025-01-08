@@ -579,14 +579,17 @@ namespace BrawlInstaller.Services
             {
                 var textureFolder = ((BRRESNode)node).GetFolder<TEX0Node>();
                 // Check each texture in definition for IDs
-                var textures = textureFolder?.Children.Where(x => x.Name.StartsWith(definition.Prefix));
-                foreach (var texture in textures)
+                var textures = textureFolder?.Children?.Where(x => x.Name.StartsWith(definition.Prefix));
+                if (textures != null)
                 {
-                    // If the texture ends with a number, add it to the list
-                    var result = int.TryParse(texture.Name.Replace(definition.Prefix + ".", ""), out int id);
-                    if (result && !idList.Contains(id))
+                    foreach (var texture in textures)
                     {
-                        idList.Add(id);
+                        // If the texture ends with a number, add it to the list
+                        var result = int.TryParse(texture.Name.Replace(definition.Prefix + ".", ""), out int id);
+                        if (result && !idList.Contains(id))
+                        {
+                            idList.Add(id);
+                        }
                     }
                 }
             }
@@ -720,9 +723,9 @@ namespace BrawlInstaller.Services
                     bres.Compression = definition.CompressionType.ToString();
                     bres.FileType = definition.FileType;
                     bres.FileIndex = (short)id;
-                    bres.Parent = node;
+                    node.InsertChild(bres, id);
+                    node._children = node._children.OrderBy(x => ((ARCEntryNode)x).FileIndex).ToList();
                     bres.UpdateName();
-                    node.SortChildren();
                     node = bres;
                 }
                 else
