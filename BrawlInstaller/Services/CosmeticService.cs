@@ -553,10 +553,6 @@ namespace BrawlInstaller.Services
         private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode node)
         {
             id = id + definition.Offset;
-            if (node.GetType() == typeof(ARCNode))
-            {
-                node = node.FindChild(definition.InstallLocation.NodePath);
-            }
             var usedIds = GetUsedCosmeticIds(definition, node);
             while (usedIds.Contains(id))
             {
@@ -577,6 +573,10 @@ namespace BrawlInstaller.Services
             var idList = new List<int>();
             if (node != null)
             {
+                if (node.GetType() == typeof(ARCNode))
+                {
+                    node = node.FindChild(definition.InstallLocation.NodePath);
+                }
                 var textureFolder = ((BRRESNode)node).GetFolder<TEX0Node>();
                 // Check each texture in definition for IDs
                 var textures = textureFolder?.Children?.Where(x => x.Name.StartsWith(definition.Prefix));
