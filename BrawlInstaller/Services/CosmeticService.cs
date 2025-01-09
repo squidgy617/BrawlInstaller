@@ -550,15 +550,19 @@ namespace BrawlInstaller.Services
         /// <param name="id">ID to compare</param>
         /// <param name="node">Node to check for cosmetics</param>
         /// <returns></returns>
-        private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode node)
+        private int GetUnusedCosmeticId(CosmeticDefinition definition, int id, ResourceNode node, int? costumeId = 0)
         {
-            id = id + definition.Offset;
+            if (costumeId == null)
+            {
+                costumeId = 0;
+            }
+            id = (id * definition.Multiplier) + definition.Offset + costumeId.Value;
             var usedIds = GetUsedCosmeticIds(definition, node);
             while (usedIds.Contains(id))
             {
                 id = id + definition.Multiplier;
             }
-            id = id - definition.Offset;
+            id = (id - definition.Offset - costumeId.Value) / definition.Multiplier;
             return id;
         }
 
@@ -734,7 +738,7 @@ namespace BrawlInstaller.Services
                 }
             }
             var parentNode = (BRRESNode)node;
-            var textureId = GetUnusedCosmeticId(definition, id, node);
+            var textureId = GetUnusedCosmeticId(definition, id, node, cosmetic.CostumeIndex);
             // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
                 (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
