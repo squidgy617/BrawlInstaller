@@ -183,7 +183,7 @@
       "PatSettings": [
         {
           "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0",
-          "FramesPerImage": 1,
+          "FramesPerImage": 10,
           "IdType": null,
           "Multiplier": null,
           "Offset": null,
