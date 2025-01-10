@@ -28,7 +28,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -446,6 +446,9 @@
   <PropertyGroup>
     <PostBuildEvent>if EXIST "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" (
   %25windir%25\system32\xcopy "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" "$(TargetDir)" /Y /I
+)
+if not '$(ConfigurationName)' == 'Debug' (
+  del *.pdb
 )</PostBuildEvent>
   </PropertyGroup>
 </Project>
