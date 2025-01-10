@@ -15,6 +15,7 @@ using System.Windows;
 using System.IO;
 using CommunityToolkit.Mvvm.Messaging;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
+using BrawlInstaller.StaticClasses;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -88,6 +89,10 @@ namespace BrawlInstaller.ViewModels
             string errorMessage = e.Exception.Message;
 
             _dialogService.ShowMessage(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // TODO: Possibly get rid of this, just for triaging errors
+            var errorText = e.Exception.StackTrace;
+            _fileService.SaveTextFile(Paths.ErrorPath, errorText);
 
             // TODO: Restore backups when an error occurs
         }

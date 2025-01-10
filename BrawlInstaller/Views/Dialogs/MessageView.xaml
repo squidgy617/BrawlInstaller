@@ -10,10 +10,12 @@
              MinHeight="172" MinWidth="300">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=button}">
         <StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image x:Name="icon" Visibility="{Binding MessageIconVisibility}" Source="{Binding MessageIconSource}"/>
-                <TextBlock x:Name="caption" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="{Binding Caption}" Margin="5" TextWrapping="Wrap"/>
-            </StackPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="720">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image x:Name="icon" Visibility="{Binding MessageIconVisibility}" Source="{Binding MessageIconSource}"/>
+                    <TextBlock x:Name="caption" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="{Binding Caption}" Margin="5" TextWrapping="Wrap"/>
+                </StackPanel>
+            </ScrollViewer>
             <Image x:Name="image" Visibility="{Binding ImageVisbility}" Source="{Binding Image}" Width="64" Height="64" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button x:Name="button" Content="{Binding OkButtonCaption}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ConfirmCommand}" Width="70" Height="25" Margin="5" IsDefault="True"/>
