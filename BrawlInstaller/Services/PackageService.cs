@@ -93,7 +93,11 @@ namespace BrawlInstaller.Services
                 var groups = typedCosmetics.GroupBy(x => x.Style);
                 foreach (var group in groups)
                 {
-                    var match = groups.Where(x => x.Key != group.Key).FirstOrDefault(x => group.Select(y => y.Texture?.MD5Str()).All(x.Select(y => y.Texture?.MD5Str()).Contains) && group.Count() == x.Count());
+                    // All MD5 hashes must be contained in both groups and count must be the same for it to be a match
+                    var match = groups.Where(x => x.Key != group.Key)
+                        .FirstOrDefault(x => group.Select(y => y.Texture?.MD5Str()).All(x.Select(y => y.Texture?.MD5Str()).Contains)
+                        && x.Select(y => y.Texture?.MD5Str()).All(group.Select(y => y.Texture?.MD5Str()).Contains)
+                        && group.Count() == x.Count());
                     if (match != null && !inheritedStyles.Any(x => (x.Key == (cosmeticType, group.Key)) || x.Value == group.Key))
                     {
                         inheritedStyles.Add((cosmeticType, group.Key), match.Key);
