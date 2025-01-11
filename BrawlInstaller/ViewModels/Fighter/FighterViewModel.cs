@@ -337,7 +337,7 @@ namespace BrawlInstaller.ViewModels
             // Prompt for items to delete if applicable
             if (packageToSave.VictoryTheme != null && packageToSave.VictoryTheme.SongPath != _oldVictoryThemePath)
             {
-                var delete = _dialogService.ShowMessage($"Victory theme has changed. Would you like to delete the old theme at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
+                var delete = _dialogService.ShowMessage($"Victory theme has changed. Would you like to delete the old file at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
                 if (!delete)
                 {
                     packageToSave.FighterDeleteOptions.DeleteVictoryTheme = false;
@@ -345,7 +345,7 @@ namespace BrawlInstaller.ViewModels
             }
             if (packageToSave.CreditsTheme != null && packageToSave.CreditsTheme.SongPath != _oldCreditsThemePath)
             {
-                var delete = _dialogService.ShowMessage($"Credits theme has changed. Would you like to delete the old theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
+                var delete = _dialogService.ShowMessage($"Credits theme has changed. Would you like to delete the old file at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
                 if (!delete)
                 {
                     packageToSave.FighterDeleteOptions.DeleteCreditsTheme = false;

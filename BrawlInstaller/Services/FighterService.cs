@@ -1030,15 +1030,8 @@ namespace BrawlInstaller.Services
             DeleteEndingPacFiles(oldFighter.FighterInfo.EndingId);
             DeleteEndingMovie(oldFighter.FighterInfo.FighterFileName);
             _fileService.DeleteFile(oldFighter.FighterInfo.Masquerade);
-            // Delete some files only if user chose to
-            if (fighterPackage.FighterDeleteOptions.DeleteVictoryTheme)
-            {
-                DeleteVictoryTheme(oldFighter.VictoryTheme.SongId);
-            }
-            if (fighterPackage.FighterDeleteOptions.DeleteCreditsTheme)
-            {
-                DeleteCreditsTheme(oldFighter.CreditsTheme.SongId);
-            }
+            DeleteVictoryTheme(oldFighter.VictoryTheme.SongId, fighterPackage.FighterDeleteOptions.DeleteVictoryTheme);
+            DeleteCreditsTheme(oldFighter.CreditsTheme.SongId, fighterPackage.FighterDeleteOptions.DeleteCreditsTheme);
             // Import pac files
             foreach(var pacFile in pacFiles)
             {
@@ -1957,9 +1950,10 @@ namespace BrawlInstaller.Services
         /// Delete victory theme by song ID
         /// </summary>
         /// <param name="songId">Song ID to delete</param>
-        private void DeleteVictoryTheme(uint? songId)
+        /// <param name="deleteSongFile">Delete the song file associated with the song</param>
+        private void DeleteVictoryTheme(uint? songId, bool deleteSongFile)
         {
-            _tracklistService.DeleteTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist);
+            _tracklistService.DeleteTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist, deleteSongFile);
         }
 
         /// <summary>
@@ -2006,9 +2000,10 @@ namespace BrawlInstaller.Services
         /// Delete credits theme by song ID
         /// </summary>
         /// <param name="songId">Song ID to delete</param>
-        private void DeleteCreditsTheme(uint? songId)
+        /// /// <param name="deleteSongFile">Delete the song file associated with the song</param>
+        private void DeleteCreditsTheme(uint? songId, bool deleteSongFile)
         {
-            _tracklistService.DeleteTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist);
+            _tracklistService.DeleteTracklistSong(songId, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist, deleteSongFile);
         }
 
         /// <summary>

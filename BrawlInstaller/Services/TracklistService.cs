@@ -24,8 +24,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="TracklistService.GetAllTracklistSongs(string)"/>
         List<TracklistSong> GetAllTracklistSongs(string tracklist);
 
-        /// <inheritdoc cref="TracklistService.DeleteTracklistSong(uint?, string)"/>
-        void DeleteTracklistSong(uint? songId, string tracklist);
+        /// <inheritdoc cref="TracklistService.DeleteTracklistSong(uint?, string, bool)"/>
+        void DeleteTracklistSong(uint? songId, string tracklist, bool deleteSongFile = true);
 
         /// <inheritdoc cref="TracklistService.ImportTracklistSong(TracklistSong, string, ResourceNode)"/>
         uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode);
@@ -177,7 +177,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="songId">ID of song to delete</param>
         /// <param name="tracklist">Tracklist song is in</param>
-        public void DeleteTracklistSong(uint? songId, string tracklist)
+        public void DeleteTracklistSong(uint? songId, string tracklist, bool deleteSongFile = true)
         {
             var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
@@ -188,7 +188,7 @@ namespace BrawlInstaller.Services
                     var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
                     var songPath = $"{songNode.SongFileName}.brstm";
                     var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
-                    if (_fileService.FileExists(songFile))
+                    if (_fileService.FileExists(songFile) && deleteSongFile)
                     {
                         _fileService.DeleteFile(songFile);
                     }
