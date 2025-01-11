@@ -160,7 +160,8 @@ namespace BrawlInstaller.Services
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }
             node.Export(path);
-            node.IsDirty = false;
+            if (node?.IsDirty == true)
+                node.IsDirty = false;
         }
 
         /// <summary>
