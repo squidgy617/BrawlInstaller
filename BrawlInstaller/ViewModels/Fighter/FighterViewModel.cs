@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
 using BrawlLib.SSBB.Types;
 using BrawlInstaller.StaticClasses;
+using System.IO;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -620,6 +621,11 @@ namespace BrawlInstaller.ViewModels
                 if (usedNames.Contains(FighterPackage?.FighterInfo?.PartialPacName?.ToLower()))
                 {
                     messages.Add(new DialogMessage("Internal Name", $"The internal name {FighterPackage.FighterInfo.PartialPacName} is already used in the build."));
+                }
+                var isExModule = _fighterService.IsExModule(FighterPackage.Module);
+                if (!isExModule)
+                {
+                    messages.Add(new DialogMessage("Non-Ex Module", $"Fighter ID could not be found in {Path.GetFileName(FighterPackage.Module)}. Fighter ID in module will not be updated. Ensure your fighter ID matches the one this character was originally designed to use."));
                 }
             }
             var soundbankIdConflict = GetSoundbankIdConflicts();

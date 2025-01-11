@@ -104,6 +104,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetUsedEffectPacs()"/>
         List<int?> GetUsedEffectPacs();
+
+        /// <inheritdoc cref="FighterService.IsExModule(string)"/>
+        bool IsExModule(string filePath);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2218,6 +2221,44 @@ namespace BrawlInstaller.Services
                     _fileService.CloseFile(rootNode);
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if a module is an Ex module
+        /// </summary>
+        /// <param name="filePath">Path to module</param>
+        /// <returns>Whether module is Ex module</returns>
+        public bool IsExModule(string filePath)
+        {
+            var relNode = _fileService.OpenFile(filePath) as RELNode;
+            if (relNode != null)
+            {
+                var isExModule = IsExModule(relNode);
+                _fileService.CloseFile(relNode);
+                return isExModule;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Check if a module is an Ex module
+        /// </summary>
+        /// <param name="relNode">REL node</param>
+        /// <returns>Whether module is Ex module</returns>
+        private bool IsExModule(RELNode relNode)
+        {
+            // First, check for Section [8] - indicates Ex module
+            if (relNode.Sections.Length >= 9)
+            {
+                var section = relNode.Sections[8];
+                if (section != null)
+                {
+                    var sectionData = _fileService.ReadRawData(section);
+                    // Next, check that first three digits are zeroes, otherwise its not a proper Ex module
+                    return !sectionData.Take(3).Any(x => x != 0) && sectionData.Length >= 4;
+                }
+            }
+            return false;
         }
 
         /// <summary>
