@@ -201,13 +201,15 @@ namespace BrawlInstaller.Services
                 {
                     var newEntry = new StageEntry
                     {
-                        ButtonFlags = (ushort)(entry.ButtonFlags >= 0x8000 ? 0x8000 : entry.ButtonFlags >= 0x4000 ? 0x4000 : entry.ButtonFlags),
+                        ButtonFlags = entry.ButtonFlags,
                         Params = GetStageParams(entry.Name, stage.AllParams)
                     };
                     // Get bin file
                     if (stage.Slot.StageIds.StageId != null)
                     {
                         newEntry.ListAlt = GetListAlt(stage.Slot.StageIds.StageId.Value, newEntry);
+                        // Update button flags for list alts, so that stage editor displays them correctly
+                        entry.ButtonFlags = (ushort)(entry.ButtonFlags >= 0x8000 ? 0x8000 : entry.ButtonFlags >= 0x4000 ? 0x4000 : entry.ButtonFlags);
                     }
                     // Add params to list if they are not already there
                     stage.StageEntries.Add(newEntry);
