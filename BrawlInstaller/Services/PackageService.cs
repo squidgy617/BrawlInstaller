@@ -307,6 +307,17 @@ namespace BrawlInstaller.Services
                         SongId = fighterPackage.FighterInfo.CreditsThemeId
                     };
                 }
+                // Get Effect.pac IDs
+                if (fighterPackage.FighterInfo.EffectPacId == null)
+                {
+                    fighterPackage.FighterInfo.EffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterPackage.FighterInfo.PacFileName);
+                    fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
+                }
+                if (fighterPackage.FighterInfo.KirbyEffectPacId == null)
+                {
+                    fighterPackage.FighterInfo.KirbyEffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterPackage.FighterInfo.KirbyPacFileName);
+                    fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
+                }
                 fighterPackage.PackageType = PackageType.New;
                 return fighterPackage;
             }
