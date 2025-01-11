@@ -181,6 +181,8 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage.FighterInfo.FullKirbyPacFileName = $"kirby/FitKirby{fileName}.pac";
                 FighterPackage.FighterInfo.ModuleFileName = $"ft_{fileName.ToLower()}.rel";
                 FighterPackage.FighterInfo.InternalName = fileName.ToUpper();
+                if (DisplayNameEnabled)
+                    FighterPackage.FighterInfo.DisplayName = fileName;
                 OnPropertyChanged(nameof(FighterPackage));
             }
         }
