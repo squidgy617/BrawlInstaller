@@ -50,9 +50,7 @@ namespace BrawlInstaller.Services
             var paletteFolder = bres.GetFolder<PLT0Node>();
             var colorSmashDirectory = Path.GetFullPath(ColorSmashDirectory);
             var colorSmashOutDirectory = Path.GetFullPath(ColorSmashOutDirectory);
-            _fileService.DeleteDirectory(colorSmashDirectory);
-            _fileService.CreateDirectory(colorSmashDirectory);
-            _fileService.CreateDirectory(colorSmashOutDirectory);
+            RegenerateDirectories();
             // Save images to color smash input folder
             foreach(var cosmetic in cosmetics)
             {
@@ -65,7 +63,28 @@ namespace BrawlInstaller.Services
             // Get mip count
             var mipCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).LevelOfDetail).Max();
             // Color smash
-            ColorSmasher(paletteCount);
+            var success = ColorSmasher(paletteCount);
+            // TODO: Better way to handle this? Trying twice seems silly
+            // If color smashing wasn't successful, try again
+            if (!success)
+            {
+                RegenerateDirectories();
+                // Save images to color smash input folder
+                foreach (var cosmetic in cosmetics)
+                {
+                    _fileService.SaveImage(cosmetic.Image, $"{colorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
+                }
+                // Recalculate palette count, removing any alpha 0 entries
+                paletteCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).GetPaletteNode().Palette.Entries.Where(y => y.A > 0).Count()).Max();
+                paletteCount = Math.Min(paletteCount, 256);
+                // Try again
+                success = ColorSmasher(paletteCount);
+                // If it fails again, throw an error
+                if (!success)
+                {
+                    throw new Exception("Error while trying to color smash. Please ensure all cosmetics are color smashable.");
+                }
+            }
             foreach(var cosmetic in cosmetics)
             {
                 var currentTexture = GetTexture(bres, cosmetic.Texture.Name);
@@ -146,7 +165,7 @@ namespace BrawlInstaller.Services
         /// Run color smasher on textures
         /// </summary>
         /// <param name="paletteCount">Palette count to use</param>
-        private void ColorSmasher(int paletteCount)
+        private bool ColorSmasher(int paletteCount)
         {
             Process cSmash = Process.Start(new ProcessStartInfo
             {
@@ -155,11 +174,20 @@ namespace BrawlInstaller.Services
                 Arguments = $"-c RGB5A3 -n {paletteCount}"
             });
             cSmash?.WaitForExit();
-            // If there are any images in the "in" folder that don't exist in the "out" folder, throw an error
-            if (_fileService.GetFiles(ColorSmashDirectory, "*.png").Any(x => !_fileService.GetFiles(ColorSmashOutDirectory, "*.png").Select(y => Path.GetFileNameWithoutExtension(y)).Contains(Path.GetFileNameWithoutExtension(x))))
-            {
-                throw new Exception("Error while trying to color smash. Please ensure all cosmetics are color smashable.");
-            }
+            // If there are any images in the "in" folder that don't exist in the "out" folder, it didn't actually succeed
+            return !_fileService.GetFiles(ColorSmashDirectory, "*.png").Any(x => !_fileService.GetFiles(ColorSmashOutDirectory, "*.png").Select(y => Path.GetFileNameWithoutExtension(y)).Contains(Path.GetFileNameWithoutExtension(x)));
+        }
+
+        /// <summary>
+        /// Regenerate color smash directories
+        /// </summary>
+        private void RegenerateDirectories()
+        {
+            var colorSmashDirectory = Path.GetFullPath(ColorSmashDirectory);
+            var colorSmashOutDirectory = Path.GetFullPath(ColorSmashOutDirectory);
+            _fileService.DeleteDirectory(colorSmashDirectory);
+            _fileService.CreateDirectory(colorSmashDirectory);
+            _fileService.CreateDirectory(colorSmashOutDirectory);
         }
     }
 }
