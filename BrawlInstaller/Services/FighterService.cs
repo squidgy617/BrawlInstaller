@@ -2249,32 +2249,33 @@ namespace BrawlInstaller.Services
                         }
                     }
                 }
+                // TODO: Commented out because it is not guaranteed to work, need to come up with a better solution
                 // If it isn't an Ex module - either because we didn't find a Section [8] or it didn't match - treat it as a fighter module
-                if (!isExModule)
-                {
-                    // Find matching fighter module ID locations
-                    var matches = ModuleIdLocations.IdLocations.Where(x => x.ModuleName == relNode.Name);
-                    if (matches.Any())
-                    {
-                        var match = matches.First();
-                        // Check for Section [1]
-                        if (relNode.Sections.Length >= 2)
-                        {
-                            var section = relNode.Sections[1];
-                            if (section != null)
-                            {
-                                var sectionData = _fileService.ReadRawData(section);
-                                // Replace data at each location with our ID
-                                foreach(var location in match.Locations)
-                                {
-                                    // TODO: Instead of putting + 3 here, put it in the static class?
-                                    sectionData[location + 3] = (byte)fighterId;
-                                    _fileService.ReplaceNodeRaw(section, sectionData);
-                                }
-                            }
-                        }
-                    }
-                }
+                //if (!isExModule)
+                //{
+                //    // Find matching fighter module ID locations
+                //    var matches = ModuleIdLocations.IdLocations.Where(x => x.ModuleName == relNode.Name);
+                //    if (matches.Any())
+                //    {
+                //        var match = matches.First();
+                //        // Check for Section [1]
+                //        if (relNode.Sections.Length >= 2)
+                //        {
+                //            var section = relNode.Sections[1];
+                //            if (section != null)
+                //            {
+                //                var sectionData = _fileService.ReadRawData(section);
+                //                // Replace data at each location with our ID
+                //                foreach(var location in match.Locations)
+                //                {
+                //                    // TODO: Instead of putting + 3 here, put it in the static class?
+                //                    sectionData[location + 3] = (byte)fighterId;
+                //                    _fileService.ReplaceNodeRaw(section, sectionData);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
             return relNode;
         }
