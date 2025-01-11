@@ -55,6 +55,11 @@ namespace BrawlInstaller.ViewModels
 
             WeakReferenceMessenger.Default.Register<AttributesUpdatedMessage>(this, (recipient, message) =>
             {
+                OnPropertyChanged(nameof(SoundbankId));
+                OnPropertyChanged(nameof(KirbySoundbankId));
+                if (FighterPackage?.VictoryTheme != null)
+                    FighterPackage.VictoryTheme.SongId = FighterPackage.FighterInfo.VictoryThemeId;
+                OnPropertyChanged(nameof(VictoryThemeId));
                 OnPropertyChanged(nameof(SoundbankControlsEnabled));
                 OnPropertyChanged(nameof(VictoryThemeControlsEnabled));
             });

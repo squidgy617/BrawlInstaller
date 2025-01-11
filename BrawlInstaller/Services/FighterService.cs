@@ -459,14 +459,24 @@ namespace BrawlInstaller.Services
                     if (rootNode.GetType() == typeof(FCFGNode))
                     {
                         fighterInfo.FighterAttributes = ((FCFGNode)rootNode).ToFighterAttributes();
+                        fighterInfo.SoundbankId = ((FCFGNode)rootNode).SoundBank;
+                        fighterInfo.KirbySoundbankId = ((FCFGNode)rootNode).KirbySoundBank;
+                        fighterInfo.KirbyLoadType = ((FCFGNode)rootNode).KirbyLoadType;
+                        fighterInfo.FighterFileName = ((FCFGNode)rootNode).FileName;
+                        fighterInfo.FullPacFileName = ((FCFGNode)rootNode).PacName;
+                        fighterInfo.FullKirbyPacFileName = ((FCFGNode)rootNode).KirbyPacName;
+                        fighterInfo.ModuleFileName = ((FCFGNode)rootNode).ModuleName;
+                        fighterInfo.InternalName = ((FCFGNode)rootNode).InternalFighterName;
                     }
                     else if (rootNode.GetType() == typeof(SLTCNode))
                     {
                         fighterInfo.SlotAttributes = ((SLTCNode)rootNode).ToSlotAttributes();
+                        fighterInfo.VictoryThemeId = ((SLTCNode)rootNode).VictoryTheme;
                     }
                     else if (rootNode.GetType() == typeof(COSCNode))
                     {
                         fighterInfo.CosmeticAttributes = ((COSCNode)rootNode).ToCosmeticAttributes();
+                        fighterInfo.DisplayName = ((COSCNode)rootNode).CharacterName;
                     }
                     else if (rootNode.GetType() == typeof(CSSCNode))
                     {
