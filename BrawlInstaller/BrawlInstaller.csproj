@@ -28,13 +28,14 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ColorPicker, Version=3.4.1.0, Culture=neutral, PublicKeyToken=1c61eec504ce2276, processorArchitecture=MSIL">
@@ -446,9 +447,6 @@
   <PropertyGroup>
     <PostBuildEvent>if EXIST "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" (
   %25windir%25\system32\xcopy "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" "$(TargetDir)" /Y /I
-)
-if not '$(ConfigurationName)' == 'Debug' (
-  del *.pdb
 )</PostBuildEvent>
   </PropertyGroup>
 </Project>

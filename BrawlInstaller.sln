@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrawlLib", "BrawlLib\BrawlL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lavaKirbyHatManagerV2", "lavaKirbyHatManagerV2\lavaKirbyHatManagerV2.csproj", "{9DFD4208-0F96-4AE5-B6C6-444C54CDE312}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{179CDD49-18F0-4D26-B79D-5E9DEF4B20A3}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Canary|Any CPU = Canary|Any CPU
