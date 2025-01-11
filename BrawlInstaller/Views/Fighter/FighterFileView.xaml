@@ -103,7 +103,10 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Label x:Name="victoryThemeLabel" Content="Victory Theme:" ToolTip="Internal name of fighter victory theme"/>
-                    <TextBox x:Name="victoryThemeTextBox" Text="{Binding FighterPackage.VictoryTheme.Name, Mode=TwoWay}" Grid.Column="1" Width="120"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <TextBox x:Name="victoryThemeTextBox" Text="{Binding FighterPackage.VictoryTheme.Name, Mode=TwoWay}" Width="120"/>
+                        <Button x:Name="victoryThemeSelectButton" Content="🔍" Style="{StaticResource miniButton}" Command="{Binding SelectVictoryThemeCommand}"/>
+                    </StackPanel>
                     <Label x:Name="victoryThemePathLabel" Content="Path:" Grid.Row="1" Grid.Column="0" ToolTip="File to use for victory theme"/>
                     <TextBox x:Name="victoryThemePathTextBox" Text="{Binding FighterPackage.VictoryTheme.SongPath, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="120"/>
                     <userControls:FileBox x:Name="victoryThemeFileBox" Text="{Binding FighterPackage.VictoryTheme.SongFile, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="BRSTM file (.brstm)|*.brstm">
@@ -128,7 +131,10 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Label x:Name="creditsThemeLabel" Content="Credits Theme:" ToolTip="Internal name of fighter credits theme"/>
-                    <TextBox x:Name="creditsThemeTextBox" Text="{Binding FighterPackage.CreditsTheme.Name, Mode=TwoWay}" Grid.Column="1" Width="120"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <TextBox x:Name="creditsThemeTextBox" Text="{Binding FighterPackage.CreditsTheme.Name, Mode=TwoWay}" Grid.Column="1" Width="120"/>
+                        <Button x:Name="creditsThemeSelectButton" Content="🔍" Style="{StaticResource miniButton}" Command="{Binding SelectCreditsThemeCommand}"/>
+                    </StackPanel>
                     <Label x:Name="creditsThemePathLabel" Content="Path:" Grid.Row="1" Grid.Column="0" ToolTip="File to use for credits theme"/>
                     <TextBox x:Name="creditsThemePathTextBox" Text="{Binding FighterPackage.CreditsTheme.SongPath, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="120"/>
                     <userControls:FileBox x:Name="creditsThemeFileBox" Text="{Binding FighterPackage.CreditsTheme.SongFile, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="BRSTM file (.brstm)|*.brstm">

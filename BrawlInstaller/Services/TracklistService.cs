@@ -21,6 +21,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="TracklistService.GetTracklistSong(uint?, string)"/>
         TracklistSong GetTracklistSong(uint? songId, string tracklist);
 
+        /// <inheritdoc cref="TracklistService.GetAllTracklistSongs(string)"/>
+        List<TracklistSong> GetAllTracklistSongs(string tracklist);
+
         /// <inheritdoc cref="TracklistService.DeleteTracklistSong(uint?, string)"/>
         void DeleteTracklistSong(uint? songId, string tracklist);
 
@@ -73,29 +76,61 @@ namespace BrawlInstaller.Services
                 var songNode = GetSongNode(rootNode, songId);
                 if (songNode != null)
                 {
-                    song.Name = songNode.Name;
-                    song.SongId = songNode.SongID;
-                    song.SongPath = songNode.SongFileName;
-                    song.SongDelay = songNode.SongDelay;
-                    song.Volume = songNode.Volume;
-                    song.Frequency = songNode.Frequency;
-                    song.SongSwitch = songNode.SongSwitch;
-                    song.DisableStockPinch = songNode.DisableStockPinch;
-                    song.HiddenFromTracklist = songNode.HiddenFromTracklist;
-                    song.Index = songNode.Index;
-                    var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
-                    var songPath = $"{songNode.SongFileName}.brstm";
-                    var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
-                    if (_fileService.FileExists(songFile))
-                    {
-                        song.SongFile = songFile;
-                    }
+                    song = GetTracklistSong(songNode);
                 }
                 _fileService.CloseFile(rootNode);
             }
             if (songId != null)
             {
                 song.SongId = (uint)songId;
+            }
+            return song;
+        }
+
+        /// <summary>
+        /// Get all song objects from tracklist
+        /// </summary>
+        /// <param name="tracklist">Tracklist to open</param>
+        /// <returns>TracklistSongs</returns>
+        public List<TracklistSong> GetAllTracklistSongs(string tracklist)
+        {
+            var songs = new List<TracklistSong>();
+            var rootNode = OpenTracklist(tracklist);
+            if (rootNode != null)
+            {
+                foreach(TLSTEntryNode songNode in rootNode.Children)
+                {
+                    songs.Add(GetTracklistSong(songNode));
+                }
+                _fileService.CloseFile(rootNode);
+            }
+            return songs;
+        }
+
+        /// <summary>
+        /// Get tracklist song from node
+        /// </summary>
+        /// <param name="songNode">TLSTEntryNode</param>
+        /// <returns>TracklistSong</returns>
+        private TracklistSong GetTracklistSong(TLSTEntryNode songNode)
+        {
+            var song = new TracklistSong();
+            song.Name = songNode.Name;
+            song.SongId = songNode.SongID;
+            song.SongPath = songNode.SongFileName;
+            song.SongDelay = songNode.SongDelay;
+            song.Volume = songNode.Volume;
+            song.Frequency = songNode.Frequency;
+            song.SongSwitch = songNode.SongSwitch;
+            song.DisableStockPinch = songNode.DisableStockPinch;
+            song.HiddenFromTracklist = songNode.HiddenFromTracklist;
+            song.Index = songNode.Index;
+            var brstmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
+            var songPath = $"{songNode.SongFileName}.brstm";
+            var songFile = Path.Combine(_settingsService.AppSettings.BuildPath, brstmPath, songPath);
+            if (_fileService.FileExists(songFile))
+            {
+                song.SongFile = songFile;
             }
             return song;
         }

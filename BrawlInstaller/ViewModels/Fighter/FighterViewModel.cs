@@ -602,7 +602,8 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Soundbank IDs", "One or more soundbanks do not have IDs. You cannot save a fighter without soundbank IDs."));
                 result = false;
             }
-            _dialogService.ShowMessages("Errors have occurred that prevent your fighter from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
+            if (messages.Count > 0)
+                _dialogService.ShowMessages("Errors have occurred that prevent your fighter from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
             return result;
         }
 

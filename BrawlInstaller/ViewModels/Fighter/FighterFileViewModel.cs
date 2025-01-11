@@ -34,6 +34,8 @@ namespace BrawlInstaller.ViewModels
         // Services
         IDialogService _dialogService { get; }
         IFighterService _fighterService { get; }
+        ITracklistService _tracklistService { get; }
+        ISettingsService _settingsService { get; }
 
         // Commands
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
@@ -41,13 +43,17 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddEndingPacFilesCommand => new RelayCommand(param => AddEndingPacFiles());
         public ICommand RemoveEndingPacFileCommand => new RelayCommand(param => RemoveEndingPacFile());
         public ICommand UpdateTracklistSongFileCommand => new RelayCommand(param => UpdateTracklistSongFile((TracklistSong)param));
+        public ICommand SelectVictoryThemeCommand => new RelayCommand(param =>  SelectVictoryTheme());
+        public ICommand SelectCreditsThemeCommand => new RelayCommand(param => SelectCreditsTheme());
 
         // Importing constructor
         [ImportingConstructor]
-        public FighterFileViewModel(IDialogService dialogService, IFighterService fighterService)
+        public FighterFileViewModel(IDialogService dialogService, IFighterService fighterService, ITracklistService tracklistService, ISettingsService settingsService)
         {
             _dialogService = dialogService;
             _fighterService = fighterService;
+            _tracklistService = tracklistService;
+            _settingsService = settingsService;
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
                 LoadFighterFiles(message);
@@ -207,6 +213,33 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage.EndingPacFiles.Remove(SelectedEndingPacFile);
             OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void SelectVictoryTheme()
+        {
+            var result = SelectTracklistSong(_settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist, "Select a victory theme");
+            if (result != null)
+            {
+                FighterPackage.VictoryTheme = result;
+                OnPropertyChanged(nameof(FighterPackage));
+            }
+        }
+
+        public void SelectCreditsTheme()
+        {
+            var result = SelectTracklistSong(_settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist, "Select a credits theme");
+            if (result != null)
+            {
+                FighterPackage.CreditsTheme = result;
+                OnPropertyChanged(nameof(FighterPackage));
+            }
+        }
+
+        private TracklistSong SelectTracklistSong(string tracklist, string caption)
+        {
+            var songs = _tracklistService.GetAllTracklistSongs(tracklist);
+            var result = _dialogService.OpenDropDownDialog(songs, "Name", "Select a song", caption);
+            return result as TracklistSong;
         }
     }
 }
