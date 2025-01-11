@@ -280,7 +280,7 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveFighter()
         {
-            if (Validate() != true)
+            if (ErrorValidate() != true || Validate() != true)
             {
                 return;
             }
@@ -402,7 +402,7 @@ namespace BrawlInstaller.ViewModels
 
         public void ExportFighterAs(string file)
         {
-            if (!string.IsNullOrEmpty(file))
+            if (ErrorValidate() && !string.IsNullOrEmpty(file))
             {
                 // Create copy of fighter package before save
                 var packageToSave = FighterPackage.Copy();
@@ -591,6 +591,19 @@ namespace BrawlInstaller.ViewModels
         {
             _fighterService.SaveRosters(Rosters);
             _dialogService.ShowMessage("Saved rosters.", "Saved");
+        }
+
+        public bool ErrorValidate()
+        {
+            var messages = new List<DialogMessage>();
+            var result = true;
+            if (FighterPackage.FighterInfo.SoundbankId == null || FighterPackage.FighterInfo.KirbySoundbankId == null)
+            {
+                messages.Add(new DialogMessage("Soundbank IDs", "One or more soundbanks do not have IDs. You cannot save a fighter without soundbank IDs."));
+                result = false;
+            }
+            _dialogService.ShowMessages("Errors have occurred that prevent your fighter from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
+            return result;
         }
 
         public bool Validate()
