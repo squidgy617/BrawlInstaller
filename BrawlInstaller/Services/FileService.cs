@@ -22,6 +22,8 @@ using BrawlInstaller.Classes;
 using BrawlInstaller.StaticClasses;
 using System.Diagnostics;
 using BrawlInstaller.Exceptions;
+using System.Text.RegularExpressions;
+using System.Web.UI.Design.WebControls;
 
 namespace BrawlInstaller.Services
 {
@@ -110,6 +112,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.ReadAllBytes(string)"/>
         byte[] ReadAllBytes(string filePath);
+
+        /// <inheritdoc cref="FileService.ParseIniFile(string)"/>
+        Dictionary<string, string> ParseIniFile(string iniFile);
     }
     // TODO: Backup system, only back up files in build
     [Export(typeof(IFileService))]
@@ -170,37 +175,40 @@ namespace BrawlInstaller.Services
         /// <param name="node">Root node of file to close</param>
         public void CloseFile(ResourceNode node)
         {
-            // TODO: Figure out what actually causes this error. For now, this should force modules to eventually close like they should
-            if (node.GetType() == typeof(RELNode))
+            if (node != null)
             {
-                var sw = new Stopwatch();
-                sw.Start();
-                while (true)
+                // TODO: Figure out what actually causes this error. For now, this should force modules to eventually close like they should
+                if (node.GetType() == typeof(RELNode))
                 {
-                    try
+                    var sw = new Stopwatch();
+                    sw.Start();
+                    while (true)
                     {
-                        if (sw.ElapsedMilliseconds >= 10000)
+                        try
                         {
-                            sw.Stop();
-                            var error = new Exception($"Module {node.FileName} could not be closed after 10 seconds. Please try again.");
-                            throw error;
+                            if (sw.ElapsedMilliseconds >= 10000)
+                            {
+                                sw.Stop();
+                                var error = new Exception($"Module {node.FileName} could not be closed after 10 seconds. Please try again.");
+                                throw error;
+                            }
+                            node.Dispose();
+                            break;
                         }
-                        node.Dispose();
-                        break;
-                    }
-                    catch(InvalidOperationException ex)
-                    {
-                        if (ex.Message == "Collection was modified; enumeration operation may not execute.")
+                        catch (InvalidOperationException ex)
                         {
-                            continue;
+                            if (ex.Message == "Collection was modified; enumeration operation may not execute.")
+                            {
+                                continue;
+                            }
                         }
                     }
+                    sw.Stop();
                 }
-                sw.Stop();
-            }
-            else
-            {
-                node.Dispose();
+                else
+                {
+                    node.Dispose();
+                }
             }
         }
 
@@ -598,6 +606,25 @@ namespace BrawlInstaller.Services
                 return File.ReadAllBytes(filePath);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Read data from INI file
+        /// </summary>
+        /// <param name="iniFile">INI file to read</param>
+        /// <returns>Dictionary of INI data</returns>
+        public Dictionary<string, string> ParseIniFile(string iniFile) 
+        {
+            var iniData = new Dictionary<string, string>();
+            var text = ReadTextFile(iniFile);
+            var cleanText = Regex.Replace(text, "([;]|[#]|[//]).*(\n|\r)", "");
+            var lines = cleanText.Replace("\r\n", "\n").Split('\n');
+            foreach (var line in lines.Where(x => !string.IsNullOrWhiteSpace(x)))
+            {
+                var keyValuePair = line.Split('=');
+                iniData.Add(keyValuePair[0].Trim(), keyValuePair[1].Trim());
+            }
+            return iniData;
         }
     }
 }

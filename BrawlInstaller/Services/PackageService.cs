@@ -11,10 +11,12 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using static BrawlLib.BrawlManagerLib.TextureContainer;
 
 namespace BrawlInstaller.Services
@@ -32,6 +34,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="PackageService.LoadFighterPackage(string)"/>
         FighterPackage LoadFighterPackage(string inFile);
+
+        /// <inheritdoc cref="PackageService.LoadLegacyPackage(string)"/>
+        FighterPackage LoadLegacyPackage(string inFile);
     }
     [Export(typeof(IPackageService))]
     internal class PackageService : IPackageService
@@ -405,6 +410,272 @@ namespace BrawlInstaller.Services
             // Generate fighter package file
             _fileService.GenerateZipFileFromDirectory(path, outFile);
             _fileService.DeleteDirectory(path);
+        }
+
+        /// <summary>
+        /// Load legacy fighter package
+        /// </summary>
+        /// <param name="inFile">Zip file to load</param>
+        /// <returns>Fighter package</returns>
+        public FighterPackage LoadLegacyPackage(string inFile)
+        {
+            var path = _settingsService.AppSettings.TempPath + "\\FighterPackageImport";
+            var output = _fileService.ExtractZipFile(inFile, path);
+            if (!string.IsNullOrEmpty(output))
+            {
+                if (_fileService.DirectoryExists(path))
+                {
+                    path = Path.GetFullPath(path);
+                }
+                else
+                {
+                    return null;
+                }
+                var fighterPackage = new FighterPackage();
+                // Get fighter info
+                var exConfigs = _fileService.GetFiles(Path.Combine(path, "EXConfigs"), "*.dat");
+                fighterPackage.FighterInfo.FighterConfig = exConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Fighter"));
+                fighterPackage.FighterInfo.CosmeticConfig = exConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Cosmetic"));
+                fighterPackage.FighterInfo.CSSSlotConfig = exConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("CSSSlot"));
+                fighterPackage.FighterInfo.SlotConfig = exConfigs.FirstOrDefault(x => Path.GetFileName(x).StartsWith("Slot"));
+                fighterPackage.FighterInfo = _fighterService.GetFighterInfo(fighterPackage.FighterInfo, fighterPackage.FighterInfo.FighterConfig, fighterPackage.FighterInfo.CosmeticConfig, fighterPackage.FighterInfo.CSSSlotConfig, fighterPackage.FighterInfo.SlotConfig);
+                // Set IDs to first available
+                fighterPackage.FighterInfo = _fighterService.UpdateIdsToFirstUnused(fighterPackage.FighterInfo);
+                // Get fighter settings
+                var settingsPath = Path.Combine(path, "FighterSettings.txt");
+                if (_fileService.FileExists(settingsPath))
+                {
+                    var iniData = _fileService.ParseIniFile(settingsPath);
+                    if (iniData.TryGetValue("throwReleasePoint", out string throwRelease))
+                    {
+                        var throwReleasePoints = throwRelease.Split(',');
+                        var resultX = double.TryParse(throwReleasePoints[0], out double x);
+                        var resultY = double.TryParse(throwReleasePoints[1], out double y);
+                        if (resultX && resultY)
+                            fighterPackage.FighterSettings.ThrowReleasePoint = new Position(x, y);
+                    }
+                    if (iniData.TryGetValue("creditsThemeId", out string creditsThemeId) && int.TryParse(creditsThemeId.Substring(2), NumberStyles.HexNumber, null, out int creditsThemeIdValue))
+                    {
+                        fighterPackage.FighterSettings.CreditsThemeId = creditsThemeIdValue;
+                    }
+                    if (iniData.TryGetValue("lucarioBoneId", out string lucarioBoneId) && int.TryParse(lucarioBoneId.Substring(2), NumberStyles.HexNumber, null, out int lucarioBoneIdValue))
+                    {
+                        fighterPackage.FighterSettings.LucarioSettings.BoneIds = new List<int?> { lucarioBoneIdValue, lucarioBoneIdValue, lucarioBoneIdValue, lucarioBoneIdValue };
+                    }
+                    if (iniData.TryGetValue("lucarioKirbyEffectId", out string lucarioKirbyEffectId))
+                    {
+                        fighterPackage.FighterSettings.LucarioSettings.UseKirbyGfxFix = true;
+                    }
+                    if (iniData.TryGetValue("jigglypuffBoneId", out string jigglypuffBoneId) && int.TryParse(jigglypuffBoneId.Substring(2), NumberStyles.HexNumber, null, out int jigglypuffBoneIdValue))
+                    {
+                        fighterPackage.FighterSettings.JigglypuffSettings.BoneIds = new List<int?> { jigglypuffBoneIdValue, jigglypuffBoneIdValue, jigglypuffBoneIdValue, jigglypuffBoneIdValue };
+                    }
+                    if (iniData.TryGetValue("jigglypuffEFLSId", out string jigglypuffEFLSId) && int.TryParse(jigglypuffEFLSId.Substring(2), NumberStyles.HexNumber, null, out int jigglypuffEFLSIdValue))
+                    {
+                        fighterPackage.FighterSettings.JigglypuffSettings.EFLSId = jigglypuffEFLSIdValue;
+                    }
+                    if (iniData.TryGetValue("jigglypuffSfxIds", out string jigglypuffSfxIds))
+                    {
+                        var sfxIds = jigglypuffSfxIds.Split(',');
+                        var sfxIdList = new List<int?>();
+                        foreach (var id in sfxIds)
+                        {
+                            if (int.TryParse(id.Substring(2), NumberStyles.HexNumber, null, out int sfxId))
+                            {
+                                sfxIdList.Add(sfxId);
+                            }
+                            else
+                            {
+                                sfxIdList.Add(null);
+                            }
+                        }
+                        fighterPackage.FighterSettings.JigglypuffSettings.SfxIds = sfxIdList;
+                    }
+                    if (iniData.TryGetValue("bowserBoneId", out string bowserBoneId) && int.TryParse(bowserBoneId.Substring(2), NumberStyles.HexNumber, null, out int bowserBoneIdValue))
+                    {
+                        fighterPackage.FighterSettings.BowserSettings.BoneId = bowserBoneIdValue;
+                    }
+                    // TODO: Trophy ID
+                    if (iniData.TryGetValue("doorId", out string doorId) && uint.TryParse(doorId.Substring(2), NumberStyles.HexNumber, null, out uint doorIdValue))
+                    {
+                        fighterPackage.FighterSettings.DoorId = doorIdValue;
+                    }
+                }
+                // Get cosmetics
+                var cosmetics = GetLegacyCosmetics(Path.Combine(path, "BPs"), CosmeticType.BP, CosmeticType.BPName);
+                cosmetics.AddRange(GetLegacyCostumeCosmetics(Path.Combine(path, "CSPs"), CosmeticType.CSP, "Result"));
+                cosmetics.AddRange(GetLegacyCosmetics(Path.Combine(path, "CSSIcon"), CosmeticType.CSSIcon, CosmeticType.CSSIconName));
+                cosmetics.AddRange(GetLegacyCosmetics(Path.Combine(path, "PortraitName"), CosmeticType.PortraitName, CosmeticType.PortraitName));
+                cosmetics.AddRange(GetLegacyCosmetics(Path.Combine(path, "ReplayIcon"), CosmeticType.ReplayIcon, CosmeticType.ReplayIcon));
+                cosmetics.AddRange(GetLegacyCostumeCosmetics(Path.Combine(path, "StockIcons"), CosmeticType.StockIcon, "P+"));
+                // Get franchise icon
+                var franchiseIconFolders = _fileService.GetDirectories(Path.Combine(path, "FranchiseIcons"), "*", SearchOption.TopDirectoryOnly);
+                var franchiseIcon = _fileService.GetFiles(franchiseIconFolders.FirstOrDefault(x => Path.GetFileName(x) == "Black"), "*.png").FirstOrDefault();
+                var franchiseIconHd = _fileService.GetFiles(franchiseIconFolders.FirstOrDefault(x => Path.GetFileName(x) == "Transparent"), "*.png").FirstOrDefault();
+                var franchiseIconModel = _fileService.GetFiles(franchiseIconFolders.FirstOrDefault(x => Path.GetFileName(x) == "Model"), "*.mdl0").FirstOrDefault();
+                if (!string.IsNullOrEmpty(franchiseIcon))
+                {
+                    var newCosmetic = new Cosmetic
+                    {
+                        CosmeticType = CosmeticType.FranchiseIcon,
+                        Style = "Icon",
+                        ImagePath = franchiseIcon,
+                        HDImagePath = _fileService.FileExists(franchiseIconHd) ? franchiseIconHd : string.Empty,
+                        Image = _fileService.LoadImage(franchiseIcon),
+                        HDImage = _fileService.FileExists(franchiseIconHd) ? _fileService.LoadImage(franchiseIconHd) : null,
+                        ModelPath = franchiseIconModel,
+                        SharesData = false
+                    };
+                    fighterPackage.Cosmetics.Add(newCosmetic);
+                }
+                // Add all cosmetics to package
+                foreach (var cosmetic in cosmetics)
+                {
+                    fighterPackage.Cosmetics.Add(cosmetic);
+                }
+                // Inherit missing cosmetics that require it
+                foreach (var definition in _settingsService.BuildSettings.CosmeticSettings)
+                {
+                    if (definition.AlwaysInheritStyle && !fighterPackage.Cosmetics.Items.Any(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style))
+                    {
+                        var inheritedStyle = fighterPackage.Cosmetics.Items.FirstOrDefault(x => x.CosmeticType == definition.CosmeticType)?.Style;
+                        if (!string.IsNullOrEmpty(inheritedStyle))
+                        {
+                            fighterPackage.Cosmetics.InheritedStyles.Add((definition.CosmeticType, definition.Style), inheritedStyle);
+                        }
+                    }
+                }
+                // Get all pac files
+                var pacDirs = new List<string>();
+                var pacPath = Path.Combine(path, "Fighter");
+                var pacFileObjects = new List<FighterPacFile>();
+                pacDirs.Add(pacPath);
+                pacDirs.AddRange(_fileService.GetDirectories(pacPath, "*", SearchOption.TopDirectoryOnly).Where(x => x != "#Options"));
+                foreach (var dir in pacDirs)
+                {
+                    var pacFiles = _fileService.GetFiles(dir, "*.pac");
+                    foreach (var pacFile in pacFiles)
+                    {
+                        var newPacFile = new FighterPacFile { FilePath = pacFile };
+                        newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, false);
+                        pacFileObjects.Add(newPacFile);
+                    }
+                }
+                // Get costumes
+                var rootNode = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
+                if (rootNode != null)
+                {
+                    foreach (var entry in rootNode.Children)
+                    {
+                        var costume = new Costume
+                        {
+                            Color = ((CSSCEntryNode)entry).Color,
+                            CostumeId = ((CSSCEntryNode)entry).CostumeID
+                        };
+                        costume.Cosmetics = fighterPackage.Cosmetics.Items.Where(x => x.CostumeIndex == entry.Index + 1).ToList();
+                        costume.PacFiles = pacFileObjects.Where(x => Path.GetFileNameWithoutExtension(x.FilePath).EndsWith(costume.CostumeId.ToString("D2"))).ToList();
+                        fighterPackage.Costumes.Add(costume);
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+                // Get non-costume pac files
+                fighterPackage.PacFiles = pacFileObjects.Where(x => !fighterPackage.Costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList();
+                fighterPackage.PackageType = PackageType.New;
+                return fighterPackage;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get non-costume cosmetics for legacy fighter package
+        /// </summary>
+        /// <param name="path">Folder to get cosmetics from</param>
+        /// <param name="cosmeticType">Type of cosmetic</param>
+        /// <param name="nameType">Type of cosmetic for name</param>
+        /// <returns>List of cosmetics</returns>
+        private List<Cosmetic> GetLegacyCosmetics(string path, CosmeticType cosmeticType, CosmeticType nameType)
+        {
+            var cosmeticList = new List<Cosmetic>();
+            var folders = _fileService.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+            foreach (var folder in folders)
+            {
+                var images = _fileService.GetFiles(folder, "*.png");
+                foreach (var image in images)
+                {
+                    var hdImagePath = Path.Combine(folder, "HD", Path.GetFileName(image));
+                    var newCosmetic = new Cosmetic
+                    {
+                        CosmeticType = cosmeticType,
+                        Style = Path.GetFileName(folder),
+                        ImagePath = image,
+                        HDImagePath = _fileService.FileExists(hdImagePath) ? hdImagePath : string.Empty,
+                        Image = _fileService.LoadImage(image),
+                        HDImage = _fileService.FileExists(hdImagePath) ? _fileService.LoadImage(hdImagePath) : null,
+                        InternalIndex = images.IndexOf(image),
+                        CostumeIndex = images.IndexOf(image) + 1,
+                        SharesData = false,
+                        ColorSmashChanged = true
+                    };
+                    cosmeticList.Add(newCosmetic);
+                }
+                // Name
+                var name = _fileService.GetFiles(Path.Combine(folder, "Name"), "*.png").FirstOrDefault();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var hdImagePath = _fileService.GetFiles(Path.Combine(folder, "Name", "HD"), "*.png").FirstOrDefault();
+                    var newCosmetic = new Cosmetic
+                    {
+                        CosmeticType = nameType,
+                        Style = Path.GetFileName(folder),
+                        ImagePath = name,
+                        HDImagePath = hdImagePath,
+                        Image = _fileService.LoadImage(name),
+                        HDImage = _fileService.FileExists(hdImagePath) ? _fileService.LoadImage(hdImagePath) : null,
+                        InternalIndex = 0,
+                        CostumeIndex = 1,
+                        SharesData = false,
+                        ColorSmashChanged = true
+                    };
+                    cosmeticList.Add(newCosmetic);
+                }
+            }
+            return cosmeticList;
+        }
+
+        /// <summary>
+        /// Get costume cosmetics for legacy fighter package
+        /// </summary>
+        /// <param name="path">Folder to get cosmetics from</param>
+        /// <param name="cosmeticType">Type of cosmetics</param>
+        /// <param name="style">Style to use for cosmetics</param>
+        /// <returns></returns>
+        private List<Cosmetic> GetLegacyCostumeCosmetics(string path, CosmeticType cosmeticType, string style)
+        {
+            var cosmeticList = new List<Cosmetic>();
+            var folders = _fileService.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+            foreach (var folder in folders)
+            {
+                var images = _fileService.GetFiles(folder, "*.png");
+                foreach (var image in images)
+                {
+                    var hdImagePath = Path.Combine(folder, "HD", Path.GetFileName(image));
+                    var newCosmetic = new Cosmetic
+                    {
+                        CosmeticType = cosmeticType,
+                        Style = style,
+                        ImagePath = image,
+                        HDImagePath = _fileService.FileExists(hdImagePath) ? hdImagePath : string.Empty,
+                        Image = _fileService.LoadImage(image),
+                        HDImage = _fileService.FileExists(hdImagePath) ? _fileService.LoadImage(hdImagePath) : null,
+                        InternalIndex = cosmeticList.Count,
+                        CostumeIndex = cosmeticList.Count + 1,
+                        SharesData = image != images.LastOrDefault(),
+                        ColorSmashChanged = true
+                    };
+                    cosmeticList.Add(newCosmetic);
+                }
+            }
+            return cosmeticList;
         }
     }
 }

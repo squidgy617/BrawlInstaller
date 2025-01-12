@@ -170,11 +170,18 @@ namespace BrawlInstaller.ViewModels
 
         public void OpenFighter()
         {
-            var file = _dialogService.OpenFileDialog("Select a fighter package to load", "FIGHTERPACKAGE file (.fighterpackage)|*.fighterpackage");
+            var file = _dialogService.OpenFileDialog("Select a fighter package to load", "FIGHTERPACKAGE file (.fighterpackage)|*.fighterpackage|ZIP file (.zip)|*.zip");
             if (!string.IsNullOrEmpty(file))
             {
                 FighterPackage = new FighterPackage { PackageType = PackageType.New };
-                FighterPackage = _packageService.LoadFighterPackage(file);
+                if (file.EndsWith(".fighterpackage"))
+                {
+                    FighterPackage = _packageService.LoadFighterPackage(file);
+                }
+                else
+                {
+                    FighterPackage = _packageService.LoadLegacyPackage(file);
+                }
                 // Prompt if user wants to load franchise icon
                 var franchiseIcon = FighterPackage.Cosmetics.ChangedItems.FirstOrDefault(x => x.CosmeticType == CosmeticType.FranchiseIcon);
                 if (franchiseIcon != null)

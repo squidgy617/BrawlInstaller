@@ -33,6 +33,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetFighterInfo(FighterInfo)"/>
         FighterInfo GetFighterInfo(FighterInfo fighterInfo);
 
+        /// <inheritdoc cref="FighterService.GetFighterInfo(FighterInfo, string, string, string, string)"/>
+        FighterInfo GetFighterInfo(FighterInfo fighterInfo, string fighterConfigPath, string cosmeticConfigPath, string cssSlotConfigPath, string slotConfigPath);
+
         /// <inheritdoc cref="FighterService.GetFighterCostumes(FighterInfo)"/>
         List<Costume> GetFighterCostumes(FighterInfo fighterInfo);
 
@@ -336,8 +339,82 @@ namespace BrawlInstaller.Services
             // For IDs, we only fill them if they have not already been filled, but for everything else we fill it if we find it.
             // This way, if we can't find a file, we default to what the fighter info already has, otherwise we pull from the source of truth we find.
             var fighterIds = LinkExConfigs(fighterInfo.Ids, cosmeticConfigs, cssSlotConfigs, slotConfigs);
+
             fighterInfo.CosmeticConfig = GetExConfig(fighterIds.CosmeticConfigId, IdType.CosmeticConfig);
-            var rootNode = cosmeticConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CosmeticConfig);
+            var cosmeticConfig = cosmeticConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CosmeticConfig);
+
+            fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
+            var cssSlotConfig = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig);
+
+            fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
+            var slotConfig = slotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.SlotConfig);
+
+            fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
+            var fighterConfig = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig);
+
+            fighterInfo = GetFighterInfo(fighterInfo, fighterConfig, cosmeticConfig, cssSlotConfig, slotConfig);
+
+            // Set ending ID
+            fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
+            // Get masquerade file
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.MasqueradePath))
+            {
+                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.MasqueradePath}\\{fighterInfo.Ids.MasqueradeId:D2}.masq";
+                if (_fileService.FileExists(path))
+                {
+                    fighterInfo.Masquerade = path;
+                }
+            }
+            return fighterInfo;
+        }
+
+        /// <summary>
+        /// Get fighter info based on supplied configs
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info</param>
+        /// <param name="fighterConfigPath">Fighter config to use</param>
+        /// <param name="cosmeticConfigPath">Cosmetic config to use</param>
+        /// <param name="cssSlotConfigPath">CSS slot config to use</param>
+        /// <param name="slotConfigPath">Slot config to use</param>
+        /// <returns>Fighter info</returns>
+        public FighterInfo GetFighterInfo(FighterInfo fighterInfo, string fighterConfigPath, string cosmeticConfigPath, string cssSlotConfigPath, string slotConfigPath)
+        {
+            fighterInfo.CosmeticConfig = cosmeticConfigPath;
+            var cosmeticConfig = _fileService.OpenFile(cosmeticConfigPath);
+
+            fighterInfo.CSSSlotConfig = cssSlotConfigPath;
+            var cssSlotConfig = _fileService.OpenFile(cssSlotConfigPath);
+
+            fighterInfo.SlotConfig = slotConfigPath;
+            var slotConfig = _fileService.OpenFile(slotConfigPath);
+
+            fighterInfo.FighterConfig = fighterConfigPath;
+            var fighterConfig = _fileService.OpenFile(fighterConfigPath);
+
+            fighterInfo = GetFighterInfo(fighterInfo, fighterConfig, cosmeticConfig, cssSlotConfig, slotConfig);
+
+            // Close files
+            _fileService.CloseFile(cosmeticConfig);
+            _fileService.CloseFile(cssSlotConfig);
+            _fileService.CloseFile(slotConfig);
+            _fileService.CloseFile(fighterConfig);
+
+            return fighterInfo;
+        }
+
+        /// <summary>
+        /// Get fighter info based on supplied configs
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info</param>
+        /// <param name="fighterConfig">Fighter config to use</param>
+        /// <param name="cosmeticConfig">Cosmetic config to use</param>
+        /// <param name="cssSlotConfig">CSS slot config to use</param>
+        /// <param name="slotConfig">Slot config to use</param>
+        /// <returns>Fighter info</returns>
+        private FighterInfo GetFighterInfo(FighterInfo fighterInfo, ResourceNode fighterConfig, ResourceNode cosmeticConfig, ResourceNode cssSlotConfig, ResourceNode slotConfig)
+        {
+            var fighterIds = fighterInfo.Ids;
+            var rootNode = cosmeticConfig;
             if (rootNode != null)
             {
                 var coscNode = (COSCNode)rootNode;
@@ -349,8 +426,7 @@ namespace BrawlInstaller.Services
                 fighterInfo.EntryName = coscNode.CharacterName;
                 fighterInfo.CosmeticAttributes = coscNode.ToCosmeticAttributes();
             }
-            fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
-            rootNode = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig);
+            rootNode = cssSlotConfig;
             if (rootNode != null)
             {
                 var csscNode = (CSSCNode)rootNode;
@@ -360,8 +436,7 @@ namespace BrawlInstaller.Services
                     fighterIds.CosmeticConfigId = csscNode.CosmeticSlot;
                 fighterInfo.CSSSlotAttributes = csscNode.ToCSSSlotAttributes();
             }
-            fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
-            rootNode = slotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.SlotConfig);
+            rootNode = slotConfig;
             if (rootNode != null)
             {
                 var slotNode = (SLTCNode)rootNode;
@@ -370,8 +445,7 @@ namespace BrawlInstaller.Services
                 fighterInfo.VictoryThemeId = slotNode.VictoryTheme;
                 fighterInfo.SlotAttributes = slotNode.ToSlotAttributes();
             }
-            fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
-            rootNode = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig);
+            rootNode = fighterConfig;
             if (rootNode != null)
             {
                 var fighterNode = (FCFGNode)rootNode;
@@ -389,16 +463,6 @@ namespace BrawlInstaller.Services
             fighterInfo.OriginalSoundbankId = fighterInfo.SoundbankId;
             fighterInfo.OriginalKirbySoundbankId = fighterInfo.KirbySoundbankId;
             fighterInfo.Ids = fighterIds;
-            fighterInfo.EndingId = GetEndingId(fighterInfo.Ids.CosmeticConfigId);
-            // Get masquerade file
-            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.MasqueradePath))
-            {
-                var path = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.MasqueradePath}\\{fighterInfo.Ids.MasqueradeId:D2}.masq";
-                if (_fileService.FileExists(path))
-                {
-                    fighterInfo.Masquerade = path;
-                }
-            }
             // TODO: Commented because it slows things down, find a way to speed this up, maybe get all slot IDs in advance at the start?
             //fighterInfo.CreditsThemeId = GetCreditsTheme(fighterInfo.Ids.SlotConfigId)?.SongId;
             return fighterInfo;

@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
         <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0" ToolTip="PAC files associated with fighter that aren't associated with a costume"/>
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2">
-            <ListBox x:Name="pacFileListBox" ItemsSource="{Binding PacFiles}" SelectedItem="{Binding SelectedPacFile}" Width="120" Height="100">
+            <ListBox x:Name="pacFileListBox" ItemsSource="{Binding PacFiles}" SelectedItem="{Binding SelectedPacFile}" Width="155" Height="100">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding FilePath, Converter={StaticResource filePathConverter}}" ToolTip="{Binding FilePath}"/>
