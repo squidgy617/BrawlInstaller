@@ -462,7 +462,7 @@ namespace BrawlInstaller.Services
                         fighterInfo.SoundbankId = ((FCFGNode)rootNode).SoundBank;
                         fighterInfo.KirbySoundbankId = ((FCFGNode)rootNode).KirbySoundBank;
                         fighterInfo.KirbyLoadType = ((FCFGNode)rootNode).KirbyLoadType;
-                        fighterInfo.FighterFileName = ((FCFGNode)rootNode).FileName;
+                        fighterInfo.FighterFileName = ((FCFGNode)rootNode).FighterName;
                         fighterInfo.FullPacFileName = ((FCFGNode)rootNode).PacName;
                         fighterInfo.FullKirbyPacFileName = ((FCFGNode)rootNode).KirbyPacName;
                         fighterInfo.ModuleFileName = ((FCFGNode)rootNode).ModuleName;
