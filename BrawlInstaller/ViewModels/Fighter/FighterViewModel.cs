@@ -419,6 +419,7 @@ namespace BrawlInstaller.ViewModels
                 FighterPackagePath = file;
                 // Set package to new
                 FighterPackage.PackageType = PackageType.New;
+                _dialogService.ShowMessage("Exported successfully.", "Success");
             }
             OnPropertyChanged(nameof(FighterPackage));
         }
