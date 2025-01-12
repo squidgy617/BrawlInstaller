@@ -642,7 +642,7 @@ namespace BrawlInstaller.Services
                 {
                     files.Add((file, name, pacFile));
                     // If main PAC file or item PAC file, update GFX and SFX IDs
-                    var regex = Regex.Match(name.ToLower(), $"[itm{fighterInfo.PartialPacName.ToLower()}]\\d+[param]");
+                    var regex = Regex.Match(name.ToLower(), $"itm{fighterInfo.PartialPacName.ToLower()}\\d+param");
                     if (name.ToLower() == (fighterInfo.PacFileName + fighterInfo.PacExtension).ToLower() || regex.Success)
                     {
                         // Update GFX IDs if they've changed
