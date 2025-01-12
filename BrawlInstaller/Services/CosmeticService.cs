@@ -60,13 +60,16 @@ namespace BrawlInstaller.Services
         ISettingsService _settingsService { get; }
         IFileService _fileService { get; }
         IColorSmashService _colorSmashService { get; }
+        // TODO: Get rid of this, only in here for debugging
+        IDialogService _dialogService { get; }
 
         [ImportingConstructor]
-        public CosmeticService(ISettingsService settingsService, IFileService fileService, IColorSmashService colorSmashService) 
+        public CosmeticService(ISettingsService settingsService, IFileService fileService, IColorSmashService colorSmashService, IDialogService dialogService) 
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _colorSmashService = colorSmashService;
+            _dialogService = dialogService;
         }
 
         // Methods
@@ -90,6 +93,11 @@ namespace BrawlInstaller.Services
                 dialog.InitialSize = new System.Drawing.Size((int)size.Width, (int)size.Height);
             dialog.ShowDialog(null, destinationNode);
             var node = dialog.TEX0TextureNode;
+            // TODO: Get rid of this, for testing only
+            if (node.Height == 0 && node.Width == 0)
+            {
+                _dialogService.ShowMessage($"Texture imported with height 0 and width 0. Please share the contents of this message with Squidgy :)\nImage: {Path.GetFileName(imageSource)}\nFormat: {format}\nSize: {size.Width}x{size.Height}\nDestination: {destinationNode.Name}", "Test Message");
+            }
             dialog.Dispose();
             return node;
         }

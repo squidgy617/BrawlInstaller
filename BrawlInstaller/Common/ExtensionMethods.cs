@@ -27,18 +27,22 @@ namespace BrawlInstaller.Common
 
         public static BitmapImage ToBitmapImage(this Bitmap bitmap, ImageFormat format)
         {
-            using (MemoryStream memory = new MemoryStream())
+            if (bitmap != null)
             {
-                bitmap.Save(memory, format);
-                memory.Position = 0;
-                BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
-                return bitmapImage;
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    bitmap.Save(memory, format);
+                    memory.Position = 0;
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memory;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+                    bitmapImage.Freeze();
+                    return bitmapImage;
+                }
             }
+            return null;
         }
     }
 
