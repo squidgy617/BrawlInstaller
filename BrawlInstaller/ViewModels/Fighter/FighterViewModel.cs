@@ -414,6 +414,7 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage = packageToSave;
                 // Remove added franchise icons from package
                 FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
+                FighterPackage.Cosmetics.ChangedItems.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon);
                 // Set package path to new file
                 FighterPackagePath = file;
                 // Set package to new
