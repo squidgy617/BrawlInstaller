@@ -422,6 +422,7 @@ namespace BrawlInstaller.ViewModels
                 _dialogService.ShowMessage("Exported successfully.", "Success");
             }
             OnPropertyChanged(nameof(FighterPackage));
+            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
         private void GetFighters()
