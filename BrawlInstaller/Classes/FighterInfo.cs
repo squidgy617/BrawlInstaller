@@ -13,7 +13,7 @@ namespace BrawlInstaller.Classes
 {
     public class FighterInfo
     {
-        public string EntryName { get; set; } = "New Fighter";
+        public string EntryName { get; set; } = null;
         public string FighterFileName { get; set; } = "NewFighter";
         public string FullPacFileName { get; set; } = "new/FitNewFighter.pac";
         [JsonIgnore] public string PacFileName { get => FullPacFileName?.Substring(FullPacFileName.LastIndexOf('/') + 1, FullPacFileName.LastIndexOf('.') - FullPacFileName.LastIndexOf('/') - 1); }

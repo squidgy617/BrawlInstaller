@@ -295,6 +295,11 @@ namespace BrawlInstaller.ViewModels
             }
             // Create copy of package before save
             var packageToSave = FighterPackage.Copy();
+            // Update entry name if necessary
+            if (packageToSave.FighterInfo.EntryName == null)
+            {
+                packageToSave.FighterInfo.EntryName = packageToSave.FighterInfo.DisplayName;
+            }
             // Set franchise icon up
             foreach (var icon in FranchiseIconViewModel.FranchiseIconList.ChangedItems)
             {
@@ -406,6 +411,11 @@ namespace BrawlInstaller.ViewModels
             {
                 // Create copy of fighter package before save
                 var packageToSave = FighterPackage.Copy();
+                // Update entry name if necessary
+                if (packageToSave.FighterInfo.EntryName == null)
+                {
+                    packageToSave.FighterInfo.EntryName = packageToSave.FighterInfo.DisplayName;
+                }
                 var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
                 packageToSave.Cosmetics.Add(franchiseIcon);
                 packageToSave.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
