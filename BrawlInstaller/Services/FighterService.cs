@@ -1505,7 +1505,7 @@ namespace BrawlInstaller.Services
         /// <returns>Ex slot IDs for fighter</returns>
         private List<uint> GetExSlots(int? cssSlotId)
         {
-            var exSlots = new List<uint>();
+            var exSlots = new List<uint> { 0xFF, 0xFF, 0xFF, 0xFF };
             if (cssSlotId != null)
             {
                 var buildPath = _settingsService.AppSettings.BuildPath;
@@ -1579,6 +1579,11 @@ namespace BrawlInstaller.Services
                 if (asmTable.Count > cssSlotId + 1)
                 {
                     var exSlots = fighterPackage.FighterSettings.ExSlotIds;
+                    // Add empty entries if it's missing them, to prevent errors
+                    while (exSlots.Count < 4)
+                    {
+                        exSlots.Add(0xFF);
+                    }
                     asmTable[cssSlotId.Value].Item = $"0x{exSlots[0]:X2}{exSlots[1]:X2}{exSlots[2]:X2}{exSlots[3]:X2}";
                     asmTable[cssSlotId.Value].Comment = fighterPackage.FighterInfo.DisplayName;
                 }
