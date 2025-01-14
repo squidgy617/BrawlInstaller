@@ -307,7 +307,7 @@ namespace BrawlInstaller.ViewModels
 
         private void DeleteStage()
         {
-            var result = _dialogService.ShowMessage("Are you sure you'd like to delete this stage slot?", "Delete stage?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = _dialogService.ShowMessage("WARNING! You are about to delete the currently loaded stage slot. Are you sure?", "Delete Stage", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result)
             {
                 var oldSlot = Stage.Slot;

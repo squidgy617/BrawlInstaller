@@ -224,65 +224,68 @@ namespace BrawlInstaller.ViewModels
 
         public void DeleteFighter()
         {
-            // Set up delete package
-            var deletePackage = new FighterPackage
+            if (_dialogService.ShowMessage("WARNING! You are about to delete the currently loaded fighter. Are you sure?", "Delete Fighter", MessageBoxButton.YesNo, MessageBoxImage.Warning))
             {
-                PackageType = PackageType.Delete,
-                FighterInfo = FighterPackage.FighterInfo.CopyNoAttributes()
-            };
-            deletePackage.FighterInfo.DisplayName = "Unknown";
-            // Mark all cosmetics as changed
-            foreach (var cosmetic in FighterPackage.Cosmetics.Items)
-            {
-                deletePackage.Cosmetics.ItemChanged(cosmetic);
-            }
-            // Prompt for items to delete if applicable
-            if (FighterPackage.VictoryTheme != null && !string.IsNullOrEmpty(FighterPackage.VictoryTheme.SongFile))
-            {
-                var delete = _dialogService.ShowMessage($"Would you like to delete the victory theme at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
-                if (!delete)
+                // Set up delete package
+                var deletePackage = new FighterPackage
                 {
-                    deletePackage.FighterDeleteOptions.DeleteVictoryTheme = false;
-                }
-            }
-            if (FighterPackage.CreditsTheme != null && !string.IsNullOrEmpty(FighterPackage.CreditsTheme.SongFile))
-            {
-                var delete = _dialogService.ShowMessage($"Would you like to delete the credits theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
-                if (!delete)
+                    PackageType = PackageType.Delete,
+                    FighterInfo = FighterPackage.FighterInfo.CopyNoAttributes()
+                };
+                deletePackage.FighterInfo.DisplayName = "Unknown";
+                // Mark all cosmetics as changed
+                foreach (var cosmetic in FighterPackage.Cosmetics.Items)
                 {
-                    deletePackage.FighterDeleteOptions.DeleteCreditsTheme = false;
+                    deletePackage.Cosmetics.ItemChanged(cosmetic);
                 }
-            }
-            if (FranchiseIconViewModel.FranchiseIconList.Items.Any(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId))
-            {
-                var delete = _dialogService.ShowMessage("Would you like to delete the fighter's franchise icon?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Franchise Icon?", MessageBoxButton.YesNo);
-                if (delete)
+                // Prompt for items to delete if applicable
+                if (FighterPackage.VictoryTheme != null && !string.IsNullOrEmpty(FighterPackage.VictoryTheme.SongFile))
                 {
-                    deletePackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
+                    var delete = _dialogService.ShowMessage($"Would you like to delete the victory theme at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
+                    if (!delete)
+                    {
+                        deletePackage.FighterDeleteOptions.DeleteVictoryTheme = false;
+                    }
                 }
+                if (FighterPackage.CreditsTheme != null && !string.IsNullOrEmpty(FighterPackage.CreditsTheme.SongFile))
+                {
+                    var delete = _dialogService.ShowMessage($"Would you like to delete the credits theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
+                    if (!delete)
+                    {
+                        deletePackage.FighterDeleteOptions.DeleteCreditsTheme = false;
+                    }
+                }
+                if (FranchiseIconViewModel.FranchiseIconList.Items.Any(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId))
+                {
+                    var delete = _dialogService.ShowMessage("Would you like to delete the fighter's franchise icon?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Franchise Icon?", MessageBoxButton.YesNo);
+                    if (delete)
+                    {
+                        deletePackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
+                    }
+                }
+                // Update UI
+                FighterPackage = null;
+                OnPropertyChanged(nameof(FighterPackage));
+                // Save
+                _packageService.SaveFighter(deletePackage, OldFighterPackage);
+                // Remove from fighter list
+                var foundFighters = FighterList.Where(x => x.Ids.FighterConfigId == deletePackage.FighterInfo.Ids.FighterConfigId
+                && x.Ids.CSSSlotConfigId == deletePackage.FighterInfo.Ids.CSSSlotConfigId
+                && x.Ids.SlotConfigId == deletePackage.FighterInfo.Ids.SlotConfigId
+                && x.Ids.CosmeticConfigId == deletePackage.FighterInfo.Ids.CosmeticConfigId);
+                foreach (var foundFighter in foundFighters.ToList())
+                {
+                    _settingsService.FighterInfoList.Remove(foundFighter);
+                }
+                _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
+                // Set package path to internal fighter
+                FighterPackagePath = string.Empty;
+                // Update rosters
+                UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
+                OnPropertyChanged(nameof(FighterList));
+                WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                _dialogService.ShowMessage("Changes saved.", "Saved");
             }
-            // Update UI
-            FighterPackage = null;
-            OnPropertyChanged(nameof(FighterPackage));
-            // Save
-            _packageService.SaveFighter(deletePackage, OldFighterPackage);
-            // Remove from fighter list
-            var foundFighters = FighterList.Where(x => x.Ids.FighterConfigId == deletePackage.FighterInfo.Ids.FighterConfigId 
-            && x.Ids.CSSSlotConfigId == deletePackage.FighterInfo.Ids.CSSSlotConfigId
-            && x.Ids.SlotConfigId == deletePackage.FighterInfo.Ids.SlotConfigId
-            && x.Ids.CosmeticConfigId == deletePackage.FighterInfo.Ids.CosmeticConfigId);
-            foreach(var foundFighter in foundFighters.ToList())
-            {
-                _settingsService.FighterInfoList.Remove(foundFighter);
-            }
-            _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
-            // Set package path to internal fighter
-            FighterPackagePath = string.Empty;
-            // Update rosters
-            UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
-            OnPropertyChanged(nameof(FighterList));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
-            _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 
         public void SaveFighter()
