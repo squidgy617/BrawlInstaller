@@ -238,7 +238,7 @@ namespace BrawlInstaller.Services
             //var newNode = NodeFactory.FromAddress(node.Parent, node.WorkingSource.Address, node.WorkingSource.Length);
             var guid = Guid.NewGuid().ToString();
             var path = $"{_settingsService.AppSettings.TempPath}\\{guid}";
-            CreateDirectory(path);
+            CreateDirectory(Path.GetDirectoryName(path));
             node.Export(path);
             ResourceNode newNode = null;
             if (node.GetType() == typeof(TEX0Node) && ((TEX0Node)node).SharesData)
@@ -269,7 +269,7 @@ namespace BrawlInstaller.Services
             BackupBuildFile(outFile);
             if (File.Exists(inFile))
             {
-                CreateDirectory(outFile);
+                CreateDirectory(Path.GetDirectoryName(outFile));
                 File.Copy(inFile, outFile, true);
             }
         }
@@ -295,7 +295,7 @@ namespace BrawlInstaller.Services
             BackupBuildFile(outFile);
             if (image != null)
             {
-                CreateDirectory(outFile);
+                CreateDirectory(Path.GetDirectoryName(outFile));
                 SaveImage(image.ToBitmap(), outFile);
             }
         }
@@ -325,7 +325,7 @@ namespace BrawlInstaller.Services
         private void SaveImage(Bitmap image, string outFile)
         {
             BackupBuildFile(outFile);
-            CreateDirectory(outFile);
+            CreateDirectory(Path.GetDirectoryName(outFile));
             image.Save(outFile);
         }
 
@@ -339,7 +339,7 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(text))
             {
                 BackupBuildFile(filePath);
-                CreateDirectory(filePath);
+                CreateDirectory(Path.GetDirectoryName(filePath));
                 File.WriteAllText(filePath, text);
             }
         }
@@ -378,9 +378,9 @@ namespace BrawlInstaller.Services
         /// <param name="path">Directory to create</param>
         public void CreateDirectory(string path)
         {
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            if (!Directory.Exists(path))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                Directory.CreateDirectory(path);
             }
         }
 
@@ -705,7 +705,7 @@ namespace BrawlInstaller.Services
             {
                 var path = file.Replace(backup.BuildBackupPath, "");
                 path = $"{_settingsService.AppSettings.BuildPath}\\{path}";
-                CreateDirectory(path);
+                CreateDirectory(Path.GetDirectoryName(path));
                 File.Copy(file, path, true);
             }
             // Restore textures
@@ -713,7 +713,7 @@ namespace BrawlInstaller.Services
             {
                 var path = file.Replace(backup.TextureBackupPath, "");
                 path = $"{_settingsService.AppSettings.HDTextures}\\{path}";
-                CreateDirectory(path);
+                CreateDirectory(Path.GetDirectoryName(path));
                 File.Copy(file, path, true);
             }
             // Delete added files
@@ -764,7 +764,7 @@ namespace BrawlInstaller.Services
                 }
                 if (!FileExists(backupPath) && FileExists(path))
                 {
-                    CreateDirectory(backupPath);
+                    CreateDirectory(Path.GetDirectoryName(backupPath));
                     File.Copy(path, backupPath, true);
                 }
                 else if (!deleteFile && !FileExists(backupPath) && (path.Contains(_settingsService.AppSettings.BuildPath) || path.Contains(_settingsService.AppSettings.HDTextures)))
@@ -807,7 +807,7 @@ namespace BrawlInstaller.Services
                     newFilePath = Path.Combine(backupPath, newFilePath);
                     if (!FileExists(newFilePath))
                     {
-                        CreateDirectory(newFilePath);
+                        CreateDirectory(Path.GetDirectoryName(newFilePath));
                         File.Copy(path, newFilePath, true);
                     }
                 }
