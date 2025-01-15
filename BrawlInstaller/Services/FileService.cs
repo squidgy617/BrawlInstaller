@@ -24,6 +24,7 @@ using System.Diagnostics;
 using BrawlInstaller.Exceptions;
 using System.Text.RegularExpressions;
 using System.Web.UI.Design.WebControls;
+using Newtonsoft.Json;
 
 namespace BrawlInstaller.Services
 {
@@ -115,6 +116,17 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.ParseIniFile(string)"/>
         Dictionary<string, string> ParseIniFile(string iniFile);
+
+        /// <inheritdoc cref="FileService.StartBackup()"/>
+        Backup StartBackup();
+
+        /// <inheritdoc cref="FileService.RestoreBackup(Backup)"/>
+        void RestoreBackup(Backup backup);
+
+        /// <inheritdoc cref="FileService.EndBackup()"/>
+        void EndBackup();
+
+        Backup CurrentBackup { get; set; }
     }
     // TODO: Backup system, only back up files in build
     [Export(typeof(IFileService))]
@@ -128,6 +140,9 @@ namespace BrawlInstaller.Services
         {
             _settingsService = settingsService;
         }
+
+        // Properties
+        public Backup CurrentBackup { get; set; } = null;
 
         // Methods
 
@@ -160,6 +175,7 @@ namespace BrawlInstaller.Services
         /// <param name="path">Path to save file to</param>
         public void SaveFileAs(ResourceNode node, string path)
         {
+            BackupBuildFile(path);
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -250,6 +266,7 @@ namespace BrawlInstaller.Services
         /// <param name="outFile">New file path</param>
         public void CopyFile(string inFile, string outFile)
         {
+            BackupBuildFile(outFile);
             if (File.Exists(inFile))
             {
                 CreateDirectory(outFile);
@@ -263,6 +280,7 @@ namespace BrawlInstaller.Services
         /// <param name="file">File to delete</param>
         public void DeleteFile(string file)
         {
+            BackupBuildFile(file, true);
             if (File.Exists(file))
                 File.Delete(file);
         }
@@ -274,6 +292,7 @@ namespace BrawlInstaller.Services
         /// <param name="outFile">Output path of image file</param>
         public void SaveImage(BitmapImage image, string outFile)
         {
+            BackupBuildFile(outFile);
             if (image != null)
             {
                 CreateDirectory(outFile);
@@ -305,6 +324,7 @@ namespace BrawlInstaller.Services
         /// <param name="outFile">Output path of image file</param>
         private void SaveImage(Bitmap image, string outFile)
         {
+            BackupBuildFile(outFile);
             CreateDirectory(outFile);
             image.Save(outFile);
         }
@@ -318,6 +338,7 @@ namespace BrawlInstaller.Services
         {
             if (!string.IsNullOrEmpty(text))
             {
+                BackupBuildFile(filePath);
                 CreateDirectory(filePath);
                 File.WriteAllText(filePath, text);
             }
@@ -381,6 +402,7 @@ namespace BrawlInstaller.Services
         {
             if (DirectoryExists(path))
             {
+                BackupBuildFolder(path);
                 Directory.Delete(path, true);
             }
         }
@@ -411,7 +433,23 @@ namespace BrawlInstaller.Services
         {
             if (DirectoryExists(path))
             {
-                return Directory.GetFiles(path, searchPattern).ToList();
+                return Directory.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly).ToList();
+            }
+            return new List<string>();
+        }
+
+        /// <summary>
+        /// Get files in directory if it exists
+        /// </summary>
+        /// <param name="path">Path to search</param>
+        /// <param name="searchPattern">Search pattern</param>
+        /// <param name="searchOption">Search option</param>
+        /// <returns>List of files</returns>
+        public List<string> GetFiles(string path, string searchPattern, SearchOption searchOption)
+        {
+            if (DirectoryExists(path))
+            {
+                return Directory.GetFiles(path, searchPattern, searchOption).ToList();
             }
             return new List<string>();
         }
@@ -625,6 +663,155 @@ namespace BrawlInstaller.Services
                 iniData.Add(keyValuePair[0].Trim(), keyValuePair[1].Trim());
             }
             return iniData;
+        }
+
+        /// <summary>
+        /// Start a backup of build files
+        /// </summary>
+        /// <returns>New backup</returns>
+        public Backup StartBackup()
+        {
+            var backup = new Backup
+            {
+                BuildPath = _settingsService.AppSettings.BuildPath
+            };
+            CurrentBackup = backup;
+            return backup;
+        }
+
+        /// <summary>
+        /// End backup of build files
+        /// </summary>
+        public void EndBackup()
+        {
+            if (CurrentBackup != null)
+            {
+                var backupJson = JsonConvert.SerializeObject(CurrentBackup);
+                File.WriteAllText(Path.Combine(Paths.BackupPath, $"{CurrentBackup.Guid}.json"), backupJson);
+                CurrentBackup = null;
+            }
+        }
+
+        /// <summary>
+        /// Restore selected backup
+        /// </summary>
+        /// <param name="backup">Backup to restore</param>
+        public void RestoreBackup(Backup backup)
+        {
+            var buildFiles = GetFiles(backup.BuildBackupPath, "*", SearchOption.AllDirectories);
+            var textureFiles = GetFiles(backup.TextureBackupPath, "*", SearchOption.AllDirectories);
+            // Restore build files
+            foreach(var file in buildFiles)
+            {
+                var path = file.Replace(backup.BuildBackupPath, "");
+                path = $"{_settingsService.AppSettings.BuildPath}\\{path}";
+                CreateDirectory(path);
+                File.Copy(file, path, true);
+            }
+            // Restore textures
+            foreach (var file in textureFiles)
+            {
+                var path = file.Replace(backup.TextureBackupPath, "");
+                path = $"{_settingsService.AppSettings.HDTextures}\\{path}";
+                CreateDirectory(path);
+                File.Copy(file, path, true);
+            }
+            // Delete added files
+            foreach(var file in backup.AddedFiles)
+            {
+                File.Delete(file);
+            }
+        }
+
+        /// <summary>
+        /// Get a list of all saved backups
+        /// </summary>
+        /// <returns>List of backups</returns>
+        public List<Backup> GetBackups()
+        {
+            var backups = new List<Backup>();
+            foreach(var file in GetFiles(Paths.BackupPath, "*.json"))
+            {
+                var backup = JsonConvert.DeserializeObject<Backup>(file);
+                backups.Add(backup);
+            }
+            return backups;
+        }
+
+        /// <summary>
+        /// Backup a build file
+        /// </summary>
+        /// <param name="path">Path of file to backup</param>
+        /// <param name="deleteFile">If file is being deleted</param>
+        private void BackupBuildFile(string path, bool deleteFile = false)
+        {
+            if (CurrentBackup == null || string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            var backupPath = string.Empty;
+            if (path.Contains(_settingsService.AppSettings.BuildPath) || path.Contains(_settingsService.AppSettings.HDTextures))
+            {
+                if (path.Contains(_settingsService.AppSettings.BuildPath))
+                {
+                    backupPath = path.Replace(_settingsService.AppSettings.BuildPath, "");
+                    backupPath = $"{CurrentBackup.BuildBackupPath}\\{backupPath}";
+                }
+                else if (path.Contains(_settingsService.AppSettings.HDTextures))
+                {
+                    backupPath = path.Replace(_settingsService.AppSettings.HDTextures, "");
+                    backupPath = $"{CurrentBackup.TextureBackupPath}\\{backupPath}";
+                }
+                if (!FileExists(backupPath) && FileExists(path))
+                {
+                    CreateDirectory(backupPath);
+                    File.Copy(path, backupPath, true);
+                }
+                else if (!deleteFile && !FileExists(backupPath) && (path.Contains(_settingsService.AppSettings.BuildPath) || path.Contains(_settingsService.AppSettings.HDTextures)))
+                {
+
+                    CurrentBackup.AddedFiles.Add(path);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Backup a build folder
+        /// </summary>
+        /// <param name="path">Path of folder to backup</param>
+        private void BackupBuildFolder(string path)
+        {
+            if (CurrentBackup == null)
+            {
+                return;
+            }
+            if (DirectoryExists(path) && (path.Contains(_settingsService.AppSettings.BuildPath) || path.Contains(_settingsService.AppSettings.HDTextures)))
+            {
+                var backupPath = string.Empty;
+                var basePath = string.Empty;
+                if (path.Contains(_settingsService.AppSettings.BuildPath))
+                {
+                    basePath = _settingsService.AppSettings.BuildPath;
+                    backupPath = path.Replace(_settingsService.AppSettings.BuildPath, "");
+                    backupPath = $"{CurrentBackup.BuildBackupPath}\\{backupPath}";
+                }
+                else if (path.Contains(_settingsService.AppSettings.HDTextures))
+                {
+                    basePath = _settingsService.AppSettings.HDTextures;
+                    backupPath = path.Replace(_settingsService.AppSettings.HDTextures, "");
+                    backupPath = $"{CurrentBackup.TextureBackupPath}\\{backupPath}";
+                }
+                foreach(var file in GetFiles(path, "*", SearchOption.AllDirectories))
+                {
+                    var newFilePath = file.Replace(basePath, "");
+                    newFilePath = Path.Combine(backupPath, newFilePath);
+                    if (!FileExists(newFilePath))
+                    {
+                        CreateDirectory(newFilePath);
+                        File.Copy(path, newFilePath, true);
+                    }
+                }
+            }
         }
     }
 }

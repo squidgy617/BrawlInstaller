@@ -94,7 +94,8 @@ namespace BrawlInstaller.ViewModels
             var errorText = e.Exception.StackTrace;
             _fileService.SaveTextFile(Paths.ErrorPath, errorText);
 
-            // TODO: Restore backups when an error occurs
+            _fileService.RestoreBackup(_fileService.CurrentBackup);
+            _fileService.EndBackup();
         }
     }
 }

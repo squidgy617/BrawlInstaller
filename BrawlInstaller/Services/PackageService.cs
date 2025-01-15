@@ -121,6 +121,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to save</param>
         public void SaveFighter(FighterPackage fighterPackage, FighterPackage oldFighter)
         {
+            _fileService.StartBackup();
             // Get old fighter if none exists
             if (oldFighter == null)
             {
@@ -183,6 +184,7 @@ namespace BrawlInstaller.Services
             _codeService.CompileCodes();
             // Set package type to update, in case it was a new package
             fighterPackage.PackageType = PackageType.Update;
+            _fileService.EndBackup();
         }
 
         /// <summary>
