@@ -671,9 +671,17 @@ namespace BrawlInstaller.Services
         /// <returns>New backup</returns>
         public Backup StartBackup()
         {
+            // Delete a backup if we're already at the count
+            var backups = GetBackups();
+            if (backups.Count >= _settingsService.AppSettings.BackupCount)
+            {
+                DeleteBackup(backups.OrderByDescending(x => x.TimeStamp).LastOrDefault());
+            }
+            // Start backup
             var backup = new Backup
             {
-                BuildPath = _settingsService.AppSettings.BuildPath
+                BuildPath = _settingsService.AppSettings.BuildPath,
+                Guid = Guid.NewGuid().ToString()
             };
             CurrentBackup = backup;
             return backup;
@@ -686,7 +694,7 @@ namespace BrawlInstaller.Services
         {
             if (CurrentBackup != null)
             {
-                var backupJson = JsonConvert.SerializeObject(CurrentBackup);
+                var backupJson = JsonConvert.SerializeObject(CurrentBackup, Formatting.Indented);
                 File.WriteAllText(Path.Combine(Paths.BackupPath, $"{CurrentBackup.Guid}.json"), backupJson);
                 CurrentBackup = null;
             }
@@ -732,10 +740,29 @@ namespace BrawlInstaller.Services
             var backups = new List<Backup>();
             foreach(var file in GetFiles(Paths.BackupPath, "*.json"))
             {
-                var backup = JsonConvert.DeserializeObject<Backup>(file);
+                var json = ReadTextFile(file);
+                var backup = JsonConvert.DeserializeObject<Backup>(json);
                 backups.Add(backup);
             }
-            return backups;
+            return backups.OrderByDescending(x => x.TimeStamp).ToList();
+        }
+
+        /// <summary>
+        /// Delete selected backup
+        /// </summary>
+        /// <param name="backup">Backup to delete</param>
+        public void DeleteBackup(Backup backup)
+        {
+            var backupFile = Path.Combine(Paths.BackupPath, $"{backup.Guid}.json");
+            var backupFolder = Path.Combine(Paths.BackupPath, backup.Guid.ToString());
+            if (File.Exists(backupFile))
+            {
+                File.Delete(backupFile);
+            }
+            if (Directory.Exists(backupFolder))
+            {
+                Directory.Delete(backupFolder, true);
+            }
         }
 
         /// <summary>
