@@ -1122,6 +1122,7 @@ namespace BrawlInstaller.Services
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CSSSlotConfig\\CSSSlot{fighterPackage.FighterInfo.Ids.CSSSlotConfigId:X2}.dat";
                 _fileService.SaveFileAs(cssSlotConfig, configPath);
                 _fileService.CloseFile(cssSlotConfig);
+                fighterPackage.FighterInfo.CSSSlotConfig = configPath;
             }
             var fighterConfig = fighterPackage.FighterInfo.FighterAttributes?.ToFCFGNode(fighterPackage.FighterInfo);
             if (fighterConfig != null)
@@ -1129,6 +1130,7 @@ namespace BrawlInstaller.Services
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\FighterConfig\\Fighter{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}.dat";
                 _fileService.SaveFileAs(fighterConfig, configPath);
                 _fileService.CloseFile(fighterConfig);
+                fighterPackage.FighterInfo.FighterConfig = configPath;
             }
             var slotConfig = fighterPackage.FighterInfo.SlotAttributes?.ToSLTCNode(fighterPackage.FighterInfo, updateLinks);
             if (slotConfig != null)
@@ -1136,6 +1138,7 @@ namespace BrawlInstaller.Services
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\SlotConfig\\Slot{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}.dat";
                 _fileService.SaveFileAs(slotConfig, configPath);
                 _fileService.CloseFile(slotConfig);
+                fighterPackage.FighterInfo.SlotConfig = configPath;
             }
             var cosmeticConfig = fighterPackage.FighterInfo.CosmeticAttributes?.ToCOSCNode(fighterPackage.FighterInfo, updateLinks);
             if (cosmeticConfig != null)
@@ -1143,6 +1146,7 @@ namespace BrawlInstaller.Services
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\CosmeticConfig\\Cosmetic{fighterPackage.FighterInfo.Ids.CosmeticConfigId:X2}.dat";
                 _fileService.SaveFileAs(cosmeticConfig, configPath);
                 _fileService.CloseFile(cosmeticConfig);
+                fighterPackage.FighterInfo.CosmeticConfig = configPath;
             }
             // Update and import masquerade
             if (masquerade != null)
@@ -1151,6 +1155,7 @@ namespace BrawlInstaller.Services
                 var configPath = $"{buildPath}\\{settings.FilePathSettings.MasqueradePath}\\{fighterPackage.FighterInfo.Ids.MasqueradeId:D2}.masq";
                 _fileService.SaveFileAs(masquerade, configPath);
                 _fileService.CloseFile(masquerade);
+                fighterPackage.FighterInfo.Masquerade = configPath;
             }
             // Update and import module
             if (module != null)
