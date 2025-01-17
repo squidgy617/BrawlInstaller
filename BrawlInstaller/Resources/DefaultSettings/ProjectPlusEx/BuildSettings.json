@@ -356,7 +356,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -386,7 +386,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1108,7 +1108,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1148,7 +1148,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1188,7 +1188,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1228,7 +1228,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1268,7 +1268,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1308,7 +1308,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1348,7 +1348,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {
@@ -1418,7 +1418,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": false,
+      "Required": true,
       "Enabled": true
     },
     {

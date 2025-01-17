@@ -722,6 +722,21 @@ namespace BrawlInstaller.ViewModels
                     missingCosmetics.Add((group.Key.CosmeticType, group.Key.Style));
                 }
             }
+            // Check franchise icons
+            var franchiseIconDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && x.Required);
+            if (franchiseIconDefinitions.Count() > 0)
+            {
+                // If there's franchise icon image, add it
+                if (franchiseIconDefinitions.Any(x => x.Style == "Icon") && FranchiseIconViewModel.SelectedFranchiseIcon.Image == null && string.IsNullOrEmpty(FranchiseIconViewModel.SelectedFranchiseIcon.ImagePath))
+                {
+                    missingCosmetics.Add((CosmeticType.FranchiseIcon, "Icon"));
+                }
+                // If there's franchise icon model, add it
+                if (franchiseIconDefinitions.Any(x => x.Style == "Model") && FranchiseIconViewModel.SelectedFranchiseIcon.Model == null && string.IsNullOrEmpty(FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath))
+                {
+                    missingCosmetics.Add((CosmeticType.FranchiseIcon, "Model"));
+                }
+            }
             return missingCosmetics;
         }
 
