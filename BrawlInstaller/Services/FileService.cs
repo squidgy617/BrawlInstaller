@@ -784,12 +784,12 @@ namespace BrawlInstaller.Services
                     backupPath = path.Replace(_settingsService.AppSettings.BuildPath, "");
                     backupPath = $"{CurrentBackup.BuildBackupPath}\\{backupPath}";
                 }
-                else if (path.Contains(_settingsService.AppSettings.HDTextures))
+                else if (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && path.Contains(_settingsService.AppSettings.HDTextures))
                 {
                     backupPath = path.Replace(_settingsService.AppSettings.HDTextures, "");
                     backupPath = $"{CurrentBackup.TextureBackupPath}\\{backupPath}";
                 }
-                if (!FileExists(backupPath) && FileExists(path))
+                if (!FileExists(backupPath) && FileExists(path) && !string.IsNullOrEmpty(backupPath))
                 {
                     CreateDirectory(Path.GetDirectoryName(backupPath));
                     File.Copy(path, backupPath, true);
@@ -822,20 +822,23 @@ namespace BrawlInstaller.Services
                     backupPath = path.Replace(_settingsService.AppSettings.BuildPath, "");
                     backupPath = $"{CurrentBackup.BuildBackupPath}\\{backupPath}";
                 }
-                else if (path.Contains(_settingsService.AppSettings.HDTextures))
+                else if (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && path.Contains(_settingsService.AppSettings.HDTextures))
                 {
                     basePath = _settingsService.AppSettings.HDTextures;
                     backupPath = path.Replace(_settingsService.AppSettings.HDTextures, "");
                     backupPath = $"{CurrentBackup.TextureBackupPath}\\{backupPath}";
                 }
-                foreach(var file in GetFiles(path, "*", SearchOption.AllDirectories))
+                if (!string.IsNullOrEmpty(backupPath) && !string.IsNullOrEmpty(basePath))
                 {
-                    var newFilePath = file.Replace(basePath, "");
-                    newFilePath = Path.Combine(backupPath, newFilePath);
-                    if (!FileExists(newFilePath))
+                    foreach (var file in GetFiles(path, "*", SearchOption.AllDirectories))
                     {
-                        CreateDirectory(Path.GetDirectoryName(newFilePath));
-                        File.Copy(path, newFilePath, true);
+                        var newFilePath = file.Replace(basePath, "");
+                        newFilePath = Path.Combine(backupPath, newFilePath);
+                        if (!FileExists(newFilePath))
+                        {
+                            CreateDirectory(Path.GetDirectoryName(newFilePath));
+                            File.Copy(path, newFilePath, true);
+                        }
                     }
                 }
             }

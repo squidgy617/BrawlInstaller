@@ -173,6 +173,8 @@ namespace BrawlInstaller.ViewModels
             var file = _dialogService.OpenFileDialog("Select a fighter package to load", "FIGHTERPACKAGE file (.fighterpackage)|*.fighterpackage|ZIP file (.zip)|*.zip");
             if (!string.IsNullOrEmpty(file))
             {
+                // Reset old fighter package
+                OldFighterPackage = null;
                 FighterPackage = new FighterPackage { PackageType = PackageType.New };
                 if (file.EndsWith(".fighterpackage"))
                 {
@@ -208,6 +210,8 @@ namespace BrawlInstaller.ViewModels
 
         public void NewFighter()
         {
+            // Reset old fighter package
+            OldFighterPackage = null;
             FighterPackage = new FighterPackage();
             FighterPackage.PackageType = PackageType.New;
             FighterPackage.FighterInfo.FighterAttributes = new FighterAttributes();
@@ -282,6 +286,8 @@ namespace BrawlInstaller.ViewModels
                 FighterPackagePath = string.Empty;
                 // Update rosters
                 UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
+                // Reset old fighter package
+                OldFighterPackage = null;
                 OnPropertyChanged(nameof(FighterList));
                 WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
                 _dialogService.ShowMessage("Changes saved.", "Saved");
@@ -401,6 +407,8 @@ namespace BrawlInstaller.ViewModels
             _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
             // Update rosters
             UpdateRoster(packageType, FighterPackage.FighterInfo);
+            // Reset old fighter package
+            OldFighterPackage = null;
             // Update UI
             OnPropertyChanged(nameof(FighterPackage));
             OnPropertyChanged(nameof(FighterList));
@@ -439,6 +447,8 @@ namespace BrawlInstaller.ViewModels
                 FighterPackagePath = file;
                 // Set package to new
                 FighterPackage.PackageType = PackageType.New;
+                // Reset old fighter package
+                OldFighterPackage = null;
                 _dialogService.ShowMessage("Exported successfully.", "Success");
             }
             OnPropertyChanged(nameof(FighterPackage));
