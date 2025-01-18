@@ -100,10 +100,15 @@ namespace BrawlInstaller.ViewModels
         public bool ListAltsEnabled { get => SelectedButtonFlags <= 0x0 || !ButtonsEnabled; }
 
         [DependsUpon(nameof(ListAltsEnabled))]
-        public bool LAltsEnabled { get => ListAltsEnabled && (SelectedButtonFlags < 0x4000 || SelectedButtonFlags >= 0x8000); }
+        public bool LAltsEnabled { get => ListAltsEnabled && (SelectedButtonFlags < 0x4000 || (SelectedButtonFlags >= 0x8000 && SelectedButtonFlags < 0xC000)); }
 
         [DependsUpon(nameof(ListAltsEnabled))]
         public bool RAltsEnabled { get => ListAltsEnabled && ((SelectedButtonFlags >= 0x4000 && SelectedButtonFlags < 0x8000) || SelectedButtonFlags <= 0x4000); }
+
+        [DependsUpon(nameof(ListAltsEnabled))]
+        [DependsUpon(nameof(ButtonsEnabled))]
+        [DependsUpon(nameof(SelectedButtonFlags))]
+        public bool EventAltsEnabled { get => SelectedButtonFlags <= 0x0 || SelectedButtonFlags >= 0xC000; }
 
         public Dictionary<string, VariantType> VariantTypes { get => typeof(VariantType).GetDictionary<VariantType>(); }
 
@@ -118,11 +123,14 @@ namespace BrawlInstaller.ViewModels
         public bool RListAlt { get => SelectedButtonFlags >= 0x4000 && SelectedButtonFlags < 0x8000; }
 
         [DependsUpon(nameof(SelectedButtonFlags))]
-        public bool LListAlt { get => SelectedButtonFlags >= 0x8000; }
+        public bool LListAlt { get => SelectedButtonFlags >= 0x8000 && SelectedButtonFlags < 0xC000; }
 
         [DependsUpon(nameof(LListAlt))]
         [DependsUpon(nameof(RListAlt))]
         public bool ListAlt { get => LListAlt || RListAlt; }
+
+        [DependsUpon(nameof(SelectedButtonFlags))]
+        public bool EventAlt { get => SelectedButtonFlags >= 0xC000; }
 
         [DependsUpon(nameof(SelectedStageEntry))]
         [DependsUpon(nameof(SelectedButtonFlags))]

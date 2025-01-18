@@ -142,6 +142,7 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid x:Name="buttonsGrid" Visibility="{Binding ButtonsEnabled, Converter={StaticResource boolVisConverter}}">
                                         <Grid.RowDefinitions>
@@ -236,6 +237,12 @@
                         ConverterParameter={x:Static enums:GameCubeButtons.Unused0x8000}}" Grid.Row="1"
                                   Visibility="{Binding LAltsEnabled, Converter={StaticResource boolVisConverter}}"/>
                                     </Grid>
+                                    <CheckBox Content="Event Alt" 
+                              IsChecked="{Binding 
+                        Path=SelectedButtonFlags, 
+                        Converter={StaticResource gameCubeButtonsConverter}, 
+                        ConverterParameter={x:Static enums:GameCubeButtons.EventAlt}}" Grid.Row="2"
+                                  Visibility="{Binding EventAltsEnabled, Converter={StaticResource boolVisConverter}}"/>
                                 </Grid>
                             </GroupBox>
                             <GroupBox x:Name="listAltGroupBox" Header="List Alt Settings" Visibility="{Binding ListAlt, Converter={StaticResource boolVisConverter}}">

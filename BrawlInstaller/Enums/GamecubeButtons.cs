@@ -24,6 +24,7 @@ namespace BrawlInstaller.Enums
         Start = 0x1000,
         Unused0x2000 = 0x2000,
         Unused0x4000 = 0x4000,
-        Unused0x8000 = 0x8000
+        Unused0x8000 = 0x8000,
+        EventAlt = 0xC000
     }
 }

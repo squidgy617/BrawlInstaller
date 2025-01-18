@@ -851,6 +851,7 @@ namespace BrawlInstaller.Services
             // Update button flags for list alts based on order they are in list
             var rListAlts = stage.StageEntries.Where(x => x.IsRAlt).ToList();
             var lListAlts = stage.StageEntries.Where(x => x.IsLAlt).ToList();
+            var eventAlts = stage.StageEntries.Where(x => x.IsEventStage).ToList();
             foreach(var alt in rListAlts)
             {
                 alt.ButtonFlags = (ushort)(0x4000 + rListAlts.IndexOf(alt));
@@ -859,7 +860,10 @@ namespace BrawlInstaller.Services
             {
                 alt.ButtonFlags = (ushort)(0x8000 + lListAlts.IndexOf(alt));
             }
-
+            foreach (var alt in eventAlts)
+            {
+                alt.ButtonFlags = (ushort)(0xC000 + eventAlts.IndexOf(alt));
+            }
             var stageInfo = SaveStageInfo(stage);
             _fileService.EndBackup();
             return stageInfo;
