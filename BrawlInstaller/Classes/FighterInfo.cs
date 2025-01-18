@@ -1,4 +1,5 @@
-﻿using BrawlLib.Internal;
+﻿using BrawlInstaller.Common;
+using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using Newtonsoft.Json;
 using System;
@@ -281,7 +282,8 @@ namespace BrawlInstaller.Classes
         [Browsable(false)]
         public uint Size { get; set; } = 0x40;
 
-        [Browsable(false)]
+        [Browsable(true)]
+        [Category("Slot Config")]
         public uint Version { get; set; } = 2;
 
         [Browsable(false)]
@@ -368,22 +370,29 @@ namespace BrawlInstaller.Classes
         [Browsable(false)]
         public uint Size { get; set; } = 0x40;
 
-        [Browsable(false)]
+        [Browsable(true)]
+        [Category("Cosmetic Config")]
         public uint Version { get; set; } = 2;
 
         [Browsable(false)]
+        [Category("Unknown")]
         public byte Unknown0x11 { get; set; } = 1;
 
         [Browsable(false)]
+        [Category("Unknown")]
         public byte Unknown0x15 { get; set; } = 0;
 
         [Browsable(false)]
+        [Category("Unknown")]
         public byte Unknown0x16 { get; set; } = 0;
 
         [Browsable(false)]
+        [Category("Unknown")]
         public byte Unknown0x17 { get; set; } = 0;
 
-        [Browsable(false)]
+        [Browsable(true)]
+        [Category("Cosmetics")]
+        [DisplayName("Classic Announcer Call Length")]
         public uint Unknown0x1C { get; set; } = 0x2633;
 
         public CosmeticAttributes Copy()
@@ -418,8 +427,8 @@ namespace BrawlInstaller.Classes
             var node = new COSCNode
             {
                 _tag = 0x43534F43,
-                _size = Size,
-                _version = Version,
+                _size = Size.ReverseEndianness(),
+                _version = Version.ReverseEndianness(),
                 HasSecondary = HasSecondary,
                 CharSlot1 = CharSlot1,
                 CharSlot2 = CharSlot2,
@@ -428,7 +437,7 @@ namespace BrawlInstaller.Classes
                 _unknown0x15 = Unknown0x15,
                 _unknown0x16 = Unknown0x16,
                 _unknown0x17 = Unknown0x17,
-                _unknown0x1C = Unknown0x1C,
+                _unknown0x1C = Unknown0x1C.ReverseEndianness()
             };
             return node;
         }
@@ -468,7 +477,8 @@ namespace BrawlInstaller.Classes
         [Browsable(false)]
         public uint Unknown0x18 { get; set; } = 0xCCCCCCCC; // Appears to be padding
 
-        [Browsable(false)]
+        [Browsable(true)]
+        [Category("CSS Slot Config")]
         public uint Version { get; set; } = 2;
 
         [Browsable(false)]

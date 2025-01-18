@@ -150,25 +150,25 @@ namespace BrawlInstaller.ViewModels
 
         public void GenerateFighterAttributes()
         {
-            FighterPackage.FighterInfo.FighterAttributes = new FighterAttributes();
+            FighterPackage.FighterInfo.FighterAttributes = new FighterAttributes { Version = _settingsService.BuildSettings.MiscSettings.DefaultExConfigVersion };
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
         public void GenerateSlotAttributes()
         {
-            FighterPackage.FighterInfo.SlotAttributes = new SlotAttributes();
+            FighterPackage.FighterInfo.SlotAttributes = new SlotAttributes { Version = _settingsService.BuildSettings.MiscSettings.DefaultExConfigVersion };
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
         public void GenerateCosmeticAttributes()
         {
-            FighterPackage.FighterInfo.CosmeticAttributes = new CosmeticAttributes();
+            FighterPackage.FighterInfo.CosmeticAttributes = new CosmeticAttributes { Version = _settingsService.BuildSettings.MiscSettings.DefaultExConfigVersion };
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
         public void GenerateCSSSlotAttributes()
         {
-            FighterPackage.FighterInfo.CSSSlotAttributes = new CSSSlotAttributes();
+            FighterPackage.FighterInfo.CSSSlotAttributes = new CSSSlotAttributes { Version = _settingsService.BuildSettings.MiscSettings.DefaultExConfigVersion };
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new AttributesUpdatedMessage(FighterPackage.FighterInfo));
         }
