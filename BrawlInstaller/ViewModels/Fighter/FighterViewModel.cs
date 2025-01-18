@@ -630,9 +630,9 @@ namespace BrawlInstaller.ViewModels
         {
             var messages = new List<DialogMessage>();
             var result = true;
-            if (FighterPackage.FighterInfo.SoundbankId == null || FighterPackage.FighterInfo.KirbySoundbankId == null)
+            if (FighterPackage.FighterInfo.FighterAttributes != null && (FighterPackage.FighterInfo.SoundbankId == null || FighterPackage.FighterInfo.KirbySoundbankId == null))
             {
-                messages.Add(new DialogMessage("Soundbank IDs", "One or more soundbanks do not have IDs. You cannot save a fighter without soundbank IDs."));
+                messages.Add(new DialogMessage("Soundbank IDs", "One or more soundbanks do not have IDs. You cannot save a fighter without specifying soundbank IDs."));
                 result = false;
             }
             if (messages.Count > 0)
