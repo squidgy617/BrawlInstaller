@@ -148,7 +148,7 @@ namespace BrawlInstaller.Classes
 
     public class CosmeticList : TrackedList<Cosmetic>
     {
-        public Dictionary<(CosmeticType, string), string> InheritedStyles { get; set; } = new Dictionary<(CosmeticType, string), string>();
+        public Dictionary<(CosmeticType BaseType, string BaseStyle), string> InheritedStyles { get; set; } = new Dictionary<(CosmeticType, string), string>();
 
         public CosmeticList Copy(List<Costume> costumes = null)
         {

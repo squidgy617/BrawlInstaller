@@ -1738,7 +1738,17 @@ namespace BrawlInstaller.Services
         public void ExportCosmetics(string path, CosmeticList cosmeticList)
         {
             var cosmetics = new List<Cosmetic>();
-            foreach (var group in cosmeticList.Items.GroupBy(x => new { x.CosmeticType, x.Style }))
+            var cosmeticsToExport = cosmeticList.Items.Copy();
+            var allCosmetics = cosmeticsToExport.ToList();
+            // Update inherited items so we don't export cosmetics more than once
+            foreach(var inheritedStyle in cosmeticList.InheritedStyles)
+            {
+                // Remove all cosmetics that inherit from the style
+                cosmeticsToExport.RemoveAll(x => x.CosmeticType == inheritedStyle.Key.BaseType && x.Style == inheritedStyle.Key.BaseStyle);
+                // Copy over all cosmetics that they inherited from
+                cosmeticsToExport.AddRange(allCosmetics.Where(x => x.CosmeticType == inheritedStyle.Key.BaseType && x.Style == inheritedStyle.Value));
+            }
+            foreach (var group in cosmeticsToExport.Distinct().GroupBy(x => new { x.CosmeticType, x.Style }))
             {
                 var index = 0;
                 foreach (var cosmetic in group.OrderBy(x => x.InternalIndex).OrderBy(x => x.CostumeIndex))
