@@ -156,12 +156,17 @@ namespace BrawlInstaller.ViewModels
             deleteOptions = _stageService.SaveStage(stageToSave, _originalRandomName != stageToSave.RandomName);
 
             // Prompt user for delete options
+            var deleteItems = new List<CheckListItem>();
             foreach (var item in deleteOptions)
             {
-                var delete = _dialogService.ShowMessage($"Delete the file {Path.GetFileName(item)}?", "Delete", MessageBoxButton.YesNo);
-                if (delete)
+                deleteItems.Add(new CheckListItem(item, Path.GetFileName(item), item));
+            }
+            if (deleteItems.Count > 0)
+            {
+                var selectedItems = _dialogService.OpenCheckListDialog(deleteItems, "Select items to delete", "The following items are no longer found in this stage slot, but may be used by other stages. Verify they are not used by other stages and then select the options you wish to delete.").Where(x => x.IsChecked);
+                foreach(var selectedItem in selectedItems)
                 {
-                    _fileService.DeleteFile(item);
+                    _fileService.DeleteFile((string)selectedItem.Item);
                 }
             }
 
@@ -322,16 +327,17 @@ namespace BrawlInstaller.ViewModels
                         deleteStage.Cosmetics.ItemChanged(cosmetic);
                     }
                 }
-                // TODO: instead of prompting for each one separately, create one prompt with checkbox options for each. Maybe images too?
                 // Prompt for selectable cosmetics
+                var deleteCosmetics = new List<CheckListItem>();
                 foreach (var cosmeticGroup in Stage.Cosmetics.Items.Where(x => x.SelectionOption).GroupBy(x => new { x.CosmeticType, x.Style }))
                 {
-                    var delete = _dialogService.ShowMessage($"Would you like to delete cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}?",
-                        "Delete cosmetics?", MessageBoxButton.YesNo);
-                    if (delete)
-                    {
-                        selectableCosmeticsToDelete.Add((cosmeticGroup.Key.CosmeticType, cosmeticGroup.Key.Style));
-                    }
+                    deleteCosmetics.Add(new CheckListItem(cosmeticGroup.Key, $"{cosmeticGroup.Key.Style} style {cosmeticGroup.Key.CosmeticType.GetDescription()}",
+                        $"Cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}", false));
+                }
+                if (deleteCosmetics.Count > 0)
+                {
+                    var selectedItems = _dialogService.OpenCheckListDialog(deleteCosmetics, "Select items to delete", "The following cosmetics may be used by other stages. Verify they are not used by other stages and select the ones you'd like to delete.").Where(x => x.IsChecked);
+                    selectableCosmeticsToDelete = selectedItems.Select(x => ((CosmeticType, string))x.Item).ToList();
                 }
                 // Mark selectable cosmetics as changed
                 foreach (var cosmetic in Stage.Cosmetics.Items.Where(x => selectableCosmeticsToDelete.Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)))

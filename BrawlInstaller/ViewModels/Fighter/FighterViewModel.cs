@@ -243,30 +243,7 @@ namespace BrawlInstaller.ViewModels
                     deletePackage.Cosmetics.ItemChanged(cosmetic);
                 }
                 // Prompt for items to delete if applicable
-                if (FighterPackage.VictoryTheme != null && !string.IsNullOrEmpty(FighterPackage.VictoryTheme.SongFile))
-                {
-                    var delete = _dialogService.ShowMessage($"Would you like to delete the victory theme at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
-                    if (!delete)
-                    {
-                        deletePackage.FighterDeleteOptions.DeleteVictoryTheme = false;
-                    }
-                }
-                if (FighterPackage.CreditsTheme != null && !string.IsNullOrEmpty(FighterPackage.CreditsTheme.SongFile))
-                {
-                    var delete = _dialogService.ShowMessage($"Would you like to delete the credits theme at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
-                    if (!delete)
-                    {
-                        deletePackage.FighterDeleteOptions.DeleteCreditsTheme = false;
-                    }
-                }
-                if (FranchiseIconViewModel.FranchiseIconList.Items.Any(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId))
-                {
-                    var delete = _dialogService.ShowMessage("Would you like to delete the fighter's franchise icon?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Franchise Icon?", MessageBoxButton.YesNo);
-                    if (delete)
-                    {
-                        deletePackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
-                    }
-                }
+                deletePackage = SelectDeleteOptions(deletePackage);
                 // Update UI
                 FighterPackage = null;
                 OnPropertyChanged(nameof(FighterPackage));
@@ -356,22 +333,7 @@ namespace BrawlInstaller.ViewModels
             }
             packageToSave.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? packageToSave.FighterInfo.Ids.FranchiseId;
             // Prompt for items to delete if applicable
-            if (packageToSave.VictoryTheme != null && packageToSave.VictoryTheme.SongPath != _oldVictoryThemePath)
-            {
-                var delete = _dialogService.ShowMessage($"Victory theme has changed. Would you like to delete the old file at {_oldVictoryThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Victory Theme?", MessageBoxButton.YesNo);
-                if (!delete)
-                {
-                    packageToSave.FighterDeleteOptions.DeleteVictoryTheme = false;
-                }
-            }
-            if (packageToSave.CreditsTheme != null && packageToSave.CreditsTheme.SongPath != _oldCreditsThemePath)
-            {
-                var delete = _dialogService.ShowMessage($"Credits theme has changed. Would you like to delete the old file at {_oldCreditsThemePath}?\nWARNING: Only delete this theme if it is not used by other fighters.", "Delete Credits Theme?", MessageBoxButton.YesNo);
-                if (!delete)
-                {
-                    packageToSave.FighterDeleteOptions.DeleteCreditsTheme = false;
-                }
-            }
+            packageToSave = SelectDeleteOptions(packageToSave);
             // Save fighter
             _packageService.SaveFighter(packageToSave, OldFighterPackage);
             // Save was successful, so load changes
@@ -808,6 +770,40 @@ namespace BrawlInstaller.ViewModels
                 }
             }
             return effectPacIdConflicts;
+        }
+
+        private FighterPackage SelectDeleteOptions(FighterPackage fighterPackage)
+        {
+            var deleteOptions = new List<CheckListItem>();
+            // Victory Theme
+            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.VictoryTheme != null && fighterPackage.VictoryTheme.SongPath != _oldVictoryThemePath)
+                || fighterPackage.PackageType == PackageType.Delete && FighterPackage.VictoryTheme != null && !string.IsNullOrEmpty(FighterPackage.VictoryTheme.SongFile))
+            {
+                deleteOptions.Add(new CheckListItem("VictoryTheme", "Victory Theme", "The victory theme BRSTM associated with the fighter", true));
+            }
+            // Credits Theme
+            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.CreditsTheme != null && fighterPackage.CreditsTheme.SongPath != _oldCreditsThemePath)
+                || fighterPackage.PackageType == PackageType.Delete && FighterPackage.CreditsTheme != null && !string.IsNullOrEmpty(FighterPackage.CreditsTheme.SongFile))
+            {
+                deleteOptions.Add(new CheckListItem("CreditsTheme", "Credits Theme", "The credits theme BRSTM associated with the fighter", true));
+            }
+            // Franchise icon
+            if (FranchiseIconViewModel.FranchiseIconList.Items.Any(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId) && fighterPackage.PackageType == PackageType.Delete)
+            {
+                deleteOptions.Add(new CheckListItem("FranchiseIcon", "Franchise Icon", "The selected franchise icon", false, FranchiseIconViewModel.SelectedFranchiseIcon.Image));
+            }
+            // Open dialog
+            if (deleteOptions.Count > 0)
+            {
+                var selectedItems = _dialogService.OpenCheckListDialog(deleteOptions, "Select items to delete", "The following items were changed, but may be shared by other fighters. Ensure they are not used by other fighters and then select the items you would like to delete.").Where(x => x.IsChecked);
+                fighterPackage.FighterDeleteOptions.DeleteVictoryTheme = selectedItems.Any(x => (string)x.Item == "VictoryTheme");
+                fighterPackage.FighterDeleteOptions.DeleteCreditsTheme = selectedItems.Any(x => (string)x.Item == "CreditsTheme");
+                if (selectedItems.Any(x => (string)x.Item == "FranchiseIcon"))
+                {
+                    fighterPackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
+                }
+            }
+            return fighterPackage;
         }
     }
 

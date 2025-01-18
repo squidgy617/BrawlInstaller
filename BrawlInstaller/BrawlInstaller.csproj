@@ -85,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\Backup.cs" />
     <Compile Include="Classes\BuildSettings.cs" />
+    <Compile Include="Classes\CheckListItem.cs" />
     <Compile Include="Classes\Codes.cs" />
     <Compile Include="Classes\CosmeticTexture.cs" />
     <Compile Include="Classes\BrawlIds.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="UserControls\WpfPropertyGrid.cs" />
     <Compile Include="Validation\BuildFilePathValidationRules.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
+    <Compile Include="ViewModels\Dialogs\CheckListViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DropDownViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
@@ -159,6 +161,9 @@
     <Compile Include="ViewModels\Stage\StageListViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\StringInputViewModel.cs" />
+    <Compile Include="Views\Dialogs\CheckListView.xaml.cs">
+      <DependentUpon>CheckListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\DropDownView.xaml.cs">
       <DependentUpon>DropDownView.xaml</DependentUpon>
     </Compile>
@@ -251,6 +256,10 @@
     <Page Include="UserControls\FileBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\CheckListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Dialogs\DropDownView.xaml">
       <SubType>Designer</SubType>

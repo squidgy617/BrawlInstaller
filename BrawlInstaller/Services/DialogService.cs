@@ -44,6 +44,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenDropDownDialog(IEnumerable{object}, string, string, string)"/>
         object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
+        /// <inheritdoc cref="DialogService.OpenCheckListDialog(IEnumerable{CheckListItem}, string, string, string)"/>
+        List<CheckListItem> OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items");
+
         /// <inheritdoc cref="DialogService.OpenTextureViewer(string, string, string)"/>
         void OpenTextureViewer(string filePath, string title = "Select a texture", string caption = "Select a texture");
 
@@ -60,6 +63,7 @@ namespace BrawlInstaller.Services
         INodeSelectorViewModel _nodeSelectorViewModel { get; }
         IMultiMessageViewModel _multiMessageViewModel { get; }
         IImageDropDownViewModel _imageDropDownViewModel { get; }
+        ICheckListViewModel _checkListViewModel { get; }
 
         // Services
         IFileService _fileService { get; }
@@ -67,7 +71,7 @@ namespace BrawlInstaller.Services
         [ImportingConstructor]
         public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, 
             IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel, IMultiMessageViewModel multiMessageViewModel,
-            IImageDropDownViewModel imageDropDownViewModel) 
+            IImageDropDownViewModel imageDropDownViewModel, ICheckListViewModel checkListViewModel) 
         {
             _fileService = fileService;
             _messageViewModel = messageViewModel;
@@ -76,6 +80,7 @@ namespace BrawlInstaller.Services
             _nodeSelectorViewModel = nodeSelectorViewModel;
             _multiMessageViewModel = multiMessageViewModel;
             _imageDropDownViewModel = imageDropDownViewModel;
+            _checkListViewModel = checkListViewModel;
         }
 
         // Methods
@@ -234,7 +239,6 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Open dialog that accepts a list of items
         /// </summary>
-        /// <typeparam name="T">Type of items in list</typeparam>
         /// <param name="list">List of items</param>
         /// <param name="title">Title displayed in dialog</param>
         /// <param name="caption">Caption displayed in dialog</param>
@@ -256,6 +260,31 @@ namespace BrawlInstaller.Services
                 return _dropDownViewModel.SelectedItem;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Open dialog that displays a checklist of items
+        /// </summary>
+        /// <param name="checkListItems">Items to display</param>
+        /// <param name="title">Title to display on window</param>
+        /// <param name="caption">Caption to display</param>
+        /// <returns>Selected items</returns>
+        public List<CheckListItem> OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items")
+        {
+            var dialog = GenerateWindow(title);
+            _checkListViewModel.Caption = caption;
+            _checkListViewModel.MessageBoxButton = MessageBoxButton.OK;
+            _checkListViewModel.MessageIcon = MessageBoxImage.None;
+            _checkListViewModel.Image = null;
+            _checkListViewModel.CheckListItems = checkListItems;
+            _checkListViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _checkListViewModel;
+            dialog.ShowDialog();
+            if (_checkListViewModel.DialogResult)
+            {
+                return _checkListViewModel.CheckListItems.ToList();
+            }
+            return new List<CheckListItem>();
         }
 
         /// <summary>

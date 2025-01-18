@@ -67,4 +67,7 @@
     <DataTemplate DataType="{x:Type viewModels:ImageDropDownViewModel}">
         <views:ImageDropDownView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:CheckListViewModel}">
+        <views:CheckListView/>
+    </DataTemplate>
 </ResourceDictionary>
