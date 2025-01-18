@@ -220,9 +220,8 @@ namespace BrawlInstaller.ViewModels
             var result = SelectTracklistSong(_settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist, "Select a victory theme");
             if (result != null)
             {
-                var oldIndex = FighterPackage.VictoryTheme.Index;
-                FighterPackage.VictoryTheme = result;
-                FighterPackage.VictoryTheme.Index = oldIndex;
+                FighterPackage.VictoryTheme.SongFile = result.SongFile;
+                FighterPackage.VictoryTheme.SongPath = result.SongPath;
                 OnPropertyChanged(nameof(FighterPackage));
             }
         }
@@ -232,9 +231,8 @@ namespace BrawlInstaller.ViewModels
             var result = SelectTracklistSong(_settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist, "Select a credits theme");
             if (result != null)
             {
-                var oldIndex = FighterPackage.CreditsTheme.Index;
-                FighterPackage.CreditsTheme = result;
-                FighterPackage.CreditsTheme.Index = oldIndex;
+                FighterPackage.CreditsTheme.SongFile = result.SongFile;
+                FighterPackage.CreditsTheme.SongPath = result.SongPath;
                 OnPropertyChanged(nameof(FighterPackage));
             }
         }
