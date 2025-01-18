@@ -777,7 +777,7 @@ namespace BrawlInstaller.Services
                 return;
             }
             var backupPath = string.Empty;
-            if (path.Contains(_settingsService.AppSettings.BuildPath) || path.Contains(_settingsService.AppSettings.HDTextures))
+            if (path.Contains(_settingsService.AppSettings.BuildPath) || (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && path.Contains(_settingsService.AppSettings.HDTextures)))
             {
                 if (path.Contains(_settingsService.AppSettings.BuildPath))
                 {
@@ -812,7 +812,7 @@ namespace BrawlInstaller.Services
             {
                 return;
             }
-            if (DirectoryExists(path) && (path.Contains(_settingsService.AppSettings.BuildPath) || path.Contains(_settingsService.AppSettings.HDTextures)))
+            if (DirectoryExists(path) && (path.Contains(_settingsService.AppSettings.BuildPath) || (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && path.Contains(_settingsService.AppSettings.HDTextures))))
             {
                 var backupPath = string.Empty;
                 var basePath = string.Empty;
