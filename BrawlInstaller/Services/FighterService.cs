@@ -600,13 +600,17 @@ namespace BrawlInstaller.Services
             var cleanName = oldFighterName;
             var prefix = new Regex("(Itm|Fit)");
             cleanName = prefix.Replace(cleanName, string.Empty, 1);
-            // Remove Kirby if fighter is not Kirby
-            if (fighterInfo.PartialPacName.ToLower() != "kirby")
+            var newName = string.Empty;
+            // Use Kirby pac name if it's a Kirby pac file and fighter is not Kirby
+            if (cleanName.ToLower().Contains("kirby") && fighterInfo.PartialPacName.ToLower() != "kirby")
             {
-                var kirby = new Regex("Kirby");
-                cleanName = kirby.Replace(cleanName, string.Empty);
+                newName = oldFighterName.Replace(cleanName, fighterInfo.PartialKirbyPacName);
             }
-            var newName = oldFighterName.Replace(cleanName, fighterInfo.PartialPacName);
+            // Otherwise use regular pac name
+            else
+            {
+                newName = oldFighterName.Replace(cleanName, fighterInfo.PartialPacName);
+            }
             // Replace first match of name with the new fighter name
             var newPacFile = GetFighterPacFile(pacFile.FilePath, oldFighterName, fighterInfo, removeCostumeId, newName);
             return newPacFile;
