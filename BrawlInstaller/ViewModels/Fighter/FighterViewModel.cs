@@ -237,11 +237,6 @@ namespace BrawlInstaller.ViewModels
                     FighterInfo = FighterPackage.FighterInfo.CopyNoAttributes()
                 };
                 deletePackage.FighterInfo.DisplayName = "Unknown";
-                // Mark all cosmetics as changed
-                foreach (var cosmetic in FighterPackage.Cosmetics.Items)
-                {
-                    deletePackage.Cosmetics.ItemChanged(cosmetic);
-                }
                 // Prompt for items to delete if applicable
                 deletePackage = SelectDeleteOptions(deletePackage);
                 // Update UI
@@ -794,6 +789,11 @@ namespace BrawlInstaller.ViewModels
             {
                 deleteOptions.Add(new CheckListItem("FranchiseIcon", "Franchise Icon", "The selected franchise icon", false, FranchiseIconViewModel.SelectedFranchiseIcon.Image));
             }
+            // Cosmetics
+            if (fighterPackage.PackageType == PackageType.Delete)
+            {
+                deleteOptions.Add(new CheckListItem("Cosmetics", "Cosmetics", "All fighter cosmetics", true));
+            }
             // Open dialog
             if (deleteOptions.Count > 0)
             {
@@ -802,6 +802,14 @@ namespace BrawlInstaller.ViewModels
                 fighterPackage.FighterDeleteOptions.DeleteCreditsTheme = selectedItems.Any(x => (string)x.Item == "CreditsTheme");
                 fighterPackage.FighterDeleteOptions.DeleteVictoryEntry = selectedItems.Any(x => (string)x.Item == "VictoryEntry");
                 fighterPackage.FighterDeleteOptions.DeleteCreditsEntry = selectedItems.Any(x => (string)x.Item == "CreditsEntry");
+                if(selectedItems.Any(x => (string)x.Item == "Cosmetics"))
+                {
+                    // Mark all cosmetics as changed
+                    foreach (var cosmetic in FighterPackage.Cosmetics.Items)
+                    {
+                        fighterPackage.Cosmetics.ItemChanged(cosmetic);
+                    }
+                }
                 if (selectedItems.Any(x => (string)x.Item == "FranchiseIcon"))
                 {
                     fighterPackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
