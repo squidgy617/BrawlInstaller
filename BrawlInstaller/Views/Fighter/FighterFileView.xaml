@@ -70,7 +70,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label x:Name="classicIntroLabel" Content="Classic Intro:" ToolTip="Classic intro BRRES associated with fighter"/>
-                <userControls:FileBox x:Name="classicIntroFileBox" Text="{Binding FighterPackage.ClassicIntro, Mode=TwoWay}" Grid.Column="1" TextBoxWidth="120" Filter="PAC file (.pac)|*.pac"/>
+                <userControls:FileBox x:Name="classicIntroFileBox" Text="{Binding FighterPackage.ClassicIntro, Mode=TwoWay}" Grid.Column="1" TextBoxWidth="120" Filter="BRRES file (.brres)|*.brres"/>
                 <Label x:Name="endingLabel" Content="Ending PAC Files:" Grid.Row="1" ToolTip="Classic/All-Star ending files associated with fighter"/>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                     <ListBox x:Name="endingListBox" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding EndingPacFiles}" Width="120" Height="80" SelectedValue="{Binding SelectedEndingPacFile}">
