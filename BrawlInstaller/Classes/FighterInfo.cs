@@ -307,7 +307,7 @@ namespace BrawlInstaller.Classes
         public SLTCNode ToSLTCNode(FighterInfo fighterInfo, bool updateLinks = false)
         {
             var node = ToSLTCNode();
-            node.VictoryTheme = (uint)fighterInfo.VictoryThemeId;
+            node.VictoryTheme = fighterInfo.VictoryThemeId != null ? (uint)fighterInfo.VictoryThemeId : 0x00000000;
             if (updateLinks)
             {
                 if (fighterInfo.Ids.FighterConfigId != fighterInfo.Ids.SlotConfigId)
