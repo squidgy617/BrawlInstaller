@@ -200,8 +200,11 @@ namespace BrawlInstaller.ViewModels
                         var match = FighterPackage.Cosmetics.InheritedStyles.FirstOrDefault(x => x.Key == (SelectedCosmeticOption, SelectedStyle));
                         FighterPackage.Cosmetics.InheritedStyles.Remove(matchKey);
                     }
-                    // Add this cosmetic to the list of those that are inheriting styles
-                    FighterPackage?.Cosmetics?.InheritedStyles.Add(matchKey, value);
+                    // Add this cosmetic to the list of those that are inheriting styles, as long as the inherited style isn't the same as it's own
+                    if (SelectedStyle != value)
+                    {
+                        FighterPackage?.Cosmetics?.InheritedStyles.Add(matchKey, value);
+                    }
                     // Mark cosmetics matching selected inheritance style as changed
                     FighterPackage?.Cosmetics?.Items?.Where(x => x.CosmeticType == matchKey.SelectedCosmeticOption && x.Style == value).ToList().ForEach(x => FighterPackage?.Cosmetics?.ItemChanged(x));
                     OnPropertyChanged(nameof(InheritedStyle));
