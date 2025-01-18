@@ -871,7 +871,7 @@ namespace BrawlInstaller.Services
                 // If location is an ARC node, remove entire BRRES
                 if (originalNode.GetType() == typeof(ARCNode))
                 {
-                    originalNode.Children.Remove(parentNode);
+                    originalNode.RemoveChild(parentNode);
                 }
             }
         }
