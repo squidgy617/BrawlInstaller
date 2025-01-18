@@ -559,7 +559,7 @@ namespace BrawlInstaller.Services
                     foreach (var pacFile in pacFiles)
                     {
                         var newPacFile = new FighterPacFile { FilePath = pacFile };
-                        newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, false);
+                        newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, true);
                         pacFileObjects.Add(newPacFile);
                     }
                 }
