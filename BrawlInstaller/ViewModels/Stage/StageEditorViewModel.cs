@@ -331,8 +331,10 @@ namespace BrawlInstaller.ViewModels
                 var deleteCosmetics = new List<CheckListItem>();
                 foreach (var cosmeticGroup in Stage.Cosmetics.Items.Where(x => x.SelectionOption).GroupBy(x => new { x.CosmeticType, x.Style }))
                 {
+                    var image = Stage.Cosmetics.Items.FirstOrDefault(x => x.CosmeticType == cosmeticGroup.Key.CosmeticType && x.Style == cosmeticGroup.Key.Style 
+                    && x.Image != null && !x.SelectionOption)?.Image;
                     deleteCosmetics.Add(new CheckListItem(cosmeticGroup.Key, $"{cosmeticGroup.Key.Style} style {cosmeticGroup.Key.CosmeticType.GetDescription()}",
-                        $"Cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}", false));
+                        $"Cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}", false, image));
                 }
                 if (deleteCosmetics.Count > 0)
                 {
