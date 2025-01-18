@@ -323,6 +323,8 @@ namespace BrawlInstaller.Classes
     {
         public bool DeleteVictoryTheme { get; set; } = true;
         public bool DeleteCreditsTheme { get; set; } = true;
+        public bool DeleteVictoryEntry { get; set; } = true;
+        public bool DeleteCreditsEntry { get; set; } = true;
 
         public FighterDeleteOptions Copy()
         {

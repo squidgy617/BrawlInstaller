@@ -779,13 +779,15 @@ namespace BrawlInstaller.ViewModels
             if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.VictoryTheme != null && fighterPackage.VictoryTheme.SongPath != _oldVictoryThemePath)
                 || fighterPackage.PackageType == PackageType.Delete && FighterPackage.VictoryTheme != null && !string.IsNullOrEmpty(FighterPackage.VictoryTheme.SongFile))
             {
-                deleteOptions.Add(new CheckListItem("VictoryTheme", "Victory Theme", "The victory theme BRSTM associated with the fighter", true));
+                deleteOptions.Add(new CheckListItem("VictoryTheme", "Victory Theme BRSTM", "The victory theme BRSTM file", true));
+                deleteOptions.Add(new CheckListItem("VictoryEntry", "Victory Tracklist Entry", "The tracklist entry for the victory theme", true));
             }
             // Credits Theme
             if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.CreditsTheme != null && fighterPackage.CreditsTheme.SongPath != _oldCreditsThemePath)
                 || fighterPackage.PackageType == PackageType.Delete && FighterPackage.CreditsTheme != null && !string.IsNullOrEmpty(FighterPackage.CreditsTheme.SongFile))
             {
-                deleteOptions.Add(new CheckListItem("CreditsTheme", "Credits Theme", "The credits theme BRSTM associated with the fighter", true));
+                deleteOptions.Add(new CheckListItem("CreditsTheme", "Credits Theme BRSTM", "The credits theme BRSTM file", true));
+                deleteOptions.Add(new CheckListItem("CreditsEntry", "Credits Tracklist Entry", "The tracklist entry for the credits theme", true));
             }
             // Franchise icon
             if (FranchiseIconViewModel.FranchiseIconList.Items.Any(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId) && fighterPackage.PackageType == PackageType.Delete)
@@ -798,6 +800,8 @@ namespace BrawlInstaller.ViewModels
                 var selectedItems = _dialogService.OpenCheckListDialog(deleteOptions, "Select items to delete", "The following items were changed, but may be shared by other fighters. Ensure they are not used by other fighters and then select the items you would like to delete.").Where(x => x.IsChecked);
                 fighterPackage.FighterDeleteOptions.DeleteVictoryTheme = selectedItems.Any(x => (string)x.Item == "VictoryTheme");
                 fighterPackage.FighterDeleteOptions.DeleteCreditsTheme = selectedItems.Any(x => (string)x.Item == "CreditsTheme");
+                fighterPackage.FighterDeleteOptions.DeleteVictoryEntry = selectedItems.Any(x => (string)x.Item == "VictoryEntry");
+                fighterPackage.FighterDeleteOptions.DeleteCreditsEntry = selectedItems.Any(x => (string)x.Item == "CreditsEntry");
                 if (selectedItems.Any(x => (string)x.Item == "FranchiseIcon"))
                 {
                     fighterPackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
