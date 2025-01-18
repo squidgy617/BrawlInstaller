@@ -456,9 +456,9 @@ namespace BrawlInstaller.Services
                         if (resultX && resultY)
                             fighterPackage.FighterSettings.ThrowReleasePoint = new Position(x, y);
                     }
-                    if (iniData.TryGetValue("creditsThemeId", out string creditsThemeId) && int.TryParse(creditsThemeId.Substring(2), NumberStyles.HexNumber, null, out int creditsThemeIdValue))
+                    if (iniData.TryGetValue("creditsThemeId", out string creditsThemeId) && uint.TryParse(creditsThemeId.Substring(2), NumberStyles.HexNumber, null, out uint creditsThemeIdValue))
                     {
-                        fighterPackage.FighterSettings.CreditsThemeId = creditsThemeIdValue;
+                        fighterPackage.FighterInfo.CreditsThemeId = creditsThemeIdValue;
                     }
                     if (iniData.TryGetValue("lucarioBoneId", out string lucarioBoneId) && int.TryParse(lucarioBoneId.Substring(2), NumberStyles.HexNumber, null, out int lucarioBoneIdValue))
                     {
@@ -582,6 +582,48 @@ namespace BrawlInstaller.Services
                 }
                 // Get non-costume pac files
                 fighterPackage.PacFiles = pacFileObjects.Where(x => !fighterPackage.Costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList();
+                // Get module
+                fighterPackage.Module = _fileService.GetFiles(Path.Combine(path, "Module"), "*.rel").FirstOrDefault();
+                // Get ending pac files
+                fighterPackage.EndingPacFiles = _fileService.GetFiles(Path.Combine(path, "Ending"), "*.pac");
+                // Get other files
+                fighterPackage.Soundbank = _fileService.GetFiles(Path.Combine(path, "Soundbank"), "*.sawnd").FirstOrDefault();
+                fighterPackage.ClassicIntro = _fileService.GetFiles(Path.Combine(path, "ClassicIntro"), "*.brres").FirstOrDefault();
+                fighterPackage.EndingMovie = _fileService.GetFiles(Path.Combine(path, "Ending"), "*.thp").FirstOrDefault();
+                // Get victory and credits themes
+                var victoryTheme = _fileService.GetFiles(Path.Combine(path, "VictoryTheme"), "*.brstm").FirstOrDefault();
+                if (victoryTheme != null)
+                {
+                    fighterPackage.VictoryTheme = new TracklistSong
+                    {
+                        Name = fighterPackage.FighterInfo.DisplayName,
+                        SongFile = victoryTheme,
+                        SongPath = !string.IsNullOrEmpty(victoryTheme) ? $"Victory!/{Path.GetFileNameWithoutExtension(victoryTheme)}" : string.Empty,
+                        SongId = fighterPackage.FighterInfo.VictoryThemeId ?? 0xF000
+                    };
+                }
+                var creditsTheme = _fileService.GetFiles(Path.Combine(path, "CreditsTheme"), "*.brstm").FirstOrDefault();
+                if (creditsTheme != null || fighterPackage.FighterInfo.CreditsThemeId != null)
+                {
+                    fighterPackage.CreditsTheme = new TracklistSong
+                    {
+                        Name = creditsTheme != null ? Path.GetFileNameWithoutExtension(creditsTheme) : fighterPackage.FighterInfo.DisplayName,
+                        SongFile = creditsTheme,
+                        SongPath = !string.IsNullOrEmpty(creditsTheme) ? $"Credits!/{Path.GetFileNameWithoutExtension(creditsTheme)}" : string.Empty,
+                        SongId = fighterPackage.FighterInfo.CreditsThemeId ?? 0xF000
+                    };
+                }
+                // Get Effect.pac IDs
+                if (fighterPackage.FighterInfo.EffectPacId == null)
+                {
+                    fighterPackage.FighterInfo.EffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterPackage.FighterInfo.PacFileName);
+                    fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
+                }
+                if (fighterPackage.FighterInfo.KirbyEffectPacId == null)
+                {
+                    fighterPackage.FighterInfo.KirbyEffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterPackage.FighterInfo.KirbyPacFileName);
+                    fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
+                }
                 fighterPackage.PackageType = PackageType.New;
                 return fighterPackage;
             }

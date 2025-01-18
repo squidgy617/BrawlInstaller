@@ -242,7 +242,6 @@ namespace BrawlInstaller.Classes
         public JigglypuffSettings JigglypuffSettings { get; set; } = new JigglypuffSettings();
         public DededeSettings DededeSettings { get; set; } = new DededeSettings();
         public Position ThrowReleasePoint { get; set; } = new Position(0.0, 0.0);
-        public int? CreditsThemeId { get; set; }
         public int? TrophyId { get; set; }
         public uint DoorId { get; set; } = 0;
         public int? SSESubCharacterId { get; set; } = 0;
