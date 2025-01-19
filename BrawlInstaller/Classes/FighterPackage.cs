@@ -44,6 +44,12 @@ namespace BrawlInstaller.Classes
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
         public PackageType PackageType { get; set; } = PackageType.Update;
 
+        // TODO: Alternate files
+        // It will be a list of alternate files you can supply. Each file has a type associated with it that tells you what type of file it is. This list, along with the associate files,
+        // is saved in its own folder in the fighter package. In the UI, there's a simple button somewhere that lets you see the whole list, adding or removing the files and their types.
+        // When you load a package, the list is loaded too. When you go to import a package, if the list has items in it, you will be prompted to select options from the list.
+        // On import, the options the user selected automatically replace the actual files for those types.
+
         public FighterPackage Copy()
         {
             var costumes = Costumes.Copy();
