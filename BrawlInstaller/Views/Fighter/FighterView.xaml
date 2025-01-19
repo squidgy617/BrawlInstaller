@@ -50,7 +50,17 @@
                         <Button x:Name="copyFighterButton" Grid.Column="1" Grid.Row="1" Content="→" VerticalAlignment="Center" Command="{Binding CopyFighterCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
                         <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}" Width="120"/>
                         <Button x:Name="saveRosterButton" Grid.Column="3" Content="Save" Command="{Binding SaveRostersCommand}"/>
-                        <ListBox x:Name="rosterListBox" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" DisplayMemberPath="Name" Width="120" Height="400"/>
+                        <ListBox x:Name="rosterListBox" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" Width="120" Height="400">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}">
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedRosterEntry, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" Command="{Binding DataContext.LoadRosterFighterCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                         <StackPanel x:Name="rosterButtonsStackPanel" Grid.Column="3" Grid.Row="1">
                             <Button x:Name="moveUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveFighterUpCommand}"/>
                             <Button x:Name="moveDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveFighterDownCommand}"/>

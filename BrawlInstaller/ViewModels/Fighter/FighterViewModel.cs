@@ -58,6 +58,7 @@ namespace BrawlInstaller.ViewModels
         IFileService _fileService { get; }
 
         // Commands
+        public ICommand LoadRosterFighterCommand => new RelayCommand(param => LoadFighterFromRoster(param));
         public ICommand LoadCommand => new RelayCommand(param => LoadFighter(param));
         public ICommand SaveCommand => new RelayCommand(param => SaveFighter());
         public ICommand DeleteCommand => new RelayCommand(param => DeleteFighter());
@@ -145,6 +146,23 @@ namespace BrawlInstaller.ViewModels
         public bool ImportButtonEnabled { get => FighterPackage?.PackageType == PackageType.Update || (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.BrawlEx) && _fileService.DirectoryExists(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BrawlEx))); }
 
         // Methods
+        public void LoadFighterFromRoster(object param)
+        {
+            if (param != null)
+            {
+                var rosterEntry = (RosterEntry)param;
+                var info = FighterList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == rosterEntry.Id);
+                if (info != null)
+                {
+                    LoadFighter(info);
+                }
+                else
+                {
+                    _dialogService.ShowMessage("Could not find fighter in fighter list.", "Fighter Not Found");
+                }
+            }
+        }
+
         public void LoadFighter(object param)
         {
             if (param != null)
