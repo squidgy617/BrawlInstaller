@@ -1042,7 +1042,7 @@
       "Enabled": true
     },
     {
-      "CosmeticType": 0,
+      "CosmeticType": 21,
       "Style": "vBrawl",
       "InstallLocation": {
         "FilePath": "pf\\menu\\adventure\\comer_tex\\",
@@ -1063,13 +1063,13 @@
         "Height": 56
       },
       "Format": 14,
-      "FirstOnly": false,
-      "SeparateFiles": false,
+      "FirstOnly": true,
+      "SeparateFiles": true,
       "CompressionType": 0,
       "FileType": 1,
-      "AlwaysInheritStyle": false,
+      "AlwaysInheritStyle": true,
       "Required": false,
-      "Enabled": false
+      "Enabled": true
     },
     {
       "CosmeticType": 7,

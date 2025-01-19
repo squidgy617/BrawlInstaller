@@ -50,6 +50,8 @@ namespace BrawlInstaller.Enums
         [Description("Stage Replay Banner")]
         StageReplayBanner,
         [Description("Stage Stats")]
-        StageStats
+        StageStats,
+        [Description("SSE Unlock Icon")]
+        SSEUnlockIcon
     }
 }
