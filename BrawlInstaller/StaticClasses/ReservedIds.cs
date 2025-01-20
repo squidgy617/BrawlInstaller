@@ -14,6 +14,8 @@ namespace BrawlInstaller.StaticClasses
         public static List<int> ReservedFighterConfigIds = new List<int> { 0x48, 0x49, 0x4A }; // Used for SSE characters
         public static List<int> ReservedFighterCosmeticIds = new List<int>
         { 
+            20, // Reserved because Ganondorf uses both frame 19 and 20 in SSE for some reason
+            27, // Used by Pokemon Trainer, which is still in SSE even in builds that don't have him
             39, // Empty slot
             50, // Random
             60, // Sandbag
