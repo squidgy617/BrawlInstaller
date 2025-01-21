@@ -122,11 +122,11 @@ namespace BrawlInstaller.Classes
 
         public FighterFileType GetFileType(string pacPrefix, FighterInfo fighterInfo)
         {
-                if (pacPrefix == fighterInfo.PacFileName)
+                if (pacPrefix.ToLower() == fighterInfo.PacFileName.ToLower())
                     return FighterFileType.FighterPacFile;
-                else if (pacPrefix == fighterInfo.KirbyPacFileName)
+                else if (pacPrefix.ToLower() == fighterInfo.KirbyPacFileName.ToLower())
                     return FighterFileType.KirbyPacFile;
-                else if (pacPrefix == $"Itm{fighterInfo.PartialPacName}")
+                else if (pacPrefix.ToLower() == $"Itm{fighterInfo.PartialPacName.ToLower()}")
                     return FighterFileType.ItemPacFile;
                 else
                     return FighterFileType.FighterPacFile;

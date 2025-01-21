@@ -1215,7 +1215,7 @@ namespace BrawlInstaller.Services
                     newNode.Name = fighterPackage.FighterInfo.FighterFileName;
                     for(var i = 0; i < 4; i++)
                     {
-                        newNode.AddChild(new ASLSEntryNode { ButtonFlags = (ushort)i });
+                        newNode.AddChild(new ASLSEntryNode { ButtonFlags = (ushort)i, Name = "Break_the_Targets" });
                     }
                     _fileService.SaveFileAs(newNode, filePath);
                     _fileService.CloseFile(newNode);
