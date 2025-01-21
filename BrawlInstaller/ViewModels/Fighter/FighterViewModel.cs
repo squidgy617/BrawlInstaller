@@ -793,6 +793,10 @@ namespace BrawlInstaller.ViewModels
                 || fighterPackage.PackageType == PackageType.Delete && FighterPackage.VictoryTheme != null && !string.IsNullOrEmpty(FighterPackage.VictoryTheme.SongFile))
             {
                 deleteOptions.Add(new CheckListItem("VictoryTheme", "Victory Theme BRSTM", "The victory theme BRSTM file", true));
+            }
+            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.VictoryTheme != null && fighterPackage.VictoryTheme.SongId != OldFighterPackage.VictoryTheme.SongId)
+                || fighterPackage.PackageType == PackageType.Delete)
+            {
                 deleteOptions.Add(new CheckListItem("VictoryEntry", "Victory Tracklist Entry", "The tracklist entry for the victory theme", true));
             }
             // Credits Theme
@@ -800,6 +804,10 @@ namespace BrawlInstaller.ViewModels
                 || fighterPackage.PackageType == PackageType.Delete && FighterPackage.CreditsTheme != null && !string.IsNullOrEmpty(FighterPackage.CreditsTheme.SongFile))
             {
                 deleteOptions.Add(new CheckListItem("CreditsTheme", "Credits Theme BRSTM", "The credits theme BRSTM file", true));
+            }
+            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.CreditsTheme != null && fighterPackage.CreditsTheme.SongId != OldFighterPackage.CreditsTheme.SongId)
+                || fighterPackage.PackageType == PackageType.Delete)
+            {
                 deleteOptions.Add(new CheckListItem("CreditsEntry", "Credits Tracklist Entry", "The tracklist entry for the credits theme", true));
             }
             // Franchise icon
