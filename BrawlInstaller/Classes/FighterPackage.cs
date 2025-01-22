@@ -126,7 +126,7 @@ namespace BrawlInstaller.Classes
                     return FighterFileType.FighterPacFile;
                 else if (pacPrefix.ToLower() == fighterInfo.KirbyPacFileName.ToLower())
                     return FighterFileType.KirbyPacFile;
-                else if (pacPrefix.ToLower() == $"Itm{fighterInfo.PartialPacName.ToLower()}")
+                else if (pacPrefix.ToLower() == $"Itm{fighterInfo.PartialPacName}".ToLower())
                     return FighterFileType.ItemPacFile;
                 else
                     return FighterFileType.FighterPacFile;
