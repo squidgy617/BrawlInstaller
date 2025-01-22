@@ -823,11 +823,24 @@ namespace BrawlInstaller.ViewModels
             // Open dialog
             if (deleteOptions.Count > 0)
             {
-                var selectedItems = _dialogService.OpenCheckListDialog(deleteOptions, "Select items to delete", "The following items were changed, but may be shared by other fighters. Ensure they are not used by other fighters and then select the items you would like to delete.").Where(x => x.IsChecked);
-                fighterPackage.FighterDeleteOptions.DeleteVictoryTheme = selectedItems.Any(x => (string)x.Item == "VictoryTheme");
-                fighterPackage.FighterDeleteOptions.DeleteCreditsTheme = selectedItems.Any(x => (string)x.Item == "CreditsTheme");
-                fighterPackage.FighterDeleteOptions.DeleteVictoryEntry = selectedItems.Any(x => (string)x.Item == "VictoryEntry");
-                fighterPackage.FighterDeleteOptions.DeleteCreditsEntry = selectedItems.Any(x => (string)x.Item == "CreditsEntry");
+                var items = _dialogService.OpenCheckListDialog(deleteOptions, "Select items to delete", "The following items were changed, but may be shared by other fighters. Ensure they are not used by other fighters and then select the items you would like to delete.");
+                var selectedItems = items.Where(x => x.IsChecked);
+                if (items.Any(x => (string)x.Item == "VictoryTheme"))
+                {
+                    fighterPackage.FighterDeleteOptions.DeleteVictoryTheme = selectedItems.Any(x => (string)x.Item == "VictoryTheme");
+                }
+                if (items.Any(x => (string)x.Item == "CreditsTheme"))
+                {
+                    fighterPackage.FighterDeleteOptions.DeleteCreditsTheme = selectedItems.Any(x => (string)x.Item == "CreditsTheme");
+                }
+                if (items.Any(x => (string)x.Item == "VictoryEntry"))
+                {
+                    fighterPackage.FighterDeleteOptions.DeleteVictoryEntry = selectedItems.Any(x => (string)x.Item == "VictoryEntry");
+                }
+                if (items.Any(x => (string)x.Item == "CreditsEntry"))
+                {
+                    fighterPackage.FighterDeleteOptions.DeleteCreditsEntry = selectedItems.Any(x => (string)x.Item == "CreditsEntry");
+                }
                 if(selectedItems.Any(x => (string)x.Item == "Cosmetics"))
                 {
                     // Mark all cosmetics as changed
