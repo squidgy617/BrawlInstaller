@@ -110,6 +110,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.IsExModule(string)"/>
         bool IsExModule(string filePath);
+
+        /// <inheritdoc cref="FighterService.VerifyFighterPacName(string, string, string)"/>
+        bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -562,23 +565,7 @@ namespace BrawlInstaller.Services
         public FighterPacFile GetFighterPacName(FighterPacFile pacFile, FighterInfo fighterInfo, bool removeCostumeId=true)
         {
             // List of strings that can be found in pac file names
-            var modifierStrings = new List<string>
-            {
-                "MotionEtc",
-                "Motion",
-                "Etc",
-                "Final",
-                "Spy",
-                "Dark",
-                "Result",
-                "Entry",
-                "AltR",
-                "AltZ",
-                "Alt",
-                "Param",
-                "Brres",
-                "Fake"
-            };
+            var modifierStrings = PacFiles.PacFileSuffixes;
             var name = Path.GetFileNameWithoutExtension(pacFile.FilePath);
             var oldFighterName = name;
             // Remove numbers
@@ -946,7 +933,7 @@ namespace BrawlInstaller.Services
         /// <param name="pacFileName">File name to check against</param>
         /// <param name="pacExtension">Extension to check against</param>
         /// <returns></returns>
-        private bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension)
+        public bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension)
         {
             // Build regex string
             var regexString = $"(i?){pacFileName}";

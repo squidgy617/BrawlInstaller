@@ -245,12 +245,7 @@ namespace BrawlInstaller.Services
                         foreach (var dir in dirs)
                         {
                             var pacFiles = _fileService.GetFiles(dir, "*.pac");
-                            foreach (var pacFile in pacFiles)
-                            {
-                                var newPacFile = new FighterPacFile { FilePath = pacFile };
-                                newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, true);
-                                costume.PacFiles.Add(newPacFile);
-                            }
+                            costume.PacFiles.AddRange(GetPacFiles(pacFiles, fighterPackage, true));
                         }
                     }
                     fighterPackage.Costumes = costumes;
@@ -263,12 +258,7 @@ namespace BrawlInstaller.Services
                 foreach (var dir in pacDirs)
                 {
                     var pacFiles = _fileService.GetFiles(dir, "*.pac");
-                    foreach (var pacFile in pacFiles)
-                    {
-                        var newPacFile = new FighterPacFile { FilePath = pacFile };
-                        newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, false);
-                        fighterPackage.PacFiles.Add(newPacFile);
-                    }
+                    fighterPackage.PacFiles.AddRange(GetPacFiles(pacFiles, fighterPackage, false));
                 }
                 // Get module
                 fighterPackage.Module = _fileService.GetFiles($"{path}\\Module", "*.rel").FirstOrDefault();
@@ -556,12 +546,7 @@ namespace BrawlInstaller.Services
                 foreach (var dir in pacDirs)
                 {
                     var pacFiles = _fileService.GetFiles(dir, "*.pac");
-                    foreach (var pacFile in pacFiles)
-                    {
-                        var newPacFile = new FighterPacFile { FilePath = pacFile };
-                        newPacFile = _fighterService.GetFighterPacName(newPacFile, fighterPackage.FighterInfo, true);
-                        pacFileObjects.Add(newPacFile);
-                    }
+                    pacFileObjects.AddRange(GetPacFiles(pacFiles, fighterPackage, true));
                 }
                 // Get costumes
                 var rootNode = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
@@ -720,6 +705,37 @@ namespace BrawlInstaller.Services
                 }
             }
             return cosmeticList;
+        }
+
+        /// <summary>
+        /// Get fighter pac files from list of files
+        /// </summary>
+        /// <param name="files">Files to convert</param>
+        /// <param name="fighterPackage">Fighter package to use</param>
+        /// <param name="removeCostumeId">Remove costume ID</param>
+        /// <returns>List of fighter pac files</returns>
+        private List<FighterPacFile> GetPacFiles(List<string> files, FighterPackage fighterPackage, bool removeCostumeId = true)
+        {
+            var pacFiles = new List<FighterPacFile>();
+            foreach (var file in files)
+            {
+                if (_fighterService.VerifyFighterPacName(Path.GetFileName(file), fighterPackage.FighterInfo.PacFileName, fighterPackage.FighterInfo.PacExtension))
+                {
+                    var newPacFile = _fighterService.GetFighterPacFile(file, fighterPackage.FighterInfo.PacFileName, fighterPackage.FighterInfo, removeCostumeId);
+                    pacFiles.Add(newPacFile);
+                }
+                else if (_fighterService.VerifyFighterPacName(Path.GetFileName(file), $"Itm{fighterPackage.FighterInfo.PartialPacName}", fighterPackage.FighterInfo.PacExtension))
+                {
+                    var newPacFile = _fighterService.GetFighterPacFile(file, $"Itm{fighterPackage.FighterInfo.PartialPacName}", fighterPackage.FighterInfo, removeCostumeId);
+                    pacFiles.Add(newPacFile);
+                }
+                else if (_fighterService.VerifyFighterPacName(Path.GetFileName(file), fighterPackage.FighterInfo.KirbyPacFileName, fighterPackage.FighterInfo.KirbyPacExtension))
+                {
+                    var newPacFile = _fighterService.GetFighterPacFile(file, fighterPackage.FighterInfo.KirbyPacFileName, fighterPackage.FighterInfo, removeCostumeId);
+                    pacFiles.Add(newPacFile);
+                }
+            }
+            return pacFiles;
         }
     }
 }
