@@ -7,6 +7,8 @@
              xmlns:userControls="clr-namespace:BrawlInstaller.UserControls"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterFileViewModel}"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:resources="clr-namespace:BrawlInstaller.Resources"
+             xmlns:validationRules="clr-namespace:BrawlInstaller.Validation"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -42,7 +44,23 @@
         <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}" ToolTip="Name to use for selected PAC file"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}">
             <ComboBox x:Name="pacFilePrefixComboBox" HorizontalAlignment="Right" ItemsSource="{Binding FighterFileTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedPacFile.FileType}" Width="100"/>
-            <TextBox x:Name="pacFileSuffixTextBox" Text="{Binding SelectedPacFile.Suffix}" Width="50"/>
+            <TextBox x:Name="pacFileSuffixTextBox" Width="50">
+                <TextBox.Resources>
+                    <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                </TextBox.Resources>
+                <TextBox.Text>
+                    <Binding Path="SelectedPacFile.Suffix">
+                        <Binding.ValidationRules>
+                            <validationRules:PacFileNameValidationRule>
+                                <validationRules:PacFileNameValidationRule.Wrapper>
+                                    <validationRules:PacFileNameWrapper Suffix="{Binding Data.SelectedPacFile.Suffix, Source={StaticResource proxy}}"/>
+                                </validationRules:PacFileNameValidationRule.Wrapper>
+                            </validationRules:PacFileNameValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Target="{Binding ElementName=pacFileSuffixTextBox}" Style="{StaticResource errorText}" Width="120"/>
         </StackPanel>
         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="2" Grid.Column="0" ToolTip="Module file to associate with fighter"/>
         <userControls:FileBox x:Name="moduleFileBox" Text="{Binding FighterPackage.Module, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" TextBoxWidth="120" Filter="REL file (.rel)|*.rel"/>

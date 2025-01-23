@@ -139,6 +139,7 @@
     <Compile Include="UserControls\WpfPropertyGrid.cs" />
     <Compile Include="Validation\BuildFilePathValidationRules.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
+    <Compile Include="Validation\PacFileNameValidationRules.cs" />
     <Compile Include="ViewModels\Dialogs\CheckListViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DropDownViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />

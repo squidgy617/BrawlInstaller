@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
+             xmlns:validationRules="clr-namespace:BrawlInstaller.Validation"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:CostumeViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -57,6 +58,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="costumeIdLabel" Content="Costume ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" ToolTip="ID to use for selected costume"/>
             <ComboBox x:Name="costumeIdComboBox" ItemsSource="{Binding AvailableCostumeIds}" SelectedItem="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" ItemStringFormat="D2" Width="50" Grid.Row="0" Grid.Column="1"/>
@@ -87,11 +89,27 @@
             <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="2" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}" ToolTip="Name to use for selected PAC file"/>
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}">
                 <ComboBox x:Name="pacFilePrefixComboBox" HorizontalAlignment="Right" ItemsSource="{Binding FighterFileTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedPacFile.FileType}" Width="100"/>
-                <TextBox x:Name="pacFileSuffixTextBox" Text="{Binding SelectedPacFile.Suffix}" Width="50"/>
+                <TextBox x:Name="pacFileSuffixTextBox" Width="50">
+                    <TextBox.Resources>
+                        <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                    </TextBox.Resources>
+                    <TextBox.Text>
+                        <Binding Path="SelectedPacFile.Suffix">
+                            <Binding.ValidationRules>
+                                <validationRules:PacFileNameValidationRule>
+                                    <validationRules:PacFileNameValidationRule.Wrapper>
+                                        <validationRules:PacFileNameWrapper Suffix="{Binding Data.SelectedPacFile.Suffix, Source={StaticResource proxy}}"/>
+                                    </validationRules:PacFileNameValidationRule.Wrapper>
+                                </validationRules:PacFileNameValidationRule>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <TextBlock x:Name="pacFileCostumeIdTextBlock" Text="{Binding SelectedCostume.CostumeId, StringFormat=D2}" VerticalAlignment="Center"/>
             </StackPanel>
-            <Label x:Name="colorLabel" Content="Color:" Grid.Row="3" ToolTip="Internal color of costume"/>
-            <ComboBox x:Name="colorComboBox" Width="120" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
+            <Label Target="{Binding ElementName=pacFileSuffixTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <Label x:Name="colorLabel" Content="Color:" Grid.Row="4" ToolTip="Internal color of costume"/>
+            <ComboBox x:Name="colorComboBox" Width="120" Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
         </Grid>
         <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" Grid.Row="0" Grid.Column="4" Grid.RowSpan="3">
             <Grid x:Name="costumeCosmeticGrid">
