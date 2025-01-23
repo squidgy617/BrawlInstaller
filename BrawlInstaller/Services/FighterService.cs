@@ -908,7 +908,7 @@ namespace BrawlInstaller.Services
             // Get pac files
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.PacFolder}";
             var files = new List<FighterPacFile>();
-            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => Path.GetFileName(x).StartsWith(fighterInfo.PacFileName, StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.PacFileName, fighterInfo.PacExtension)))
             {
                 var pacFile = GetFighterPacFile(file, fighterInfo.PacFileName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
@@ -918,7 +918,7 @@ namespace BrawlInstaller.Services
             }
             // Get item pac files
             path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.PacFolder}\\item";
-            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => Path.GetFileName(x).StartsWith($"Itm{fighterInfo.PartialPacName}", StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), $"Itm{fighterInfo.PartialPacName}", fighterInfo.PacExtension)))
             {
                 var pacFile = GetFighterPacFile(file, "Itm" + fighterInfo.PartialPacName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
@@ -928,7 +928,7 @@ namespace BrawlInstaller.Services
             }
             // Get Kirby pac files
             path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.KirbyPacFolder}";
-            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => Path.GetFileName(x).StartsWith(fighterInfo.KirbyPacFileName, StringComparison.InvariantCultureIgnoreCase)).ToList())
+            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.KirbyPacFileName, fighterInfo.KirbyPacExtension)).ToList())
             {
                 var pacFile = GetFighterPacFile(file, fighterInfo.KirbyPacFileName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
@@ -937,6 +937,27 @@ namespace BrawlInstaller.Services
                 }
             }
             return files;
+        }
+
+        /// <summary>
+        /// Returns whether or not the pac file is valid for the fighter file name
+        /// </summary>
+        /// <param name="fileName">File to verify</param>
+        /// <param name="pacFileName">File name to check against</param>
+        /// <param name="pacExtension">Extension to check against</param>
+        /// <returns></returns>
+        private bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension)
+        {
+            // Build regex string
+            var regexString = $"(i?){pacFileName}";
+            // Add suffix options
+            var suffixString = "(" + string.Join("|", PacFiles.PacFileSuffixes.Select(x => $"({x.Replace("#", "\\d")})")) + ")?";
+            regexString += suffixString;
+            // Add costume IDs optionally
+            regexString += "(\\d\\d)?";
+            // Add extension
+            regexString += pacExtension;
+            return Regex.IsMatch(fileName, regexString);
         }
 
         /// <summary>
