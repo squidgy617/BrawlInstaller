@@ -12,6 +12,7 @@ namespace BrawlInstaller.Classes
         public List<RosterEntry> Entries { get; set; } = new List<RosterEntry>();
         public string FilePath { get; set; } = string.Empty;
         public bool AddNewCharacters { get; set; } = true;
+        public RosterType RosterType { get; set; } = RosterType.CSS;
     }
 
     public class RosterEntry
@@ -20,5 +21,12 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; } = "Unknown";
         public bool InRandom { get; set; } = false;
         public bool InCss { get; set; } = false;
+    }
+
+    public enum RosterType
+    {
+        CSS,
+        CodeMenu,
+        SSE
     }
 }

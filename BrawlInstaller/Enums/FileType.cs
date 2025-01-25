@@ -62,6 +62,8 @@ namespace BrawlInstaller.Enums
         [Description("GCTRealMate EXE File")]
         GctRealMateExe,
         [Description("Fighter Target Break Folder")]
-        TargetBreakFolder
+        TargetBreakFolder,
+        [Description("Code Menu Config")]
+        CodeMenuConfig
     }
 }

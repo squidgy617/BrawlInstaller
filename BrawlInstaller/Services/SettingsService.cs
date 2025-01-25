@@ -37,6 +37,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="SettingsService.LoadSettings(string)"/>
         BuildSettings LoadSettings(string path);
 
+        /// <inheritdoc cref="SettingsService.LoadSettings(BuildSettings)"/>
+        BuildSettings LoadSettings(BuildSettings buildSettings);
+
         /// <inheritdoc cref="SettingsService.LoadAppSettings()"/>
         AppSettings LoadAppSettings();
 
@@ -107,15 +110,37 @@ namespace BrawlInstaller.Services
         public BuildSettings LoadSettings(string path)
         {
             var buildSettings = new BuildSettings();
-            var defaultSettings = new BuildSettings();
             if (File.Exists(path))
             {
                 var text = File.ReadAllText(path);
                 buildSettings = JsonConvert.DeserializeObject<BuildSettings>(text);
             }
+            buildSettings = GetMissingPaths(buildSettings);
+            return buildSettings;
+        }
+
+        /// <summary>
+        /// Load build settings
+        /// </summary>
+        /// <param name="buildSettings">Build settings to load</param>
+        /// <returns>Build settings</returns>
+        public BuildSettings LoadSettings(BuildSettings buildSettings)
+        {
+            buildSettings = GetMissingPaths(buildSettings);
+            return buildSettings;
+        }
+
+        /// <summary>
+        /// Get missing paths in build settings
+        /// </summary>
+        /// <param name="buildSettings">Build settings to update</param>
+        /// <returns>Build settings with missing paths added</returns>
+        private BuildSettings GetMissingPaths(BuildSettings buildSettings)
+        {
+            var defaultSettings = new BuildSettings();
             // If any paths are missing, add them
             var missingPaths = defaultSettings.FilePathSettings.FilePaths.Where(x => !buildSettings.FilePathSettings.FilePaths.Select(y => y.FileType).Contains(x.FileType));
-            foreach(var missingPath in missingPaths)
+            foreach (var missingPath in missingPaths)
             {
                 buildSettings.FilePathSettings.FilePaths.Add(missingPath);
             }
@@ -124,6 +149,8 @@ namespace BrawlInstaller.Services
             {
                 buildSettings.FilePathSettings.AsmPaths.Add(missingAsm);
             }
+            buildSettings.FilePathSettings.FilePaths = buildSettings.FilePathSettings.FilePaths.OrderBy(x => x.FileType).ToList();
+            buildSettings.FilePathSettings.AsmPaths = buildSettings.FilePathSettings.AsmPaths.OrderBy(x => x.FileType).ToList();
             return buildSettings;
         }
 

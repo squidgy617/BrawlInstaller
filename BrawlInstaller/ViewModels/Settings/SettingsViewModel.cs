@@ -155,6 +155,7 @@ namespace BrawlInstaller.ViewModels
         {
             var json = GetSelectedSettings("BuildSettings.json");
             BuildSettings = JsonConvert.DeserializeObject<BuildSettings>(json);
+            BuildSettings = _settingsService.LoadSettings(BuildSettings);
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
             WeakReferenceMessenger.Default.Send(new LoadDefaultSettingsMessage(SelectedSettingsOption));
