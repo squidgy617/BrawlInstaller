@@ -914,13 +914,16 @@ namespace BrawlInstaller.Services
                 }
             }
             // Get Kirby pac files
-            path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.KirbyPacFolder}";
-            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.KirbyPacFileName, fighterInfo.KirbyPacExtension)).ToList())
+            if (!removeCostumeId)
             {
-                var pacFile = GetFighterPacFile(file, fighterInfo.KirbyPacFileName, fighterInfo, removeCostumeId);
-                if (pacFile != null)
+                path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.KirbyPacFolder}";
+                foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.KirbyPacFileName, fighterInfo.KirbyPacExtension)).ToList())
                 {
-                    files.Add(pacFile);
+                    var pacFile = GetFighterPacFile(file, fighterInfo.KirbyPacFileName, fighterInfo, removeCostumeId);
+                    if (pacFile != null)
+                    {
+                        files.Add(pacFile);
+                    }
                 }
             }
             return files;
