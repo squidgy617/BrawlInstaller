@@ -151,15 +151,7 @@ namespace BrawlInstaller.ViewModels
             if (param != null)
             {
                 var rosterEntry = (RosterEntry)param;
-                FighterInfo info = null;
-                if (SelectedRoster.RosterType == RosterType.CSS)
-                {
-                    info = FighterList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == rosterEntry.Id);
-                }
-                else if (SelectedRoster.RosterType == RosterType.CodeMenu)
-                {
-                    info = FighterList.FirstOrDefault(x => x.Ids.SlotConfigId == rosterEntry.Id);
-                }
+                var info = FighterList.FirstOrDefault(x => x.Ids.GetIdOfType(SelectedRoster.IdType) == rosterEntry.Id);
                 if (info != null)
                 {
                     LoadFighter(info);
@@ -456,7 +448,11 @@ namespace BrawlInstaller.ViewModels
             var updatedMatches = new List<RosterEntry>();
             foreach(var fighterInfo in fighterInfoList)
             {
-                var foundMatches = Rosters.SelectMany(x => x.Entries).Where(x => x.Id == fighterInfo.Ids.CSSSlotConfigId && !updatedMatches.Contains(x));
+                var foundMatches = new List<RosterEntry>();
+                foreach(var roster in Rosters)
+                {
+                    foundMatches.AddRange(roster.Entries.Where(x => x.Id == fighterInfo.Ids.GetIdOfType(roster.IdType) && !updatedMatches.Contains(x)));
+                }
                 foreach(var match in foundMatches)
                 {
                     match.Name = fighterInfo.DisplayName;
@@ -473,9 +469,10 @@ namespace BrawlInstaller.ViewModels
             {
                 foreach(var roster in Rosters.Where(x => x.AddNewCharacters))
                 {
+                    var id = SelectedFighter.Ids.GetIdOfType(roster.IdType);
                     var newEntry = new RosterEntry
                     {
-                        Id = fighterInfo.Ids.CSSSlotConfigId != null ? fighterInfo.Ids.CSSSlotConfigId.Value : 0,
+                        Id = id != null ? id.Value : 0,
                         Name = fighterInfo.DisplayName,
                         InCss = true,
                         InRandom = true
@@ -487,7 +484,8 @@ namespace BrawlInstaller.ViewModels
             {
                 foreach(var roster in Rosters)
                 {
-                    var foundEntry = roster.Entries.FirstOrDefault(x => x.Id == fighterInfo.Ids.CSSSlotConfigId);
+                    var id = SelectedFighter.Ids.GetIdOfType(roster.IdType);
+                    var foundEntry = roster.Entries.FirstOrDefault(x => x.Id == id);
                     if (foundEntry != null)
                     {
                         if (packageType == PackageType.Delete)
@@ -556,9 +554,10 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedRoster != null && SelectedFighter != null)
             {
+                var id = SelectedFighter.Ids.GetIdOfType(SelectedRoster.IdType);
                 var newEntry = new RosterEntry
                 {
-                    Id = SelectedFighter.Ids.CSSSlotConfigId != null ? SelectedFighter.Ids.CSSSlotConfigId.Value : 0,
+                    Id = id != null ? id.Value : 0,
                     InCss = true,
                     InRandom = true,
                     Name = SelectedFighter.DisplayName
@@ -585,9 +584,10 @@ namespace BrawlInstaller.ViewModels
                 rosterOptions.Add(randomEntry);
                 foreach (var fighter in _settingsService.FighterInfoList)
                 {
+                    var id = SelectedFighter.Ids.GetIdOfType(SelectedRoster.IdType);
                     var newEntry = new RosterEntry
                     {
-                        Id = fighter.Ids.CSSSlotConfigId != null ? fighter.Ids.CSSSlotConfigId.Value : 0,
+                        Id = id != null ? id.Value : 0,
                         Name = fighter.DisplayName,
                         InCss = true,
                         InRandom = true

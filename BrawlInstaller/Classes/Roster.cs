@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BrawlInstaller.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace BrawlInstaller.Classes
         public string FilePath { get; set; } = string.Empty;
         public bool AddNewCharacters { get; set; } = true;
         public RosterType RosterType { get; set; } = RosterType.CSS;
+        public IdType IdType { get => RosterType == RosterType.CodeMenu ? IdType.SlotConfig : IdType.CSSSlotConfig; }
     }
 
     public class RosterEntry
