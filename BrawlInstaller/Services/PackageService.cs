@@ -226,6 +226,8 @@ namespace BrawlInstaller.Services
                     var fighterSettingsJson = _fileService.ReadTextFile(fighterSettingsPath);
                     fighterPackage.FighterSettings = JsonConvert.DeserializeObject<FighterSettings>(fighterSettingsJson);
                 }
+                fighterPackage.FighterSettings.LLoadCharacterId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
+                fighterPackage.FighterSettings.SSESubCharacterId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
                 // Get Kirby hat data
                 fighterPackage.FighterSettings.KirbyHatData = _fighterService.ConvertXMLToKirbyHatData(Path.Combine(path, "KirbyHat.xml"));
                 // Get cosmetics
@@ -493,6 +495,8 @@ namespace BrawlInstaller.Services
                         fighterPackage.FighterSettings.DoorId = doorIdValue;
                     }
                 }
+                fighterPackage.FighterSettings.LLoadCharacterId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
+                fighterPackage.FighterSettings.SSESubCharacterId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
                 // Get cosmetics
                 var cosmetics = GetLegacyCosmetics(Path.Combine(path, "BPs"), CosmeticType.BP, CosmeticType.BPName);
                 cosmetics.AddRange(GetLegacyCostumeCosmetics(Path.Combine(path, "CSPs"), CosmeticType.CSP, "Result"));

@@ -240,6 +240,8 @@ namespace BrawlInstaller.ViewModels
             _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
             // Set IDs to first available
             FighterPackage.FighterInfo = _fighterService.UpdateIdsToFirstUnused(FighterPackage.FighterInfo);
+            FighterPackage.FighterSettings.LLoadCharacterId = FighterPackage.FighterInfo.Ids.CSSSlotConfigId;
+            FighterPackage.FighterSettings.SSESubCharacterId = FighterPackage.FighterInfo.Ids.CSSSlotConfigId;
             OnPropertyChanged(nameof(FighterPackage));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
