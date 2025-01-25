@@ -2560,7 +2560,28 @@ namespace BrawlInstaller.Services
                     fighters.SetAttributeValue("baseListVersion", xml.Element("characterList").Attribute("baseListVersion").Value);
                     xml.Element("characterList").ReplaceWith(fighters);
                     _fileService.SaveXmlFile(xml, codeMenuConfigPath);
+                    BuildCodeMenu();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Compile the code menu
+        /// </summary>
+        private void BuildCodeMenu()
+        {
+            var codeMenuBuilder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuBuilder);
+            if (_fileService.FileExists(codeMenuBuilder))
+            {
+                var args = "1 1 0 1";
+                Process codeMenu = Process.Start(new ProcessStartInfo
+                {
+                    WorkingDirectory = Path.GetDirectoryName(codeMenuBuilder),
+                    FileName = codeMenuBuilder,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    Arguments = args
+                });
+                codeMenu.WaitForExit();
             }
         }
 

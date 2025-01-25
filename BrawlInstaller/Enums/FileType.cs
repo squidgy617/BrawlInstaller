@@ -64,6 +64,8 @@ namespace BrawlInstaller.Enums
         [Description("Fighter Target Break Folder")]
         TargetBreakFolder,
         [Description("Code Menu Config")]
-        CodeMenuConfig
+        CodeMenuConfig,
+        [Description("Code Menu Builder EXE File")]
+        CodeMenuBuilder
     }
 }
