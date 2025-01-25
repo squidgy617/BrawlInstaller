@@ -1989,8 +1989,18 @@
       },
       {
         "FileType": 26,
-        "Path": "pf\\stage\\stageslot\\tBreak",
+        "Path": "pf\\stage\\stageslot\\tBreak\\",
         "Filter": ""
+      },
+      {
+        "FileType": 27,
+        "Path": "Code Menu Builder\\EX_Config.xml",
+        "Filter": "XML file (.xml)|*.xml"
+      },
+      {
+        "FileType": 28,
+        "Path": "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe",
+        "Filter": "EXE file (.exe)|*.exe"
       }
     ],
     "AsmPaths": [

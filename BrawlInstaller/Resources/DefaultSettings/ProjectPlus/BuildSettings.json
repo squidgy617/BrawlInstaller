@@ -1989,8 +1989,18 @@
       },
       {
         "FileType": 26,
-        "Path": "pf\\stage\\stageslot\\tBreak",
+        "Path": "pf\\stage\\stageslot\\tBreak\\",
         "Filter": ""
+      },
+      {
+        "FileType": 27,
+        "Path": "",
+        "Filter": "XML file (.xml)|*.xml"
+      },
+      {
+        "FileType": 28,
+        "Path": "",
+        "Filter": "EXE file (.exe)|*.exe"
       }
     ],
     "AsmPaths": [

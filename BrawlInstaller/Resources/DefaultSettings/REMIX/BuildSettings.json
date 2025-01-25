@@ -1615,6 +1615,16 @@
         "FileType": 26,
         "Path": "",
         "Filter": ""
+      },
+      {
+        "FileType": 27,
+        "Path": "",
+        "Filter": "XML file (.xml)|*.xml"
+      },
+      {
+        "FileType": 28,
+        "Path": "",
+        "Filter": "EXE file (.exe)|*.exe"
       }
     ],
     "AsmPaths": [
