@@ -117,9 +117,9 @@ namespace BrawlInstaller.Classes
     {
         public ushort ButtonFlags { get; set; } = 0x0000;
         public ListAlt ListAlt { get; set; } = new ListAlt();
-        [JsonIgnore] public bool IsRAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0; }
-        [JsonIgnore] public bool IsLAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) != 0; }
-        [JsonIgnore] public bool IsEventStage { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0 & GameCubeButtons.Unused0x8000 != 0; }
+        [JsonIgnore] public bool IsRAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0 && ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) == 0; }
+        [JsonIgnore] public bool IsLAlt { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) != 0 && ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) == 0; }
+        [JsonIgnore] public bool IsEventStage { get => ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x4000) != 0 && ((GameCubeButtons)ButtonFlags & GameCubeButtons.Unused0x8000) != 0; }
         public StageParams Params { get; set; } = new StageParams();
 
         public StageEntry Copy()
