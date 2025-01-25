@@ -151,7 +151,15 @@ namespace BrawlInstaller.ViewModels
             if (param != null)
             {
                 var rosterEntry = (RosterEntry)param;
-                var info = FighterList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == rosterEntry.Id);
+                FighterInfo info = null;
+                if (SelectedRoster.RosterType == RosterType.CSS)
+                {
+                    info = FighterList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == rosterEntry.Id);
+                }
+                else if (SelectedRoster.RosterType == RosterType.CodeMenu)
+                {
+                    info = FighterList.FirstOrDefault(x => x.Ids.SlotConfigId == rosterEntry.Id);
+                }
                 if (info != null)
                 {
                     LoadFighter(info);

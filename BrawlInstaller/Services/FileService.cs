@@ -25,6 +25,7 @@ using BrawlInstaller.Exceptions;
 using System.Text.RegularExpressions;
 using System.Web.UI.Design.WebControls;
 using Newtonsoft.Json;
+using System.Xml.Linq;
 
 namespace BrawlInstaller.Services
 {
@@ -125,6 +126,12 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FileService.EndBackup()"/>
         void EndBackup();
+
+        /// <inheritdoc cref="FileService.OpenXmlFile(string)"/>
+        XElement OpenXmlFile(string path);
+
+        /// <inheritdoc cref="FileService.SaveXmlFile(XElement, string)"/>
+        void SaveXmlFile(XElement xml, string path);
 
         Backup CurrentBackup { get; set; }
     }
@@ -842,6 +849,32 @@ namespace BrawlInstaller.Services
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Load an XML file
+        /// </summary>
+        /// <param name="path">Path to XML file</param>
+        /// <returns>XElement</returns>
+        public XElement OpenXmlFile(string path)
+        {
+            var doc = XElement.Load(path);
+            return doc;
+        }
+
+        /// <summary>
+        /// Save an XML file
+        /// </summary>
+        /// <param name="xml">XML element to save</param>
+        /// <param name="path">Path to save XMl to</param>
+        public void SaveXmlFile(XElement xml, string path)
+        {
+            BackupBuildFile(path);
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+            xml.Save(path);
         }
     }
 }

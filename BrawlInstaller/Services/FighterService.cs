@@ -2422,6 +2422,7 @@ namespace BrawlInstaller.Services
         public List<Roster> GetRosters()
         {
             var rosters = new List<Roster>();
+            // Get CSS rosters
             foreach(var rosterFile in _settingsService.BuildSettings.FilePathSettings.RosterFiles)
             {
                 if (rosterFile.FilePath != null)
@@ -2481,6 +2482,26 @@ namespace BrawlInstaller.Services
                     }
                 }
             }
+            // Get code menu roster
+            var codeMenuConfigPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuConfig);
+            if (_fileService.FileExists(codeMenuConfigPath))
+            {
+                var codeMenuRoster = new Roster { FilePath = codeMenuConfigPath, Name = "Code Menu", RosterType = RosterType.CodeMenu };
+                var xml = _fileService.OpenXmlFile(codeMenuConfigPath);
+                var fighters = xml.Element("characterList").Elements();
+                foreach(var fighter in fighters)
+                {
+                    var name = fighter.Attribute("name").Value;
+                    var idString = fighter.Attribute("slotID").Value;
+                    var parsed = int.TryParse(idString.Replace("0x", ""), NumberStyles.HexNumber, null, out int id);
+                    if (parsed)
+                    {
+                        var newEntry = new RosterEntry { Name = name, Id = id };
+                        codeMenuRoster.Entries.Add(newEntry);
+                    }
+                }
+                rosters.Add(codeMenuRoster);
+            }
             return rosters;
         }
 
@@ -2490,7 +2511,8 @@ namespace BrawlInstaller.Services
         /// <param name="rosters">List of rosters to save</param>
         public void SaveRosters(List<Roster> rosters)
         {
-            foreach (var roster in rosters)
+            // Save CSS rosters
+            foreach (var roster in rosters.Where(x => x.RosterType == RosterType.CSS))
             {
                 // TODO: Create a whole new RSTCNode instead of opening existing one.
                 // For some reason new RSTCNodes save as RawDataNodes, but this should be fixable somehow
@@ -2517,6 +2539,27 @@ namespace BrawlInstaller.Services
                     rosterFile.AddChild(rosterFile.randList);
                     _fileService.SaveFileAs(rosterFile, Path.Combine(_settingsService.AppSettings.BuildPath, roster.FilePath));
                     _fileService.CloseFile(rosterFile);
+                }
+            }
+            // Save code menu roster
+            var codeMenuRoster = rosters.FirstOrDefault(x => x.RosterType == RosterType.CodeMenu);
+            if (codeMenuRoster != null)
+            {
+                var codeMenuConfigPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuConfig);
+                if (_fileService.FileExists(codeMenuConfigPath))
+                {
+                    var xml = _fileService.OpenXmlFile(codeMenuConfigPath);
+                    var fighters = new XElement("characterList");
+                    foreach(var entry in codeMenuRoster.Entries)
+                    {
+                        var newEntry = new XElement("character");
+                        newEntry.SetAttributeValue("name", entry.Name);
+                        newEntry.SetAttributeValue("slotID", $"0x{entry.Id:X2}");
+                        fighters.Add(newEntry);
+                    }
+                    fighters.SetAttributeValue("baseListVersion", xml.Element("characterList").Attribute("baseListVersion").Value);
+                    xml.Element("characterList").ReplaceWith(fighters);
+                    _fileService.SaveXmlFile(xml, codeMenuConfigPath);
                 }
             }
         }
