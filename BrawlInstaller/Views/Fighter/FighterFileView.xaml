@@ -44,11 +44,11 @@
         <Label x:Name="pacFileNameLabel" Content="File Name:" Grid.Row="1" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}" ToolTip="Name to use for selected PAC file"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Visibility="{Binding SelectedPacFile, Converter={StaticResource nullVisConverter}}">
             <ComboBox x:Name="pacFilePrefixComboBox" HorizontalAlignment="Right" ItemsSource="{Binding FighterFileTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedPacFile.FileType}" Width="100"/>
-            <TextBox x:Name="pacFileSuffixTextBox" Width="50">
-                <TextBox.Resources>
+            <ComboBox x:Name="pacFileSuffixTextBox" IsEditable="True" ItemsSource="{Binding PacFileSuffixes}" Width="70">
+                <ComboBox.Resources>
                     <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
-                </TextBox.Resources>
-                <TextBox.Text>
+                </ComboBox.Resources>
+                <ComboBox.Text>
                     <Binding Path="SelectedPacFile.Suffix">
                         <Binding.ValidationRules>
                             <validationRules:PacFileNameValidationRule>
@@ -58,8 +58,8 @@
                             </validationRules:PacFileNameValidationRule>
                         </Binding.ValidationRules>
                     </Binding>
-                </TextBox.Text>
-            </TextBox>
+                </ComboBox.Text>
+            </ComboBox>
             <Label Target="{Binding ElementName=pacFileSuffixTextBox}" Style="{StaticResource errorText}" Width="120"/>
         </StackPanel>
         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="2" Grid.Column="0" ToolTip="Module file to associate with fighter"/>

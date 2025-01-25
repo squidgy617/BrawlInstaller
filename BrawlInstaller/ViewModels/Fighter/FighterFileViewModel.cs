@@ -116,6 +116,8 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>().ToDictionary(x => FighterPackage != null ? FighterPacFile.GetPrefix(x.Value, FighterPackage?.FighterInfo) : x.Key, x => x.Value); }
 
+        public List<string> PacFileSuffixes { get => StaticClasses.PacFiles.PacFileSuffixes; }
+
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
         {
