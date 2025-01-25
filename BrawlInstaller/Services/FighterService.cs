@@ -2486,7 +2486,7 @@ namespace BrawlInstaller.Services
             var codeMenuConfigPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuConfig);
             if (_fileService.FileExists(codeMenuConfigPath))
             {
-                var codeMenuRoster = new Roster { FilePath = codeMenuConfigPath, Name = "Code Menu", RosterType = RosterType.CodeMenu };
+                var codeMenuRoster = new Roster { FilePath = codeMenuConfigPath, Name = "Code Menu", RosterType = RosterType.CodeMenu, AddNewCharacters = true };
                 var xml = _fileService.OpenXmlFile(codeMenuConfigPath);
                 var fighters = xml.Element("characterList").Elements();
                 foreach(var fighter in fighters)
