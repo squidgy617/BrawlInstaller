@@ -2299,15 +2299,6 @@ namespace BrawlInstaller.Services
                             {
                                 sectionData[subcharacterPosition] = (byte)fighterPackage.FighterSettings.SSESubCharacterId;
                             }
-                            // Add fighter if it is not already present
-                            // TODO: Test this
-                            var fighterCount = sectionData[0];
-                            var fighterTable = sectionData.Skip(2).Take(126).ToList(); // There are 126 slots in sora_adv_stage.rel
-                            if (_settingsService.BuildSettings.MiscSettings.InstallToSse && fighterPackage.PackageType == PackageType.New && !fighterTable.Contains((byte)fighterPackage.FighterInfo.Ids.SlotConfigId))
-                            {
-                                sectionData[fighterTable.IndexOf(0) + 2] = (byte)fighterPackage.FighterInfo.Ids.SlotConfigId;
-                                sectionData[0] = (byte)(fighterCount + 1);
-                            }
                             _fileService.ReplaceNodeRaw(section, sectionData);
                         }
                     }
@@ -2502,6 +2493,37 @@ namespace BrawlInstaller.Services
                 }
                 rosters.Add(codeMenuRoster);
             }
+            // Get SSE roster
+            var sseModulePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.SSEModule);
+            if (_fileService.FileExists(sseModulePath) && _settingsService.BuildSettings.MiscSettings.SubspaceEx)
+            {
+                var rootNode = _fileService.OpenFile(sseModulePath) as RELNode;
+                if (rootNode != null)
+                {
+                    if (rootNode.Sections.Count() > 8)
+                    {
+                        var section = rootNode.Sections[8];
+                        if (section != null)
+                        {
+                            var sseRoster = new Roster { AddNewCharacters = _settingsService.BuildSettings.MiscSettings.InstallToSse, Name = "Subspace EX", RosterType = RosterType.SSE };
+                            byte[] sectionData = _fileService.ReadRawData(section);
+                            var fighterCount = sectionData[0];
+                            var fighterTable = sectionData.Skip(2).Take(126).ToList(); // There are 126 slots in sora_adv_stage.rel
+                            for(var i = 0; i < fighterCount; i++) // Add fighters up to our count
+                            {
+                                var newEntry = new RosterEntry
+                                {
+                                    Id = fighterTable[i],
+                                    Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == fighterTable[i])?.DisplayName ?? $"Fighter0x{fighterTable[i]:X2}"
+                                };
+                                sseRoster.Entries.Add(newEntry);
+                            }
+                            rosters.Add(sseRoster);
+                        }
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
             return rosters;
         }
 
@@ -2561,6 +2583,45 @@ namespace BrawlInstaller.Services
                     xml.Element("characterList").ReplaceWith(fighters);
                     _fileService.SaveXmlFile(xml, codeMenuConfigPath);
                     BuildCodeMenu();
+                }
+            }
+            // Save SSE roster
+            var sseRoster = rosters.FirstOrDefault(x => x.RosterType == RosterType.SSE);
+            if (sseRoster != null)
+            {
+                var sseModulePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.SSEModule);
+                if (_fileService.FileExists(sseModulePath) && _settingsService.BuildSettings.MiscSettings.SubspaceEx)
+                {
+                    var rootNode = _fileService.OpenFile(sseModulePath) as RELNode;
+                    if (rootNode != null)
+                    {
+                        if (rootNode.Sections.Count() > 8)
+                        {
+                            var section = rootNode.Sections[8];
+                            if (section != null)
+                            {
+                                byte[] sectionData = _fileService.ReadRawData(section);
+                                // Set fighter count
+                                sectionData[0] = (byte)sseRoster.Entries.Count;
+                                // Insert IDs
+                                for (var i = 0; i < 126; i++)
+                                {
+                                    if (sseRoster.Entries.Count > i)
+                                    {
+                                        sectionData[i + 2] = (byte)sseRoster.Entries[i].Id;
+                                    }
+                                    else
+                                    {
+                                        sectionData[i + 2] = 0;
+                                    }
+                                }
+                                // Write data back to module
+                                _fileService.ReplaceNodeRaw(section, sectionData);
+                            }
+                        }
+                        _fileService.SaveFile(rootNode);
+                        _fileService.CloseFile(rootNode);
+                    }
                 }
             }
         }

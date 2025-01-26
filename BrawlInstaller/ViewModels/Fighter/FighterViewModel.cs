@@ -469,7 +469,7 @@ namespace BrawlInstaller.ViewModels
             {
                 foreach(var roster in Rosters.Where(x => x.AddNewCharacters))
                 {
-                    var id = SelectedFighter.Ids.GetIdOfType(roster.IdType);
+                    var id = fighterInfo.Ids.GetIdOfType(roster.IdType);
                     var newEntry = new RosterEntry
                     {
                         Id = id != null ? id.Value : 0,
@@ -484,7 +484,7 @@ namespace BrawlInstaller.ViewModels
             {
                 foreach(var roster in Rosters)
                 {
-                    var id = SelectedFighter.Ids.GetIdOfType(roster.IdType);
+                    var id = fighterInfo.Ids.GetIdOfType(roster.IdType);
                     var foundEntry = roster.Entries.FirstOrDefault(x => x.Id == id);
                     if (foundEntry != null)
                     {
