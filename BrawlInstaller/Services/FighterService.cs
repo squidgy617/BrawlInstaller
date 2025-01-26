@@ -84,8 +84,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetRosters()"/>
         List<Roster> GetRosters();
 
-        /// <inheritdoc cref="FighterService.SaveRosters(List{Roster})"/>
-        void SaveRosters(List<Roster> rosters);
+        /// <inheritdoc cref="FighterService.SaveRosters(List{Roster}, bool)"/>
+        void SaveRosters(List<Roster> rosters, bool recompile = false);
 
         /// <inheritdoc cref="FighterService.UpdateNullIdsToFirstUnused(FighterInfo)"/>
         FighterInfo UpdateNullIdsToFirstUnused(FighterInfo fighterInfo);
@@ -2531,7 +2531,7 @@ namespace BrawlInstaller.Services
         /// Save a list of rosters to the build
         /// </summary>
         /// <param name="rosters">List of rosters to save</param>
-        public void SaveRosters(List<Roster> rosters)
+        public void SaveRosters(List<Roster> rosters, bool recompile = false)
         {
             // Save CSS rosters
             foreach (var roster in rosters.Where(x => x.RosterType == RosterType.CSS))
@@ -2583,6 +2583,10 @@ namespace BrawlInstaller.Services
                     xml.Element("characterList").ReplaceWith(fighters);
                     _fileService.SaveXmlFile(xml, codeMenuConfigPath);
                     BuildCodeMenu();
+                    if (recompile)
+                    {
+                        _codeService.CompileCodes();
+                    }
                 }
             }
             // Save SSE roster
