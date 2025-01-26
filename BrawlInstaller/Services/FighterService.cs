@@ -2583,6 +2583,8 @@ namespace BrawlInstaller.Services
                     xml.Element("characterList").ReplaceWith(fighters);
                     _fileService.SaveXmlFile(xml, codeMenuConfigPath);
                     BuildCodeMenu();
+                    // TODO: This will compile twice if a fighter is installed, but we need to always compile after code menu changes. Find a way to not make this happen twice
+                    _codeService.CompileCodes();
                 }
             }
             // Save SSE roster
