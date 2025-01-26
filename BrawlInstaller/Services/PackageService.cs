@@ -166,7 +166,6 @@ namespace BrawlInstaller.Services
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
             // Import fighter files
             _fighterService.ImportFighterFiles(fighterPackage, oldFighter);
-            throw new Exception();
             // Set original Effect.pac and soundbank ID to current
             fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
             fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
