@@ -56,6 +56,7 @@ namespace BrawlInstaller.ViewModels
         IDialogService _dialogService { get; }
         IFighterService _fighterService { get; }
         IFileService _fileService { get; }
+        ICodeService _codeService { get; }
 
         // Commands
         public ICommand LoadRosterFighterCommand => new RelayCommand(param => LoadFighterFromRoster(param));
@@ -77,14 +78,15 @@ namespace BrawlInstaller.ViewModels
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
         public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFighterService fighterService, IFileService fileService,
-            IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel, 
-            IFighterSettingsViewModel fighterSettingsViewModel)
+            ICodeService codeService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel,
+            IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel)
         {
             _packageService = packageService;
             _settingsService = settingsService;
             _dialogService = dialogService;
             _fighterService = fighterService;
             _fileService = fileService;
+            _codeService = codeService;
             FranchiseIconViewModel = franchiseIconViewModel;
             CostumeViewModel = costumeViewModel;
             CosmeticViewModel = cosmeticViewmodel;
@@ -258,6 +260,7 @@ namespace BrawlInstaller.ViewModels
         {
             if (_dialogService.ShowMessage("WARNING! You are about to delete the currently loaded fighter. Are you sure?", "Delete Fighter", MessageBoxButton.YesNo, MessageBoxImage.Warning))
             {
+                _fileService.StartBackup();
                 // Set up delete package
                 var deletePackage = new FighterPackage
                 {
@@ -290,6 +293,9 @@ namespace BrawlInstaller.ViewModels
                 OldFighterPackage = null;
                 OnPropertyChanged(nameof(FighterList));
                 WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                // Compile GCT
+                _codeService.CompileCodes();
+                _fileService.EndBackup();
                 _dialogService.ShowMessage("Changes saved.", "Saved");
             }
         }
@@ -300,6 +306,7 @@ namespace BrawlInstaller.ViewModels
             {
                 return;
             }
+            _fileService.StartBackup();
             var packageType = FighterPackage.PackageType;
             // Set costume indexes for cosmetics
             foreach(var costume in FighterPackage.Costumes)
@@ -399,6 +406,9 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(FighterList));
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+            // Compile GCT
+            _codeService.CompileCodes();
+            _fileService.EndBackup();
             _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 

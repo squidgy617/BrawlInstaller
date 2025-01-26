@@ -121,7 +121,6 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to save</param>
         public void SaveFighter(FighterPackage fighterPackage, FighterPackage oldFighter)
         {
-            _fileService.StartBackup();
             // Get old fighter if none exists
             if (oldFighter == null)
             {
@@ -167,6 +166,7 @@ namespace BrawlInstaller.Services
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
             // Import fighter files
             _fighterService.ImportFighterFiles(fighterPackage, oldFighter);
+            throw new Exception();
             // Set original Effect.pac and soundbank ID to current
             fighterPackage.FighterInfo.OriginalEffectPacId = fighterPackage.FighterInfo.EffectPacId;
             fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
@@ -180,11 +180,8 @@ namespace BrawlInstaller.Services
             {
                 _fighterService.UpdateCreditsModule(fighterPackage);
             }
-            // Compile GCT
-            _codeService.CompileCodes();
             // Set package type to update, in case it was a new package
             fighterPackage.PackageType = PackageType.Update;
-            _fileService.EndBackup();
         }
 
         /// <summary>
