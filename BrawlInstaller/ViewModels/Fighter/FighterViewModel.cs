@@ -584,7 +584,7 @@ namespace BrawlInstaller.ViewModels
                 rosterOptions.Add(randomEntry);
                 foreach (var fighter in _settingsService.FighterInfoList)
                 {
-                    var id = SelectedFighter.Ids.GetIdOfType(SelectedRoster.IdType);
+                    var id = fighter.Ids.GetIdOfType(SelectedRoster.IdType);
                     var newEntry = new RosterEntry
                     {
                         Id = id != null ? id.Value : 0,
