@@ -424,9 +424,9 @@ namespace BrawlInstaller.ViewModels
                 // Reset old fighter package
                 OldFighterPackage = null;
                 _dialogService.ShowMessage("Exported successfully.", "Success");
+                OnPropertyChanged(nameof(FighterPackage));
+                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
             }
-            OnPropertyChanged(nameof(FighterPackage));
-            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
         }
 
         private void GetFighters()
