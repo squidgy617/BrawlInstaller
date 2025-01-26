@@ -87,7 +87,8 @@ namespace BrawlInstaller.ViewModels
             FranchiseIconList = _cosmeticService.GetFranchiseIcons(fighterPackage.PackageType == PackageType.New);
             // Add franchise icons that were loaded alongside fighter, if any
             // TODO: Is there a less stupid way to do this?
-            foreach(var icon in fighterPackage.Cosmetics.ChangedItems.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList())
+            foreach(var icon in fighterPackage.Cosmetics.ChangedItems.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon && 
+            !FranchiseIconList.Items.Select(y => y.Id).ToList().Contains(x.Id)).ToList())
             {
                 var newId = 0;
                 while (FranchiseIconList.Items.Select(x => x.Id).Contains(newId))

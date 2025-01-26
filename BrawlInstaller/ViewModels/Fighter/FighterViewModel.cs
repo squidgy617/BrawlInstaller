@@ -216,6 +216,14 @@ namespace BrawlInstaller.ViewModels
                             FighterPackage.Cosmetics.RemoveChange(icon);
                         }
                     }
+                    else
+                    {
+                        // Update all icons to have a null ID so they'll be seen as new
+                        foreach (var icon in FighterPackage.Cosmetics.Items.Where(x => x.CosmeticType == CosmeticType.FranchiseIcon).ToList())
+                        {
+                            icon.Id = null;
+                        }
+                    }
                 }
                 _oldVictoryThemePath = FighterPackage.VictoryTheme.SongPath;
                 _oldCreditsThemePath = FighterPackage.CreditsTheme.SongPath;
