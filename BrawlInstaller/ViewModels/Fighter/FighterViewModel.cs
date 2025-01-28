@@ -400,7 +400,7 @@ namespace BrawlInstaller.ViewModels
             // Update rosters
             UpdateRoster(packageType, FighterPackage.FighterInfo);
             // Reset old fighter package
-            OldFighterPackage = null;
+            OldFighterPackage = packageToSave.Copy();
             // Update UI
             OnPropertyChanged(nameof(FighterPackage));
             OnPropertyChanged(nameof(FighterList));
@@ -819,7 +819,7 @@ namespace BrawlInstaller.ViewModels
             {
                 deleteOptions.Add(new CheckListItem("VictoryTheme", "Victory Theme BRSTM", "The victory theme BRSTM file", true));
             }
-            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.VictoryTheme != null && fighterPackage.VictoryTheme.SongId != OldFighterPackage.VictoryTheme.SongId)
+            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.VictoryTheme != null && fighterPackage.VictoryTheme.SongId != OldFighterPackage?.VictoryTheme.SongId)
                 || fighterPackage.PackageType == PackageType.Delete)
             {
                 deleteOptions.Add(new CheckListItem("VictoryEntry", "Victory Tracklist Entry", "The tracklist entry for the victory theme", true));
@@ -830,7 +830,7 @@ namespace BrawlInstaller.ViewModels
             {
                 deleteOptions.Add(new CheckListItem("CreditsTheme", "Credits Theme BRSTM", "The credits theme BRSTM file", true));
             }
-            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.CreditsTheme != null && fighterPackage.CreditsTheme.SongId != OldFighterPackage.CreditsTheme.SongId)
+            if ((fighterPackage.PackageType == PackageType.Update && fighterPackage.CreditsTheme != null && fighterPackage.CreditsTheme.SongId != OldFighterPackage?.CreditsTheme.SongId)
                 || fighterPackage.PackageType == PackageType.Delete)
             {
                 deleteOptions.Add(new CheckListItem("CreditsEntry", "Credits Tracklist Entry", "The tracklist entry for the credits theme", true));
