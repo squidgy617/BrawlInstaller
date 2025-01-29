@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
+using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
@@ -161,7 +162,10 @@ namespace BrawlInstaller.ViewModels
             // Create copy of stage before save
             var stageToSave = stage.Copy();
             var deleteOptions = new List<string>();
-            deleteOptions = _stageService.SaveStage(stageToSave, _originalRandomName != stageToSave.RandomName);
+            using (new CursorWait())
+            {
+                deleteOptions = _stageService.SaveStage(stageToSave, _originalRandomName != stageToSave.RandomName);
+            }
 
             // Prompt user for delete options
             var deleteItems = new List<CheckListItem>();

@@ -274,28 +274,31 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage = null;
                 OnPropertyChanged(nameof(FighterPackage));
                 // Save
-                _packageService.SaveFighter(deletePackage, OldFighterPackage);
-                // Remove from fighter list
-                var foundFighters = FighterList.Where(x => x.Ids.FighterConfigId == deletePackage.FighterInfo.Ids.FighterConfigId
-                && x.Ids.CSSSlotConfigId == deletePackage.FighterInfo.Ids.CSSSlotConfigId
-                && x.Ids.SlotConfigId == deletePackage.FighterInfo.Ids.SlotConfigId
-                && x.Ids.CosmeticConfigId == deletePackage.FighterInfo.Ids.CosmeticConfigId);
-                foreach (var foundFighter in foundFighters.ToList())
+                using (new CursorWait())
                 {
-                    _settingsService.FighterInfoList.Remove(foundFighter);
+                    _packageService.SaveFighter(deletePackage, OldFighterPackage);
+                    // Remove from fighter list
+                    var foundFighters = FighterList.Where(x => x.Ids.FighterConfigId == deletePackage.FighterInfo.Ids.FighterConfigId
+                    && x.Ids.CSSSlotConfigId == deletePackage.FighterInfo.Ids.CSSSlotConfigId
+                    && x.Ids.SlotConfigId == deletePackage.FighterInfo.Ids.SlotConfigId
+                    && x.Ids.CosmeticConfigId == deletePackage.FighterInfo.Ids.CosmeticConfigId);
+                    foreach (var foundFighter in foundFighters.ToList())
+                    {
+                        _settingsService.FighterInfoList.Remove(foundFighter);
+                    }
+                    _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
+                    // Set package path to internal fighter
+                    FighterPackagePath = string.Empty;
+                    // Update rosters
+                    UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
+                    // Reset old fighter package
+                    OldFighterPackage = null;
+                    OnPropertyChanged(nameof(FighterList));
+                    WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                    // Compile GCT
+                    _codeService.CompileCodes();
+                    _fileService.EndBackup();
                 }
-                _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
-                // Set package path to internal fighter
-                FighterPackagePath = string.Empty;
-                // Update rosters
-                UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
-                // Reset old fighter package
-                OldFighterPackage = null;
-                OnPropertyChanged(nameof(FighterList));
-                WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
-                // Compile GCT
-                _codeService.CompileCodes();
-                _fileService.EndBackup();
                 _dialogService.ShowMessage("Changes saved.", "Saved");
             }
         }
@@ -364,51 +367,54 @@ namespace BrawlInstaller.ViewModels
             packageToSave.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? packageToSave.FighterInfo.Ids.FranchiseId;
             // Prompt for items to delete if applicable
             packageToSave = SelectDeleteOptions(packageToSave);
-            // Save fighter
-            _packageService.SaveFighter(packageToSave, OldFighterPackage);
-            // Save was successful, so load changes
-            FighterPackage = packageToSave;
-            // Remove added franchise icons from package
-            FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
-            // Clear changes on all cosmetics
-            FighterPackage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; } );
-            FighterPackage.Cosmetics.ClearChanges();
-            // Update delete options
-            FighterPackage.FighterDeleteOptions.DeleteVictoryTheme = true;
-            FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = true;
-            _oldVictoryThemePath = FighterPackage.VictoryTheme?.SongPath;
-            _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
-            // Set package path to internal fighter
-            FighterPackagePath = string.Empty;
-            // Update fighter list
-            var newFighterInfo = FighterPackage.FighterInfo.CopyNoAttributes();
-            if (packageType == PackageType.New)
+            using (new CursorWait())
             {
-                _settingsService.FighterInfoList.Add(newFighterInfo);
-            }
-            else
-            {
-                var match = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.FighterConfigId == newFighterInfo.Ids.FighterConfigId
-                && x.Ids.CSSSlotConfigId == newFighterInfo.Ids.CSSSlotConfigId && x.Ids.SlotConfigId == newFighterInfo.Ids.SlotConfigId
-                && x.Ids.CosmeticConfigId == newFighterInfo.Ids.CosmeticConfigId);
-                if (match != null)
+                // Save fighter
+                _packageService.SaveFighter(packageToSave, OldFighterPackage);
+                // Save was successful, so load changes
+                FighterPackage = packageToSave;
+                // Remove added franchise icons from package
+                FighterPackage.Cosmetics.Items.RemoveAll(x => x.CosmeticType == CosmeticType.FranchiseIcon && FighterPackage.Cosmetics.HasChanged(x));
+                // Clear changes on all cosmetics
+                FighterPackage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
+                FighterPackage.Cosmetics.ClearChanges();
+                // Update delete options
+                FighterPackage.FighterDeleteOptions.DeleteVictoryTheme = true;
+                FighterPackage.FighterDeleteOptions.DeleteCreditsTheme = true;
+                _oldVictoryThemePath = FighterPackage.VictoryTheme?.SongPath;
+                _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
+                // Set package path to internal fighter
+                FighterPackagePath = string.Empty;
+                // Update fighter list
+                var newFighterInfo = FighterPackage.FighterInfo.CopyNoAttributes();
+                if (packageType == PackageType.New)
                 {
-                    match = newFighterInfo;
+                    _settingsService.FighterInfoList.Add(newFighterInfo);
                 }
+                else
+                {
+                    var match = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.FighterConfigId == newFighterInfo.Ids.FighterConfigId
+                    && x.Ids.CSSSlotConfigId == newFighterInfo.Ids.CSSSlotConfigId && x.Ids.SlotConfigId == newFighterInfo.Ids.SlotConfigId
+                    && x.Ids.CosmeticConfigId == newFighterInfo.Ids.CosmeticConfigId);
+                    if (match != null)
+                    {
+                        match = newFighterInfo;
+                    }
+                }
+                _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
+                // Update rosters
+                UpdateRoster(packageType, FighterPackage.FighterInfo);
+                // Reset old fighter package
+                OldFighterPackage = packageToSave.Copy();
+                // Update UI
+                OnPropertyChanged(nameof(FighterPackage));
+                OnPropertyChanged(nameof(FighterList));
+                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+                WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                // Compile GCT
+                _codeService.CompileCodes();
+                _fileService.EndBackup();
             }
-            _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
-            // Update rosters
-            UpdateRoster(packageType, FighterPackage.FighterInfo);
-            // Reset old fighter package
-            OldFighterPackage = packageToSave.Copy();
-            // Update UI
-            OnPropertyChanged(nameof(FighterPackage));
-            OnPropertyChanged(nameof(FighterList));
-            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
-            WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
-            // Compile GCT
-            _codeService.CompileCodes();
-            _fileService.EndBackup();
             _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 
