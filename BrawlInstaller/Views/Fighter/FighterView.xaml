@@ -84,9 +84,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TabItem Header="Costumes/Cosmetics">
+            <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TabItem Header="Costumes/Cosmetics">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <GroupBox x:Name="costumeGroupBox" Header="Costumes" Grid.ColumnSpan="2">
                                 <Grid>
@@ -102,8 +102,10 @@
                                 </GroupBox>
                             </StackPanel>
                         </StackPanel>
-                    </TabItem>
-                    <TabItem Header="Files/Settings">
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Files/Settings">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Horizontal">
                             <GroupBox x:Name="fighterFilesGroupBox" Header="Fighter Files">
                                 <ContentControl Content="{Binding FighterFileViewModel}"/>
@@ -112,9 +114,9 @@
                                 <ContentControl Content="{Binding FighterSettingsViewModel}"/>
                             </GroupBox>
                         </StackPanel>
-                    </TabItem>
-                </TabControl>
-            </ScrollViewer>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
