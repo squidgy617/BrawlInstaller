@@ -17,9 +17,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TabItem Header="General">
+        <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <TabItem Header="General">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Content="Kirby Hat EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.InstallKirbyHats}" ToolTip="Check if build uses Kirby Hat system from P+Ex 1.5 and up"/>
@@ -269,15 +269,19 @@
                             </ItemsControl.Resources>
                         </ItemsControl>
                     </StackPanel>
-                </TabItem>
-                <TabItem Header="Cosmetics">
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Cosmetics">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <ContentControl Content="{Binding CosmeticSettingsViewModel}"/>
-                </TabItem>
-                <TabItem Header="Fighters">
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Fighters">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <ContentControl Content="{Binding FighterInfoViewModel}"/>
-                </TabItem>
-            </TabControl>
-        </ScrollViewer>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
