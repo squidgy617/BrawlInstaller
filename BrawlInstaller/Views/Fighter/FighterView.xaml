@@ -15,68 +15,70 @@
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="1" Grid.RowSpan="2"/>
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <GroupBox x:Name="idGroupBox" Header="Fighters">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label x:Name="fighterListLabel" Content="All Fighters:" HorizontalAlignment="Left" ToolTip="All fighters in build"/>
-                        <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" Width="120" Height="400">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding EntryName}">
-                                        <TextBlock.InputBindings>
-                                            <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedFighter, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" Command="{Binding DataContext.LoadCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
-                                        </TextBlock.InputBindings>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <!--<Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource miniButton}"/>-->
-                        <Button x:Name="copyFighterButton" Grid.Column="1" Grid.Row="1" Content="→" VerticalAlignment="Center" Command="{Binding CopyFighterCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
-                        <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}" Width="120"/>
-                        <Button x:Name="saveRosterButton" Grid.Column="3" Content="Save" Command="{Binding SaveRostersCommand}"/>
-                        <ListBox x:Name="rosterListBox" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" Width="120" Height="400">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name}">
-                                        <TextBlock.InputBindings>
-                                            <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedRosterEntry, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" Command="{Binding DataContext.LoadRosterFighterCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
-                                        </TextBlock.InputBindings>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <StackPanel x:Name="rosterButtonsStackPanel" Grid.Column="3" Grid.Row="1">
-                            <Button x:Name="moveUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveFighterUpCommand}"/>
-                            <Button x:Name="moveDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveFighterDownCommand}"/>
-                            <Button x:Name="addButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddFighterCommand}"/>
-                            <Button x:Name="removeButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveFighterCommand}"/>
-                        </StackPanel>
-                        <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="2" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to CSS"/>
-                        <CheckBox x:Name="inRandomCheckBox" Grid.Column="2" Grid.Row="3" IsChecked="{Binding SelectedRosterEntry.InRandom}" Content="In Random" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to random selection"/>
-                    </Grid>
-                </GroupBox>
-            </ScrollViewer>
-            <StackPanel Grid.Row="1">
-                <Button x:Name="browseButton" Content="Browse..." Command="{Binding OpenFighterCommand}"/>
-                <Button x:Name="loadButton" Content="Load" CommandParameter="{Binding SelectedFighter}" Command="{Binding LoadCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
-                <Button x:Name="newButton" Content="New" Command="{Binding NewFighterCommand}"/>
-            </StackPanel>
+            <GroupBox x:Name="idGroupBox" Header="Fighters" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label x:Name="fighterListLabel" Content="All Fighters:" HorizontalAlignment="Left" ToolTip="All fighters in build"/>
+                            <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" Grid.Row="1" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" Width="120" Height="400">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding EntryName}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedFighter, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" Command="{Binding DataContext.LoadCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <!--<Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource miniButton}"/>-->
+                            <Button x:Name="copyFighterButton" Grid.Column="1" Grid.Row="1" Content="→" VerticalAlignment="Center" Command="{Binding CopyFighterCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
+                            <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}" Width="120"/>
+                            <Button x:Name="saveRosterButton" Grid.Column="3" Content="Save" Command="{Binding SaveRostersCommand}"/>
+                            <ListBox x:Name="rosterListBox" Grid.Column="2" Grid.Row="1" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" Width="120" Height="400">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding DataContext.SelectedRosterEntry, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" Command="{Binding DataContext.LoadRosterFighterCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <StackPanel x:Name="rosterButtonsStackPanel" Grid.Column="3" Grid.Row="1">
+                                <Button x:Name="moveUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveFighterUpCommand}"/>
+                                <Button x:Name="moveDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveFighterDownCommand}"/>
+                                <Button x:Name="addButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddFighterCommand}"/>
+                                <Button x:Name="removeButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveFighterCommand}"/>
+                            </StackPanel>
+                            <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="2" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to CSS"/>
+                            <CheckBox x:Name="inRandomCheckBox" Grid.Column="2" Grid.Row="3" IsChecked="{Binding SelectedRosterEntry.InRandom}" Content="In Random" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to random selection"/>
+                        </Grid>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="1">
+                        <Button x:Name="browseButton" Content="Browse..." Command="{Binding OpenFighterCommand}"/>
+                        <Button x:Name="loadButton" Content="Load" CommandParameter="{Binding SelectedFighter}" Command="{Binding LoadCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
+                        <Button x:Name="newButton" Content="New" Command="{Binding NewFighterCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
         </Grid>
         <Grid Grid.Column="1" Margin="3,0,0,0"  Visibility="{Binding FighterPackage, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
             <Grid.RowDefinitions>
