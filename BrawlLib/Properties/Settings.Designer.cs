@@ -295,15 +295,6 @@ namespace BrawlLib.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ApplyRelocationsSynchronously {
-            get {
-                return ((bool)(this["ApplyRelocationsSynchronously"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ShowProgressBars {
             get {
                 return ((bool)(this["ShowProgressBars"]));
