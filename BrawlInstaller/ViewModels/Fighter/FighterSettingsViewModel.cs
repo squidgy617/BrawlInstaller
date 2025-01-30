@@ -45,6 +45,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand GenerateSlotAttributesCommand => new RelayCommand(param => GenerateSlotAttributes());
         public ICommand GenerateCosmeticAttributesCommand => new RelayCommand(param => GenerateCosmeticAttributes());
         public ICommand GenerateCSSSlotAttributesCommand => new RelayCommand(param => GenerateCSSSlotAttributes());
+        public ICommand RefreshEffectPacCommand => new RelayCommand(param => RefreshEffectPac());
+        public ICommand RefreshKirbyEffectPacCommand => new RelayCommand(param => RefreshKirbyEffectPac());
 
         // Importing constructor
         [ImportingConstructor]
@@ -185,6 +187,31 @@ namespace BrawlInstaller.ViewModels
                     FighterPackage.FighterInfo.DisplayName = fileName;
                 OnPropertyChanged(nameof(FighterPackage));
             }
+        }
+
+        private void RefreshEffectPac()
+        {
+            SelectedFighterEffectPac = GetUnusedEffectPacId(SelectedFighterEffectPac, SelectedKirbyEffectPac);
+        }
+
+        private void RefreshKirbyEffectPac()
+        {
+            SelectedKirbyEffectPac = GetUnusedEffectPacId(SelectedKirbyEffectPac, SelectedFighterEffectPac);
+        }
+
+        private int? GetUnusedEffectPacId(int? currentId, int? otherUsedId)
+        {
+            if (_dialogService.ShowMessage("This will update your fighter's Effect.pac to the first available custom Effect.pac in the build. Continue?", "Update Effect.pac", MessageBoxButton.YesNo))
+            {
+                int newEffectPacId = 311; // 311 is first custom Effect.pac ID
+                var usedEffectPacs = _fighterService.GetUsedEffectPacs();
+                while (usedEffectPacs.Contains(newEffectPacId) || newEffectPacId == otherUsedId)
+                {
+                    newEffectPacId++;
+                }
+                return newEffectPacId;
+            }
+            return currentId;
         }
     }
 

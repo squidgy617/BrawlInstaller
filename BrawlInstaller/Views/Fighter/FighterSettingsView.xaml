@@ -58,9 +58,15 @@
             </Grid>
         </GroupBox>
         <Label x:Name="effectPacLabel" Content="Effect PAC:" Grid.Row="1" ToolTip="Effect.pac to use for fighter"/>
-        <ComboBox x:Name="effectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedFighterEffectPac, UpdateSourceTrigger=LostFocus}" Grid.Row="1" Grid.Column="1" Width="120" Grid.ColumnSpan="3"/>
+        <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+            <ComboBox x:Name="effectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedFighterEffectPac, UpdateSourceTrigger=LostFocus}" Width="120"/>
+            <Button x:Name="refreshEffectPacButton" Content="↺" Style="{StaticResource condensedButton}" Command="{Binding RefreshEffectPacCommand}"/>
+        </StackPanel>
         <Label x:Name="kirbyEffectPacLabel" Content="Kirby Effect PAC:" Grid.Row="2" ToolTip="Effect.pac to use for fighter Kirby hat"/>
-        <ComboBox x:Name="kirbyEffectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedKirbyEffectPac, UpdateSourceTrigger=LostFocus}" Grid.Column="1" Grid.Row="2" Width="120" Grid.ColumnSpan="3"/>
+        <StackPanel Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal">
+            <ComboBox x:Name="kirbyEffectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedKirbyEffectPac, UpdateSourceTrigger=LostFocus}" Width="120"/>
+            <Button x:Name="refreshKirbyEffectPacButton" Content="↺" Style="{StaticResource condensedButton}" Command="{Binding RefreshKirbyEffectPacCommand}"/>
+        </StackPanel>
         <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:" Grid.Row="3" ToolTip="Kirby hat data to associate with fighter. Can import XML files generated from lavaKirbyHatManager V2."/>
         <TextBlock x:Name="kirbyHatKindTextBlock" VerticalAlignment="Center" Text="{Binding FighterPackage.FighterSettings.KirbyHatData.TopStatusKind}" Grid.Row="3" Grid.Column="1"/>
         <Button x:Name="kirbyHatBrowseButton" Content="Browse..." Command="{Binding LoadKirbyHatCommand}" Grid.Column="2" Grid.Row="3"/>
