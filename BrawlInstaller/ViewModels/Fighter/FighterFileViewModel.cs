@@ -45,6 +45,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand UpdateTracklistSongFileCommand => new RelayCommand(param => UpdateTracklistSongFile((TracklistSong)param));
         public ICommand SelectVictoryThemeCommand => new RelayCommand(param =>  SelectVictoryTheme());
         public ICommand SelectCreditsThemeCommand => new RelayCommand(param => SelectCreditsTheme());
+        public ICommand RefreshSoundbankIdCommand => new RelayCommand(param => RefreshSoundbankId());
+        public ICommand RefreshKirbySoundbankIdCommand => new RelayCommand(param => RefreshKirbySoundbankId());
 
         // Importing constructor
         [ImportingConstructor]
@@ -244,6 +246,31 @@ namespace BrawlInstaller.ViewModels
             var songs = _tracklistService.GetAllTracklistSongs(tracklist);
             var result = _dialogService.OpenDropDownDialog(songs, "Name", "Select a song", caption);
             return result as TracklistSong;
+        }
+
+        private void RefreshSoundbankId()
+        {
+            SoundbankId = GetUnusedSoundbankId(SoundbankId, KirbySoundbankId);
+        }
+
+        private void RefreshKirbySoundbankId()
+        {
+            KirbySoundbankId = GetUnusedSoundbankId(KirbySoundbankId, SoundbankId);
+        }
+
+        private uint? GetUnusedSoundbankId(uint? currentId, uint? otherUsedId)
+        {
+            if (_dialogService.ShowMessage("This will update your fighter's soundbank ID to the first available custom soundbank ID in the build. Continue?", "Update Sounbank ID", MessageBoxButton.YesNo))
+            {
+                uint newSoundbankId = 324; // 324 is first custom soundbank ID
+                var usedIds = _fighterService.GetUsedSoundbankIds();
+                while (usedIds.Contains(newSoundbankId) || newSoundbankId == otherUsedId)
+                {
+                    newSoundbankId++;
+                }
+                return newSoundbankId;
+            }
+            return currentId;
         }
     }
 }

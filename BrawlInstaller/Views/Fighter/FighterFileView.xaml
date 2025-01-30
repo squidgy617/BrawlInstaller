@@ -69,12 +69,14 @@
             <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding FighterPackage.Soundbank, Mode=TwoWay}" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
             <Label x:Name="soundbankIdLabel" Content="ID:" ToolTip="ID to use for fighter's soundbank"/>
             <TextBox x:Name="soundbankTextBox" Text="{Binding SoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding SoundbankIdControlEnabled}"/>
+            <Button Style="{StaticResource condensedButton}" Content="↺" Command="{Binding RefreshSoundbankIdCommand}" IsEnabled="{Binding SoundbankIdControlEnabled}"/>
         </StackPanel>
         <Label x:Name="kirbySoundbankLabel" Content="Kirby Soundbank:" Grid.Row="4" Grid.Column="0" ToolTip="Soundbank to use for Kirby hat ability associated with fighter"/>
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding SoundbankControlsEnabled}">
             <userControls:FileBox x:Name="kirbySoundbankFileBox" Text="{Binding FighterPackage.KirbySoundbank, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
             <Label x:Name="kirbySoundbankIdLabel" Content="ID:" ToolTip="ID to use for Kirby hat soundbank"/>
             <TextBox x:Name="kirbySoundbankTextBox" Text="{Binding KirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding KirbySoundbankIdControlEnabled}"/>
+            <Button Style="{StaticResource condensedButton}" Content="↺" Command="{Binding RefreshKirbySoundbankIdCommand}" IsEnabled="{Binding KirbySoundbankIdControlEnabled}"/>
         </StackPanel>
         <GroupBox Header="Classic/All-Star Files" x:Name="classicFileGroupBox" Grid.Row="5" Grid.ColumnSpan="4">
             <Grid x:Name="classicFileGrid">
