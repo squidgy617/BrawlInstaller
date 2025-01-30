@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BrawlInstaller.Services
 {
@@ -92,7 +90,7 @@ namespace BrawlInstaller.Services
         /// <returns>New window</returns>
         private Window GenerateWindow(string title = "Title")
         {
-            var dialog = new Window { Width = 300, Height = 172, Title = title, SizeToContent = SizeToContent.WidthAndHeight, ResizeMode = ResizeMode.NoResize };
+            var dialog = new Window { Width = 300, Height = 172, Title = title, SizeToContent = SizeToContent.WidthAndHeight, ResizeMode = ResizeMode.NoResize, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = Application.Current.MainWindow };
             return dialog;
         }
 
