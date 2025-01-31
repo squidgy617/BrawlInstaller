@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="BrawlInstaller.Views.TracklistView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BrawlInstaller.Views"
+             xmlns:resources="clr-namespace:BrawlInstaller.Resources"
+             xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:TracklistViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1"/>
+        <Grid>
+            <GroupBox x:Name="tracklistGroupBox" Header="Tracklists" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="tracklistLabel" Content="Tracklists" HorizontalAlignment="Left"/>
+                            <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Width="120" Height="400" Grid.Row="1">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=., Converter={StaticResource filePathNoExtensionConverter}}" ToolTip="{Binding}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="1">
+                        <Button x:Name="loadButton" Content="Load" Command="{Binding LoadTracklistCommand}"/>
+                        <Button x:Name="newButton" Content="New"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Column="1" Margin="3,0,0,0" Visibility="{Binding LoadedTracklist, Converter={StaticResource nullVisConverter}}">
+            <GroupBox Header="Editor" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <Label x:Name="tracklistNameLabel" Content="Name:"/>
+                                <TextBox x:Name="tracklistNameTextBox" Text="{Binding LoadedTracklist.Name}" Width="120"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1">
+                                <Label x:Name="songListLabel" Content="Songs:" HorizontalAlignment="Left"/>
+                                <ListBox x:Name="songListBox" ItemsSource="{Binding TracklistSongs}" SelectedItem="{Binding SelectedSong}" DisplayMemberPath="Name" Width="140" Height="200"/>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+                    <WrapPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                        <Button Content="Test"/>
+                    </WrapPanel>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

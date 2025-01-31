@@ -19,6 +19,9 @@
             <TabItem Header="Stages" IsEnabled="{Binding BuildSettingsExist}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="StageView" Content="{Binding StageViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
+            <TabItem Header="Music" IsEnabled="{Binding BuildPathExists}" IsEnabledChanged="TabItem_IsEnabledChanged">
+                <ContentControl x:Name="TracklistView" Content="{Binding TracklistViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </TabItem>
             <TabItem Header="Settings" IsEnabled="{Binding BuildPathExists}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="SettingsView" Content="{Binding SettingsViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>

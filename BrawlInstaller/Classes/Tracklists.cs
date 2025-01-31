@@ -13,6 +13,16 @@ using Newtonsoft.Json;
 
 namespace BrawlInstaller.Classes
 {
+    public class Tracklist
+    {
+        public string Name { get; set; }
+        public List<TracklistSong> TracklistSongs { get; set; } = new List<TracklistSong>();
+
+        public Tracklist Copy()
+        {
+            return JsonConvert.DeserializeObject<Tracklist>(JsonConvert.SerializeObject(this));
+        }
+    }
     public class TracklistSong
     {
         public string Name { get; set; } = string.Empty;

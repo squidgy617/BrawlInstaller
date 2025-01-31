@@ -163,6 +163,7 @@
     <Compile Include="ViewModels\Stage\StageListViewModel.cs" />
     <Compile Include="ViewModels\Stage\StageViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\StringInputViewModel.cs" />
+    <Compile Include="ViewModels\Music\TracklistViewModel.cs" />
     <Compile Include="Views\Dialogs\CheckListView.xaml.cs">
       <DependentUpon>CheckListView.xaml</DependentUpon>
     </Compile>
@@ -228,6 +229,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\StringInputView.xaml.cs">
       <DependentUpon>StringInputView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Music\TracklistView.xaml.cs">
+      <DependentUpon>TracklistView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -344,6 +348,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\StringInputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Music\TracklistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

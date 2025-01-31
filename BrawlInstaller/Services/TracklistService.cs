@@ -21,6 +21,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="TracklistService.GetTracklistSong(uint?, string)"/>
         TracklistSong GetTracklistSong(uint? songId, string tracklist);
 
+        /// <inheritdoc cref="TracklistService.LoadTracklist(string)"/>
+        Tracklist LoadTracklist(string tracklist);
+
         /// <inheritdoc cref="TracklistService.GetAllTracklistSongs(string)"/>
         List<TracklistSong> GetAllTracklistSongs(string tracklist);
 
@@ -88,6 +91,24 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Load tracklist from file
+        /// </summary>
+        /// <param name="tracklist">Tracklist file to load</param>
+        /// <returns>Tracklist object</returns>
+        public Tracklist LoadTracklist(string tracklist)
+        {
+            var openedList = new Tracklist();
+            var rootNode = OpenTracklist(tracklist);
+            if (rootNode != null)
+            {
+                openedList.Name = rootNode.Name;
+                openedList.TracklistSongs = GetAllTracklistSongs(rootNode);
+                _fileService.CloseFile(rootNode);
+            }
+            return openedList;
+        }
+        
+        /// <summary>
         /// Get all song objects from tracklist
         /// </summary>
         /// <param name="tracklist">Tracklist to open</param>
@@ -98,14 +119,27 @@ namespace BrawlInstaller.Services
             var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
             {
-                foreach(TLSTEntryNode songNode in rootNode.Children)
-                {
-                    songs.Add(GetTracklistSong(songNode));
-                }
+                songs = GetAllTracklistSongs(rootNode);
                 _fileService.CloseFile(rootNode);
             }
             return songs;
         }
+
+        /// <summary>
+        /// Get all song objects from tracklist
+        /// </summary>
+        /// <param name="rootNode">Root node to get songs from</param>
+        /// <returns>TracklistSongs</returns>
+        private List<TracklistSong> GetAllTracklistSongs(ResourceNode rootNode)
+        {
+            var songs = new List<TracklistSong>();
+            foreach (TLSTEntryNode songNode in rootNode.Children)
+            {
+                songs.Add(GetTracklistSong(songNode));
+            }
+            return songs;
+        }
+
 
         /// <summary>
         /// Get tracklist song from node
