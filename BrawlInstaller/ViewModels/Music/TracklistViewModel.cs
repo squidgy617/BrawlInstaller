@@ -50,18 +50,21 @@ namespace BrawlInstaller.ViewModels
         ISettingsService _settingsService;
         IFileService _fileService;
         ITracklistService _tracklistService;
+        IDialogService _dialogService;
 
         // Commands
         public ICommand LoadTracklistCommand => new RelayCommand(param => LoadTracklist());
         public ICommand PlaySongCommand => new RelayCommand(param => PlaySong());
         public ICommand StopSongCommand => new RelayCommand(param => StopSong());
+        public ICommand SaveTracklistCommand => new RelayCommand(param => SaveTracklist());
 
         [ImportingConstructor]
-        public TracklistViewModel(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService)
+        public TracklistViewModel(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, IDialogService dialogService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _tracklistService = tracklistService;
+            _dialogService = dialogService;
 
             Volume = 100;
             LoadedTracklist = null;
@@ -157,6 +160,40 @@ namespace BrawlInstaller.ViewModels
             uint NewVolumeAllChannels = (((uint)NewVolume & 0x0000ffff) | ((uint)NewVolume << 16));
             // Set the volume
             waveOutSetVolume(IntPtr.Zero, NewVolumeAllChannels);
+        }
+
+        private void SaveTracklist()
+        {
+            // Copy tracklist before save
+            var tracklistToSave = LoadedTracklist.Copy();
+
+            // Get delete options
+            var deleteOptions = _tracklistService.GetTracklistDeleteOptions(tracklistToSave);
+
+            // Prompt user with delete options
+            var checklistItems = new List<CheckListItem>();
+            foreach (var deleteOption in deleteOptions)
+            {
+                checklistItems.Add(new CheckListItem(deleteOption, Path.GetFileName(deleteOption), deleteOption, false));
+            }
+            var items = new List<CheckListItem>();
+            if (deleteOptions.Count > 0)
+            {
+                items = _dialogService.OpenCheckListDialog(checklistItems, "Select items to delete", "The following items were changed, but may be shared in other tracklists. Ensure they are not used in other tracklists and then select the items you would like to delete.");
+            }
+            var itemsToDelete = items.Where(x => x.IsChecked).Select(x => x.Item.ToString()).ToList();
+
+            // Save tracklist
+            tracklistToSave = _tracklistService.SaveTracklist(tracklistToSave, itemsToDelete);
+
+            // Save successful, so load saved tracklist
+            LoadedTracklist = tracklistToSave;
+
+            // Update UI
+            OnPropertyChanged(nameof(LoadedTracklist));
+
+            // Show dialog
+            _dialogService.ShowMessage("Changes saved.", "Saved");
         }
     }
 }

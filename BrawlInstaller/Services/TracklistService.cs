@@ -32,6 +32,12 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="TracklistService.ImportTracklistSong(TracklistSong, string, ResourceNode)"/>
         uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode);
+
+        /// <inheritdoc cref="TracklistService.GetTracklistDeleteOptions(Tracklist)"/>
+        List<string> GetTracklistDeleteOptions(Tracklist tracklist);
+
+        /// <inheritdoc cref="TracklistService.SaveTracklist(Tracklist, List{string})"/>
+        Tracklist SaveTracklist(Tracklist tracklist, List<string> deleteOptions);
     }
 
     [Export(typeof(ITracklistService))]
@@ -102,6 +108,7 @@ namespace BrawlInstaller.Services
             if (rootNode != null)
             {
                 openedList.Name = rootNode.Name;
+                openedList.File = rootNode.FilePath;
                 openedList.TracklistSongs = GetAllTracklistSongs(rootNode);
                 _fileService.CloseFile(rootNode);
             }
@@ -305,6 +312,79 @@ namespace BrawlInstaller.Services
                 }
             }
             return id.Value;
+        }
+
+        /// <summary>
+        /// Get potential options for deletion before saving a tracklist
+        /// </summary>
+        /// <param name="tracklist">Tracklist to be saved</param>
+        /// <returns>Delete options</returns>
+        public List<string> GetTracklistDeleteOptions(Tracklist tracklist)
+        {
+            var deleteOptions = new List<string>();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var strmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
+            var tracklistNode = _fileService.OpenFile(tracklist.File);
+            if (tracklistNode != null)
+            {
+                foreach(TLSTEntryNode entry in tracklistNode.Children.Where(x => !string.IsNullOrEmpty(((TLSTEntryNode)x).SongFileName)))
+                {
+                    var brstmPath = $"{Path.Combine(buildPath, strmPath, entry?.SongFileName)}.brstm";
+                    // If a BRSTM file exists and is not in the tracklist we're saving, prompt user to delete
+                    if (_fileService.FileExists(brstmPath) && !tracklist.TracklistSongs.Any(x => x.SongPath == entry.SongFileName && !string.IsNullOrEmpty(x.SongFile)))
+                    {
+                        deleteOptions.Add(brstmPath);
+                    }
+                }
+                _fileService.CloseFile(tracklistNode);
+            }
+            return deleteOptions;
+        }
+
+        /// <summary>
+        /// Save a tracklist
+        /// </summary>
+        /// <param name="tracklist">Tracklist to save</param>
+        /// <returns>Updated tracklist</returns>
+        public Tracklist SaveTracklist(Tracklist tracklist, List<string> deleteOptions)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var strmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
+            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
+            // Open BRSTMs in case they get deleted
+            var brstms = new List<ResourceNode>();
+            foreach (var song in tracklist.TracklistSongs.Where(x => !string.IsNullOrEmpty(x.SongFile)))
+            {
+                var node = _fileService.OpenFile(song.SongFile);
+                if (node != null)
+                {
+                    node._origPath = $"{Path.Combine(buildPath, strmPath, song.SongPath)}.brstm";
+                    song.SongFile = node._origPath;
+                    brstms.Add(node);
+                }
+            }
+            // Delete selected BRSTMs
+            foreach(var brstm in deleteOptions)
+            {
+                _fileService.DeleteFile(brstm);
+            }
+            // Delete old tracklist
+            if (_fileService.FileExists(tracklist.File))
+            {
+                _fileService.DeleteFile(tracklist.File);
+            }
+            // Save BRSTMs
+            foreach(var node in brstms)
+            {
+                _fileService.SaveFile(node);
+                _fileService.CloseFile(node);
+            }
+            // Save tracklist
+            var tracklistNode = tracklist.ConvertToNode();
+            var tracklistSavePath = $"{Path.Combine(buildPath, tracklistPath, tracklist.Name)}.tlst";
+            _fileService.SaveFileAs(tracklistNode, tracklistSavePath);
+            tracklist.File = tracklistSavePath;
+            return tracklist;
         }
     }
 }

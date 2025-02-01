@@ -16,11 +16,22 @@ namespace BrawlInstaller.Classes
     public class Tracklist
     {
         public string Name { get; set; }
+        public string File { get; set; }
         public List<TracklistSong> TracklistSongs { get; set; } = new List<TracklistSong>();
 
         public Tracklist Copy()
         {
             return JsonConvert.DeserializeObject<Tracklist>(JsonConvert.SerializeObject(this));
+        }
+
+        public TLSTNode ConvertToNode()
+        {
+            var node = new TLSTNode { Name = Name };
+            foreach(var song in TracklistSongs)
+            {
+                node.AddChild(song.ConvertToNode());
+            }
+            return node;
         }
     }
     public class TracklistSong

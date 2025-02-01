@@ -126,7 +126,7 @@
                         </Grid>
                     </ScrollViewer>
                     <WrapPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                        <Button Content="Test"/>
+                        <Button Content="Save" Command="{Binding SaveTracklistCommand}"/>
                     </WrapPanel>
                 </Grid>
             </GroupBox>
