@@ -32,7 +32,11 @@
                             <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Width="120" Height="400" Grid.Row="1">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Path=., Converter={StaticResource filePathNoExtensionConverter}}" ToolTip="{Binding}"/>
+                                        <TextBlock Text="{Binding Path=., Converter={StaticResource filePathNoExtensionConverter}}" ToolTip="{Binding}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTracklistCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
