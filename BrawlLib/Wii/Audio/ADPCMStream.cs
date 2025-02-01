@@ -12,13 +12,13 @@ namespace BrawlLib.Wii.Audio
         private readonly int _numSamples;
         private readonly int _numChannels;
         private readonly int _blockLen;
-        private int _samplesPerBlock;
+        public int _samplesPerBlock;
         private int _lastBlockSamples, _lastBlockSize;
         private int _numBlocks;
         private readonly int _loopStartSample, _loopEndSample;
         private readonly bool _isLooped;
         private bool _useLoop;
-        private int _samplePos;
+        public int _samplePos;
 
         private readonly ADPCMState[,] _blockStates;
         private readonly ADPCMState[] _loopStates;
@@ -274,7 +274,7 @@ namespace BrawlLib.Wii.Audio
 
         private readonly int _startChannel;
 
-        private void RefreshStates()
+        public void RefreshStates()
         {
             int blockId = _samplePos / _samplesPerBlock;
             int samplePos = blockId * _samplesPerBlock;

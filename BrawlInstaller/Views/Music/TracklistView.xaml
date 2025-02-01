@@ -90,6 +90,8 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Label x:Name="songNameLabel" Content="Name:"/>
                                     <TextBox x:Name="songNameTextBox" Text="{Binding SelectedSong.Name}" Width="100" Grid.Column="1"/>
@@ -107,6 +109,12 @@
                                     <TextBox x:Name="frequencyTextBox" Grid.Row="6" Text="{Binding SelectedSong.Frequency}" Width="100" Grid.Column="1"/>
                                     <Label x:Name="songSwitchLabel" Grid.Row="7" Content="Song Switch:"/>
                                     <TextBox x:Name="songSwitchTextBox" Grid.Row="7" Text="{Binding SelectedSong.SongSwitch}" Width="100" Grid.Column="1"/>
+                                    <StackPanel x:Name="songButtonsStackPanel" Grid.Row="8" Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2" Visibility="{Binding PlaybackVisible, Converter={StaticResource boolVisConverter}}">
+                                        <Button x:Name="songPlayButton" Content="Play" Command="{Binding PlaySongCommand}"/>
+                                        <Button x:Name="songStopButton" Content="Stop" Command="{Binding StopSongCommand}"/>
+                                    </StackPanel>
+                                    <Label x:Name="volumeSliderLabel" Content="Volume:" Grid.Row="9" Visibility="{Binding PlaybackVisible, Converter={StaticResource boolVisConverter}}"/>
+                                    <Slider x:Name="volumeSlider" Minimum="0" Maximum="100" Value="{Binding Volume}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="120" Visibility="{Binding PlaybackVisible, Converter={StaticResource boolVisConverter}}"/>
                                     <CheckBox x:Name="stockPinchCheckBox" Content="Disable Stock Pinch" IsChecked="{Binding SelectedSong.DisableStockPinch}" Grid.Column="2"/>
                                     <CheckBox x:Name="hiddenFromTracklistCheckBox" Content="Hidden from Tracklist" IsChecked="{Binding SelectedSong.HiddenFromTracklist}" Grid.Row="1" Grid.Column="2"/>
                                 </Grid>
