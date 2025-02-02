@@ -28,11 +28,11 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="TracklistService.GetAllTracklistSongs(string)"/>
         List<TracklistSong> GetAllTracklistSongs(string tracklist);
 
-        /// <inheritdoc cref="TracklistService.DeleteTracklistSong(uint?, string, bool, bool)"/>
-        void DeleteTracklistSong(uint? songId, string tracklist, bool deleteSongFile = true, bool deleteTracklistEntry = true);
+        /// <inheritdoc cref="TracklistService.DeleteTracklistSong(uint?, string, bool, bool, TracklistType)"/>
+        void DeleteTracklistSong(uint? songId, string tracklist, bool deleteSongFile = true, bool deleteTracklistEntry = true, TracklistType tracklistType = TracklistType.Standard);
 
-        /// <inheritdoc cref="TracklistService.ImportTracklistSong(TracklistSong, string, ResourceNode)"/>
-        uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode);
+        /// <inheritdoc cref="TracklistService.ImportTracklistSong(TracklistSong, string, ResourceNode, TracklistType)"/>
+        uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode, TracklistType tracklistType = TracklistType.Standard);
 
         /// <inheritdoc cref="TracklistService.GetTracklistDeleteOptions(Tracklist)"/>
         List<string> GetTracklistDeleteOptions(Tracklist tracklist);
@@ -261,7 +261,8 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="songId">ID of song to delete</param>
         /// <param name="tracklist">Tracklist song is in</param>
-        public void DeleteTracklistSong(uint? songId, string tracklist, bool deleteSongFile = true, bool deleteTracklistEntry = true)
+        /// <param name="tracklistType">Tracklist type</param>
+        public void DeleteTracklistSong(uint? songId, string tracklist, bool deleteSongFile = true, bool deleteTracklistEntry = true, TracklistType tracklistType = TracklistType.Standard)
         {
             var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
@@ -282,7 +283,10 @@ namespace BrawlInstaller.Services
                         songNode.Dispose();
                     }
                 }
-                _fileService.SaveFile(rootNode);
+                foreach (var tracklistPath in GetTracklistPaths(tracklistType))
+                {
+                    _fileService.SaveFileAs(rootNode, $"{Path.Combine(_settingsService.GetBuildFilePath(tracklistPath), rootNode.Name)}.tlst");
+                }
                 _fileService.CloseFile(rootNode);
             }
         }
@@ -292,8 +296,9 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="tracklistSong">Tracklist song object to add</param>
         /// <param name="tracklist">Tracklist to add to</param>
+        /// <param name="tracklistType">Tracklist type</param>
         /// <returns>Added song ID</returns>
-        private uint AddTracklistSong(TracklistSong tracklistSong, string tracklist)
+        private uint AddTracklistSong(TracklistSong tracklistSong, string tracklist, TracklistType tracklistType = TracklistType.Standard)
         {
             var rootNode = OpenTracklist(tracklist);
             if (rootNode != null)
@@ -319,7 +324,10 @@ namespace BrawlInstaller.Services
                 {
                     rootNode.InsertChild(newNode, tracklistSong.Index);
                 }
-                _fileService.SaveFile(rootNode);
+                foreach(var tracklistPath in GetTracklistPaths(tracklistType))
+                {
+                    _fileService.SaveFileAs(rootNode, $"{Path.Combine(_settingsService.GetBuildFilePath(tracklistPath), rootNode.Name)}.tlst");
+                }
                 _fileService.CloseFile(rootNode);
             }
             return tracklistSong.SongId.Value;
@@ -331,8 +339,9 @@ namespace BrawlInstaller.Services
         /// <param name="tracklistSong">Tracklist song to import</param>
         /// <param name="tracklist">Tracklist to import to</param>
         /// <param name="brstmNode">BRSTM node to import</param>
+        /// <param name="tracklistType">Type of tracklist</param>
         /// <returns>Added song ID</returns>
-        public uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode)
+        public uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode, TracklistType tracklistType = TracklistType.Standard)
         {
             var id = tracklistSong.SongId;
             if (id == null)
@@ -342,7 +351,7 @@ namespace BrawlInstaller.Services
             // Only add the song if it's using a custom TLST ID, otherwise it's a vBrawl song and should not be added
             if (tracklistSong.SongId >= 0x0000F000)
             {
-                id = AddTracklistSong(tracklistSong, tracklist);
+                id = AddTracklistSong(tracklistSong, tracklist, tracklistType);
                 if (brstmNode != null)
                 {
                     var buildPath = _settingsService.AppSettings.BuildPath;

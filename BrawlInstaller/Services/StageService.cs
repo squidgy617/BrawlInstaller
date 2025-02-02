@@ -735,6 +735,16 @@ namespace BrawlInstaller.Services
                 if (stageEntry.Params.TrackListFile != null && _fileService.FileExists(stageEntry.Params.TrackListFile) && !toDelete.Contains(stageEntry.Params.TrackListFile))
                 {
                     toDelete.Add(stageEntry.Params.TrackListFile);
+                    // Add netplay tracklist if syncing is on
+                    if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
+                    {
+                        var netplayListPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath);
+                        var tracklistPath = Path.Combine(netplayListPath, Path.GetFileName(stageEntry.Params.TrackListFile));
+                        if (_fileService.FileExists(tracklistPath))
+                        {
+                            toDelete.Add(tracklistPath);
+                        }
+                    }
                 }
                 // Delete ASL file
                 path = Path.Combine(aslPath, $"{stage.Slot.StageIds.StageId:X2}.asl");
