@@ -43,7 +43,7 @@
                         </Grid>
                     </ScrollViewer>
                     <StackPanel Grid.Row="1">
-                        <Button x:Name="loadButton" Content="Load" Command="{Binding LoadTracklistCommand}"/>
+                        <Button x:Name="loadButton" Content="Load" Command="{Binding LoadTracklistCommand}" IsEnabled="{Binding SelectedTracklist, Converter={StaticResource nullBoolConverter}}"/>
                         <Button x:Name="newButton" Content="New" Command="{Binding NewTracklistCommand}"/>
                     </StackPanel>
                 </Grid>
@@ -63,7 +63,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <StackPanel Orientation="Horizontal">
-                                <Label x:Name="tracklistNameLabel" Content="Name:"/>
+                                <Label x:Name="tracklistNameLabel" Content="Name:" ToolTip="Name to use for tracklist"/>
                                 <TextBox x:Name="tracklistNameTextBox" Text="{Binding LoadedTracklist.Name}" Width="120"/>
                             </StackPanel>
                             <Grid Grid.Row="1">
@@ -75,7 +75,7 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-                                <Label x:Name="songListLabel" Content="Songs:" HorizontalAlignment="Left"/>
+                                <Label x:Name="songListLabel" Content="Songs:" HorizontalAlignment="Left" ToolTip="List of songs in tracklist"/>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                                     <ListBox x:Name="songListBox" ItemsSource="{Binding TracklistSongs}" SelectedItem="{Binding SelectedSong}" DisplayMemberPath="Name" Width="140" Height="200"/>
                                     <StackPanel>
@@ -103,30 +103,30 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Label x:Name="songNameLabel" Content="Name:"/>
+                                    <Label x:Name="songNameLabel" Content="Name:" ToolTip="Name to use for track internally"/>
                                     <TextBox x:Name="songNameTextBox" Text="{Binding SelectedSong.Name}" Width="100" Grid.Column="1"/>
-                                    <Label x:Name="songPathLabel" Grid.Row="1" Content="Path:"/>
+                                    <Label x:Name="songPathLabel" Grid.Row="1" Content="Path:" ToolTip="Relative path in build where track will be saved"/>
                                     <TextBox x:Name="songPathTextBox" Grid.Row="1" Text="{Binding SelectedSong.SongPath}" Width="100" Grid.Column="1"/>
-                                    <Label x:Name="songFileLabel" Grid.Row="2" Content="File:"/>
+                                    <Label x:Name="songFileLabel" Grid.Row="2" Content="File:" ToolTip="BRSTM file to use for the track"/>
                                     <userControls:FileBox x:Name="songFileBox" Grid.Row="2" Text="{Binding SelectedSong.SongFile}" TextBoxWidth="100" Grid.Column="1" Filter="BRSTM file (.brstm)|*.brstm"/>
-                                    <Label x:Name="songIdLabel" Grid.Row="3" Content="ID:"/>
+                                    <Label x:Name="songIdLabel" Grid.Row="3" Content="ID:" ToolTip="Song ID to use for track"/>
                                     <TextBox x:Name="songIdTextBox" Grid.Row="3" Text="{Binding SelectedSong.SongId, Converter={StaticResource hexUIntConverter}}" Width="100" Grid.Column="1"/>
-                                    <Label x:Name="songDelayLabel" Grid.Row="4" Content="Delay:"/>
+                                    <Label x:Name="songDelayLabel" Grid.Row="4" Content="Delay:" ToolTip="Delay before track starts playing in a match"/>
                                     <TextBox x:Name="songDelayTextBox" Grid.Row="4" Text="{Binding SelectedSong.SongDelay}" Width="100" Grid.Column="1"/>
-                                    <Label x:Name="volumeLabel" Grid.Row="5" Content="Volume:"/>
+                                    <Label x:Name="volumeLabel" Grid.Row="5" Content="Track Volume:" ToolTip="In-game volume of track"/>
                                     <TextBox x:Name="volumeTextBox" Grid.Row="5" Text="{Binding SelectedSong.Volume}" Width="100" Grid.Column="1"/>
-                                    <Label x:Name="frequencyLabel" Grid.Row="6" Content="Frequency:"/>
+                                    <Label x:Name="frequencyLabel" Grid.Row="6" Content="Frequency:" ToolTip="Frequency that track will play when stage is selected"/>
                                     <TextBox x:Name="frequencyTextBox" Grid.Row="6" Text="{Binding SelectedSong.Frequency}" Width="100" Grid.Column="1"/>
-                                    <Label x:Name="songSwitchLabel" Grid.Row="7" Content="Song Switch:"/>
+                                    <Label x:Name="songSwitchLabel" Grid.Row="7" Content="Song Switch:" ToolTip="How long before song switches to an alternate track"/>
                                     <TextBox x:Name="songSwitchTextBox" Grid.Row="7" Text="{Binding SelectedSong.SongSwitch}" Width="100" Grid.Column="1"/>
                                     <StackPanel x:Name="songButtonsStackPanel" Grid.Row="8" Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2" Visibility="{Binding PlaybackVisible, Converter={StaticResource boolVisConverter}}">
                                         <Button x:Name="songPlayButton" Content="Play" Command="{Binding PlaySongCommand}"/>
                                         <Button x:Name="songStopButton" Content="Stop" Command="{Binding StopSongCommand}"/>
                                     </StackPanel>
-                                    <Label x:Name="volumeSliderLabel" Content="Volume:" Grid.Row="9" Visibility="{Binding PlaybackVisible, Converter={StaticResource boolVisConverter}}"/>
+                                    <Label x:Name="volumeSliderLabel" Content="Volume:" Grid.Row="9" Visibility="{Binding PlaybackVisible, Converter={StaticResource boolVisConverter}}" ToolTip="Volume slider for song playback"/>
                                     <Slider x:Name="volumeSlider" Minimum="0" Maximum="100" Value="{Binding Volume}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="120" Visibility="{Binding PlaybackVisible, Converter={StaticResource boolVisConverter}}"/>
-                                    <CheckBox x:Name="stockPinchCheckBox" Content="Disable Stock Pinch" IsChecked="{Binding SelectedSong.DisableStockPinch}" Grid.Column="2"/>
-                                    <CheckBox x:Name="hiddenFromTracklistCheckBox" Content="Hidden from Tracklist" IsChecked="{Binding SelectedSong.HiddenFromTracklist}" Grid.Row="1" Grid.Column="2"/>
+                                    <CheckBox x:Name="stockPinchCheckBox" Content="Disable Stock Pinch" IsChecked="{Binding SelectedSong.DisableStockPinch}" Grid.Column="2" ToolTip="Check to use alternate track when stocks or time are low"/>
+                                    <CheckBox x:Name="hiddenFromTracklistCheckBox" Content="Hidden from Tracklist" IsChecked="{Binding SelectedSong.HiddenFromTracklist}" Grid.Row="1" Grid.Column="2" ToolTip="Check to hide track from tracklist in-game"/>
                                 </Grid>
                             </Grid>
                         </Grid>
