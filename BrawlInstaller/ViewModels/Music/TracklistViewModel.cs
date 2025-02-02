@@ -54,6 +54,7 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand LoadTracklistCommand => new RelayCommand(param => LoadTracklist());
+        public ICommand NewTracklistCommand => new RelayCommand(param => NewTracklist());
         public ICommand PlaySongCommand => new RelayCommand(param => PlaySong());
         public ICommand StopSongCommand => new RelayCommand(param => StopSong());
         public ICommand SaveTracklistCommand => new RelayCommand(param => SaveTracklist());
@@ -120,6 +121,13 @@ namespace BrawlInstaller.ViewModels
             LoadedTracklist = null;
             Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
             OnPropertyChanged(nameof(Tracklists));
+            OnPropertyChanged(nameof(LoadedTracklist));
+        }
+
+        private void NewTracklist()
+        {
+            var tracklist = new Tracklist { Name = "New_Tracklist" };
+            LoadedTracklist = tracklist;
             OnPropertyChanged(nameof(LoadedTracklist));
         }
 
