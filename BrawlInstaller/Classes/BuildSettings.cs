@@ -128,27 +128,27 @@ namespace BrawlInstaller.Classes
         [JsonProperty("FilePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<FilePath> FilePaths { get; set; } = new List<FilePath>
         {
-            new FilePath(FileType.FighterFiles, "pf\\fighter"),
-            new FilePath(FileType.BrawlEx, "pf\\BrawlEx"),
-            new FilePath(FileType.MasqueradePath, "pf\\info\\costumeslots"),
-            new FilePath(FileType.Modules, "pf\\module"),
-            new FilePath(FileType.StageSlots, "pf\\stage\\stageslot"),
-            new FilePath(FileType.StageParamPath, "pf\\stage\\stageinfo"),
-            new FilePath(FileType.StagePacPath, "pf\\stage\\melee"),
-            new FilePath(FileType.TracklistPath, "pf\\sound\\tracklist"),
-            new FilePath(FileType.ClassicIntroPath, "pf\\menu\\intro\\enter"),
-            new FilePath(FileType.EndingPath, "pf\\menu\\intro\\ending"),
-            new FilePath(FileType.MoviePath, "pf\\movie"),
-            new FilePath(FileType.BrstmPath, "pf\\sound\\strm"),
-            new FilePath(FileType.SoundbankPath, "pf\\sfx"),
-            new FilePath(FileType.StageAltListPath, "pf\\stage\\stagelist"),
+            new FilePath(FileType.FighterFiles, "pf\\fighter\\"),
+            new FilePath(FileType.BrawlEx, "pf\\BrawlEx\\"),
+            new FilePath(FileType.MasqueradePath, "pf\\info\\costumeslots\\"),
+            new FilePath(FileType.Modules, "pf\\module\\"),
+            new FilePath(FileType.StageSlots, "pf\\stage\\stageslot\\"),
+            new FilePath(FileType.StageParamPath, "pf\\stage\\stageinfo\\"),
+            new FilePath(FileType.StagePacPath, "pf\\stage\\melee\\"),
+            new FilePath(FileType.TracklistPath, "pf\\sound\\tracklist\\"),
+            new FilePath(FileType.ClassicIntroPath, "pf\\menu\\intro\\enter\\"),
+            new FilePath(FileType.EndingPath, "pf\\menu\\intro\\ending\\"),
+            new FilePath(FileType.MoviePath, "pf\\movie\\"),
+            new FilePath(FileType.BrstmPath, "pf\\sound\\strm\\"),
+            new FilePath(FileType.SoundbankPath, "pf\\sfx\\"),
+            new FilePath(FileType.StageAltListPath, "pf\\stage\\stagelist\\"),
             new FilePath(FileType.CreditsModule, "pf\\module\\st_croll.rel", "REL file (.rel)|*.rel"),
             new FilePath(FileType.SSEModule, "pf\\module\\sora_adv_stage.rel", "REL file (.rel)|*.rel"),
             new FilePath(FileType.GctRealMateExe, "GCTRealMate.exe", "EXE file (.exe)|*.exe"),
-            new FilePath(FileType.TargetBreakFolder, "pf\\stage\\stageslot\\tBreak"),
+            new FilePath(FileType.TargetBreakFolder, "pf\\stage\\stageslot\\tBreak\\"),
             new FilePath(FileType.CodeMenuConfig, "Code Menu Builder\\EX_Config.xml", "XML file (.xml)|*.xml"),
             new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe"),
-            new FilePath(FileType.NetplaylistPath, "pf\\sound\\netplaylist")
+            new FilePath(FileType.NetplaylistPath, "pf\\sound\\netplaylist\\")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
