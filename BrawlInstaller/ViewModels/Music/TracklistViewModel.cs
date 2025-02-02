@@ -69,7 +69,7 @@ namespace BrawlInstaller.ViewModels
             Volume = 100;
             LoadedTracklist = null;
             Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
-            OnPropertyChanged(nameof(LoadTracklist));
+            OnPropertyChanged(nameof(LoadedTracklist));
             OnPropertyChanged(nameof(Tracklists));
 
             WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
@@ -183,15 +183,23 @@ namespace BrawlInstaller.ViewModels
             }
             var itemsToDelete = items.Where(x => x.IsChecked).Select(x => x.Item.ToString()).ToList();
 
-            // Save tracklist
-            tracklistToSave = _tracklistService.SaveTracklist(tracklistToSave, itemsToDelete);
+            using (new CursorWait())
+            {
+                _fileService.StartBackup();
+                // Save tracklist
+                tracklistToSave = _tracklistService.SaveTracklist(tracklistToSave, itemsToDelete);
 
-            // Save successful, so load saved tracklist
-            LoadedTracklist = tracklistToSave;
+                // Save successful, so load saved tracklist
+                LoadedTracklist = tracklistToSave;
 
-            // Update UI
-            OnPropertyChanged(nameof(LoadedTracklist));
+                // Update tracklists
+                Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
 
+                // Update UI
+                OnPropertyChanged(nameof(LoadedTracklist));
+
+                _fileService.EndBackup();
+            }
             // Show dialog
             _dialogService.ShowMessage("Changes saved.", "Saved");
         }
