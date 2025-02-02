@@ -76,8 +76,14 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Label x:Name="songListLabel" Content="Songs:" HorizontalAlignment="Left"/>
-                                <StackPanel Grid.Row="1">
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
                                     <ListBox x:Name="songListBox" ItemsSource="{Binding TracklistSongs}" SelectedItem="{Binding SelectedSong}" DisplayMemberPath="Name" Width="140" Height="200"/>
+                                    <StackPanel>
+                                        <Button x:Name="moveSongUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveSongUpCommand}" IsEnabled="{Binding SelectedSong, Converter={StaticResource nullBoolConverter}}"/>
+                                        <Button x:Name="moveSongDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveSongDownCommand}" IsEnabled="{Binding SelectedSong, Converter={StaticResource nullBoolConverter}}"/>
+                                        <Button x:Name="addSongButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddSongCommand}"/>
+                                        <Button x:Name="removeSongButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveSongCommand}" IsEnabled="{Binding SelectedSong, Converter={StaticResource nullBoolConverter}}"/>
+                                    </StackPanel>
                                 </StackPanel>
                                 <Grid x:Name="songPropertiesGrid" Grid.Row="1" Grid.Column="1" Visibility="{Binding SelectedSong, Converter={StaticResource nullVisConverter}}">
                                     <Grid.ColumnDefinitions>

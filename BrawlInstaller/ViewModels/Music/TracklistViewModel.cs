@@ -58,6 +58,10 @@ namespace BrawlInstaller.ViewModels
         public ICommand StopSongCommand => new RelayCommand(param => StopSong());
         public ICommand SaveTracklistCommand => new RelayCommand(param => SaveTracklist());
         public ICommand DeleteTracklistCommand => new RelayCommand(param => DeleteTracklist());
+        public ICommand MoveSongUpCommand => new RelayCommand(param => MoveSongUp());
+        public ICommand MoveSongDownCommand => new RelayCommand(param => MoveSongDown());
+        public ICommand AddSongCommand => new RelayCommand(param => AddSong());
+        public ICommand RemoveSongCommand => new RelayCommand(param => RemoveSong());
 
         [ImportingConstructor]
         public TracklistViewModel(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, IDialogService dialogService)
@@ -215,6 +219,51 @@ namespace BrawlInstaller.ViewModels
                 _fileService.EndBackup();
             }
             return tracklist;
+        }
+
+        private void MoveSongUp()
+        {
+            if (SelectedSong != null)
+            {
+                LoadedTracklist.TracklistSongs.MoveUp(SelectedSong);
+                OnPropertyChanged(nameof(TracklistSongs));
+            }
+        }
+
+        private void MoveSongDown()
+        {
+            if (SelectedSong != null)
+            {
+                LoadedTracklist.TracklistSongs.MoveDown(SelectedSong);
+                OnPropertyChanged(nameof(TracklistSongs));
+            }
+        }
+
+        private void AddSong()
+        {
+            if (TracklistSongs != null)
+            {
+                uint newId = 0x0000F000;
+                while (LoadedTracklist.TracklistSongs.Select(x => x.SongId).ToList().Contains(newId))
+                {
+                    newId++;
+                }
+                var newSong = new TracklistSong { Name = "New_Song", SongId = newId };
+                LoadedTracklist.TracklistSongs.Add(newSong);
+                SelectedSong = newSong;
+                OnPropertyChanged(nameof(TracklistSongs));
+                OnPropertyChanged(nameof(SelectedSong));
+            }
+        }
+
+        private void RemoveSong()
+        {
+            if (SelectedSong != null)
+            {
+                LoadedTracklist.TracklistSongs.Remove(SelectedSong);
+                OnPropertyChanged(nameof(TracklistSongs));
+                OnPropertyChanged(nameof(SelectedSong));
+            }
         }
     }
 }
