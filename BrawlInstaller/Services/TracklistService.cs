@@ -90,6 +90,28 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get synced tracklist paths by type
+        /// </summary>
+        /// <param name="tracklistType">Type of tracklist</param>
+        /// <returns>List of tracklist paths</returns>
+        private List<string> GetTracklistPaths(TracklistType tracklistType = TracklistType.Standard)
+        {
+            var tracklistPaths = new List<string>
+            {
+                GetTracklistPath(tracklistType)
+            };
+            if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && tracklistType == TracklistType.Standard)
+            {
+                tracklistPaths.Add(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath);
+            }
+            else if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && tracklistType == TracklistType.Netplay)
+            {
+                tracklistPaths.Add(_settingsService.BuildSettings.FilePathSettings.TracklistPath);
+            }
+            return tracklistPaths;
+        }
+
+        /// <summary>
         /// Get song object from tracklist
         /// </summary>
         /// <param name="songId">ID of song to retrieve</param>
@@ -373,7 +395,7 @@ namespace BrawlInstaller.Services
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var strmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
-            var tracklistPath = GetTracklistPath(tracklistType);
+            var tracklistPaths = GetTracklistPaths(tracklistType);
             // Open BRSTMs in case they get deleted
             var brstms = new List<ResourceNode>();
             foreach (var song in tracklist.TracklistSongs.Where(x => !string.IsNullOrEmpty(x.SongFile)))
@@ -392,9 +414,13 @@ namespace BrawlInstaller.Services
                 _fileService.DeleteFile(brstm);
             }
             // Delete old tracklist
-            if (_fileService.FileExists(tracklist.File))
+            foreach(var tracklistPath in tracklistPaths)
             {
-                _fileService.DeleteFile(tracklist.File);
+                var path = Path.Combine(_settingsService.GetBuildFilePath(tracklistPath), Path.GetFileName(tracklist.File));
+                if (_fileService.FileExists(path))
+                {
+                    _fileService.DeleteFile(path);
+                }
             }
             // Save BRSTMs
             foreach(var node in brstms)
@@ -406,9 +432,12 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(tracklist.Name))
             {
                 var tracklistNode = tracklist.ConvertToNode();
-                var tracklistSavePath = $"{Path.Combine(buildPath, tracklistPath, tracklist.Name)}.tlst";
-                _fileService.SaveFileAs(tracklistNode, tracklistSavePath);
-                tracklist.File = tracklistSavePath;
+                foreach(var tracklistPath in tracklistPaths)
+                {
+                    var tracklistSavePath = $"{Path.Combine(buildPath, tracklistPath, tracklist.Name)}.tlst";
+                    _fileService.SaveFileAs(tracklistNode, tracklistSavePath);
+                    tracklist.File = tracklistSavePath;
+                }
             }
             return tracklist;
         }

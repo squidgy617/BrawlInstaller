@@ -121,6 +121,7 @@ namespace BrawlInstaller.Classes
         public bool SubspaceEx { get; set; } = true;
         public bool InstallKirbyHats { get; set; } = false;
         public uint DefaultExConfigVersion { get; set; } = 1;
+        public bool SyncTracklists { get; set; } = true;
     }
 
     public class FilePathSettings
