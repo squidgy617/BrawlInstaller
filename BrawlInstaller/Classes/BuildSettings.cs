@@ -121,7 +121,7 @@ namespace BrawlInstaller.Classes
         public bool SubspaceEx { get; set; } = true;
         public bool InstallKirbyHats { get; set; } = false;
         public uint DefaultExConfigVersion { get; set; } = 1;
-        public bool SyncTracklists { get; set; } = true;
+        public bool SyncTracklists { get; set; } = false;
     }
 
     public class FilePathSettings
@@ -137,7 +137,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.StageParamPath, "pf\\stage\\stageinfo\\"),
             new FilePath(FileType.StagePacPath, "pf\\stage\\melee\\"),
             new FilePath(FileType.TracklistPath, "pf\\sound\\tracklist\\"),
-            new FilePath(FileType.NetplaylistPath, "pf\\sound\\netplaylist\\"),
+            new FilePath(FileType.NetplaylistPath, ""),
             new FilePath(FileType.ClassicIntroPath, "pf\\menu\\intro\\enter\\"),
             new FilePath(FileType.EndingPath, "pf\\menu\\intro\\ending\\"),
             new FilePath(FileType.MoviePath, "pf\\movie\\"),

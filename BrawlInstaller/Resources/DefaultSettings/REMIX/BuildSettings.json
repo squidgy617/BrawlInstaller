@@ -1522,7 +1522,8 @@
     "UpdateCreditsModule": false,
     "SubspaceEx": false,
     "InstallKirbyHats": false,
-    "DefaultExConfigVersion": 1
+    "DefaultExConfigVersion": 1,
+    "SyncTracklists": false
   },
   "FilePathSettings": {
     "FilePaths": [
@@ -1564,6 +1565,11 @@
       {
         "FileType": 7,
         "Path": "pf\\sound\\tracklist\\",
+        "Filter": ""
+      },
+      {
+        "FileType": 29,
+        "Path": "",
         "Filter": ""
       },
       {
