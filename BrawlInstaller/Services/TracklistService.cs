@@ -380,10 +380,13 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(node);
             }
             // Save tracklist
-            var tracklistNode = tracklist.ConvertToNode();
-            var tracklistSavePath = $"{Path.Combine(buildPath, tracklistPath, tracklist.Name)}.tlst";
-            _fileService.SaveFileAs(tracklistNode, tracklistSavePath);
-            tracklist.File = tracklistSavePath;
+            if (!string.IsNullOrEmpty(tracklist.Name))
+            {
+                var tracklistNode = tracklist.ConvertToNode();
+                var tracklistSavePath = $"{Path.Combine(buildPath, tracklistPath, tracklist.Name)}.tlst";
+                _fileService.SaveFileAs(tracklistNode, tracklistSavePath);
+                tracklist.File = tracklistSavePath;
+            }
             return tracklist;
         }
     }

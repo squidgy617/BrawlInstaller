@@ -57,6 +57,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand PlaySongCommand => new RelayCommand(param => PlaySong());
         public ICommand StopSongCommand => new RelayCommand(param => StopSong());
         public ICommand SaveTracklistCommand => new RelayCommand(param => SaveTracklist());
+        public ICommand DeleteTracklistCommand => new RelayCommand(param => DeleteTracklist());
 
         [ImportingConstructor]
         public TracklistViewModel(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, IDialogService dialogService)
@@ -162,10 +163,26 @@ namespace BrawlInstaller.ViewModels
             waveOutSetVolume(IntPtr.Zero, NewVolumeAllChannels);
         }
 
+        private void DeleteTracklist()
+        {
+            var tracklistToDelete = new Tracklist { File = LoadedTracklist.File };
+            SaveTracklist(tracklistToDelete);
+            LoadedTracklist = null;
+            OnPropertyChanged(nameof(LoadedTracklist));
+            _dialogService.ShowMessage("Changes saved.", "Saved");
+        }
+
         private void SaveTracklist()
         {
+            LoadedTracklist = SaveTracklist(LoadedTracklist);
+            OnPropertyChanged(nameof(LoadedTracklist));
+            _dialogService.ShowMessage("Changes saved.", "Saved");
+        }
+
+        private Tracklist SaveTracklist(Tracklist tracklist)
+        {
             // Copy tracklist before save
-            var tracklistToSave = LoadedTracklist.Copy();
+            var tracklistToSave = tracklist.Copy();
 
             // Get delete options
             var deleteOptions = _tracklistService.GetTracklistDeleteOptions(tracklistToSave);
@@ -190,18 +207,14 @@ namespace BrawlInstaller.ViewModels
                 tracklistToSave = _tracklistService.SaveTracklist(tracklistToSave, itemsToDelete);
 
                 // Save successful, so load saved tracklist
-                LoadedTracklist = tracklistToSave;
+                tracklist = tracklistToSave;
 
                 // Update tracklists
                 Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
 
-                // Update UI
-                OnPropertyChanged(nameof(LoadedTracklist));
-
                 _fileService.EndBackup();
             }
-            // Show dialog
-            _dialogService.ShowMessage("Changes saved.", "Saved");
+            return tracklist;
         }
     }
 }
