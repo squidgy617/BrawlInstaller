@@ -28,7 +28,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Label x:Name="tracklistLabel" Content="Tracklists" HorizontalAlignment="Left"/>
+                            <ComboBox x:Name="tracklistOptionsDropDown" ItemsSource="{Binding TracklistOptions}" SelectedItem="{Binding SelectedTracklistOption}" Width="120" DisplayMemberPath="Name"/>
                             <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Width="120" Height="400" Grid.Row="1">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>

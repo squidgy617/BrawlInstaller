@@ -1,4 +1,5 @@
 ﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Enums;
 using BrawlLib.BrawlManagerLib.Songs;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
@@ -15,14 +16,14 @@ namespace BrawlInstaller.Services
 {
     public interface ITracklistService
     {
-        /// <inheritdoc cref="TracklistService.GetTracklists()"/>
-        List<string> GetTracklists();
+        /// <inheritdoc cref="TracklistService.GetTracklists(TracklistType)"/>
+        List<string> GetTracklists(TracklistType tracklistType = TracklistType.Standard);
 
         /// <inheritdoc cref="TracklistService.GetTracklistSong(uint?, string)"/>
         TracklistSong GetTracklistSong(uint? songId, string tracklist);
 
-        /// <inheritdoc cref="TracklistService.LoadTracklist(string)"/>
-        Tracklist LoadTracklist(string tracklist);
+        /// <inheritdoc cref="TracklistService.LoadTracklist(string, TracklistType)"/>
+        Tracklist LoadTracklist(string tracklist, TracklistType tracklistType = TracklistType.Standard);
 
         /// <inheritdoc cref="TracklistService.GetAllTracklistSongs(string)"/>
         List<TracklistSong> GetAllTracklistSongs(string tracklist);
@@ -36,8 +37,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="TracklistService.GetTracklistDeleteOptions(Tracklist)"/>
         List<string> GetTracklistDeleteOptions(Tracklist tracklist);
 
-        /// <inheritdoc cref="TracklistService.SaveTracklist(Tracklist, List{string})"/>
-        Tracklist SaveTracklist(Tracklist tracklist, List<string> deleteOptions);
+        /// <inheritdoc cref="TracklistService.SaveTracklist(Tracklist, List{string}, TracklistType)"/>
+        Tracklist SaveTracklist(Tracklist tracklist, List<string> deleteOptions, TracklistType tracklistType = TracklistType.Standard);
     }
 
     [Export(typeof(ITracklistService))]
@@ -59,15 +60,33 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Get all tracklists in build
         /// </summary>
+        /// <param name="tracklistType">Tracklist type</param>
         /// <returns>List of tracklists</returns>
-        public List<string> GetTracklists()
+        public List<string> GetTracklists(TracklistType tracklistType = TracklistType.Standard)
         {
             var tracklists = new List<string>();
             var buildPath = _settingsService.AppSettings.BuildPath;
-            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
+            var tracklistPath = GetTracklistPath(tracklistType);
             var path = Path.Combine(buildPath, tracklistPath);
             tracklists = _fileService.GetFiles(path, "*.tlst").ToList();
             return tracklists;
+        }
+
+        /// <summary>
+        /// Get tracklist path by type
+        /// </summary>
+        /// <param name="tracklistType">Tracklist type</param>
+        /// <returns>Tracklist path</returns>
+        private string GetTracklistPath(TracklistType tracklistType = TracklistType.Standard)
+        {
+            if (tracklistType == TracklistType.Netplay)
+            {
+                return _settingsService.BuildSettings.FilePathSettings.NetplaylistPath;
+            }
+            else
+            {
+                return _settingsService.BuildSettings.FilePathSettings.TracklistPath;
+            }
         }
 
         /// <summary>
@@ -100,11 +119,12 @@ namespace BrawlInstaller.Services
         /// Load tracklist from file
         /// </summary>
         /// <param name="tracklist">Tracklist file to load</param>
+        /// <param name="tracklistType">Tracklist type</param>
         /// <returns>Tracklist object</returns>
-        public Tracklist LoadTracklist(string tracklist)
+        public Tracklist LoadTracklist(string tracklist, TracklistType tracklistType = TracklistType.Standard)
         {
             var openedList = new Tracklist();
-            var rootNode = OpenTracklist(tracklist);
+            var rootNode = OpenTracklist(tracklist, tracklistType);
             if (rootNode != null)
             {
                 openedList.Name = rootNode.Name;
@@ -180,11 +200,12 @@ namespace BrawlInstaller.Services
         /// Open tracklist by name
         /// </summary>
         /// <param name="tracklist">Tracklist to open</param>
+        /// <param name="tracklistType">Type of tracklist</param>
         /// <returns>Tracklist root node</returns>
-        private ResourceNode OpenTracklist(string tracklist)
+        private ResourceNode OpenTracklist(string tracklist, TracklistType tracklistType = TracklistType.Standard)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
-            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
+            var tracklistPath = GetTracklistPath(tracklistType);
             var path = Path.Combine(buildPath, tracklistPath, $"{tracklist}.tlst");
             var rootNode = _fileService.OpenFile(path);
             if (rootNode != null)
@@ -345,12 +366,14 @@ namespace BrawlInstaller.Services
         /// Save a tracklist
         /// </summary>
         /// <param name="tracklist">Tracklist to save</param>
+        /// <param name="deleteOptions">Selected options to delete</param>
+        /// <param name="tracklistType">Type of tracklist</param>
         /// <returns>Updated tracklist</returns>
-        public Tracklist SaveTracklist(Tracklist tracklist, List<string> deleteOptions)
+        public Tracklist SaveTracklist(Tracklist tracklist, List<string> deleteOptions, TracklistType tracklistType = TracklistType.Standard)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var strmPath = _settingsService.BuildSettings.FilePathSettings.BrstmPath;
-            var tracklistPath = _settingsService.BuildSettings.FilePathSettings.TracklistPath;
+            var tracklistPath = GetTracklistPath(tracklistType);
             // Open BRSTMs in case they get deleted
             var brstms = new List<ResourceNode>();
             foreach (var song in tracklist.TracklistSongs.Where(x => !string.IsNullOrEmpty(x.SongFile)))

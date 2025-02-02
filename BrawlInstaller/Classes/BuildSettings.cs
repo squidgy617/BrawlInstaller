@@ -147,7 +147,8 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.GctRealMateExe, "GCTRealMate.exe", "EXE file (.exe)|*.exe"),
             new FilePath(FileType.TargetBreakFolder, "pf\\stage\\stageslot\\tBreak"),
             new FilePath(FileType.CodeMenuConfig, "Code Menu Builder\\EX_Config.xml", "XML file (.xml)|*.xml"),
-            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe")
+            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe"),
+            new FilePath(FileType.NetplaylistPath, "pf\\sound\\netplaylist")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -223,6 +224,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string TargetBreakFolder { get => GetFilePath(FileType.TargetBreakFolder); }
         [JsonIgnore] public string CodeMenuConfig { get => GetFilePath(FileType.CodeMenuConfig); }
         [JsonIgnore] public string CodeMenuBuilder { get =>  GetFilePath(FileType.CodeMenuBuilder); }
+        [JsonIgnore] public string NetplaylistPath { get => GetFilePath(FileType.NetplaylistPath); }
 
         // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]

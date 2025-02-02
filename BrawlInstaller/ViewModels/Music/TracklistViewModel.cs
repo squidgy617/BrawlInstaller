@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
 using BrawlLib.Internal.Audio;
@@ -36,6 +37,8 @@ namespace BrawlInstaller.ViewModels
         public static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
 
         // Private properties
+        private ObservableCollection<TracklistOption> _tracklistOptions;
+        private TracklistOption _selectedTracklistOption;
         private ObservableCollection<string> _tracklists;
         private string _selectedTracklist;
         private Tracklist _loadedTracklist;
@@ -72,11 +75,11 @@ namespace BrawlInstaller.ViewModels
             _tracklistService = tracklistService;
             _dialogService = dialogService;
 
+            TracklistOptions = new ObservableCollection<TracklistOption>();
             Volume = 100;
             LoadedTracklist = null;
-            Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
+            RefreshTracklists();
             OnPropertyChanged(nameof(LoadedTracklist));
-            OnPropertyChanged(nameof(Tracklists));
 
             WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
             {
@@ -89,7 +92,13 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public ObservableCollection<string> Tracklists { get => _tracklists; set {  _tracklists = value; OnPropertyChanged(nameof(Tracklists)); } }
+        public ObservableCollection<TracklistOption> TracklistOptions { get => _tracklistOptions; set { _tracklistOptions = value; OnPropertyChanged(nameof(TracklistOptions)); } }
+
+        [DependsUpon(nameof(TracklistOptions))]
+        public TracklistOption SelectedTracklistOption { get => _selectedTracklistOption; set { _selectedTracklistOption = value; OnPropertyChanged(nameof(SelectedTracklistOption)); } }
+
+        [DependsUpon(nameof(SelectedTracklistOption))]
+        public ObservableCollection<string> Tracklists { get => SelectedTracklistOption?.Tracklists; }
 
         [DependsUpon(nameof(Tracklists))]
         public string SelectedTracklist { get => _selectedTracklist; set { _selectedTracklist = value; OnPropertyChanged(nameof(SelectedTracklist)); } }
@@ -108,19 +117,42 @@ namespace BrawlInstaller.ViewModels
         public int Volume { get => _volume; set { _volume = value; AdjustVolume(value); OnPropertyChanged(nameof(Volume)); } }
 
         // Methods
+        private void RefreshTracklists()
+        {
+            var selectedTracklistIndex = TracklistOptions.IndexOf(SelectedTracklistOption);
+            TracklistOptions = new ObservableCollection<TracklistOption>();
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TracklistPath))
+            {
+                TracklistOptions.Add(new TracklistOption("Standard", TracklistType.Standard, new ObservableCollection<string>(_tracklistService.GetTracklists())));
+            }
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
+            {
+                TracklistOptions.Add(new TracklistOption("Netplay", TracklistType.Netplay, new ObservableCollection<string>(_tracklistService.GetTracklists(TracklistType.Netplay))));
+            }
+            if (selectedTracklistIndex != -1 && TracklistOptions.Count > selectedTracklistIndex)
+            {
+                SelectedTracklistOption = TracklistOptions[selectedTracklistIndex];
+            }
+            else
+            {
+                SelectedTracklistOption = TracklistOptions.FirstOrDefault();
+            }
+            OnPropertyChanged(nameof(TracklistOptions));
+            OnPropertyChanged(nameof(Tracklists));
+            OnPropertyChanged(nameof(SelectedTracklistOption));
+        }
+
         private void UpdateSettings()
         {
             LoadedTracklist = null;
-            Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
-            OnPropertyChanged(nameof(Tracklists));
+            RefreshTracklists();
             OnPropertyChanged(nameof(LoadedTracklist));
         }
 
         private void SettingsSaved()
         {
             LoadedTracklist = null;
-            Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
-            OnPropertyChanged(nameof(Tracklists));
+            RefreshTracklists();
             OnPropertyChanged(nameof(LoadedTracklist));
         }
 
@@ -137,7 +169,7 @@ namespace BrawlInstaller.ViewModels
             {
                 using (new CursorWait())
                 {
-                    var tracklist = _tracklistService.LoadTracklist(Path.GetFileNameWithoutExtension(SelectedTracklist));
+                    var tracklist = _tracklistService.LoadTracklist(Path.GetFileNameWithoutExtension(SelectedTracklist), SelectedTracklistOption.TracklistType);
                     LoadedTracklist = tracklist.Copy();
                     OnPropertyChanged(nameof(LoadedTracklist));
                 }
@@ -222,7 +254,7 @@ namespace BrawlInstaller.ViewModels
                 tracklist = tracklistToSave;
 
                 // Update tracklists
-                Tracklists = new ObservableCollection<string>(_tracklistService.GetTracklists());
+                RefreshTracklists();
 
                 _fileService.EndBackup();
             }
@@ -272,6 +304,20 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(TracklistSongs));
                 OnPropertyChanged(nameof(SelectedSong));
             }
+        }
+    }
+
+    internal class TracklistOption
+    {
+        public string Name { get; set; }
+        public ObservableCollection<string> Tracklists { get; set; } = new ObservableCollection<string>();
+        public TracklistType TracklistType { get; set; }
+
+        public TracklistOption(string name, TracklistType tracklistType, ObservableCollection<string> tracklists)
+        {
+            Name = name;
+            Tracklists = tracklists;
+            TracklistType = tracklistType;
         }
     }
 }
