@@ -137,6 +137,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.StageParamPath, "pf\\stage\\stageinfo\\"),
             new FilePath(FileType.StagePacPath, "pf\\stage\\melee\\"),
             new FilePath(FileType.TracklistPath, "pf\\sound\\tracklist\\"),
+            new FilePath(FileType.NetplaylistPath, "pf\\sound\\netplaylist\\"),
             new FilePath(FileType.ClassicIntroPath, "pf\\menu\\intro\\enter\\"),
             new FilePath(FileType.EndingPath, "pf\\menu\\intro\\ending\\"),
             new FilePath(FileType.MoviePath, "pf\\movie\\"),
@@ -148,8 +149,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.GctRealMateExe, "GCTRealMate.exe", "EXE file (.exe)|*.exe"),
             new FilePath(FileType.TargetBreakFolder, "pf\\stage\\stageslot\\tBreak\\"),
             new FilePath(FileType.CodeMenuConfig, "Code Menu Builder\\EX_Config.xml", "XML file (.xml)|*.xml"),
-            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe"),
-            new FilePath(FileType.NetplaylistPath, "pf\\sound\\netplaylist\\")
+            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]

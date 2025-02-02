@@ -149,8 +149,8 @@ namespace BrawlInstaller.Services
             {
                 buildSettings.FilePathSettings.AsmPaths.Add(missingAsm);
             }
-            buildSettings.FilePathSettings.FilePaths = buildSettings.FilePathSettings.FilePaths.OrderBy(x => x.FileType).ToList();
-            buildSettings.FilePathSettings.AsmPaths = buildSettings.FilePathSettings.AsmPaths.OrderBy(x => x.FileType).ToList();
+            buildSettings.FilePathSettings.FilePaths = buildSettings.FilePathSettings.FilePaths.OrderBy(x => defaultSettings.FilePathSettings.FilePaths.IndexOf(defaultSettings.FilePathSettings.FilePaths.FirstOrDefault(y => y.FileType == x.FileType))).ToList();
+            buildSettings.FilePathSettings.AsmPaths = buildSettings.FilePathSettings.AsmPaths.OrderBy(x => defaultSettings.FilePathSettings.FilePaths.IndexOf(defaultSettings.FilePathSettings.FilePaths.FirstOrDefault(y => y.FileType == x.FileType))).ToList();
             return buildSettings;
         }
 
