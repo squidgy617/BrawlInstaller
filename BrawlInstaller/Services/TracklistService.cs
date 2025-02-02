@@ -100,11 +100,11 @@ namespace BrawlInstaller.Services
             {
                 GetTracklistPath(tracklistType)
             };
-            if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && tracklistType == TracklistType.Standard)
+            if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && tracklistType == TracklistType.Standard && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
             {
                 tracklistPaths.Add(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath);
             }
-            else if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && tracklistType == TracklistType.Netplay)
+            else if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && tracklistType == TracklistType.Netplay && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TracklistPath))
             {
                 tracklistPaths.Add(_settingsService.BuildSettings.FilePathSettings.TracklistPath);
             }
