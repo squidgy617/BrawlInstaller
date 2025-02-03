@@ -13,6 +13,7 @@ using BrawlInstaller.StaticClasses;
 using System.Runtime.CompilerServices;
 using BrawlLib.Internal;
 using System.Globalization;
+using BrawlLib.SSBB.ResourceNodes;
 
 namespace BrawlInstaller.Classes
 {
@@ -164,6 +165,12 @@ namespace BrawlInstaller.Classes
             new AsmPath(FileType.SlotExAsmFile, "Source\\P+Ex\\SlotEx.asm", "Table:")
         };
 
+        [JsonProperty("FileNodePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+        public List<FileNodePath> FileNodePaths { get; set; } = new List<FileNodePath>()
+        {
+            new FileNodePath(FileType.TrophyLocation, "pf\\system\\common3.pac", "Misc Data [0]/tyDataList", new List<Type> { typeof(TyDataListNode) }, "PAC file (.pac)|*.pac")
+        };
+
         [JsonIgnore] public string FighterFiles { get => GetFilePath(FileType.FighterFiles); }
         [JsonIgnore] public string BrawlEx { get => GetFilePath(FileType.BrawlEx); }
         [JsonIgnore] public string MasqueradePath { get => GetFilePath(FileType.MasqueradePath); }
@@ -295,7 +302,20 @@ namespace BrawlInstaller.Classes
             Filter = filter;
             Label = label;
         }
-        // TODO: Use the label!!
         public string Label { get; set; }
+    }
+
+    public class FileNodePath : FilePath
+    {
+        public FileNodePath(FileType fileType, string path, string nodePath, List<Type> allowedNodes, string filter = "") : base(fileType, path, filter)
+        {
+            FileType = fileType;
+            Path = path;
+            NodePath = nodePath;
+            AllowedNodes = allowedNodes;
+            Filter = filter;
+        }
+        public string NodePath { get; set; }
+        public List<Type> AllowedNodes { get; set; } = new List<Type>();
     }
 }

@@ -446,7 +446,7 @@ namespace BrawlInstaller.Common
 
     public static class TyDataListEntryNodeExtensions
     {
-        public static TyDataListEntryNode ToTrophy(this TyDataListEntryNode node)
+        public static Trophy ToTrophy(this TyDataListEntryNode node)
         {
             var trophy = new Trophy
             {

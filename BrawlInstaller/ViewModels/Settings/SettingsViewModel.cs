@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
@@ -58,6 +59,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveRandomStageNameLocationCommand => new RelayCommand(param => RemoveRandomStageNameLocation());
         public ICommand SelectRandomStageNameLocationCommand => new RelayCommand(param => SelectRandomStageNameLocation());
         public ICommand ClearRandomStageNameNodeCommand => new RelayCommand(param => ClearRandomStageNameNode());
+        public ICommand SelectNodePathCommand => new RelayCommand(param => SelectNodePath(param));
+        public ICommand ClearNodePathCommand => new RelayCommand(param => ClearNodePath(param));
 
         [ImportingConstructor]
         public SettingsViewModel(ISettingsService settingsService, IFileService fileService, IDialogService dialogService, ICosmeticSettingsViewModel cosmeticSettingsViewModel, IFighterInfoViewModel fighterInfoViewModel)
@@ -94,6 +97,7 @@ namespace BrawlInstaller.ViewModels
         public CompositeCollection FilePathSettings { get => new CompositeCollection
             {
                 new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FilePaths },
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FileNodePaths },
                 new CollectionContainer() { Collection = BuildSettings.FilePathSettings.AsmPaths }
             };
         }
@@ -265,6 +269,26 @@ namespace BrawlInstaller.ViewModels
                 SelectedRandomStageNameLocation.NodePath = string.Empty;
                 OnPropertyChanged(nameof(RandomStageNamesLocations));
             }
+        }
+
+        public void SelectNodePath(object param)
+        {
+            var parameters = (object[])param;
+            var textBox = (TextBox)parameters[0];
+            var allowedTypes = (List<Type>)parameters[1];
+            var relativePath = (string)parameters[2];
+            var filePath = _settingsService.GetBuildFilePath(relativePath);
+            var nodeSelector = _dialogService.OpenNodeSelectorDialog(filePath, "Select trophy location", "Select trophy location", allowedTypes);
+            if (nodeSelector.Result)
+            {
+                textBox.Text = nodeSelector.NodePath;
+            }
+        }
+
+        public void ClearNodePath(object param)
+        {
+            var textBox = (TextBox)param;
+            textBox.Text = string.Empty;
         }
     }
 

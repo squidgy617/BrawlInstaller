@@ -267,6 +267,38 @@
                                         </Grid>
                                     </StackPanel>
                                 </DataTemplate>
+                                <DataTemplate DataType="{x:Type classes:FileNodePath}">
+                                    <StackPanel Orientation="Vertical" Grid.Column="1">
+                                        <Grid HorizontalAlignment="Right">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition SharedSizeGroup="col1"/>
+                                                <ColumnDefinition SharedSizeGroup="col2"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
+                                            <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
+                                        </Grid>
+                                        <Grid HorizontalAlignment="Right">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition SharedSizeGroup="col1"/>
+                                                <ColumnDefinition SharedSizeGroup="col2"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Node Path:"/>
+                                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                                <TextBox Text="{Binding NodePath}" Width="100"/>
+                                                <Button Style="{StaticResource condensedButton}" Content="..." Command="{Binding DataContext.SelectNodePathCommand, ElementName=settingsView}">
+                                                    <Button.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource multiParamConverter}">
+                                                            <Binding RelativeSource="{RelativeSource AncestorType=StackPanel}" Path="Children[0]"/>
+                                                            <Binding Path="AllowedNodes"/>
+                                                            <Binding Path="Path"/>
+                                                        </MultiBinding>
+                                                    </Button.CommandParameter>
+                                                </Button>
+                                                <Button Style="{StaticResource condensedButton}" Content="✕" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=StackPanel}, Path=Children[0]}" Command="{Binding DataContext.ClearNodePathCommand, ElementName=settingsView}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
                             </ItemsControl.Resources>
                         </ItemsControl>
                     </StackPanel>

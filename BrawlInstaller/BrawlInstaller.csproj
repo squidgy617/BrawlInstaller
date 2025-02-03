@@ -106,6 +106,7 @@
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
     <Compile Include="Services\PsaService.cs" />
     <Compile Include="Services\TracklistService.cs" />
+    <Compile Include="Services\TrophyService.cs" />
     <Compile Include="StaticClasses\DefaultCosmetics.cs" />
     <Compile Include="StaticClasses\EffectPacs.cs" />
     <Compile Include="StaticClasses\Encryption.cs" />

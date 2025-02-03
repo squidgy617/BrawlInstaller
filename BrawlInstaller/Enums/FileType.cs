@@ -68,6 +68,8 @@ namespace BrawlInstaller.Enums
         [Description("Code Menu Builder EXE File")]
         CodeMenuBuilder,
         [Description("Netplay Tracklist Folder")]
-        NetplaylistPath
+        NetplaylistPath,
+        [Description("Trophy Location")]
+        TrophyLocation
     }
 }
