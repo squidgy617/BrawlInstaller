@@ -284,7 +284,7 @@
                                             </Grid.ColumnDefinitions>
                                             <Label Content="Node Path:"/>
                                             <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                                <TextBox Text="{Binding NodePath}" Width="100"/>
+                                                <TextBox Text="{Binding NodePath}" Width="100" IsReadOnly="True"/>
                                                 <Button Style="{StaticResource condensedButton}" Content="..." Command="{Binding DataContext.SelectNodePathCommand, ElementName=settingsView}">
                                                     <Button.CommandParameter>
                                                         <MultiBinding Converter="{StaticResource multiParamConverter}">
