@@ -98,6 +98,7 @@
     <Compile Include="Classes\PSA.cs" />
     <Compile Include="Classes\Roster.cs" />
     <Compile Include="Classes\Tracklists.cs" />
+    <Compile Include="Classes\Trophy.cs" />
     <Compile Include="Enums\FighterFileType.cs" />
     <Compile Include="Enums\FileType.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />

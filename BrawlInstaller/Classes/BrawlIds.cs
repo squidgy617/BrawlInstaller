@@ -23,6 +23,7 @@ namespace BrawlInstaller.Classes
         public int? StageId { get => GetId(IdType.Stage); set => SetId(IdType.Stage, value); }
         public int? StageCosmeticId { get => GetId(IdType.StageCosmetic); set => SetId(IdType.StageCosmetic, value); }
         public int? MasqueradeId { get => GetId(IdType.Masquerade); set => SetId(IdType.Masquerade, value); }
+        public int? TrophyId { get => GetId(IdType.Trophy); set => SetId(IdType.Trophy, value); }
 
         private int? GetId(IdType type)
         {

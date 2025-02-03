@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using BrawlInstaller.Classes;
+using BrawlInstaller.Enums;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
@@ -440,6 +441,42 @@ namespace BrawlInstaller.Common
             var revbits = bits.Reverse().ToArray();
             number = BitConverter.ToUInt32(revbits, 0);
             return number;
+        }
+    }
+
+    public static class TyDataListEntryNodeExtensions
+    {
+        public static TyDataListEntryNode ToTrophy(this TyDataListEntryNode node)
+        {
+            var trophy = new Trophy
+            {
+                Name = node.Name,
+                Brres = node.BRRES,
+                Ids = new BrawlIds
+                {
+                    Ids = new List<BrawlId>
+                    {
+                        new BrawlId { Id = node.Id, Type = IdType.Trophy },
+                        new BrawlId { Id = node.ThumbnailIndex, Type = IdType.Thumbnail }
+                    }
+                },
+                GameIcon1 = node.GameIcon1,
+                GameIcon2 = node.GameIcon2,
+                NameIndex = node.NameIndex,
+                GameIndex = node.GameIndex,
+                DescriptionIndex = node.DescriptionIndex,
+                SeriesIndex = node.SeriesIndex,
+                CategoryIndex = node.CategoryIndex,
+                Unknown0x34 = node.Unknown0x34,
+                Unknown0x38 = node.Unknown0x38,
+                Unknown0x40 = node.Unknown0x40,
+                Unknown0x44 = node.Unknown0x44,
+                Unknown0x50 = node.Unknown0x50,
+                Unknown0x54 = node.Unknown0x54,
+                Unknown0x58 = node.Unknown0x58,
+                Unknown0x5C = node.Unknown0x5C
+            };
+            return trophy;
         }
     }
 }
