@@ -167,6 +167,7 @@
     <Compile Include="ViewModels\Stage\StageViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\StringInputViewModel.cs" />
     <Compile Include="ViewModels\Music\TracklistViewModel.cs" />
+    <Compile Include="ViewModels\Trophy\TrophyViewModel.cs" />
     <Compile Include="Views\Dialogs\CheckListView.xaml.cs">
       <DependentUpon>CheckListView.xaml</DependentUpon>
     </Compile>
@@ -235,6 +236,9 @@
     </Compile>
     <Compile Include="Views\Music\TracklistView.xaml.cs">
       <DependentUpon>TracklistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Trophy\TrophyView.xaml.cs">
+      <DependentUpon>TrophyView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -358,6 +362,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Trophy\TrophyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -466,6 +474,7 @@
     <Resource Include="Icons\Unknown.png" />
     <Resource Include="Icons\VIS.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if EXIST "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" (

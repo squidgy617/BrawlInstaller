@@ -73,4 +73,7 @@
     <DataTemplate DataType="{x:Type viewModels:TracklistViewModel}">
         <views:TracklistView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:TrophyViewModel}">
+        <views:TrophyView/>
+    </DataTemplate>
 </ResourceDictionary>
