@@ -233,6 +233,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string CodeMenuConfig { get => GetFilePath(FileType.CodeMenuConfig); }
         [JsonIgnore] public string CodeMenuBuilder { get =>  GetFilePath(FileType.CodeMenuBuilder); }
         [JsonIgnore] public string NetplaylistPath { get => GetFilePath(FileType.NetplaylistPath); }
+        [JsonIgnore] public FileNodePath TrophyLocation { get => GetFileNodePath(FileType.TrophyLocation); }
 
         // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -270,6 +271,12 @@ namespace BrawlInstaller.Classes
         {
             var label = AsmPaths.FirstOrDefault(x => x.FileType == fileType)?.Label;
             return label;
+        }
+
+        private FileNodePath GetFileNodePath(FileType fileType)
+        {
+            var path = FileNodePaths.FirstOrDefault(x => x.FileType == fileType);
+            return path;
         }
     }
 
