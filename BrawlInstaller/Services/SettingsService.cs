@@ -204,7 +204,14 @@ namespace BrawlInstaller.Services
         /// <returns>Full build path of file</returns>
         public string GetBuildFilePath(string path)
         {
-            return Path.Combine(AppSettings.BuildPath, path);
+            if (!string.IsNullOrEmpty(path))
+            {
+                return Path.Combine(AppSettings.BuildPath, path);
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>

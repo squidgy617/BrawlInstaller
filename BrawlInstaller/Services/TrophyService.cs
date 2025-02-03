@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BrawlLib.SSBB.ResourceNodes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace BrawlInstaller.Services
 {
     public interface ITrophyService
     {
-
+        /// <inheritdoc cref="TrophyService.GetTrophyList()"/>
+        List<string> GetTrophyList();
     }
 
     [Export(typeof(ITrophyService))]
@@ -30,5 +32,29 @@ namespace BrawlInstaller.Services
 
         // Methods
 
+        /// <summary>
+        /// Get list of trophies in build
+        /// </summary>
+        /// <returns>List of trophies</returns>
+        public List<string> GetTrophyList()
+        {
+            var trophyList = new List<string>();
+            var trophyPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyLocation.Path);
+            var nodePath = _settingsService.BuildSettings.FilePathSettings.TrophyLocation.NodePath;
+            if (!string.IsNullOrEmpty(trophyPath))
+            {
+                var rootNode = _fileService.OpenFile(trophyPath);
+                if (rootNode != null)
+                {
+                    var trophyNodeList = rootNode.FindChild(nodePath) as TyDataListNode;
+                    if (trophyNodeList != null)
+                    {
+                        trophyList = trophyNodeList.Children.Select(x => x.Name).ToList();
+                    }
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+            return trophyList;
+        }
     }
 }
