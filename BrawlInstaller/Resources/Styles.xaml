@@ -38,6 +38,22 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
+    <Style x:Key="resizeContainer" TargetType="ContentControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="{TemplateBinding MinWidth}"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentControl Content="{TemplateBinding Content}" HorizontalAlignment="Stretch"/>
+                        <GridSplitter Grid.Column="1" Width="3"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <!--Default styles-->
     <Style TargetType="TextBox">
         <Setter Property="HorizontalAlignment" Value="Left"/>
