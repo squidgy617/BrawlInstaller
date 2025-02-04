@@ -1,4 +1,5 @@
-﻿using BrawlInstaller.Common;
+﻿using BrawlInstaller.Classes;
+using BrawlInstaller.Common;
 using BrawlInstaller.Services;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace BrawlInstaller.ViewModels
     internal class TrophyViewModel : ViewModelBase, ITrophyViewModel
     {
         // Private properties
-        private ObservableCollection<string> _trophyList;
+        private ObservableCollection<Trophy> _trophyList;
 
         // Services
         ISettingsService _settingsService;
@@ -35,11 +36,11 @@ namespace BrawlInstaller.ViewModels
             _fileService = fileService;
             _trophyService = trophyService;
 
-            TrophyList = new ObservableCollection<string>(_trophyService.GetTrophyList());
+            TrophyList = new ObservableCollection<Trophy>(_trophyService.GetTrophyList());
             OnPropertyChanged(nameof(TrophyList));
         }
 
         // Properties
-        public ObservableCollection<string> TrophyList { get => _trophyList; set { _trophyList = value; OnPropertyChanged(nameof(TrophyList)); } }
+        public ObservableCollection<Trophy> TrophyList { get => _trophyList; set { _trophyList = value; OnPropertyChanged(nameof(TrophyList)); } }
     }
 }
