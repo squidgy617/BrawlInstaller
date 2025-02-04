@@ -26,7 +26,9 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Label x:Name="fighterListLabel" HorizontalAlignment="Left" Content="Fighters:" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ToolTip="List of fighters in build"/>
-            <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" Grid.Row="1" Grid.ColumnSpan="2" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Width="150" Height="400" MaxHeight="400"/>
+            <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" Grid.ColumnSpan="2" MinWidth="150">
+                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterInfoList}" SelectedValue="{Binding SelectedFighterInfo, Mode=TwoWay}" DisplayMemberPath="EntryName" Height="400" MaxHeight="400" HorizontalAlignment="Stretch"/>
+            </ContentControl>
             <Button x:Name="loadButton" Content="Find Missing Fighters" Width="Auto" Grid.Row="2" Command="{Binding LoadFightersCommand}"/>
             <!--<Button x:Name="saveButton" Content="Save" Grid.Row="2" Grid.Column="1" Command="{Binding SaveFightersCommand}"/>-->
             <Grid x:Name="buttonGrid" Grid.Row="1" Grid.Column="2">

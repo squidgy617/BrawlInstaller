@@ -29,17 +29,19 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <ComboBox x:Name="tracklistOptionsDropDown" ItemsSource="{Binding TracklistOptions}" SelectedItem="{Binding SelectedTracklistOption}" Width="120" DisplayMemberPath="Name"/>
-                            <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Width="120" Height="400" Grid.Row="1">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Path=., Converter={StaticResource filePathNoExtensionConverter}}" ToolTip="{Binding}">
-                                            <TextBlock.InputBindings>
-                                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTracklistCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
-                                            </TextBlock.InputBindings>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                            <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" MinWidth="120">
+                                <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Height="400" HorizontalAlignment="Stretch">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=., Converter={StaticResource filePathNoExtensionConverter}}" ToolTip="{Binding}">
+                                                <TextBlock.InputBindings>
+                                                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTracklistCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                                </TextBlock.InputBindings>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </ContentControl>
                         </Grid>
                     </ScrollViewer>
                     <StackPanel Grid.Row="1">
