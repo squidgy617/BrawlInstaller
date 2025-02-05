@@ -10,6 +10,28 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListBox ItemsSource="{Binding TrophyList}" DisplayMemberPath="Name" Height="400" Width="120"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1"/>
+        <Grid>
+            <GroupBox x:Name="trophyListGroupBox" Header="Trophies" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <ListBox ItemsSource="{Binding TrophyList}" DisplayMemberPath="Name" Height="400" HorizontalAlignment="Stretch"/>
+                        </ContentControl>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="1">
+                        <Button Content="Test"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+        </Grid>
     </Grid>
 </UserControl>
