@@ -170,7 +170,8 @@ namespace BrawlInstaller.Classes
         [JsonProperty("FileNodePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<FileNodePath> FileNodePaths { get; set; } = new List<FileNodePath>()
         {
-            new FileNodePath(FileType.TrophyLocation, "pf\\system\\common3.pac", "Misc Data [0]/tyDataList", new List<Type> { typeof(TyDataListNode) }, "PAC file (.pac)|*.pac")
+            new FileNodePath(FileType.TrophyLocation, "pf\\system\\common3.pac", "Misc Data [0]/tyDataList", new List<Type> { typeof(TyDataListNode) }, "PAC file (.pac)|*.pac"),
+            new FileNodePath(FileType.TrophyGameIconsLocation, "pf\\menu\\collection\\Figure.brres", "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0", new List<Type> {typeof(PAT0TextureNode)}, "BRRES file (.brres)|*.brres")
         };
 
         [JsonIgnore] public string FighterFiles { get => GetFilePath(FileType.FighterFiles); }
@@ -238,6 +239,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public FileNodePath TrophyLocation { get => GetFileNodePath(FileType.TrophyLocation); }
         [JsonIgnore] public string TrophyNames { get => GetFilePath(FileType.TrophyNames); }
         [JsonIgnore] public string TrophyDescriptions { get => GetFilePath(FileType.TrophyDescriptions); }
+        [JsonIgnore] public FileNodePath TrophyGameIconsLocation { get => GetFileNodePath(FileType.TrophyGameIconsLocation); }
 
         // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]

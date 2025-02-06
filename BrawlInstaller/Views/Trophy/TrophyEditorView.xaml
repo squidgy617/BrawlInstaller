@@ -41,11 +41,27 @@
         <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="5"/>
         <TextBox x:Name="descriptionTextBox" Text="{Binding Trophy.Description}" Width="180" Height="100" Grid.Row="5" Grid.Column="1" TextWrapping="Wrap"/>
         <Label x:Name="gameName1Label" Content="First Appearance:" Grid.Row="6"/>
-        <TextBox x:Name="gameName1TextBox" Text="{Binding Trophy.GameNames[0]}" Grid.Row="6" Grid.Column="1" Width="120"/>
-        <!--placeholder for icon select-->
-        <Label x:Name="gameName2Label" Content="Last Appearance:" Grid.Row="8"/>
-        <TextBox x:Name="gameName2TextBox" Text="{Binding Trophy.GameNames[1]}" Grid.Row="8" Grid.Column="1" Width="120"/>
-        <!--placeholder for icon select-->
+        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+            <StackPanel>
+                <TextBox x:Name="gameName1TextBox" Text="{Binding Trophy.GameNames[0]}" Width="120"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Icon:"/>
+                    <ComboBox x:Name="gameIcon1DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon1}" Width="80"/>
+                </StackPanel>
+            </StackPanel>
+            <Image x:Name="gameIcon1Image" Source="{Binding GameIcon1}" Width="64" Height="32"/>
+        </StackPanel>
+        <Label x:Name="gameName2Label" Content="Last Appearance:" Grid.Row="7"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
+            <StackPanel>
+                <TextBox x:Name="gameName2TextBox" Text="{Binding Trophy.GameNames[1]}" Width="120"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Icon:"/>
+                    <ComboBox x:Name="gameIcon2DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon2}" Width="80"/>
+                </StackPanel>
+            </StackPanel>
+            <Image x:Name="gameIcon2Image" Source="{Binding GameIcon2}" Width="64" Height="32"/>
+        </StackPanel>
         <Label x:Name="seriesLabel" Content="Series:" Grid.Row="10"/>
         <ComboBox x:Name="seriesDropDown" ItemsSource="{Binding TrophySeries}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.SeriesIndex}" Grid.Row="10" Grid.Column="1" Width="120"/>
         <Label x:Name="categoryLabel" Content="Category:" Grid.Row="11"/>

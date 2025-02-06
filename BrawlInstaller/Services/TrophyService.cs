@@ -17,6 +17,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="TrophyService.LoadTrophyData(Trophy)"/>
         Trophy LoadTrophyData(Trophy trophy);
+
+        /// <inheritdoc cref="TrophyService.GetTrophyGameIcons()"/>
+        List<TrophyGameIcon> GetTrophyGameIcons();
     }
 
     [Export(typeof(ITrophyService))]
@@ -115,6 +118,33 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(descriptionNode);
             }
             return trophy;
+        }
+
+        /// <summary>
+        /// Get trophy game icons in build
+        /// </summary>
+        /// <returns>List of trophy game icons</returns>
+        public List<TrophyGameIcon> GetTrophyGameIcons()
+        {
+            var gameIcons = new List<TrophyGameIcon>();
+            var trophyGameIconPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyGameIconsLocation.Path);
+            var rootNode = _fileService.OpenFile(trophyGameIconPath);
+            if (rootNode != null)
+            {
+                var pat0 = rootNode.FindChild(_settingsService.BuildSettings.FilePathSettings.TrophyGameIconsLocation.NodePath);
+                if (pat0 != null)
+                {
+                    foreach(PAT0TextureEntryNode child in pat0.Children)
+                    {
+                        var newGameIcon = new TrophyGameIcon();
+                        newGameIcon.Id = (int)child.FrameIndex;
+                        newGameIcon.Image = child.GetImage(0)?.ToBitmapImage();
+                        gameIcons.Add(newGameIcon);
+                    }
+                }
+                _fileService.CloseFile(rootNode);
+            }
+            return gameIcons;
         }
     }
 }

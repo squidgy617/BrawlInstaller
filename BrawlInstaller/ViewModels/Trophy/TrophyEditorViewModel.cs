@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -23,6 +24,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private Trophy _trophy;
+        private List<TrophyGameIcon> _gameIconList;
 
         // Services
         ISettingsService _settingsService;
@@ -38,6 +40,8 @@ namespace BrawlInstaller.ViewModels
             _fileService = fileService;
             _trophyService = trophyService;
 
+            GameIconList = new List<TrophyGameIcon>();
+
             WeakReferenceMessenger.Default.Register<LoadTrophyMessage>(this, (recipient, message) =>
             {
                 LoadTrophy(message);
@@ -48,12 +52,27 @@ namespace BrawlInstaller.ViewModels
         public Trophy Trophy { get => _trophy; set { _trophy = value; OnPropertyChanged(nameof(Trophy)); } }
         public Dictionary<string, int> TrophySeries { get => Trophies.Series; }
         public Dictionary<string, int> TrophyCategories { get => Trophies.Categories; }
+        public List<TrophyGameIcon> GameIconList { get => _gameIconList; set { _gameIconList = value; OnPropertyChanged(nameof(GameIconList)); } }
+
+        [DependsUpon(nameof(Trophy))]
+        public int? SelectedGameIcon1 { get => Trophy?.GameIcon1; set { Trophy.GameIcon1 = (value ?? 0); OnPropertyChanged(nameof(SelectedGameIcon1)); } }
+
+        [DependsUpon(nameof(Trophy))]
+        public int? SelectedGameIcon2 { get => Trophy?.GameIcon2; set { Trophy.GameIcon2 = (value ?? 0); OnPropertyChanged(nameof(SelectedGameIcon2)); } }
+
+        [DependsUpon(nameof(SelectedGameIcon1))]
+        public BitmapImage GameIcon1 { get => GameIconList.FirstOrDefault(x => x.Id == Trophy?.GameIcon1)?.Image; }
+
+        [DependsUpon(nameof(SelectedGameIcon2))]
+        public BitmapImage GameIcon2 { get => GameIconList.FirstOrDefault(x => x.Id == Trophy?.GameIcon2)?.Image; }
 
         // Methods
         public void LoadTrophy(LoadTrophyMessage message)
         {
+            GameIconList = _trophyService.GetTrophyGameIcons();
             var trophy = message.Value;
             Trophy = _trophyService.LoadTrophyData(trophy);
+            OnPropertyChanged(nameof(GameIconList));
             OnPropertyChanged(nameof(Trophy));
         }
     }
