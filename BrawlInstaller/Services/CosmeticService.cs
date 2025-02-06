@@ -31,6 +31,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CosmeticService.GetFighterCosmetics(BrawlIds)"/>
         List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds);
 
+        /// <inheritdoc cref="CosmeticService.GetFighterCosmetics(BrawlIds)"/>
+        List<Cosmetic> GetTrophyCosmetics(BrawlIds trophyIds);
+
         /// <inheritdoc cref="CosmeticService.GetStageCosmetics(BrawlIds)"/>
         List<Cosmetic> GetStageCosmetics(BrawlIds stageIds);
 
@@ -1632,6 +1635,21 @@ namespace BrawlInstaller.Services
             if (_settingsService.AppSettings.ModifyHDTextures)
                 PreloadHDTextures();
             return GetCosmetics(fighterIds, definitions, true);
+        }
+
+        /// <summary>
+        /// Get a list of trophy cosmetics
+        /// </summary>
+        /// <param name="trophyIds">Trophy IDs to retrieve cosmetics for</param>
+        /// <returns>List of cosmetics</returns>
+        public List<Cosmetic> GetTrophyCosmetics(BrawlIds trophyIds)
+        {
+            var settings = _settingsService.BuildSettings;
+            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.TrophyThumbnail).ToList();
+            // Load HD textures in advance
+            if (_settingsService.AppSettings.ModifyHDTextures)
+                PreloadHDTextures();
+            return GetCosmetics(trophyIds, definitions, true);
         }
 
         /// <summary>

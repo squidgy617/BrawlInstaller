@@ -14,57 +14,85 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Label x:Name="nameLabel" Content="Name:"/>
-        <TextBox x:Name="nameTextBox" Text="{Binding Trophy.Name}" Grid.Column="1" Width="120"/>
-        <Label x:Name="brresLabel" Content="BRRES Name:" Grid.Row="1"/>
-        <TextBox x:Name="brresTextBox" Text="{Binding Trophy.Brres}" Grid.Column="1" Grid.Row="1" Width="120"/>
-        <Label x:Name="fileLabel" Content="File:" Grid.Row="2"/>
-        <userControls:FileBox x:Name="brresFileBox" TextBoxWidth="120" Text="{Binding Trophy.BrresFile}" Grid.Column="1" Grid.Row="2" Filter="BRRES file (.brres)|*.brres"/>
-        <Label x:Name="idLabel" Content="Trophy ID:" Grid.Row="3"/>
-        <TextBox x:Name="idTextBox" Text="{Binding Trophy.Ids.TrophyId}" Grid.Row="3" Grid.Column="1"/>
-        <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="4"/>
-        <TextBox x:Name="displayNameTextBox" Text="{Binding Trophy.DisplayName}" Grid.Row="4" Grid.Column="1" Width="120"/>
-        <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="5"/>
-        <TextBox x:Name="descriptionTextBox" Text="{Binding Trophy.Description}" Width="180" Height="100" Grid.Row="5" Grid.Column="1" TextWrapping="Wrap"/>
-        <Label x:Name="gameName1Label" Content="First Appearance:" Grid.Row="6"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
-            <StackPanel>
-                <TextBox x:Name="gameName1TextBox" Text="{Binding Trophy.GameNames[0]}" Width="120"/>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Icon:"/>
-                    <ComboBox x:Name="gameIcon1DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon1}" Width="80"/>
+        <Grid x:Name="trophyPropertiesGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="nameLabel" Content="Name:"/>
+            <TextBox x:Name="nameTextBox" Text="{Binding Trophy.Name}" Grid.Column="1" Width="120"/>
+            <Label x:Name="brresLabel" Content="BRRES Name:" Grid.Row="1"/>
+            <TextBox x:Name="brresTextBox" Text="{Binding Trophy.Brres}" Grid.Column="1" Grid.Row="1" Width="120"/>
+            <Label x:Name="fileLabel" Content="File:" Grid.Row="2"/>
+            <userControls:FileBox x:Name="brresFileBox" TextBoxWidth="120" Text="{Binding Trophy.BrresFile}" Grid.Column="1" Grid.Row="2" Filter="BRRES file (.brres)|*.brres"/>
+            <Label x:Name="idLabel" Content="Trophy ID:" Grid.Row="3"/>
+            <TextBox x:Name="idTextBox" Text="{Binding Trophy.Ids.TrophyId}" Grid.Row="3" Grid.Column="1"/>
+            <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="4"/>
+            <TextBox x:Name="displayNameTextBox" Text="{Binding Trophy.DisplayName}" Grid.Row="4" Grid.Column="1" Width="120"/>
+            <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="5"/>
+            <TextBox x:Name="descriptionTextBox" Text="{Binding Trophy.Description}" Width="180" Height="100" Grid.Row="5" Grid.Column="1" TextWrapping="Wrap"/>
+            <Label x:Name="gameName1Label" Content="First Appearance:" Grid.Row="6"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+                <StackPanel>
+                    <TextBox x:Name="gameName1TextBox" Text="{Binding Trophy.GameNames[0]}" Width="120"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Icon:"/>
+                        <ComboBox x:Name="gameIcon1DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon1}" Width="80"/>
+                    </StackPanel>
                 </StackPanel>
+                <Image x:Name="gameIcon1Image" Source="{Binding GameIcon1}" Width="64" Height="32"/>
             </StackPanel>
-            <Image x:Name="gameIcon1Image" Source="{Binding GameIcon1}" Width="64" Height="32"/>
-        </StackPanel>
-        <Label x:Name="gameName2Label" Content="Last Appearance:" Grid.Row="7"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
-            <StackPanel>
-                <TextBox x:Name="gameName2TextBox" Text="{Binding Trophy.GameNames[1]}" Width="120"/>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Icon:"/>
-                    <ComboBox x:Name="gameIcon2DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon2}" Width="80"/>
+            <Label x:Name="gameName2Label" Content="Last Appearance:" Grid.Row="7"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
+                <StackPanel>
+                    <TextBox x:Name="gameName2TextBox" Text="{Binding Trophy.GameNames[1]}" Width="120"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Icon:"/>
+                        <ComboBox x:Name="gameIcon2DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon2}" Width="80"/>
+                    </StackPanel>
                 </StackPanel>
+                <Image x:Name="gameIcon2Image" Source="{Binding GameIcon2}" Width="64" Height="32"/>
             </StackPanel>
-            <Image x:Name="gameIcon2Image" Source="{Binding GameIcon2}" Width="64" Height="32"/>
-        </StackPanel>
-        <Label x:Name="seriesLabel" Content="Series:" Grid.Row="10"/>
-        <ComboBox x:Name="seriesDropDown" ItemsSource="{Binding TrophySeries}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.SeriesIndex}" Grid.Row="10" Grid.Column="1" Width="120"/>
-        <Label x:Name="categoryLabel" Content="Category:" Grid.Row="11"/>
-        <ComboBox x:Name="categoryDropDown" ItemsSource="{Binding TrophyCategories}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.CategoryIndex}" Grid.Row="11" Grid.Column="1" Width="120"/>
+            <Label x:Name="seriesLabel" Content="Series:" Grid.Row="10"/>
+            <ComboBox x:Name="seriesDropDown" ItemsSource="{Binding TrophySeries}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.SeriesIndex}" Grid.Row="10" Grid.Column="1" Width="120"/>
+            <Label x:Name="categoryLabel" Content="Category:" Grid.Row="11"/>
+            <ComboBox x:Name="categoryDropDown" ItemsSource="{Binding TrophyCategories}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.CategoryIndex}" Grid.Row="11" Grid.Column="1" Width="120"/>
+        </Grid>
+        <GroupBox x:Name="thumbnailGroupBox" Header="Thumbnail" Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="imageLabel" Content="Image:" HorizontalAlignment="Left"/>
+                <Image x:Name="image" Source="{Binding Trophy.Thumbnail.Image}" Width="112" Height="96" Grid.Row="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Button x:Name="imageButton" Content="Browse..." Grid.Row="2"/>
+                <Button x:Name="imageClearButton" Content="Clear" Grid.Row="3"/>
+                <Label x:Name="hdImageLabel" Content="HD Image:" HorizontalAlignment="Left" Grid.Column="1"/>
+                <Image x:Name="hdImage" Source="{Binding Trophy.Thumbnail.HDImage}" Width="112" Height="96" Grid.Row="1" Grid.Column="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Button x:Name="hdImageButton" Content="Browse..." Grid.Row="2" Grid.Column="1"/>
+                <Button x:Name="hdImageClearButton" Content="Clear" Grid.Row="3" Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>

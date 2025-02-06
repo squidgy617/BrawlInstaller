@@ -117,6 +117,9 @@ namespace BrawlInstaller.Services
                 }
                 _fileService.CloseFile(descriptionNode);
             }
+            // Get thumbnail
+            var cosmetics = _cosmeticService.GetTrophyCosmetics(trophy.Ids);
+            trophy.Thumbnail = cosmetics.FirstOrDefault();
             return trophy;
         }
 
