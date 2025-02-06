@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Services;
+using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,8 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public Trophy Trophy { get => _trophy; set { _trophy = value; OnPropertyChanged(nameof(Trophy)); } }
+        public Dictionary<string, int> TrophySeries { get => Trophies.Series; }
+        public Dictionary<string, int> TrophyCategories { get => Trophies.Categories; }
 
         // Methods
         public void LoadTrophy(LoadTrophyMessage message)

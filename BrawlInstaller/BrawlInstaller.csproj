@@ -136,6 +136,7 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\StageService.cs" />
+    <Compile Include="StaticClasses\Trophies.cs" />
     <Compile Include="UserControls\FileBox.xaml.cs">
       <DependentUpon>FileBox.xaml</DependentUpon>
     </Compile>

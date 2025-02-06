@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Classes
 {
@@ -78,5 +79,11 @@ namespace BrawlInstaller.Classes
             copy.DescriptionIndex = DescriptionIndex;
             return copy;
         }
+    }
+
+    public class TrophyGameIcon
+    {
+        public int Id { get; set; }
+        public BitmapImage Image { get; set; }
     }
 }
