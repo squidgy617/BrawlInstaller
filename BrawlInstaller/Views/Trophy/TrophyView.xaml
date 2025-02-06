@@ -24,11 +24,11 @@
                     </Grid.RowDefinitions>
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <ListBox ItemsSource="{Binding TrophyList}" DisplayMemberPath="Name" Height="400" HorizontalAlignment="Stretch"/>
+                            <ListBox ItemsSource="{Binding TrophyList}" SelectedItem="{Binding SelectedTrophy}" DisplayMemberPath="Name" Height="400" HorizontalAlignment="Stretch"/>
                         </ContentControl>
                     </ScrollViewer>
                     <StackPanel Grid.Row="1">
-                        <Button Content="Test"/>
+                        <Button Content="Load" Command="{Binding LoadTrophyCommand}"/>
                     </StackPanel>
                 </Grid>
             </GroupBox>

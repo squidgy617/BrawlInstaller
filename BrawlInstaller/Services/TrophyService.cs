@@ -14,6 +14,9 @@ namespace BrawlInstaller.Services
     {
         /// <inheritdoc cref="TrophyService.GetTrophyList()"/>
         List<Trophy> GetTrophyList();
+
+        /// <inheritdoc cref="TrophyService.LoadTrophyData(Trophy)"/>
+        Trophy LoadTrophyData(Trophy trophy);
     }
 
     [Export(typeof(ITrophyService))]
@@ -57,6 +60,61 @@ namespace BrawlInstaller.Services
                 }
             }
             return trophyList;
+        }
+
+        /// <summary>
+        /// Load full data for a trophy
+        /// </summary>
+        /// <param name="trophy">Trophy to load full data for</param>
+        /// <returns>Trophy</returns>
+        public Trophy LoadTrophyData(Trophy trophy)
+        {
+            var trophyPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyLocation.Path);
+            var trophyNamePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyNames);
+            var trophyDescriptionPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyDescriptions);
+            var nodePath = _settingsService.BuildSettings.FilePathSettings.TrophyLocation.NodePath;
+            // Get trophy data
+            var rootNode = _fileService.OpenFile(trophyPath);
+            if (rootNode != null )
+            {
+                var trophyNodeList = rootNode.FindChild(nodePath) as TyDataListNode;
+                if (trophyNodeList != null)
+                {
+                    var trophyNode = trophyNodeList.Children.FirstOrDefault(x => ((TyDataListEntryNode)x).Id == trophy.Ids.TrophyId && ((TyDataListEntryNode)x).Name == trophy.Name) as TyDataListEntryNode;
+                    if (trophyNode != null)
+                    {
+                        trophy = trophyNode.ToTrophy();
+                    }
+                }
+                _fileService.CloseFile(rootNode);
+            }
+            // Get trophy name
+            var namesNode = _fileService.OpenFile(trophyNamePath) as MSBinNode; 
+            if (namesNode != null)
+            {
+                if (trophy.NameIndex != null && namesNode._strings.Count > trophy.NameIndex)
+                {
+                    trophy.DisplayName = namesNode._strings[trophy.NameIndex.Value];
+                }
+                // Get game names
+                if (trophy.GameIndex != null && namesNode._strings.Count > trophy.GameIndex)
+                {
+                    var gameString = namesNode._strings[trophy.GameIndex.Value];
+                    trophy.GameNames = gameString.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList();
+                }
+                _fileService.CloseFile(namesNode);
+            }
+            // Get trophy description
+            var descriptionNode = _fileService.OpenFile(trophyDescriptionPath) as MSBinNode;
+            if (descriptionNode != null)
+            {
+                if (trophy.DescriptionIndex != null && descriptionNode._strings.Count > trophy.DescriptionIndex)
+                {
+                    trophy.Description = descriptionNode._strings[trophy.DescriptionIndex.Value];
+                }
+                _fileService.CloseFile(descriptionNode);
+            }
+            return trophy;
         }
     }
 }

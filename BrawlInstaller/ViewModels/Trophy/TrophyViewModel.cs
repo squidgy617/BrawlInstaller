@@ -8,6 +8,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -21,6 +22,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private ObservableCollection<Trophy> _trophyList;
+        private Trophy _selectedTrophy;
 
         // Services
         ISettingsService _settingsService;
@@ -28,6 +30,7 @@ namespace BrawlInstaller.ViewModels
         ITrophyService _trophyService;
 
         // Commands
+        public ICommand LoadTrophyCommand => new RelayCommand(param => LoadTrophy());
 
         [ImportingConstructor]
         public TrophyViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService)
@@ -42,5 +45,12 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public ObservableCollection<Trophy> TrophyList { get => _trophyList; set { _trophyList = value; OnPropertyChanged(nameof(TrophyList)); } }
+        public Trophy SelectedTrophy { get => _selectedTrophy; set { _selectedTrophy = value; OnPropertyChanged(nameof(SelectedTrophy)); } }
+
+        // Methods
+        public void LoadTrophy()
+        {
+            var test = _trophyService.LoadTrophyData(SelectedTrophy);
+        }
     }
 }

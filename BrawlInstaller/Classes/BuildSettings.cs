@@ -150,7 +150,9 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.GctRealMateExe, "GCTRealMate.exe", "EXE file (.exe)|*.exe"),
             new FilePath(FileType.TargetBreakFolder, "pf\\stage\\stageslot\\tBreak\\"),
             new FilePath(FileType.CodeMenuConfig, "Code Menu Builder\\EX_Config.xml", "XML file (.xml)|*.xml"),
-            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe")
+            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe"),
+            new FilePath(FileType.TrophyNames, "pf\\toy\\fig\\ty_fig_name_list.msbin", "MSBIN file (.msbin)|*.msbin"),
+            new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin", "MSBIn file (.msbin)|*.msbin")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -234,6 +236,8 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string CodeMenuBuilder { get =>  GetFilePath(FileType.CodeMenuBuilder); }
         [JsonIgnore] public string NetplaylistPath { get => GetFilePath(FileType.NetplaylistPath); }
         [JsonIgnore] public FileNodePath TrophyLocation { get => GetFileNodePath(FileType.TrophyLocation); }
+        [JsonIgnore] public string TrophyNames { get => GetFilePath(FileType.TrophyNames); }
+        [JsonIgnore] public string TrophyDescriptions { get => GetFilePath(FileType.TrophyDescriptions); }
 
         // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]

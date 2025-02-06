@@ -12,13 +12,14 @@ namespace BrawlInstaller.Classes
     {
         public string Name { get; set; } = "New_Trophy";
         public string Brres { get; set; } = "New_Trophy";
+        public string BrresFile { get; set; }
         public BrawlIds Ids { get; set; }
         [JsonIgnore] public Cosmetic Thumbnail { get; set; }
         public int GameIcon1 { get; set; } = 0;
         public int GameIcon2 { get; set; } = 0;
         public string DisplayName { get; set; } = "New Trophy";
         [JsonIgnore] public int? NameIndex { get; set; }
-        public string GameName { get; set; } = string.Empty;
+        public List<string> GameNames { get; set; } = new List<string>();
         [JsonIgnore] public int? GameIndex { get; set; }
         public string Description { get; set; } = "A new trophy.";
         [JsonIgnore] public int? DescriptionIndex { get; set; }

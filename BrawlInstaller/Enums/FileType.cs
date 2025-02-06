@@ -70,6 +70,10 @@ namespace BrawlInstaller.Enums
         [Description("Netplay Tracklist Folder")]
         NetplaylistPath,
         [Description("Trophy Location")]
-        TrophyLocation
+        TrophyLocation,
+        [Description("Trophy Name List")]
+        TrophyNames,
+        [Description("Trophy Description List")]
+        TrophyDescriptions
     }
 }
