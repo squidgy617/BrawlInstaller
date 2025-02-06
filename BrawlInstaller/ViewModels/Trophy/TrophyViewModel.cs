@@ -1,6 +1,8 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Services;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,15 +35,20 @@ namespace BrawlInstaller.ViewModels
         public ICommand LoadTrophyCommand => new RelayCommand(param => LoadTrophy());
 
         [ImportingConstructor]
-        public TrophyViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService)
+        public TrophyViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, ITrophyEditorViewModel trophyEditorViewModel)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _trophyService = trophyService;
 
+            TrophyEditorViewModel = trophyEditorViewModel;
+
             TrophyList = new ObservableCollection<Trophy>(_trophyService.GetTrophyList());
             OnPropertyChanged(nameof(TrophyList));
         }
+
+        // ViewModels
+        public ITrophyEditorViewModel TrophyEditorViewModel { get; }
 
         // Properties
         public ObservableCollection<Trophy> TrophyList { get => _trophyList; set { _trophyList = value; OnPropertyChanged(nameof(TrophyList)); } }
@@ -50,7 +57,15 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadTrophy()
         {
-            var test = _trophyService.LoadTrophyData(SelectedTrophy);
+            WeakReferenceMessenger.Default.Send(new LoadTrophyMessage(SelectedTrophy));
+        }
+    }
+
+    // Messages
+    public class LoadTrophyMessage : ValueChangedMessage<Trophy>
+    {
+        public LoadTrophyMessage(Trophy trophy) : base(trophy)
+        {
         }
     }
 }

@@ -167,6 +167,7 @@
     <Compile Include="ViewModels\Stage\StageViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\StringInputViewModel.cs" />
     <Compile Include="ViewModels\Music\TracklistViewModel.cs" />
+    <Compile Include="ViewModels\Trophy\TrophyEditorViewModel.cs" />
     <Compile Include="ViewModels\Trophy\TrophyViewModel.cs" />
     <Compile Include="Views\Dialogs\CheckListView.xaml.cs">
       <DependentUpon>CheckListView.xaml</DependentUpon>
@@ -236,6 +237,9 @@
     </Compile>
     <Compile Include="Views\Music\TracklistView.xaml.cs">
       <DependentUpon>TracklistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Trophy\TrophyEditorView.xaml.cs">
+      <DependentUpon>TrophyEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Trophy\TrophyView.xaml.cs">
       <DependentUpon>TrophyView.xaml</DependentUpon>
@@ -359,6 +363,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Music\TracklistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Trophy\TrophyEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
