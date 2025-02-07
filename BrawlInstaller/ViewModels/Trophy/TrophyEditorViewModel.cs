@@ -66,6 +66,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedGameIcon2))]
         public BitmapImage GameIcon2 { get => GameIconList.FirstOrDefault(x => x.Id == Trophy?.GameIcon2)?.Image; }
 
+        [DependsUpon(nameof(Trophy))]
+        public Cosmetic Thumbnail { get => Trophy?.Thumbnails?.Items.FirstOrDefault(); }
+
         // Methods
         public void LoadTrophy(LoadTrophyMessage message)
         {

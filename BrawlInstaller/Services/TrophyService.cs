@@ -119,7 +119,7 @@ namespace BrawlInstaller.Services
             }
             // Get thumbnail
             var cosmetics = _cosmeticService.GetTrophyCosmetics(trophy.Ids);
-            trophy.Thumbnail = cosmetics.FirstOrDefault();
+            trophy.Thumbnails.Items = cosmetics;
             return trophy;
         }
 

@@ -85,11 +85,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label x:Name="imageLabel" Content="Image:" HorizontalAlignment="Left"/>
-                <Image x:Name="image" Source="{Binding Trophy.Thumbnail.Image}" Width="112" Height="96" Grid.Row="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Image x:Name="image" Source="{Binding Thumbnail.Image}" Width="112" Height="96" Grid.Row="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                 <Button x:Name="imageButton" Content="Browse..." Grid.Row="2"/>
                 <Button x:Name="imageClearButton" Content="Clear" Grid.Row="3"/>
                 <Label x:Name="hdImageLabel" Content="HD Image:" HorizontalAlignment="Left" Grid.Column="1"/>
-                <Image x:Name="hdImage" Source="{Binding Trophy.Thumbnail.HDImage}" Width="112" Height="96" Grid.Row="1" Grid.Column="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Image x:Name="hdImage" Source="{Binding Thumbnail.HDImage}" Width="112" Height="96" Grid.Row="1" Grid.Column="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                 <Button x:Name="hdImageButton" Content="Browse..." Grid.Row="2" Grid.Column="1"/>
                 <Button x:Name="hdImageClearButton" Content="Clear" Grid.Row="3" Grid.Column="1"/>
             </Grid>
