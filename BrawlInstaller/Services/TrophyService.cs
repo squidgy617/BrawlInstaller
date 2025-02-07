@@ -4,6 +4,7 @@ using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="TrophyService.GetTrophyGameIcons()"/>
         List<TrophyGameIcon> GetTrophyGameIcons();
+
+        /// <inheritdoc cref="TrophyService.SaveTrophy(Trophy, Trophy)"/>
+        Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy);
     }
 
     [Export(typeof(ITrophyService))]
@@ -117,6 +121,11 @@ namespace BrawlInstaller.Services
                 }
                 _fileService.CloseFile(descriptionNode);
             }
+            // Get BRRES
+            var trophyBrresPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
+            var files = _fileService.GetFiles(trophyBrresPath, "*.brres");
+            var brres = files.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == trophy.Brres);
+            trophy.BrresFile = brres;
             // Get thumbnail
             var cosmetics = _cosmeticService.GetTrophyCosmetics(trophy.Ids);
             trophy.Thumbnails.Items = cosmetics;
@@ -148,6 +157,22 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(rootNode);
             }
             return gameIcons;
+        }
+
+        /// <summary>
+        /// Save a trophy to the build
+        /// </summary>
+        /// <param name="trophy">Trophy to save</param>
+        /// <param name="oldTrophy">Old trophy to remove/replace</param>
+        /// <returns>Updated trophy</returns>
+        public Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy)
+        {
+            _fileService.StartBackup();
+            // Save cosmetics
+            var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => trophy.Thumbnails.ChangedItems.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
+            _cosmeticService.ImportCosmetics(changedDefinitions, trophy.Thumbnails, trophy.Ids);
+            _fileService.EndBackup();
+            return trophy;
         }
     }
 }

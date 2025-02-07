@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
+using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
@@ -25,6 +26,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private Trophy _trophy;
+        private Trophy _oldTrophy;
         private List<TrophyGameIcon> _gameIconList;
 
         // Services
@@ -38,6 +40,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ReplaceHDThumbnailCommand => new RelayCommand(param => ReplaceHDCosmetic());
         public ICommand ClearThumbnailCommand => new RelayCommand(param => ClearCosmetic());
         public ICommand ClearHDThumbnailCommand => new RelayCommand(param => ClearHDCosmetic());
+        public ICommand SaveTrophyCommand => new RelayCommand(() => SaveTrophy());
 
         [ImportingConstructor]
         public TrophyEditorViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, IDialogService dialogService)
@@ -57,6 +60,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public Trophy Trophy { get => _trophy; set { _trophy = value; OnPropertyChanged(nameof(Trophy)); } }
+        public Trophy OldTrophy { get => _oldTrophy; set { _oldTrophy = value; OnPropertyChanged(nameof(OldTrophy)); } }
         public Dictionary<string, int> TrophySeries { get => Trophies.Series; }
         public Dictionary<string, int> TrophyCategories { get => Trophies.Categories; }
         public List<TrophyGameIcon> GameIconList { get => _gameIconList; set { _gameIconList = value; OnPropertyChanged(nameof(GameIconList)); } }
@@ -82,6 +86,7 @@ namespace BrawlInstaller.ViewModels
             GameIconList = _trophyService.GetTrophyGameIcons();
             var trophy = message.Value;
             Trophy = _trophyService.LoadTrophyData(trophy);
+            OldTrophy = Trophy.Copy();
             OnPropertyChanged(nameof(GameIconList));
             OnPropertyChanged(nameof(Trophy));
         }
@@ -156,6 +161,25 @@ namespace BrawlInstaller.ViewModels
             }
             OnPropertyChanged(nameof(Thumbnail));
             OnPropertyChanged(nameof(Trophy));
+        }
+
+        public void SaveTrophy()
+        {
+            using (new CursorWait())
+            {
+                // Create copies of trophies before save
+                var trophyToSave = Trophy.Copy();
+                var oldTrophy = OldTrophy.Copy();
+                // Save trophy
+                Trophy = _trophyService.SaveTrophy(trophyToSave, oldTrophy);
+                OldTrophy = Trophy.Copy();
+                // Clear cosmetic changes
+                Trophy.Thumbnails.ClearChanges();
+                // Update UI
+                OnPropertyChanged(nameof(Trophy));
+                OnPropertyChanged(nameof(OldTrophy));
+            }
+            _dialogService.ShowMessage("Changes saved.", "Saved");
         }
     }
 }

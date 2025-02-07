@@ -50,7 +50,7 @@
                         </Grid.ColumnDefinitions>
                         <Button x:Name="deleteButton" Content="Delete"/>
                         <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                            <Button x:Name="saveButton" Content="Save"/>
+                            <Button x:Name="saveButton" Content="Save" Command="{Binding TrophyEditorViewModel.SaveTrophyCommand}"/>
                         </WrapPanel>
                     </Grid>
                 </Grid>

@@ -76,6 +76,8 @@ namespace BrawlInstaller.Enums
         [Description("Trophy Description List")]
         TrophyDescriptions,
         [Description("Trophy Game Icons Location")]
-        TrophyGameIconsLocation
+        TrophyGameIconsLocation,
+        [Description("Trophy BRRES Location")]
+        TrophyBrresLocation
     }
 }
