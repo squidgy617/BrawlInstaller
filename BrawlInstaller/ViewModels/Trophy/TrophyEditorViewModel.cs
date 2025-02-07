@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
@@ -30,15 +31,21 @@ namespace BrawlInstaller.ViewModels
         ISettingsService _settingsService;
         IFileService _fileService;
         ITrophyService _trophyService;
+        IDialogService _dialogService;
 
         // Commands
+        public ICommand ReplaceThumbnailCommand => new RelayCommand(param => ReplaceCosmetic());
+        public ICommand ReplaceHDThumbnailCommand => new RelayCommand(param => ReplaceHDCosmetic());
+        public ICommand ClearThumbnailCommand => new RelayCommand(param => ClearCosmetic());
+        public ICommand ClearHDThumbnailCommand => new RelayCommand(param => ClearHDCosmetic());
 
         [ImportingConstructor]
-        public TrophyEditorViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService)
+        public TrophyEditorViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, IDialogService dialogService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _trophyService = trophyService;
+            _dialogService = dialogService;
 
             GameIconList = new List<TrophyGameIcon>();
 
@@ -76,6 +83,78 @@ namespace BrawlInstaller.ViewModels
             var trophy = message.Value;
             Trophy = _trophyService.LoadTrophyData(trophy);
             OnPropertyChanged(nameof(GameIconList));
+            OnPropertyChanged(nameof(Trophy));
+        }
+
+        private Cosmetic AddCosmetic()
+        {
+            var cosmetic = new Cosmetic
+            {
+                CosmeticType = CosmeticType.TrophyThumbnail,
+                Style = "vBrawl"
+            };
+            Trophy.Thumbnails.Add(cosmetic);
+            return cosmetic;
+        }
+
+        public void ReplaceCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select image", "PNG image (.png)|*.png");
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = _fileService.LoadImage(image);
+                if (Thumbnail == null)
+                {
+                    AddCosmetic();
+                }
+                Thumbnail.Image = bitmap;
+                Thumbnail.ImagePath = image;
+                Thumbnail.Texture = null;
+                Thumbnail.Palette = null;
+                Trophy.Thumbnails.ItemChanged(Thumbnail);
+                OnPropertyChanged(nameof(Thumbnail));
+                OnPropertyChanged(nameof(Trophy));
+            }
+        }
+
+        public void ReplaceHDCosmetic()
+        {
+            var image = _dialogService.OpenFileDialog("Select HD image", "PNG image (.png)|*.png");
+            if (!string.IsNullOrEmpty(image))
+            {
+                var bitmap = _fileService.LoadImage(image);
+                if (Thumbnail == null)
+                {
+                    AddCosmetic();
+                }
+                Thumbnail.HDImage = bitmap;
+                Thumbnail.HDImagePath = image;
+                Trophy.Thumbnails.ItemChanged(Thumbnail);
+                OnPropertyChanged(nameof(Thumbnail));
+                OnPropertyChanged(nameof(Trophy));
+            }
+        }
+
+        public void ClearCosmetic()
+        {
+            Trophy?.Thumbnails?.Remove(Thumbnail);
+            OnPropertyChanged(nameof(Thumbnail));
+            OnPropertyChanged(nameof(Trophy));
+        }
+
+        public void ClearHDCosmetic()
+        {
+            if (Thumbnail?.Image == null)
+            {
+                Trophy.Thumbnails.Remove(Thumbnail);
+            }
+            else
+            {
+                Thumbnail.HDImage = null;
+                Thumbnail.HDImagePath = "";
+                Trophy.Thumbnails.ItemChanged(Thumbnail);
+            }
+            OnPropertyChanged(nameof(Thumbnail));
             OnPropertyChanged(nameof(Trophy));
         }
     }
