@@ -629,6 +629,7 @@ namespace BrawlInstaller.ViewModels
         private void SaveRosters()
         {
             _fighterService.SaveRosters(Rosters);
+            _codeService.CompileCodes();
             _dialogService.ShowMessage("Saved rosters.", "Saved");
         }
 
