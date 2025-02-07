@@ -45,7 +45,7 @@
             <TextBox x:Name="displayNameTextBox" Text="{Binding Trophy.DisplayName}" Grid.Row="4" Grid.Column="1" Width="120"/>
             <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="5"/>
             <TextBox x:Name="descriptionTextBox" Text="{Binding Trophy.Description}" Width="180" Height="100" Grid.Row="5" Grid.Column="1" TextWrapping="Wrap"/>
-            <Label x:Name="gameName1Label" Content="First Appearance:" Grid.Row="6"/>
+            <Label x:Name="gameName1Label" Content="Game 1:" Grid.Row="6"/>
             <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
                 <StackPanel>
                     <TextBox x:Name="gameName1TextBox" Text="{Binding Trophy.GameNames[0]}" Width="120"/>
@@ -56,7 +56,7 @@
                 </StackPanel>
                 <Image x:Name="gameIcon1Image" Source="{Binding GameIcon1}" Width="64" Height="32"/>
             </StackPanel>
-            <Label x:Name="gameName2Label" Content="Last Appearance:" Grid.Row="7"/>
+            <Label x:Name="gameName2Label" Content="Game 2:" Grid.Row="7"/>
             <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
                 <StackPanel>
                     <TextBox x:Name="gameName2TextBox" Text="{Binding Trophy.GameNames[1]}" Width="120"/>
