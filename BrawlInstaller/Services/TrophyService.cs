@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BrawlInstaller.Services
 {
@@ -168,11 +169,105 @@ namespace BrawlInstaller.Services
         public Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy)
         {
             _fileService.StartBackup();
+
+            var trophyPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyLocation.Path);
+            var trophyNamePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyNames);
+            var trophyDescriptionPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyDescriptions);
+            var nodePath = _settingsService.BuildSettings.FilePathSettings.TrophyLocation.NodePath;
+
             // Save cosmetics
             var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => trophy.Thumbnails.ChangedItems.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
             _cosmeticService.ImportCosmetics(changedDefinitions, trophy.Thumbnails, trophy.Ids);
+
+            // Open BRRES in case it gets deleted
+            var brres = _fileService.OpenFile(trophy.BrresFile);
+            // Replace old BRRES
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation))
+            {
+                _fileService.DeleteFile(oldTrophy.BrresFile);
+                var trophyBrresFolder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
+                var newTrophyBrresPath = Path.Combine(trophyBrresFolder, $"{trophy.Brres}.brres");
+                _fileService.CopyFile(trophy.BrresFile, newTrophyBrresPath);
+            }
+            _fileService.CloseFile(brres);
+
+            // Update trophy name
+            trophy.NameIndex = ReplaceMsBinString(trophy.DisplayName, trophyNamePath, trophy.NameIndex, oldTrophy.NameIndex);
+
+            // Update trophy game names
+            trophy.GameIndex = ReplaceMsBinString(string.Join("\r\n", trophy.GameNames), trophyNamePath, trophy.GameIndex, oldTrophy.GameIndex);
+
+            // Update trophy description
+            trophy.DescriptionIndex = ReplaceMsBinString(trophy.Description, trophyDescriptionPath, trophy.DescriptionIndex, oldTrophy.DescriptionIndex);
+
+            // Update trophy data
+            var rootNode = _fileService.OpenFile(trophyPath);
+            if (rootNode != null)
+            {
+                var trophyNodeList = rootNode.FindChild(nodePath) as TyDataListNode;
+                if (trophyNodeList != null)
+                {
+                    var index = -1;
+                    // Delete old trophy node if it exists
+                    if (oldTrophy != null)
+                    {
+                        var trophyNode = trophyNodeList.Children.FirstOrDefault(x => ((TyDataListEntryNode)x).Id == oldTrophy.Ids.TrophyId && ((TyDataListEntryNode)x).Name == oldTrophy.Name) as TyDataListEntryNode;
+                        if (trophyNode != null)
+                        {
+                            index = trophyNode.Index;
+                            trophyNodeList.RemoveChild(trophyNode);
+                        }
+                    }
+                    // Insert new trophy node
+                    if (trophy != null)
+                    {
+                        var newTrophyNode = trophy.ToNode();
+                        // Get new index if necessary
+                        if (index == -1)
+                        {
+                            index = trophyNodeList.Children.Count;
+                        }
+                        trophyNodeList.InsertChild(newTrophyNode, index);
+                    }
+                    _fileService.SaveFile(rootNode);
+                }
+                _fileService.CloseFile(rootNode);
+            }
+
             _fileService.EndBackup();
             return trophy;
+        }
+
+        /// <summary>
+        /// Replace trophy-related string in MsBin file
+        /// </summary>
+        /// <param name="newString">String to insert</param>
+        /// <param name="file">File to replace string in</param>
+        /// <param name="index">Index to place new string</param>
+        /// <param name="oldIndex">Index of old string</param>
+        /// <returns>Updated trophy</returns>
+        private int? ReplaceMsBinString(string newString, string file, int? index, int? oldIndex)
+        {
+            var rootNode = _fileService.OpenFile(file) as MSBinNode;
+            if (rootNode != null)
+            {
+                // Delete old string
+                if (oldIndex != null && rootNode._strings.Count > oldIndex)
+                {
+                    rootNode._strings.RemoveAt((int)oldIndex);
+                }
+                // Get new index if necessary
+                if (index == null)
+                {
+                    index = rootNode._strings.Count;
+                }
+                // Insert new string
+                rootNode._strings.Insert((int)index, newString);
+                rootNode.IsDirty = true;
+                _fileService.SaveFile(rootNode);
+                _fileService.CloseFile(rootNode);
+            }
+            return index;
         }
     }
 }

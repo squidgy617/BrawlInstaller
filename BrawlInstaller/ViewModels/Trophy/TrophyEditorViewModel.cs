@@ -83,12 +83,15 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void LoadTrophy(LoadTrophyMessage message)
         {
-            GameIconList = _trophyService.GetTrophyGameIcons();
-            var trophy = message.Value;
-            Trophy = _trophyService.LoadTrophyData(trophy);
-            OldTrophy = Trophy.Copy();
-            OnPropertyChanged(nameof(GameIconList));
-            OnPropertyChanged(nameof(Trophy));
+            using (new CursorWait())
+            {
+                GameIconList = _trophyService.GetTrophyGameIcons();
+                var trophy = message.Value;
+                Trophy = _trophyService.LoadTrophyData(trophy);
+                OldTrophy = Trophy.Copy();
+                OnPropertyChanged(nameof(GameIconList));
+                OnPropertyChanged(nameof(Trophy));
+            }
         }
 
         private Cosmetic AddCosmetic()
