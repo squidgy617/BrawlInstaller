@@ -23,8 +23,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="TrophyService.GetTrophyGameIcons()"/>
         List<TrophyGameIcon> GetTrophyGameIcons();
 
-        /// <inheritdoc cref="TrophyService.SaveTrophy(Trophy, Trophy)"/>
-        Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy);
+        /// <inheritdoc cref="TrophyService.SaveTrophy(Trophy, Trophy, bool)"/>
+        Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy, bool addTrophy = true);
     }
 
     [Export(typeof(ITrophyService))]
@@ -165,8 +165,9 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="trophy">Trophy to save</param>
         /// <param name="oldTrophy">Old trophy to remove/replace</param>
+        /// <param name="addTrophy">Whether or not to add the new trophy</param>
         /// <returns>Updated trophy</returns>
-        public Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy)
+        public Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy, bool addTrophy = true)
         {
             _fileService.StartBackup();
 
@@ -184,21 +185,24 @@ namespace BrawlInstaller.Services
             // Replace old BRRES
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation))
             {
-                _fileService.DeleteFile(oldTrophy.BrresFile);
-                var trophyBrresFolder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
-                var newTrophyBrresPath = Path.Combine(trophyBrresFolder, $"{trophy.Brres}.brres");
-                _fileService.CopyFile(trophy.BrresFile, newTrophyBrresPath);
+                _fileService.DeleteFile(oldTrophy?.BrresFile);
+                if (addTrophy)
+                {
+                    var trophyBrresFolder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
+                    var newTrophyBrresPath = Path.Combine(trophyBrresFolder, $"{trophy.Brres}.brres");
+                    _fileService.CopyFile(trophy.BrresFile, newTrophyBrresPath);
+                }
             }
             _fileService.CloseFile(brres);
 
             // Update trophy name
-            trophy.NameIndex = ReplaceMsBinString(trophy.DisplayName, trophyNamePath, trophy.NameIndex, oldTrophy.NameIndex);
+            trophy.NameIndex = ReplaceMsBinString(addTrophy ? trophy.DisplayName : null, trophyNamePath, trophy.NameIndex, oldTrophy?.NameIndex);
 
             // Update trophy game names
-            trophy.GameIndex = ReplaceMsBinString(string.Join("\r\n", trophy.GameNames), trophyNamePath, trophy.GameIndex, oldTrophy.GameIndex);
+            trophy.GameIndex = ReplaceMsBinString(addTrophy ? string.Join("\r\n", trophy.GameNames) : null, trophyNamePath, trophy.GameIndex, oldTrophy?.GameIndex);
 
             // Update trophy description
-            trophy.DescriptionIndex = ReplaceMsBinString(trophy.Description, trophyDescriptionPath, trophy.DescriptionIndex, oldTrophy.DescriptionIndex);
+            trophy.DescriptionIndex = ReplaceMsBinString(addTrophy ? trophy.Description : null, trophyDescriptionPath, trophy.DescriptionIndex, oldTrophy?.DescriptionIndex);
 
             // Update trophy data
             var rootNode = _fileService.OpenFile(trophyPath);
@@ -219,7 +223,7 @@ namespace BrawlInstaller.Services
                         }
                     }
                     // Insert new trophy node
-                    if (trophy != null)
+                    if (trophy != null && addTrophy)
                     {
                         var newTrophyNode = trophy.ToNode();
                         // Get new index if necessary
@@ -262,7 +266,10 @@ namespace BrawlInstaller.Services
                     index = rootNode._strings.Count;
                 }
                 // Insert new string
-                rootNode._strings.Insert((int)index, newString);
+                if (newString != null)
+                {
+                    rootNode._strings.Insert((int)index, newString);
+                }
                 rootNode.IsDirty = true;
                 _fileService.SaveFile(rootNode);
                 _fileService.CloseFile(rootNode);

@@ -48,7 +48,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="deleteButton" Content="Delete"/>
+                        <Button x:Name="deleteButton" Content="Delete" Command="{Binding TrophyEditorViewModel.DeleteTrophyCommand}"/>
                         <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                             <Button x:Name="saveButton" Content="Save" Command="{Binding TrophyEditorViewModel.SaveTrophyCommand}"/>
                         </WrapPanel>

@@ -19,6 +19,8 @@ namespace BrawlInstaller.ViewModels
     public interface ITrophyEditorViewModel
     {
         Trophy Trophy { get; set; }
+        ICommand SaveTrophyCommand { get; }
+        ICommand DeleteTrophyCommand { get; }
     }
 
     [Export(typeof(ITrophyEditorViewModel))]
@@ -41,6 +43,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand ClearThumbnailCommand => new RelayCommand(param => ClearCosmetic());
         public ICommand ClearHDThumbnailCommand => new RelayCommand(param => ClearHDCosmetic());
         public ICommand SaveTrophyCommand => new RelayCommand(() => SaveTrophy());
+        public ICommand DeleteTrophyCommand => new RelayCommand(() => DeleteTrophy());
 
         [ImportingConstructor]
         public TrophyEditorViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, IDialogService dialogService)
@@ -179,6 +182,27 @@ namespace BrawlInstaller.ViewModels
                 // Clear cosmetic changes
                 Trophy.Thumbnails.ClearChanges();
                 // Update UI
+                OnPropertyChanged(nameof(Trophy));
+                OnPropertyChanged(nameof(OldTrophy));
+            }
+            _dialogService.ShowMessage("Changes saved.", "Saved");
+        }
+
+        public void DeleteTrophy()
+        {
+            using (new CursorWait())
+            {
+                var trophyToDelete = new Trophy { Ids = OldTrophy.Ids.Copy() };
+                var oldTrophy = OldTrophy.Copy();
+                // Add all cosmetics as changes
+                foreach (var thumbnail in oldTrophy.Thumbnails.Items)
+                {
+                    trophyToDelete.Thumbnails.ItemChanged(thumbnail);
+                }
+                // Delete trophy
+                _trophyService.SaveTrophy(trophyToDelete, oldTrophy, false);
+                Trophy = null;
+                OldTrophy = null;
                 OnPropertyChanged(nameof(Trophy));
                 OnPropertyChanged(nameof(OldTrophy));
             }
