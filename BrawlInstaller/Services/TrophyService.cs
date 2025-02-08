@@ -108,7 +108,9 @@ namespace BrawlInstaller.Services
                 if (trophy.GameIndex != null && namesNode._strings.Count > trophy.GameIndex)
                 {
                     var gameString = namesNode._strings[trophy.GameIndex.Value];
-                    trophy.GameNames = gameString.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList();
+                    var gameNames = gameString.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList();
+                    trophy.GameName1 = gameNames.FirstOrDefault();
+                    trophy.GameName2 = gameNames.LastOrDefault();
                 }
                 _fileService.CloseFile(namesNode);
             }
@@ -193,6 +195,7 @@ namespace BrawlInstaller.Services
                     if (brres != null)
                     {
                         brres._origPath = newTrophyBrresPath;
+                        trophy.BrresFile = newTrophyBrresPath;
                         _fileService.SaveFile(brres);
                     }
                 }
@@ -203,7 +206,7 @@ namespace BrawlInstaller.Services
             trophy.NameIndex = ReplaceMsBinString(addTrophy ? trophy.DisplayName : null, trophyNamePath, trophy.NameIndex, oldTrophy?.NameIndex);
 
             // Update trophy game names
-            trophy.GameIndex = ReplaceMsBinString(addTrophy ? string.Join("\r\n", trophy.GameNames) : null, trophyNamePath, trophy.GameIndex, oldTrophy?.GameIndex);
+            trophy.GameIndex = ReplaceMsBinString(addTrophy ? $"{trophy.GameName1}\r\n{trophy.GameName2}" : null, trophyNamePath, trophy.GameIndex, oldTrophy?.GameIndex);
 
             // Update trophy description
             trophy.DescriptionIndex = ReplaceMsBinString(addTrophy ? trophy.Description : null, trophyDescriptionPath, trophy.DescriptionIndex, oldTrophy?.DescriptionIndex);
