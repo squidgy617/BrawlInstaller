@@ -233,6 +233,33 @@ namespace BrawlInstaller.Services
                         }
                         trophyNodeList.InsertChild(newTrophyNode, index);
                     }
+                    // If trophy was deleted, update other trophies' indexes
+                    if (!addTrophy)
+                    {
+                        foreach(TyDataListEntryNode trophyNode in trophyNodeList.Children)
+                        {
+                            if (trophyNode.NameIndex > oldTrophy.NameIndex)
+                            {
+                                trophyNode.NameIndex--;
+                                if (trophyNode.NameIndex >= oldTrophy.GameIndex)
+                                {
+                                    trophyNode.NameIndex--;
+                                }
+                            }
+                            if (trophyNode.GameIndex > oldTrophy.GameIndex)
+                            {
+                                trophyNode.GameIndex--;
+                                if (trophyNode.GameIndex >= oldTrophy.NameIndex)
+                                {
+                                    trophyNode.GameIndex--;
+                                }
+                            }
+                            if (trophyNode.DescriptionIndex > oldTrophy.DescriptionIndex)
+                            {
+                                trophyNode.DescriptionIndex--;
+                            }
+                        }
+                    }
                     _fileService.SaveFile(rootNode);
                 }
                 _fileService.CloseFile(rootNode);
