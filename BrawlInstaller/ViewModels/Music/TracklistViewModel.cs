@@ -16,6 +16,7 @@ using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using static BrawlInstaller.ViewModels.MainControlsViewModel;
 
@@ -209,11 +210,15 @@ namespace BrawlInstaller.ViewModels
 
         private void DeleteTracklist()
         {
-            var tracklistToDelete = new Tracklist { File = LoadedTracklist.File };
-            SaveTracklist(tracklistToDelete);
-            LoadedTracklist = null;
-            OnPropertyChanged(nameof(LoadedTracklist));
-            _dialogService.ShowMessage("Changes saved.", "Saved");
+            var result = _dialogService.ShowMessage("WARNING! You are about to delete the currently loaded tracklist. Are you sure?", "Delete Tracklist", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result)
+            {
+                var tracklistToDelete = new Tracklist { File = LoadedTracklist.File };
+                SaveTracklist(tracklistToDelete);
+                LoadedTracklist = null;
+                OnPropertyChanged(nameof(LoadedTracklist));
+                _dialogService.ShowMessage("Changes saved.", "Saved");
+            }
         }
 
         private void SaveTracklist()

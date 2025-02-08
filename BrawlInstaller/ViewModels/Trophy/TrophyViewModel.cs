@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static BrawlInstaller.ViewModels.MainControlsViewModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -43,8 +44,20 @@ namespace BrawlInstaller.ViewModels
 
             TrophyEditorViewModel = trophyEditorViewModel;
 
-            TrophyList = new ObservableCollection<Trophy>(_trophyService.GetTrophyList());
-            OnPropertyChanged(nameof(TrophyList));
+            GetTrophyList();
+
+            WeakReferenceMessenger.Default.Register<UpdateTrophyListMessage>(this, (recipient, message) =>
+            {
+                GetTrophyList();
+            });
+            WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
+            {
+                GetTrophyList();
+            });
+            WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
+            {
+                GetTrophyList();
+            });
         }
 
         // ViewModels
@@ -58,6 +71,12 @@ namespace BrawlInstaller.ViewModels
         public void LoadTrophy()
         {
             WeakReferenceMessenger.Default.Send(new LoadTrophyMessage(SelectedTrophy));
+        }
+
+        public void GetTrophyList()
+        {
+            TrophyList = new ObservableCollection<Trophy>(_trophyService.GetTrophyList());
+            OnPropertyChanged(nameof(TrophyList));
         }
     }
 

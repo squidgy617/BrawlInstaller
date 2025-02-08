@@ -5,12 +5,14 @@ using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -184,29 +186,43 @@ namespace BrawlInstaller.ViewModels
                 // Update UI
                 OnPropertyChanged(nameof(Trophy));
                 OnPropertyChanged(nameof(OldTrophy));
+                WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
             }
             _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 
         public void DeleteTrophy()
         {
-            using (new CursorWait())
+            var result = _dialogService.ShowMessage("WARNING! You are about to delete the currently loaded trophy. Are you sure?", "Delete Trophy", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result)
             {
-                var trophyToDelete = new Trophy { Ids = OldTrophy.Ids.Copy() };
-                var oldTrophy = OldTrophy.Copy();
-                // Add all cosmetics as changes
-                foreach (var thumbnail in oldTrophy.Thumbnails.Items)
+                using (new CursorWait())
                 {
-                    trophyToDelete.Thumbnails.ItemChanged(thumbnail);
+                    var trophyToDelete = new Trophy { Ids = OldTrophy.Ids.Copy() };
+                    var oldTrophy = OldTrophy.Copy();
+                    // Add all cosmetics as changes
+                    foreach (var thumbnail in oldTrophy.Thumbnails.Items)
+                    {
+                        trophyToDelete.Thumbnails.ItemChanged(thumbnail);
+                    }
+                    // Delete trophy
+                    _trophyService.SaveTrophy(trophyToDelete, oldTrophy, false);
+                    Trophy = null;
+                    OldTrophy = null;
+                    OnPropertyChanged(nameof(Trophy));
+                    OnPropertyChanged(nameof(OldTrophy));
+                    WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
                 }
-                // Delete trophy
-                _trophyService.SaveTrophy(trophyToDelete, oldTrophy, false);
-                Trophy = null;
-                OldTrophy = null;
-                OnPropertyChanged(nameof(Trophy));
-                OnPropertyChanged(nameof(OldTrophy));
+                _dialogService.ShowMessage("Changes saved.", "Saved");
             }
-            _dialogService.ShowMessage("Changes saved.", "Saved");
+        }
+    }
+
+    // Messages
+    public class UpdateTrophyListMessage : ValueChangedMessage<Trophy>
+    {
+        public UpdateTrophyListMessage(Trophy trophy) : base(trophy)
+        {
         }
     }
 }
