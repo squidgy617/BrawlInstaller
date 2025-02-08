@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using static BrawlInstaller.ViewModels.MainControlsViewModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -60,6 +61,14 @@ namespace BrawlInstaller.ViewModels
             WeakReferenceMessenger.Default.Register<LoadTrophyMessage>(this, (recipient, message) =>
             {
                 LoadTrophy(message);
+            });
+            WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
+            {
+                ResetTrophy();
+            });
+            WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
+            {
+                ResetTrophy();
             });
         }
 
@@ -215,6 +224,14 @@ namespace BrawlInstaller.ViewModels
                 }
                 _dialogService.ShowMessage("Changes saved.", "Saved");
             }
+        }
+
+        private void ResetTrophy()
+        {
+            Trophy = null;
+            OldTrophy = null;
+            OnPropertyChanged(nameof(Trophy));
+            OnPropertyChanged(nameof(OldTrophy));
         }
     }
 
