@@ -235,30 +235,27 @@ namespace BrawlInstaller.Services
                         trophyNodeList.InsertChild(newTrophyNode, index);
                     }
                     // If trophy was deleted, update other trophies' indexes
-                    if (!addTrophy)
+                    foreach(TyDataListEntryNode trophyNode in trophyNodeList.Children)
                     {
-                        foreach(TyDataListEntryNode trophyNode in trophyNodeList.Children)
+                        if (trophy.NameIndex == null && trophyNode.NameIndex > oldTrophy.NameIndex)
                         {
-                            if (trophyNode.NameIndex > oldTrophy.NameIndex)
+                            trophyNode.NameIndex--;
+                            if (trophyNode.NameIndex >= oldTrophy.GameIndex)
                             {
                                 trophyNode.NameIndex--;
-                                if (trophyNode.NameIndex >= oldTrophy.GameIndex)
-                                {
-                                    trophyNode.NameIndex--;
-                                }
                             }
-                            if (trophyNode.GameIndex > oldTrophy.GameIndex)
+                        }
+                        if (trophy.GameIndex == null && trophyNode.GameIndex > oldTrophy.GameIndex)
+                        {
+                            trophyNode.GameIndex--;
+                            if (trophyNode.GameIndex >= oldTrophy.NameIndex)
                             {
                                 trophyNode.GameIndex--;
-                                if (trophyNode.GameIndex >= oldTrophy.NameIndex)
-                                {
-                                    trophyNode.GameIndex--;
-                                }
                             }
-                            if (trophyNode.DescriptionIndex > oldTrophy.DescriptionIndex)
-                            {
-                                trophyNode.DescriptionIndex--;
-                            }
+                        }
+                        if (trophy.DescriptionIndex == null && trophyNode.DescriptionIndex > oldTrophy.DescriptionIndex)
+                        {
+                            trophyNode.DescriptionIndex--;
                         }
                     }
                     _fileService.SaveFile(rootNode);
@@ -277,7 +274,7 @@ namespace BrawlInstaller.Services
         /// <param name="file">File to replace string in</param>
         /// <param name="index">Index to place new string</param>
         /// <param name="oldIndex">Index of old string</param>
-        /// <returns>Updated trophy</returns>
+        /// <returns>Index of new trophy string</returns>
         private int? ReplaceMsBinString(string newString, string file, int? index, int? oldIndex)
         {
             var rootNode = _fileService.OpenFile(file) as MSBinNode;
@@ -297,6 +294,10 @@ namespace BrawlInstaller.Services
                 if (newString != null)
                 {
                     rootNode._strings.Insert((int)index, newString);
+                }
+                else
+                {
+                    index = null;
                 }
                 rootNode.IsDirty = true;
                 _fileService.SaveFile(rootNode);
