@@ -236,7 +236,7 @@ namespace BrawlInstaller.Services
                         // Get new index if necessary
                         if (index == -1)
                         {
-                            index = trophyNodeList.Children.Count;
+                            index = trophyNodeList.Children.Count > 1 ? trophyNodeList.Children.Count - 1 : trophyNodeList.Children.Count;
                         }
                         trophyNodeList.InsertChild(newTrophyNode, index);
                     }
