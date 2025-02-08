@@ -52,7 +52,7 @@
                     <TextBox x:Name="gameName1TextBox" Text="{Binding Trophy.GameNames[0]}" Width="120"/>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Icon:"/>
-                        <ComboBox x:Name="gameIcon1DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon1}" Width="80"/>
+                        <ComboBox x:Name="gameIcon1DropDown" IsEditable="True" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" Text="{Binding SelectedGameIcon1}" Width="80"/>
                     </StackPanel>
                 </StackPanel>
                 <Image x:Name="gameIcon1Image" Source="{Binding GameIcon1}" Width="64" Height="32"/>
@@ -63,7 +63,7 @@
                     <TextBox x:Name="gameName2TextBox" Text="{Binding Trophy.GameNames[1]}" Width="120"/>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Icon:"/>
-                        <ComboBox x:Name="gameIcon2DropDown" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" SelectedValue="{Binding SelectedGameIcon2}" Width="80"/>
+                        <ComboBox x:Name="gameIcon2DropDown" IsEditable="True" ItemsSource="{Binding GameIconList}" DisplayMemberPath="Id" SelectedValuePath="Id" Text="{Binding SelectedGameIcon2}" Width="80"/>
                     </StackPanel>
                 </StackPanel>
                 <Image x:Name="gameIcon2Image" Source="{Binding GameIcon2}" Width="64" Height="32"/>
