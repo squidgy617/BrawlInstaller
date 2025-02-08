@@ -1631,6 +1631,21 @@
         "FileType": 28,
         "Path": "",
         "Filter": "EXE file (.exe)|*.exe"
+      },
+      {
+        "FileType": 31,
+        "Path": "pf\\toy\\fig\\ty_fig_name_list.msbin",
+        "Filter": "MSBIN file (.msbin)|*.msbin"
+      },
+      {
+        "FileType": 32,
+        "Path": "pf\\toy\\fig\\ty_fig_ext_list.msbin",
+        "Filter": "MSBIn file (.msbin)|*.msbin"
+      },
+      {
+        "FileType": 34,
+        "Path": "pf\\toy\\fig\\",
+        "Filter": ""
       }
     ],
     "AsmPaths": [
@@ -1675,6 +1690,26 @@
         "FileType": 22,
         "Path": "",
         "Filter": "ASM file (.asm)|*.asm"
+      }
+    ],
+    "FileNodePaths": [
+      {
+        "NodePath": "Misc Data [0]/tyDataList",
+        "AllowedNodes": [
+          "BrawlLib.SSBB.ResourceNodes.TyDataListNode, BrawlLib, Version=0.42.0.1, Culture=neutral, PublicKeyToken=null"
+        ],
+        "FileType": 30,
+        "Path": "pf\\system\\common3.pac",
+        "Filter": "PAC file (.pac)|*.pac"
+      },
+      {
+        "NodePath": "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0",
+        "AllowedNodes": [
+          "BrawlLib.SSBB.ResourceNodes.PAT0TextureNode, BrawlLib, Version=0.42.0.1, Culture=neutral, PublicKeyToken=null"
+        ],
+        "FileType": 33,
+        "Path": "pf\\menu\\collection\\Figure.brres",
+        "Filter": "BRRES file (.brres)|*.brres"
       }
     ],
     "StageListPaths": [
