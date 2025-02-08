@@ -474,7 +474,12 @@ namespace BrawlInstaller.Common
                 Unknown0x50 = node.Unknown0x50,
                 Unknown0x54 = node.Unknown0x54,
                 Unknown0x58 = node.Unknown0x58,
-                Unknown0x5C = node.Unknown0x5C
+                Unknown0x5C = node.Unknown0x5C,
+                Pad0x28 = node.Pad0x28,
+                Pad0x2C = node.Pad0x2C,
+                Pad0x30 = node.Pad0x30,
+                Pad0x3C = node.Pad0x3C,
+                Pad0x48 = node.Pad0x48
             };
             return trophy;
         }

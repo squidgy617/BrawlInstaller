@@ -31,17 +31,22 @@ namespace BrawlInstaller.ViewModels
         ISettingsService _settingsService;
         IFileService _fileService;
         ITrophyService _trophyService;
+        IDialogService _dialogService;
 
         // Commands
         public ICommand LoadTrophyCommand => new RelayCommand(param => LoadTrophy());
         public ICommand NewTrophyCommand => new RelayCommand(param => NewTrophy());
+        public ICommand SaveTrophyListCommand => new RelayCommand(param =>  SaveTrophyList());
+        public ICommand MoveTrophyUpCommand => new RelayCommand(param => MoveTrophyUp());
+        public ICommand MoveTrophyDownCommand => new RelayCommand(param => MoveTrophyDown());
 
         [ImportingConstructor]
-        public TrophyViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, ITrophyEditorViewModel trophyEditorViewModel)
+        public TrophyViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, IDialogService dialogService, ITrophyEditorViewModel trophyEditorViewModel)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _trophyService = trophyService;
+            _dialogService = dialogService;
 
             TrophyEditorViewModel = trophyEditorViewModel;
 
@@ -95,6 +100,32 @@ namespace BrawlInstaller.ViewModels
                 newTrophy.Ids.TrophyThumbnailId++;
             }
             WeakReferenceMessenger.Default.Send(new LoadTrophyMessage(newTrophy));
+        }
+
+        public void SaveTrophyList()
+        {
+            _fileService.StartBackup();
+            _trophyService.SaveTrophyList(TrophyList.ToList());
+            _fileService.EndBackup();
+            _dialogService.ShowMessage("Changes saved.", "Saved");
+        }
+
+        public void MoveTrophyUp()
+        {
+            if (SelectedTrophy != null)
+            {
+                TrophyList.MoveUp(SelectedTrophy);
+                OnPropertyChanged(nameof(TrophyList));
+            }
+        }
+
+        public void MoveTrophyDown()
+        {
+            if (SelectedTrophy != null)
+            {
+                TrophyList.MoveDown(SelectedTrophy);
+                OnPropertyChanged(nameof(TrophyList));
+            }
         }
     }
 

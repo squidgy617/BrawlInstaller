@@ -23,19 +23,28 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                        <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <ListBox ItemsSource="{Binding TrophyList}" SelectedItem="{Binding SelectedTrophy}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}">
-                                            <TextBlock.InputBindings>
-                                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTrophyCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
-                                            </TextBlock.InputBindings>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </ContentControl>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <ListBox ItemsSource="{Binding TrophyList}" SelectedItem="{Binding SelectedTrophy}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}">
+                                                    <TextBlock.InputBindings>
+                                                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTrophyCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                                    </TextBlock.InputBindings>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </ContentControl>
+                                <StackPanel>
+                                    <Button x:Name="moveUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveTrophyUpCommand}"/>
+                                    <Button x:Name="moveDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveTrophyDownCommand}"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <Button Content="Save" Command="{Binding SaveTrophyListCommand}"/>
+                        </StackPanel>
                     </ScrollViewer>
                     <StackPanel Grid.Row="1">
                         <Button Content="Load" Command="{Binding LoadTrophyCommand}"/>

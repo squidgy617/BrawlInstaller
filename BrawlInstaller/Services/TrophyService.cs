@@ -25,6 +25,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="TrophyService.SaveTrophy(Trophy, Trophy, bool)"/>
         Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy, bool addTrophy = true);
+
+        /// <inheritdoc cref="TrophyService.SaveTrophy(Trophy, Trophy, bool)"/>
+        void SaveTrophyList(List<Trophy> trophyList);
     }
 
     [Export(typeof(ITrophyService))]
@@ -310,6 +313,31 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(rootNode);
             }
             return index;
+        }
+
+        /// <summary>
+        /// Save a list of trophies
+        /// </summary>
+        /// <param name="trophyList">Trophies to save</param>
+        public void SaveTrophyList(List<Trophy> trophyList)
+        {
+            var trophyPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyLocation.Path);
+            var nodePath = _settingsService.BuildSettings.FilePathSettings.TrophyLocation.NodePath;
+            var rootNode = _fileService.OpenFile(trophyPath);
+            if (rootNode != null)
+            {
+                var trophyNodeList = rootNode.FindChild(nodePath) as TyDataListNode;
+                if (trophyNodeList != null)
+                {
+                    trophyNodeList.Children.Clear();
+                    foreach(var trophy in trophyList)
+                    {
+                        trophyNodeList.AddChild(trophy.ToNode());
+                    }
+                    _fileService.SaveFile(rootNode);
+                }
+                _fileService.CloseFile(rootNode);
+            }
         }
     }
 }

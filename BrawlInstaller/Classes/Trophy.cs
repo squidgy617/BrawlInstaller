@@ -38,6 +38,13 @@ namespace BrawlInstaller.Classes
         public float Unknown0x58 { get; set; } = 0;
         public float Unknown0x5C { get; set; } = 0;
 
+        // Padding
+        public int Pad0x28 { get; set; } = 0;
+        public int Pad0x2C { get; set; } = 0;
+        public int Pad0x30 { get; set; } = 0;
+        public int Pad0x3C { get; set; } = 0;
+        public int Pad0x48 { get; set; } = 0;
+
         public TyDataListEntryNode ToNode()
         {
             var node = new TyDataListEntryNode
@@ -62,11 +69,12 @@ namespace BrawlInstaller.Classes
                 Unknown0x54 = Unknown0x54,
                 Unknown0x58 = Unknown0x58,
                 Unknown0x5C = Unknown0x5C,
-                Pad0x28 = 0,
-                Pad0x2C = 0,
-                Pad0x30 = 0,
-                Pad0x3C = 0,
-                Pad0x48 = 0
+                // Padding
+                Pad0x28 = Pad0x28,
+                Pad0x2C = Pad0x2C,
+                Pad0x30 = Pad0x30,
+                Pad0x3C = Pad0x3C,
+                Pad0x48 = Pad0x48
             };
             return node;
         }
