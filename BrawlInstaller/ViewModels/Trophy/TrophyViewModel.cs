@@ -34,6 +34,7 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand LoadTrophyCommand => new RelayCommand(param => LoadTrophy());
+        public ICommand NewTrophyCommand => new RelayCommand(param => NewTrophy());
 
         [ImportingConstructor]
         public TrophyViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, ITrophyEditorViewModel trophyEditorViewModel)
@@ -77,6 +78,23 @@ namespace BrawlInstaller.ViewModels
         {
             TrophyList = new ObservableCollection<Trophy>(_trophyService.GetTrophyList());
             OnPropertyChanged(nameof(TrophyList));
+        }
+
+        public void NewTrophy()
+        {
+            var newTrophy = new Trophy();
+            // Get new trophy IDs
+            newTrophy.Ids.TrophyId = 631; // 631 is first EX trophy ID
+            newTrophy.Ids.TrophyThumbnailId = 631;
+            while (TrophyList.Select(x => x.Ids.TrophyId).Contains(newTrophy.Ids.TrophyId))
+            {
+                newTrophy.Ids.TrophyId++;
+            }
+            while (TrophyList.Select(x => x.Ids.TrophyThumbnailId).Contains(newTrophy.Ids.TrophyThumbnailId))
+            {
+                newTrophy.Ids.TrophyThumbnailId++;
+            }
+            WeakReferenceMessenger.Default.Send(new LoadTrophyMessage(newTrophy));
         }
     }
 

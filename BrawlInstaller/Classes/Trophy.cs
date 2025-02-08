@@ -14,7 +14,7 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; } = "New_Trophy";
         public string Brres { get; set; } = "New_Trophy";
         public string BrresFile { get; set; }
-        public BrawlIds Ids { get; set; }
+        public BrawlIds Ids { get; set; } = new BrawlIds();
         [JsonIgnore] public CosmeticList Thumbnails { get; set; } = new CosmeticList();
         public int GameIcon1 { get; set; } = 0;
         public int GameIcon2 { get; set; } = 0;
@@ -24,8 +24,8 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public int? GameIndex { get; set; }
         public string Description { get; set; } = "A new trophy.";
         [JsonIgnore] public int? DescriptionIndex { get; set; }
-        public int SeriesIndex { get; set; }
-        public int CategoryIndex { get; set; }
+        public int SeriesIndex { get; set; } = 0;
+        public int CategoryIndex { get; set; } = 0;
 
         // Unknowns
         public float Unknown0x34 { get; set; } = 1;

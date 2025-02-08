@@ -29,6 +29,7 @@
                     </ScrollViewer>
                     <StackPanel Grid.Row="1">
                         <Button Content="Load" Command="{Binding LoadTrophyCommand}"/>
+                        <Button Content="New" Command="{Binding NewTrophyCommand}"/>
                     </StackPanel>
                 </Grid>
             </GroupBox>

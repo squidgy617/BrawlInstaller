@@ -190,8 +190,11 @@ namespace BrawlInstaller.Services
                 {
                     var trophyBrresFolder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
                     var newTrophyBrresPath = Path.Combine(trophyBrresFolder, $"{trophy.Brres}.brres");
-                    brres._origPath = newTrophyBrresPath;
-                    _fileService.SaveFile(brres);
+                    if (brres != null)
+                    {
+                        brres._origPath = newTrophyBrresPath;
+                        _fileService.SaveFile(brres);
+                    }
                 }
             }
             _fileService.CloseFile(brres);
