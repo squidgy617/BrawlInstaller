@@ -42,6 +42,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.RemoveMacro(string, string, string, string, int)"/>
         string RemoveMacro(string fileText, string address, string paramValue, string macroName, int paramIndex = 0);
+
+        /// <inheritdoc cref="CodeService.GetCodeAliases(string, string, string)"/>
+        List<Alias> GetCodeAliases(string fileText, string codeName, string endString);
     }
 
     [Export(typeof(ICodeService))]
@@ -744,6 +747,64 @@ namespace BrawlInstaller.Services
                     throw error;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get list of aliases in a code
+        /// </summary>
+        /// <param name="fileText">Text of file</param>
+        /// <param name="codeName">Code to search for aliases</param>
+        /// <param name="endString">String marking end of code to search</param>
+        /// <returns>List of aliases</returns>
+        public List<Alias> GetCodeAliases(string fileText, string codeName, string endString)
+        {
+            var aliases = new List<Alias>();
+            var startPoint = fileText.IndexOf(codeName);
+            var endPoint = fileText.IndexOf(endString, startPoint);
+            var aliasRange = fileText.Substring(startPoint, endPoint - startPoint);
+            var i = 0;
+            // Read our range for aliases
+            while (i > -1 && i < aliasRange.Length)
+            {
+                // Get next alias startpoint
+                i = aliasRange.IndexOf(".alias", i);
+                if (i == -1)
+                {
+                    break;
+                }
+                // Get the end of the alias string
+                var semicolonIndex = aliasRange.IndexOf(";", i);
+                var newLineIndex = aliasRange.IndexOf("\r\n", i);
+                var aliasStringEnd = Math.Min(semicolonIndex > -1 ? semicolonIndex : newLineIndex, newLineIndex);
+                if (aliasStringEnd == -1)
+                {
+                    aliasStringEnd = aliasRange.Length;
+                }
+                // Get alias from string
+                var alias = GetAlias(aliasRange.Substring(i, aliasStringEnd - i), i);
+                aliases.Add(alias);
+                i = aliasStringEnd;
+            }
+            return aliases;
+        }
+
+        /// <summary>
+        /// Get an alias from an alias string
+        /// </summary>
+        /// <param name="text">String to parse</param>
+        /// <param name="index">Index of string</param>
+        /// <returns>Alias</returns>
+        private Alias GetAlias(string text, int index)
+        {
+            var aliasString = text.Replace(".alias", "");
+            var keyValue = aliasString.Split('=');
+            var alias = new Alias
+            {
+                Index = index,
+                Name = keyValue[0],
+                Value = keyValue[1]
+            };
+            return alias;
         }
     }
 }

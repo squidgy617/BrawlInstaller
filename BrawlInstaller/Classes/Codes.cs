@@ -33,4 +33,11 @@ namespace BrawlInstaller.Classes
         public List<string> Parameters { get; set; }
         public string Comment { get; set; } = string.Empty;
     }
+
+    public class Alias
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public int Index { get; set; }
+    }
 }

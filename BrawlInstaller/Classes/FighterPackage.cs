@@ -43,6 +43,7 @@ namespace BrawlInstaller.Classes
         public FighterSettings FighterSettings { get; set; } = new FighterSettings();
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
         public PackageType PackageType { get; set; } = PackageType.Update;
+        public List<FighterTrophy> Trophies { get; set; } = new List<FighterTrophy>();
 
         // TODO: Alternate files
         // It will be a list of alternate files you can supply. Each file has a type associated with it that tells you what type of file it is. This list, along with the associate files,
@@ -335,5 +336,17 @@ namespace BrawlInstaller.Classes
         {
             return JsonConvert.DeserializeObject<FighterDeleteOptions>(JsonConvert.SerializeObject(this));
         }
+    }
+
+    public enum TrophyType
+    {
+        Fighter,
+        AllStar
+    }
+
+    public class FighterTrophy
+    {
+        public TrophyType Type { get; set; }
+        public Trophy Trophy { get; set; }
     }
 }
