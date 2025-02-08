@@ -23,7 +23,7 @@ namespace BrawlInstaller.Classes
         public string GameName1 { get; set; } = string.Empty;
         public string GameName2 { get; set; } = string.Empty;
         [JsonIgnore] public int? GameIndex { get; set; }
-        public string Description { get; set; } = "A new trophy.";
+        public string Description { get; set; } = "<color=E6E6E6FF>A new trophy.</end>";
         [JsonIgnore] public int? DescriptionIndex { get; set; }
         public int SeriesIndex { get; set; } = 0;
         public int CategoryIndex { get; set; } = 0;
