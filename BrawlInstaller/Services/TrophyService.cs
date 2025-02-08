@@ -110,7 +110,7 @@ namespace BrawlInstaller.Services
                     var gameString = namesNode._strings[trophy.GameIndex.Value];
                     var gameNames = gameString.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList();
                     trophy.GameName1 = gameNames.FirstOrDefault();
-                    trophy.GameName2 = gameNames.LastOrDefault();
+                    trophy.GameName2 = gameNames.Count > 1 ? gameNames.LastOrDefault() : string.Empty;
                 }
                 _fileService.CloseFile(namesNode);
             }
