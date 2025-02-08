@@ -30,7 +30,7 @@
                             </Grid.RowDefinitions>
                             <ComboBox x:Name="tracklistOptionsDropDown" ItemsSource="{Binding TracklistOptions}" SelectedItem="{Binding SelectedTracklistOption}" Width="120" DisplayMemberPath="Name"/>
                             <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" MinWidth="120">
-                                <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Height="400" HorizontalAlignment="Stretch">
+                                <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Path=., Converter={StaticResource filePathNoExtensionConverter}}" ToolTip="{Binding}">

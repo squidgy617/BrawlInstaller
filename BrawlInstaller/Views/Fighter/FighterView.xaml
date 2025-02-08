@@ -37,7 +37,7 @@
                             </Grid.ColumnDefinitions>
                             <Label x:Name="fighterListLabel" Content="All Fighters:" HorizontalAlignment="Left" ToolTip="All fighters in build"/>
                             <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" MinWidth="120">
-                                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" Height="400" HorizontalAlignment="Stretch">
+                                <ListBox x:Name="fighterListBox" ItemsSource="{Binding FighterList}" SelectedValue="{Binding SelectedFighter, Mode=TwoWay}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding EntryName}">
@@ -54,7 +54,7 @@
                             <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}" Width="120"/>
                             <Button x:Name="saveRosterButton" Grid.Column="3" Content="Save" Command="{Binding SaveRostersCommand}"/>
                             <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" Grid.Column="2" MinWidth="120">
-                                <ListBox x:Name="rosterListBox" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" Height="400" HorizontalAlignment="Stretch">
+                                <ListBox x:Name="rosterListBox" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Name}">

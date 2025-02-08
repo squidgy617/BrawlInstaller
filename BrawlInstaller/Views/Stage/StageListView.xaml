@@ -34,7 +34,7 @@
                 <StackPanel x:Name="stageTableStackPanel" Grid.Row="1">
                     <Label x:Name="stageTableLabel" Content="All Stages:" HorizontalAlignment="Left" ToolTip="All stages in build"/>
                     <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120">
-                        <ListBox x:Name="stageTableListBox" ItemsSource="{Binding StageTable}" SelectedValue="{Binding SelectedStageTableEntry}" Height="400" HorizontalAlignment="Stretch">
+                        <ListBox x:Name="stageTableListBox" ItemsSource="{Binding StageTable}" SelectedValue="{Binding SelectedStageTableEntry}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Name}">
@@ -64,7 +64,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120">
-                                    <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" Height="400" HorizontalAlignment="Stretch">
+                                    <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}">
