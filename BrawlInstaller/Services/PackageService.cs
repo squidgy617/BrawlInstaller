@@ -110,6 +110,9 @@ namespace BrawlInstaller.Services
                 }
             }
 
+            // Get trophies
+            fighterPackage.Trophies = _fighterService.GetFighterTrophies(fighterInfo.Ids.SlotConfigId);
+
             fighterPackage.Cosmetics.Items = cosmetics;
             fighterPackage.Cosmetics.InheritedStyles = inheritedStyles;
             return fighterPackage;

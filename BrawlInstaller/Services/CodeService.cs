@@ -45,6 +45,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.GetCodeAliases(string, string, string)"/>
         List<Alias> GetCodeAliases(string fileText, string codeName, string endString);
+
+        /// <inheritdoc cref="CodeService.ReadHook(string, string)"/>
+        AsmHook ReadHook(string fileText, string address);
     }
 
     [Export(typeof(ICodeService))]
@@ -218,7 +221,7 @@ namespace BrawlInstaller.Services
         /// <param name="fileText">Text to read from</param>
         /// <param name="hookLocation">Address hook is bound to</param>
         /// <returns>ASM hook with instructions</returns>
-        private AsmHook ReadHook(string fileText, string address)
+        public AsmHook ReadHook(string fileText, string address)
         {
             var newLine = "\r\n";
             AsmHook asmHook = null;
@@ -801,8 +804,8 @@ namespace BrawlInstaller.Services
             var alias = new Alias
             {
                 Index = index,
-                Name = keyValue[0],
-                Value = keyValue[1]
+                Name = keyValue[0].Trim(),
+                Value = keyValue[1].Trim()
             };
             return alias;
         }

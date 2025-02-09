@@ -113,6 +113,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.VerifyFighterPacName(string, string, string)"/>
         bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension);
+
+        /// <inheritdoc cref="FighterService.GetFighterTrophies(int?)"/>
+        List<FighterTrophy> GetFighterTrophies(int? slotId);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -123,15 +126,17 @@ namespace BrawlInstaller.Services
         ITracklistService _tracklistService { get; }
         ICodeService _codeService { get; }
         IPsaService _psaService { get; }
+        ITrophyService _trophyService { get; }
 
         [ImportingConstructor]
-        public FighterService(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, ICodeService codeService, IPsaService psaService)
+        public FighterService(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, ICodeService codeService, IPsaService psaService, ITrophyService trophyService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _tracklistService = tracklistService;
             _codeService = codeService;
             _psaService = psaService;
+            _trophyService = trophyService;
         }
 
         // Methods
@@ -2817,6 +2822,84 @@ namespace BrawlInstaller.Services
             var usedIds = _settingsService.FighterInfoList.Select(x => x.EffectPacId);
             usedIds = usedIds.Concat(buildIds.ToList());
             return usedIds.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Get trophies associated with fighter
+        /// </summary>
+        /// <param name="slotId">Slot ID of fighter</param>
+        /// <returns>List of trophies</returns>
+        public List<FighterTrophy> GetFighterTrophies(int? slotId)
+        {
+            var fighterTrophies = new List<FighterTrophy>();
+            int classicTrophyId = -1;
+            int allStarTrophyId = -1;
+            var trophyFile = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterTrophyLocation);
+            // First get trophy IDs
+            if (!string.IsNullOrEmpty(trophyFile))
+            {
+                var trophyFileText = _codeService.ReadCode(trophyFile);
+                var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]", "op b 0x34 @ $806E29DC");
+                // Get alias for fighter's slot ID
+                var slotAlias = aliases.FirstOrDefault(x => int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == slotId);
+                if (slotAlias != null)
+                {
+                    // Get classic trophy
+                    classicTrophyId = GetFighterTrophyFromHook(slotAlias, "806E29D0", trophyFileText, aliases);
+                    // Get All-Star trophy
+                    allStarTrophyId = GetFighterTrophyFromHook(slotAlias, "806E47D8", trophyFileText, aliases);
+                }
+            }
+            // Use trophy IDs to load trophies
+            var trophies = _trophyService.GetTrophyList();
+            if (classicTrophyId > -1)
+            {
+                var trophy = trophies.FirstOrDefault(x => x.Ids.TrophyId == classicTrophyId);
+                var newTrophy = _trophyService.LoadTrophyData(trophy);
+                fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.Fighter });
+            }
+            if (allStarTrophyId > -1)
+            {
+                var trophy = trophies.FirstOrDefault(x => x.Ids.TrophyId == allStarTrophyId);
+                var newTrophy = _trophyService.LoadTrophyData(trophy);
+                fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.AllStar });
+            }
+            return fighterTrophies;
+        }
+
+        /// <summary>
+        /// Get trophy ID in a hook by matching with a fighter's slot alias
+        /// </summary>
+        /// <param name="alias">Alias for fighter's slot ID</param>
+        /// <param name="hookAddress">Address of hook to search</param>
+        /// <param name="codeText">Text of code containing hook</param>
+        /// <param name="aliases">List of aliases</param>
+        /// <returns></returns>
+        private int GetFighterTrophyFromHook(Alias alias, string hookAddress, string codeText, List<Alias> aliases)
+        {
+            int trophyId = -1;
+            var hook = _codeService.ReadHook(codeText, hookAddress);
+            foreach (var instruction in hook.Instructions)
+            {
+                // Check if the instruction has our slot alias
+                if (instruction.Text.Contains(alias.Name))
+                {
+                    // If it does, search for another alias in the string
+                    var wordList = instruction.Text.Split(new string[] { ";", "\r\n", " " }, StringSplitOptions.None);
+                    wordList = wordList.Select(x => x.Trim()).ToArray();
+                    var match = aliases.FirstOrDefault(x => x.Name != alias.Name && wordList.Contains(x.Name));
+                    // If another alias was found, we can link the trophy to the slot ID
+                    if (match != null)
+                    {
+                        if (int.TryParse(match.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id))
+                        {
+                            trophyId = id;
+                            break;
+                        }
+                    }
+                }
+            }
+            return trophyId;
         }
 
         #region Fighter-Specific Settings
