@@ -149,7 +149,7 @@
     <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ImageDropDownViewModel.cs" />
-    <Compile Include="ViewModels\Fighter\TrophyEditorViewModel.cs" />
+    <Compile Include="ViewModels\Fighter\FighterTrophyViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />

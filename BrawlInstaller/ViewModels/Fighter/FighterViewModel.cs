@@ -41,6 +41,7 @@ namespace BrawlInstaller.ViewModels
     internal class FighterViewModel : ViewModelBase, IFighterViewModel
     {
         // Private properties
+        private FighterPackage _fighterPackage;
         private FighterPackage _oldFighterPackage;
         private FighterInfo _selectedFighter;
         private string _oldVictoryThemePath;
@@ -49,6 +50,7 @@ namespace BrawlInstaller.ViewModels
         private List<Roster> _rosters;
         private Roster _selectedRoster;
         private RosterEntry _selectedRosterEntry;
+        private TrophyType _selectedTrophyType;
 
         // Services
         IPackageService _packageService { get; }
@@ -121,7 +123,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public FighterPackage OldFighterPackage { get => _oldFighterPackage; set { _oldFighterPackage = value; OnPropertyChanged(nameof(OldFighterPackage)); } }
-        public FighterPackage FighterPackage { get; set; }
+        public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
         public ObservableCollection<FighterInfo> FighterList { get => new ObservableCollection<FighterInfo>(_settingsService.FighterInfoList); }
         public FighterInfo SelectedFighter { get => _selectedFighter; set { _selectedFighter = value; OnPropertyChanged(nameof(SelectedFighter)); } }
 
@@ -148,6 +150,15 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public bool ImportButtonEnabled { get => FighterPackage?.PackageType == PackageType.Update || (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.BrawlEx) && _fileService.DirectoryExists(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BrawlEx))); }
+
+        public Dictionary<string, TrophyType> TrophyTypes { get => typeof(TrophyType).GetDictionary<TrophyType>(); }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public TrophyType SelectedTrophyType { get => _selectedTrophyType; set { _selectedTrophyType = value; ChangeSelectedTrophyType(value); OnPropertyChanged(nameof(SelectedTrophyType)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        [DependsUpon(nameof(SelectedTrophyType))]
+        public FighterTrophy SelectedFighterTrophy { get => FighterPackage?.Trophies?.FirstOrDefault(x => x.Type == SelectedTrophyType); }
 
         // Methods
         public void LoadFighterFromRoster(object param)
@@ -185,7 +196,7 @@ namespace BrawlInstaller.ViewModels
                     // Set package path to internal fighter
                     FighterPackagePath = string.Empty;
                     OnPropertyChanged(nameof(FighterPackage));
-                    WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+                    SendFighterLoadedMessage(FighterPackage);
                 }
             }
         }
@@ -234,7 +245,7 @@ namespace BrawlInstaller.ViewModels
                 // Set package path to newly opened fighter
                 FighterPackagePath = file;
                 OnPropertyChanged(nameof(FighterPackage));
-                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+                SendFighterLoadedMessage(FighterPackage);
             }
         }
 
@@ -255,7 +266,7 @@ namespace BrawlInstaller.ViewModels
             FighterPackage.FighterSettings.LLoadCharacterId = FighterPackage.FighterInfo.Ids.CSSSlotConfigId;
             FighterPackage.FighterSettings.SSESubCharacterId = FighterPackage.FighterInfo.Ids.CSSSlotConfigId;
             OnPropertyChanged(nameof(FighterPackage));
-            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+            SendFighterLoadedMessage(FighterPackage);
         }
 
         public void DeleteFighter()
@@ -411,7 +422,7 @@ namespace BrawlInstaller.ViewModels
                 // Update UI
                 OnPropertyChanged(nameof(FighterPackage));
                 OnPropertyChanged(nameof(FighterList));
-                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+                SendFighterLoadedMessage(FighterPackage);
                 WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
                 // Compile GCT
                 _codeService.CompileCodes();
@@ -451,7 +462,7 @@ namespace BrawlInstaller.ViewModels
                 OldFighterPackage = null;
                 _dialogService.ShowMessage("Exported successfully.", "Success");
                 OnPropertyChanged(nameof(FighterPackage));
-                WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(FighterPackage));
+                SendFighterLoadedMessage(FighterPackage);
             }
         }
 
@@ -890,6 +901,19 @@ namespace BrawlInstaller.ViewModels
             }
             return fighterPackage;
         }
+
+        private void ChangeSelectedTrophyType(TrophyType trophyType)
+        {
+            var trophy = FighterPackage?.Trophies?.FirstOrDefault(x => x.Type == trophyType);
+            WeakReferenceMessenger.Default.Send(new TrophyChangedMessage(trophy?.Trophy));
+            OnPropertyChanged(nameof(SelectedTrophyType));
+        }
+
+        private void SendFighterLoadedMessage(FighterPackage fighterPackage)
+        {
+            WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(fighterPackage));
+            SelectedTrophyType = TrophyTypes.FirstOrDefault().Value;
+        }
     }
 
     // Messages
@@ -903,6 +927,13 @@ namespace BrawlInstaller.ViewModels
     public class UpdateFighterListMessage : ValueChangedMessage<List<FighterInfo>>
     {
         public UpdateFighterListMessage(List<FighterInfo> fighterInfoList) : base(fighterInfoList)
+        {
+        }
+    }
+
+    public class TrophyChangedMessage : ValueChangedMessage<Trophy>
+    {
+        public TrophyChangedMessage(Trophy trophy) : base(trophy)
         {
         }
     }

@@ -425,6 +425,19 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class FighterTrophyListExtensions
+    {
+        public static List<FighterTrophy> Copy(this List<FighterTrophy> list)
+        {
+            var newList = new List<FighterTrophy>();
+            foreach (var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
+
     public static class ObjectExtensions
     {
         public static bool Compare(this object object1, object object2)

@@ -71,7 +71,8 @@ namespace BrawlInstaller.Classes
                 VictoryTheme = VictoryTheme.Copy(),
                 FighterSettings = FighterSettings.Copy(),
                 FighterDeleteOptions = FighterDeleteOptions.Copy(),
-                PackageType = PackageType
+                PackageType = PackageType,
+                Trophies = Trophies.Copy()
             };
             return fighterPackage;
         }
@@ -340,7 +341,9 @@ namespace BrawlInstaller.Classes
 
     public enum TrophyType
     {
+        [Description("Classic")]
         Fighter,
+        [Description("All-Star")]
         AllStar
     }
 
@@ -348,5 +351,15 @@ namespace BrawlInstaller.Classes
     {
         public TrophyType Type { get; set; }
         public Trophy Trophy { get; set; }
+
+        public FighterTrophy Copy()
+        {
+            var copy = new FighterTrophy
+            {
+                Type = Type,
+                Trophy = Trophy.Copy()
+            };
+            return copy;
+        }
     }
 }

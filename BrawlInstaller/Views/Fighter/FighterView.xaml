@@ -107,7 +107,10 @@
                                     <ContentControl Content="{Binding FranchiseIconViewModel}"/>
                                 </GroupBox>
                                 <GroupBox x:Name="trophiesGroupBox" Header="Trophies" Margin="3,2,2,2">
-                                    <ContentControl Content="{Binding FighterTrophyViewModel}"/>
+                                    <StackPanel>
+                                        <ComboBox x:Name="trophiesDropDown" ItemsSource="{Binding TrophyTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedTrophyType}" Width="120"/>
+                                        <ContentControl Content="{Binding FighterTrophyViewModel}" Visibility="{Binding SelectedFighterTrophy, Converter={StaticResource nullVisConverter}}"/>
+                                    </StackPanel>
                                 </GroupBox>
                             </StackPanel>
                         </StackPanel>

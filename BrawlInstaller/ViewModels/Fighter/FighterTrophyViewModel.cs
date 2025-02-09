@@ -50,11 +50,24 @@ namespace BrawlInstaller.ViewModels
             _dialogService = dialogService;
 
             GameIconList = new List<TrophyGameIcon>();
+
+            WeakReferenceMessenger.Default.Register<TrophyChangedMessage>(this, (recipient, message) =>
+            {
+                var trophy = message.Value;
+                LoadTrophy(trophy);
+            });
         }
 
         // Properties
 
         // Methods
+        public new void LoadTrophy(Trophy trophy)
+        {
+            Trophy = trophy;
+            OldTrophy = trophy;
+            OnPropertyChanged(nameof(Trophy));
+            OnPropertyChanged(nameof(OldTrophy));
+        }
     }
 
     // Messages
