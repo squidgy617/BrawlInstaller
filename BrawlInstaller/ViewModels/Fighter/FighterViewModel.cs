@@ -79,7 +79,7 @@ namespace BrawlInstaller.ViewModels
         [ImportingConstructor]
         public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFighterService fighterService, IFileService fileService,
             ICodeService codeService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel,
-            IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel)
+            IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel, IFighterTrophyViewModel fighterTrophyViewModel)
         {
             _packageService = packageService;
             _settingsService = settingsService;
@@ -92,6 +92,7 @@ namespace BrawlInstaller.ViewModels
             CosmeticViewModel = cosmeticViewmodel;
             FighterFileViewModel = fighterFileViewModel;
             FighterSettingsViewModel = fighterSettingsViewModel;
+            FighterTrophyViewModel = fighterTrophyViewModel;
 
             Rosters = _fighterService.GetRosters();
             SelectedRoster = Rosters.FirstOrDefault();
@@ -116,6 +117,7 @@ namespace BrawlInstaller.ViewModels
         public ICosmeticViewModel CosmeticViewModel { get; }
         public IFighterFileViewModel FighterFileViewModel { get; }
         public IFighterSettingsViewModel FighterSettingsViewModel { get; }
+        public IFighterTrophyViewModel FighterTrophyViewModel { get; }
 
         // Properties
         public FighterPackage OldFighterPackage { get => _oldFighterPackage; set { _oldFighterPackage = value; OnPropertyChanged(nameof(OldFighterPackage)); } }

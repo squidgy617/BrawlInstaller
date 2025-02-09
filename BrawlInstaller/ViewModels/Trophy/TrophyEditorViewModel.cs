@@ -27,7 +27,7 @@ namespace BrawlInstaller.ViewModels
     }
 
     [Export(typeof(ITrophyEditorViewModel))]
-    internal class TrophyEditorViewModel : ViewModelBase, ITrophyEditorViewModel
+    internal class TrophyEditorViewModel : TrophyEditorViewModelBase, ITrophyEditorViewModel
     {
         // Private properties
         private Trophy _trophy;
@@ -41,15 +41,12 @@ namespace BrawlInstaller.ViewModels
         IDialogService _dialogService;
 
         // Commands
-        public ICommand ReplaceThumbnailCommand => new RelayCommand(param => ReplaceCosmetic());
-        public ICommand ReplaceHDThumbnailCommand => new RelayCommand(param => ReplaceHDCosmetic());
-        public ICommand ClearThumbnailCommand => new RelayCommand(param => ClearCosmetic());
-        public ICommand ClearHDThumbnailCommand => new RelayCommand(param => ClearHDCosmetic());
         public ICommand SaveTrophyCommand => new RelayCommand(() => SaveTrophy());
         public ICommand DeleteTrophyCommand => new RelayCommand(() => DeleteTrophy());
 
         [ImportingConstructor]
-        public TrophyEditorViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, IDialogService dialogService)
+        public TrophyEditorViewModel(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, IDialogService dialogService) 
+            : base(settingsService, fileService, trophyService, dialogService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
@@ -60,7 +57,10 @@ namespace BrawlInstaller.ViewModels
 
             WeakReferenceMessenger.Default.Register<LoadTrophyMessage>(this, (recipient, message) =>
             {
-                LoadTrophy(message);
+                using (new CursorWait())
+                {
+                    LoadTrophy(message.Value);
+                }
             });
             WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
             {
@@ -73,115 +73,11 @@ namespace BrawlInstaller.ViewModels
         }
 
         // Properties
-        public Trophy Trophy { get => _trophy; set { _trophy = value; OnPropertyChanged(nameof(Trophy)); } }
-        public Trophy OldTrophy { get => _oldTrophy; set { _oldTrophy = value; OnPropertyChanged(nameof(OldTrophy)); } }
-        public Dictionary<string, int> TrophySeries { get => Trophies.Series; }
-        public Dictionary<string, int> TrophyCategories { get => Trophies.Categories; }
-        public List<TrophyGameIcon> GameIconList { get => _gameIconList; set { _gameIconList = value; OnPropertyChanged(nameof(GameIconList)); } }
-
-        [DependsUpon(nameof(Trophy))]
-        public int? SelectedGameIcon1 { get => Trophy?.GameIcon1; set { Trophy.GameIcon1 = (value ?? 0); OnPropertyChanged(nameof(SelectedGameIcon1)); } }
-
-        [DependsUpon(nameof(Trophy))]
-        public int? SelectedGameIcon2 { get => Trophy?.GameIcon2; set { Trophy.GameIcon2 = (value ?? 0); OnPropertyChanged(nameof(SelectedGameIcon2)); } }
-
-        [DependsUpon(nameof(SelectedGameIcon1))]
-        public BitmapImage GameIcon1 { get => GameIconList.FirstOrDefault(x => x.Id == Trophy?.GameIcon1)?.Image; }
-
-        [DependsUpon(nameof(SelectedGameIcon2))]
-        public BitmapImage GameIcon2 { get => GameIconList.FirstOrDefault(x => x.Id == Trophy?.GameIcon2)?.Image; }
-
-        [DependsUpon(nameof(Trophy))]
-        public Cosmetic Thumbnail { get => Trophy?.Thumbnails?.Items.FirstOrDefault(); }
 
         // Methods
-        public void LoadTrophy(LoadTrophyMessage message)
-        {
-            using (new CursorWait())
-            {
-                GameIconList = _trophyService.GetTrophyGameIcons();
-                var trophy = message.Value;
-                Trophy = _trophyService.LoadTrophyData(trophy);
-                OldTrophy = Trophy.Copy();
-                OnPropertyChanged(nameof(GameIconList));
-                OnPropertyChanged(nameof(Trophy));
-            }
-        }
-
-        private Cosmetic AddCosmetic()
-        {
-            var cosmetic = new Cosmetic
-            {
-                CosmeticType = CosmeticType.TrophyThumbnail,
-                Style = "vBrawl"
-            };
-            Trophy.Thumbnails.Add(cosmetic);
-            return cosmetic;
-        }
-
-        public void ReplaceCosmetic()
-        {
-            var image = _dialogService.OpenFileDialog("Select image", "PNG image (.png)|*.png");
-            if (!string.IsNullOrEmpty(image))
-            {
-                var bitmap = _fileService.LoadImage(image);
-                if (Thumbnail == null)
-                {
-                    AddCosmetic();
-                }
-                Thumbnail.Image = bitmap;
-                Thumbnail.ImagePath = image;
-                Thumbnail.Texture = null;
-                Thumbnail.Palette = null;
-                Trophy.Thumbnails.ItemChanged(Thumbnail);
-                OnPropertyChanged(nameof(Thumbnail));
-                OnPropertyChanged(nameof(Trophy));
-            }
-        }
-
-        public void ReplaceHDCosmetic()
-        {
-            var image = _dialogService.OpenFileDialog("Select HD image", "PNG image (.png)|*.png");
-            if (!string.IsNullOrEmpty(image))
-            {
-                var bitmap = _fileService.LoadImage(image);
-                if (Thumbnail == null)
-                {
-                    AddCosmetic();
-                }
-                Thumbnail.HDImage = bitmap;
-                Thumbnail.HDImagePath = image;
-                Trophy.Thumbnails.ItemChanged(Thumbnail);
-                OnPropertyChanged(nameof(Thumbnail));
-                OnPropertyChanged(nameof(Trophy));
-            }
-        }
-
-        public void ClearCosmetic()
-        {
-            Trophy?.Thumbnails?.Remove(Thumbnail);
-            OnPropertyChanged(nameof(Thumbnail));
-            OnPropertyChanged(nameof(Trophy));
-        }
-
-        public void ClearHDCosmetic()
-        {
-            if (Thumbnail?.Image == null)
-            {
-                Trophy.Thumbnails.Remove(Thumbnail);
-            }
-            else
-            {
-                Thumbnail.HDImage = null;
-                Thumbnail.HDImagePath = "";
-                Trophy.Thumbnails.ItemChanged(Thumbnail);
-            }
-            OnPropertyChanged(nameof(Thumbnail));
-            OnPropertyChanged(nameof(Trophy));
-        }
-
         public void SaveTrophy()
         {
+            _fileService.StartBackup();
             using (new CursorWait())
             {
                 // Create copies of trophies before save
@@ -197,6 +93,7 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(OldTrophy));
                 WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
             }
+            _fileService.EndBackup();
             _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 
@@ -205,6 +102,7 @@ namespace BrawlInstaller.ViewModels
             var result = _dialogService.ShowMessage("WARNING! You are about to delete the currently loaded trophy. Are you sure?", "Delete Trophy", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result)
             {
+                _fileService.StartBackup();
                 using (new CursorWait())
                 {
                     var trophyToDelete = new Trophy { Ids = OldTrophy.Ids.Copy() };
@@ -222,6 +120,7 @@ namespace BrawlInstaller.ViewModels
                     OnPropertyChanged(nameof(OldTrophy));
                     WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
                 }
+                _fileService.EndBackup();
                 _dialogService.ShowMessage("Changes saved.", "Saved");
             }
         }

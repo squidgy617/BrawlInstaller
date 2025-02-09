@@ -79,4 +79,7 @@
     <DataTemplate DataType="{x:Type viewModels:TrophyEditorViewModel}">
         <views:TrophyEditorView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:FighterTrophyViewModel}">
+        <views:FighterTrophyView/>
+    </DataTemplate>
 </ResourceDictionary>

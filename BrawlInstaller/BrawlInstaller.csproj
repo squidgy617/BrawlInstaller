@@ -149,6 +149,7 @@
     <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ImageDropDownViewModel.cs" />
+    <Compile Include="ViewModels\Fighter\TrophyEditorViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="ViewModels\Stage\StageViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\StringInputViewModel.cs" />
     <Compile Include="ViewModels\Music\TracklistViewModel.cs" />
+    <Compile Include="ViewModels\Trophy\TrophyEditorViewModelBase.cs" />
     <Compile Include="ViewModels\Trophy\TrophyEditorViewModel.cs" />
     <Compile Include="ViewModels\Trophy\TrophyViewModel.cs" />
     <Compile Include="Views\Dialogs\CheckListView.xaml.cs">
@@ -196,6 +198,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\ImageDropDownView.xaml.cs">
       <DependentUpon>ImageDropDownView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Fighter\FighterTrophyView.xaml.cs">
+      <DependentUpon>FighterTrophyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
@@ -310,6 +315,10 @@
     <Page Include="Views\Dialogs\ImageDropDownView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Fighter\FighterTrophyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Settings\FighterInfoView.xaml">
       <SubType>Designer</SubType>

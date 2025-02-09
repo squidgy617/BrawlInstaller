@@ -174,8 +174,6 @@ namespace BrawlInstaller.Services
         /// <returns>Updated trophy</returns>
         public Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy, bool addTrophy = true)
         {
-            _fileService.StartBackup();
-
             var trophyPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyLocation.Path);
             var trophyNamePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyNames);
             var trophyDescriptionPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyDescriptions);
@@ -271,8 +269,6 @@ namespace BrawlInstaller.Services
                 }
                 _fileService.CloseFile(rootNode);
             }
-
-            _fileService.EndBackup();
             return trophy;
         }
 

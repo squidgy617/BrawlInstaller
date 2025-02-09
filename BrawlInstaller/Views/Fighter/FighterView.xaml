@@ -106,6 +106,9 @@
                                 <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" Margin="3,2,2,2">
                                     <ContentControl Content="{Binding FranchiseIconViewModel}"/>
                                 </GroupBox>
+                                <GroupBox x:Name="trophiesGroupBox" Header="Trophies" Margin="3,2,2,2">
+                                    <ContentControl Content="{Binding FighterTrophyViewModel}"/>
+                                </GroupBox>
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
