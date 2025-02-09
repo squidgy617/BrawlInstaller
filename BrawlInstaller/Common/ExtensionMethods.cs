@@ -439,21 +439,21 @@ namespace BrawlInstaller.Common
                 };
                 // Preserve references
                 var existingTrophy = trophiesCopied.Any(x => x.OldRef == item.Trophy);
-                if (existingTrophy)
+                if (existingTrophy && item?.Trophy != null)
                 {
                     newItem.Trophy = trophiesCopied.FirstOrDefault(x => x.OldRef == item.Trophy).NewRef;
                 }
-                else
+                else if (item?.Trophy != null)
                 {
                     newItem.Trophy = item.Trophy.Copy();
                     trophiesCopied.Add((item.Trophy, newItem.Trophy));
                 }
                 var existingOldTrophy = trophiesCopied.Any(x => x.OldRef == item.OldTrophy);
-                if (existingOldTrophy)
+                if (existingOldTrophy && item?.OldTrophy != null)
                 {
                     newItem.OldTrophy = trophiesCopied.FirstOrDefault(x => x.OldRef == item.OldTrophy).NewRef;
                 }
-                else
+                else if (item?.OldTrophy != null)
                 {
                     newItem.OldTrophy = item.OldTrophy.Copy();
                     trophiesCopied.Add((item.OldTrophy, newItem.OldTrophy));

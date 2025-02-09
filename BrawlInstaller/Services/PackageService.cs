@@ -47,15 +47,17 @@ namespace BrawlInstaller.Services
         ICosmeticService _cosmeticService { get; }
         IFighterService _fighterService { get; }
         ICodeService _codeService { get; }
+        ITrophyService _trophyService { get; }
 
         [ImportingConstructor]
-        public PackageService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService, ICodeService codeService) 
+        public PackageService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService, ICodeService codeService, ITrophyService trophyService) 
         {
             _fileService = fileService;
             _settingsService = settingsService;
             _cosmeticService = cosmeticService;
             _fighterService = fighterService;
             _codeService = codeService;
+            _trophyService = trophyService;
         }
 
         // Methods
@@ -318,6 +320,50 @@ namespace BrawlInstaller.Services
                     fighterPackage.FighterInfo.KirbyEffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterPackage.FighterInfo.KirbyPacFileName);
                     fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
                 }
+                // Get trophies
+                foreach(var type in typeof(TrophyType).GetDictionary<TrophyType>())
+                {
+                    var trophyPath = $"{path}\\Trophies\\{type.Value}";
+                    if (_fileService.DirectoryExists(trophyPath))
+                    {
+                        var trophyJson = _fileService.ReadTextFile($"{trophyPath}\\Trophy.json");
+                        if (!string.IsNullOrEmpty(trophyJson))
+                        {
+                            var trophy = JsonConvert.DeserializeObject<FighterTrophy>(trophyJson);
+                            // Get BRRES
+                            trophy.Trophy.BrresFile = _fileService.GetFiles(trophyPath, "*.brres").FirstOrDefault();
+                            // Get cosmetics
+                            trophy.Trophy.Thumbnails = _cosmeticService.LoadCosmetics($"{trophyPath}\\Thumbnails");
+                            // Set custom trophy IDs to get a new ID
+                            if (trophy.Trophy.Ids.TrophyId >= 631)
+                            {
+                                trophy.Trophy.Ids.TrophyId = null;
+                            }
+                            if (trophy.Trophy.Ids.TrophyThumbnailId >= 631)
+                            {
+                                trophy.Trophy.Ids.TrophyThumbnailId = null;
+                            }
+                            _trophyService.GetUnusedTrophyIds(trophy.Trophy.Ids);
+                            // If NOT a custom trophy ID, set old trophy to matching trophy in build
+                            if (trophy.Trophy.Ids.TrophyId < 631)
+                            {
+                                var existingTrophy = _trophyService.LoadTrophyData(trophy.Trophy);
+                                trophy.OldTrophy = existingTrophy;
+                            }
+                            fighterPackage.Trophies.Add(trophy);
+                        }
+                    }
+                }
+                // Copy trophy over if one is missing
+                if (fighterPackage.Trophies.Count == 1)
+                {
+                    fighterPackage.Trophies.Add(new FighterTrophy 
+                    {
+                        Trophy = fighterPackage.Trophies.FirstOrDefault()?.Trophy, 
+                        OldTrophy = fighterPackage.Trophies.FirstOrDefault()?.Trophy, 
+                        Type = !fighterPackage.Trophies.Any(x => x.Type == TrophyType.AllStar) ? TrophyType.AllStar : TrophyType.Fighter
+                    });
+                }
                 fighterPackage.PackageType = PackageType.New;
                 return fighterPackage;
             }
@@ -393,8 +439,14 @@ namespace BrawlInstaller.Services
                 _fileService.SaveTextFile($"{path}\\CreditsTheme.json", creditsThemeJson);
             }
             // Export trophies
+            var exportedTrophies = new List<Trophy>();
             foreach(var fighterTrophy in fighterPackage.Trophies)
             {
+                // If already exported, don't export again
+                if (exportedTrophies.Contains(fighterTrophy.Trophy))
+                {
+                    continue;
+                }
                 var trophyPath = $"{path}\\Trophies\\{fighterTrophy.Type}";
                 var fighterTrophyJson = JsonConvert.SerializeObject(fighterTrophy, Formatting.Indented);
                 _fileService.SaveTextFile($"{trophyPath}\\Trophy.json", fighterTrophyJson);
@@ -402,6 +454,7 @@ namespace BrawlInstaller.Services
                 _cosmeticService.ExportCosmetics($"{trophyPath}\\Thumbnails", fighterTrophy?.Trophy?.Thumbnails);
                 // Export BRRES
                 _fileService.CopyFile(fighterTrophy?.Trophy?.BrresFile, $"{trophyPath}\\{fighterTrophy?.Trophy?.Brres}.brres");
+                exportedTrophies.Add(fighterTrophy.Trophy);
             }
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);

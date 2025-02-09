@@ -28,6 +28,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="TrophyService.SaveTrophy(Trophy, Trophy, bool)"/>
         void SaveTrophyList(List<Trophy> trophyList);
+
+        /// <inheritdoc cref="TrophyService.GetUnusedTrophyIds(BrawlIds)"/>
+        BrawlIds GetUnusedTrophyIds(BrawlIds ids);
     }
 
     [Export(typeof(ITrophyService))]
@@ -352,6 +355,42 @@ namespace BrawlInstaller.Services
                 }
                 _fileService.CloseFile(rootNode);
             }
+        }
+
+        /// <summary>
+        /// Get first unused trophy IDs
+        /// </summary>
+        /// <param name="ids">BrawlIds to update</param>
+        /// <returns>Updated IDs</returns>
+        public BrawlIds GetUnusedTrophyIds(BrawlIds ids)
+        {
+            if (ids != null)
+            {
+                List<Trophy> trophyList = null;
+                // Get IDs if they aren't there
+                if (ids.TrophyId == null)
+                {
+                    trophyList = GetTrophyList();
+                    ids.TrophyId = 631; // 631 is first custom trophy ID
+                    while (trophyList.Any(x => x.Ids.TrophyId == ids.TrophyId))
+                    {
+                        ids.TrophyId++;
+                    }
+                }
+                if (ids.TrophyThumbnailId == null)
+                {
+                    if (trophyList == null)
+                    {
+                        trophyList = GetTrophyList();
+                    }
+                    ids.TrophyThumbnailId = 631; // 631 is first custom trophy ID
+                    while (trophyList.Any(x => x.Ids.TrophyThumbnailId == ids.TrophyThumbnailId))
+                    {
+                        ids.TrophyThumbnailId++;
+                    }
+                }
+            }
+            return ids;
         }
     }
 }
