@@ -195,7 +195,10 @@ namespace BrawlInstaller.Services
             // Replace old BRRES
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation))
             {
-                _fileService.DeleteFile(oldTrophy?.BrresFile);
+                if (!string.IsNullOrEmpty(oldTrophy?.BrresFile) && oldTrophy.BrresFile.Contains(_settingsService.AppSettings.BuildPath))
+                {
+                    _fileService.DeleteFile(oldTrophy?.BrresFile);
+                }
                 if (addTrophy)
                 {
                     var trophyBrresFolder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
@@ -301,7 +304,14 @@ namespace BrawlInstaller.Services
                 // Get new index if necessary
                 if (index == null)
                 {
-                    index = rootNode._strings.Count;
+                    if (oldIndex != null)
+                    {
+                        index = oldIndex;
+                    }
+                    else
+                    {
+                        index = rootNode._strings.Count;
+                    }
                 }
                 // Insert new string
                 if (newString != null)

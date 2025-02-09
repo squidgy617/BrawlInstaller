@@ -392,6 +392,17 @@ namespace BrawlInstaller.Services
                 var creditsThemeJson = JsonConvert.SerializeObject(fighterPackage.CreditsTheme.CopyNoFile(), Formatting.Indented);
                 _fileService.SaveTextFile($"{path}\\CreditsTheme.json", creditsThemeJson);
             }
+            // Export trophies
+            foreach(var fighterTrophy in fighterPackage.Trophies)
+            {
+                var trophyPath = $"{path}\\Trophies\\{fighterTrophy.Type}";
+                var fighterTrophyJson = JsonConvert.SerializeObject(fighterTrophy, Formatting.Indented);
+                _fileService.SaveTextFile($"{trophyPath}\\Trophy.json", fighterTrophyJson);
+                // Export thumbnails
+                _cosmeticService.ExportCosmetics($"{trophyPath}\\Thumbnails", fighterTrophy?.Trophy?.Thumbnails);
+                // Export BRRES
+                _fileService.CopyFile(fighterTrophy?.Trophy?.BrresFile, $"{trophyPath}\\{fighterTrophy?.Trophy?.Brres}.brres");
+            }
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);
