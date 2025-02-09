@@ -13,7 +13,7 @@ namespace BrawlInstaller.Classes
     {
         public string Name { get; set; } = "New_Trophy";
         public string Brres { get; set; } = "New_Trophy";
-        public string BrresFile { get; set; }
+        [JsonIgnore] public string BrresFile { get; set; }
         public BrawlIds Ids { get; set; } = new BrawlIds();
         [JsonIgnore] public CosmeticList Thumbnails { get; set; } = new CosmeticList();
         public int GameIcon1 { get; set; } = 0;
@@ -82,6 +82,7 @@ namespace BrawlInstaller.Classes
         public Trophy Copy()
         {
             var copy = JsonConvert.DeserializeObject<Trophy>(JsonConvert.SerializeObject(this));
+            copy.BrresFile = BrresFile;
             copy.Thumbnails = Thumbnails.Copy();
             copy.NameIndex = NameIndex;
             copy.GameIndex = GameIndex;
