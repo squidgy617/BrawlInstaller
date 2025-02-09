@@ -63,6 +63,7 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public new void LoadTrophy(Trophy trophy)
         {
+            GameIconList = _trophyService.GetTrophyGameIcons();
             Trophy = trophy;
             OldTrophy = trophy;
             OnPropertyChanged(nameof(Trophy));
