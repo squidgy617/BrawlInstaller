@@ -2857,13 +2857,26 @@ namespace BrawlInstaller.Services
             {
                 var trophy = trophies.FirstOrDefault(x => x.Ids.TrophyId == classicTrophyId);
                 var newTrophy = _trophyService.LoadTrophyData(trophy);
-                fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.Fighter });
+                fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.Fighter, OldTrophy = newTrophy.Copy() });
             }
             if (allStarTrophyId > -1)
             {
                 var trophy = trophies.FirstOrDefault(x => x.Ids.TrophyId == allStarTrophyId);
-                var newTrophy = _trophyService.LoadTrophyData(trophy);
-                fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.AllStar });
+                // If All-Star and Classic trophies match, both fighter trophies should reference the same object
+                var trophyMatch = fighterTrophies.FirstOrDefault(x => x.Trophy.Ids.TrophyId == trophy.Ids.TrophyId && x.Trophy.Name == trophy.Name);
+                Trophy newTrophy = null;
+                Trophy oldTrophy = newTrophy;
+                if (trophyMatch != null)
+                {
+                    newTrophy = trophyMatch.Trophy;
+                    oldTrophy = trophyMatch.OldTrophy;
+                }
+                else
+                {
+                    newTrophy = _trophyService.LoadTrophyData(trophy);
+                    oldTrophy = newTrophy.Copy();
+                }
+                fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.AllStar, OldTrophy = oldTrophy });
             }
             return fighterTrophies;
         }

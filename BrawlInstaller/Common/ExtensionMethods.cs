@@ -430,9 +430,25 @@ namespace BrawlInstaller.Common
         public static List<FighterTrophy> Copy(this List<FighterTrophy> list)
         {
             var newList = new List<FighterTrophy>();
+            var trophiesCopied = new List<(Trophy OldRef, Trophy NewRef)>();
             foreach (var item in list)
             {
-                newList.Add(item.Copy());
+                var newItem = new FighterTrophy
+                {
+                    Type = item.Type
+                };
+                // Preserve references
+                var existingTrophy = trophiesCopied.Any(x => x.OldRef == item.Trophy);
+                if (existingTrophy)
+                {
+                    newItem.Trophy = trophiesCopied.FirstOrDefault(x => x.OldRef == item.Trophy).NewRef;
+                }
+                else
+                {
+                    newItem.Trophy = item.Trophy.Copy();
+                    trophiesCopied.Add((item.Trophy, newItem.Trophy));
+                }
+                newList.Add(newItem);
             }
             return newList;
         }
