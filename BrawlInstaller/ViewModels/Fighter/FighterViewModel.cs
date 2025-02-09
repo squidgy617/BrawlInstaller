@@ -59,6 +59,7 @@ namespace BrawlInstaller.ViewModels
         IFighterService _fighterService { get; }
         IFileService _fileService { get; }
         ICodeService _codeService { get; }
+        ITrophyService _trophyService { get; }
 
         // Commands
         public ICommand LoadRosterFighterCommand => new RelayCommand(param => LoadFighterFromRoster(param));
@@ -76,11 +77,12 @@ namespace BrawlInstaller.ViewModels
         public ICommand SaveRostersCommand => new RelayCommand(param => SaveRosters());
         public ICommand AddFighterCommand => new RelayCommand(param => AddFighter());
         public ICommand CopyFighterCommand => new RelayCommand(param => CopyFighter());
+        public ICommand ChangeTrophyCommand => new RelayCommand(param => ChangeTrophy());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
         public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFighterService fighterService, IFileService fileService,
-            ICodeService codeService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel,
+            ICodeService codeService, ITrophyService trophyService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel,
             IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel, IFighterTrophyViewModel fighterTrophyViewModel)
         {
             _packageService = packageService;
@@ -89,6 +91,7 @@ namespace BrawlInstaller.ViewModels
             _fighterService = fighterService;
             _fileService = fileService;
             _codeService = codeService;
+            _trophyService = trophyService;
             FranchiseIconViewModel = franchiseIconViewModel;
             CostumeViewModel = costumeViewModel;
             CosmeticViewModel = cosmeticViewmodel;
@@ -913,6 +916,27 @@ namespace BrawlInstaller.ViewModels
         {
             WeakReferenceMessenger.Default.Send(new FighterLoadedMessage(fighterPackage));
             SelectedTrophyType = TrophyTypes.FirstOrDefault().Value;
+        }
+
+        private void ChangeTrophy()
+        {
+            var trophyList = _trophyService.GetTrophyList();
+            var trophySelect = _dialogService.OpenDropDownDialog(trophyList, "Name", "Select a trophy", "Select a trophy to replace current trophy") as Trophy;
+            if (trophySelect != null)
+            {
+                trophySelect = _trophyService.LoadTrophyData(trophySelect);
+                var selectedTrophy = FighterPackage.Trophies.FirstOrDefault(x => x.Type == SelectedTrophyType);
+                var newTrophy = new FighterTrophy { Trophy = trophySelect, Type = SelectedTrophyType };
+                // Remove selected trophy if it exists
+                if (selectedTrophy != null)
+                {
+                    FighterPackage.Trophies.Remove(selectedTrophy);
+                }
+                // Add new trophy
+                FighterPackage.Trophies.Add(newTrophy);
+                WeakReferenceMessenger.Default.Send(new TrophyChangedMessage(newTrophy.Trophy));
+                OnPropertyChanged(nameof(SelectedFighterTrophy));
+            }
         }
     }
 

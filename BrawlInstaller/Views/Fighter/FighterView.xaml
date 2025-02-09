@@ -108,8 +108,21 @@
                                 </GroupBox>
                                 <GroupBox x:Name="trophiesGroupBox" Header="Trophies" Margin="3,2,2,2">
                                     <StackPanel>
-                                        <ComboBox x:Name="trophiesDropDown" ItemsSource="{Binding TrophyTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedTrophyType}" Width="120"/>
-                                        <ContentControl Content="{Binding FighterTrophyViewModel}" Visibility="{Binding SelectedFighterTrophy, Converter={StaticResource nullVisConverter}}"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Label x:Name="trophiesLabel" Content="Type:"/>
+                                            <ComboBox x:Name="trophiesDropDown" ItemsSource="{Binding TrophyTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedTrophyType}" Width="120" Grid.Column="1"/>
+                                            <Button x:Name="changeTrophyButton" Content="Choose..." Command="{Binding ChangeTrophyCommand}" Grid.Column="1" Grid.Row="1"/>
+                                        </Grid>
+                                        <Separator/>
+                                        <ContentControl Content="{Binding FighterTrophyViewModel}" Visibility="{Binding SelectedFighterTrophy, Converter={StaticResource nullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                                     </StackPanel>
                                 </GroupBox>
                             </StackPanel>
