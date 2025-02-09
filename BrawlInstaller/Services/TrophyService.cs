@@ -207,7 +207,8 @@ namespace BrawlInstaller.Services
             trophy.NameIndex = ReplaceMsBinString(addTrophy ? trophy.DisplayName : null, trophyNamePath, trophy.NameIndex, oldTrophy?.NameIndex);
 
             // Update trophy game names
-            trophy.GameIndex = ReplaceMsBinString(addTrophy ? $"{trophy.GameName1}\r\n{trophy.GameName2}" : null, trophyNamePath, trophy.GameIndex, oldTrophy?.GameIndex);
+            var gameNameString = !string.IsNullOrEmpty(trophy.GameName2) ? $"{trophy.GameName1}\r\n{trophy.GameName2}" : trophy.GameName1;
+            trophy.GameIndex = ReplaceMsBinString(addTrophy ? gameNameString : null, trophyNamePath, trophy.GameIndex, oldTrophy?.GameIndex);
 
             // Update trophy description
             trophy.DescriptionIndex = ReplaceMsBinString(addTrophy ? trophy.Description : null, trophyDescriptionPath, trophy.DescriptionIndex, oldTrophy?.DescriptionIndex);

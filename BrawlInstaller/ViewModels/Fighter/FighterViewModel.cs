@@ -723,7 +723,7 @@ namespace BrawlInstaller.ViewModels
         {
             var missingPaths = new List<string>();
             var paths = _settingsService.GetAllPaths();
-            foreach (var path in paths)
+            foreach (var path in paths.Where(x => !string.IsNullOrEmpty(x)))
             {
                 var buildFilePath = _settingsService.GetBuildFilePath(path);
                 if (!_fileService.FileOrDirectoryExists(buildFilePath))

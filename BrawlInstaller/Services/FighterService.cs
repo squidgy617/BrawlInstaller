@@ -116,6 +116,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetFighterTrophies(int?)"/>
         List<FighterTrophy> GetFighterTrophies(int? slotId);
+
+        /// <inheritdoc cref="FighterService.SaveFighterTrophies(FighterPackage)"/>
+        void SaveFighterTrophies(FighterPackage fighterPackage);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2914,6 +2917,19 @@ namespace BrawlInstaller.Services
                 }
             }
             return trophyId;
+        }
+
+        /// <summary>
+        /// Save fighter trophies
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to save</param>
+        public void SaveFighterTrophies(FighterPackage fighterPackage)
+        {
+            foreach(var fighterTrophy in fighterPackage.Trophies.Distinct())
+            {
+                _trophyService.SaveTrophy(fighterTrophy.Trophy, fighterTrophy.OldTrophy);
+                fighterTrophy.Trophy.Thumbnails.ClearChanges();
+            }
         }
 
         #region Fighter-Specific Settings

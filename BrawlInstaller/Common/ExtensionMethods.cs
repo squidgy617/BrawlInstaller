@@ -448,6 +448,16 @@ namespace BrawlInstaller.Common
                     newItem.Trophy = item.Trophy.Copy();
                     trophiesCopied.Add((item.Trophy, newItem.Trophy));
                 }
+                var existingOldTrophy = trophiesCopied.Any(x => x.OldRef == item.OldTrophy);
+                if (existingOldTrophy)
+                {
+                    newItem.OldTrophy = trophiesCopied.FirstOrDefault(x => x.OldRef == item.OldTrophy).NewRef;
+                }
+                else
+                {
+                    newItem.OldTrophy = item.OldTrophy.Copy();
+                    trophiesCopied.Add((item.OldTrophy, newItem.OldTrophy));
+                }
                 newList.Add(newItem);
             }
             return newList;
