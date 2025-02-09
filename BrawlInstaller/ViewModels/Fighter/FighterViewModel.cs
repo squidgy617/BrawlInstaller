@@ -78,6 +78,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddFighterCommand => new RelayCommand(param => AddFighter());
         public ICommand CopyFighterCommand => new RelayCommand(param => CopyFighter());
         public ICommand ChangeTrophyCommand => new RelayCommand(param => ChangeTrophy());
+        public ICommand NewTrophyCommand => new RelayCommand(param => NewTrophy());
+        public ICommand ClearTrophyCommand => new RelayCommand(param => ClearTrophy());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -926,17 +928,38 @@ namespace BrawlInstaller.ViewModels
             {
                 trophySelect = _trophyService.LoadTrophyData(trophySelect);
                 var selectedTrophy = FighterPackage.Trophies.FirstOrDefault(x => x.Type == SelectedTrophyType);
-                var newTrophy = new FighterTrophy { Trophy = trophySelect, Type = SelectedTrophyType };
-                // Remove selected trophy if it exists
-                if (selectedTrophy != null)
-                {
-                    FighterPackage.Trophies.Remove(selectedTrophy);
-                }
-                // Add new trophy
-                FighterPackage.Trophies.Add(newTrophy);
-                WeakReferenceMessenger.Default.Send(new TrophyChangedMessage(newTrophy.Trophy));
-                OnPropertyChanged(nameof(SelectedFighterTrophy));
+                var newTrophy = new FighterTrophy { Trophy = trophySelect, Type = SelectedTrophyType, OldTrophy = trophySelect.Copy() };
+                ChangeTrophy(newTrophy, selectedTrophy);
             }
+        }
+
+        private void NewTrophy()
+        {
+            var selectedTrophy = FighterPackage.Trophies.FirstOrDefault(x => x.Type == SelectedTrophyType);
+            var newTrophy = new FighterTrophy { Trophy = new Trophy(), Type = SelectedTrophyType, OldTrophy = null };
+            ChangeTrophy(newTrophy, selectedTrophy);
+        }
+
+        private void ClearTrophy()
+        {
+            var selectedTrophy = FighterPackage.Trophies.FirstOrDefault(x => x.Type == SelectedTrophyType);
+            ChangeTrophy(null, selectedTrophy);
+        }
+
+        private void ChangeTrophy(FighterTrophy newTrophy, FighterTrophy oldTrophy)
+        {
+            // Remove selected trophy if it exists
+            if (oldTrophy != null)
+            {
+                FighterPackage.Trophies.Remove(oldTrophy);
+            }
+            // Add new trophy
+            if (newTrophy != null)
+            {
+                FighterPackage.Trophies.Add(newTrophy);
+            }
+            WeakReferenceMessenger.Default.Send(new TrophyChangedMessage(newTrophy?.Trophy));
+            OnPropertyChanged(nameof(SelectedFighterTrophy));
         }
     }
 

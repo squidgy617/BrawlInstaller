@@ -119,7 +119,11 @@
                                             </Grid.RowDefinitions>
                                             <Label x:Name="trophiesLabel" Content="Type:"/>
                                             <ComboBox x:Name="trophiesDropDown" ItemsSource="{Binding TrophyTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedTrophyType}" Width="120" Grid.Column="1"/>
-                                            <Button x:Name="changeTrophyButton" Content="Choose..." Command="{Binding ChangeTrophyCommand}" Grid.Column="1" Grid.Row="1"/>
+                                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                                <Button x:Name="changeTrophyButton" Content="Choose..." Command="{Binding ChangeTrophyCommand}"/>
+                                                <Button x:Name="newTrophyButton" Content="New" Command="{Binding NewTrophyCommand}"/>
+                                                <Button x:Name="clearTrophyButton" Content="Clear" Command="{Binding ClearTrophyCommand}" Visibility="{Binding SelectedFighterTrophy, Converter={StaticResource nullVisConverter}}"/>
+                                            </StackPanel>
                                         </Grid>
                                         <Separator/>
                                         <ContentControl Content="{Binding FighterTrophyViewModel}" Visibility="{Binding SelectedFighterTrophy, Converter={StaticResource nullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>

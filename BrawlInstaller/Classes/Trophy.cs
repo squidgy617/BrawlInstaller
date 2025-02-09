@@ -26,7 +26,7 @@ namespace BrawlInstaller.Classes
         public string Description { get; set; } = "<color=E6E6E6FF>A new trophy.</end>";
         [JsonIgnore] public int? DescriptionIndex { get; set; }
         public int SeriesIndex { get; set; } = 0;
-        public int CategoryIndex { get; set; } = 0;
+        public int CategoryIndex { get; set; } = 23;
 
         // Unknowns
         public float Unknown0x34 { get; set; } = 1;

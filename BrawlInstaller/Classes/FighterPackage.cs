@@ -351,13 +351,15 @@ namespace BrawlInstaller.Classes
     {
         public TrophyType Type { get; set; }
         public Trophy Trophy { get; set; }
+        [JsonIgnore] public Trophy OldTrophy { get; set; }
 
         public FighterTrophy Copy()
         {
             var copy = new FighterTrophy
             {
                 Type = Type,
-                Trophy = Trophy.Copy()
+                Trophy = Trophy?.Copy(),
+                OldTrophy = OldTrophy?.Copy()
             };
             return copy;
         }
