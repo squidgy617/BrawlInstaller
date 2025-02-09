@@ -77,6 +77,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(Trophy))]
         public Cosmetic Thumbnail { get => Trophy?.Thumbnails?.Items.FirstOrDefault(); }
 
+        [DependsUpon(nameof(Trophy))]
+        public int? ThumbnailId { get => Trophy?.Ids?.TrophyThumbnailId; set { Trophy.Ids.TrophyThumbnailId = value; MarkThumbnailsChanged(); OnPropertyChanged(nameof(ThumbnailId)); } }
+
         // Methods
         public void LoadTrophy(Trophy trophy)
         {
@@ -157,6 +160,11 @@ namespace BrawlInstaller.ViewModels
             }
             OnPropertyChanged(nameof(Thumbnail));
             OnPropertyChanged(nameof(Trophy));
+        }
+
+        public void MarkThumbnailsChanged()
+        {
+            Trophy?.Thumbnails?.MarkAllChanged();
         }
     }
 }

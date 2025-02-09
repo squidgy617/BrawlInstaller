@@ -183,6 +183,13 @@ namespace BrawlInstaller.Services
             var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => trophy.Thumbnails.ChangedItems.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
             _cosmeticService.ImportCosmetics(changedDefinitions, trophy.Thumbnails, trophy.Ids);
 
+            // If old trophy thumbnail ID was different, remove old trophy cosmetics
+            if (oldTrophy?.Ids?.TrophyThumbnailId != null && oldTrophy?.Ids?.TrophyThumbnailId != trophy?.Ids?.TrophyThumbnailId)
+            {
+                changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => oldTrophy.Thumbnails.Items.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
+                _cosmeticService.ImportCosmetics(changedDefinitions, new CosmeticList(), oldTrophy.Ids);
+            }
+
             // Open BRRES in case it gets deleted
             var brres = _fileService.OpenFile(trophy.BrresFile);
             // Replace old BRRES

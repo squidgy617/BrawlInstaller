@@ -41,7 +41,7 @@
             <Label x:Name="idLabel" Content="Trophy ID:" Grid.Row="3"/>
             <TextBox x:Name="idTextBox" Text="{Binding Trophy.Ids.TrophyId}" Grid.Row="3" Grid.Column="1"/>
             <Label x:Name="thumbnailIdLabel" Content="Thumbnail ID:" Grid.Row="4"/>
-            <TextBox x:Name="thumbnailIdTextBox" Text="{Binding Trophy.Ids.TrophyThumbnailId}" Grid.Row="4" Grid.Column="1"/>
+            <TextBox x:Name="thumbnailIdTextBox" Text="{Binding ThumbnailId, UpdateSourceTrigger=LostFocus}" Grid.Row="4" Grid.Column="1"/>
             <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="5"/>
             <TextBox x:Name="displayNameTextBox" Text="{Binding Trophy.DisplayName}" Grid.Row="5" Grid.Column="1" Width="120"/>
             <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="6"/>
