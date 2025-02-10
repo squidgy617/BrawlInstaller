@@ -334,22 +334,8 @@ namespace BrawlInstaller.Services
                             trophy.Trophy.BrresFile = _fileService.GetFiles(trophyPath, "*.brres").FirstOrDefault();
                             // Get cosmetics
                             trophy.Trophy.Thumbnails = _cosmeticService.LoadCosmetics($"{trophyPath}\\Thumbnails");
-                            // Set custom trophy IDs to get a new ID
-                            if (trophy.Trophy.Ids.TrophyId >= 631)
-                            {
-                                trophy.Trophy.Ids.TrophyId = null;
-                            }
-                            if (trophy.Trophy.Ids.TrophyThumbnailId >= 631)
-                            {
-                                trophy.Trophy.Ids.TrophyThumbnailId = null;
-                            }
-                            _trophyService.GetUnusedTrophyIds(trophy.Trophy.Ids);
-                            // If NOT a custom trophy ID, set old trophy to matching trophy in build
-                            if (trophy.Trophy.Ids.TrophyId < 631)
-                            {
-                                var existingTrophy = _trophyService.LoadTrophyData(trophy.Trophy);
-                                trophy.OldTrophy = existingTrophy;
-                            }
+                            // Check if trophy is new or existing
+                            trophy = GetNewOrExistingTrophy(trophy);
                             fighterPackage.Trophies.Add(trophy);
                         }
                     }
@@ -478,6 +464,7 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter package</returns>
         public FighterPackage LoadLegacyPackage(string inFile)
         {
+            int? trophyId = null;
             var path = _settingsService.AppSettings.TempPath + "\\FighterPackageImport";
             var output = _fileService.ExtractZipFile(inFile, path);
             if (!string.IsNullOrEmpty(output))
@@ -554,10 +541,13 @@ namespace BrawlInstaller.Services
                     {
                         fighterPackage.FighterSettings.BowserSettings.BoneId = bowserBoneIdValue;
                     }
-                    // TODO: Trophy ID
                     if (iniData.TryGetValue("doorId", out string doorId) && uint.TryParse(doorId.Substring(2), NumberStyles.HexNumber, null, out uint doorIdValue))
                     {
                         fighterPackage.FighterSettings.DoorId = doorIdValue;
+                    }
+                    if (iniData.TryGetValue("trophyId", out string trophyIdNum) && int.TryParse(trophyIdNum.Substring(2), NumberStyles.HexNumber, null, out int trophyIdValue))
+                    {
+                        trophyId = trophyIdValue;
                     }
                 }
                 fighterPackage.FighterSettings.LLoadCharacterId = fighterPackage.FighterInfo.Ids.CSSSlotConfigId;
@@ -569,6 +559,14 @@ namespace BrawlInstaller.Services
                 cosmetics.AddRange(GetLegacyCosmetics(Path.Combine(path, "PortraitName"), CosmeticType.PortraitName, CosmeticType.PortraitName));
                 cosmetics.AddRange(GetLegacyCosmetics(Path.Combine(path, "ReplayIcon"), CosmeticType.ReplayIcon, CosmeticType.ReplayIcon));
                 cosmetics.AddRange(GetLegacyCostumeCosmetics(Path.Combine(path, "StockIcons"), CosmeticType.StockIcon, "P+"));
+                // Get SSE unlock icon
+                var vBrawlIcon = cosmetics.FirstOrDefault(x => x.CosmeticType == CosmeticType.CSSIcon && x.Style == "vBrawl");
+                if (vBrawlIcon != null)
+                {
+                    var sseIcon = vBrawlIcon.Copy();
+                    sseIcon.CosmeticType = CosmeticType.SSEUnlockIcon;
+                    cosmetics.Add(sseIcon);
+                }
                 // Get franchise icon
                 var franchiseIconFolders = _fileService.GetDirectories(Path.Combine(path, "FranchiseIcons"), "*", SearchOption.TopDirectoryOnly);
                 var franchiseIcon = _fileService.GetFiles(franchiseIconFolders.FirstOrDefault(x => Path.GetFileName(x) == "Black"), "*.png").FirstOrDefault();
@@ -679,10 +677,83 @@ namespace BrawlInstaller.Services
                     fighterPackage.FighterInfo.KirbyEffectPacId = _fighterService.GetFighterEffectPacId(fighterPackage.PacFiles, fighterPackage.FighterInfo.KirbyPacFileName);
                     fighterPackage.FighterInfo.OriginalKirbyEffectPacId = fighterPackage.FighterInfo.KirbyEffectPacId;
                 }
+                // Get trophies
+                var trophyPath = Path.Combine(path, "Trophy");
+                if (_fileService.DirectoryExists(trophyPath))
+                {
+                    var trophy = new Trophy();
+                    var trophySettingsPath = Path.Combine(trophyPath, "TrophySettings.txt");
+                    if (_fileService.FileExists(trophySettingsPath))
+                    {
+                        // Get trophy data
+                        var trophyIniData = _fileService.ParseIniFile(trophySettingsPath);
+                        trophy.DisplayName = trophyIniData.TryGetValue("trophyName", out string trophyName) ? trophyName : string.Empty;
+                        trophy.Description = trophyIniData.TryGetValue("description", out string description) ? "<color=E6E6E6FF>" + description.Replace("<br/>", "\r\n") + "</end>" : string.Empty;
+                        trophy.GameName1 = trophyIniData.TryGetValue("gameName1", out string gameName1) ? gameName1 : string.Empty;
+                        trophy.GameName2 = trophyIniData.TryGetValue("gameName2", out string gameName2) ? gameName2 : string.Empty;
+                        trophy.GameIcon1 = trophyIniData.TryGetValue("gameIcon1", out string gameIcon1) && int.TryParse(gameIcon1, out int gameIcon1Index) ? gameIcon1Index : 0;
+                        trophy.GameIcon2 = trophyIniData.TryGetValue("gameIcon2", out string gameIcon2) && int.TryParse(gameIcon2, out int gameIcon2Index) ? gameIcon2Index : 0;
+                        trophy.SeriesIndex = trophyIniData.TryGetValue("seriesIndex", out string seriesIndex) && int.TryParse(seriesIndex, out int seriesIndexParsed) ? seriesIndexParsed : 0;
+                        trophy.CategoryIndex = 23;
+                    }
+                    // Get BRRES
+                    var trophyBrres = _fileService.GetFiles(trophyPath, "*.brres").FirstOrDefault();
+                    if (trophyBrres != null)
+                    {
+                        trophy.Name = Path.GetFileNameWithoutExtension(trophyBrres);
+                        trophy.Brres = Path.GetFileNameWithoutExtension(trophyBrres);
+                        trophy.BrresFile = trophyBrres;
+                    }
+                    // Get thumbnail
+                    var trophyThumbnail = _fileService.GetFiles(trophyPath, "*.png").FirstOrDefault();
+                    trophy.Thumbnails.Add(new Cosmetic
+                    {
+                        Style = "vBrawl",
+                        CosmeticType = CosmeticType.TrophyThumbnail,
+                        ImagePath = trophyThumbnail,
+                        Image = _fileService.LoadImage(trophyThumbnail)
+                    });
+                    // Add trophies
+                    fighterPackage.Trophies.Add(new FighterTrophy { Trophy = trophy, Type = TrophyType.Fighter });
+                    fighterPackage.Trophies.Add(new FighterTrophy { Trophy = trophy, Type = TrophyType.AllStar });
+                    // Check if trophy is new or existing
+                    foreach(var fighterTrophy in fighterPackage.Trophies)
+                    {
+                        GetNewOrExistingTrophy(fighterTrophy);
+                    }
+                }
+                    
                 fighterPackage.PackageType = PackageType.New;
                 return fighterPackage;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Check if trophy is a custom trophy or not, and update it accordingly
+        /// </summary>
+        /// <param name="fighterTrophy">Fighter trophy to check</param>
+        /// <returns>Updated fighter trophy</returns>
+        private FighterTrophy GetNewOrExistingTrophy(FighterTrophy fighterTrophy)
+        {
+            var trophy = fighterTrophy;
+            // Set custom trophy IDs to get a new ID
+            if (trophy.Trophy.Ids.TrophyId >= 631)
+            {
+                trophy.Trophy.Ids.TrophyId = null;
+            }
+            if (trophy.Trophy.Ids.TrophyThumbnailId >= 631)
+            {
+                trophy.Trophy.Ids.TrophyThumbnailId = null;
+            }
+            _trophyService.GetUnusedTrophyIds(trophy.Trophy.Ids);
+            // If NOT a custom trophy ID, set old trophy to matching trophy in build
+            if (trophy.Trophy.Ids.TrophyId < 631)
+            {
+                var existingTrophy = _trophyService.LoadTrophyData(trophy.Trophy);
+                trophy.OldTrophy = existingTrophy;
+            }
+            return trophy;
         }
 
         /// <summary>

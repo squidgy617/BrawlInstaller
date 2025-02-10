@@ -662,7 +662,7 @@ namespace BrawlInstaller.Services
         {
             var iniData = new Dictionary<string, string>();
             var text = ReadTextFile(iniFile);
-            var cleanText = Regex.Replace(text, "([;]|[#]|[//]).*(\n|\r)", "");
+            var cleanText = Regex.Replace(text, "(;|#|//).*(\n|\r)", "");
             var lines = cleanText.Replace("\r\n", "\n").Split('\n');
             foreach (var line in lines.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
