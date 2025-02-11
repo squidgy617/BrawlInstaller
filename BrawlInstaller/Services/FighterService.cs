@@ -2891,6 +2891,7 @@ namespace BrawlInstaller.Services
         /// <param name="slotId">Slot ID of fighter</param>
         /// <param name="oldSlotId">Slot ID of previously installed fighter</param>
         /// <param name="fighterTrophies">List of fighter trophies to install</param>
+        // TODO: Make this better somehow? Might not be possible given what it's doing
         private void UpdateFighterTrophyCode(string fighterName, int slotId, int oldSlotId, List<FighterTrophy> fighterTrophies)
         {
             var trophyFile = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterTrophyLocation);
@@ -3009,7 +3010,8 @@ namespace BrawlInstaller.Services
                 _trophyService.SaveTrophy(fighterTrophy.Trophy, fighterTrophy.OldTrophy);
                 fighterTrophy.Trophy.Thumbnails.ClearChanges();
             }
-            if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null)
+            // Only update code if we have a slot ID and if any trophy IDs have changed
+            if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null && fighterPackage.Trophies.Any(x => x.Trophy?.Ids?.TrophyId != x.OldTrophy?.Ids?.TrophyId))
             {
                 UpdateFighterTrophyCode(fighterPackage.FighterInfo.PartialPacName, fighterPackage.FighterInfo.Ids.SlotConfigId.Value, oldFighterPackage.FighterInfo.Ids.SlotConfigId.Value, fighterPackage.Trophies);
             }

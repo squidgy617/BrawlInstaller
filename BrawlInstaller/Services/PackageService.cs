@@ -185,7 +185,7 @@ namespace BrawlInstaller.Services
                 _fighterService.UpdateCreditsModule(fighterPackage);
             }
             // Update trophies
-            _fighterService.SaveFighterTrophies(fighterPackage);
+            _fighterService.SaveFighterTrophies(fighterPackage, oldFighter);
             // Set package type to update, in case it was a new package
             fighterPackage.PackageType = PackageType.Update;
         }
