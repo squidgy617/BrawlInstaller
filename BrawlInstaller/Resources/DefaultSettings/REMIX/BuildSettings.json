@@ -1646,6 +1646,16 @@
         "FileType": 34,
         "Path": "pf\\toy\\fig\\",
         "Filter": ""
+      },
+      {
+        "FileType": 35,
+        "Path": "Source\\ProjectM\\CloneEngine.asm",
+        "Filter": "ASM file (.asm)|*.asm"
+      },
+      {
+        "FileType": 36,
+        "Path": "pf\\module\\sora_adv_menu_game_over.rel",
+        "Filter": "REL file (.rel)|*.rel"
       }
     ],
     "AsmPaths": [
