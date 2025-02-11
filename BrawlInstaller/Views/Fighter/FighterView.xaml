@@ -100,12 +100,14 @@
                                 </Grid>
                             </GroupBox>
                             <StackPanel Orientation="Horizontal">
-                                <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" Margin="3,2,2,2">
-                                    <ContentControl Content="{Binding CosmeticViewModel}"/>
-                                </GroupBox>
-                                <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" Margin="3,2,2,2">
-                                    <ContentControl Content="{Binding FranchiseIconViewModel}"/>
-                                </GroupBox>
+                                <StackPanel>
+                                    <GroupBox x:Name="franchiseIconGroupBox" Header="Franchise Icons" Margin="3,2,2,2">
+                                        <ContentControl Content="{Binding FranchiseIconViewModel}"/>
+                                    </GroupBox>
+                                    <GroupBox x:Name="cosmeticGroupBox" Header="Other Cosmetics" Margin="3,2,2,2">
+                                        <ContentControl Content="{Binding CosmeticViewModel}"/>
+                                    </GroupBox>
+                                </StackPanel>
                                 <GroupBox x:Name="trophiesGroupBox" Header="Trophies" Margin="3,2,2,2">
                                     <StackPanel>
                                         <Grid>
