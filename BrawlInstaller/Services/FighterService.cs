@@ -2977,7 +2977,17 @@ namespace BrawlInstaller.Services
                     }
                     if (allStarHook?.Instructions != null && fighterTrophy.Type == TrophyType.AllStar)
                     {
-                        allStarHook.Instructions.Insert(4, new Instruction { Text = instruction, Comment = comment });
+                        var insertPoint = allStarHook.Instructions.FirstOrDefault(x => x.Text.Trim() == "cmpwi r4, 0x2B;  ble+ GotTrophy");
+                        var index = 1;
+                        if (insertPoint != null)
+                        {
+                            index = allStarHook.Instructions.IndexOf(insertPoint) + 1;
+                            if (allStarHook.Instructions.Count <= index)
+                            {
+                                index = 1;
+                            }
+                        }
+                        allStarHook.Instructions.Insert(index, new Instruction { Text = instruction, Comment = comment });
                     }
                 }
                 // Replace aliases
