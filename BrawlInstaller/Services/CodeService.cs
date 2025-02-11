@@ -784,7 +784,7 @@ namespace BrawlInstaller.Services
                     aliasStringEnd = aliasRange.Length;
                 }
                 // Get alias from string
-                var alias = GetAlias(aliasRange.Substring(i, aliasStringEnd - i), i);
+                var alias = GetAlias(aliasRange.Substring(i, aliasStringEnd - i), startPoint + i);
                 aliases.Add(alias);
                 i = aliasStringEnd;
             }

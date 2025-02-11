@@ -117,8 +117,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.GetFighterTrophies(int?)"/>
         List<FighterTrophy> GetFighterTrophies(int? slotId);
 
-        /// <inheritdoc cref="FighterService.SaveFighterTrophies(FighterPackage)"/>
-        void SaveFighterTrophies(FighterPackage fighterPackage);
+        /// <inheritdoc cref="FighterService.SaveFighterTrophies(FighterPackage, FighterPackage)"/>
+        void SaveFighterTrophies(FighterPackage fighterPackage, FighterPackage oldFighterPackage);
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2885,21 +2885,102 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Update trophy code to map fighter to trophy
+        /// </summary>
+        /// <param name="fighterName">Name of fighter to display in code</param>
+        /// <param name="slotId">Slot ID of fighter</param>
+        /// <param name="oldSlotId">Slot ID of previously installed fighter</param>
+        /// <param name="fighterTrophies">List of fighter trophies to install</param>
+        private void UpdateFighterTrophyCode(string fighterName, int slotId, int oldSlotId, List<FighterTrophy> fighterTrophies)
+        {
+            var trophyFile = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterTrophyLocation);
+            // First get trophy IDs
+            if (!string.IsNullOrEmpty(trophyFile))
+            {
+                var trophyFileText = _codeService.ReadCode(trophyFile);
+                // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
+                var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]", "op b 0x34 @ $806E29DC");
+                // Get alias for fighter's slot ID
+                var slotAlias = aliases.FirstOrDefault(x => int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == oldSlotId);
+                // Get classic trophy
+                var classicTrophy = GetFighterTrophyAliasFromHook(slotAlias, "806E29D0", trophyFileText, aliases);
+                // Get All-Star trophy
+                var allStarTrophy = GetFighterTrophyAliasFromHook(slotAlias, "806E47D8", trophyFileText, aliases);
+                // Remove aliases from list
+                var startPoint = aliases.FirstOrDefault().Index;
+                aliases.RemoveAll(x => x.Name == classicTrophy.TrophyAlias?.Name || x.Name == allStarTrophy.TrophyAlias?.Name || x.Name == slotAlias?.Name);
+                // Remove code lines using aliases
+                var classicHook = _codeService.ReadHook(trophyFileText, "806E29D0");
+                var allStarHook = _codeService.ReadHook(trophyFileText, "806E47D8");
+                if (classicTrophy.InstructionIndex > -1)
+                    classicHook?.Instructions?.RemoveAt(classicTrophy.InstructionIndex);
+                if (allStarTrophy.InstructionIndex > -1)
+                    allStarHook?.Instructions?.RemoveAt(allStarTrophy.InstructionIndex);
+                // Add aliases and instructions
+                var slotAliasName = $"{fighterName}_Slot";
+                aliases.Add(new Alias { Name = slotAliasName, Value = $"0x{slotId:X2}" });
+                foreach(var fighterTrophy in fighterTrophies)
+                {
+                    var trophySuffix = fighterTrophy.Type == TrophyType.Fighter ? "_Trophy" : "_Trophy_AllStar";
+                    var register1 = fighterTrophy.Type == TrophyType.Fighter ? "r29" : "r26";
+                    var register2 = fighterTrophy.Type == TrophyType.Fighter ? "r28" : "r4";
+                    var trophyAliasName = $"{fighterName}{trophySuffix}";
+                    aliases.Add(new Alias { Name = trophyAliasName, Value = $"0x{fighterTrophy.Trophy.Ids.TrophyId:X2}" });
+                    var instruction = $"li {register1}, {trophyAliasName};cmpwi {register2}, {slotAliasName};beq+ GotTrophy";
+                    var comment = $"if it's {fighterName}'s P+Ex slot";
+                    if (classicHook?.Instructions != null && fighterTrophy.Type == TrophyType.Fighter)
+                    {
+                        classicHook.Instructions.Insert(1, new Instruction { Text = instruction, Comment = comment });
+                    }
+                    if (allStarHook?.Instructions != null && fighterTrophy.Type == TrophyType.AllStar)
+                    {
+                        allStarHook.Instructions.Insert(4, new Instruction { Text = instruction, Comment = comment });
+                    }
+                }
+                // Replace aliases
+                var endPoint = trophyFileText.IndexOf("op b 0x34 @ $806E29DC", startPoint);
+                trophyFileText = trophyFileText.Substring(0, startPoint) + string.Join("\r\n", aliases.Select(x => $".alias {x.Name} = {x.Value}")) + "\r\n\r\n" + trophyFileText.Substring(endPoint, trophyFileText.Length - endPoint);
+                // Replace instructions
+                trophyFileText = _codeService.ReplaceHook(classicHook, trophyFileText);
+                trophyFileText = _codeService.ReplaceHook(allStarHook, trophyFileText);
+                // Save code
+                _fileService.SaveTextFile(trophyFile, trophyFileText);
+            }
+        }
+
+        /// <summary>
         /// Get trophy ID in a hook by matching with a fighter's slot alias
         /// </summary>
         /// <param name="alias">Alias for fighter's slot ID</param>
         /// <param name="hookAddress">Address of hook to search</param>
         /// <param name="codeText">Text of code containing hook</param>
         /// <param name="aliases">List of aliases</param>
-        /// <returns></returns>
+        /// <returns>Trophy ID</returns>
         private int GetFighterTrophyFromHook(Alias alias, string hookAddress, string codeText, List<Alias> aliases)
         {
-            int trophyId = -1;
+            var match = GetFighterTrophyAliasFromHook(alias, hookAddress, codeText, aliases);
+            if (match.TrophyAlias != null && int.TryParse(match.TrophyAlias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id))
+            {
+                return id;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Get trophy alias in a hook by matching with a fighter's slot alias
+        /// </summary>
+        /// <param name="alias">Alias for fighter's slot ID</param>
+        /// <param name="hookAddress">Address of hook to search</param>
+        /// <param name="codeText">Text of code containing hook</param>
+        /// <param name="aliases">List of aliases</param>
+        /// <returns>Trophy alias and instruction index where alias is used</returns>
+        private (int InstructionIndex, Alias TrophyAlias) GetFighterTrophyAliasFromHook(Alias alias, string hookAddress, string codeText, List<Alias> aliases)
+        {
             var hook = _codeService.ReadHook(codeText, hookAddress);
             foreach (var instruction in hook.Instructions)
             {
                 // Check if the instruction has our slot alias
-                if (instruction.Text.Contains(alias.Name))
+                if (alias != null && instruction.Text.Contains(alias.Name))
                 {
                     // If it does, search for another alias in the string
                     var wordList = instruction.Text.Split(new string[] { ";", "\r\n", " " }, StringSplitOptions.None);
@@ -2908,22 +2989,19 @@ namespace BrawlInstaller.Services
                     // If another alias was found, we can link the trophy to the slot ID
                     if (match != null)
                     {
-                        if (int.TryParse(match.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id))
-                        {
-                            trophyId = id;
-                            break;
-                        }
+                        return (hook.Instructions.IndexOf(instruction), match);
                     }
                 }
             }
-            return trophyId;
+            return (-1, null);
         }
 
         /// <summary>
         /// Save fighter trophies
         /// </summary>
         /// <param name="fighterPackage">Fighter package to save</param>
-        public void SaveFighterTrophies(FighterPackage fighterPackage)
+        /// <param name="oldFighterPackage">Old fighter package being removed</param>
+        public void SaveFighterTrophies(FighterPackage fighterPackage, FighterPackage oldFighterPackage)
         {
             foreach(var fighterTrophy in fighterPackage.Trophies.Distinct())
             {
@@ -2931,6 +3009,11 @@ namespace BrawlInstaller.Services
                 _trophyService.SaveTrophy(fighterTrophy.Trophy, fighterTrophy.OldTrophy);
                 fighterTrophy.Trophy.Thumbnails.ClearChanges();
             }
+            if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null)
+            {
+                UpdateFighterTrophyCode(fighterPackage.FighterInfo.PartialPacName, fighterPackage.FighterInfo.Ids.SlotConfigId.Value, oldFighterPackage.FighterInfo.Ids.SlotConfigId.Value, fighterPackage.Trophies);
+            }
+            
         }
 
         
