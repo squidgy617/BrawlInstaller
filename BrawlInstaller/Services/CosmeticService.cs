@@ -1610,7 +1610,11 @@ namespace BrawlInstaller.Services
                     .Select(g => g.OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId) ?? g.First())
                     .ToList();
                 // Set nearest option to selected
-                cosmetics.Where(x => x.Id != null).OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId).SelectionOption = false;
+                var selection = cosmetics.Where(x => x.Id != null).OrderBy(x => x.Id).LastOrDefault(x => x.Id <= cosmeticId);
+                if (selection != null)
+                {
+                    selection.SelectionOption = false;
+                };
                 // Order cosmetics
                 cosmetics = cosmetics.OrderByDescending(x => x.Texture.Name).ToList();
             }
