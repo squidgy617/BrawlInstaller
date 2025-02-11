@@ -44,7 +44,7 @@ namespace BrawlInstaller.Services
         string RemoveMacro(string fileText, string address, string paramValue, string macroName, int paramIndex = 0);
 
         /// <inheritdoc cref="CodeService.GetCodeAliases(string, string, string)"/>
-        List<Alias> GetCodeAliases(string fileText, string codeName, string endString);
+        List<Alias> GetCodeAliases(string fileText, string codeName);
 
         /// <inheritdoc cref="CodeService.ReadHook(string, string)"/>
         AsmHook ReadHook(string fileText, string address);
@@ -759,11 +759,16 @@ namespace BrawlInstaller.Services
         /// <param name="codeName">Code to search for aliases</param>
         /// <param name="endString">String marking end of code to search</param>
         /// <returns>List of aliases</returns>
-        public List<Alias> GetCodeAliases(string fileText, string codeName, string endString)
+        public List<Alias> GetCodeAliases(string fileText, string codeName)
         {
             var aliases = new List<Alias>();
             var startPoint = fileText.IndexOf(codeName);
-            var endPoint = fileText.IndexOf(endString, startPoint);
+            startPoint = fileText.IndexOf(".alias", startPoint);
+            var endPoint = startPoint;
+            while (fileText.Length > fileText.LastIndexOf("\r\n", endPoint) + 2 && fileText[fileText.LastIndexOf("\r\n", endPoint) + 2] == '.')
+            {
+                endPoint++;
+            }
             var aliasRange = fileText.Substring(startPoint, endPoint - startPoint);
             var i = 0;
             // Read our range for aliases

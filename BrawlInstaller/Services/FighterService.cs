@@ -2881,7 +2881,7 @@ namespace BrawlInstaller.Services
             {
                 var trophyFileText = _codeService.ReadCode(trophyFile);
                 // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
-                var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]", "op b 0x34 @ $806E29DC");
+                var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]");
                 // Get alias for fighter's slot ID
                 var slotAlias = aliases.FirstOrDefault(x => int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == slotId);
                 if (slotAlias != null)
@@ -2938,7 +2938,7 @@ namespace BrawlInstaller.Services
             {
                 var trophyFileText = _codeService.ReadCode(trophyFile);
                 // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
-                var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]", "op b 0x34 @ $806E29DC");
+                var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]");
                 // Get alias for fighter's slot ID
                 var slotAlias = aliases.FirstOrDefault(x => int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == oldSlotId);
                 // Get classic trophy
@@ -2981,8 +2981,13 @@ namespace BrawlInstaller.Services
                     }
                 }
                 // Replace aliases
-                var endPoint = trophyFileText.IndexOf("op b 0x34 @ $806E29DC", startPoint);
-                trophyFileText = trophyFileText.Substring(0, startPoint) + string.Join("\r\n", aliases.Select(x => $".alias {x.Name} = {x.Value}")) + "\r\n\r\n" + trophyFileText.Substring(endPoint, trophyFileText.Length - endPoint);
+                var endPoint = startPoint;
+                while (trophyFileText.Length > trophyFileText.LastIndexOf("\r\n", endPoint) + 2 && trophyFileText[trophyFileText.LastIndexOf("\r\n", endPoint) + 2] == '.')
+                {
+                    endPoint++;
+                }
+                endPoint = endPoint + 1;
+                trophyFileText = trophyFileText.Substring(0, startPoint) + string.Join("\r\n", aliases.Select(x => $".alias {x.Name} = {x.Value}")) + "\r\n" + trophyFileText.Substring(endPoint, trophyFileText.Length - endPoint);
                 // Replace instructions
                 trophyFileText = _codeService.ReplaceHook(classicHook, trophyFileText);
                 trophyFileText = _codeService.ReplaceHook(allStarHook, trophyFileText);
@@ -3053,7 +3058,8 @@ namespace BrawlInstaller.Services
                 fighterTrophy?.Trophy?.Thumbnails?.ClearChanges();
             }
             // Only update code if we have a slot ID and if any trophy IDs have changed
-            if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null && (fighterPackage.Trophies.Any(x => x.Trophy?.Ids?.TrophyId != x.OldTrophy?.Ids?.TrophyId) || fighterPackage.PackageType == PackageType.Delete))
+            if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null && (fighterPackage.Trophies.Any(x => !oldFighterPackage?.Trophies?.Select(y => y?.Trophy?.Ids?.TrophyId).Contains(x?.Trophy?.Ids?.TrophyId) == true) 
+                || fighterPackage.Trophies.Any(x => x.Trophy?.Ids?.TrophyId != x.OldTrophy?.Ids?.TrophyId) || fighterPackage.PackageType == PackageType.Delete))
             {
                 UpdateFighterTrophyCode(fighterPackage.FighterInfo.PartialPacName, fighterPackage.FighterInfo.Ids.SlotConfigId.Value, oldFighterPackage.FighterInfo.Ids.SlotConfigId.Value, fighterPackage.Trophies);
             }
