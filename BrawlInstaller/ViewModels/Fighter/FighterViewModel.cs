@@ -870,6 +870,12 @@ namespace BrawlInstaller.ViewModels
             {
                 deleteOptions.Add(new CheckListItem("Cosmetics", "Cosmetics", "All fighter cosmetics", true));
             }
+            // Trophies
+            if (fighterPackage.PackageType == PackageType.Delete)
+            {
+                deleteOptions.Add(new CheckListItem("Trophies", "Trophies", "Trophies associated with fighter",
+                    true, FighterPackage?.Trophies?.FirstOrDefault()?.Trophy?.Thumbnails?.Items?.FirstOrDefault()?.Image));
+            }
             // Open dialog
             if (deleteOptions.Count > 0)
             {
@@ -902,6 +908,15 @@ namespace BrawlInstaller.ViewModels
                 if (selectedItems.Any(x => (string)x.Item == "FranchiseIcon"))
                 {
                     fighterPackage.Cosmetics.ItemChanged(FranchiseIconViewModel.FranchiseIconList.Items.FirstOrDefault(x => x.Id == FighterPackage.FighterInfo.Ids.FranchiseId));
+                }
+                if (selectedItems.Any(x => (string)x.Item == "Trophies"))
+                {
+                    foreach(var fighterTrophy in FighterPackage.Trophies.GroupBy(x => x.Trophy).Select(group => group.FirstOrDefault()))
+                    {
+                        var deleteTrophy = new FighterTrophy { Trophy = null, OldTrophy = fighterTrophy?.Trophy?.Copy(), Type = fighterTrophy.Type };
+                        deleteTrophy?.Trophy?.Thumbnails?.MarkAllChanged();
+                        fighterPackage.Trophies.Add(deleteTrophy);
+                    }
                 }
             }
             return fighterPackage;

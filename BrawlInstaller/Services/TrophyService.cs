@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -182,19 +183,46 @@ namespace BrawlInstaller.Services
             var trophyDescriptionPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyDescriptions);
             var nodePath = _settingsService.BuildSettings.FilePathSettings.TrophyLocation.NodePath;
 
+            // Get old trophy indexes and stuff to ensure correctness
+            var rootNode = _fileService.OpenFile(trophyPath);
+            if (rootNode != null)
+            {
+                var trophyNodeList = rootNode.FindChild(nodePath) as TyDataListNode;
+                if (trophyNodeList != null)
+                {
+                    if (oldTrophy != null)
+                    {
+                        var trophyNode = trophyNodeList.Children.FirstOrDefault(x => ((TyDataListEntryNode)x).Id == oldTrophy.Ids.TrophyId && ((TyDataListEntryNode)x).Name == oldTrophy.Name) as TyDataListEntryNode;
+                        if (trophyNode != null)
+                        {
+                            oldTrophy.Ids.TrophyId = trophyNode.Id;
+                            oldTrophy.Ids.TrophyThumbnailId = trophyNode.ThumbnailIndex;
+                            oldTrophy.NameIndex = trophyNode.NameIndex;
+                            oldTrophy.GameIndex = trophyNode.GameIndex;
+                            oldTrophy.DescriptionIndex = trophyNode.DescriptionIndex;
+                            oldTrophy.SeriesIndex = trophyNode.SeriesIndex;
+                            oldTrophy.CategoryIndex = trophyNode.CategoryIndex;
+                        }
+                    }
+                }
+            }
+
             // Save cosmetics
-            var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => trophy.Thumbnails.ChangedItems.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
-            _cosmeticService.ImportCosmetics(changedDefinitions, trophy.Thumbnails, trophy.Ids);
+            if (trophy != null)
+            {
+                var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => trophy.Thumbnails.ChangedItems.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
+                _cosmeticService.ImportCosmetics(changedDefinitions, trophy.Thumbnails, trophy.Ids);
+            }
 
             // If old trophy thumbnail ID was different, remove old trophy cosmetics
             if (oldTrophy?.Ids?.TrophyThumbnailId != null && oldTrophy?.Ids?.TrophyThumbnailId != trophy?.Ids?.TrophyThumbnailId)
             {
-                changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => oldTrophy.Thumbnails.Items.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
+                var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => oldTrophy.Thumbnails.Items.Any(y => y.CosmeticType == x.CosmeticType)).ToList();
                 _cosmeticService.ImportCosmetics(changedDefinitions, new CosmeticList(), oldTrophy.Ids);
             }
 
             // Open BRRES in case it gets deleted
-            var brres = _fileService.OpenFile(trophy.BrresFile);
+            var brres = _fileService.OpenFile(trophy?.BrresFile);
             // Replace old BRRES
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation))
             {
@@ -202,7 +230,7 @@ namespace BrawlInstaller.Services
                 {
                     _fileService.DeleteFile(oldTrophy?.BrresFile);
                 }
-                if (addTrophy)
+                if (addTrophy && trophy != null)
                 {
                     var trophyBrresFolder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
                     var newTrophyBrresPath = Path.Combine(trophyBrresFolder, $"{trophy.Brres}.brres");
@@ -217,17 +245,24 @@ namespace BrawlInstaller.Services
             _fileService.CloseFile(brres);
 
             // Update trophy name
-            trophy.NameIndex = ReplaceMsBinString(addTrophy ? trophy.DisplayName : null, trophyNamePath, trophy.NameIndex, oldTrophy?.NameIndex);
+            var nameIndex = ReplaceMsBinString(addTrophy ? trophy?.DisplayName : null, trophyNamePath, trophy?.NameIndex, oldTrophy?.NameIndex);
 
             // Update trophy game names
-            var gameNameString = !string.IsNullOrEmpty(trophy.GameName2) ? $"{trophy.GameName1}\r\n{trophy.GameName2}" : trophy.GameName1;
-            trophy.GameIndex = ReplaceMsBinString(addTrophy ? gameNameString : null, trophyNamePath, trophy.GameIndex, oldTrophy?.GameIndex);
+            var gameNameString = !string.IsNullOrEmpty(trophy?.GameName2) ? $"{trophy?.GameName1}\r\n{trophy?.GameName2}" : trophy?.GameName1;
+            var gameIndex = ReplaceMsBinString(addTrophy ? gameNameString : null, trophyNamePath, trophy?.GameIndex - (nameIndex == null ? 1 : 0), oldTrophy?.GameIndex - (nameIndex == null ? 1 : 0));
 
             // Update trophy description
-            trophy.DescriptionIndex = ReplaceMsBinString(addTrophy ? trophy.Description : null, trophyDescriptionPath, trophy.DescriptionIndex, oldTrophy?.DescriptionIndex);
+            var descriptionIndex = ReplaceMsBinString(addTrophy ? trophy?.Description : null, trophyDescriptionPath, trophy?.DescriptionIndex, oldTrophy?.DescriptionIndex);
+
+            // Update trophy values
+            if (trophy != null)
+            {
+                trophy.NameIndex = nameIndex;
+                trophy.GameIndex = gameIndex;
+                trophy.DescriptionIndex = descriptionIndex;
+            }
 
             // Update trophy data
-            var rootNode = _fileService.OpenFile(trophyPath);
             if (rootNode != null)
             {
                 var trophyNodeList = rootNode.FindChild(nodePath) as TyDataListNode;
@@ -258,7 +293,7 @@ namespace BrawlInstaller.Services
                     // If trophy was deleted, update other trophies' indexes
                     foreach(TyDataListEntryNode trophyNode in trophyNodeList.Children)
                     {
-                        if (trophy.NameIndex == null && trophyNode.NameIndex > oldTrophy.NameIndex)
+                        if (trophy?.NameIndex == null && trophyNode.NameIndex > oldTrophy.NameIndex)
                         {
                             trophyNode.NameIndex--;
                             if (trophyNode.NameIndex >= oldTrophy.GameIndex)
@@ -266,7 +301,7 @@ namespace BrawlInstaller.Services
                                 trophyNode.NameIndex--;
                             }
                         }
-                        if (trophy.GameIndex == null && trophyNode.GameIndex > oldTrophy.GameIndex)
+                        if (trophy?.GameIndex == null && trophyNode.GameIndex > oldTrophy.GameIndex)
                         {
                             trophyNode.GameIndex--;
                             if (trophyNode.GameIndex >= oldTrophy.NameIndex)
@@ -274,7 +309,7 @@ namespace BrawlInstaller.Services
                                 trophyNode.GameIndex--;
                             }
                         }
-                        if (trophy.DescriptionIndex == null && trophyNode.DescriptionIndex > oldTrophy.DescriptionIndex)
+                        if (trophy?.DescriptionIndex == null && trophyNode.DescriptionIndex > oldTrophy.DescriptionIndex)
                         {
                             trophyNode.DescriptionIndex--;
                         }

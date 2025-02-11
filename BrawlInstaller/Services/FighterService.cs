@@ -2956,9 +2956,13 @@ namespace BrawlInstaller.Services
                 if (allStarTrophy.InstructionIndex > -1)
                     allStarHook?.Instructions?.RemoveAt(allStarTrophy.InstructionIndex);
                 // Add aliases and instructions
-                var slotAliasName = $"{fighterName}_Slot";
-                aliases.Add(new Alias { Name = slotAliasName, Value = $"0x{slotId:X2}" });
-                foreach(var fighterTrophy in fighterTrophies)
+                var slotAliasName = string.Empty;
+                if (fighterTrophies.Any(x => x.Trophy != null))
+                {
+                    slotAliasName = $"{fighterName}_Slot";
+                    aliases.Add(new Alias { Name = slotAliasName, Value = $"0x{slotId:X2}" });
+                }
+                foreach(var fighterTrophy in fighterTrophies.Where(x => x.Trophy != null))
                 {
                     var trophySuffix = fighterTrophy.Type == TrophyType.Fighter ? "_Trophy" : "_Trophy_AllStar";
                     var register1 = fighterTrophy.Type == TrophyType.Fighter ? "r29" : "r26";
@@ -3046,10 +3050,10 @@ namespace BrawlInstaller.Services
             {
                 _trophyService.GetUnusedTrophyIds(fighterTrophy?.Trophy?.Ids);
                 _trophyService.SaveTrophy(fighterTrophy.Trophy, fighterTrophy.OldTrophy);
-                fighterTrophy.Trophy.Thumbnails.ClearChanges();
+                fighterTrophy?.Trophy?.Thumbnails?.ClearChanges();
             }
             // Only update code if we have a slot ID and if any trophy IDs have changed
-            if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null && fighterPackage.Trophies.Any(x => x.Trophy?.Ids?.TrophyId != x.OldTrophy?.Ids?.TrophyId))
+            if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null && (fighterPackage.Trophies.Any(x => x.Trophy?.Ids?.TrophyId != x.OldTrophy?.Ids?.TrophyId) || fighterPackage.PackageType == PackageType.Delete))
             {
                 UpdateFighterTrophyCode(fighterPackage.FighterInfo.PartialPacName, fighterPackage.FighterInfo.Ids.SlotConfigId.Value, oldFighterPackage.FighterInfo.Ids.SlotConfigId.Value, fighterPackage.Trophies);
             }

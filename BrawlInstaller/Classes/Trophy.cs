@@ -81,6 +81,10 @@ namespace BrawlInstaller.Classes
 
         public Trophy Copy()
         {
+            if (this == null)
+            {
+                return null;
+            }
             var copy = JsonConvert.DeserializeObject<Trophy>(JsonConvert.SerializeObject(this));
             copy.BrresFile = BrresFile;
             copy.Thumbnails = Thumbnails.Copy();
