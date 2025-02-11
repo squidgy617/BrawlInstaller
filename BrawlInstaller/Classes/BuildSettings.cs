@@ -154,7 +154,8 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.TrophyNames, "pf\\toy\\fig\\ty_fig_name_list.msbin", "MSBIN file (.msbin)|*.msbin"),
             new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin", "MSBIn file (.msbin)|*.msbin"),
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
-            new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm", "ASM file (.asm)|*.asm")
+            new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm", "ASM file (.asm)|*.asm"),
+            new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel", "REL file (.rel)|*.rel")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -244,6 +245,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public FileNodePath TrophyGameIconsLocation { get => GetFileNodePath(FileType.TrophyGameIconsLocation); }
         [JsonIgnore] public string TrophyBrresLocation { get => GetFilePath(FileType.TrophyBrresLocation); }
         [JsonIgnore] public string FighterTrophyLocation { get => GetFilePath(FileType.FighterTrophyLocation); }
+        [JsonIgnore] public string SSETrophyModule { get => GetFilePath(FileType.SSETrophyModule); }
 
         // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]

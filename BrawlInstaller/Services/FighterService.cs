@@ -2298,7 +2298,8 @@ namespace BrawlInstaller.Services
                             var unlockPosition = ((fighterPackage.FighterInfo.Ids.CSSSlotConfigId.Value - 0x2A) * 4) + 0x178;
                             if (fighterPackage.FighterInfo.Ids.CSSSlotConfigId > 0x2A && sectionData.Length > unlockPosition)
                             {
-                                byte[] newBytes = BitConverter.GetBytes(fighterPackage.FighterSettings.DoorId).Reverse().ToArray();
+                                var doorId = fighterPackage.PackageType == PackageType.Delete ? 0 : fighterPackage.FighterSettings.DoorId;
+                                byte[] newBytes = BitConverter.GetBytes(doorId).Reverse().ToArray();
                                 newBytes.CopyTo(sectionData, unlockPosition);
                             }
                             // Set sub character
@@ -2306,6 +2307,43 @@ namespace BrawlInstaller.Services
                             if (sectionData.Length > subcharacterPosition && fighterPackage.FighterSettings.SSESubCharacterId != null)
                             {
                                 sectionData[subcharacterPosition] = (byte)fighterPackage.FighterSettings.SSESubCharacterId;
+                            }
+                            _fileService.ReplaceNodeRaw(section, sectionData);
+                        }
+                    }
+                    _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update SSE trophy module settings for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update</param>
+        private void UpdateSSETrophy(FighterPackage fighterPackage, int? trophyId)
+        {
+            if (_settingsService.BuildSettings.MiscSettings.SubspaceEx && fighterPackage.FighterInfo.Ids.SlotConfigId != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var modulePath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SSETrophyModule);
+                var rootNode = _fileService.OpenFile(modulePath);
+                if (rootNode != null)
+                {
+                    var relNode = (RELNode)rootNode;
+                    if (relNode.Sections.Count() > 8)
+                    {
+                        var section = relNode.Sections[8];
+                        if (section != null)
+                        {
+                            byte[] sectionData = _fileService.ReadRawData(section);
+                            // Set trophy
+                            var trophyPosition = ((fighterPackage.FighterInfo.Ids.SlotConfigId.Value - 0x32) * 4);
+                            if (fighterPackage.FighterInfo.Ids.SlotConfigId > 0x32 && sectionData.Length > trophyPosition && trophyPosition > -1)
+                            {
+                                trophyId = fighterPackage.PackageType == PackageType.Delete ? 0 : trophyId; // If deleting fighter, zero out ID
+                                byte[] newBytes = BitConverter.GetBytes(trophyId ?? 0).Reverse().ToArray();
+                                newBytes.CopyTo(sectionData, trophyPosition);
                             }
                             _fileService.ReplaceNodeRaw(section, sectionData);
                         }
@@ -3015,7 +3053,11 @@ namespace BrawlInstaller.Services
             {
                 UpdateFighterTrophyCode(fighterPackage.FighterInfo.PartialPacName, fighterPackage.FighterInfo.Ids.SlotConfigId.Value, oldFighterPackage.FighterInfo.Ids.SlotConfigId.Value, fighterPackage.Trophies);
             }
-            
+            var fighterTrophyId = fighterPackage?.Trophies.FirstOrDefault()?.Trophy?.Ids?.TrophyId;
+            if (fighterTrophyId != null)
+            {
+                UpdateSSETrophy(fighterPackage, fighterTrophyId);
+            }
         }
 
         
