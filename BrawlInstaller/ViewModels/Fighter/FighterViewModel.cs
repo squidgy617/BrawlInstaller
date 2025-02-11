@@ -926,9 +926,23 @@ namespace BrawlInstaller.ViewModels
             var trophySelect = _dialogService.OpenDropDownDialog(trophyList, "Name", "Select a trophy", "Select a trophy to replace current trophy") as Trophy;
             if (trophySelect != null)
             {
-                trophySelect = _trophyService.LoadTrophyData(trophySelect);
+                var trophyMatch = FighterPackage.Trophies.FirstOrDefault(x => x.OldTrophy.Ids.TrophyId == trophySelect.Ids.TrophyId && x.OldTrophy.Name == trophySelect.Name
+                    && x.Type != SelectedTrophyType);
+                var newTrophy = new FighterTrophy();
                 var selectedTrophy = FighterPackage.Trophies.FirstOrDefault(x => x.Type == SelectedTrophyType);
-                var newTrophy = new FighterTrophy { Trophy = trophySelect, Type = SelectedTrophyType, OldTrophy = trophySelect.Copy() };
+                // If this trophy is already selected for a different trophy type, use the same reference
+                if (trophyMatch != null)
+                {
+                    newTrophy.Trophy = trophyMatch.Trophy;
+                    newTrophy.OldTrophy = trophyMatch.OldTrophy;
+                    newTrophy.Type = SelectedTrophyType;
+                }
+                // Otherwise, load it
+                else
+                {
+                    trophySelect = _trophyService.LoadTrophyData(trophySelect);
+                    newTrophy = new FighterTrophy { Trophy = trophySelect, Type = SelectedTrophyType, OldTrophy = trophySelect.Copy() };
+                }
                 ChangeTrophy(newTrophy, selectedTrophy);
             }
         }
