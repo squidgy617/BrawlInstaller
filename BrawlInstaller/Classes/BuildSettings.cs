@@ -84,7 +84,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public bool UseIndividualIds { get => CosmeticType == CosmeticType.FranchiseIcon || Selectable; }
         [JsonIgnore] public bool FighterCosmetic { get => CosmeticType != CosmeticType.FranchiseIcon && !StageCosmetic; }
         [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon || CosmeticType == CosmeticType.StageName || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName || CosmeticType == CosmeticType.StageRandomBanner || CosmeticType == CosmeticType.StageReplayBanner || CosmeticType == CosmeticType.StageStats; }
-        [JsonIgnore] public bool Selectable { get => CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName; }
+        public bool Selectable { get; set; }
 
         public CosmeticDefinition Copy()
         {
