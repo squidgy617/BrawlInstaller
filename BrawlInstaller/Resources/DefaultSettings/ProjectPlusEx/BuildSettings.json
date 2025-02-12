@@ -974,7 +974,7 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": true
     },
     {
       "CosmeticType": 17,
@@ -1024,7 +1024,7 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": true
     },
     {
       "CosmeticType": 14,
@@ -1718,7 +1718,7 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": false,
-      "Selectable": true
+      "Selectable": false
     },
     {
       "CosmeticType": 8,
