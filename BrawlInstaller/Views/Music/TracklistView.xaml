@@ -14,7 +14,11 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Column="1"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left">
+            <Separator.LayoutTransform>
+                <RotateTransform Angle="90"/>
+            </Separator.LayoutTransform>
+        </Separator>
         <Grid>
             <GroupBox x:Name="tracklistGroupBox" Header="Tracklists" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <Grid>

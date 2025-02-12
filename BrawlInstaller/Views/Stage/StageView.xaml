@@ -13,7 +13,11 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Stretch" Width="3" Grid.RowSpan="3" Background="Silver" ResizeDirection="Columns"/>
+        <Separator Grid.Column="1" HorizontalAlignment="Left">
+            <Separator.LayoutTransform>
+                <RotateTransform Angle="90"/>
+            </Separator.LayoutTransform>
+        </Separator>
         <GroupBox x:Name="stageListGroupBox" Header="Stages" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ContentControl Content="{Binding StageListViewModel}"/>
         </GroupBox>
