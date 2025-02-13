@@ -1561,7 +1561,7 @@
     "UpdateCreditsModule": false,
     "SubspaceEx": false,
     "InstallKirbyHats": false,
-    "DefaultExConfigVersion": 1,
+    "DefaultExConfigVersion": 2,
     "SyncTracklists": false
   },
   "FilePathSettings": {
