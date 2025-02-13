@@ -749,7 +749,7 @@ namespace BrawlInstaller.Services
                 }
             }
             var parentNode = (BRRESNode)node;
-            var textureId = GetUnusedCosmeticId(definition, !definition.UseIndividualIds ? id : (cosmetic.Id ?? id), node, cosmetic.CostumeIndex);
+            var textureId = GetUnusedCosmeticId(definition, id, node, cosmetic.CostumeIndex);
             // If we have a texture node of the same properties, import that
             if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
                 (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
