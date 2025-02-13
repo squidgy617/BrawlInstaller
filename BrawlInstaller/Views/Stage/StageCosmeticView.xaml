@@ -40,13 +40,7 @@
             <Button x:Name="styleAddButton" Content="+" Style="{StaticResource miniButton}" Grid.Row="1" Grid.Column="2" Command="{Binding AddStyleCommand}"/>
             <Button x:Name="styleRemoveButton" Content="-" Style="{StaticResource miniButton}" Grid.Row="1" Grid.Column="3" Command="{Binding RemoveStyleCommand}"/>
             <Label x:Name="cosmeticSelectionLabel" Content="Option:" Grid.Row="2" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}" ToolTip="Select cosmetic from list"/>
-            <ComboBox x:Name="cosmeticDropDown" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, Mode=OneWay}" DisplayMemberPath="Name" Grid.Row="2" Width="140" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}" Grid.Column="1">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction CommandParameter="{Binding ElementName=cosmeticDropDown, Path=SelectedItem}" Command="{Binding ChangeCosmeticCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ComboBox>
+            <ComboBox x:Name="cosmeticDropDown" ItemsSource="{Binding SelectedCosmetics}" SelectedItem="{Binding SelectedCosmetic, UpdateSourceTrigger=LostFocus}" DisplayMemberPath="Name" Grid.Row="2" Width="140" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}" Grid.Column="1"/>
             <Button x:Name="addCosmeticSelectionButton" Style="{StaticResource miniButton}" Content="+" Grid.Column="2" Grid.Row="2" Command="{Binding AddCosmeticOptionCommand}" Visibility="{Binding DisplayCosmeticSelect, Mode=OneWay, Converter={StaticResource boolVisConverter}}"/>
         </Grid>
         <Label x:Name="imageLabel" Content="Image:" Grid.Row="1" HorizontalAlignment="Left" ToolTip="Image to use for cosmetic"/>
