@@ -1422,7 +1422,7 @@ namespace BrawlInstaller.Services
                                 {
                                     Texture = patEntry._textureNode,
                                     CostumeIndex = GetCostumeIndex(Convert.ToInt32(patEntry.FrameIndex), patSettings.Multiplier ?? definition.Multiplier, id, patSettings.Offset ?? definition.Offset),
-                                    Id = (int)patEntry.FrameIndex,
+                                    Id = (int)(patEntry.FrameIndex - (patSettings.Offset ?? definition.Offset)) / (patSettings.Multiplier ?? definition.Multiplier),
                                     TextureId = GetCosmeticId(patEntry._textureNode?.Name, definition)
                                 });
                             }
