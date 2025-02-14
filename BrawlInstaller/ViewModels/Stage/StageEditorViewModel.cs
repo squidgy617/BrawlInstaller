@@ -21,6 +21,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static BrawlInstaller.ViewModels.MainControlsViewModel;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 
 namespace BrawlInstaller.ViewModels
@@ -74,6 +75,14 @@ namespace BrawlInstaller.ViewModels
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
             {
                 LoadStage(message);
+            });
+            WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
+            });
+            WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
             });
         }
 
@@ -148,6 +157,11 @@ namespace BrawlInstaller.ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
 
         // Methods
+        private void UpdateSettings()
+        {
+            Stage = null;
+            OnPropertyChanged(nameof(Stage));
+        }
         public void LoadStage(StageLoadedMessage message)
         {
             Stage = message.Value;
