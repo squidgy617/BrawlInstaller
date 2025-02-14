@@ -39,9 +39,15 @@
             <Label x:Name="fileLabel" Content="File:" Grid.Row="2"/>
             <userControls:FileBox x:Name="brresFileBox" TextBoxWidth="120" Text="{Binding Trophy.BrresFile}" Grid.Column="1" Grid.Row="2" Filter="BRRES file (.brres)|*.brres"/>
             <Label x:Name="idLabel" Content="Trophy ID:" Grid.Row="3"/>
-            <TextBox x:Name="idTextBox" Text="{Binding Trophy.Ids.TrophyId}" Grid.Row="3" Grid.Column="1"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                <TextBox x:Name="idTextBox" Text="{Binding Trophy.Ids.TrophyId}"/>
+                <Button x:Name="refreshTrophyIdButton" Content="↺" Command="{Binding RefreshTrophyIdCommand}" Style="{StaticResource condensedButton}"/>
+            </StackPanel>
             <Label x:Name="thumbnailIdLabel" Content="Thumbnail ID:" Grid.Row="4"/>
-            <TextBox x:Name="thumbnailIdTextBox" Text="{Binding ThumbnailId, UpdateSourceTrigger=LostFocus}" Grid.Row="4" Grid.Column="1"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                <TextBox x:Name="thumbnailIdTextBox" Text="{Binding ThumbnailId, UpdateSourceTrigger=LostFocus}"/>
+                <Button x:Name="refreshThumbnailIdButton" Content="↺" Command="{Binding RefreshThumbnailIdCommand}" Style="{StaticResource condensedButton}"/>
+            </StackPanel>
             <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="5"/>
             <TextBox x:Name="displayNameTextBox" Text="{Binding Trophy.DisplayName}" Grid.Row="5" Grid.Column="1" Width="120"/>
             <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="6"/>

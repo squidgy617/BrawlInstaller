@@ -43,6 +43,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand ReplaceHDThumbnailCommand => new RelayCommand(param => ReplaceHDCosmetic());
         public ICommand ClearThumbnailCommand => new RelayCommand(param => ClearCosmetic());
         public ICommand ClearHDThumbnailCommand => new RelayCommand(param => ClearHDCosmetic());
+        public ICommand RefreshTrophyIdCommand => new RelayCommand(param => RefreshTrophyId());
+        public ICommand RefreshThumbnailIdCommand => new RelayCommand(param => RefreshThumbnailId());
 
         [ImportingConstructor]
         public TrophyEditorViewModelBase(ISettingsService settingsService, IFileService fileService, ITrophyService trophyService, IDialogService dialogService)
@@ -165,6 +167,26 @@ namespace BrawlInstaller.ViewModels
         public void MarkThumbnailsChanged()
         {
             Trophy?.Thumbnails?.MarkAllChanged();
+        }
+
+        public void RefreshTrophyId()
+        {
+            if (_dialogService.ShowMessage("This will update your trophy's ID to the first available custom trophy ID in the build. Continue?", "Update Trophy ID", MessageBoxButton.YesNo))
+            {
+                var trophyIds = _trophyService.GetUnusedTrophyIds(new BrawlIds());
+                Trophy.Ids.TrophyId = trophyIds.TrophyId;
+                OnPropertyChanged(nameof(Trophy));
+            }
+        }
+
+        public void RefreshThumbnailId()
+        {
+            if (_dialogService.ShowMessage("This will update your trophy's thumbnail ID to the first available custom thumbnail ID in the build. Continue?", "Update Trophy ID", MessageBoxButton.YesNo))
+            {
+                var trophyIds = _trophyService.GetUnusedTrophyIds(new BrawlIds());
+                Trophy.Ids.TrophyThumbnailId = trophyIds.TrophyThumbnailId;
+                OnPropertyChanged(nameof(Trophy));
+            }
         }
     }
 }
