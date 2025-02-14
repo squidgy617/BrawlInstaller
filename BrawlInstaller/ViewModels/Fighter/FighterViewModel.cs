@@ -718,6 +718,18 @@ namespace BrawlInstaller.ViewModels
                 var effectPacString = string.Join("\n", effectPacIdConflicts.Select(x => EffectPacs.FighterEffectPacs.FirstOrDefault(y => y.Value == x).Key));
                 messages.Add(new DialogMessage("Effect.pacs", $"Effect.pacs conflict with existing Effect.pacs in your build:\n\n{effectPacString}"));
             }
+            var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy.Ids.TrophyId || x.Trophy.Ids.TrophyThumbnailId != x.OldTrophy.Ids.TrophyThumbnailId ||
+                x.Trophy.Brres != x.OldTrophy.Brres);
+            if (changedTrophies != null)
+            {
+                var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => changedTrophies.Any(y => y.Trophy.Ids.TrophyId == x.Ids.TrophyId 
+                && y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId || (y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId && 
+                (y.Trophy.Ids.TrophyThumbnailId == x.Ids.TrophyThumbnailId || y.Trophy.Brres == x.Brres))));
+                if (trophyConflict != null)
+                {
+                    messages.Add(new DialogMessage("Trophy Conflicts", "One of the fighter's trophies shares an ID, thumbnail, or BRRES with another trophy in your build.\n\nIf two trophies have the same ID, the fighter will load the FIRST trophy in the build. Change your trophy's ID or change the order of trophies after saving to ensure they are ordered correctly.\n\nIf trophies have the same thumbnail ID or BRRES, the existing thumbnail/BRRES will be overwritten. If this is undesired, change the thumbnail ID or BRRES name."));
+                }
+            }
             if (messages.Count > 0)
             {
                 result = _dialogService.ShowMessages("Validation errors have occurred. Installing fighters with these errors could have unexpected results. It is strongly recommended that you correct these errors before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
