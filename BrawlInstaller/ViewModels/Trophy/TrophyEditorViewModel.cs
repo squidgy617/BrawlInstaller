@@ -77,24 +77,27 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void SaveTrophy()
         {
-            _fileService.StartBackup();
-            using (new CursorWait())
+            if (Validate())
             {
-                // Create copies of trophies before save
-                var trophyToSave = Trophy.Copy();
-                var oldTrophy = OldTrophy.Copy();
-                // Save trophy
-                Trophy = _trophyService.SaveTrophy(trophyToSave, oldTrophy);
-                OldTrophy = Trophy.Copy();
-                // Clear cosmetic changes
-                Trophy.Thumbnails.ClearChanges();
-                // Update UI
-                OnPropertyChanged(nameof(Trophy));
-                OnPropertyChanged(nameof(OldTrophy));
-                WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
+                _fileService.StartBackup();
+                using (new CursorWait())
+                {
+                    // Create copies of trophies before save
+                    var trophyToSave = Trophy.Copy();
+                    var oldTrophy = OldTrophy.Copy();
+                    // Save trophy
+                    Trophy = _trophyService.SaveTrophy(trophyToSave, oldTrophy);
+                    OldTrophy = Trophy.Copy();
+                    // Clear cosmetic changes
+                    Trophy.Thumbnails.ClearChanges();
+                    // Update UI
+                    OnPropertyChanged(nameof(Trophy));
+                    OnPropertyChanged(nameof(OldTrophy));
+                    WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
+                }
+                _fileService.EndBackup();
+                _dialogService.ShowMessage("Changes saved.", "Saved");
             }
-            _fileService.EndBackup();
-            _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 
         public void DeleteTrophy()
@@ -131,6 +134,26 @@ namespace BrawlInstaller.ViewModels
             OldTrophy = null;
             OnPropertyChanged(nameof(Trophy));
             OnPropertyChanged(nameof(OldTrophy));
+        }
+
+        private bool Validate()
+        {
+            var messages = new List<DialogMessage>();
+            var result = true;
+            if (Trophy?.Ids?.TrophyId != OldTrophy?.Ids?.TrophyId || Trophy?.Ids?.TrophyThumbnailId != OldTrophy?.Ids?.TrophyThumbnailId || Trophy?.Brres != OldTrophy?.Brres)
+            {
+                var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => Trophy.Ids.TrophyId == x.Ids.TrophyId && OldTrophy.Ids.TrophyId != x.Ids.TrophyId 
+                || (OldTrophy.Ids.TrophyId != x.Ids.TrophyId && (Trophy.Ids.TrophyThumbnailId == x.Ids.TrophyThumbnailId || Trophy.Brres == x.Brres)));
+                if (trophyConflict != null)
+                {
+                    messages.Add(new DialogMessage("Trophy Conflicts", "Trophy shares an ID, thumbnail, or BRRES with another trophy in your build.\n\nIf two trophies have the same ID, fighters linked to the trophy will load the FIRST trophy in the build. Change your trophy's ID or change the order of trophies after saving to ensure they are ordered correctly.\n\nIf trophies have the same thumbnail ID or BRRES, the existing thumbnail/BRRES will be overwritten. If this is undesired, change the thumbnail ID or BRRES name."));
+                }
+            }
+            if (messages.Count > 0)
+            {
+                result = _dialogService.ShowMessages("Validation errors have occurred. Saving trophies with these errors could have unexpected results. It is strongly recommended that you correct these errors before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            }
+            return result;
         }
     }
 
