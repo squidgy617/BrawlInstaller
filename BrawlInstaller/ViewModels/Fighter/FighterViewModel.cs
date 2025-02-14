@@ -317,6 +317,7 @@ namespace BrawlInstaller.ViewModels
                     OldFighterPackage = null;
                     OnPropertyChanged(nameof(FighterList));
                     WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                    WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
                     // Compile GCT
                     _codeService.CompileCodes();
                     _fileService.EndBackup();
@@ -433,6 +434,7 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(FighterList));
                 SendFighterLoadedMessage(FighterPackage);
                 WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
                 // Compile GCT
                 _codeService.CompileCodes();
                 _fileService.EndBackup();
@@ -1015,6 +1017,14 @@ namespace BrawlInstaller.ViewModels
     {
         public TrophyChangedMessage(Trophy trophy) : base(trophy)
         {
+        }
+    }
+
+    public class FighterSavedMessage : ValueChangedMessage<FighterPackage>
+    {
+        public FighterSavedMessage(FighterPackage fighterPackage) : base(fighterPackage)
+        {
+
         }
     }
 }

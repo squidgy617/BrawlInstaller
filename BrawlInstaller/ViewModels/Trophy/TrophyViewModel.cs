@@ -64,6 +64,10 @@ namespace BrawlInstaller.ViewModels
             {
                 GetTrophyList();
             });
+            WeakReferenceMessenger.Default.Register<FighterSavedMessage>(this, (recipient, message) =>
+            {
+                GetTrophyList();
+            });
         }
 
         // ViewModels
