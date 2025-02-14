@@ -32,27 +32,27 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label x:Name="nameLabel" Content="Name:"/>
+            <Label x:Name="nameLabel" Content="Name:" ToolTip="Name to use for trophy internally"/>
             <TextBox x:Name="nameTextBox" Text="{Binding Trophy.Name}" Grid.Column="1" Width="120"/>
-            <Label x:Name="brresLabel" Content="BRRES Name:" Grid.Row="1"/>
+            <Label x:Name="brresLabel" Content="BRRES Name:" Grid.Row="1" ToolTip="Name of BRRES used for trophy model"/>
             <TextBox x:Name="brresTextBox" Text="{Binding Trophy.Brres}" Grid.Column="1" Grid.Row="1" Width="120"/>
-            <Label x:Name="fileLabel" Content="File:" Grid.Row="2"/>
+            <Label x:Name="fileLabel" Content="File:" Grid.Row="2" ToolTip="BRRES file to use for trophy"/>
             <userControls:FileBox x:Name="brresFileBox" TextBoxWidth="120" Text="{Binding Trophy.BrresFile}" Grid.Column="1" Grid.Row="2" Filter="BRRES file (.brres)|*.brres"/>
-            <Label x:Name="idLabel" Content="Trophy ID:" Grid.Row="3"/>
+            <Label x:Name="idLabel" Content="Trophy ID:" Grid.Row="3" ToolTip="ID to use for trophy. Multiple trophies can use the same ID, but fighters with a trophy assigned will load the first trophy with that ID."/>
             <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
                 <TextBox x:Name="idTextBox" Text="{Binding Trophy.Ids.TrophyId}"/>
                 <Button x:Name="refreshTrophyIdButton" Content="↺" Command="{Binding RefreshTrophyIdCommand}" Style="{StaticResource condensedButton}"/>
             </StackPanel>
-            <Label x:Name="thumbnailIdLabel" Content="Thumbnail ID:" Grid.Row="4"/>
+            <Label x:Name="thumbnailIdLabel" Content="Thumbnail ID:" Grid.Row="4" ToolTip="Thumbnail ID to use for trophy"/>
             <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
                 <TextBox x:Name="thumbnailIdTextBox" Text="{Binding ThumbnailId, UpdateSourceTrigger=LostFocus}"/>
                 <Button x:Name="refreshThumbnailIdButton" Content="↺" Command="{Binding RefreshThumbnailIdCommand}" Style="{StaticResource condensedButton}"/>
             </StackPanel>
-            <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="5"/>
+            <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="5" ToolTip="Name of trophy to display in trophy viewer in-game"/>
             <TextBox x:Name="displayNameTextBox" Text="{Binding Trophy.DisplayName}" Grid.Row="5" Grid.Column="1" Width="120"/>
-            <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="6"/>
+            <Label x:Name="descriptionLabel" Content="Description:" Grid.Row="6" ToolTip="Description of trophy to display in trophy viewer in-game"/>
             <TextBox x:Name="descriptionTextBox" Text="{Binding Trophy.Description}" AcceptsReturn="True" Width="180" Height="100" Grid.Row="6" Grid.Column="1" TextWrapping="Wrap"/>
-            <Label x:Name="gameName1Label" Content="Game 1:" Grid.Row="7"/>
+            <Label x:Name="gameName1Label" Content="Game 1:" Grid.Row="7" ToolTip="Name of the first game displayed in trophy viewer"/>
             <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
                 <StackPanel>
                     <TextBox x:Name="gameName1TextBox" Text="{Binding Trophy.GameName1}" Width="120"/>
@@ -63,7 +63,7 @@
                 </StackPanel>
                 <Image x:Name="gameIcon1Image" Source="{Binding GameIcon1}" Width="64" Height="32"/>
             </StackPanel>
-            <Label x:Name="gameName2Label" Content="Game 2:" Grid.Row="8"/>
+            <Label x:Name="gameName2Label" Content="Game 2:" Grid.Row="8" ToolTip="Name of second game displayed in trophy viewer"/>
             <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1">
                 <StackPanel>
                     <TextBox x:Name="gameName2TextBox" Text="{Binding Trophy.GameName2}" Width="120"/>
@@ -74,9 +74,9 @@
                 </StackPanel>
                 <Image x:Name="gameIcon2Image" Source="{Binding GameIcon2}" Width="64" Height="32"/>
             </StackPanel>
-            <Label x:Name="seriesLabel" Content="Series:" Grid.Row="9"/>
+            <Label x:Name="seriesLabel" Content="Series:" Grid.Row="9" ToolTip="Series trophy is listed under in-game"/>
             <ComboBox x:Name="seriesDropDown" ItemsSource="{Binding TrophySeries}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.SeriesIndex}" Grid.Row="9" Grid.Column="1" Width="120"/>
-            <Label x:Name="categoryLabel" Content="Category:" Grid.Row="10"/>
+            <Label x:Name="categoryLabel" Content="Category:" Grid.Row="10" ToolTip="Category trophy is listed under in-game"/>
             <ComboBox x:Name="categoryDropDown" ItemsSource="{Binding TrophyCategories}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.CategoryIndex}" Grid.Row="10" Grid.Column="1" Width="120"/>
         </Grid>
         <GroupBox x:Name="thumbnailGroupBox" Header="Thumbnail" Grid.Column="1">
