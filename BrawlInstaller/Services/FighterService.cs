@@ -3073,7 +3073,7 @@ namespace BrawlInstaller.Services
             {
                 UpdateFighterTrophyCode(fighterPackage.FighterInfo.PartialPacName, fighterPackage.FighterInfo.Ids.SlotConfigId.Value, oldFighterPackage.FighterInfo.Ids.SlotConfigId.Value, fighterPackage.Trophies);
             }
-            var fighterTrophyId = fighterPackage?.Trophies.FirstOrDefault()?.Trophy?.Ids?.TrophyId;
+            var fighterTrophyId = fighterPackage?.Trophies?.OrderBy(x => x.Type)?.FirstOrDefault()?.Trophy?.Ids?.TrophyId;
             if (fighterTrophyId != null)
             {
                 UpdateSSETrophy(fighterPackage, fighterTrophyId);
