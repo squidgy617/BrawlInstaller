@@ -666,6 +666,17 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Soundbank IDs", "One or more soundbanks do not have IDs. You cannot save a fighter without specifying soundbank IDs."));
                 result = false;
             }
+            var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy.Ids.TrophyId || x.Trophy.Name != x.OldTrophy.Name);
+            if (changedTrophies.Any())
+            {
+                var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => changedTrophies.Any(y => y.Trophy.Ids.TrophyId == x.Ids.TrophyId
+                && y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId && y.Trophy.Name == x.Name));
+                if (trophyConflict != null)
+                {
+                    messages.Add(new DialogMessage("Trophies", "One or more trophies has the same name and ID as another trophy in the build. Change either the name or ID to continue."));
+                    result = false;
+                }
+            }
             if (messages.Count > 0)
                 _dialogService.ShowMessages("Errors have occurred that prevent your fighter from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
             return result;
@@ -720,7 +731,7 @@ namespace BrawlInstaller.ViewModels
             }
             var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy.Ids.TrophyId || x.Trophy.Ids.TrophyThumbnailId != x.OldTrophy.Ids.TrophyThumbnailId ||
                 x.Trophy.Brres != x.OldTrophy.Brres);
-            if (changedTrophies != null)
+            if (changedTrophies.Any())
             {
                 var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => changedTrophies.Any(y => y.Trophy.Ids.TrophyId == x.Ids.TrophyId 
                 && y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId || (y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId && 

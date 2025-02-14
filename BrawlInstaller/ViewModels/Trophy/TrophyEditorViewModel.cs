@@ -77,7 +77,7 @@ namespace BrawlInstaller.ViewModels
         // Methods
         public void SaveTrophy()
         {
-            if (Validate())
+            if (ErrorValidate() && Validate())
             {
                 _fileService.StartBackup();
                 using (new CursorWait())
@@ -153,6 +153,25 @@ namespace BrawlInstaller.ViewModels
             {
                 result = _dialogService.ShowMessages("Validation errors have occurred. Saving trophies with these errors could have unexpected results. It is strongly recommended that you correct these errors before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
             }
+            return result;
+        }
+
+        private bool ErrorValidate()
+        {
+            var messages = new List<DialogMessage>();
+            var result = true;
+            if (Trophy.Ids.TrophyId != OldTrophy.Ids.TrophyId || Trophy.Name != OldTrophy.Name)
+            {
+                var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => Trophy.Ids.TrophyId == x.Ids.TrophyId && OldTrophy.Ids.TrophyId != x.Ids.TrophyId 
+                    && Trophy.Name == x.Name);
+                if (trophyConflict != null)
+                {
+                    messages.Add(new DialogMessage("Trophy Conflict", "Trophy has the same name and ID as another trophy in the build. Change either the name or ID to continue."));
+                    result = false;
+                }
+            }
+            if (messages.Count > 0)
+                _dialogService.ShowMessages("Errors have occurred that prevent your trophy from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
             return result;
         }
     }
