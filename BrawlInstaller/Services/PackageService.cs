@@ -331,7 +331,7 @@ namespace BrawlInstaller.Services
                         {
                             var trophy = JsonConvert.DeserializeObject<FighterTrophy>(trophyJson);
                             // Get BRRES
-                            trophy.Trophy.BrresFile = _fileService.GetFiles(trophyPath, "*.brres").FirstOrDefault();
+                            trophy.Trophy.BrresFile = _fileService.GetFiles(trophyPath, "*.brres", SearchOption.AllDirectories).FirstOrDefault();
                             // Get cosmetics
                             trophy.Trophy.Thumbnails = _cosmeticService.LoadCosmetics($"{trophyPath}\\Thumbnails");
                             // Check if trophy is new or existing

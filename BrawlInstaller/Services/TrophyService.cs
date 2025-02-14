@@ -133,9 +133,12 @@ namespace BrawlInstaller.Services
             }
             // Get BRRES
             var trophyBrresPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyBrresLocation);
-            var files = _fileService.GetFiles(trophyBrresPath, "*.brres");
-            var brres = files.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == trophy.Brres);
-            trophy.BrresFile = brres;
+            var brresPath = $"{trophy.Brres}.brres";
+            var fullPath = Path.Combine(trophyBrresPath, brresPath);
+            if (_fileService.FileExists(fullPath))
+            {
+                trophy.BrresFile = fullPath;
+            }
             // Get thumbnail
             var cosmetics = _cosmeticService.GetTrophyCosmetics(trophy.Ids);
             trophy.Thumbnails.Items = cosmetics;

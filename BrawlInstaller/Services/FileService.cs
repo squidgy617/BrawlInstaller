@@ -88,6 +88,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.GetFiles(string, string)"/>
         List<string> GetFiles(string path, string searchPattern);
 
+        /// <inheritdoc cref="FileService.GetFiles(string, string, SearchOption)"/>
+        List<string> GetFiles(string path, string searchPattern, SearchOption searchOption);
+
         /// <inheritdoc cref="FileService.FileExists(string)"/>
         bool FileExists(string path);
 
