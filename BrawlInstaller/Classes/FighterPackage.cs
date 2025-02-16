@@ -44,6 +44,13 @@ namespace BrawlInstaller.Classes
         public FighterDeleteOptions FighterDeleteOptions { get; set; } = new FighterDeleteOptions();
         public PackageType PackageType { get; set; } = PackageType.Update;
         public List<FighterTrophy> Trophies { get; set; } = new List<FighterTrophy>();
+        public List<FighterInstallOption> InstallOptions { get; set; } = new List<FighterInstallOption> 
+        { 
+            new FighterInstallOption(InstallOptionType.MovesetFile),
+            new FighterInstallOption(InstallOptionType.Module),
+            new FighterInstallOption(InstallOptionType.Sounbank),
+            new FighterInstallOption(InstallOptionType.KirbySoundbank)
+        };
 
         // TODO: Alternate files
         // It will be a list of alternate files you can supply. Each file has a type associated with it that tells you what type of file it is. This list, along with the associate files,
@@ -336,6 +343,39 @@ namespace BrawlInstaller.Classes
         public FighterDeleteOptions Copy()
         {
             return JsonConvert.DeserializeObject<FighterDeleteOptions>(JsonConvert.SerializeObject(this));
+        }
+    }
+
+    public class FighterInstallOption
+    {
+        public InstallOptionType Type { get; set; } = InstallOptionType.MovesetFile;
+        [JsonIgnore] public string File { get; set; } = string.Empty;
+        public string Name { get; set; } = "New Option";
+        public string Description { get; set; } = string.Empty;
+
+        public FighterInstallOption()
+        {
+
+        }
+
+        public FighterInstallOption(InstallOptionType type, string name = "Default", string description = "The default option for this package.", string file = "")
+        {
+            Type = type;
+            Name = name;
+            Description = description;
+            File = file;
+        }
+
+        public FighterInstallOption Copy()
+        {
+            var copy = new FighterInstallOption
+            {
+                Type = Type,
+                Name = Name,
+                Description = Description,
+                File = File
+            };
+            return copy;
         }
     }
 

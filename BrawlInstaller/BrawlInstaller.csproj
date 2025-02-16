@@ -101,6 +101,7 @@
     <Compile Include="Classes\Trophy.cs" />
     <Compile Include="Enums\FighterFileType.cs" />
     <Compile Include="Enums\FileType.cs" />
+    <Compile Include="Enums\InstallOptionType.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
     <Compile Include="Enums\TracklistType.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />

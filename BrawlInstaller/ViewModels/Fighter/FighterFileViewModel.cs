@@ -47,6 +47,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand SelectCreditsThemeCommand => new RelayCommand(param => SelectCreditsTheme());
         public ICommand RefreshSoundbankIdCommand => new RelayCommand(param => RefreshSoundbankId());
         public ICommand RefreshKirbySoundbankIdCommand => new RelayCommand(param => RefreshKirbySoundbankId());
+        public ICommand RemoveInstallOptionCommand => new RelayCommand(param => RemoveInstallOption(param));
+        public ICommand AddInstallOptionCommand => new RelayCommand(param => AddInstallOption());
 
         // Importing constructor
         [ImportingConstructor]
@@ -119,6 +121,11 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>().ToDictionary(x => FighterPackage != null ? FighterPacFile.GetPrefix(x.Value, FighterPackage?.FighterInfo) : x.Key, x => x.Value); }
 
         public List<string> PacFileSuffixes { get => StaticClasses.PacFiles.PacFileSuffixes; }
+
+        public Dictionary<string, InstallOptionType> InstallOptionTypes { get => typeof(InstallOptionType).GetDictionary<InstallOptionType>().ToDictionary(x => x.Key, x => x.Value); }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public ObservableCollection<FighterInstallOption> InstallOptions { get => FighterPackage?.InstallOptions != null ? new ObservableCollection<FighterInstallOption>(FighterPackage.InstallOptions) : new ObservableCollection<FighterInstallOption>(); }
 
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
@@ -271,6 +278,22 @@ namespace BrawlInstaller.ViewModels
                 return newSoundbankId;
             }
             return currentId;
+        }
+
+        private void RemoveInstallOption(object param)
+        {
+            var installOption = param as FighterInstallOption;
+            if (installOption != null && FighterPackage.InstallOptions.Count(x => x.Type == installOption.Type) > 1)
+            {
+                FighterPackage.InstallOptions.Remove(installOption);
+                OnPropertyChanged(nameof(InstallOptions));
+            }
+        }
+
+        private void AddInstallOption()
+        {
+            FighterPackage.InstallOptions.Add(new FighterInstallOption());
+            OnPropertyChanged(nameof(InstallOptions));
         }
     }
 }

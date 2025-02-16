@@ -9,7 +9,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
              xmlns:validationRules="clr-namespace:BrawlInstaller.Validation"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" x:Name="fighterFileView"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -19,6 +19,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -169,5 +170,41 @@
                 </Grid>
             </StackPanel>
         </GroupBox>
+        <Expander Header="Alternate Files" Grid.Row="7" Grid.ColumnSpan="4">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding InstallOptions}">
+                    <ItemsControl.ItemTemplate>
+                        <HierarchicalDataTemplate>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource miniButton}" Content="-" CommandParameter="{Binding}" Command="{Binding DataContext.RemoveInstallOptionCommand, ElementName=fighterFileView}"/>
+                                    <ComboBox ItemsSource="{Binding DataContext.InstallOptionTypes, ElementName=fighterFileView}" Width="120" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Type}"/>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Name:"/>
+                                        <TextBox Text="{Binding Name}" Width="120" Grid.Column="1"/>
+                                        <Label Content="Description:" Grid.Row="1"/>
+                                        <TextBox Text="{Binding Description}" Width="200" Grid.Row="1" Grid.Column="1"/>
+                                        <Label Content="File:" Grid.Row="2"/>
+                                        <userControls:FileBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" TextBoxWidth="200" Text="{Binding File}"/>
+                                    </Grid>
+                                </StackPanel>
+                                <Separator/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Content="+" Style="{StaticResource miniButton}" Command="{Binding DataContext.AddInstallOptionCommand, ElementName=fighterFileView}"/>
+            </StackPanel>
+        </Expander>
     </Grid>
 </UserControl>
