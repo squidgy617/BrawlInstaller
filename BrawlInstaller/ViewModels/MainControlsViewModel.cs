@@ -70,7 +70,7 @@ namespace BrawlInstaller.ViewModels
 
         private void RestoreBackup()
         {
-            var backups = _fileService.GetBackups().Where(x => x.BuildPath == AppSettings.BuildPath);
+            var backups = _fileService.GetBackups().Where(x => x.BuildPath == AppSettings.BuildPath).OrderByDescending(x => x.TimeStamp);
             if (backups.Any())
             {
                 var selectedBackup = _dialogService.OpenDropDownDialog(backups, "TimeStamp", "Restore Backup", "Select a backup to restore") as Backup;
