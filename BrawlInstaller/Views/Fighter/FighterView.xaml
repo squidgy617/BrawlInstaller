@@ -32,6 +32,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -76,8 +77,12 @@
                                 <Button x:Name="addButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddFighterCommand}"/>
                                 <Button x:Name="removeButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveFighterCommand}"/>
                             </StackPanel>
-                            <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="2" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to CSS"/>
-                            <CheckBox x:Name="inRandomCheckBox" Grid.Column="2" Grid.Row="3" IsChecked="{Binding SelectedRosterEntry.InRandom}" Content="In Random" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}" ToolTip="Check to add fighter to random selection"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}">
+                                <Label x:Name="rosterEntryNameLabel" Content="Name:"/>
+                                <TextBox x:Name="rosterEntryNameTextBox" Text="{Binding SelectedRosterEntry.Name}"/>
+                            </StackPanel>
+                            <CheckBox x:Name="inCssCheckBox" Grid.Column="2" Grid.Row="3" IsChecked="{Binding SelectedRosterEntry.InCss}" Content="In CSS" Visibility="{Binding ShowCssCheckBoxes, Converter={StaticResource boolVisConverter}}" ToolTip="Check to add fighter to CSS"/>
+                            <CheckBox x:Name="inRandomCheckBox" Grid.Column="2" Grid.Row="4" IsChecked="{Binding SelectedRosterEntry.InRandom}" Content="In Random" Visibility="{Binding ShowCssCheckBoxes, Converter={StaticResource boolVisConverter}}" ToolTip="Check to add fighter to random selection"/>
                         </Grid>
                     </ScrollViewer>
                     <StackPanel Grid.Row="1">

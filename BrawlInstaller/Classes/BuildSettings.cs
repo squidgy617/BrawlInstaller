@@ -123,6 +123,7 @@ namespace BrawlInstaller.Classes
         public bool InstallKirbyHats { get; set; } = false;
         public uint DefaultExConfigVersion { get; set; } = 1;
         public bool SyncTracklists { get; set; } = false;
+        public bool UpdateCodeMenuNames { get; set; } = true;
     }
 
     public class FilePathSettings

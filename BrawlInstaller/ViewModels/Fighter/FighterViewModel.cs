@@ -165,6 +165,10 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedTrophyType))]
         public FighterTrophy SelectedFighterTrophy { get => FighterPackage?.Trophies?.FirstOrDefault(x => x.Type == SelectedTrophyType); }
 
+        [DependsUpon(nameof(SelectedRosterEntry))]
+        [DependsUpon(nameof(SelectedRoster))]
+        public bool ShowCssCheckBoxes { get => SelectedRosterEntry != null && SelectedRoster?.RosterType == RosterType.CSS; }
+
         // Methods
         public void LoadFighterFromRoster(object param)
         {
@@ -494,7 +498,7 @@ namespace BrawlInstaller.ViewModels
             foreach(var fighterInfo in fighterInfoList)
             {
                 var foundMatches = new List<RosterEntry>();
-                foreach(var roster in Rosters)
+                foreach(var roster in Rosters.Where(x => x.RosterType != RosterType.CodeMenu || _settingsService.BuildSettings.MiscSettings.UpdateCodeMenuNames))
                 {
                     foundMatches.AddRange(roster.Entries.Where(x => x.Id == fighterInfo.Ids.GetIdOfType(roster.IdType) && !updatedMatches.Contains(x)));
                 }
@@ -537,7 +541,7 @@ namespace BrawlInstaller.ViewModels
                         {
                             roster.Entries.Remove(foundEntry);
                         }
-                        else if (packageType == PackageType.Update)
+                        else if (packageType == PackageType.Update && (roster.RosterType != RosterType.CodeMenu || _settingsService.BuildSettings.MiscSettings.UpdateCodeMenuNames))
                         {
                             foundEntry.Name = fighterInfo.DisplayName;
                         }
