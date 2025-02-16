@@ -3061,7 +3061,7 @@ namespace BrawlInstaller.Services
         /// <param name="oldFighterPackage">Old fighter package being removed</param>
         public void SaveFighterTrophies(FighterPackage fighterPackage, FighterPackage oldFighterPackage)
         {
-            foreach(var fighterTrophy in fighterPackage.Trophies.Distinct())
+            foreach(var fighterTrophy in fighterPackage.Trophies.GroupBy(x => x.Trophy).Select(x => x.FirstOrDefault()))
             {
                 _trophyService.GetUnusedTrophyIds(fighterTrophy?.Trophy?.Ids);
                 _trophyService.SaveTrophy(fighterTrophy.Trophy, fighterTrophy.OldTrophy);
