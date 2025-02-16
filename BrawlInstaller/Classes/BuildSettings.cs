@@ -31,7 +31,8 @@ namespace BrawlInstaller.Classes
             {
                 BuildPath = BuildPath,
                 HDTextures = HDTextures,
-                ModifyHDTextures = ModifyHDTextures
+                ModifyHDTextures = ModifyHDTextures,
+                BackupCount = BackupCount
             };
             return copy;
         }
