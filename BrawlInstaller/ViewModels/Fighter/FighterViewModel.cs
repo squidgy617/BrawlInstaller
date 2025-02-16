@@ -719,7 +719,7 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Soundbank IDs", "One or more soundbanks do not have IDs. You cannot save a fighter without specifying soundbank IDs."));
                 result = false;
             }
-            var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy.Ids.TrophyId || x.Trophy.Name != x.OldTrophy.Name);
+            var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy?.Ids.TrophyId || x.Trophy.Name != x.OldTrophy?.Name);
             if (changedTrophies.Any())
             {
                 var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => changedTrophies.Any(y => y.Trophy.Ids.TrophyId == x.Ids.TrophyId
@@ -782,12 +782,12 @@ namespace BrawlInstaller.ViewModels
                 var effectPacString = string.Join("\n", effectPacIdConflicts.Select(x => EffectPacs.FighterEffectPacs.FirstOrDefault(y => y.Value == x).Key));
                 messages.Add(new DialogMessage("Effect.pacs", $"Effect.pacs conflict with existing Effect.pacs in your build:\n\n{effectPacString}"));
             }
-            var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy.Ids.TrophyId || x.Trophy.Ids.TrophyThumbnailId != x.OldTrophy.Ids.TrophyThumbnailId ||
+            var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy?.Ids.TrophyId || x.Trophy.Ids.TrophyThumbnailId != x.OldTrophy?.Ids.TrophyThumbnailId ||
                 x.Trophy.Brres != x.OldTrophy.Brres);
             if (changedTrophies.Any())
             {
                 var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => changedTrophies.Any(y => y.Trophy.Ids.TrophyId == x.Ids.TrophyId 
-                && y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId || (y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId && 
+                && y.OldTrophy?.Ids.TrophyId != x.Ids.TrophyId || (y.OldTrophy?.Ids.TrophyId != x.Ids.TrophyId && 
                 (y.Trophy.Ids.TrophyThumbnailId == x.Ids.TrophyThumbnailId || y.Trophy.Brres == x.Brres))));
                 if (trophyConflict != null)
                 {

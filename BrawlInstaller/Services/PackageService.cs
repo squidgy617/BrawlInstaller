@@ -647,6 +647,37 @@ namespace BrawlInstaller.Services
                     var pacFiles = _fileService.GetFiles(dir, "*.pac");
                     pacFileObjects.AddRange(GetPacFiles(pacFiles, fighterPackage, true));
                 }
+                // Get option definition if it exists
+                var defaultOptionSettingsFile = Path.Combine(pacPath, "OptionSettings.txt");
+                if (_fileService.FileExists(defaultOptionSettingsFile))
+                {
+                    var defaultOptionSettings = _fileService.ParseIniFile(defaultOptionSettingsFile);
+                    var defaultInstallOption = fighterPackage.InstallOptions.FirstOrDefault(x => x.Type == InstallOptionType.MovesetFile);
+                    if (defaultInstallOption != null)
+                    {
+                        defaultInstallOption.Name = defaultOptionSettings.TryGetValue("name", out string name) ? name : string.Empty;
+                        defaultInstallOption.Description = defaultOptionSettings.TryGetValue("description", out string description) ? description : string.Empty;
+                    }
+                }
+                // Get alternate moveset files
+                var optionPacPath = Path.Combine(pacPath, "#Options");
+                if (_fileService.DirectoryExists(optionPacPath))
+                {
+                    foreach (var optionFolder in _fileService.GetDirectories(optionPacPath, "*", SearchOption.TopDirectoryOnly))
+                    {
+                        var optionSettingsFile = Path.Combine(optionFolder, "OptionSettings.txt");
+                        if (_fileService.FileExists(optionSettingsFile))
+                        {
+                            var optionSettings = _fileService.ParseIniFile(optionSettingsFile);
+                            var installOption = new FighterInstallOption();
+                            installOption.Name = optionSettings.TryGetValue("name", out string name) ? name : string.Empty;
+                            installOption.Description = optionSettings.TryGetValue("description", out string description) ? description : string.Empty;
+                            installOption.Type = InstallOptionType.MovesetFile;
+                            installOption.File = _fileService.GetFiles(optionFolder, $"*.{installOption.Extension}").FirstOrDefault();
+                            fighterPackage.InstallOptions.Add(installOption);
+                        }
+                    }
+                }
                 // Get costumes
                 var rootNode = _fileService.OpenFile(fighterPackage.FighterInfo.CSSSlotConfig);
                 if (rootNode != null)
