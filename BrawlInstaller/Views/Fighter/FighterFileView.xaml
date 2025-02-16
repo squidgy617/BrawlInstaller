@@ -195,7 +195,7 @@
                                         <Label Content="Description:" Grid.Row="1"/>
                                         <TextBox Text="{Binding Description}" Width="200" Grid.Row="1" Grid.Column="1"/>
                                         <Label Content="File:" Grid.Row="2"/>
-                                        <userControls:FileBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" TextBoxWidth="200" Text="{Binding File}"/>
+                                        <userControls:FileBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" TextBoxWidth="200" Text="{Binding File}" Filter="{Binding Filter, Mode=OneWay}"/>
                                     </Grid>
                                 </StackPanel>
                                 <Separator/>

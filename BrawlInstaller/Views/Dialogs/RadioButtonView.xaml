@@ -19,7 +19,7 @@
                 <ItemsControl x:Name="listbox" ItemsSource="{Binding RadioButtonGroups}">
                     <ItemsControl.ItemTemplate>
                         <HierarchicalDataTemplate>
-                            <GroupBox Header="{Binding GroupName}">
+                            <GroupBox Header="{Binding DisplayName}">
                                 <ItemsControl ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemTemplate>
                                         <HierarchicalDataTemplate>

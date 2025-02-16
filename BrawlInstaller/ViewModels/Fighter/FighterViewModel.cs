@@ -341,10 +341,11 @@ namespace BrawlInstaller.ViewModels
                 return;
             }
             // Get install options
+            var selectedInstallOptions = new List<FighterInstallOption>();
             var installOptionsGroups = new List<RadioButtonGroup>();
             foreach(var installGroup in FighterPackage.InstallOptions.GroupBy(x => x.Type).Where(x => x.Count() > 1))
             {
-                var group = new RadioButtonGroup { GroupName = installGroup.Key.ToString() };
+                var group = new RadioButtonGroup { DisplayName = installGroup.Key.GetDescription(), GroupName = installGroup.Key.ToString() };
                 foreach(var installOption in installGroup)
                 {
                     group.Items.Add(new RadioButtonItem(installOption, installOption.Name, installOption.Description, installOption.Type.ToString(), installOption == FighterPackage.InstallOptions.FirstOrDefault(x => x.Type == installOption.Type)));
@@ -353,7 +354,7 @@ namespace BrawlInstaller.ViewModels
             }
             if (installOptionsGroups.Count > 0)
             {
-                _dialogService.OpenRadioButtonDialog(installOptionsGroups);
+                selectedInstallOptions = _dialogService.OpenRadioButtonDialog(installOptionsGroups).Where(x => x.IsChecked).Select(x => x.Item as FighterInstallOption).ToList();
             }
             _fileService.StartBackup();
             var packageType = FighterPackage.PackageType;
@@ -367,6 +368,7 @@ namespace BrawlInstaller.ViewModels
             }
             // Create copy of package before save
             var packageToSave = FighterPackage.Copy();
+            packageToSave = ApplyInstallOptions(selectedInstallOptions, packageToSave);
             // Update entry name if necessary
             if (packageToSave.FighterInfo.EntryName == null)
             {
@@ -463,6 +465,34 @@ namespace BrawlInstaller.ViewModels
                 _fileService.EndBackup();
             }
             _dialogService.ShowMessage("Changes saved.", "Saved");
+        }
+
+        private FighterPackage ApplyInstallOptions(List<FighterInstallOption> installOptions, FighterPackage fighterPackage)
+        {
+            foreach(var installOption in installOptions.Where(x => !string.IsNullOrEmpty(x.File)))
+            {
+                if (installOption.Type == InstallOptionType.Module)
+                {
+                    fighterPackage.Module = installOption.File;
+                }
+                else if (installOption.Type == InstallOptionType.Sounbank)
+                {
+                    fighterPackage.Soundbank = installOption.File;
+                }
+                else if (installOption.Type == InstallOptionType.KirbySoundbank)
+                {
+                    fighterPackage.KirbySoundbank = installOption.File;
+                }
+                else if (installOption.Type == InstallOptionType.MovesetFile)
+                {
+                    var movesetPac = fighterPackage.PacFiles.FirstOrDefault(x => x.FileType == FighterFileType.FighterPacFile && string.IsNullOrEmpty(x.Suffix));
+                    if (movesetPac != null)
+                    {
+                        movesetPac.FilePath = installOption.File;
+                    }
+                }
+            }
+            return fighterPackage;
         }
 
         public void ExportFighter()

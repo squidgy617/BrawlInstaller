@@ -15,6 +15,7 @@ using static BrawlLib.SSBB.ResourceNodes.FCFGNode;
 using System.ComponentModel;
 using BrawlInstaller.Services;
 using BrawlInstaller.Common;
+using BrawlInstaller.StaticClasses;
 
 namespace BrawlInstaller.Classes
 {
@@ -352,6 +353,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string File { get; set; } = string.Empty;
         public string Name { get; set; } = "New Option";
         public string Description { get; set; } = string.Empty;
+        [JsonIgnore] public string Filter { get => InstallOptions.InstallOptionFilters.TryGetValue(Type, out var filter) ? filter : string.Empty; }
 
         public FighterInstallOption()
         {

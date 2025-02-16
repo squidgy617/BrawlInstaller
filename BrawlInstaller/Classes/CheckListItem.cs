@@ -42,6 +42,7 @@ namespace BrawlInstaller.Classes
 
     public class RadioButtonGroup
     {
+        public string DisplayName { get; set; }
         public string GroupName { get; set; }
         public List<RadioButtonItem> Items { get; set; } = new List<RadioButtonItem>();
     }
