@@ -50,6 +50,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public AppSettings AppSettings { get => _appSettings; set { _appSettings = value; OnPropertyChanged(nameof(AppSettings)); } }
+        public bool BuildPathExists { get => !string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath) && _fileService.DirectoryExists(_settingsService.AppSettings.BuildPath); }
 
         // Methods
         private void RefreshSettings()

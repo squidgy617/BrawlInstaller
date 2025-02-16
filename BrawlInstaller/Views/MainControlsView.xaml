@@ -17,7 +17,7 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
             <Label x:Name="backupCountLabel" Content="Max Backups:" ToolTip="Maximum number of build backups to keep." HorizontalAlignment="Left"/>
             <TextBox x:Name="backupCountTextBox" Width="35" Text="{Binding AppSettings.BackupCount}"/>
-            <Button x:Name="restoreBackupButton" Content="Restore..." Command="{Binding RestoreBackupCommand}"/>
+            <Button x:Name="restoreBackupButton" Content="Restore..." Command="{Binding RestoreBackupCommand}" IsEnabled="{Binding BuildPathExists}"/>
         </StackPanel>
         <Grid Grid.Column="1" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
