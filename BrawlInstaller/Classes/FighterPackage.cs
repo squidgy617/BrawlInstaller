@@ -80,7 +80,8 @@ namespace BrawlInstaller.Classes
                 FighterSettings = FighterSettings.Copy(),
                 FighterDeleteOptions = FighterDeleteOptions.Copy(),
                 PackageType = PackageType,
-                Trophies = Trophies.Copy()
+                Trophies = Trophies.Copy(),
+                InstallOptions = InstallOptions.Copy()
             };
             return fighterPackage;
         }
