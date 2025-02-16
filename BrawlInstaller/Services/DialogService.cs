@@ -42,8 +42,11 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.OpenDropDownDialog(IEnumerable{object}, string, string, string)"/>
         object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
-        /// <inheritdoc cref="DialogService.OpenCheckListDialog(IEnumerable{CheckListItem}, string, string, string)"/>
+        /// <inheritdoc cref="DialogService.OpenCheckListDialog(IEnumerable{CheckListItem}, string, string)"/>
         List<CheckListItem> OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items");
+
+        /// <inheritdoc cref="DialogService.OpenRadioButtonDialog(IEnumerable{RadioButtonGroup}, string, string)"/>
+        List<RadioButtonItem> OpenRadioButtonDialog(IEnumerable<RadioButtonGroup> radioButtonGroups, string title = "Select items", string caption = "Select items");
 
         /// <inheritdoc cref="DialogService.OpenTextureViewer(string, string, string)"/>
         void OpenTextureViewer(string filePath, string title = "Select a texture", string caption = "Select a texture");
@@ -62,6 +65,7 @@ namespace BrawlInstaller.Services
         IMultiMessageViewModel _multiMessageViewModel { get; }
         IImageDropDownViewModel _imageDropDownViewModel { get; }
         ICheckListViewModel _checkListViewModel { get; }
+        IRadioButtonViewModel _radioButtonViewModel { get; }
 
         // Services
         IFileService _fileService { get; }
@@ -69,7 +73,7 @@ namespace BrawlInstaller.Services
         [ImportingConstructor]
         public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, 
             IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel, IMultiMessageViewModel multiMessageViewModel,
-            IImageDropDownViewModel imageDropDownViewModel, ICheckListViewModel checkListViewModel) 
+            IImageDropDownViewModel imageDropDownViewModel, ICheckListViewModel checkListViewModel, IRadioButtonViewModel radioButtonViewModel) 
         {
             _fileService = fileService;
             _messageViewModel = messageViewModel;
@@ -79,6 +83,7 @@ namespace BrawlInstaller.Services
             _multiMessageViewModel = multiMessageViewModel;
             _imageDropDownViewModel = imageDropDownViewModel;
             _checkListViewModel = checkListViewModel;
+            _radioButtonViewModel = radioButtonViewModel;
         }
 
         // Methods
@@ -283,6 +288,31 @@ namespace BrawlInstaller.Services
                 return _checkListViewModel.CheckListItems.ToList();
             }
             return new List<CheckListItem>();
+        }
+
+        /// <summary>
+        /// Open dialog that displays a list of items divided into radio button groups
+        /// </summary>
+        /// <param name="radioButtonGroups">Items to display</param>
+        /// <param name="title">Title to display on window</param>
+        /// <param name="caption">Caption to display</param>
+        /// <returns>Selected items</returns>
+        public List<RadioButtonItem> OpenRadioButtonDialog(IEnumerable<RadioButtonGroup> radioButtonGroups, string title = "Select items", string caption = "Select items")
+        {
+            var dialog = GenerateWindow(title);
+            _radioButtonViewModel.Caption = caption;
+            _radioButtonViewModel.MessageBoxButton = MessageBoxButton.OK;
+            _radioButtonViewModel.MessageIcon = MessageBoxImage.None;
+            _radioButtonViewModel.Image = null;
+            _radioButtonViewModel.RadioButtonGroups = radioButtonGroups;
+            _radioButtonViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _radioButtonViewModel;
+            dialog.ShowDialog();
+            if (_radioButtonViewModel.DialogResult)
+            {
+                return _radioButtonViewModel.RadioButtonItems.ToList();
+            }
+            return new List<RadioButtonItem>();
         }
 
         /// <summary>

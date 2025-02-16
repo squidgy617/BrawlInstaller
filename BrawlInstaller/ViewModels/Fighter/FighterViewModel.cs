@@ -340,6 +340,21 @@ namespace BrawlInstaller.ViewModels
             {
                 return;
             }
+            // Get install options
+            var installOptionsGroups = new List<RadioButtonGroup>();
+            foreach(var installGroup in FighterPackage.InstallOptions.GroupBy(x => x.Type).Where(x => x.Count() > 1))
+            {
+                var group = new RadioButtonGroup { GroupName = installGroup.Key.ToString() };
+                foreach(var installOption in installGroup)
+                {
+                    group.Items.Add(new RadioButtonItem(installOption, installOption.Name, installOption.Description, installOption.Type.ToString(), installOption == FighterPackage.InstallOptions.FirstOrDefault(x => x.Type == installOption.Type)));
+                }
+                installOptionsGroups.Add(group);
+            }
+            if (installOptionsGroups.Count > 0)
+            {
+                _dialogService.OpenRadioButtonDialog(installOptionsGroups);
+            }
             _fileService.StartBackup();
             var packageType = FighterPackage.PackageType;
             // Set costume indexes for cosmetics

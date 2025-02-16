@@ -70,6 +70,9 @@
     <DataTemplate DataType="{x:Type viewModels:CheckListViewModel}">
         <views:CheckListView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:RadioButtonViewModel}">
+        <views:RadioButtonView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:TracklistViewModel}">
         <views:TracklistView/>
     </DataTemplate>

@@ -145,6 +145,7 @@
     <Compile Include="Validation\BuildFilePathValidationRules.cs" />
     <Compile Include="Validation\FranchiseIconValidationRules.cs" />
     <Compile Include="Validation\PacFileNameValidationRules.cs" />
+    <Compile Include="ViewModels\Dialogs\RadioButtonViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\CheckListViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DropDownViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />
@@ -173,6 +174,9 @@
     <Compile Include="ViewModels\Trophy\TrophyEditorViewModelBase.cs" />
     <Compile Include="ViewModels\Trophy\TrophyEditorViewModel.cs" />
     <Compile Include="ViewModels\Trophy\TrophyViewModel.cs" />
+    <Compile Include="Views\Dialogs\RadioButtonView.xaml.cs">
+      <DependentUpon>RadioButtonView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\CheckListView.xaml.cs">
       <DependentUpon>CheckListView.xaml</DependentUpon>
     </Compile>
@@ -280,6 +284,10 @@
     <Page Include="UserControls\FileBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\RadioButtonView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Dialogs\CheckListView.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -24,4 +24,25 @@ namespace BrawlInstaller.Classes
             IsChecked = isChecked;
         }
     }
+
+    public class RadioButtonItem : CheckListItem
+    {
+        public string GroupName { get; set; } = string.Empty;
+
+        public RadioButtonItem(object item, string name, string description, string groupName, bool isChecked = false, BitmapImage image = null) : base(item, name, description, isChecked, image)
+        {
+            Item = item;
+            Name = name;
+            Description = description;
+            Image = image;
+            IsChecked = isChecked;
+            GroupName = groupName;
+        }
+    }
+
+    public class RadioButtonGroup
+    {
+        public string GroupName { get; set; }
+        public List<RadioButtonItem> Items { get; set; } = new List<RadioButtonItem>();
+    }
 }
