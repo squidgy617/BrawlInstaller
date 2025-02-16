@@ -354,7 +354,7 @@ namespace BrawlInstaller.ViewModels
             }
             if (installOptionsGroups.Count > 0)
             {
-                selectedInstallOptions = _dialogService.OpenRadioButtonDialog(installOptionsGroups).Where(x => x.IsChecked).Select(x => x.Item as FighterInstallOption).ToList();
+                selectedInstallOptions = _dialogService.OpenRadioButtonDialog(installOptionsGroups, "Install Options", "Select options to install").Where(x => x.IsChecked).Select(x => x.Item as FighterInstallOption).ToList();
             }
             _fileService.StartBackup();
             var packageType = FighterPackage.PackageType;
