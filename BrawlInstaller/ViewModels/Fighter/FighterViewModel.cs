@@ -169,6 +169,10 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedRoster))]
         public bool ShowCssCheckBoxes { get => SelectedRosterEntry != null && SelectedRoster?.RosterType == RosterType.CSS; }
 
+        [DependsUpon(nameof(SelectedRosterEntry))]
+        [DependsUpon(nameof(SelectedRoster))]
+        public bool ShowRosterEntryNameField { get => SelectedRosterEntry != null && SelectedRoster?.RosterType == RosterType.CodeMenu; }
+
         // Methods
         public void LoadFighterFromRoster(object param)
         {

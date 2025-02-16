@@ -77,7 +77,7 @@
                                 <Button x:Name="addButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddFighterCommand}"/>
                                 <Button x:Name="removeButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveFighterCommand}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Visibility="{Binding SelectedRosterEntry, Converter={StaticResource nullVisConverter}}">
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Visibility="{Binding ShowRosterEntryNameField, Converter={StaticResource boolVisConverter}}">
                                 <Label x:Name="rosterEntryNameLabel" Content="Name:"/>
                                 <TextBox x:Name="rosterEntryNameTextBox" Text="{Binding SelectedRosterEntry.Name}"/>
                             </StackPanel>
