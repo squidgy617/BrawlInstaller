@@ -706,6 +706,38 @@ namespace BrawlInstaller.Services
                 fighterPackage.Soundbank = _fileService.GetFiles(Path.Combine(path, "Soundbank"), "*.sawnd").FirstOrDefault();
                 fighterPackage.ClassicIntro = _fileService.GetFiles(Path.Combine(path, "ClassicIntro"), "*.brres").FirstOrDefault();
                 fighterPackage.EndingMovie = _fileService.GetFiles(Path.Combine(path, "Ending"), "*.thp").FirstOrDefault();
+                // Get soundbank options
+                var soundbankFolder = Path.Combine(path, "Soundbank");
+                var soundbankOptionSettingsFile = Path.Combine(soundbankFolder, "OptionSettings.txt");
+                if (_fileService.FileExists(soundbankOptionSettingsFile))
+                {
+                    var soundbankOptionSettings = _fileService.ParseIniFile(soundbankOptionSettingsFile);
+                    var defaultInstallOption = fighterPackage.InstallOptions.FirstOrDefault(x => x.Type == InstallOptionType.Sounbank);
+                    if (defaultInstallOption != null)
+                    {
+                        defaultInstallOption.Name = soundbankOptionSettings.TryGetValue("name", out string name) ? name : string.Empty;
+                        defaultInstallOption.Description = soundbankOptionSettings.TryGetValue("description", out string description) ? description : string.Empty;
+                    }
+                }
+                // Get alternate soundbank options
+                var soundbankOptionsFolder = Path.Combine(soundbankFolder, "#Options");
+                if (_fileService.DirectoryExists(soundbankOptionsFolder))
+                {
+                    foreach (var optionFolder in _fileService.GetDirectories(soundbankOptionsFolder, "*", SearchOption.TopDirectoryOnly))
+                    {
+                        var optionSettingsFile = Path.Combine(optionFolder, "OptionSettings.txt");
+                        if (_fileService.FileExists(optionSettingsFile))
+                        {
+                            var optionSettings = _fileService.ParseIniFile(optionSettingsFile);
+                            var installOption = new FighterInstallOption();
+                            installOption.Name = optionSettings.TryGetValue("name", out string name) ? name : string.Empty;
+                            installOption.Description = optionSettings.TryGetValue("description", out string description) ? description : string.Empty;
+                            installOption.Type = InstallOptionType.Sounbank;
+                            installOption.File = _fileService.GetFiles(optionFolder, $"*.{installOption.Extension}").FirstOrDefault();
+                            fighterPackage.InstallOptions.Add(installOption);
+                        }
+                    }
+                }
                 // Get victory and credits themes
                 var victoryTheme = _fileService.GetFiles(Path.Combine(path, "VictoryTheme"), "*.brstm").FirstOrDefault();
                 if (victoryTheme != null)
