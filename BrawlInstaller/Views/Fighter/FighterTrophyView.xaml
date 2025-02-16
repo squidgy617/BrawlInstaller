@@ -33,9 +33,9 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="nameLabel" Content="Name:" ToolTip="Name to use for trophy internally"/>
-            <TextBox x:Name="nameTextBox" Text="{Binding Trophy.Name}" Grid.Column="1" Width="120"/>
+            <TextBox x:Name="nameTextBox" Text="{Binding Trophy.Name}" MaxLength="20" Grid.Column="1" Width="120"/>
             <Label x:Name="brresLabel" Content="BRRES Name:" Grid.Row="1" ToolTip="Name of BRRES used for trophy model"/>
-            <TextBox x:Name="brresTextBox" Text="{Binding Trophy.Brres}" Grid.Column="1" Grid.Row="1" Width="120"/>
+            <TextBox x:Name="brresTextBox" Text="{Binding Trophy.Brres}" MaxLength="20" Grid.Column="1" Grid.Row="1" Width="120"/>
             <Label x:Name="fileLabel" Content="File:" Grid.Row="2" ToolTip="BRRES file to use for trophy"/>
             <userControls:FileBox x:Name="brresFileBox" TextBoxWidth="120" Text="{Binding Trophy.BrresFile}" Grid.Column="1" Grid.Row="2" Filter="BRRES file (.brres)|*.brres"/>
             <Label x:Name="idLabel" Content="Trophy ID:" Grid.Row="3" ToolTip="ID to use for trophy. Multiple trophies can use the same ID, but fighters with a trophy assigned will load the first trophy with that ID."/>
