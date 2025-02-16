@@ -33,6 +33,7 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand RefreshCommand => new RelayCommand(param => RefreshSettings());
+        public ICommand RestoreBackupCommand => new RelayCommand(param => RestoreBackup());
 
         [ImportingConstructor]
         public MainControlsViewModel(ISettingsService settingsService, IFileService fileService, IDialogService dialogService)
@@ -64,6 +65,20 @@ namespace BrawlInstaller.ViewModels
             else
             {
                 _dialogService.ShowMessage("Build path does not appear to be valid. Ensure it is the root directory of your build. Should be the folder that contains a subfolder called 'pf'.", "Invalid Build Path", MessageBoxImage.Error);
+            }
+        }
+
+        private void RestoreBackup()
+        {
+            var backups = _fileService.GetBackups().Where(x => x.BuildPath == AppSettings.BuildPath);
+            if (backups.Any())
+            {
+                var selectedBackup = _dialogService.OpenDropDownDialog(backups, "TimeStamp", "Restore Backup", "Select a backup to restore") as Backup;
+                if (selectedBackup != null)
+                {
+                    _fileService.RestoreBackup(selectedBackup);
+                    _dialogService.ShowMessage("Backup restored.", "Success");
+                }
             }
         }
 

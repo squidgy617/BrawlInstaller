@@ -127,6 +127,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.RestoreBackup(Backup)"/>
         void RestoreBackup(Backup backup);
 
+        /// <inheritdoc cref="FileService.GetBackups()"/>
+        List<Backup> GetBackups();
+
         /// <inheritdoc cref="FileService.EndBackup()"/>
         void EndBackup();
 
@@ -727,17 +730,23 @@ namespace BrawlInstaller.Services
                 File.Copy(file, path, true);
             }
             // Restore textures
-            foreach (var file in textureFiles)
+            if (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
             {
-                var path = file.Replace(backup.TextureBackupPath, "");
-                path = $"{_settingsService.AppSettings.HDTextures}\\{path}";
-                CreateDirectory(Path.GetDirectoryName(path));
-                File.Copy(file, path, true);
+                foreach (var file in textureFiles)
+                {
+                    var path = file.Replace(backup.TextureBackupPath, "");
+                    path = $"{_settingsService.AppSettings.HDTextures}\\{path}";
+                    CreateDirectory(Path.GetDirectoryName(path));
+                    File.Copy(file, path, true);
+                }
             }
             // Delete added files
             foreach(var file in backup.AddedFiles)
             {
-                File.Delete(file);
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
             }
         }
 
