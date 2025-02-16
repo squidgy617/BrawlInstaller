@@ -743,9 +743,13 @@ namespace BrawlInstaller.Services
             // Delete added files
             foreach(var file in backup.AddedFiles)
             {
-                if (File.Exists(file))
+                if (File.Exists($"{_settingsService.AppSettings.BuildPath}\\{file}"))
                 {
-                    File.Delete(file);
+                    File.Delete($"{_settingsService.AppSettings.BuildPath}\\{file}");
+                }
+                else if (File.Exists($"{_settingsService.AppSettings.HDTextures}\\{file}"))
+                {
+                    File.Delete($"{_settingsService.AppSettings.HDTextures}\\{file}");
                 }
             }
         }
@@ -815,8 +819,14 @@ namespace BrawlInstaller.Services
                 }
                 else if (!deleteFile && !FileExists(backupPath) && (path.Contains(_settingsService.AppSettings.BuildPath) || path.Contains(_settingsService.AppSettings.HDTextures)))
                 {
-
-                    CurrentBackup.AddedFiles.Add(path);
+                    if (!string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath) && path.Contains(_settingsService.AppSettings.BuildPath))
+                    {
+                        CurrentBackup.AddedFiles.Add(path.Replace(_settingsService.AppSettings.BuildPath, ""));
+                    }
+                    else if (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && path.Contains(_settingsService.AppSettings.HDTextures))
+                    {
+                        CurrentBackup.AddedFiles.Add(path.Replace(_settingsService.AppSettings.HDTextures, ""));
+                    }
                 }
             }
         }
