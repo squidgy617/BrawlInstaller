@@ -16,5 +16,13 @@ namespace BrawlInstaller.StaticClasses
             { InstallOptionType.Sounbank, "SAWND file (.sawnd)|*.sawnd" },
             { InstallOptionType.KirbySoundbank, "SAWND file (.sawnd)|*.sawnd" }
         };
+
+        public static Dictionary<InstallOptionType, string> InstallOptionExtensions = new Dictionary<InstallOptionType, string>
+        {
+            { InstallOptionType.MovesetFile, "pac" },
+            { InstallOptionType.Module, "rel" },
+            { InstallOptionType.Sounbank, "sawnd" },
+            { InstallOptionType.KirbySoundbank, "sawnd" }
+        };
     }
 }

@@ -355,6 +355,7 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; } = "New Option";
         public string Description { get; set; } = string.Empty;
         [JsonIgnore] public string Filter { get => InstallOptions.InstallOptionFilters.TryGetValue(Type, out var filter) ? filter : string.Empty; }
+        [JsonIgnore] public string Extension { get => InstallOptions.InstallOptionExtensions.TryGetValue(Type, out var extension) ? extension : string.Empty; }
 
         public FighterInstallOption()
         {

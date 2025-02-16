@@ -350,6 +350,26 @@ namespace BrawlInstaller.Services
                         Type = !fighterPackage.Trophies.Any(x => x.Type == TrophyType.AllStar) ? TrophyType.AllStar : TrophyType.Fighter
                     });
                 }
+                // Get install options
+                var installOptionPath = $"{path}\\InstallOptions";
+                if (_fileService.DirectoryExists(installOptionPath))
+                {
+                    fighterPackage.InstallOptions = new List<FighterInstallOption>();
+                    foreach(var installOptionType in _fileService.GetDirectories(installOptionPath, "*", SearchOption.TopDirectoryOnly))
+                    {
+                        foreach(var option in _fileService.GetDirectories(installOptionType, "*", SearchOption.TopDirectoryOnly))
+                        {
+                            var json = Path.Combine(option, "InstallOption.json");
+                            if (_fileService.FileExists(json))
+                            {
+                                var jsonText = _fileService.ReadTextFile(json);
+                                var installOption = JsonConvert.DeserializeObject<FighterInstallOption>(jsonText);
+                                installOption.File = _fileService.GetFiles(option, $"*.{installOption.Extension}").FirstOrDefault();
+                                fighterPackage.InstallOptions.Add(installOption);
+                            }
+                        }
+                    }
+                }
                 fighterPackage.PackageType = PackageType.New;
                 return fighterPackage;
             }
@@ -441,6 +461,18 @@ namespace BrawlInstaller.Services
                 // Export BRRES
                 _fileService.CopyFile(fighterTrophy?.Trophy?.BrresFile, $"{trophyPath}\\{fighterTrophy?.Trophy?.Brres}.brres");
                 exportedTrophies.Add(fighterTrophy.Trophy);
+            }
+            // Export install options
+            var installOptionPath = $"{path}\\InstallOptions";
+            foreach(var installOption in fighterPackage.InstallOptions)
+            {
+                // Save json
+                var outDir = Path.Combine(installOptionPath, installOption.Type.ToString(), installOption.Name);
+                var installOptionJson = JsonConvert.SerializeObject(installOption, Formatting.Indented);
+                _fileService.SaveTextFile($"{outDir}\\InstallOption.json", installOptionJson);
+                // Save file
+                var installOptionFile = Path.Combine(outDir, Path.GetFileName(installOption.File));
+                _fileService.CopyFile(installOption.File, installOptionFile);
             }
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
