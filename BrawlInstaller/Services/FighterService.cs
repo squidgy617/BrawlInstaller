@@ -344,7 +344,6 @@ namespace BrawlInstaller.Services
         /// <param name="cssSlotConfigs">All CSSslot configs to use</param>
         /// <param name="slotConfigs">All slot configs to use</param>
         /// <returns>Fighter info</returns>
-        // TODO: get way more info
         private FighterInfo GetFighterInfo(FighterInfo fighterInfo, List<ResourceNode> fighterConfigs, List<ResourceNode> cosmeticConfigs, List<ResourceNode> cssSlotConfigs, List<ResourceNode> slotConfigs)
         {
             // For IDs, we only fill them if they have not already been filled, but for everything else we fill it if we find it.
@@ -2415,39 +2414,11 @@ namespace BrawlInstaller.Services
                         if (isExModule)
                         {
                             // 4th position is fighter ID
-                            // TODO: Make this configurable?
                             sectionData[3] = (byte)fighterId;
                             _fileService.ReplaceNodeRaw(section, sectionData);
                         }
                     }
                 }
-                // TODO: Commented out because it is not guaranteed to work, need to come up with a better solution
-                // If it isn't an Ex module - either because we didn't find a Section [8] or it didn't match - treat it as a fighter module
-                //if (!isExModule)
-                //{
-                //    // Find matching fighter module ID locations
-                //    var matches = ModuleIdLocations.IdLocations.Where(x => x.ModuleName == relNode.Name);
-                //    if (matches.Any())
-                //    {
-                //        var match = matches.First();
-                //        // Check for Section [1]
-                //        if (relNode.Sections.Length >= 2)
-                //        {
-                //            var section = relNode.Sections[1];
-                //            if (section != null)
-                //            {
-                //                var sectionData = _fileService.ReadRawData(section);
-                //                // Replace data at each location with our ID
-                //                foreach(var location in match.Locations)
-                //                {
-                //                    // TODO: Instead of putting + 3 here, put it in the static class?
-                //                    sectionData[location + 3] = (byte)fighterId;
-                //                    _fileService.ReplaceNodeRaw(section, sectionData);
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
             }
             return relNode;
         }
@@ -2582,8 +2553,6 @@ namespace BrawlInstaller.Services
             // Save CSS rosters
             foreach (var roster in rosters.Where(x => x.RosterType == RosterType.CSS))
             {
-                // TODO: Create a whole new RSTCNode instead of opening existing one.
-                // For some reason new RSTCNodes save as RawDataNodes, but this should be fixable somehow
                 var file = _fileService.OpenFile(Path.Combine(_settingsService.AppSettings.BuildPath, roster.FilePath));
                 if (file != null)
                 {

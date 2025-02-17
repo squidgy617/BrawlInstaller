@@ -71,7 +71,7 @@ namespace BrawlInstaller.Classes
         public string Prefix { get; set; } = "";
         public int Multiplier { get; set; } = 1;
         public int Offset { get; set; } = 0;
-        public int SuffixDigits { get; set; } = 3; // TODO: instead of displaying this on the interface, automatically fill this in based on IdType and Multiplier? Most cosmetics use 2, any that use cosmetic ID use 3 (10CC) or 4 (50CC)
+        public int SuffixDigits { get; set; } = 3;
         public IdType IdType { get; set; } = IdType.Cosmetic;
         public ImageSize Size { get; set; } = new ImageSize(null, null);
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
@@ -213,7 +213,6 @@ namespace BrawlInstaller.Classes
         };
         [JsonIgnore] public string StageParamPath { get => GetFilePath(FileType.StageParamPath); }
         [JsonIgnore] public string StagePacPath { get => GetFilePath(FileType.StagePacPath); }
-        // TODO: Allow multiple for netplay?
         [JsonIgnore] public string TracklistPath { get => GetFilePath(FileType.TracklistPath); }
         public string VictoryThemeTracklist { get; set; } = "Results";
         public string CreditsThemeTracklist { get; set; } = "Credits";
@@ -249,7 +248,6 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string FighterTrophyLocation { get => GetFilePath(FileType.FighterTrophyLocation); }
         [JsonIgnore] public string SSETrophyModule { get => GetFilePath(FileType.SSETrophyModule); }
 
-        // TODO: Should SSE roster be handled like all of these?
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<RosterFile> RosterFiles { get; set; } = new List<RosterFile> 
         { 

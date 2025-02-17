@@ -626,7 +626,6 @@ namespace BrawlInstaller.Services
             return (id, costumeIndex);
         }
 
-        // TODO: Improve this, also maybe implement it as a separate tool you can run
         /// <summary>
         /// Renames textures to line up with their PAT animation entries
         /// </summary>
@@ -1600,7 +1599,6 @@ namespace BrawlInstaller.Services
                 }
             }
             // For selectable cosmetics, we only want to get each texture once
-            // TODO: Need to get ALL textures while still favoring one with the pat0 entry closest to ours
             if (definition.Selectable)
             {
                 // Get ID of selected cosmetic
@@ -1620,11 +1618,6 @@ namespace BrawlInstaller.Services
             }
             return cosmetics;
         }
-
-        // TODO: When importing a character, franchise icons with a null ID or an ID greater than any existing franchise icon will be installed as new. Any others
-        // will overwrite existing ones.
-
-        // TODO: separate RSPs and CSPs so they can be toggled on install
 
         /// <summary>
         /// Get a list of fighter cosmetics

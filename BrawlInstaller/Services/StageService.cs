@@ -71,7 +71,6 @@ namespace BrawlInstaller.Services
         /// <returns>Stage object with data</returns>
         public StageInfo GetStageData(StageInfo stage)
         {
-            // TODO: Get list of tracklists and use dropdown to select them?
             // Get cosmetics
             var cosmetics = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
             // Get name for RSS
@@ -560,7 +559,6 @@ namespace BrawlInstaller.Services
             }
         }
 
-        // TODO: This should update the paths in the stage object for every file that gets its path changed
         /// <summary>
         /// Open all files associated with a stage
         /// </summary>
@@ -580,6 +578,7 @@ namespace BrawlInstaller.Services
                     var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath, $"STG{entry.Params.PacName.ToUpper()}.pac");
                     pacFile._origPath = installPath;
                     files.Add(pacFile);
+                    entry.Params.PacFile = installPath;
                 }
                 // Open soundbanks
                 var soundbank = _fileService.OpenFile(entry.Params.SoundBankFile);
@@ -588,6 +587,7 @@ namespace BrawlInstaller.Services
                     var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, $"{entry.Params.SoundBank:X3}_{entry.Params.PacName}.sawnd");
                     soundbank._origPath = installPath;
                     files.Add(soundbank);
+                    entry.Params.SoundBankFile = installPath;
                 }
                 // Open modules
                 var module = _fileService.OpenFile(entry.Params.ModuleFile);
@@ -596,6 +596,7 @@ namespace BrawlInstaller.Services
                     var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules, $"{entry.Params.Module.ToLower()}");
                     module._origPath = installPath;
                     files.Add(module);
+                    entry.Params.ModuleFile = installPath;
                 }
                 // Open tracklists
                 var tracklist = _fileService.OpenFile(entry.Params.TrackListFile);
@@ -604,6 +605,7 @@ namespace BrawlInstaller.Services
                     var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath, $"{entry.Params.TrackList}.tlst");
                     tracklist._origPath = installPath;
                     files.Add(tracklist);
+                    entry.Params.TrackListFile = installPath;
                 }
                 // Open bin files
                 if (entry.IsRAlt || entry.IsLAlt)
@@ -619,6 +621,7 @@ namespace BrawlInstaller.Services
                         var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageAltListPath, folderName, fileName);
                         binFile._origPath = installPath;
                         files.Add(binFile);
+                        entry.ListAlt.BinFilePath = installPath;
                     }
                 }
                 // Get substages for install
@@ -631,6 +634,7 @@ namespace BrawlInstaller.Services
                             $"STG{entry.Params.PacName.ToUpper()}_{substage.Name}.pac");
                         substageFile._origPath = installPath;
                         files.Add(substageFile);
+                        substage.PacFile = installPath;
                     }
                 }
             }
@@ -841,7 +845,6 @@ namespace BrawlInstaller.Services
             // Import cosmetics
             _cosmeticService.ImportCosmetics(changedDefinitions, stage.Cosmetics, stage.Slot.StageIds);
 
-            // TODO: only do if name is changed
             // Save stage random name
             if (updateRandomName)
             {
@@ -849,11 +852,6 @@ namespace BrawlInstaller.Services
             }
 
             // TODO: Make sure to update stage list object to use the correct name if stage entries were renamed
-
-            // TODO: To save params, open the existing ASL file, loop through all params. Open the associated param files.
-            // Gather up names of files that we might want to delete. Then delete each param file and each node in the ASL file and generate new ones with our
-            // changes. Use the names we gathered up to prompt the user on what they might want to delete.
-            // Perhaps could add something to check for unused files too.
 
             // Remove all params that aren't used
             stage.AllParams.RemoveAll(x => !stage.StageEntries.Select(y => y.Params).Contains(x));

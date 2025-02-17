@@ -70,7 +70,6 @@ namespace BrawlInstaller.ViewModels
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
         // Combines defaults, build settings, and styles found in loaded cosmetics to get all available styles
-        // TODO: Do fighter cosmetics like this, and same with their cosmetic types
         [DependsUpon(nameof(SelectedCosmeticOption))]
         public List<string> Styles { get => DefaultCosmetics.DefaultStageCosmetics?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style)
                 .Concat(BuildSettings?.CosmeticSettings?.Where(x => x.CosmeticType == SelectedCosmeticOption).Select(x => x.Style) ?? new List<string>())

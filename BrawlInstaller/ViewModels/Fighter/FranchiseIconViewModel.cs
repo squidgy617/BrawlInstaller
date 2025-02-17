@@ -29,7 +29,6 @@ namespace BrawlInstaller.ViewModels
     [Export(typeof(IFranchiseIconViewModel))]
     internal class FranchiseIconViewModel : ViewModelBase, IFranchiseIconViewModel
     {
-        // TODO: Allow changing icon ID, can probably use a command OnChanged to validate that the ID isn't already used
         // Commands
         public ICommand SelectModelCommand => new RelayCommand(param => SelectModel());
         public ICommand ClearModelCommand => new RelayCommand(param => ClearModel());

@@ -141,7 +141,7 @@ namespace BrawlInstaller.Services
 
         Backup CurrentBackup { get; set; }
     }
-    // TODO: Backup system, only back up files in build
+
     [Export(typeof(IFileService))]
     internal class FileService : IFileService
     {

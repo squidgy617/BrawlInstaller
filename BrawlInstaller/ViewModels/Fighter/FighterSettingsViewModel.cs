@@ -27,8 +27,6 @@ namespace BrawlInstaller.ViewModels
     [Export(typeof(IFighterSettingsViewModel))]
     internal class FighterSettingsViewModel : ViewModelBase, IFighterSettingsViewModel
     {
-        //TODO: Add controls to edit internal name and display name
-
         // Private properties
         private FighterPackage _fighterPackage;
 

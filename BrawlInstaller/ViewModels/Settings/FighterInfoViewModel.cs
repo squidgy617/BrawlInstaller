@@ -173,7 +173,6 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(FighterInfoList));
         }
 
-        // TODO: Include default fighter info stuff, make another pass at IDs that differ between builds
         private void SaveFighters() 
         {
             _settingsService.SaveFighterInfoSettings(FighterInfoList.ToList());
