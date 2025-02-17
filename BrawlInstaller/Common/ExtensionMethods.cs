@@ -149,12 +149,12 @@ namespace BrawlInstaller.Common
                 CameraDistance2 = node.CameraDistance2,
                 CameraDistance3 = node.CameraDistance3,
                 CameraDistance4 = node.CameraDistance4,
-                Size = node._size,
-                Version = node._version,
+                Size = node._size.ReverseEndianness(),
+                Version = node._version.ReverseEndianness(),
                 Unknown0x25 = node._unknown0x25,
                 Unknown0x26 = node._unknown0x26,
                 Unknown0x27 = node._unknown0x27,
-                Unknown0x2C = node._unknown0x2C
+                Unknown0x2C = node._unknown0x2C.ReverseEndianness()
             };
             return slotAttributes;
         }

@@ -328,8 +328,8 @@ namespace BrawlInstaller.Classes
             var node = new SLTCNode
             {
                 _tag = 0x43544C53,
-                _size = Size,
-                _version = Version,
+                _size = Size.ReverseEndianness(),
+                _version = Version.ReverseEndianness(),
                 SetSlot = SetSlot,
                 CharSlot1 = CharSlot1,
                 CharSlot2 = CharSlot2,
@@ -344,7 +344,7 @@ namespace BrawlInstaller.Classes
                 _unknown0x25 = Unknown0x25,
                 _unknown0x26 = Unknown0x26,
                 _unknown0x27 = Unknown0x27,
-                _unknown0x2C = Unknown0x2C
+                _unknown0x2C = Unknown0x2C.ReverseEndianness()
             };
             return node;
         }
