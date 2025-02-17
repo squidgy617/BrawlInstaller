@@ -35,7 +35,7 @@
                 <Image x:Name="image" Visibility="{Binding HoveredItem.Image, Converter={StaticResource nullVisConverter}, ConverterParameter={x:Static Visibility.Hidden}}" Source="{Binding HoveredItem.Image}" Width="64" Height="64"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="button" Content="{Binding OkButtonCaption}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ConfirmCommand}" Width="70" Height="25" Margin="5" IsDefault="True" IsEnabled="{Binding SelectedItem, Converter={StaticResource nullBoolConverter}}"/>
+                <Button x:Name="button" Content="{Binding OkButtonCaption}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ConfirmCommand}" Width="70" Height="25" Margin="5" IsDefault="True"/>
                 <Button x:Name="cancelButton" Content="{Binding CancelButtonCaption}" Visibility="{Binding CancelButtonVisibility}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding CancelCommand}" Width="70" Height="25" Margin="5" IsCancel="True"/>
             </StackPanel>
         </StackPanel>
