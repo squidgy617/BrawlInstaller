@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.ViewModels;
 using BrawlLib.SSBB.ResourceNodes;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using System;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
@@ -20,6 +20,9 @@ namespace BrawlInstaller.Services
     {
         /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxImage)"/>
         bool ShowMessage(string text, string caption, MessageBoxImage image=MessageBoxImage.Information);
+
+        /// <inheritdoc cref="DialogService.ShowProgressBar(string, string, int)"/>
+        void ShowProgressBar(string text, string caption, int maximum);
 
         /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxButton, MessageBoxImage, BitmapImage)"/>
         bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information, BitmapImage bitmapImage=null);
@@ -66,6 +69,7 @@ namespace BrawlInstaller.Services
         IImageDropDownViewModel _imageDropDownViewModel { get; }
         ICheckListViewModel _checkListViewModel { get; }
         IRadioButtonViewModel _radioButtonViewModel { get; }
+        IProgressBarViewModel _progressBarViewModel { get; }
 
         // Services
         IFileService _fileService { get; }
@@ -73,7 +77,7 @@ namespace BrawlInstaller.Services
         [ImportingConstructor]
         public DialogService(IFileService fileService, IMessageViewModel messageViewModel, IStringInputViewModel stringInputViewModel, 
             IDropDownViewModel dropDownViewModel, INodeSelectorViewModel nodeSelectorViewModel, IMultiMessageViewModel multiMessageViewModel,
-            IImageDropDownViewModel imageDropDownViewModel, ICheckListViewModel checkListViewModel, IRadioButtonViewModel radioButtonViewModel) 
+            IImageDropDownViewModel imageDropDownViewModel, ICheckListViewModel checkListViewModel, IRadioButtonViewModel radioButtonViewModel, IProgressBarViewModel progressBarViewModel) 
         {
             _fileService = fileService;
             _messageViewModel = messageViewModel;
@@ -84,6 +88,7 @@ namespace BrawlInstaller.Services
             _imageDropDownViewModel = imageDropDownViewModel;
             _checkListViewModel = checkListViewModel;
             _radioButtonViewModel = radioButtonViewModel;
+            _progressBarViewModel = progressBarViewModel;
         }
 
         // Methods
@@ -130,6 +135,24 @@ namespace BrawlInstaller.Services
             dialog.Content = _messageViewModel;
             dialog.ShowDialog();
             return _messageViewModel.DialogResult;
+        }
+
+        /// <summary>
+        /// Show progress bar dialog
+        /// </summary>
+        /// <param name="text">Text to display in dialog</param>
+        /// <param name="caption">Caption to display in title bar</param>
+        /// <param name="maximum">Maximum value of progress bar</param>
+        public void ShowProgressBar(string text, string caption, int maximum)
+        {
+            var dialog = GenerateWindow(caption);
+            _progressBarViewModel.Caption = text;
+            _progressBarViewModel.Maximum = maximum;
+            _progressBarViewModel.Progress = 0;
+            _progressBarViewModel.OnRequestClose += (s, e) => dialog.Close();
+            dialog.Content = _progressBarViewModel;
+            dialog.Show();
+            WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(0));
         }
 
         /// <summary>

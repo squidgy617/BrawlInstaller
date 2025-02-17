@@ -73,6 +73,9 @@
     <DataTemplate DataType="{x:Type viewModels:RadioButtonViewModel}">
         <views:RadioButtonView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:ProgressBarViewModel}">
+        <views:ProgressBarView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:TracklistViewModel}">
         <views:TracklistView/>
     </DataTemplate>

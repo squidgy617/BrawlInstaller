@@ -160,6 +160,7 @@
     <Compile Include="ViewModels\Dialogs\MessageViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\NodeSelectorViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MultiMessageViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ProgressBarViewModel.cs" />
     <Compile Include="ViewModels\Settings\FighterInfoViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FranchiseIconViewModel.cs" />
@@ -207,6 +208,9 @@
     </Compile>
     <Compile Include="Views\Fighter\FighterTrophyView.xaml.cs">
       <DependentUpon>FighterTrophyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ProgressBarView.xaml.cs">
+      <DependentUpon>ProgressBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
@@ -329,6 +333,10 @@
     <Page Include="Views\Fighter\FighterTrophyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\ProgressBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\FighterInfoView.xaml">
       <SubType>Designer</SubType>
