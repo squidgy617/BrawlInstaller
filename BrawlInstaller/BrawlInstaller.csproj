@@ -117,6 +117,7 @@
     <Compile Include="StaticClasses\IdCategories.cs" />
     <Compile Include="StaticClasses\ModuleIdLocations.cs" />
     <Compile Include="StaticClasses\Paths.cs" />
+    <Compile Include="StaticClasses\ProgressTracker.cs" />
     <Compile Include="StaticClasses\ReservedIds.cs" />
     <Compile Include="Classes\Stages.cs" />
     <Compile Include="Classes\TrackedList.cs" />

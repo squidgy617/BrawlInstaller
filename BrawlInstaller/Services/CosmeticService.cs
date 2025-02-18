@@ -23,6 +23,7 @@ using System.Collections.Concurrent;
 using BrawlLib.SSBB.Types.Animations;
 using BrawlLib.SSBB.Types;
 using Newtonsoft.Json;
+using BrawlInstaller.StaticClasses;
 
 namespace BrawlInstaller.Services
 {
@@ -1020,10 +1021,14 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of character for HD textures</param>
         public void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name = null)
         {
+            // TODO: Track individual cosmetics instead of definitions?
+            ProgressTracker.Start("Importing cosmetics...", 0, definitions.Count);
             foreach(var definition in definitions.Where(x => x.Enabled != false).OrderByDescending(x => x.CosmeticType).ThenByDescending(x => x.Style).ThenByDescending(x => x.Size.Width + x.Size.Height))
             {
                 ImportCosmetics(definition, cosmeticList, ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, name);
+                ProgressTracker.Update(1);
             }
+            ProgressTracker.End();
             // Save and close all files
             foreach (var file in FileCache.ToList())
             {

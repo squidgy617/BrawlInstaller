@@ -356,6 +356,7 @@ namespace BrawlInstaller.ViewModels
             {
                 selectedInstallOptions = _dialogService.OpenRadioButtonDialog(installOptionsGroups, "Install Options", "Select options to install").Where(x => x.IsChecked).Select(x => x.Item as FighterInstallOption).ToList();
             }
+            _dialogService.ShowProgressBar("Installing Fighter", "Installing fighter...");
             _fileService.StartBackup();
             var packageType = FighterPackage.PackageType;
             // Set costume indexes for cosmetics
@@ -464,6 +465,7 @@ namespace BrawlInstaller.ViewModels
                 _codeService.CompileCodes();
                 _fileService.EndBackup();
             }
+            _dialogService.CloseProgressBar();
             _dialogService.ShowMessage("Changes saved.", "Saved");
         }
 

@@ -4,6 +4,7 @@ using BrawlInstaller.ViewModels;
 using BrawlLib.SSBB.ResourceNodes;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
@@ -21,8 +22,11 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxImage)"/>
         bool ShowMessage(string text, string caption, MessageBoxImage image=MessageBoxImage.Information);
 
-        /// <inheritdoc cref="DialogService.ShowProgressBar(string, string, int)"/>
-        void ShowProgressBar(string text, string caption, int maximum);
+        /// <inheritdoc cref="DialogService.ShowProgressBar(string, string)"/>
+        void ShowProgressBar(string caption, string text);
+
+        /// <inheritdoc cref="DialogService.CloseProgressBar()"/>
+        void CloseProgressBar();
 
         /// <inheritdoc cref="DialogService.ShowMessage(string, string, MessageBoxButton, MessageBoxImage, BitmapImage)"/>
         bool ShowMessage(string text, string caption, MessageBoxButton buttonType, MessageBoxImage image=MessageBoxImage.Information, BitmapImage bitmapImage=null);
@@ -140,19 +144,27 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Show progress bar dialog
         /// </summary>
-        /// <param name="text">Text to display in dialog</param>
         /// <param name="caption">Caption to display in title bar</param>
-        /// <param name="maximum">Maximum value of progress bar</param>
-        public void ShowProgressBar(string text, string caption, int maximum)
+        /// /// <param name="text">Initial message to display</param>
+        public void ShowProgressBar(string caption, string text)
         {
             var dialog = GenerateWindow(caption);
+            _progressBarViewModel.Minimum = 0;
+            _progressBarViewModel.Value = 0;
+            _progressBarViewModel.Maximum = 100;
             _progressBarViewModel.Caption = text;
-            _progressBarViewModel.Maximum = maximum;
-            _progressBarViewModel.Progress = 0;
             _progressBarViewModel.OnRequestClose += (s, e) => dialog.Close();
             dialog.Content = _progressBarViewModel;
             dialog.Show();
             WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(0));
+        }
+
+        /// <summary>
+        /// Close progress bar dialog if it exists
+        /// </summary>
+        public void CloseProgressBar()
+        {
+            WeakReferenceMessenger.Default.Send(new EndProgressMessage(_progressBarViewModel.Maximum));
         }
 
         /// <summary>
