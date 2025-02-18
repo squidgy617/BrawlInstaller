@@ -247,19 +247,19 @@ namespace BrawlInstaller.Classes
 
         [Category("Characters")]
         [Browsable(false)]
-        public uint CharSlot1 { get; set; } = 0xFF;
+        public uint CharSlot1 { get; set; } = 0xFFFFFFFF;
 
         [Category("Characters")]
         [Browsable(false)]
-        public uint CharSlot2 { get; set; } = 0xFF;
+        public uint CharSlot2 { get; set; } = 0xFFFFFFFF;
 
         [Category("Characters")]
         [Browsable(false)]
-        public uint CharSlot3 { get; set; } = 0xFF;
+        public uint CharSlot3 { get; set; } = 0xFFFFFFFF;
 
         [Category("Characters")]
         [Browsable(false)]
-        public uint CharSlot4 { get; set; } = 0xFF;
+        public uint CharSlot4 { get; set; } = 0xFFFFFFFF;
 
         [Category("Characters")] 
         public byte Records { get; set; } = 0;
@@ -406,7 +406,7 @@ namespace BrawlInstaller.Classes
             var node = ToCOSCNode();
             node.CosmeticID = (byte)fighterInfo.Ids.CosmeticId;
             node.CharacterName = fighterInfo.DisplayName;
-            node.FranchiseIconID = (byte)(fighterInfo.Ids.FranchiseId - 1);
+            node.FranchiseIconID = fighterInfo.Ids.FranchiseId != null ? (byte)(fighterInfo.Ids.FranchiseId - 1) : (byte)0;
             if (updateLinks)
             {
                 if (fighterInfo.Ids.SlotConfigId != fighterInfo.Ids.CosmeticConfigId)

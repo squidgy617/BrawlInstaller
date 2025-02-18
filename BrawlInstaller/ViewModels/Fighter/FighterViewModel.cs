@@ -834,12 +834,12 @@ namespace BrawlInstaller.ViewModels
             if (franchiseIconDefinitions.Count() > 0)
             {
                 // If there's franchise icon image, add it
-                if (franchiseIconDefinitions.Any(x => x.Style == "Icon") && FranchiseIconViewModel.SelectedFranchiseIcon.Image == null && string.IsNullOrEmpty(FranchiseIconViewModel.SelectedFranchiseIcon.ImagePath))
+                if (franchiseIconDefinitions.Any(x => x.Style == "Icon") && FranchiseIconViewModel.SelectedFranchiseIcon?.Image == null && string.IsNullOrEmpty(FranchiseIconViewModel.SelectedFranchiseIcon?.ImagePath))
                 {
                     missingCosmetics.Add((CosmeticType.FranchiseIcon, "Icon"));
                 }
                 // If there's franchise icon model, add it
-                if (franchiseIconDefinitions.Any(x => x.Style == "Model") && FranchiseIconViewModel.SelectedFranchiseIcon.Model == null && string.IsNullOrEmpty(FranchiseIconViewModel.SelectedFranchiseIcon.ModelPath))
+                if (franchiseIconDefinitions.Any(x => x.Style == "Model") && FranchiseIconViewModel.SelectedFranchiseIcon?.Model == null && string.IsNullOrEmpty(FranchiseIconViewModel.SelectedFranchiseIcon?.ModelPath))
                 {
                     missingCosmetics.Add((CosmeticType.FranchiseIcon, "Model"));
                 }
