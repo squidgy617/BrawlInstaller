@@ -11,9 +11,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace BrawlInstaller.Services
 {
@@ -108,6 +110,31 @@ namespace BrawlInstaller.Services
             return dialog;
         }
 
+        private void GenerateWindowAsync(object content, string title = "Title")
+        {
+            var x = Application.Current.MainWindow.Left + (Application.Current.MainWindow.Width / 2) - (300 / 2);
+            var y = Application.Current.MainWindow.Top + (Application.Current.MainWindow.Height / 2) - (172 / 2);
+            Thread thread = new Thread(() =>
+            {
+                var w = new Window { Width = 300, Height = 172, Title = title, Content = content, SizeToContent = SizeToContent.WidthAndHeight, ResizeMode = ResizeMode.NoResize, Left = x, Top = y };
+                WeakReferenceMessenger.Default.Register<EndProgressMessage>(w, (recipient, message) =>
+                {
+                    w.Dispatcher.Invoke(() =>
+                    {
+                        w.Close();
+                    });
+                });
+                w.Show();
+
+                w.Closed += (sender, e) => w.Dispatcher.InvokeShutdown();
+
+                Dispatcher.Run();
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+        }
+
         /// <summary>
         /// Show generic message dialog
         /// </summary>
@@ -148,14 +175,12 @@ namespace BrawlInstaller.Services
         /// /// <param name="text">Initial message to display</param>
         public void ShowProgressBar(string caption, string text)
         {
-            var dialog = GenerateWindow(caption);
+            // TODO: Do we keep this as an async window? If not, do something similar to ShowMessage
             _progressBarViewModel.Minimum = 0;
             _progressBarViewModel.Value = 0;
             _progressBarViewModel.Maximum = 100;
             _progressBarViewModel.Caption = text;
-            _progressBarViewModel.OnRequestClose += (s, e) => dialog.Close();
-            dialog.Content = _progressBarViewModel;
-            dialog.Show();
+            GenerateWindowAsync(_progressBarViewModel, caption);
             WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(0));
         }
 

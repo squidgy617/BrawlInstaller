@@ -93,16 +93,17 @@ namespace BrawlInstaller.ViewModels
 
         private void AllowUIToUpdate()
         {
-            DispatcherFrame frame = new DispatcherFrame();
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Render, new DispatcherOperationCallback(delegate (object parameter)
-            {
-                frame.Continue = false;
-                return null;
-            }), null);
+            // TODO: Restore this if we make the ProgressBar dialog synchronous
+            //DispatcherFrame frame = new DispatcherFrame();
+            //Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Render, new DispatcherOperationCallback(delegate (object parameter)
+            //{
+            //    frame.Continue = false;
+            //    return null;
+            //}), null);
 
-            Dispatcher.PushFrame(frame);
-            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background,
-                                          new Action(delegate { }));
+            //Dispatcher.PushFrame(frame);
+            //Application.Current.Dispatcher.Invoke(DispatcherPriority.Background,
+            //                              new Action(delegate { }));
         }
     }
 
