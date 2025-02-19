@@ -11,10 +11,10 @@ namespace BrawlInstaller.StaticClasses
 {
     public static class ProgressTracker
     {
-        public static string Caption { get; set; } = string.Empty;
-        public static int Value { get; set; } = 0;
-        public static int Minimum { get; set; } = 0;
-        public static int Maximum { get; set; } = 100;
+        public static string Caption { get; private set; } = string.Empty;
+        public static int Value { get; private set; } = 0;
+        public static int Minimum { get; private set; } = 0;
+        public static int Maximum { get; private set; } = 100;
 
         public static void Start(string caption, int minimum, int maximum)
         {
