@@ -1030,12 +1030,12 @@ namespace BrawlInstaller.Services
             }
             ProgressTracker.End("Finished importing cosmetics.");
             // Save and close all files
-            foreach (var file in FileCache.ToList())
+            Parallel.ForEach(FileCache.ToList(), file =>
             {
                 _fileService.SaveFile(file);
                 FileCache.Remove(file);
                 _fileService.CloseFile(file);
-            }
+            });
         }
 
         /// <summary>
