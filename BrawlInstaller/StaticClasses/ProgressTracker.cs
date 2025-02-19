@@ -31,10 +31,30 @@ namespace BrawlInstaller.StaticClasses
             WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(Value));
         }
 
+        public static void Update(int increment, string caption)
+        {
+            Update(increment);
+            UpdateCaption(caption);
+        }
+
+        public static void UpdateCaption(string caption)
+        {
+            Caption = caption;
+            WeakReferenceMessenger.Default.Send(new UpdateProgressCaptionMessage(Caption));
+        }
+
         public static void End()
         {
             Value = Maximum;
             WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(Value));
+        }
+
+        public static void End(string caption)
+        {
+            Value = Maximum;
+            Caption = caption;
+            WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(Value));
+            WeakReferenceMessenger.Default.Send(new UpdateProgressCaptionMessage(Caption));
         }
     }
 }

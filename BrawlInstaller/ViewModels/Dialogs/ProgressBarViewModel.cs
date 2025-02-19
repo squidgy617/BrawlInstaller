@@ -48,6 +48,10 @@ namespace BrawlInstaller.ViewModels
             {
                 UpdateProgress(message.Value);
             });
+            WeakReferenceMessenger.Default.Register<UpdateProgressCaptionMessage>(this, (recipient, message) =>
+            {
+                UpdateCaption(message.Value);
+            });
             WeakReferenceMessenger.Default.Register<EndProgressMessage>(this, (recipient, message) =>
             {
                 EndProgressTracker();
@@ -67,6 +71,12 @@ namespace BrawlInstaller.ViewModels
             Maximum = ProgressTracker.Maximum;
             Minimum = ProgressTracker.Minimum;
             Caption = ProgressTracker.Caption;
+            AllowUIToUpdate();
+        }
+
+        private void UpdateCaption(string value)
+        {
+            Caption = value;
             AllowUIToUpdate();
         }
 
@@ -107,6 +117,14 @@ namespace BrawlInstaller.ViewModels
     public class UpdateProgressMessage : ValueChangedMessage<int>
     {
         public UpdateProgressMessage(int value) : base(value)
+        {
+
+        }
+    }
+
+    public class UpdateProgressCaptionMessage : ValueChangedMessage<string>
+    {
+        public UpdateProgressCaptionMessage(string value) : base(value)
         {
 
         }

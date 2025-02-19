@@ -24,6 +24,7 @@ using BrawlLib.SSBB.Types.Animations;
 using BrawlLib.SSBB.Types;
 using Newtonsoft.Json;
 using BrawlInstaller.StaticClasses;
+using BrawlLib.Internal;
 
 namespace BrawlInstaller.Services
 {
@@ -1021,14 +1022,13 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of character for HD textures</param>
         public void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name = null)
         {
-            // TODO: Track individual cosmetics instead of definitions?
-            ProgressTracker.Start("Importing cosmetics...", 0, definitions.Count);
+            ProgressTracker.Start("Importing cosmetics...", 0, definitions.SelectMany(x => cosmeticList.Items.Where(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)).Count());
             foreach(var definition in definitions.Where(x => x.Enabled != false).OrderByDescending(x => x.CosmeticType).ThenByDescending(x => x.Style).ThenByDescending(x => x.Size.Width + x.Size.Height))
             {
+                ProgressTracker.UpdateCaption($"Importing cosmetics...\n[Type] {definition.CosmeticType.GetDescription()}\n[Style] {definition.Style}");
                 ImportCosmetics(definition, cosmeticList, ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, name);
-                ProgressTracker.Update(1);
             }
-            ProgressTracker.End();
+            ProgressTracker.End("Finished importing cosmetics.");
             // Save and close all files
             foreach (var file in FileCache.ToList())
             {
@@ -1097,9 +1097,12 @@ namespace BrawlInstaller.Services
                     foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                     {
                         ImportCosmetic(definition, cosmetic, id, rootNode);
+                        ProgressTracker.Update(1);
                     }
                     if (!definition.FirstOnly && !definition.SeparateFiles)
+                    {
                         ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition, id);
+                    }
                     // Save HD cosmetics if they exist
                     if (_settingsService.AppSettings.ModifyHDTextures)
                         foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
@@ -1116,6 +1119,7 @@ namespace BrawlInstaller.Services
                 {
                     var rootNode = new BRRESNode();
                     ImportCosmetic(definition, cosmetic, id, rootNode);
+                    ProgressTracker.Update(1);
                     rootNode._origPath = $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
                         GetFileName(definition, id, cosmetic);
                     FileCache.Add(rootNode);
