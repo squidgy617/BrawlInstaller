@@ -126,7 +126,7 @@ namespace BrawlInstaller.ViewModels
             BuildSettings = _settingsService.BuildSettings;
             OnPropertyChanged(nameof(BuildSettings));
             OnPropertyChanged(nameof(CosmeticOptions));
-            Stage = message.Value;
+            Stage = message.Value.Stage;
             OnPropertyChanged(nameof(Stage));
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
             OnPropertyChanged(nameof(SelectedCosmeticOption));

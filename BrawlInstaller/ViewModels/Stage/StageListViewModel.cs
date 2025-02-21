@@ -245,7 +245,7 @@ namespace BrawlInstaller.ViewModels
                     stage = _stageService.GetStageData(stage);
                     // TODO: Do we need to copy stage on load? Right now just useful for debugging
                     var stageCopy = stage.Copy();
-                    WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stageCopy));
+                    WeakReferenceMessenger.Default.Send(new StageLoadedMessage(new StageLoadObject(stageCopy)));
                 }
             }
         }
@@ -275,7 +275,7 @@ namespace BrawlInstaller.ViewModels
             stage.AllParams.Add(stage.StageEntries[0].Params);
             // This is done to populate selectable cosmetics
             stage.Cosmetics.Items = _cosmeticService.GetStageCosmetics(stage.Slot.StageIds);
-            WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
+            WeakReferenceMessenger.Default.Send(new StageLoadedMessage(new StageLoadObject(stage, true)));
         }
 
         private void UpdateSettings()
@@ -294,10 +294,22 @@ namespace BrawlInstaller.ViewModels
     }
 
     // Messages
-    public class StageLoadedMessage : ValueChangedMessage<StageInfo>
+    public class StageLoadedMessage : ValueChangedMessage<StageLoadObject>
     {
-        public StageLoadedMessage(StageInfo stage) : base(stage)
+        public StageLoadedMessage(StageLoadObject stageObject) : base(stageObject)
         {
+        }
+    }
+
+    public class StageLoadObject
+    {
+        public StageInfo Stage { get; set; }
+        public bool NewStage { get; set; } = false;
+
+        public StageLoadObject(StageInfo stage, bool newStage = false)
+        {
+            Stage = stage;
+            NewStage = newStage;
         }
     }
 }

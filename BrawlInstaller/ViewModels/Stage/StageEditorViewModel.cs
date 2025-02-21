@@ -36,6 +36,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private StageInfo _stage;
+        private StageInfo _oldStage;
         private StageEntry _selectedStageEntry;
         private Substage _selectedSubstage;
         private List<string> _tracklists;
@@ -46,6 +47,7 @@ namespace BrawlInstaller.ViewModels
         IDialogService _dialogService { get; }
         ITracklistService _tracklistService { get; }
         IFileService _fileService { get; }
+        ISettingsService _settingsService { get; }
 
         // Commands
         public ICommand SaveStageCommand => new RelayCommand(param => SaveStage(Stage));
@@ -64,12 +66,13 @@ namespace BrawlInstaller.ViewModels
         public ICommand UpdateListAltImageCommand => new RelayCommand(param => UpdateListAltImage());
 
         [ImportingConstructor]
-        public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, IStageCosmeticViewModel stageCosmeticViewModel)
+        public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, ISettingsService settingsService, IStageCosmeticViewModel stageCosmeticViewModel)
         {
             _stageService = stageService;
             _dialogService = dialogService;
             _tracklistService = tracklistService;
             _fileService = fileService;
+            _settingsService = settingsService;
             StageCosmeticViewModel = stageCosmeticViewModel;
 
             WeakReferenceMessenger.Default.Register<StageLoadedMessage>(this, (recipient, message) =>
@@ -88,6 +91,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
+        public StageInfo OldStage { get => _oldStage; set { _oldStage = value; OnPropertyChanged(nameof(OldStage)); } }
 
         [DependsUpon(nameof(Stage))]
         public ObservableCollection<StageEntry> StageEntries { get => Stage?.StageEntries != null ? new ObservableCollection<StageEntry>(Stage.StageEntries) : new ObservableCollection<StageEntry>(); }
@@ -164,7 +168,8 @@ namespace BrawlInstaller.ViewModels
         }
         public void LoadStage(StageLoadedMessage message)
         {
-            Stage = message.Value;
+            Stage = message.Value.Stage;
+            OldStage = message.Value.NewStage ? null : message.Value.Stage.Copy();
             _originalRandomName = Stage.RandomName;
             Tracklists = _tracklistService.GetTracklists();
             OnPropertyChanged(nameof(Stage));
@@ -175,14 +180,21 @@ namespace BrawlInstaller.ViewModels
         {
             // Create copy of stage before save
             var stageToSave = stage.Copy();
-            var deleteOptions = new List<string>();
-            using (new CursorWait())
+
+            // Get delete options
+            var deleteOptions = OldStage?.StageEntries?.Select(x => x.Params.ModuleFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.ModuleFile).Contains(x)).Distinct().ToList() ?? new List<string>();
+            deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Distinct().ToList() ?? new List<string>());
+            // Add netplay tracklists if syncing is on
+            if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
             {
-                deleteOptions = _stageService.SaveStage(stageToSave, _originalRandomName != stageToSave.RandomName);
+                var netplayListPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath);
+                // TODO: only add netplay tracklists that actually exist
+                deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Select(x => Path.Combine(netplayListPath, Path.GetFileName(x))).Distinct().ToList() ?? new List<string>());
             }
 
             // Prompt user for delete options
             var deleteItems = new List<CheckListItem>();
+            var stageDeleteOptions = new List<string>();
             foreach (var item in deleteOptions)
             {
                 deleteItems.Add(new CheckListItem(item, Path.GetFileName(item), item));
@@ -190,10 +202,16 @@ namespace BrawlInstaller.ViewModels
             if (deleteItems.Count > 0)
             {
                 var selectedItems = _dialogService.OpenCheckListDialog(deleteItems, "Select items to delete", "The following items are no longer found in this stage slot, but may be used by other stages. Verify they are not used by other stages and then select the options you wish to delete.").Where(x => x.IsChecked);
-                foreach(var selectedItem in selectedItems)
+                foreach (var selectedItem in selectedItems)
                 {
-                    _fileService.DeleteFile((string)selectedItem.Item);
+                    stageDeleteOptions.Add((string)selectedItem.Item);
                 }
+            }
+
+            // Save stage
+            using (new CursorWait())
+            {
+                _stageService.SaveStage(stageToSave, OldStage, stageDeleteOptions, _originalRandomName != stageToSave.RandomName);
             }
 
             // Stage saving was successful, so load changes
@@ -206,7 +224,7 @@ namespace BrawlInstaller.ViewModels
             // Update stage list
             WeakReferenceMessenger.Default.Send(new StageSavedMessage(stage));
             // Update loaded stage
-            WeakReferenceMessenger.Default.Send(new StageLoadedMessage(stage));
+            WeakReferenceMessenger.Default.Send(new StageLoadedMessage(new StageLoadObject(stage)));
             if (deleteStage)
             {
                 Stage = null;
@@ -375,6 +393,7 @@ namespace BrawlInstaller.ViewModels
                 Stage = null;
                 OnPropertyChanged(nameof(Stage));
                 SaveStage(deleteStage, true);
+                OldStage = null;
                 // Update stage lists
                 WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
             }

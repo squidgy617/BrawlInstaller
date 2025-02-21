@@ -37,8 +37,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="StageService.SaveStageLists(List{StageList}, List{StageSlot})"/>
         void SaveStageLists(List<StageList> stageLists, List<StageSlot> stageTable);
 
-        /// <inheritdoc cref="StageService.SaveStage(StageInfo, bool)"/>
-        List<string> SaveStage(StageInfo stage, bool updateRandomName = true);
+        /// <inheritdoc cref="StageService.SaveStage(StageInfo, StageInfo, List{string}, bool)"/>
+        void SaveStage(StageInfo stage, StageInfo oldStage, List<string> deleteOptions, bool updateRandomName = true);
 
         /// <inheritdoc cref="StageService.GetListAlt(string)"/>
         ListAlt GetListAlt(string binFile);
@@ -491,20 +491,23 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="stage">The stage to save</param>
         /// <returns>List of files user can choose to delete</returns>
-        public List<string> SaveStageInfo(StageInfo stage)
+        public void SaveStageInfo(StageInfo stage, StageInfo oldStageData, List<string> deleteOptions)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             // Get old stage data
-            var oldStageData = new StageInfo
+            if (oldStageData == null)
             {
-                Slot = stage.Slot.Copy()
-            };
-            LoadStageEntries(oldStageData);
+                oldStageData = new StageInfo
+                {
+                    Slot = stage.Slot.Copy()
+                };
+                LoadStageEntries(oldStageData);
+            }
             // Get files for install
             // We do this before deleting old files in case the user kept an old file
             var files = OpenStageFiles(stage);
             // Delete old stage data
-            var toDelete = DeleteStageEntries(oldStageData);
+            DeleteStageEntries(oldStageData, deleteOptions);
             // Generate ASL and param files
             SaveStageEntries(stage);
             // Save files
@@ -515,10 +518,6 @@ namespace BrawlInstaller.Services
             }
             // Update slot name
             stage.Slot.Name = stage.StageEntries.FirstOrDefault()?.Params?.Name ?? "Unknown";
-            // Return optional delete files, only ones that don't still exist in stage entries
-            var modules = stage.StageEntries.Select(x => x.Params.Module).ToList();
-            var tracklists = stage.StageEntries.Select(x => x.Params.TrackList).ToList();
-            return toDelete.Where(x => !modules.Contains(Path.GetFileName(x), StringComparer.OrdinalIgnoreCase) && !tracklists.Contains(Path.GetFileNameWithoutExtension(x), StringComparer.OrdinalIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -704,8 +703,9 @@ namespace BrawlInstaller.Services
         /// Delete all stage entries from stage
         /// </summary>
         /// <param name="stage">Stage to remove from</param>
+        /// <param name="deleteOptions">Selected items to delete</param>
         /// <returns>List of files that can be optionally deleted</returns>
-        private List<string> DeleteStageEntries(StageInfo stage)
+        private List<string> DeleteStageEntries(StageInfo stage, List<string> deleteOptions)
         {
             var toDelete = new List<string>();
             var buildPath = _settingsService.AppSettings.BuildPath;
@@ -732,23 +732,9 @@ namespace BrawlInstaller.Services
                 path = stageEntry.ListAlt.BinFilePath;
                 _fileService.DeleteFile(path);
                 // Add modules and tracklists to delete options
-                if (stageEntry.Params.ModuleFile != null && _fileService.FileExists(stageEntry.Params.ModuleFile) && !toDelete.Contains(stageEntry.Params.ModuleFile))
+                foreach(var file in deleteOptions)
                 {
-                    toDelete.Add(stageEntry.Params.ModuleFile);
-                }
-                if (stageEntry.Params.TrackListFile != null && _fileService.FileExists(stageEntry.Params.TrackListFile) && !toDelete.Contains(stageEntry.Params.TrackListFile))
-                {
-                    toDelete.Add(stageEntry.Params.TrackListFile);
-                    // Add netplay tracklist if syncing is on
-                    if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
-                    {
-                        var netplayListPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath);
-                        var tracklistPath = Path.Combine(netplayListPath, Path.GetFileName(stageEntry.Params.TrackListFile));
-                        if (_fileService.FileExists(tracklistPath))
-                        {
-                            toDelete.Add(tracklistPath);
-                        }
-                    }
+                    _fileService.DeleteFile(file);
                 }
                 // Delete ASL file
                 path = Path.Combine(aslPath, $"{stage.Slot.StageIds.StageId:X2}.asl");
@@ -834,7 +820,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="stage">Stage to save</param>
         /// <returns>List of delete options</returns>
-        public List<string> SaveStage(StageInfo stage, bool updateRandomName = true)
+        public void SaveStage(StageInfo stage, StageInfo oldStage, List<string> deleteOptions, bool updateRandomName = true)
         {
             _fileService.StartBackup();
             var buildPath = _settingsService.AppSettings.BuildPath;
@@ -872,9 +858,8 @@ namespace BrawlInstaller.Services
             {
                 alt.ButtonFlags = (ushort)(0xC000 + eventAlts.IndexOf(alt));
             }
-            var stageInfo = SaveStageInfo(stage);
+            SaveStageInfo(stage, oldStage, deleteOptions);
             _fileService.EndBackup();
-            return stageInfo;
         }
     }
 }
