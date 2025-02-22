@@ -2653,6 +2653,19 @@ namespace BrawlInstaller.Services
             var codeMenuBuilder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuBuilder);
             if (_fileService.FileExists(codeMenuBuilder))
             {
+                // Backup code menu files
+                // TODO: These paths are hardcoded right now because there's no way to change them in the code menu builder, if that ever changes, un-hardcode them
+                var files = _fileService.GetFiles(Path.Combine(_settingsService.AppSettings.BuildPath, "Source\\CodeMenu"), "CodeMenu.asm");
+                files.AddRange(_fileService.GetFiles(Path.Combine(_settingsService.AppSettings.BuildPath, "pf\\menu3"), "data.cmnu"));
+                files.AddRange(_fileService.GetFiles(Path.Combine(_settingsService.AppSettings.BuildPath, "pf\\menu3"), "dnet.cmnu"));
+                files.AddRange(_fileService.GetFiles(Path.Combine(_settingsService.AppSettings.BuildPath, "Source\\CM_Addons"), "*", SearchOption.AllDirectories));
+                foreach(var file in files)
+                {
+                    if (_fileService.FileExists(file))
+                    {
+                        _fileService.BackupBuildFile(file);
+                    }
+                }
                 var args = "1 1 0 1";
                 Process codeMenu = Process.Start(new ProcessStartInfo
                 {
