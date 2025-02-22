@@ -2653,22 +2653,6 @@ namespace BrawlInstaller.Services
             var codeMenuBuilder = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuBuilder);
             if (_fileService.FileExists(codeMenuBuilder))
             {
-                // Backup code menu files
-                var files = new List<string>
-                {
-                    _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuSource),
-                    _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuData),
-                    _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuNetplayData)
-                };
-                files.AddRange(_fileService.GetFiles(_settingsService.BuildSettings.FilePathSettings.CodeMenuAddons, "*", SearchOption.AllDirectories));
-                foreach(var file in files)
-                {
-                    if (_fileService.FileExists(file))
-                    {
-                        _fileService.BackupBuildFile(file);
-                    }
-                }
-
                 // Compile code menu
                 var args = "0 0 0 1";
                 Process codeMenu = Process.Start(new ProcessStartInfo
