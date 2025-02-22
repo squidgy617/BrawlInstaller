@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
+             xmlns:behaviors="clr-namespace:BrawlInstaller.Behaviors"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:FighterViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -174,6 +175,13 @@
                     <TextBox x:Name="cssSlotConfigIdTextbox" Text="{Binding FighterPackage.FighterInfo.Ids.CSSSlotConfigId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
                     <Label x:Name="cosmeticIdLabel" Content="Cosmetic ID:" ToolTip="Cosmetic ID used by fighter"/>
                     <TextBox x:Name="cosmeticIdTextBox" Text="{Binding FighterPackage.FighterInfo.Ids.CosmeticId}" Width="30" IsReadOnly="{Binding InternalPackage}"/>
+                    <Button x:Name="actionsButton" Style="{StaticResource condensedButton}" Content="≡" behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True">
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Export cosmetics..." Command="{Binding ExportCosmeticsCommand}"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
                     <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFighterCommand}"/>
                     <Button x:Name="saveButton" Content="Save" Command="{Binding SavePackageCommand}" Visibility="{Binding FighterPackagePath, Converter={StaticResource stringVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                     <Button x:Name="importButton" Content="{Binding ImportButtonText}" Command="{Binding SaveCommand}" IsEnabled="{Binding ImportButtonEnabled}"/>

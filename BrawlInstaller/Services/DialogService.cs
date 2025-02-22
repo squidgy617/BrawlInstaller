@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BrawlInstaller.Services
 {
@@ -38,6 +39,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="DialogService.OpenFileDialog(string, string)"/>
         string OpenFileDialog(string title, string filter);
+
+        /// <inheritdoc cref="DialogService.OpenFolderDialog(string)"/>
+        string OpenFolderDialog(string title = "Select a folder");
 
         /// <inheritdoc cref="DialogService.SaveFileDialog(string, string)"/>
         string SaveFileDialog(string title = "Save file", string filter = "");
@@ -235,6 +239,24 @@ namespace BrawlInstaller.Services
             if (result == true)
             {
                 return dialog.FileName;
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Open folder dialog
+        /// </summary>
+        /// <param name="title">Title to display on dialog</param>
+        /// <returns>Folder chosen by user</returns>
+        public string OpenFolderDialog(string title="Select a folder")
+        {
+            var dialog = new VistaFolderBrowserDialog();
+            dialog.Description = title;
+
+            var result = dialog.ShowDialog();
+            if (result == true)
+            {
+                return dialog.SelectedPath;
             }
             return "";
         }

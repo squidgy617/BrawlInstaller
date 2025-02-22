@@ -60,6 +60,7 @@ namespace BrawlInstaller.ViewModels
         IFileService _fileService { get; }
         ICodeService _codeService { get; }
         ITrophyService _trophyService { get; }
+        ICosmeticService _cosmeticService { get; }
 
         // Commands
         public ICommand LoadRosterFighterCommand => new RelayCommand(param => LoadFighterFromRoster(param));
@@ -80,12 +81,14 @@ namespace BrawlInstaller.ViewModels
         public ICommand ChangeTrophyCommand => new RelayCommand(param => ChangeTrophy());
         public ICommand NewTrophyCommand => new RelayCommand(param => NewTrophy());
         public ICommand ClearTrophyCommand => new RelayCommand(param => ClearTrophy());
+        public ICommand ExportCosmeticsCommand => new RelayCommand(param => ExportCosmetics());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
         public FighterViewModel(IPackageService packageService, ISettingsService settingsService, IDialogService dialogService, IFighterService fighterService, IFileService fileService,
-            ICodeService codeService, ITrophyService trophyService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, ICosmeticViewModel cosmeticViewmodel,
-            IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel, IFighterTrophyViewModel fighterTrophyViewModel)
+            ICodeService codeService, ITrophyService trophyService, ICosmeticService cosmeticService, IFranchiseIconViewModel franchiseIconViewModel, ICostumeViewModel costumeViewModel, 
+            ICosmeticViewModel cosmeticViewmodel, IFighterFileViewModel fighterFileViewModel, IFighterSettingsViewModel fighterSettingsViewModel, 
+            IFighterTrophyViewModel fighterTrophyViewModel)
         {
             _packageService = packageService;
             _settingsService = settingsService;
@@ -94,6 +97,7 @@ namespace BrawlInstaller.ViewModels
             _fileService = fileService;
             _codeService = codeService;
             _trophyService = trophyService;
+            _cosmeticService = cosmeticService;
             FranchiseIconViewModel = franchiseIconViewModel;
             CostumeViewModel = costumeViewModel;
             CosmeticViewModel = cosmeticViewmodel;
@@ -1082,6 +1086,19 @@ namespace BrawlInstaller.ViewModels
             }
             WeakReferenceMessenger.Default.Send(new TrophyChangedMessage(newTrophy?.Trophy));
             OnPropertyChanged(nameof(SelectedFighterTrophy));
+        }
+
+        private void ExportCosmetics()
+        {
+            var path = _dialogService.OpenFolderDialog("Select directory to save cosmetics to");
+            if (!string.IsNullOrEmpty(path))
+            {
+                var cosmeticsToExport = new CosmeticList();
+                cosmeticsToExport.Items.AddRange(FighterPackage.Cosmetics.Items);
+                cosmeticsToExport.Items.Add(FranchiseIconViewModel.SelectedFranchiseIcon);
+                _cosmeticService.ExportCosmetics(path, cosmeticsToExport);
+                _dialogService.ShowMessage("Success", "Cosmetics exported.");
+            }
         }
     }
 

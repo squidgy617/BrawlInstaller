@@ -83,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Behaviors\ContextMenuLeftClickBehavior.cs" />
     <Compile Include="Classes\Backup.cs" />
     <Compile Include="Classes\BuildSettings.cs" />
     <Compile Include="Classes\CheckListItem.cs" />
