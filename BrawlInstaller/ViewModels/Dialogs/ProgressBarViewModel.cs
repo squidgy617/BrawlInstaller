@@ -18,8 +18,8 @@ namespace BrawlInstaller.ViewModels
     public interface IProgressBarViewModel
     {
         event EventHandler OnRequestClose;
-        int Maximum { get; set; }
-        int Minimum { get; set; }
+        int? Maximum { get; set; }
+        int? Minimum { get; set; }
         int Value { get; set; }
         string Caption { get; set; }
     }
@@ -29,8 +29,8 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private int _value;
-        private int _maximum;
-        private int _minimum;
+        private int? _maximum;
+        private int? _minimum;
         private string _caption;
 
         // Events
@@ -60,9 +60,12 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public int Value { get => _value; set { _value = value; OnPropertyChanged(nameof(Value)); } }
-        public int Maximum { get => _maximum; set { _maximum = value; OnPropertyChanged(nameof(Maximum)); } }
-        public int Minimum { get => _minimum; set { _minimum = value; OnPropertyChanged(nameof(Minimum)); } }
+        public int? Maximum { get => _maximum; set { _maximum = value; OnPropertyChanged(nameof(Maximum)); } }
+        public int? Minimum { get => _minimum; set { _minimum = value; OnPropertyChanged(nameof(Minimum)); } }
         public string Caption { get => _caption; set { _caption = value; OnPropertyChanged(nameof(Caption)); } }
+
+        [DependsUpon(nameof(Maximum))]
+        public bool Indeterminate { get => Maximum == null; }
 
         // Methods
         private void StartProgress()
@@ -131,9 +134,9 @@ namespace BrawlInstaller.ViewModels
         }
     }
 
-    public class EndProgressMessage : ValueChangedMessage<int>
+    public class EndProgressMessage : ValueChangedMessage<int?>
     {
-        public EndProgressMessage(int increment) : base(increment)
+        public EndProgressMessage(int? increment) : base(increment)
         {
 
         }

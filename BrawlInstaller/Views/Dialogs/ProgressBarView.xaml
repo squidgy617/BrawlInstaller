@@ -11,7 +11,7 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
         <StackPanel HorizontalAlignment="Center">
             <TextBlock x:Name="caption" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Text="{Binding Caption}" Margin="5" TextWrapping="Wrap"/>
-            <ProgressBar x:Name="progressBar" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="25" Maximum="{Binding Maximum}" Minimum="{Binding Minimum}" Value="{Binding Value}"/>
+            <ProgressBar x:Name="progressBar" HorizontalAlignment="Center" IsIndeterminate="{Binding Indeterminate}" VerticalAlignment="Center" Width="200" Height="25" Maximum="{Binding Maximum}" Minimum="{Binding Minimum}" Value="{Binding Value}"/>
         </StackPanel>
     </Grid>
 </UserControl>

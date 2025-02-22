@@ -729,6 +729,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.GctRealMateExe))
             {
+                ProgressTracker.Start("Compiling codes...");
                 // Backup GCT files
                 foreach(var codeFile in _settingsService.BuildSettings.FilePathSettings.CodeFilePaths)
                 {

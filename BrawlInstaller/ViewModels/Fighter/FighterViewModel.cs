@@ -304,6 +304,7 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage = null;
                 OnPropertyChanged(nameof(FighterPackage));
                 // Save
+                _dialogService.ShowProgressBar("Deleting Fighter", "Deleting fighter...");
                 using (new CursorWait())
                 {
                     _packageService.SaveFighter(deletePackage, OldFighterPackage);
@@ -330,6 +331,7 @@ namespace BrawlInstaller.ViewModels
                     _codeService.CompileCodes();
                     _fileService.EndBackup();
                 }
+                _dialogService.CloseProgressBar();
                 _dialogService.ShowMessage("Changes saved.", "Saved");
             }
         }

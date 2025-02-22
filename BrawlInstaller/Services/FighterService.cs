@@ -696,7 +696,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var files = new List<(ResourceNode node, string name, FighterPacFile pacFile)>();
-            ProgressTracker.Start("Updating PAC files...", 0, fighterPackage.PacFiles.Count + fighterPackage.Costumes.SelectMany(x => x.PacFiles).Count());
+            ProgressTracker.Start("Updating PAC files...");
             foreach(var pacFile in pacFiles)
             {
                 var file = _fileService.OpenFile(pacFile.FilePath);
@@ -738,7 +738,6 @@ namespace BrawlInstaller.Services
                         }
                     }
                 }
-                ProgressTracker.Update(1);
             }
             foreach(var costume in costumes)
             {
@@ -770,7 +769,6 @@ namespace BrawlInstaller.Services
                     if (file != null)
                         files.Add((file, name, pacFile));
                 }
-                ProgressTracker.Update(1);
             }
             // Set all file paths
             foreach(var file in files)
@@ -791,7 +789,6 @@ namespace BrawlInstaller.Services
                     file.pacFile.FilePath = file.node._origPath;
                 }
             }
-            ProgressTracker.End("Finished updating PAC files.");
             return files.Select(x => x.node).ToList();
         }
 
@@ -2554,6 +2551,7 @@ namespace BrawlInstaller.Services
         /// <param name="rosters">List of rosters to save</param>
         public void SaveRosters(List<Roster> rosters)
         {
+            ProgressTracker.Start("Updating rosters...");
             // Save CSS rosters
             foreach (var roster in rosters.Where(x => x.RosterType == RosterType.CSS))
             {
@@ -3064,6 +3062,7 @@ namespace BrawlInstaller.Services
         /// <param name="oldFighterPackage">Old fighter package being removed</param>
         public void SaveFighterTrophies(FighterPackage fighterPackage, FighterPackage oldFighterPackage)
         {
+            ProgressTracker.Start("Updating fighter trophies...");
             foreach(var fighterTrophy in fighterPackage.Trophies.GroupBy(x => x.Trophy).Select(x => x.FirstOrDefault()))
             {
                 _trophyService.GetUnusedTrophyIds(fighterTrophy?.Trophy?.Ids);

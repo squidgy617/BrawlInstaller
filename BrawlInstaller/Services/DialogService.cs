@@ -176,9 +176,9 @@ namespace BrawlInstaller.Services
         public void ShowProgressBar(string caption, string text)
         {
             // TODO: Do we keep this as an async window? If not, do something similar to ShowMessage
-            _progressBarViewModel.Minimum = 0;
+            _progressBarViewModel.Minimum = null;
             _progressBarViewModel.Value = 0;
-            _progressBarViewModel.Maximum = 100;
+            _progressBarViewModel.Maximum = null;
             _progressBarViewModel.Caption = text;
             GenerateWindowAsync(_progressBarViewModel, caption);
             WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(0));

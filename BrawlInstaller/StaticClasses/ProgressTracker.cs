@@ -13,10 +13,10 @@ namespace BrawlInstaller.StaticClasses
     {
         public static string Caption { get; private set; } = string.Empty;
         public static int Value { get; private set; } = 0;
-        public static int Minimum { get; private set; } = 0;
-        public static int Maximum { get; private set; } = 100;
+        public static int? Minimum { get; private set; } = 0;
+        public static int? Maximum { get; private set; } = null;
 
-        public static void Start(string caption, int minimum, int maximum)
+        public static void Start(string caption, int? minimum = null, int? maximum = null)
         {
             Caption = caption;
             Value = 0;
@@ -45,13 +45,13 @@ namespace BrawlInstaller.StaticClasses
 
         public static void End()
         {
-            Value = Maximum;
+            Value = Maximum ?? 0;
             WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(Value));
         }
 
         public static void End(string caption)
         {
-            Value = Maximum;
+            Value = Maximum ?? 0;
             Caption = caption;
             WeakReferenceMessenger.Default.Send(new UpdateProgressMessage(Value));
             WeakReferenceMessenger.Default.Send(new UpdateProgressCaptionMessage(Caption));
