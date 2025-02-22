@@ -494,15 +494,6 @@ namespace BrawlInstaller.Services
         public void SaveStageInfo(StageInfo stage, StageInfo oldStageData, List<string> deleteOptions)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
-            // Get old stage data
-            if (oldStageData == null)
-            {
-                oldStageData = new StageInfo
-                {
-                    Slot = stage.Slot.Copy()
-                };
-                LoadStageEntries(oldStageData);
-            }
             // Get files for install
             // We do this before deleting old files in case the user kept an old file
             var files = OpenStageFiles(stage);
