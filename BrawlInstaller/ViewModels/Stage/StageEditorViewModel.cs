@@ -178,6 +178,7 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveStage(StageInfo stage, bool deleteStage=false)
         {
+            var oldStage = Stage;
             // Create copy of stage before save
             var stageToSave = stage.Copy();
 
@@ -212,22 +213,28 @@ namespace BrawlInstaller.ViewModels
             using (new CursorWait())
             {
                 _stageService.SaveStage(stageToSave, OldStage, stageDeleteOptions, _originalRandomName != stageToSave.RandomName);
-            }
 
-            // Stage saving was successful, so load changes
-            Stage = stageToSave;
-            stage = Stage;
+                // Stage saving was successful, so load changes
+                Stage = stageToSave;
+                stage = Stage;
 
-            stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
-            stage.Cosmetics.ClearChanges();
+                stage.Cosmetics.Items.ForEach(x => { x.ImagePath = ""; x.ModelPath = ""; x.ColorSmashChanged = false; });
+                stage.Cosmetics.ClearChanges();
 
-            // Update stage list
-            WeakReferenceMessenger.Default.Send(new StageSavedMessage(stage));
-            // Update loaded stage
-            WeakReferenceMessenger.Default.Send(new StageLoadedMessage(new StageLoadObject(stage)));
-            if (deleteStage)
-            {
-                Stage = null;
+                // Update loaded stage
+                WeakReferenceMessenger.Default.Send(new StageLoadedMessage(new StageLoadObject(stage)));
+
+                if (deleteStage)
+                {
+                    // Update stage list
+                    WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldStage.Slot));
+                    Stage = null;
+                }
+                else
+                {
+                    // Update stage list
+                    WeakReferenceMessenger.Default.Send(new StageSavedMessage(stage));
+                }
             }
             _fileService.EndBackup();
             OnPropertyChanged(nameof(Stage));
@@ -391,12 +398,8 @@ namespace BrawlInstaller.ViewModels
                 {
                     deleteStage.Cosmetics.ItemChanged(cosmetic);
                 }
-                Stage = null;
-                OnPropertyChanged(nameof(Stage));
                 SaveStage(deleteStage, true);
                 OldStage = null;
-                // Update stage lists
-                WeakReferenceMessenger.Default.Send(new StageDeletedMessage(oldSlot));
             }
         }
 
