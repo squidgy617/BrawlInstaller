@@ -2670,7 +2670,7 @@ namespace BrawlInstaller.Services
                 }
 
                 // Compile code menu
-                var args = "1 1 0 1";
+                var args = "0 0 0 1";
                 Process codeMenu = Process.Start(new ProcessStartInfo
                 {
                     WorkingDirectory = Path.GetDirectoryName(codeMenuBuilder),
@@ -2679,6 +2679,35 @@ namespace BrawlInstaller.Services
                     Arguments = args
                 });
                 codeMenu.WaitForExit();
+
+                // Copy files
+                var codeMenuDir = _settingsService.GetBuildFilePath(Path.GetDirectoryName(_settingsService.BuildSettings.FilePathSettings.CodeMenuBuilder));
+                var codeMenuOutput = Path.Combine(codeMenuDir, "Code_Menu_Output");
+                var dataFile = _fileService.GetFiles(codeMenuOutput, "data.cmnu").FirstOrDefault();
+                var dataNetplayFile = _fileService.GetFiles(codeMenuOutput, "dnet.cmnu").FirstOrDefault();
+                var sourceFile = _fileService.GetFiles(codeMenuOutput, "CodeMenu.asm").FirstOrDefault();
+                var addons = _fileService.GetDirectories(codeMenuOutput, "CM_Addons", SearchOption.TopDirectoryOnly).FirstOrDefault();
+                if (dataFile != null)
+                {
+                    _fileService.CopyFile(dataFile, _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuData));
+                }
+                if (dataNetplayFile != null)
+                {
+                    _fileService.CopyFile(dataNetplayFile, _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuNetplayData));
+                }
+                if (sourceFile != null)
+                {
+                    _fileService.CopyFile(sourceFile, _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuSource));
+                }
+                if (addons != null)
+                {
+                    var codeMenuAddons = _fileService.GetFiles(addons, "*", SearchOption.AllDirectories);
+                    foreach(var addon in codeMenuAddons)
+                    {
+                        var newPath = addon.Replace(codeMenuOutput, _settingsService.BuildSettings.FilePathSettings.CodeMenuAddons);
+                        _fileService.CopyFile(addon, newPath);
+                    }
+                }
             }
         }
 

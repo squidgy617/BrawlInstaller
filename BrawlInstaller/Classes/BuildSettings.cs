@@ -156,7 +156,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.CodeMenuSource, "Source\\CodeMenu\\CodeMenu.asm", "ASM file (.asm)|*.asm"),
             new FilePath(FileType.CodeMenuData, "pf\\menu3\\data.cmnu", "CMNU file (.cmnu)|*.cmnu"),
             new FilePath(FileType.CodeMenuNetplayData, "pf\\menu3\\dnet.cmnu", "CMNU file (.cmnu)|*.cmnu"),
-            new FilePath(FileType.CodeMenuAddons, "Source\\CM_Addons"),
+            new FilePath(FileType.CodeMenuAddons, "Source\\CM_Addons\\"),
             new FilePath(FileType.TrophyNames, "pf\\toy\\fig\\ty_fig_name_list.msbin", "MSBIN file (.msbin)|*.msbin"),
             new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin", "MSBIn file (.msbin)|*.msbin"),
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
