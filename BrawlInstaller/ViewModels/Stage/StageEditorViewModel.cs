@@ -209,6 +209,7 @@ namespace BrawlInstaller.ViewModels
             }
 
             _fileService.StartBackup();
+            _dialogService.ShowProgressBar("Saving Stage Changes", "Saving stage changes...");
             // Save stage
             using (new CursorWait())
             {
@@ -236,6 +237,7 @@ namespace BrawlInstaller.ViewModels
                     WeakReferenceMessenger.Default.Send(new StageSavedMessage(stage));
                 }
             }
+            _dialogService.CloseProgressBar();
             _fileService.EndBackup();
             OnPropertyChanged(nameof(Stage));
             _dialogService.ShowMessage("Changes saved.", "Saved");

@@ -1022,10 +1022,10 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of character for HD textures</param>
         public void ImportCosmetics(List<CosmeticDefinition> definitions, CosmeticList cosmeticList, BrawlIds ids, string name = null)
         {
-            ProgressTracker.Start("Importing cosmetics...");
+            ProgressTracker.Start("Updating cosmetics...");
             foreach(var definition in definitions.Where(x => x.Enabled != false).OrderByDescending(x => x.CosmeticType).ThenByDescending(x => x.Style).ThenByDescending(x => x.Size.Width + x.Size.Height))
             {
-                ProgressTracker.UpdateCaption($"Importing cosmetics...\n[Type] {definition.CosmeticType.GetDescription()}\n[Style] {definition.Style}");
+                ProgressTracker.UpdateCaption($"Updating cosmetics...\n[Type] {definition.CosmeticType.GetDescription()}\n[Style] {definition.Style}");
                 ImportCosmetics(definition, cosmeticList, ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, name);
             }
             // Save and close all files
