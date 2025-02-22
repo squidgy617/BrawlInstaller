@@ -78,6 +78,8 @@ namespace BrawlInstaller.ViewModels
                 if (selectedBackup != null)
                 {
                     _fileService.RestoreBackup(selectedBackup);
+                    // Do this to re-load everything when a backup is restored
+                    WeakReferenceMessenger.Default.Send(new UpdateSettingsMessage(AppSettings));
                     _dialogService.ShowMessage("Backup restored.", "Success");
                 }
             }
