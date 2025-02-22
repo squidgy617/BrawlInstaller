@@ -207,6 +207,7 @@ namespace BrawlInstaller.ViewModels
                 }
             }
 
+            _fileService.StartBackup();
             // Save stage
             using (new CursorWait())
             {
@@ -228,6 +229,7 @@ namespace BrawlInstaller.ViewModels
             {
                 Stage = null;
             }
+            _fileService.EndBackup();
             OnPropertyChanged(nameof(Stage));
             _dialogService.ShowMessage("Changes saved.", "Saved");
         }

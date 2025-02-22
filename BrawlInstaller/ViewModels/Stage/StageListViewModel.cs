@@ -45,22 +45,24 @@ namespace BrawlInstaller.ViewModels
         IStageService _stageService { get; }
         ICosmeticService _cosmeticService { get; }
         IDialogService _dialogService { get; }
+        IFileService _fileService { get; }
 
         // Commands
         public ICommand MoveUpCommand => new RelayCommand(param => MoveStageUp());
         public ICommand MoveDownCommand => new RelayCommand(param => MoveStageDown());
         public ICommand AddStageToListCommand => new RelayCommand(param =>  AddStageToList());
         public ICommand RemoveStageFromListCommand => new RelayCommand(param => RemoveStageFromList());
-        public ICommand SaveStageListCommand => new RelayCommand(param => { SaveStageList(); _dialogService.ShowMessage("Stage lists saved.", "Saved"); });
+        public ICommand SaveStageListCommand => new RelayCommand(param => { _fileService.StartBackup(); SaveStageList(); _fileService.EndBackup(); _dialogService.ShowMessage("Stage lists saved.", "Saved"); });
         public ICommand LoadStageCommand => new RelayCommand(param => LoadStage(param));
         public ICommand NewStageCommand => new RelayCommand(param =>  NewStage());
 
         [ImportingConstructor]
-        public StageListViewModel(IStageService stageService, ICosmeticService cosmeticService, IDialogService dialogService)
+        public StageListViewModel(IStageService stageService, ICosmeticService cosmeticService, IDialogService dialogService, IFileService fileService)
         {
             _stageService = stageService;
             _cosmeticService = cosmeticService;
             _dialogService = dialogService;
+            _fileService = fileService;
 
             StageTable = new ObservableCollection<StageSlot>(_stageService.GetStageSlots());
 

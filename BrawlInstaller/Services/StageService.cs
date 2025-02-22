@@ -822,7 +822,6 @@ namespace BrawlInstaller.Services
         /// <returns>List of delete options</returns>
         public void SaveStage(StageInfo stage, StageInfo oldStage, List<string> deleteOptions, bool updateRandomName = true)
         {
-            _fileService.StartBackup();
             var buildPath = _settingsService.AppSettings.BuildPath;
             // Only update cosmetics that have changed
             var changedDefinitions = _settingsService.BuildSettings.CosmeticSettings.Where(x => stage.Cosmetics.ChangedItems
@@ -859,7 +858,6 @@ namespace BrawlInstaller.Services
                 alt.ButtonFlags = (ushort)(0xC000 + eventAlts.IndexOf(alt));
             }
             SaveStageInfo(stage, oldStage, deleteOptions);
-            _fileService.EndBackup();
         }
     }
 }
