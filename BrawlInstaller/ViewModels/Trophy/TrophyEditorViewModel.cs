@@ -80,6 +80,7 @@ namespace BrawlInstaller.ViewModels
             if (ErrorValidate() && Validate())
             {
                 _fileService.StartBackup();
+                _dialogService.ShowProgressBar("Updating Trophy", "Updating trophy...");
                 using (new CursorWait())
                 {
                     // Create copies of trophies before save
@@ -95,6 +96,7 @@ namespace BrawlInstaller.ViewModels
                     OnPropertyChanged(nameof(OldTrophy));
                     WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
                 }
+                _dialogService.CloseProgressBar();
                 _fileService.EndBackup();
                 _dialogService.ShowMessage("Changes saved.", "Saved");
             }
@@ -106,6 +108,7 @@ namespace BrawlInstaller.ViewModels
             if (result)
             {
                 _fileService.StartBackup();
+                _dialogService.ShowProgressBar("Deleting Trophy", "Deleting trophy...");
                 using (new CursorWait())
                 {
                     var trophyToDelete = new Trophy { Ids = OldTrophy.Ids.Copy() };
@@ -123,6 +126,7 @@ namespace BrawlInstaller.ViewModels
                     OnPropertyChanged(nameof(OldTrophy));
                     WeakReferenceMessenger.Default.Send(new UpdateTrophyListMessage(Trophy));
                 }
+                _dialogService.CloseProgressBar();
                 _fileService.EndBackup();
                 _dialogService.ShowMessage("Changes saved.", "Saved");
             }

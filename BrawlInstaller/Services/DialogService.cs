@@ -119,10 +119,13 @@ namespace BrawlInstaller.Services
                 var w = new Window { Width = 300, Height = 172, Title = title, Content = content, SizeToContent = SizeToContent.WidthAndHeight, ResizeMode = ResizeMode.NoResize, Left = x, Top = y };
                 WeakReferenceMessenger.Default.Register<EndProgressMessage>(w, (recipient, message) =>
                 {
-                    w.Dispatcher.Invoke(() =>
+                    if (!w.Dispatcher.HasShutdownFinished)
                     {
-                        w.Close();
-                    });
+                        w.Dispatcher.Invoke(() =>
+                        {
+                            w.Close();
+                        });
+                    }
                 });
                 w.Show();
 
