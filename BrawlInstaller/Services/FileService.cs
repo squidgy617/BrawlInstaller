@@ -139,6 +139,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.SaveXmlFile(XElement, string)"/>
         void SaveXmlFile(XElement xml, string path);
 
+        /// <inheritdoc cref="FileService.BackupBuildFile(string, bool)"/>
+        void BackupBuildFile(string path, bool deleteFile = false);
+
         Backup CurrentBackup { get; set; }
     }
 
@@ -793,7 +796,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="path">Path of file to backup</param>
         /// <param name="deleteFile">If file is being deleted</param>
-        private void BackupBuildFile(string path, bool deleteFile = false)
+        public void BackupBuildFile(string path, bool deleteFile = false)
         {
             if (CurrentBackup == null || string.IsNullOrEmpty(path))
             {

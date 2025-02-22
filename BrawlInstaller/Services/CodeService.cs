@@ -724,12 +724,22 @@ namespace BrawlInstaller.Services
         /// <summary>
         /// Compile all codes
         /// </summary>
-        // TODO: Create backups of code files when we do this
         public void CompileCodes()
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.GctRealMateExe))
             {
+                // Backup GCT files
+                foreach(var codeFile in _settingsService.BuildSettings.FilePathSettings.CodeFilePaths)
+                {
+                    var gctDir = Path.GetDirectoryName(_settingsService.GetBuildFilePath(codeFile.Path));
+                    var gctPath = Path.GetFileNameWithoutExtension(_settingsService.GetBuildFilePath(codeFile.Path));
+                    var gctFile = Path.Combine(gctDir, $"{gctPath}.GCT");
+                    if (_fileService.FileExists(gctFile))
+                    {
+                        _fileService.BackupBuildFile(gctFile);
+                    }
+                }
                 var args = "-g -l -q";
                 var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Where(x => _fileService.FileExists(_settingsService.GetBuildFilePath(x.Path))).Select(s => $" \"{Path.Combine(buildPath, s.Path)}\"");
                 foreach(var arg in argList)
