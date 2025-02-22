@@ -198,10 +198,11 @@ namespace BrawlInstaller.Services
             {
                 foreach (ASLSEntryNode entry in node.Children)
                 {
+                    var existingParams = stage.AllParams.FirstOrDefault(x => x.Name == entry.Name);
                     var newEntry = new StageEntry
                     {
                         ButtonFlags = entry.ButtonFlags,
-                        Params = GetStageParams(entry.Name, stage.AllParams)
+                        Params = existingParams ?? GetStageParams(entry.Name, stage.AllParams)
                     };
                     // Get bin file
                     if (stage.Slot.StageIds.StageId != null)

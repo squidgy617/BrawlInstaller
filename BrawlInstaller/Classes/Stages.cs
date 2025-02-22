@@ -35,7 +35,7 @@ namespace BrawlInstaller.Classes
                 Cosmetics = Cosmetics.Copy(),
                 StageEntries = StageEntries.Copy()
             };
-            copy.AllParams = copy.StageEntries.Select(x => x.Params).ToList();
+            copy.AllParams = copy.StageEntries.Select(x => x.Params).Distinct().ToList();
             return copy;
         }
     }
@@ -136,14 +136,31 @@ namespace BrawlInstaller.Classes
 
     public static class StageEntryListExtensions
     {
-        public static List<StageEntry> Copy(this List<StageEntry> stageEntryList)
+        public static List<StageEntry> Copy(this List<StageEntry> list)
         {
-            var list = new List<StageEntry>();
-            foreach (var entry in stageEntryList)
+            var newList = new List<StageEntry>();
+            var paramsCopied = new List<(StageParams OldRef, StageParams NewRef)>();
+            foreach (var item in list)
             {
-                list.Add(entry.Copy());
+                var newItem = new StageEntry
+                {
+                    ButtonFlags = item.ButtonFlags,
+                    ListAlt = item.ListAlt.Copy()
+                };
+                // Preserve references
+                var existingParams = paramsCopied.Any(x => x.OldRef == item.Params);
+                if (existingParams)
+                {
+                    newItem.Params = paramsCopied.FirstOrDefault(x => x.OldRef == item.Params).NewRef;
+                }
+                else
+                {
+                    newItem.Params = item.Params.Copy();
+                    paramsCopied.Add((item.Params, newItem.Params));
+                }
+                newList.Add(newItem);
             }
-            return list;
+            return newList;
         }
     }
 
