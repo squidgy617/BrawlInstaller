@@ -1562,7 +1562,8 @@
     "SubspaceEx": false,
     "InstallKirbyHats": false,
     "DefaultExConfigVersion": 2,
-    "SyncTracklists": false
+    "SyncTracklists": false,
+    "UpdateCodeMenuNames": true
   },
   "FilePathSettings": {
     "FilePaths": [
@@ -1670,6 +1671,26 @@
         "FileType": 28,
         "Path": "",
         "Filter": "EXE file (.exe)|*.exe"
+      },
+      {
+        "FileType": 37,
+        "Path": "Source\\CodeMenu\\CodeMenu.asm",
+        "Filter": "ASM file (.asm)|*.asm"
+      },
+      {
+        "FileType": 38,
+        "Path": "pf\\menu3\\data.cmnu",
+        "Filter": "CMNU file (.cmnu)|*.cmnu"
+      },
+      {
+        "FileType": 39,
+        "Path": "pf\\menu3\\dnet.cmnu",
+        "Filter": "CMNU file (.cmnu)|*.cmnu"
+      },
+      {
+        "FileType": 40,
+        "Path": "Source\\CM_Addons\\",
+        "Filter": ""
       },
       {
         "FileType": 31,
