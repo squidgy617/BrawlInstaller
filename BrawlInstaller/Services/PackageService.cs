@@ -186,8 +186,44 @@ namespace BrawlInstaller.Services
             }
             // Update trophies
             _fighterService.SaveFighterTrophies(fighterPackage, oldFighter);
+            // Clean up inheritance
+            fighterPackage = CleanupCosmeticInheritance(fighterPackage);
             // Set package type to update, in case it was a new package
             fighterPackage.PackageType = PackageType.Update;
+        }
+
+        /// <summary>
+        /// Clean up cosmetic inheritance for a fighter package
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update</param>
+        /// <returns>Updated fighter package</returns>
+        private FighterPackage CleanupCosmeticInheritance(FighterPackage fighterPackage)
+        {
+            // Remove cosmetics that were set to inherit from other ones
+            fighterPackage.Cosmetics.Items.RemoveAll(x => fighterPackage.Cosmetics.InheritedStyles.Any(y => y.Key.BaseType == x.CosmeticType && y.Key.BaseStyle == x.Style));
+            foreach (var costume in fighterPackage.Costumes)
+            {
+                costume.Cosmetics.RemoveAll(x => fighterPackage.Cosmetics.InheritedStyles.Any(y => y.Key.BaseType == x.CosmeticType && y.Key.BaseStyle == x.Style));
+            }
+            // Copy cosmetics that were inherited from
+            foreach (var inheritedStyle in fighterPackage.Cosmetics.InheritedStyles)
+            {
+                var baseCosmetics = fighterPackage.Cosmetics.Items.Where(x => x.CosmeticType == inheritedStyle.Key.BaseType && x.Style == inheritedStyle.Value).ToList();
+                foreach (var cosmetic in baseCosmetics)
+                {
+                    var newCosmetic = cosmetic.Copy();
+                    newCosmetic.Style = inheritedStyle.Key.BaseStyle;
+                    fighterPackage.Cosmetics.Add(newCosmetic);
+                    foreach (var costume in fighterPackage.Costumes)
+                    {
+                        if (costume.Cosmetics.Any(x => x == cosmetic))
+                        {
+                            costume.Cosmetics.Add(newCosmetic);
+                        }
+                    }
+                }
+            }
+            return fighterPackage;
         }
 
         /// <summary>
@@ -487,6 +523,8 @@ namespace BrawlInstaller.Services
             // Generate fighter package file
             _fileService.GenerateZipFileFromDirectory(path, outFile);
             _fileService.DeleteDirectory(path);
+            // Clean up cosmetic inheritance
+            fighterPackage = CleanupCosmeticInheritance(fighterPackage);
         }
 
         /// <summary>
