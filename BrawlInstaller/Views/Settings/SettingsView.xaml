@@ -210,7 +210,7 @@
                             </Grid>
                         </StackPanel>
                         <Separator/>
-                        <ItemsControl x:Name="filePathsControl" ItemsSource="{Binding FilePathSettings}" HorizontalAlignment="Left" MaxHeight="400" VerticalAlignment="Top">
+                        <ItemsControl x:Name="filePathsControl" ItemsSource="{Binding FilePathSettings}" HorizontalAlignment="Left" MaxHeight="500" VerticalAlignment="Top">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Vertical"/>

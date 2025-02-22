@@ -82,6 +82,14 @@ namespace BrawlInstaller.Enums
         [Description("Fighter Trophy Location")]
         FighterTrophyLocation,
         [Description("SSE Trophy Module")]
-        SSETrophyModule
+        SSETrophyModule,
+        [Description("Code Menu Source File")]
+        CodeMenuSource,
+        [Description("Code Menu Data File")]
+        CodeMenuData,
+        [Description("Netplay Code Menu Data File")]
+        CodeMenuNetplayData,
+        [Description("Code Menu Addons Folder")]
+        CodeMenuAddons
     }
 }

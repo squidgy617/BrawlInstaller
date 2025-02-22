@@ -153,6 +153,10 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.TargetBreakFolder, "pf\\stage\\stageslot\\tBreak\\"),
             new FilePath(FileType.CodeMenuConfig, "Code Menu Builder\\EX_Config.xml", "XML file (.xml)|*.xml"),
             new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe"),
+            new FilePath(FileType.CodeMenuSource, "Source\\CodeMenu\\CodeMenu.asm", "ASM file (.asm)|*.asm"),
+            new FilePath(FileType.CodeMenuData, "pf\\menu3\\data.cmnu", "CMNU file (.cmnu)|*.cmnu"),
+            new FilePath(FileType.CodeMenuNetplayData, "pf\\menu3\\dnet.cmnu", "CMNU file (.cmnu)|*.cmnu"),
+            new FilePath(FileType.CodeMenuAddons, "Source\\CM_Addons"),
             new FilePath(FileType.TrophyNames, "pf\\toy\\fig\\ty_fig_name_list.msbin", "MSBIN file (.msbin)|*.msbin"),
             new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin", "MSBIn file (.msbin)|*.msbin"),
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
@@ -247,6 +251,10 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string TrophyBrresLocation { get => GetFilePath(FileType.TrophyBrresLocation); }
         [JsonIgnore] public string FighterTrophyLocation { get => GetFilePath(FileType.FighterTrophyLocation); }
         [JsonIgnore] public string SSETrophyModule { get => GetFilePath(FileType.SSETrophyModule); }
+        [JsonIgnore] public string CodeMenuSource { get => GetFilePath(FileType.CodeMenuSource); }
+        [JsonIgnore] public string CodeMenuData { get => GetFilePath(FileType.CodeMenuData); }
+        [JsonIgnore] public string CodeMenuNetplayData { get => GetFilePath(FileType.CodeMenuNetplayData); }
+        [JsonIgnore] public string CodeMenuAddons { get => GetFilePath(FileType.CodeMenuAddons); }
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<RosterFile> RosterFiles { get; set; } = new List<RosterFile> 
