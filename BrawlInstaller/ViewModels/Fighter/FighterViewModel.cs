@@ -710,8 +710,13 @@ namespace BrawlInstaller.ViewModels
         private void SaveRosters()
         {
             _fileService.StartBackup();
-            _fighterService.SaveRosters(Rosters);
-            _codeService.CompileCodes();
+            using (new CursorWait())
+            {
+                _dialogService.ShowProgressBar("Saving Rosters", "Saving rosters...");
+                _fighterService.SaveRosters(Rosters);
+                _codeService.CompileCodes();
+                _dialogService.CloseProgressBar();
+            }
             _fileService.EndBackup();
             _dialogService.ShowMessage("Saved rosters.", "Saved");
         }
