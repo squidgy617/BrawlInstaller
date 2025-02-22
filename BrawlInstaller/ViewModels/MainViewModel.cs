@@ -92,6 +92,9 @@ namespace BrawlInstaller.ViewModels
 
             string errorMessage = e.Exception.Message;
 
+            // If there's a progress bar, kill it
+            _dialogService.CloseProgressBar();
+
             _dialogService.ShowMessage(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             // TODO: Possibly get rid of this, just for triaging errors
