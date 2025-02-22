@@ -398,6 +398,7 @@ namespace BrawlInstaller.ViewModels
             Costumes.MoveUp(selectedCostume);
             FighterPackage.Costumes.MoveUp(selectedCostume);
             SelectedCostume = selectedCostume;
+            UpdateCostumeIndexes();
             OnPropertyChanged(nameof(Costumes));
         }
 
@@ -408,6 +409,7 @@ namespace BrawlInstaller.ViewModels
             Costumes.MoveDown(selectedCostume);
             FighterPackage.Costumes.MoveDown(selectedCostume);
             SelectedCostume = selectedCostume;
+            UpdateCostumeIndexes();
             OnPropertyChanged(nameof(Costumes));
         }
 
@@ -604,6 +606,7 @@ namespace BrawlInstaller.ViewModels
             Costumes.Add(newCostume);
             FighterPackage.Costumes.Add(newCostume);
             SelectedCostume = newCostume;
+            UpdateCostumeIndexes();
             OnPropertyChanged(nameof(Costumes));
         }
 
@@ -634,6 +637,7 @@ namespace BrawlInstaller.ViewModels
                 FighterPackage.Costumes.Remove(costume);
                 Costumes.Remove(costume);
             }
+            UpdateCostumeIndexes();
             OnPropertyChanged(nameof(SelectedCosmetic));
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
@@ -687,6 +691,17 @@ namespace BrawlInstaller.ViewModels
             if (SelectedPacFile != null)
             {
                 _dialogService.OpenTextureViewer(SelectedPacFile.FilePath, "Texture Viewer", "Select a texture to view");
+            }
+        }
+
+        private void UpdateCostumeIndexes()
+        {
+            foreach (var costume in Costumes)
+            {
+                foreach (var cosmetic in costume.Cosmetics)
+                {
+                    cosmetic.CostumeIndex = Costumes.IndexOf(costume) + 1;
+                }
             }
         }
     }
