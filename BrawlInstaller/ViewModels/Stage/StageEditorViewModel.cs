@@ -188,8 +188,7 @@ namespace BrawlInstaller.ViewModels
             if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
             {
                 var netplayListPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath);
-                // TODO: only add netplay tracklists that actually exist
-                deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Select(x => Path.Combine(netplayListPath, Path.GetFileName(x))).Distinct().ToList() ?? new List<string>());
+                deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Select(x => Path.Combine(netplayListPath, Path.GetFileName(x))).Distinct().Where(x => _fileService.FileExists(x)).ToList() ?? new List<string>());
             }
 
             // Prompt user for delete options
