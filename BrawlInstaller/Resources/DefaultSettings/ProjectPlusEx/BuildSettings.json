@@ -1954,224 +1954,178 @@
     "FilePaths": [
       {
         "FileType": 0,
-        "Path": "pf\\fighter\\",
-        "Filter": ""
+        "Path": "pf\\fighter\\"
       },
       {
         "FileType": 1,
-        "Path": "pf\\BrawlEx\\",
-        "Filter": ""
+        "Path": "pf\\BrawlEx\\"
       },
       {
         "FileType": 2,
-        "Path": "",
-        "Filter": ""
+        "Path": ""
       },
       {
         "FileType": 3,
-        "Path": "pf\\module\\",
-        "Filter": ""
+        "Path": "pf\\module\\"
       },
       {
         "FileType": 4,
-        "Path": "pf\\stage\\stageslot\\",
-        "Filter": ""
+        "Path": "pf\\stage\\stageslot\\"
       },
       {
         "FileType": 5,
-        "Path": "pf\\stage\\stageinfo\\",
-        "Filter": ""
+        "Path": "pf\\stage\\stageinfo\\"
       },
       {
         "FileType": 6,
-        "Path": "pf\\stage\\melee\\",
-        "Filter": ""
+        "Path": "pf\\stage\\melee\\"
       },
       {
         "FileType": 7,
-        "Path": "pf\\sound\\tracklist\\",
-        "Filter": ""
+        "Path": "pf\\sound\\tracklist\\"
       },
       {
         "FileType": 29,
-        "Path": "",
-        "Filter": ""
+        "Path": ""
       },
       {
         "FileType": 8,
-        "Path": "pf\\menu\\intro\\enter\\",
-        "Filter": ""
+        "Path": "pf\\menu\\intro\\enter\\"
       },
       {
         "FileType": 9,
-        "Path": "pf\\menu\\intro\\ending\\",
-        "Filter": ""
+        "Path": "pf\\menu\\intro\\ending\\"
       },
       {
         "FileType": 10,
-        "Path": "pf\\movie\\",
-        "Filter": ""
+        "Path": "pf\\movie\\"
       },
       {
         "FileType": 11,
-        "Path": "pf\\sound\\strm\\",
-        "Filter": ""
+        "Path": "pf\\sound\\strm\\"
       },
       {
         "FileType": 12,
-        "Path": "pf\\sfx\\",
-        "Filter": ""
+        "Path": "pf\\sfx\\"
       },
       {
         "FileType": 13,
-        "Path": "pf\\stage\\stagelist\\",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\"
       },
       {
         "FileType": 14,
-        "Path": "pf\\module\\st_croll.rel",
-        "Filter": "REL file (.rel)|*.rel"
+        "Path": "pf\\module\\st_croll.rel"
       },
       {
         "FileType": 15,
-        "Path": "pf\\module\\sora_adv_stage.rel",
-        "Filter": "REL file (.rel)|*.rel"
+        "Path": "pf\\module\\sora_adv_stage.rel"
       },
       {
         "FileType": 25,
-        "Path": "GCTRealMate.exe",
-        "Filter": "EXE file (.exe)|*.exe"
+        "Path": "GCTRealMate.exe"
       },
       {
         "FileType": 26,
-        "Path": "pf\\stage\\stageslot\\tBreak\\",
-        "Filter": ""
+        "Path": "pf\\stage\\stageslot\\tBreak\\"
       },
       {
         "FileType": 27,
-        "Path": "Code Menu Builder\\EX_Config.xml",
-        "Filter": "XML file (.xml)|*.xml"
+        "Path": "Code Menu Builder\\EX_Config.xml"
       },
       {
         "FileType": 28,
-        "Path": "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe",
-        "Filter": "EXE file (.exe)|*.exe"
+        "Path": "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe"
       },
       {
         "FileType": 37,
-        "Path": "Source\\CodeMenu\\CodeMenu.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\CodeMenu\\CodeMenu.asm"
       },
       {
         "FileType": 38,
-        "Path": "pf\\menu3\\data.cmnu",
-        "Filter": "CMNU file (.cmnu)|*.cmnu"
+        "Path": "pf\\menu3\\data.cmnu"
       },
       {
         "FileType": 39,
-        "Path": "pf\\menu3\\dnet.cmnu",
-        "Filter": "CMNU file (.cmnu)|*.cmnu"
+        "Path": "pf\\menu3\\dnet.cmnu"
       },
       {
         "FileType": 40,
-        "Path": "Source\\CM_Addons\\",
-        "Filter": ""
+        "Path": "Source\\CM_Addons\\"
       },
       {
         "FileType": 31,
-        "Path": "pf\\toy\\fig\\ty_fig_name_list.msbin",
-        "Filter": "MSBIN file (.msbin)|*.msbin"
+        "Path": "pf\\toy\\fig\\ty_fig_name_list.msbin"
       },
       {
         "FileType": 32,
-        "Path": "pf\\toy\\fig\\ty_fig_ext_list.msbin",
-        "Filter": "MSBIn file (.msbin)|*.msbin"
+        "Path": "pf\\toy\\fig\\ty_fig_ext_list.msbin"
       },
       {
         "FileType": 34,
-        "Path": "pf\\toy\\fig\\",
-        "Filter": ""
+        "Path": "pf\\toy\\fig\\"
       },
       {
         "FileType": 35,
-        "Path": "Source\\ProjectM\\CloneEngine.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
       },
       {
         "FileType": 36,
-        "Path": "pf\\module\\sora_adv_menu_game_over.rel",
-        "Filter": "REL file (.rel)|*.rel"
+        "Path": "pf\\module\\sora_adv_menu_game_over.rel"
       }
     ],
     "AsmPaths": [
       {
         "Label": "TABLE_STAGES:",
         "FileType": 16,
-        "Path": "Source\\Project+\\StageTable.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\Project+\\StageTable.asm"
       },
       {
         "Label": "ClassicResultsTable:",
         "FileType": 17,
-        "Path": "Source\\Project+\\ResultsMusic.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\Project+\\ResultsMusic.asm"
       },
       {
         "Label": "ENDINGTABLE:",
         "FileType": 18,
-        "Path": "Source\\ProjectM\\CloneEngine.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
       },
       {
         "Label": "ThrowReleaseTable:",
         "FileType": 19,
-        "Path": "Source\\ProjectM\\Modifier\\ThrowRelease.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\Modifier\\ThrowRelease.asm"
       },
       {
         "Label": "",
         "FileType": 20,
-        "Path": "Source\\ProjectM\\CloneEngine.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
       },
       {
         "Label": ".GOTO->Table_Skip",
         "FileType": 21,
-        "Path": "Source\\ProjectM\\CSS.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CSS.asm"
       },
       {
         "Label": "Table:",
         "FileType": 22,
-        "Path": "Source\\P+Ex\\SlotEx.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\P+Ex\\SlotEx.asm"
       }
     ],
     "FileNodePaths": [
       {
         "NodePath": "Misc Data [0]/tyDataList",
-        "AllowedNodes": [
-          "BrawlLib.SSBB.ResourceNodes.TyDataListNode, BrawlLib, Version=0.42.0.1, Culture=neutral, PublicKeyToken=null"
-        ],
         "FileType": 30,
-        "Path": "pf\\system\\common3.pac",
-        "Filter": "PAC file (.pac)|*.pac"
+        "Path": "pf\\system\\common3.pac"
       },
       {
         "NodePath": "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0",
-        "AllowedNodes": [
-          "BrawlLib.SSBB.ResourceNodes.PAT0TextureNode, BrawlLib, Version=0.42.0.1, Culture=neutral, PublicKeyToken=null"
-        ],
         "FileType": 33,
-        "Path": "pf\\menu\\collection\\Figure.brres",
-        "Filter": "BRRES file (.brres)|*.brres"
+        "Path": "pf\\menu\\collection\\Figure.brres"
       }
     ],
     "StageListPaths": [
       {
         "FileType": 24,
-        "Path": "Source\\Project+\\StageTable.asm",
-        "Filter": ""
+        "Path": "Source\\Project+\\StageTable.asm"
       }
     ],
     "RandomStageNamesLocations": [
@@ -2197,23 +2151,19 @@
     "CodeFilePaths": [
       {
         "FileType": 23,
-        "Path": "RSBE01.txt",
-        "Filter": ""
+        "Path": "RSBE01.txt"
       },
       {
         "FileType": 23,
-        "Path": "BOOST.txt",
-        "Filter": ""
+        "Path": "BOOST.txt"
       },
       {
         "FileType": 23,
-        "Path": "NETPLAY.txt",
-        "Filter": ""
+        "Path": "NETPLAY.txt"
       },
       {
         "FileType": 23,
-        "Path": "NETBOOST.txt",
-        "Filter": ""
+        "Path": "NETBOOST.txt"
       }
     ]
   }

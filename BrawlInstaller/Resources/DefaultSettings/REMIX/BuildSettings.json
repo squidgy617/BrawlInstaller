@@ -1569,299 +1569,238 @@
     "FilePaths": [
       {
         "FileType": 0,
-        "Path": "pf\\fighter\\",
-        "Filter": ""
+        "Path": "pf\\fighter\\"
       },
       {
         "FileType": 1,
-        "Path": "pf\\BrawlEx\\",
-        "Filter": ""
+        "Path": "pf\\BrawlEx\\"
       },
       {
         "FileType": 2,
-        "Path": "",
-        "Filter": ""
+        "Path": ""
       },
       {
         "FileType": 3,
-        "Path": "pf\\module\\",
-        "Filter": ""
+        "Path": "pf\\module\\"
       },
       {
         "FileType": 4,
-        "Path": "pf\\stage\\stageslot\\",
-        "Filter": ""
+        "Path": "pf\\stage\\stageslot\\"
       },
       {
         "FileType": 5,
-        "Path": "pf\\stage\\stageinfo\\",
-        "Filter": ""
+        "Path": "pf\\stage\\stageinfo\\"
       },
       {
         "FileType": 6,
-        "Path": "pf\\stage\\melee\\",
-        "Filter": ""
+        "Path": "pf\\stage\\melee\\"
       },
       {
         "FileType": 7,
-        "Path": "pf\\sound\\tracklist\\",
-        "Filter": ""
+        "Path": "pf\\sound\\tracklist\\"
       },
       {
         "FileType": 29,
-        "Path": "",
-        "Filter": ""
+        "Path": ""
       },
       {
         "FileType": 8,
-        "Path": "pf\\menu\\intro\\enter\\",
-        "Filter": ""
+        "Path": "pf\\menu\\intro\\enter\\"
       },
       {
         "FileType": 9,
-        "Path": "pf\\menu\\intro\\ending\\",
-        "Filter": ""
+        "Path": "pf\\menu\\intro\\ending\\"
       },
       {
         "FileType": 10,
-        "Path": "pf\\movie\\",
-        "Filter": ""
+        "Path": "pf\\movie\\"
       },
       {
         "FileType": 11,
-        "Path": "pf\\sound\\strm\\",
-        "Filter": ""
+        "Path": "pf\\sound\\strm\\"
       },
       {
         "FileType": 12,
-        "Path": "pf\\sfx\\",
-        "Filter": ""
+        "Path": "pf\\sfx\\"
       },
       {
         "FileType": 13,
-        "Path": "",
-        "Filter": ""
+        "Path": ""
       },
       {
         "FileType": 14,
-        "Path": "",
-        "Filter": "REL file (.rel)|*.rel"
+        "Path": ""
       },
       {
         "FileType": 15,
-        "Path": "pf\\module\\sora_adv_stage.rel",
-        "Filter": "REL file (.rel)|*.rel"
+        "Path": "pf\\module\\sora_adv_stage.rel"
       },
       {
         "FileType": 25,
-        "Path": "GCTRealMate.exe",
-        "Filter": "EXE file (.exe)|*.exe"
+        "Path": "GCTRealMate.exe"
       },
       {
         "FileType": 26,
-        "Path": "",
-        "Filter": ""
+        "Path": ""
       },
       {
         "FileType": 27,
-        "Path": "",
-        "Filter": "XML file (.xml)|*.xml"
+        "Path": ""
       },
       {
         "FileType": 28,
-        "Path": "",
-        "Filter": "EXE file (.exe)|*.exe"
+        "Path": ""
       },
       {
         "FileType": 37,
-        "Path": "Source\\CodeMenu\\CodeMenu.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\CodeMenu\\CodeMenu.asm"
       },
       {
         "FileType": 38,
-        "Path": "pf\\menu3\\data.cmnu",
-        "Filter": "CMNU file (.cmnu)|*.cmnu"
+        "Path": "pf\\menu3\\data.cmnu"
       },
       {
         "FileType": 39,
-        "Path": "pf\\menu3\\dnet.cmnu",
-        "Filter": "CMNU file (.cmnu)|*.cmnu"
+        "Path": "pf\\menu3\\dnet.cmnu"
       },
       {
         "FileType": 40,
-        "Path": "Source\\CM_Addons\\",
-        "Filter": ""
+        "Path": "Source\\CM_Addons\\"
       },
       {
         "FileType": 31,
-        "Path": "pf\\toy\\fig\\ty_fig_name_list.msbin",
-        "Filter": "MSBIN file (.msbin)|*.msbin"
+        "Path": "pf\\toy\\fig\\ty_fig_name_list.msbin"
       },
       {
         "FileType": 32,
-        "Path": "pf\\toy\\fig\\ty_fig_ext_list.msbin",
-        "Filter": "MSBIn file (.msbin)|*.msbin"
+        "Path": "pf\\toy\\fig\\ty_fig_ext_list.msbin"
       },
       {
         "FileType": 34,
-        "Path": "pf\\toy\\fig\\",
-        "Filter": ""
+        "Path": "pf\\toy\\fig\\"
       },
       {
         "FileType": 35,
-        "Path": "Source\\ProjectM\\CloneEngine.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
       },
       {
         "FileType": 36,
-        "Path": "pf\\module\\sora_adv_menu_game_over.rel",
-        "Filter": "REL file (.rel)|*.rel"
+        "Path": "pf\\module\\sora_adv_menu_game_over.rel"
       }
     ],
     "AsmPaths": [
       {
         "Label": "TABLE_STAGES:",
         "FileType": 16,
-        "Path": "pf\\stage\\stagelist\\TABLE_STAGES.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "pf\\stage\\stagelist\\TABLE_STAGES.asm"
       },
       {
         "Label": "ClassicResultsTable:",
         "FileType": 17,
-        "Path": "Source\\Project+\\ResultsMusic.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\Project+\\ResultsMusic.asm"
       },
       {
         "Label": "ENDINGTABLE:",
         "FileType": 18,
-        "Path": "Source\\ProjectM\\CloneEngine.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
       },
       {
         "Label": "ThrowReleaseTable:",
         "FileType": 19,
-        "Path": "Source\\ProjectM\\Modifier\\ThrowRelease.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\Modifier\\ThrowRelease.asm"
       },
       {
         "Label": "",
         "FileType": 20,
-        "Path": "Source\\ProjectM\\CloneEngine.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
       },
       {
         "Label": ".GOTO->Table_Skip",
         "FileType": 21,
-        "Path": "Source\\ProjectM\\CSS.asm",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": "Source\\ProjectM\\CSS.asm"
       },
       {
         "Label": "",
         "FileType": 22,
-        "Path": "",
-        "Filter": "ASM file (.asm)|*.asm"
+        "Path": ""
       }
     ],
     "FileNodePaths": [
       {
         "NodePath": "Misc Data [0]/tyDataList",
-        "AllowedNodes": [
-          "BrawlLib.SSBB.ResourceNodes.TyDataListNode, BrawlLib, Version=0.42.0.1, Culture=neutral, PublicKeyToken=null"
-        ],
         "FileType": 30,
-        "Path": "pf\\system\\common3.pac",
-        "Filter": "PAC file (.pac)|*.pac"
+        "Path": "pf\\system\\common3.pac"
       },
       {
         "NodePath": "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0",
-        "AllowedNodes": [
-          "BrawlLib.SSBB.ResourceNodes.PAT0TextureNode, BrawlLib, Version=0.42.0.1, Culture=neutral, PublicKeyToken=null"
-        ],
         "FileType": 33,
-        "Path": "pf\\menu\\collection\\Figure.brres",
-        "Filter": "BRRES file (.brres)|*.brres"
+        "Path": "pf\\menu\\collection\\Figure.brres"
       }
     ],
     "StageListPaths": [
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist1_Default.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist1_Default.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist2_TE.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist2_TE.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist3_Spain.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist3_Spain.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist4_Australia.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist4_Australia.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist5_Series.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist5_Series.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist6_Alphabetical.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist6_Alphabetical.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist7_ProjectM.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist7_ProjectM.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Stagelist8_Project+.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist8_Project+.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist1_Default.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist1_Default.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist2_TE.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist2_TE.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist3_Spain.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist3_Spain.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist4_Australia.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist4_Australia.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist5_Series.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist5_Series.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist6_Alphabetical.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist6_Alphabetical.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist7_ProjectM.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist7_ProjectM.asm"
       },
       {
         "FileType": 24,
-        "Path": "pf\\stage\\stagelist\\Netlist8_Project+.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist8_Project+.asm"
       }
     ],
     "RandomStageNamesLocations": [],
@@ -1888,103 +1827,83 @@
     "CodeFilePaths": [
       {
         "FileType": 23,
-        "Path": "RSBE01.txt",
-        "Filter": ""
+        "Path": "RSBE01.txt"
       },
       {
         "FileType": 23,
-        "Path": "BOOST.txt",
-        "Filter": ""
+        "Path": "BOOST.txt"
       },
       {
         "FileType": 23,
-        "Path": "NETPLAY.txt",
-        "Filter": ""
+        "Path": "NETPLAY.txt"
       },
       {
         "FileType": 23,
-        "Path": "NETBOOST.txt",
-        "Filter": ""
+        "Path": "NETBOOST.txt"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist1_Default.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist1_Default.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist2_TE.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist2_TE.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist3_Spain.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist3_Spain.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist4_Australia.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist4_Australia.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist5_Series.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist5_Series.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist6_Alphabetical.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist6_Alphabetical.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist7_ProjectM.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist7_ProjectM.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Stagelist8_Project+.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Stagelist8_Project+.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist1_Default.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist1_Default.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist2_TE.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist2_TE.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist3_Spain.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist3_Spain.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist4_Australia.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist4_Australia.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist5_Series.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist5_Series.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist6_Alphabetical.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist6_Alphabetical.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist7_ProjectM.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist7_ProjectM.asm"
       },
       {
         "FileType": 23,
-        "Path": "pf\\stage\\stagelist\\Netlist8_Project+.asm",
-        "Filter": ""
+        "Path": "pf\\stage\\stagelist\\Netlist8_Project+.asm"
       }
     ]
   }
