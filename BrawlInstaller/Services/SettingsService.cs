@@ -221,13 +221,14 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Get all paths in settings
+        /// Get all required paths in settings
         /// </summary>
         /// <returns>List of all paths</returns>
         public List<string> GetAllPaths()
         {
-            var paths = BuildSettings.FilePathSettings.FilePaths.Select(x => x.Path);
-            paths.Concat(BuildSettings.FilePathSettings.CodeFilePaths.Select(x => x.Path));
+            var paths = BuildSettings.FilePathSettings.FilePaths.Where(x => DefaultSettings.GetFilePath(x.FileType)?.Required == true).Select(x => x.Path);
+            paths.Concat(BuildSettings.FilePathSettings.CodeFilePaths.Where(x => DefaultSettings.GetFilePath(x.FileType)?.Required == true).Select(x => x.Path));
+            paths.Concat(BuildSettings.FilePathSettings.FileNodePaths.Where(x => DefaultSettings.GetFilePath(x.FileType)?.Required == true).Select(x => x.Path));
             paths.Concat(BuildSettings.CosmeticSettings.Select(x => x.InstallLocation.FilePath));
             paths.Concat(BuildSettings.FilePathSettings.StageListPaths.Select(x => x.Path));
             paths.Concat(BuildSettings.FilePathSettings.CodeFilePaths.Select(x => x.Path));

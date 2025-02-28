@@ -228,7 +228,7 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                        <userControls:FileBox x:Name="fileBox" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1">
+                                        <userControls:FileBox x:Name="fileBox" Filter="{Binding Filter, Mode=OneWay}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1">
                                             <userControls:FileBox.Resources>
                                                 <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
                                                 <resources:BindingProxy x:Key="proxy2" Data="{Binding DataContext, ElementName=settingsView}"/>
@@ -256,7 +256,7 @@
                                                 <ColumnDefinition SharedSizeGroup="col2"/>
                                             </Grid.ColumnDefinitions>
                                             <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                            <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
+                                            <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter, Mode=OneWay}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
                                         </Grid>
                                         <Grid HorizontalAlignment="Right">
                                             <Grid.ColumnDefinitions>
@@ -276,7 +276,7 @@
                                                 <ColumnDefinition SharedSizeGroup="col2"/>
                                             </Grid.ColumnDefinitions>
                                             <Label Content="{Binding DisplayName}" ContentStringFormat="{}{0}:"/>
-                                            <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
+                                            <userControls:FileBox Text="{Binding Path}" Filter="{Binding Filter, Mode=OneWay}" ExcludePath="{Binding DataContext.AppSettings.BuildPath, ElementName=settingsView}" TextBoxWidth="240" Grid.Column="1"/>
                                         </Grid>
                                         <Grid HorizontalAlignment="Right">
                                             <Grid.ColumnDefinitions>

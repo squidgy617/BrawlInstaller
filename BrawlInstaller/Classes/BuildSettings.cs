@@ -147,21 +147,21 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.BrstmPath, "pf\\sound\\strm\\"),
             new FilePath(FileType.SoundbankPath, "pf\\sfx\\"),
             new FilePath(FileType.StageAltListPath, "pf\\stage\\stagelist\\"),
-            new FilePath(FileType.CreditsModule, "pf\\module\\st_croll.rel", "REL file (.rel)|*.rel"),
-            new FilePath(FileType.SSEModule, "pf\\module\\sora_adv_stage.rel", "REL file (.rel)|*.rel"),
-            new FilePath(FileType.GctRealMateExe, "GCTRealMate.exe", "EXE file (.exe)|*.exe"),
+            new FilePath(FileType.CreditsModule, "pf\\module\\st_croll.rel"),
+            new FilePath(FileType.SSEModule, "pf\\module\\sora_adv_stage.rel"),
+            new FilePath(FileType.GctRealMateExe, "GCTRealMate.exe"),
             new FilePath(FileType.TargetBreakFolder, "pf\\stage\\stageslot\\tBreak\\"),
-            new FilePath(FileType.CodeMenuConfig, "Code Menu Builder\\EX_Config.xml", "XML file (.xml)|*.xml"),
-            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe", "EXE file (.exe)|*.exe"),
-            new FilePath(FileType.CodeMenuSource, "Source\\CodeMenu\\CodeMenu.asm", "ASM file (.asm)|*.asm"),
-            new FilePath(FileType.CodeMenuData, "pf\\menu3\\data.cmnu", "CMNU file (.cmnu)|*.cmnu"),
-            new FilePath(FileType.CodeMenuNetplayData, "pf\\menu3\\dnet.cmnu", "CMNU file (.cmnu)|*.cmnu"),
+            new FilePath(FileType.CodeMenuConfig, "Code Menu Builder\\EX_Config.xml"),
+            new FilePath(FileType.CodeMenuBuilder, "Code Menu Builder\\PowerPC Assembly Functions - Offline.exe"),
+            new FilePath(FileType.CodeMenuSource, "Source\\CodeMenu\\CodeMenu.asm"),
+            new FilePath(FileType.CodeMenuData, "pf\\menu3\\data.cmnu"),
+            new FilePath(FileType.CodeMenuNetplayData, "pf\\menu3\\dnet.cmnu"),
             new FilePath(FileType.CodeMenuAddons, "Source\\CM_Addons\\"),
-            new FilePath(FileType.TrophyNames, "pf\\toy\\fig\\ty_fig_name_list.msbin", "MSBIN file (.msbin)|*.msbin"),
-            new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin", "MSBIn file (.msbin)|*.msbin"),
+            new FilePath(FileType.TrophyNames, "pf\\toy\\fig\\ty_fig_name_list.msbin"),
+            new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin"),
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
-            new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm", "ASM file (.asm)|*.asm"),
-            new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel", "REL file (.rel)|*.rel")
+            new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm"),
+            new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -179,8 +179,8 @@ namespace BrawlInstaller.Classes
         [JsonProperty("FileNodePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<FileNodePath> FileNodePaths { get; set; } = new List<FileNodePath>()
         {
-            new FileNodePath(FileType.TrophyLocation, "pf\\system\\common3.pac", "Misc Data [0]/tyDataList", new List<Type> { typeof(TyDataListNode) }, "PAC file (.pac)|*.pac"),
-            new FileNodePath(FileType.TrophyGameIconsLocation, "pf\\menu\\collection\\Figure.brres", "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0", new List<Type> {typeof(PAT0TextureNode)}, "BRRES file (.brres)|*.brres")
+            new FileNodePath(FileType.TrophyLocation, "pf\\system\\common3.pac", "Misc Data [0]/tyDataList"),
+            new FileNodePath(FileType.TrophyGameIconsLocation, "pf\\menu\\collection\\Figure.brres", "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0")
         };
 
         [JsonIgnore] public string FighterFiles { get => GetFilePath(FileType.FighterFiles); }
@@ -308,25 +308,23 @@ namespace BrawlInstaller.Classes
 
     public class FilePath
     {
-        public FilePath(FileType fileType, string path, string filter = "")
+        public FilePath(FileType fileType, string path)
         {
             FileType = fileType;
             Path = path;
-            Filter = filter;
         }
         public FileType FileType { get; set; }
         [JsonIgnore] public string DisplayName { get => FileType.GetDescription(); }
         public string Path { get; set; }
-        public string Filter { get; set; }
+        [JsonIgnore] public string Filter { get => DefaultSettings.GetFilePath(FileType)?.Filter ?? string.Empty; }
     }
 
     public class AsmPath : FilePath
     {
-        public AsmPath(FileType fileType, string path, string label = "", string filter = "ASM file (.asm)|*.asm") : base(fileType, path, filter)
+        public AsmPath(FileType fileType, string path, string label = "") : base(fileType, path)
         {
             FileType = fileType;
             Path = path;
-            Filter = filter;
             Label = label;
         }
         public string Label { get; set; }
@@ -334,15 +332,13 @@ namespace BrawlInstaller.Classes
 
     public class FileNodePath : FilePath
     {
-        public FileNodePath(FileType fileType, string path, string nodePath, List<Type> allowedNodes, string filter = "") : base(fileType, path, filter)
+        public FileNodePath(FileType fileType, string path, string nodePath) : base(fileType, path)
         {
             FileType = fileType;
             Path = path;
             NodePath = nodePath;
-            AllowedNodes = allowedNodes;
-            Filter = filter;
         }
         public string NodePath { get; set; }
-        public List<Type> AllowedNodes { get; set; } = new List<Type>();
+        [JsonIgnore] public List<Type> AllowedNodes { get => DefaultSettings.GetFilePath(FileType)?.AllowedNodes ?? new List<Type>(); }
     }
 }
