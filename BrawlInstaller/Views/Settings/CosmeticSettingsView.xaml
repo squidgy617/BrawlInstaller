@@ -55,6 +55,15 @@
                 <Button x:Name="definitionCopyButton" Content="📋" Style="{StaticResource miniButton}" Command="{Binding CopyDefinitionCommand}" Grid.Column="1" Grid.Row="2"/>
             </Grid>
         </Grid>
+        <TextBlock Grid.Column="1" Visibility="{Binding SelectedDefinition, Converter={StaticResource notNullVisConverter}}">
+            These settings define where cosmetics are stored in your build, so BrawlInstaller can find them.
+            <LineBreak/>
+            <LineBreak/>
+            Settings configured here are used by BrawlInstaller to both load and save cosmetics correctly.
+            <LineBreak/>
+            <LineBreak/>
+            Cosmetics not defined in these settings will not be loaded or saved when changes are made to your build.
+        </TextBlock>
         <Grid x:Name="definitionSettingsGrid" Grid.Column="1" Visibility="{Binding SelectedDefinition, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -225,6 +234,12 @@
                             <Button x:Name="patClearPathButton" Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearPatNodePathCommand}"/>
                         </StackPanel>
                     </Grid>
+                    <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding SelectedPatSettings, Converter={StaticResource notNullVisConverter}}">
+                        These settings define how your cosmetic is animated at the location defined above.
+                        <LineBreak/>
+                        <LineBreak/>
+                        Configure settings to match how PAT0s used by this cosmetic are set up in your build.
+                    </TextBlock>
                     <Grid Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding SelectedPatSettings, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>

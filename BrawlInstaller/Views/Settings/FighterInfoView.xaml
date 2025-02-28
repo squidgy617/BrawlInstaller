@@ -45,8 +45,20 @@
                 <Button x:Name="removeButton" Content="-" Command="{Binding RemoveFighterCommand}" Grid.Row="3" Style="{StaticResource miniButton}"/>
                 <Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="4" Style="{StaticResource miniButton}"/>
             </Grid>
-            
         </Grid>
+        <TextBlock Grid.Column="1" Visibility="{Binding SelectedFighterInfo, Converter={StaticResource notNullVisConverter}}">
+            <LineBreak/>
+            Fighters in this list can be loaded by BrawlInstaller. 
+            <LineBreak/>
+            <LineBreak/>
+            Modifying this list will not modify your build and only affects BrawlInstaller's ability to find fighters.
+            <LineBreak/>
+            <LineBreak/>
+            Add or remove fighters from the list to change their availability in the fighter editor.
+            <LineBreak/>
+            <LineBreak/>
+            Select "Find Missing Fighters" to search your build for fighters not already in the list.
+        </TextBlock>
         <Grid x:Name="boxesGrid" Grid.Column="1" Visibility="{Binding SelectedFighterInfo, Mode=OneWay, Converter={StaticResource nullVisConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
