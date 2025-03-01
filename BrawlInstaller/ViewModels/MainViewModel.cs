@@ -90,15 +90,12 @@ namespace BrawlInstaller.ViewModels
         {
             e.Handled = true;
 
-            string errorMessage = e.Exception.Message;
-
             // If there's a progress bar, kill it
             _dialogService.CloseProgressBar();
 
-            _dialogService.ShowMessage(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            _dialogService.ShowMessage("An error has occurred. View Error.txt in the app directory for more information.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-            // TODO: Possibly get rid of this, just for triaging errors
-            var errorText = e.Exception.StackTrace;
+            var errorText = e.Exception.Message + "\r\n" + e.Exception.StackTrace;
             _fileService.SaveTextFile(Paths.ErrorPath, errorText);
 
             _fileService.RestoreBackup(_fileService.CurrentBackup);
