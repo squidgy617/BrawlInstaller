@@ -1,0 +1,46 @@
+name: Build and Package BrawlInstaller
+
+on:
+  push:
+    branches:
+      - release
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-2019
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Get Version from Project File
+        id: get-version
+        shell: bash
+        run: echo "version=$(grep -oE '<Version>[^<]+' BrawlInstaller/BrawlInstaller.csproj | sed 's/<Version>//')" >> $GITHUB_OUTPUT
+
+      - name: Echo Version
+        run: echo "The version is ${{ steps.get-version.outputs.version }}"
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
+
+      - name: Restore NuGet Packages
+        run: nuget restore BrawlInstaller.sln
+
+      - name: Build Solution
+        run: msbuild BrawlInstaller.sln /p:Configuration=Release /p:Platform="Any CPU"
+
+      - name: Publish .NET Framework Project
+        run: msbuild BrawlInstaller/BrawlInstaller.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath="${{ github.workspace }}/publish"
+
+      - name: Create Velopack Release
+        run: |
+          dotnet tool install -g vpk
+          vpk download github --repoUrl https://github.com/squidgy617/BrawlInstaller
+          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller
+          vpk upload github --repoUrl https://github.com/squidgy617/BrawlInstaller --publish --releaseName "BrawlInstaller ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
