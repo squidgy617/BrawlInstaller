@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Velopack.Sources;
+using Velopack;
+using System.Windows.Threading;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -34,6 +37,7 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand RefreshCommand => new RelayCommand(param => RefreshSettings());
         public ICommand RestoreBackupCommand => new RelayCommand(param => RestoreBackup());
+        public ICommand UpdateCommand => new RelayCommand(param => Update(true));
 
         [ImportingConstructor]
         public MainControlsViewModel(ISettingsService settingsService, IFileService fileService, IDialogService dialogService)
@@ -41,6 +45,8 @@ namespace BrawlInstaller.ViewModels
             _settingsService = settingsService;
             _fileService = fileService;
             _dialogService = dialogService;
+
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() => Update()));
 
             _settingsService.AppSettings = _settingsService.LoadAppSettings();
             _settingsService.BuildSettings = _settingsService.LoadSettings(_settingsService.BuildSettingsPath);
@@ -83,6 +89,41 @@ namespace BrawlInstaller.ViewModels
                     _dialogService.ShowMessage("Backup restored.", "Success");
                 }
             }
+        }
+
+        private async void Update(bool showNoUpdate = false)
+        {
+#if !DEBUG
+            try
+            {
+                var mgr = new UpdateManager(new GithubSource("https://github.com/squidgy617/BrawlInstaller", null, false));
+
+                var newVersion = await mgr.CheckForUpdatesAsync();
+                if (newVersion == null)
+                {
+                    if (showNoUpdate)
+                    {
+                        _dialogService.ShowMessage("You are on the latest version.", "Updater");
+                    }
+                    return;
+                }
+
+                var installUpdate = _dialogService.ShowMessage($"New update version {newVersion.TargetFullRelease.Version} found. Would you like to install it?\nWARNING: Application will be restarted and any unsaved progress will be lost.", "Update Found", MessageBoxButton.YesNo);
+                if (installUpdate)
+                {
+                    _dialogService.ShowProgressBar("Updating", "Downloading update...");
+                    mgr.DownloadUpdates(newVersion);
+
+                    _dialogService.ShowProgressBar("Updating", "Download complete, restarting application...");
+                    mgr.ApplyUpdatesAndRestart(newVersion);
+                }
+            }
+            catch
+            {
+                _dialogService.ShowMessage("There was an error when finding or installing updates. Ensure Updater.exe is present and that program has write access to its directory.", "Update Error", MessageBoxImage.Error);
+                _dialogService.CloseProgressBar();
+            }
+#endif
         }
 
         // Messages
