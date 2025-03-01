@@ -2686,7 +2686,7 @@ namespace BrawlInstaller.Services
                     var codeMenuAddons = _fileService.GetFiles(addons, "*", SearchOption.AllDirectories);
                     foreach(var addon in codeMenuAddons)
                     {
-                        var newPath = addon.Replace(codeMenuOutput, _settingsService.BuildSettings.FilePathSettings.CodeMenuAddons);
+                        var newPath = addon.Replace(addons, _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CodeMenuAddons));
                         _fileService.CopyFile(addon, newPath);
                     }
                 }
