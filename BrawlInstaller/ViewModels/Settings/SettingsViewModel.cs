@@ -33,7 +33,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private BuildSettings _buildSettings;
-        private string _selectedSettingsOption;
+        private SettingsPresets _selectedSettingsOption;
         private CompositeCollection _filePathSettings;
         private FilePath _selectedStageListPath;
         private RosterFile _selectedRosterFile;
@@ -73,7 +73,7 @@ namespace BrawlInstaller.ViewModels
 
             BuildSettings = _settingsService.BuildSettings.Copy();
 
-            SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault();
+            SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault().Value;
 
             WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
             {
@@ -90,8 +90,8 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public AppSettings AppSettings { get => _settingsService.AppSettings; }
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
-        public List<string> DefaultSettingsOptions { get => new List<string> { "ProjectPlusEx", "ProjectPlus", "REMIX" }; }
-        public string SelectedSettingsOption { get => _selectedSettingsOption; set { _selectedSettingsOption = value; OnPropertyChanged(nameof(SelectedSettingsOption)); } }
+        public Dictionary<string, SettingsPresets> DefaultSettingsOptions { get => typeof(SettingsPresets).GetDictionary<SettingsPresets>(); }
+        public SettingsPresets SelectedSettingsOption { get => _selectedSettingsOption; set { _selectedSettingsOption = value; OnPropertyChanged(nameof(SelectedSettingsOption)); } }
 
         [DependsUpon(nameof(BuildSettings))]
         public CompositeCollection FilePathSettings { get => new CompositeCollection
@@ -162,7 +162,7 @@ namespace BrawlInstaller.ViewModels
             BuildSettings = _settingsService.LoadSettings(BuildSettings);
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
-            WeakReferenceMessenger.Default.Send(new LoadDefaultSettingsMessage(SelectedSettingsOption));
+            WeakReferenceMessenger.Default.Send(new LoadDefaultSettingsMessage(SelectedSettingsOption.ToString()));
         }
 
         private string GetSelectedSettings(string file)
