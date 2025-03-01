@@ -42,5 +42,5 @@ jobs:
         run: |
           dotnet tool install -g vpk
           vpk download github --repoUrl https://github.com/squidgy617/BrawlInstaller
-          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller
+          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller --icon .\BrawlInstaller\BrawlInstallerIcon.ico
           vpk upload github --repoUrl https://github.com/squidgy617/BrawlInstaller --publish --releaseName "BrawlInstaller ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
