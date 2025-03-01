@@ -591,14 +591,19 @@ namespace BrawlInstaller.Services
                     workingText += cleanText[j];
                     j++;
                 }
-                // Then go until we hit whitespace again
-                while (cleanText[j] < cleanText.Length && !char.IsWhiteSpace(cleanText[j]))
+                // Then go until we hit a bracket
+                while (cleanText[j] < cleanText.Length && cleanText[j] != ']')
+                {
+                    workingText += cleanText[j];
+                    j++;
+                }
+                if (cleanText[j] == ']')
                 {
                     workingText += cleanText[j];
                     j++;
                 }
                 // Get table length
-                var result = Regex.Match(workingText, "(half|word|byte|float)\\s*[[]\\d+[]]");
+                var result = Regex.Match(workingText, "(half|word|byte|float)\\s*\\[\\d+\\]");
                 // If length is missing, it's an empty table
                 if (!result.Success)
                 {

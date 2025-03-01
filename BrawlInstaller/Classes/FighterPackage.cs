@@ -274,7 +274,9 @@ namespace BrawlInstaller.Classes
         [JsonProperty("BoneIds", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<int?> BoneIds { get; set; } = new List<int?> { null, null, null, null };
         public bool UseGfxFix { get; set; } = false;
+        public int? EflsId { get; set; } = null;
         public bool UseKirbyGfxFix { get; set; } = false;
+        public int? KirbyEflsId { get; set; } = null;
 
         public LucarioSettings Copy()
         {

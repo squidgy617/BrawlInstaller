@@ -3116,12 +3116,20 @@ namespace BrawlInstaller.Services
                 if (lucarioGfxMacro != null)
                 {
                     fighterSettings.LucarioSettings.UseGfxFix = true;
+                    if (lucarioGfxMacro.Parameters.Count > 2)
+                    {
+                        fighterSettings.LucarioSettings.EflsId = Convert.ToInt32(lucarioGfxMacro.Parameters[2].Replace("0x", ""), 16);
+                    }
                 }
                 // Get Lucario Aura Sphere Kirby GFX Settings
                 var lucarioKirbyGfxMacro = _codeService.GetMacro(code, "80AA95AC", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
                 if (lucarioKirbyGfxMacro != null)
                 {
                     fighterSettings.LucarioSettings.UseKirbyGfxFix = true;
+                    if (lucarioGfxMacro.Parameters.Count > 2)
+                    {
+                        fighterSettings.LucarioSettings.KirbyEflsId = Convert.ToInt32(lucarioKirbyGfxMacro.Parameters[2].Replace("0x", ""), 16);
+                    }
                 }
                 // Get Samus GFX fix settings
                 var samusGfxMacro = _codeService.GetMacro(code, "80A0AAA8", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", 0, "GFXFix");
@@ -3230,6 +3238,10 @@ namespace BrawlInstaller.Services
                         },
                         Comment = fighterPackage.FighterInfo.DisplayName
                     };
+                    if (fighterSettings.LucarioSettings?.EflsId != null)
+                    {
+                        lucarioGfxMacro.Parameters.Add($"0x{fighterSettings.LucarioSettings.EflsId:X2}");
+                    }
                     code = _codeService.InsertUpdateMacro(code, "80AA95B8", lucarioGfxMacro, 0, 0);
                 }
                 else
@@ -3249,6 +3261,10 @@ namespace BrawlInstaller.Services
                         },
                         Comment = fighterPackage.FighterInfo.DisplayName + "Hat"
                     };
+                    if (fighterSettings.LucarioSettings?.KirbyEflsId != null)
+                    {
+                        lucarioKirbyGfxMacro.Parameters.Add($"0x{fighterSettings.LucarioSettings.KirbyEflsId:X2}");
+                    }
                     code = _codeService.InsertUpdateMacro(code, "80AA95AC", lucarioKirbyGfxMacro, 0, 7);
                 }
                 else
