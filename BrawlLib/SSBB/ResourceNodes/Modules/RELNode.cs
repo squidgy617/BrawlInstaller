@@ -357,7 +357,7 @@ namespace BrawlLib.SSBB.ResourceNodes
 
             if (_name == null)
             {
-                _name = _idNames.ContainsKey(_id) ? _idNames[_id] : Path.GetFileName(_origPath);
+                _name = _idNames.ContainsKey(_id) ? _idNames[_id] : (string.IsNullOrEmpty(_origPath) ? $"module0x{_id:X2}" : Path.GetFileName(_origPath));
             }
 
             if (!_files.ContainsKey(ModuleID))
@@ -379,14 +379,14 @@ namespace BrawlLib.SSBB.ResourceNodes
         public override void OnPopulate()
         {
             _sections = new ModuleSectionNode[_numSections];
-            int prevOffset = RELHeader.Size + RELSectionEntry.Size * (int)_numSections;
+            int prevOffset = RELHeader.Size + RELSectionEntry.Size * (int) _numSections;
             int lastDataSection = -1;
             for (int i = 0; i < _numSections; i++)
             {
                 RELSectionEntry entry = Header->SectionInfo[i];
                 ModuleSectionNode section = _sections[i] = new ModuleSectionNode();
 
-                int dataOffset = entry.Offset, dataSize = (int)(uint)entry._size;
+                int dataOffset = entry.Offset, dataSize = (int) (uint) entry._size;
 
                 section._isCodeSection = entry.IsCodeSection;
                 section._dataOffset = dataOffset;
@@ -412,18 +412,18 @@ namespace BrawlLib.SSBB.ResourceNodes
             {
                 // Calculate buffer between last section and imports
                 RELSectionEntry entry = Header->SectionInfo[lastDataSection];
-                int dataOffset = entry.Offset, dataSize = (int)(uint)entry._size;
+                int dataOffset = entry.Offset, dataSize = (int) (uint) entry._size;
                 _sections[lastDataSection]._endBufferSize =
-                    ((int)(_impOffset - (dataOffset + dataSize))).ClampMin(0);
+                    ((int) (_impOffset - (dataOffset + dataSize))).ClampMin(0);
             }
 
             if (!Properties.Settings.Default.ApplyRelocationsAsync)
             {
-                PopulateRelSynchronous();
+                PopulateRelAsync();
             }
             else
             {
-                PopulateRelAsync();
+                PopulateRelSynchronous();
             }
 
             // Stage module conversion
@@ -608,6 +608,10 @@ namespace BrawlLib.SSBB.ResourceNodes
         {
             _imports.Clear();
             Dictionary<uint, ImportData> tempImports = new Dictionary<uint, ImportData>();
+            if (_sections == null)
+            {
+                Populate();
+            }
             foreach (ModuleSectionNode s in _sections)
             {
                 foreach (ImportData e in tempImports.Values)
@@ -953,6 +957,15 @@ namespace BrawlLib.SSBB.ResourceNodes
             RELHeader* header = (RELHeader*) source.Address;
             return header->_info._id <= 0x7E &&
                    header->_info._numSections <= 20 &&
+                   header->_bssAlign == 8 &&
+                   header->_moduleAlign == 32
+                ? new RELNode()
+                : null;
+        }
+        internal static ResourceNode TryParseGeneric(DataSource source, ResourceNode parent)
+        {
+            RELHeader* header = (RELHeader*)source.Address;
+            return header->_info._numSections <= 20 &&
                    header->_bssAlign == 8 &&
                    header->_moduleAlign == 32
                 ? new RELNode()
