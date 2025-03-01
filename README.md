@@ -3,7 +3,7 @@ BrawlInstaller rewrite.
 
 # Credits
 - [BrawlCrate/BrawlLib](https://github.com/soopercool101/BrawlCrate)
-    - Created and subsequently maintained by [Kryal](https://code.google.com/archive/p/brawltools/), [BlackJax96](https://code.google.com/archive/p/brawltools2/), [https://github.com/libertyernie/brawltools](https://github.com/libertyernie/brawltools), and [soopercool101](https://github.com/soopercool101)
+    - Created and subsequently maintained by [Kryal](https://code.google.com/archive/p/brawltools/), [BlackJax96](https://code.google.com/archive/p/brawltools2/), [libertyernie](https://github.com/libertyernie/brawltools), and [soopercool101](https://github.com/soopercool101)
     - [GNU Lesser General Public License v3.0](https://github.com/soopercool101/BrawlCrate/blob/master/LICENSE)
 - [Color Smash](https://github.com/PeterHatch/color-smash)
     - Originally created by [Peter Hatch](https://github.com/PeterHatch)
