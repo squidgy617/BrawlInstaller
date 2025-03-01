@@ -1,5 +1,24 @@
 # BrawlInstaller
-BrawlInstaller rewrite.
+An all-in-one tool for managing mods in Brawl. Manage fighters, costumes, stages, music, and trophies with flexible tools that can support virtually any build.
+
+# Features
+- Add, edit, or delete all of the following in virtually any build:
+    - Fighters
+    - Stages
+    - Music
+    - Trophies
+- Quickly install fighters stored in BrawlInstaller's `.fighterpackage` format in just a few clicks.
+- Create `.fighterpackage` files with ease, or extract them directly from a build.
+- Automatic validation checks warn you of conflicts, and numerous controls in place to easily resolve said conflicts.
+- Automatic backups created whenever BrawlInstaller makes a change, which can be restored when unexpected results occur.
+
+# Installation
+- Download the portable .zip in the [latest release](https://github.com/squidgy617/BrawlInstaller/releases/latest) and extract it to a destination of your choosing.
+- Run `BrawlInstaller.exe`.
+- Set your build path to the root of your build.
+- On the settings tab, set your settings to one of the presets, make any modifications necessary, and hit "Save".
+
+Once you've completed these steps, you're ready to start using BrawlInstaller. For more information, please view the wiki.
 
 # Credits
 - [BrawlCrate/BrawlLib](https://github.com/soopercool101/BrawlCrate)
@@ -37,3 +56,25 @@ BrawlInstaller rewrite.
     - Copyright © 2021 Caelan Sayler
     - Copyright © 2024 Velopack Ltd.
     - [MIT License](https://github.com/velopack/velopack/blob/develop/LICENSE)
+ 
+# Testers
+The following people were part of the BrawlInstaller testing team to provide feedback and bug reports during development.
+- Burrotis Man/SoN1c2001
+- Cahalan
+- GoldenNickXT
+- KingJigglypuff
+- KorytheMaril
+- RedipsTheCooler
+- Szion
+- Tatsuya
+- Tyleto
+- Char
+- FWCrash
+- ilikepizza107
+- gerarreal
+- Kapedani
+- MonaFuzz
+- Oyako
+- QuickLava
+- Shadowic
+- Zataisho
