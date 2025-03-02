@@ -18,7 +18,7 @@ jobs:
       - name: Get Version from Project File
         id: get-version
         shell: bash
-        run: echo "version=$(grep -oE '<Version>[^<]+' BrawlInstaller/BrawlInstaller.csproj | sed 's/<Version>//')" >> $GITHUB_OUTPUT
+        run: echo "version=$(grep -oE '<BrawlInstallerVersion>[^<]+' BrawlInstaller/BrawlInstaller.csproj | sed 's/<BrawlInstallerVersion>//')" >> $GITHUB_OUTPUT
 
       - name: Echo Version
         run: echo "The version is ${{ steps.get-version.outputs.version }}"
