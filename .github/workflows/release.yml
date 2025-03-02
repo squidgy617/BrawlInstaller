@@ -37,12 +37,18 @@ jobs:
 
       - name: Move color_smash.exe to publish directory
         run: |
-          if [ -f "$(Build.SourcesDirectory)/ColorSmash/target/i686-pc-windows-msvc/release/color_smash.exe" ]; then
-            mkdir -p "$(Build.SourcesDirectory)/publish"
-            mv "$(Build.SourcesDirectory)/ColorSmash/target/i686-pc-windows-msvc/release/color_smash.exe" "$(Build.SourcesDirectory)/publish"
-          else
-            echo "color_smash.exe not found, skipping move."
-          fi
+            $colorSmashPath = "${{ github.workspace }}\ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe"
+            $publishPath = "${{ github.workspace }}\publish"
+
+            if (Test-Path $colorSmashPath) {
+              if (-not (Test-Path $publishPath)) {
+                New-Item -Path $publishPath -ItemType Directory
+              }
+              Move-Item -Path $colorSmashPath -Destination $publishPath
+            } 
+            else {
+              Write-Host "color_smash.exe not found, skipping move."
+            }
 
       - name: Publish .NET Framework Project
         run: msbuild BrawlInstaller/BrawlInstaller.csproj /t:Publish /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath="${{ github.workspace }}/publish"
