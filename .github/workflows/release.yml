@@ -33,7 +33,7 @@ jobs:
         run: nuget restore BrawlInstaller.sln
 
       - name: Build Solution
-        run: msbuild BrawlInstaller.sln /p:Configuration=Release /p:Platform="Any CPU"
+        run: msbuild BrawlInstaller.sln /restore /t:Build /p:Configuration="Release";RunCodeAnalysis=False;RestorePackagesConfig=true” /p:Platform="Any CPU"
 
       - name: Publish .NET Framework Project
         run: msbuild BrawlInstaller/BrawlInstaller.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath="${{ github.workspace }}/publish"
