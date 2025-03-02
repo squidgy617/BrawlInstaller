@@ -19,7 +19,7 @@ An all-in-one tool for managing mods in Brawl. Manage fighters, costumes, stages
 - Set your build path to the root of your build.
 - On the settings tab, set your settings to one of the presets, make any modifications necessary, and hit "Save".
 
-Once you've completed these steps, you're ready to start using BrawlInstaller. For more information, please view the wiki.
+Once you've completed these steps, you're ready to start using BrawlInstaller. For more information, please view the [wiki](https://github.com/squidgy617/BrawlInstaller/wiki).
 
 # Reporting Issues
 If you encounter an error or unexpected behavior with the program, please open an issue on the [issues page](https://github.com/squidgy617/BrawlInstaller/issues). If you encountered an error, an `Error.txt` file should be generated in your BrawlInstaller directory, so please provide that in the issue report. Please also provide as much detail as possible on how to recreate the issue.
