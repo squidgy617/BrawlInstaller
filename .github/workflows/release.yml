@@ -36,7 +36,7 @@ jobs:
         run: msbuild BrawlInstaller.sln /restore /t:Build /p:Configuration=Release /p:RunCodeAnalysis=False /p:RestorePackagesConfig=true /p:Platform="Any CPU"
 
       - name: Publish .NET Framework Project
-        run: msbuild BrawlInstaller/BrawlInstaller.csproj /t:Publish /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath="${{ github.workspace }}/publish" /p:BuildProjectReferences=false
+        run: msbuild BrawlInstaller/BrawlInstaller.csproj /t:Publish /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath="${{ github.workspace }}/publish" /p:BuildProjectReferences=false /p:NoBuild=true
 
       - name: Create Velopack Release
         run: |
