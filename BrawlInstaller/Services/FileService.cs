@@ -192,7 +192,7 @@ namespace BrawlInstaller.Services
         public void SaveFileAs(ResourceNode node, string path)
         {
             BackupBuildFile(path);
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            if (!string.IsNullOrEmpty(Path.GetDirectoryName(path)) && !Directory.Exists(Path.GetDirectoryName(path)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }

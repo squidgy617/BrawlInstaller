@@ -1225,27 +1225,30 @@ namespace BrawlInstaller.Services
 
         private void UpdateTargetTestFiles(FighterPackage fighterPackage)
         {
-            if (fighterPackage.PackageType == PackageType.New)
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TargetBreakFolder))
             {
-                var filePath = Path.Combine(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TargetBreakFolder), $"{fighterPackage.FighterInfo.FighterFileName}.asl");
-                if (!_fileService.FileExists(filePath))
+                if (fighterPackage.PackageType == PackageType.New)
                 {
-                    var newNode = new ASLSNode();
-                    newNode.Name = fighterPackage.FighterInfo.FighterFileName;
-                    for(var i = 0; i < 4; i++)
+                    var filePath = Path.Combine(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TargetBreakFolder), $"{fighterPackage.FighterInfo.FighterFileName}.asl");
+                    if (!_fileService.FileExists(filePath))
                     {
-                        newNode.AddChild(new ASLSEntryNode { ButtonFlags = (ushort)i, Name = "Break_the_Targets" });
+                        var newNode = new ASLSNode();
+                        newNode.Name = fighterPackage.FighterInfo.FighterFileName;
+                        for (var i = 0; i < 4; i++)
+                        {
+                            newNode.AddChild(new ASLSEntryNode { ButtonFlags = (ushort)i, Name = "Break_the_Targets" });
+                        }
+                        _fileService.SaveFileAs(newNode, filePath);
+                        _fileService.CloseFile(newNode);
                     }
-                    _fileService.SaveFileAs(newNode, filePath);
-                    _fileService.CloseFile(newNode);
                 }
-            }
-            else if (fighterPackage.PackageType == PackageType.Delete)
-            {
-                var filePath = Path.Combine(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TargetBreakFolder), $"{fighterPackage.FighterInfo.FighterFileName}.asl");
-                if (_fileService.FileExists(filePath))
+                else if (fighterPackage.PackageType == PackageType.Delete)
                 {
-                    _fileService.DeleteFile(filePath);
+                    var filePath = Path.Combine(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TargetBreakFolder), $"{fighterPackage.FighterInfo.FighterFileName}.asl");
+                    if (_fileService.FileExists(filePath))
+                    {
+                        _fileService.DeleteFile(filePath);
+                    }
                 }
             }
         }
