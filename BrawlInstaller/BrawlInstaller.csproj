@@ -557,6 +557,9 @@
     <PreBuildEvent>if not '$(ConfigurationName)' == 'Documentation' (
   if not '$(ConfigurationName)' == 'Doxygen' (
     if not '$(ConfigurationName)' == 'Mono' (
+      if '$(GITHUB_ACTIONS)' == 'true' (
+        cd $(Build.SourcesDirectory)\ColorSmash\
+      )
       cd $(SolutionDir)ColorSmash\
       cargo build --release --target i686-pc-windows-msvc
     )
