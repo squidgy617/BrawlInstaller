@@ -557,8 +557,10 @@
     <PreBuildEvent>if not '$(ConfigurationName)' == 'Documentation' (
   if not '$(ConfigurationName)' == 'Doxygen' (
     if not '$(ConfigurationName)' == 'Mono' (
-      cd $(SolutionDir)ColorSmash\
-      cargo build --release --target i686-pc-windows-msvc
+      if not '$(DeployOnBuild)' == 'true' (
+        cd $(SolutionDir)ColorSmash\
+        cargo build --release --target i686-pc-windows-msvc
+      )
     )
   )
 )</PreBuildEvent>
