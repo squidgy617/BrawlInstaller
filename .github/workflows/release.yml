@@ -35,6 +35,21 @@ jobs:
       - name: Build Solution
         run: msbuild BrawlInstaller.sln /restore /t:Build /p:Configuration=Release /p:RunCodeAnalysis=False /p:RestorePackagesConfig=true /p:Platform="Any CPU"
 
+      - name: Setup Rust
+        uses: actions/setup-rust@v1
+        with:
+          rust-version: 1.58.0
+
+      - name: Build ColorSmash (Rust)
+        run: |
+          cd ColorSmash
+          cargo build --release
+
+      - name: Copy ColorSmash executable
+        run: |
+          mkdir -p "${{ github.workspace }}/publish"
+          cp ColorSmash/target/release/color_smash.exe "${{ github.workspace }}/publish"
+
       - name: Publish .NET Framework Project
         run: msbuild BrawlInstaller/BrawlInstaller.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath="${{ github.workspace }}/publish"
 
