@@ -21,7 +21,7 @@
                 <Button x:Name="restoreBackupButton" Content="Restore..." Command="{Binding RestoreBackupCommand}" IsEnabled="{Binding BuildPathExists}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Label Content="Version 1.0.9"/>
+                <Label Content="Version 2.0.0"/>
                 <Button x:Name="updateButton" Content="Update..." Command="{Binding UpdateCommand}"/>
             </StackPanel>
         </StackPanel>

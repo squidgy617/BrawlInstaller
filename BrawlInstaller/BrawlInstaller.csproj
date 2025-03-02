@@ -14,7 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <BrawlInstallerVersion>1.0.9</BrawlInstallerVersion>
+    <BrawlInstallerVersion>2.0.0</BrawlInstallerVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
