@@ -553,4 +553,14 @@
   %25windir%25\system32\xcopy "$(SolutionDir)ColorSmash\target\i686-pc-windows-msvc\release\color_smash.exe" "$(TargetDir)" /Y /I
 )</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>if not '$(ConfigurationName)' == 'Documentation' (
+  if not '$(ConfigurationName)' == 'Doxygen' (
+    if not '$(ConfigurationName)' == 'Mono' (
+      cd $(SolutionDir)ColorSmash\
+      cargo build --release --target i686-pc-windows-msvc
+    )
+  )
+)</PreBuildEvent>
+  </PropertyGroup>
 </Project>
