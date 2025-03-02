@@ -21,6 +21,9 @@ An all-in-one tool for managing mods in Brawl. Manage fighters, costumes, stages
 
 Once you've completed these steps, you're ready to start using BrawlInstaller. For more information, please view the wiki.
 
+# Reporting Issues
+If you encounter an error or unexpected behavior with the program, please open an issue on the [issues page](https://github.com/squidgy617/BrawlInstaller/issues). If you encountered an error, an `Error.txt` file should be generated in your BrawlInstaller directory, so please provide that in the issue report. Please also provide as much detail as possible on how to recreate the issue.
+
 # Credits
 - [BrawlCrate/BrawlLib](https://github.com/soopercool101/BrawlCrate)
     - Created and subsequently maintained by [Kryal](https://code.google.com/archive/p/brawltools/), [BlackJax96](https://code.google.com/archive/p/brawltools2/), [libertyernie](https://github.com/libertyernie/brawltools), and [soopercool101](https://github.com/soopercool101)
