@@ -7,6 +7,7 @@ An all-in-one tool for managing mods in Brawl. Manage fighters, costumes, stages
     - Stages
     - Music
     - Trophies
+- Manage HD textures associated with any of the above.
 - Quickly install fighters stored in BrawlInstaller's `.fighterpackage` format in just a few clicks.
 - Create `.fighterpackage` files with ease, or extract them directly from a build.
 - Automatic validation checks warn you of conflicts, and numerous controls in place to easily resolve said conflicts.
