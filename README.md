@@ -14,7 +14,7 @@ An all-in-one tool for managing mods in Brawl. Manage fighters, costumes, stages
 - Automatic backups created whenever BrawlInstaller makes a change, which can be restored when unexpected results occur.
 
 # Installation
-- Download the portable .zip in the [latest release](https://github.com/squidgy617/BrawlInstaller/releases/latest) and extract it to a destination of your choosing.
+- Download `BrawlInstaller-win-Portable.zip` in the [latest release](https://github.com/squidgy617/BrawlInstaller/releases/latest) and extract it to a destination of your choosing.
 - Run `BrawlInstaller.exe`.
 - Set your build path to the root of your build.
 - On the settings tab, set your settings to one of the presets, make any modifications necessary, and hit "Save".
