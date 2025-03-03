@@ -592,7 +592,7 @@ namespace BrawlInstaller.Services
                     j++;
                 }
                 // Then go until we hit a bracket
-                while (cleanText[j] < cleanText.Length && cleanText[j] != ']')
+                while (cleanText[j] < cleanText.Length && cleanText[j] != ']' && cleanText[j] != '\r' && cleanText[j] != '\n')
                 {
                     workingText += cleanText[j];
                     j++;
