@@ -15,9 +15,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Debug JSON File
-        run: cat BrawlInstaller/Resources/update.json
-
       - name: Get Version from JSON
         id: get-version
         shell: bash
@@ -31,15 +28,10 @@ jobs:
             VERSION=$(echo "$PACKAGE_JSON" | jq -r '.Version')
             CHANGELOG=$(echo "$PACKAGE_JSON" | jq -r '.Changelog' | awk '{printf "%s\\n", $0}' )
 
-            echo "PACKAGE_JSON=$PACKAGE_JSON" >> $GITHUB_ENV
             echo "version=$VERSION" >> $GITHUB_OUTPUT
-            echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
 
       - name: Echo Version
         run: echo "The version is ${{ steps.get-version.outputs.version }}"
-
-      - name: Echo Changelog
-        run: echo "Changelog - ${{ steps.get-version.outputs.changelog}}"
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
@@ -75,5 +67,5 @@ jobs:
         run: |
           dotnet tool install -g vpk
           vpk download github --repoUrl https://github.com/squidgy617/BrawlInstaller
-          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --releaseNotes ${{ steps.get-version.outputs.changelog }} --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller --icon .\BrawlInstaller\BrawlInstallerIcon.ico
+          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --releaseNotes BrawlInstaller/Resources/update.json --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller --icon .\BrawlInstaller\BrawlInstallerIcon.ico
           vpk upload github --repoUrl https://github.com/squidgy617/BrawlInstaller --publish --releaseName "BrawlInstaller ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
