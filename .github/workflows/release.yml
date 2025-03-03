@@ -18,10 +18,16 @@ jobs:
       - name: Get Version from Project File
         id: get-version
         shell: bash
-        run: echo "version=$(grep -oE '<BrawlInstallerVersion>[^<]+' BrawlInstaller/BrawlInstaller.csproj | sed 's/<BrawlInstallerVersion>//')" >> $GITHUB_OUTPUT
+        run: |
+            echo "PACKAGE_JSON=$(jq -c . < BrawlInstaller/Resources/update.json)" >> $GITHUB_ENV
+            echo "version=${{ fromJson(env.PACKAGE_JSON).Version }}" >> $GITHUB_OUTPUT
+            echo "changelog=${{ fromJson(env.PACKAGE_JSON).Changelog }}" >> $GITHUB_OUTPUT
 
       - name: Echo Version
         run: echo "The version is ${{ steps.get-version.outputs.version }}"
+
+      - name: Echo Changelog
+        run: echo "Changelog - ${{ steps.get-version.outputs.changelog}}"
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
@@ -57,5 +63,5 @@ jobs:
         run: |
           dotnet tool install -g vpk
           vpk download github --repoUrl https://github.com/squidgy617/BrawlInstaller
-          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller --icon .\BrawlInstaller\BrawlInstallerIcon.ico
+          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --releaseNotes ${{ steps.get-version.outputs.changelog }} --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller --icon .\BrawlInstaller\BrawlInstallerIcon.ico
           vpk upload github --repoUrl https://github.com/squidgy617/BrawlInstaller --publish --releaseName "BrawlInstaller ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}

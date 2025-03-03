@@ -15,6 +15,8 @@ using System.Windows.Input;
 using Velopack.Sources;
 using Velopack;
 using System.Windows.Threading;
+using System.Reflection;
+using Newtonsoft.Json;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -57,6 +59,7 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public AppSettings AppSettings { get => _appSettings; set { _appSettings = value; OnPropertyChanged(nameof(AppSettings)); } }
         public bool BuildPathExists { get => !string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath) && _fileService.DirectoryExists(_settingsService.AppSettings.BuildPath); }
+        public VersionInfo VersionInfo { get => GetVersionInfo(); }
 
         // Methods
         private void RefreshSettings()
@@ -91,6 +94,24 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
+        private VersionInfo GetVersionInfo()
+        {
+            var versionInfo = new VersionInfo();
+            var json = string.Empty;
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"BrawlInstaller.Resources.update.json"))
+            {
+                using (StreamReader streamReader = new StreamReader(stream))
+                {
+                    json = streamReader.ReadToEnd();
+                }
+            }
+            if (!string.IsNullOrEmpty(json))
+            {
+                versionInfo = JsonConvert.DeserializeObject<VersionInfo>(json);
+            }
+            return versionInfo;
+        }
+
         private async void Update(bool showNoUpdate = false)
         {
 #if !DEBUG
@@ -108,7 +129,7 @@ namespace BrawlInstaller.ViewModels
                     return;
                 }
 
-                var installUpdate = _dialogService.ShowMessage($"New update version {newVersion.TargetFullRelease.Version} found. Would you like to install it?\nWARNING: Application will be restarted and any unsaved progress will be lost.", "Update Found", MessageBoxButton.YesNo);
+                var installUpdate = _dialogService.ShowMessage($"New update version {newVersion.TargetFullRelease.Version} found. Would you like to install it?\nWARNING: Application will be restarted and any unsaved progress will be lost.\n\nChangelog:\n{newVersion.TargetFullRelease.NotesMarkdown}", "Update Found", MessageBoxButton.YesNo);
                 if (installUpdate)
                 {
                     _dialogService.ShowProgressBar("Updating", "Downloading update...");

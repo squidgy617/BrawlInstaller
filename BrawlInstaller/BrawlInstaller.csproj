@@ -14,7 +14,6 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <BrawlInstallerVersion>2.0.3</BrawlInstallerVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -104,6 +103,7 @@
     <Compile Include="Classes\Roster.cs" />
     <Compile Include="Classes\Tracklists.cs" />
     <Compile Include="Classes\Trophy.cs" />
+    <Compile Include="Classes\VersionInfo.cs" />
     <Compile Include="Enums\FighterFileType.cs" />
     <Compile Include="Enums\FileType.cs" />
     <Compile Include="Enums\InstallOptionType.cs" />
@@ -440,6 +440,7 @@
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus\FighterList.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\REMIX\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\REMIX\FighterList.json" />
+    <EmbeddedResource Include="Resources\update.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
