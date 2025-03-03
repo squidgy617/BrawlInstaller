@@ -1,4 +1,4 @@
 {
 	"Version": "2.0.4",
-	"Changelog": "- Improved changelog versioning"
+	"Changelog": "- Changelog will now display when updates are available"
 }

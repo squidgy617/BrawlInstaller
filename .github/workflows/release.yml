@@ -15,7 +15,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Get Version from Project File
+      - name: Debug JSON File
+        run: cat BrawlInstaller/Resources/update.json
+
+      - name: Get Version from JSON
         id: get-version
         shell: bash
         run: |
