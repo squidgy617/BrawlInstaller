@@ -22,9 +22,18 @@ jobs:
         id: get-version
         shell: bash
         run: |
-            echo "PACKAGE_JSON=$(jq -c . < BrawlInstaller/Resources/update.json)" >> $GITHUB_ENV
-            echo "version=${{ fromJson(env.PACKAGE_JSON).Version }}" >> $GITHUB_OUTPUT
-            echo "changelog=${{ fromJson(env.PACKAGE_JSON).Changelog }}" >> $GITHUB_OUTPUT
+            PACKAGE_JSON=$(jq -c . < BrawlInstaller/Resources/update.json)
+            if [ -z "$PACKAGE_JSON" ]; then
+              echo "Error: Failed to read update.json!"
+              exit 1
+            fi
+
+            VERSION=$(echo "$PACKAGE_JSON" | jq -r '.Version')
+            CHANGELOG=$(echo "$PACKAGE_JSON" | jq -r '.Changelog' | awk '{printf "%s\\n", $0}' )
+
+            echo "PACKAGE_JSON=$PACKAGE_JSON" >> $GITHUB_ENV
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
 
       - name: Echo Version
         run: echo "The version is ${{ steps.get-version.outputs.version }}"
