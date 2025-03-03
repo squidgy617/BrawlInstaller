@@ -151,6 +151,7 @@ namespace BrawlInstaller.ViewModels
             CosmeticOptions = typeof(CosmeticType).GetDictionary<CosmeticType>();
             IdTypes = typeof(IdType).GetDictionary<IdType>();
             Formats = typeof(WiiPixelFormat).GetDictionary<WiiPixelFormat>();
+            OnPropertyChanged(nameof(AppSettings));
         }
 
         public void AddStyle()

@@ -143,6 +143,7 @@ namespace BrawlInstaller.ViewModels
         private void LoadSettings()
         {
             BuildSettings = _settingsService.LoadSettings(_settingsService.BuildSettingsPath);
+            OnPropertyChanged(nameof(AppSettings));
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }
@@ -151,6 +152,7 @@ namespace BrawlInstaller.ViewModels
         {
             LoadSettings();
             _settingsService.BuildSettings = BuildSettings;
+            OnPropertyChanged(nameof(AppSettings));
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }
