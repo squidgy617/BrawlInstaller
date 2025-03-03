@@ -168,7 +168,7 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
             WeakReferenceMessenger.Default.Send(new LoadDefaultSettingsMessage(SelectedSettingsOption.ToString()));
-            _dialogService.ShowMessage("Preset settings loaded. Save settings to apply them to your build.", "Preset Applied");
+            _dialogService.ShowMessage("Preset settings loaded. Click save to save them to your build.", "Preset Applied");
             SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault().Value;
         }
 
