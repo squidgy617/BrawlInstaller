@@ -84,6 +84,10 @@ namespace BrawlInstaller.Services
         /// <returns>Trophy</returns>
         public Trophy LoadTrophyData(Trophy trophy)
         {
+            if (trophy == null)
+            {
+                return trophy;
+            }
             var trophyPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyLocation.Path);
             var trophyNamePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyNames);
             var trophyDescriptionPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyDescriptions);

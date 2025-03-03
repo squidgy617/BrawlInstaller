@@ -2528,18 +2528,21 @@ namespace BrawlInstaller.Services
                         {
                             var sseRoster = new Roster { AddNewCharacters = _settingsService.BuildSettings.MiscSettings.InstallToSse, Name = "Subspace EX", RosterType = RosterType.SSE };
                             byte[] sectionData = _fileService.ReadRawData(section);
-                            var fighterCount = sectionData[0];
-                            var fighterTable = sectionData.Skip(2).Take(126).ToList(); // There are 126 slots in sora_adv_stage.rel
-                            for(var i = 0; i < fighterCount; i++) // Add fighters up to our count
+                            if (sectionData.Length > 0)
                             {
-                                var newEntry = new RosterEntry
+                                var fighterCount = sectionData[0];
+                                var fighterTable = sectionData.Skip(2).Take(126).ToList(); // There are 126 slots in sora_adv_stage.rel
+                                for (var i = 0; i < fighterCount; i++) // Add fighters up to our count
                                 {
-                                    Id = fighterTable[i],
-                                    Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == fighterTable[i])?.DisplayName ?? $"Fighter0x{fighterTable[i]:X2}"
-                                };
-                                sseRoster.Entries.Add(newEntry);
+                                    var newEntry = new RosterEntry
+                                    {
+                                        Id = fighterTable[i],
+                                        Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == fighterTable[i])?.DisplayName ?? $"Fighter0x{fighterTable[i]:X2}"
+                                    };
+                                    sseRoster.Entries.Add(newEntry);
+                                }
+                                rosters.Add(sseRoster);
                             }
-                            rosters.Add(sseRoster);
                         }
                     }
                     _fileService.CloseFile(rootNode);
@@ -3129,7 +3132,7 @@ namespace BrawlInstaller.Services
                 if (lucarioKirbyGfxMacro != null)
                 {
                     fighterSettings.LucarioSettings.UseKirbyGfxFix = true;
-                    if (lucarioGfxMacro.Parameters.Count > 2)
+                    if (lucarioKirbyGfxMacro.Parameters.Count > 2)
                     {
                         fighterSettings.LucarioSettings.KirbyEflsId = Convert.ToInt32(lucarioKirbyGfxMacro.Parameters[2].Replace("0x", ""), 16);
                     }
