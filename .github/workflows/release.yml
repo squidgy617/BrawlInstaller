@@ -26,7 +26,6 @@ jobs:
             fi
 
             VERSION=$(echo "$PACKAGE_JSON" | jq -r '.Version')
-            CHANGELOG=$(echo "$PACKAGE_JSON" | jq -r '.Changelog' | awk '{printf "%s\\n", $0}' )
 
             echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -67,5 +66,5 @@ jobs:
         run: |
           dotnet tool install -g vpk
           vpk download github --repoUrl https://github.com/squidgy617/BrawlInstaller
-          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --releaseNotes BrawlInstaller/Resources/update.json --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller --icon .\BrawlInstaller\BrawlInstallerIcon.ico
+          vpk pack --packId BrawlInstaller --packVersion ${{ steps.get-version.outputs.version }} --releaseNotes BrawlInstaller/Resources/changelog.md --packDir "${{ github.workspace }}/publish" --mainExe BrawlInstaller.exe --packTitle BrawlInstaller --icon .\BrawlInstaller\BrawlInstallerIcon.ico
           vpk upload github --repoUrl https://github.com/squidgy617/BrawlInstaller --publish --releaseName "BrawlInstaller ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}

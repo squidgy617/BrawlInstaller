@@ -441,6 +441,7 @@
     <EmbeddedResource Include="Resources\DefaultSettings\REMIX\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\REMIX\FighterList.json" />
     <EmbeddedResource Include="Resources\update.json" />
+    <EmbeddedResource Include="Resources\changelog.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

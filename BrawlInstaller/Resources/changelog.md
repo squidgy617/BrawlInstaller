@@ -1,0 +1,1 @@
+- Fixed formatting for changelog
