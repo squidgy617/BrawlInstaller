@@ -325,7 +325,7 @@
                 <Button x:Name="loadButton" Content="Reset" Command="{Binding LoadSettingsCommand}" VerticalAlignment="Bottom"/>
                 <Label x:Name="defaultSettingsLabel" Content="Presets:" VerticalAlignment="Bottom" ToolTip="Select a default set of settings to apply"/>
                 <ComboBox x:Name="defaultSettingsDropDown" ItemsSource="{Binding DefaultSettingsOptions}" SelectedValuePath="Value" DisplayMemberPath="Key" SelectedValue="{Binding SelectedSettingsOption}" VerticalAlignment="Bottom" Width="100"/>
-                <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}" VerticalAlignment="Bottom"/>
+                <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}" VerticalAlignment="Bottom" IsEnabled="{Binding ApplyPresetButtonEnabled}"/>
             </WrapPanel>
             <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         </Grid>

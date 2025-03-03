@@ -93,6 +93,9 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<string, SettingsPresets> DefaultSettingsOptions { get => typeof(SettingsPresets).GetDictionary<SettingsPresets>(); }
         public SettingsPresets SelectedSettingsOption { get => _selectedSettingsOption; set { _selectedSettingsOption = value; OnPropertyChanged(nameof(SelectedSettingsOption)); } }
 
+        [DependsUpon(nameof(SelectedSettingsOption))]
+        public bool ApplyPresetButtonEnabled { get => SelectedSettingsOption != SettingsPresets.None; }
+
         [DependsUpon(nameof(BuildSettings))]
         public CompositeCollection FilePathSettings { get => new CompositeCollection
             {
@@ -165,6 +168,8 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(BuildSettings));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
             WeakReferenceMessenger.Default.Send(new LoadDefaultSettingsMessage(SelectedSettingsOption.ToString()));
+            _dialogService.ShowMessage("Preset settings loaded. Save settings to apply them to your build.", "Preset Applied");
+            SelectedSettingsOption = DefaultSettingsOptions.FirstOrDefault().Value;
         }
 
         private string GetSelectedSettings(string file)

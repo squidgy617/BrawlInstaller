@@ -9,6 +9,8 @@ namespace BrawlInstaller.Enums
 {
     public enum SettingsPresets
     {
+        [Description("")]
+        None,
         [Description("Project+")]
         ProjectPlus,
         [Description("P+Ex")]
