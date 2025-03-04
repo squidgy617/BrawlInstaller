@@ -1,1 +1,2 @@
-- Fixed formatting for changelog
+- Fixed issue where saving code changes would sometimes overwrite part of an ASM table
+- Minor UX tweaks when applying preset settings
