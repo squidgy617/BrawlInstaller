@@ -657,11 +657,6 @@ namespace BrawlInstaller.Services
                         {
                             i = fileText.IndexOf(newLine, i);
                         }
-                        // Otherwise, set to end of file
-                        else
-                        {
-                            i = fileText.Length;
-                        }
                         var tableEnd = i;
                         // Go until we hit non-whitespace characters - that's the next piece of actual code
                         while (tableEnd < fileText.Length && char.IsWhiteSpace(fileText[tableEnd]))
