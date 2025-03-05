@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 
 namespace BrawlInstaller.Services
 {
@@ -536,7 +537,16 @@ namespace BrawlInstaller.Services
                         // If start of comment, put comment symbols
                         if (lineComment == string.Empty)
                         {
-                            lineComment += " | # ";
+                            // The | symbole marks that the next line should be a continuation of the last, so we should NOT use it on the last line of a table, otherwise any text that
+                            // follows will be treated as part of the table
+                            if (table.Count > table.IndexOf(item) + width)
+                            {
+                                lineComment += " | # ";
+                            }
+                            else
+                            {
+                                lineComment += " # ";
+                            }
                         }
                         // Add comment
                         lineComment += item.Comment;
