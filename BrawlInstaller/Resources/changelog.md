@@ -1,2 +1,1 @@
-- Fixed issue where saving code changes would sometimes overwrite part of an ASM table
-- Minor UX tweaks when applying preset settings
+- Fixed an issue where the last line of ASM tables were not always written with correct syntax, which could rarely result in them compiling incorrectly.
