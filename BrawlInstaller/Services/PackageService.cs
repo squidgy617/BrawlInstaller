@@ -635,6 +635,7 @@ namespace BrawlInstaller.Services
                 {
                     var sseIcon = vBrawlIcon.Copy();
                     sseIcon.CosmeticType = CosmeticType.SSEUnlockIcon;
+                    sseIcon.CostumeIndex = 0;
                     cosmetics.Add(sseIcon);
                 }
                 // Get franchise icon
