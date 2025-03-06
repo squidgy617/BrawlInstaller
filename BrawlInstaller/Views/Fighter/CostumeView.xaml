@@ -42,6 +42,15 @@
                                         <Binding RelativeSource="{RelativeSource AncestorType=UserControl}" Path="DataContext.InheritedStyle"/>
                                     </MultiBinding>
                                 </Image.Source>
+                                <Image.ToolTip>
+                                    <ToolTip Placement="Bottom">
+                                        <ToolTip.Template>
+                                            <ControlTemplate>
+                                                <Image Height="128" Width="128" Source="{Binding Path=Source, RelativeSource={RelativeSource AncestorType=Image}}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                                            </ControlTemplate>
+                                        </ToolTip.Template>
+                                    </ToolTip>
+                                </Image.ToolTip>
                             </Image>
                             <Run Text="Costume"/>
                             <Run Text="{Binding Path=CostumeId}"/>
