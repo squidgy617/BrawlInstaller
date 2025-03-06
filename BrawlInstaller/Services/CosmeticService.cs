@@ -1029,12 +1029,12 @@ namespace BrawlInstaller.Services
                 ImportCosmetics(definition, cosmeticList, ids.Ids.FirstOrDefault(x => x.Type == definition.IdType)?.Id ?? -1, name);
             }
             // Save and close all files
-            Parallel.ForEach(FileCache.ToList(), file =>
+            foreach(var file in FileCache.ToList())
             {
                 _fileService.SaveFile(file);
                 FileCache.Remove(file);
                 _fileService.CloseFile(file);
-            });
+            };
         }
 
         /// <summary>

@@ -798,7 +798,7 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Effect.pacs", $"Effect.pacs conflict with existing Effect.pacs in your build:\n\n{effectPacString}"));
             }
             var changedTrophies = FighterPackage.Trophies.Where(x => x.Trophy.Ids.TrophyId != x.OldTrophy?.Ids.TrophyId || x.Trophy.Ids.TrophyThumbnailId != x.OldTrophy?.Ids.TrophyThumbnailId ||
-                x.Trophy.Brres != x.OldTrophy.Brres);
+                x.Trophy.Brres != x.OldTrophy?.Brres);
             if (changedTrophies.Any())
             {
                 var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => changedTrophies.Any(y => y.Trophy.Ids.TrophyId == x.Ids.TrophyId 
