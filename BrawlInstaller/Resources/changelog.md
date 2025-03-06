@@ -1,1 +1,7 @@
-- Fixed an issue where the last line of ASM tables were not always written with correct syntax, which could rarely result in them compiling incorrectly.
+- Costume list now shows a preview of the cosmetic assigned to each costume next to the list entry.
+- You can now switch which cosmetics are assigned to which costumes. Small arrow buttons on the left-hand side of the costume list allow you to move cosmetics up and down the costume list.
+- Stage list alt thumbnails will now automatically be resized to 160 x 120 pixels.
+- Fixed an issue where SSE unlock icons loaded from legacy (.zip) fighter packages would not be named correctly when the package was imported.
+- Fixed an issue where empty trophies would cause an error on import.
+- Fixed an issue where saving cosmetics would rarely result in an error.
+- Changed verbiage of missing cosmetics validation error.
