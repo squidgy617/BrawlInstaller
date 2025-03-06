@@ -85,6 +85,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddStyleCommand => new RelayCommand(param => AddStyle());
         public ICommand RemoveStyleCommand => new RelayCommand(param => RemoveStyle());
         public ICommand ViewTexturesCommand => new RelayCommand(param => ViewTextures());
+        public ICommand MoveCostumeCosmeticsDownCommand => new RelayCommand(param => MoveCostumeCosmeticDown());
+        public ICommand MoveCostumeCosmeticUpCommand => new RelayCommand(param => MoveCostumeCosmeticUp());
 
         // Importing constructor
         [ImportingConstructor]
@@ -702,6 +704,78 @@ namespace BrawlInstaller.ViewModels
                 {
                     cosmetic.CostumeIndex = Costumes.IndexOf(costume) + 1;
                 }
+            }
+        }
+
+        private void MoveCostumeCosmeticDown()
+        {
+            if (SelectedCostume != null && InheritedStyle != null && SelectedCostume != Costumes.LastOrDefault())
+            {
+                // Get current and next costume
+                var currentCostume = FighterPackage.Costumes.FirstOrDefault(x => x == SelectedCostume);
+                var nextCostume = FighterPackage.Costumes[Costumes.IndexOf(SelectedCostume) + 1];
+                var currentCosmetics = SelectedCostume.Cosmetics.Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle).ToList();
+                var nextCosmetics = nextCostume.Cosmetics.Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle).ToList();
+
+                // Remove cosmetics from each
+                nextCostume.Cosmetics.RemoveAll(x => nextCosmetics.Contains(x));
+                currentCostume.Cosmetics.RemoveAll(x => currentCosmetics.Contains(x));
+
+                // Move cosmetics from one to the other
+                nextCostume.Cosmetics.AddRange(currentCosmetics);
+                currentCostume.Cosmetics.AddRange(nextCosmetics);
+
+                // Mark as changed
+                foreach(var cosmetic in FighterPackage.Cosmetics.Items)
+                {
+                    if (nextCosmetics.Contains(cosmetic) || currentCosmetics.Contains(cosmetic))
+                    {
+                        FighterPackage.Cosmetics.ItemChanged(cosmetic);
+                    }
+                }
+
+                // Select next costume
+                SelectedCostume = nextCostume;
+
+                UpdateCostumeIndexes();
+
+                OnPropertyChanged(nameof(CosmeticList));
+                OnPropertyChanged(nameof(SelectedCosmeticNode));
+                OnPropertyChanged(nameof(SelectedCostume));
+            }
+        }
+
+        private void MoveCostumeCosmeticUp()
+        {
+            if (SelectedCostume != null && InheritedStyle != null && SelectedCostume != Costumes.FirstOrDefault())
+            {
+                // Get current and next costume
+                var currentCostume = FighterPackage.Costumes.FirstOrDefault(x => x == SelectedCostume);
+                var nextCostume = FighterPackage.Costumes[Costumes.IndexOf(SelectedCostume) - 1];
+                var currentCosmetics = SelectedCostume.Cosmetics.Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle).ToList();
+                var nextCosmetics = nextCostume.Cosmetics.Where(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle).ToList();
+
+                // Remove cosmetics from each
+                nextCostume.Cosmetics.RemoveAll(x => nextCosmetics.Contains(x));
+                currentCostume.Cosmetics.RemoveAll(x => currentCosmetics.Contains(x));
+
+                // Move cosmetics from one to the other
+                nextCostume.Cosmetics.AddRange(currentCosmetics);
+                currentCostume.Cosmetics.AddRange(nextCosmetics);
+
+                // Mark as changed
+                foreach (var cosmetic in FighterPackage.Cosmetics.Items)
+                {
+                    if (nextCosmetics.Contains(cosmetic) || currentCosmetics.Contains(cosmetic))
+                    {
+                        FighterPackage.Cosmetics.ItemChanged(cosmetic);
+                    }
+                }
+
+                // Select next costume
+                SelectedCostume = nextCostume;
+
+                OnPropertyChanged(nameof(SelectedCostume));
             }
         }
     }

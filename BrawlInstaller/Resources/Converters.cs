@@ -1,4 +1,5 @@
 ﻿using BrawlCrate.UI;
+using BrawlInstaller.Classes;
 using BrawlInstaller.Enums;
 using BrawlLib.Imaging;
 using BrawlLib.Internal;
@@ -348,6 +349,23 @@ namespace BrawlInstaller.Resources
         public object Convert(object[] values, Type targetTypes, object parameter, CultureInfo culture)
         {
             return values.Clone();
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    public class CostumePreviewConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Costume costume = values[0] != DependencyProperty.UnsetValue ? (Costume)values[0] : null;
+            CosmeticType selectedType = values[1] != DependencyProperty.UnsetValue ? (CosmeticType)values[1] : 0;
+            string selectedStyle = values[2] != DependencyProperty.UnsetValue ? (string)values[2] : string.Empty;
+
+            return costume.Cosmetics.FirstOrDefault(x => x.CosmeticType == selectedType && x.Style == selectedStyle)?.Image;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

@@ -17,4 +17,5 @@
     <local:ColorRGBAPixelConverter x:Key="colorRGBAConverter"/>
     <local:ResourceTypeUriStringConverter x:Key="nodeUriStringConverter"/>
     <local:MultiParamConverter x:Key="multiParamConverter"/>
+    <local:CostumePreviewConverter x:Key="costumePreviewConverter"/>
 </ResourceDictionary>
