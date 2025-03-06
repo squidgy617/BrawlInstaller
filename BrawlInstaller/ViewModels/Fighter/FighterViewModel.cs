@@ -764,7 +764,7 @@ namespace BrawlInstaller.ViewModels
             if (missingCosmetics.Count > 0)
             {
                 var cosmeticString = string.Join("\n", missingCosmetics.Select(x => $"Type: {x.CosmeticType.GetDescription()} Style: {x.Style}"));
-                messages.Add(new DialogMessage("Cosmetics", $"Some cosmetics marked as required are missing:\n\n{cosmeticString}"));
+                messages.Add(new DialogMessage("Cosmetics", $"Some cosmetics marked as required are missing. Review if they are needed for your fighter:\n\n{cosmeticString}"));
             }
             if (FighterPackage.PackageType == PackageType.New)
             {
