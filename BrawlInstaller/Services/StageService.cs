@@ -682,6 +682,7 @@ namespace BrawlInstaller.Services
                 // Update image length fields
                 newImageEnd.CopyTo(finalData, 0x58); // Ending position
                 newImageStart.CopyTo(finalData, 0x5C); // Starting position
+                newImageEnd.CopyTo(finalData, 0x60); // Ending position (wide)
                 // Encrypt
                 if (!finalData.SequenceEqual(decryptedData))
                 {
