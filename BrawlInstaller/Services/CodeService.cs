@@ -58,6 +58,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="CodeService.ReadHook(string, string)"/>
         AsmHook ReadHook(string fileText, string address);
+
+        /// <inheritdoc cref="CodeService.GetCodeAlias(string, string)"/>
+        Alias GetCodeAlias(string fileText, string aliasName);
     }
 
     [Export(typeof(ICodeService))]
@@ -912,6 +915,23 @@ namespace BrawlInstaller.Services
                 i = aliasStringEnd;
             }
             return aliases;
+        }
+
+        /// <summary>
+        /// Get an alias by name
+        /// </summary>
+        /// <param name="fileText">Text to get alias from</param>
+        /// <param name="aliasName">Name of alias to get</param>
+        /// <returns>Alias</returns>
+        public Alias GetCodeAlias(string fileText, string aliasName)
+        {
+            var match = Regex.Match(fileText, "\\.alias\\s+NUM_PRESETS\\s+=\\s+(0[xX][0-9a-fA-F]+|\\d+)");
+            if (match.Success)
+            {
+                var alias = GetAlias(match.Value, match.Index);
+                return alias;
+            }
+            return null;
         }
 
         /// <summary>
