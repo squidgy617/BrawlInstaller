@@ -122,6 +122,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.ReadAllBytes(string)"/>
         byte[] ReadAllBytes(string filePath);
 
+        /// <inheritdoc cref="FileService.WriteAllBytes(string, byte[])"/>
+        void WriteAllBytes(string filePath, byte[] bytes);
+
         /// <inheritdoc cref="FileService.ParseIniFile(string)"/>
         Dictionary<string, string> ParseIniFile(string iniFile);
 
@@ -723,6 +726,21 @@ namespace BrawlInstaller.Services
                 return File.ReadAllBytes(filePath);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Write all bytes to a file
+        /// </summary>
+        /// <param name="filePath">Path to file</param>
+        /// <param name="bytes">Bytes to write</param>
+        public void WriteAllBytes(string filePath, byte[] bytes)
+        {
+            BackupBuildFile(filePath);
+            if (!string.IsNullOrEmpty(Path.GetDirectoryName(filePath)) && !Directory.Exists(Path.GetDirectoryName(filePath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            }
+            File.WriteAllBytes(filePath, bytes);
         }
 
         /// <summary>
