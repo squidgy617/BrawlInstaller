@@ -55,6 +55,15 @@ namespace BrawlInstaller.Services
         IFileService _fileService;
         ICosmeticService _cosmeticService;
 
+        // Private properties
+
+        // Table starts at 0x104 and holds 256 pairs, so 512 total bytes
+        private const int _rssStageTableStart = 0x104;
+        private const int _rssStageTableLength = 512;
+        // Pages start at 0x3C and are 40 bytes each
+        private List<int> _pageLocations = new List<int> { 0x3C, 0x64, 0x8C, 0xB4, 0xDC };
+        private const int _stagesPerPage = 39;
+
         [ImportingConstructor]
         public StageService(ICodeService codeService, ISettingsService settingsService, IFileService fileService, ICosmeticService cosmeticService) 
         {
@@ -138,10 +147,9 @@ namespace BrawlInstaller.Services
                     else if (Path.GetExtension(filePath) == ".rss")
                     {
                         var rssData = _fileService.ReadAllBytes(filePath);
-                        // Pages start at 0x3C and are 40 bytes each
-                        var pageLocations = new List<int> { 0x3C, 0x64, 0x8C, 0xB4, 0xDC };
+                        
                         int pageNumber = 1;
-                        foreach(var pageLocation in pageLocations)
+                        foreach(var pageLocation in _pageLocations)
                         {
                             var page = new StagePage { PageNumber = pageNumber };
                             // Get indexes in page
@@ -460,8 +468,8 @@ namespace BrawlInstaller.Services
                 else if (Path.GetExtension(filePath) == ".rss")
                 {
                     var rssData = _fileService.ReadAllBytes(filePath);
-                    // Table starts at 0x104 and holds 256 values
-                    for (var i = 0x104; i < (0x104 + 256); i += 2)
+                    
+                    for (var i = _rssStageTableStart; i < (_rssStageTableStart + _rssStageTableLength); i += 2)
                     {
                         if (rssData[i] != 0 && rssData[i + 1] != 0)
                         {
@@ -804,9 +812,19 @@ namespace BrawlInstaller.Services
             var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";
             if (_fileService.FileExists(tableFilepath))
             {
-                var tableFileText = _codeService.ReadCode(tableFilepath);
-                tableFileText = _codeService.ReplaceTable(tableFileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
-                _fileService.SaveTextFile(tableFilepath, tableFileText);
+                if (Path.GetExtension(tableFilepath) == ".asm")
+                {
+                    var tableFileText = _codeService.ReadCode(tableFilepath);
+                    tableFileText = _codeService.ReplaceTable(tableFileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
+                    _fileService.SaveTextFile(tableFilepath, tableFileText);
+                }
+                else if (Path.GetExtension(tableFilepath) == ".rss")
+                {
+                    var rssData = _fileService.ReadAllBytes(tableFilepath);
+                    var bytes = stageTable.ToByteArray();
+                    bytes.CopyTo(rssData, _rssStageTableStart);
+                    _fileService.WriteAllBytes(tableFilepath, rssData);
+                }
             }
             // Update indexes
             foreach (var stageSlot in stageTable)
@@ -816,45 +834,65 @@ namespace BrawlInstaller.Services
             foreach(var stageList in stageLists)
             {
                 var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageList.FilePath}";
-                var fileText = _codeService.ReadCode(filePath);
-                foreach (var page in stageList.Pages)
+                if (Path.GetExtension(filePath) == ".asm")
                 {
+                    var fileText = _codeService.ReadCode(filePath);
                     // Update stage table if it exists
                     fileText = _codeService.ReplaceTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
-                    // Update stage list
-                    var pageEntriesAsm = page.ConvertToAsmTable();
-                    fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntriesAsm, DataSize.Byte);
-                    // Update memory allocations
-                    var hookAddress = string.Empty;
-                    switch (page.PageNumber)
+                    foreach (var page in stageList.Pages)
                     {
-                        case 1:
-                            hookAddress = "806B929C";
-                            break;
-                        case 2:
-                            hookAddress = "806B92A4";
-                            break;
-                        case 3:
-                            hookAddress = "80496002";
-                            break;
-                        case 4:
-                            hookAddress = "80496003";
-                            break;
-                        case 5:
-                            hookAddress = "80496004";
-                            break;
+                        // Update stage list
+                        var pageEntriesAsm = page.ConvertToAsmTable();
+                        fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntriesAsm, DataSize.Byte);
+                        // Update memory allocations
+                        var hookAddress = string.Empty;
+                        switch (page.PageNumber)
+                        {
+                            case 1:
+                                hookAddress = "806B929C";
+                                break;
+                            case 2:
+                                hookAddress = "806B92A4";
+                                break;
+                            case 3:
+                                hookAddress = "80496002";
+                                break;
+                            case 4:
+                                hookAddress = "80496003";
+                                break;
+                            case 5:
+                                hookAddress = "80496004";
+                                break;
+                        }
+                        var hook = new AsmHook { Address = hookAddress, Instructions = new List<Instruction> { new Instruction { Text = $"byte {page.StageSlots.Count:D2}" } }, Comment = $"Page {page.PageNumber}" };
+                        fileText = _codeService.ReplaceHook(hook, fileText);
                     }
-                    var hook = new AsmHook { Address = hookAddress, Instructions = new List<Instruction> { new Instruction { Text = $"byte {page.StageSlots.Count:D2}" } }, Comment = $"Page {page.PageNumber}" };
-                   fileText = _codeService.ReplaceHook(hook, fileText);
+                    // Update total stage count
+                    var countHook = new AsmHook { Address = "800AF673", Instructions = new List<Instruction> { new Instruction { Text = $"byte {stageTable.Count(x => x != dummySlot):D2}" } }, Comment = "Stage Count" };
+                    fileText = _codeService.ReplaceHook(countHook, fileText);
+                    _fileService.SaveTextFile(filePath, fileText);
                 }
-                // Remove dummy slots
-                // TODO: Remove this if we don't need the dummy slots to begin with
-                stageTable.RemoveAll(x => x == dummySlot);
-                // Update total stage count
-                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<Instruction> { new Instruction { Text = $"byte {stageTable.Count():D2}" } }, Comment = "Stage Count" };
-                fileText = _codeService.ReplaceHook(countHook, fileText);
-                _fileService.SaveTextFile(filePath, fileText);
+                else if (Path.GetExtension(filePath) == ".rss")
+                {
+                    var rssData = _fileService.ReadAllBytes(filePath);
+                    // Update stage table if it exists
+                    var tableBytes = stageTable.ToByteArray();
+                    tableBytes.CopyTo(rssData, _rssStageTableStart);
+
+                    foreach (var page in stageList.Pages)
+                    {
+                        // Update stage page
+                        var location = _pageLocations[stageList.Pages.IndexOf(page)];
+                        var bytes = page.StageSlots.Select(x => (byte)x.Index).Concat(Enumerable.Repeat<byte>(0, _stagesPerPage - page.StageSlots.Count)).ToArray();
+                        rssData[location] = (byte)page.StageSlots.Count;
+                        bytes.CopyTo(rssData, location + 1);
+                    }
+                    _fileService.WriteAllBytes(filePath, rssData);
+                }
             }
+            // Remove dummy slots
+            // TODO: Remove this if we don't need the dummy slots to begin with
+            stageTable.RemoveAll(x => x == dummySlot);
             // Compile code
             _codeService.CompileCodes();
         }

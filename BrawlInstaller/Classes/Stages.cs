@@ -111,6 +111,18 @@ namespace BrawlInstaller.Classes
             }
             return list;
         }
+
+        public static byte[] ToByteArray(this List<StageSlot> list)
+        {
+            var slotIds = new List<byte>();
+            foreach (var item in list)
+            {
+                slotIds.Add((byte)item.StageIds.StageId);
+                slotIds.Add((byte)item.StageIds.StageCosmeticId);
+            }
+            var bytes = slotIds.ToArray();
+            return bytes;
+        }
     }
 
     public class StageEntry
