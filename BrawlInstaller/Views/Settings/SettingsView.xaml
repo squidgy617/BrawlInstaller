@@ -60,7 +60,7 @@
                                 <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left" ToolTip="Stage lists in build"/>
                                 <ListBox x:Name="stageListsListBox" ItemsSource="{Binding StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ToolTip="Stage list file"/>
-                                <userControls:FileBox x:Name="stagePathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="ASM file (.asm)|*.asm">
+                                <userControls:FileBox x:Name="stagePathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Stage list file (*.asm, *.rss)|*.asm;*.rss">
                                     <userControls:FileBox.Resources>
                                         <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
                                     </userControls:FileBox.Resources>

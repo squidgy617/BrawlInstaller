@@ -24,7 +24,7 @@ namespace BrawlInstaller.StaticClasses
             new DefaultFilePath(FileType.TrophyNames, "MSBIN file (.msbin)|*.msbin"),
             new DefaultFilePath(FileType.FighterTrophyLocation, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.SSETrophyModule, "REL file (.rel)|*.rel"),
-            new DefaultFilePath(FileType.StageTablePath, "ASM file (.asm)|*.asm"),
+            new DefaultFilePath(FileType.StageTablePath, "Stage table file (*.asm, *.rss)|*.asm;*.rss"),
             new DefaultFilePath(FileType.CreditsThemeAsmFile, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.EndingAsmFile, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.ThrowReleaseAsmFile, "ASM file (.asm)|*.asm"),

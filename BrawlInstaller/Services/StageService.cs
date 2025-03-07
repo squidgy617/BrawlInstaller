@@ -105,32 +105,64 @@ namespace BrawlInstaller.Services
                 if (_fileService.FileExists(filePath))
                 {
                     var stageList = new StageList { Name = Path.GetFileNameWithoutExtension(stageListFile.Path), FilePath = filePath.Replace(_settingsService.AppSettings.BuildPath, "") };
-                    // Read all pages from stage list file
-                    var fileText = _fileService.ReadTextFile(filePath);
-                    var labels = new List<string> { "TABLE_1:", "TABLE_2:", "TABLE_3:", "TABLE_4:", "TABLE_5:" };
-                    int pageNumber = 1;
-                    foreach (var label in labels)
+                    if (Path.GetExtension(filePath) == ".asm")
                     {
-                        var page = new StagePage { PageNumber = pageNumber };
-                        // Get indexes in table
-                        var indexList = _codeService.ReadTable(fileText, label);
-                        foreach(var index in indexList)
+                        // Read all pages from stage list file
+                        var fileText = _fileService.ReadTextFile(filePath);
+                        var labels = new List<string> { "TABLE_1:", "TABLE_2:", "TABLE_3:", "TABLE_4:", "TABLE_5:" };
+                        int pageNumber = 1;
+                        foreach (var label in labels)
                         {
-                            // Get IDs from index
-                            if(int.TryParse(index.Replace("0x", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result))
+                            var page = new StagePage { PageNumber = pageNumber };
+                            // Get indexes in table
+                            var indexList = _codeService.ReadTable(fileText, label);
+                            foreach (var index in indexList)
                             {
-                                if (result >= 0)
+                                // Get IDs from index
+                                if (int.TryParse(index.Replace("0x", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result))
                                 {
-                                    var stageSlot = stageTable.FirstOrDefault(x => x.Index == result);
-                                    if (stageSlot != null)
+                                    if (result >= 0)
                                     {
-                                        page.StageSlots.Add(stageSlot);
+                                        var stageSlot = stageTable.FirstOrDefault(x => x.Index == result);
+                                        if (stageSlot != null)
+                                        {
+                                            page.StageSlots.Add(stageSlot);
+                                        }
                                     }
                                 }
                             }
+                            stageList.Pages.Add(page);
+                            pageNumber++;
                         }
-                        stageList.Pages.Add(page);
-                        pageNumber++;
+                    }
+                    else if (Path.GetExtension(filePath) == ".rss")
+                    {
+                        var rssData = _fileService.ReadAllBytes(filePath);
+                        // Pages start at 0x3C and are 40 bytes each
+                        var pageLocations = new List<int> { 0x3C, 0x64, 0x8C, 0xB4, 0xDC };
+                        int pageNumber = 1;
+                        foreach(var pageLocation in pageLocations)
+                        {
+                            var page = new StagePage { PageNumber = pageNumber };
+                            // Get indexes in page
+                            var indexList = new List<int>();
+                            int stageCount = rssData[pageLocation];
+                            var start = pageLocation + 1;
+                            for(var i = start; i < start + stageCount; i++)
+                            {
+                                indexList.Add(rssData[i]);
+                            }
+                            foreach (var index in indexList)
+                            {
+                                var stageSlot = stageTable.FirstOrDefault(x => x.Index == index);
+                                if (stageSlot != null)
+                                {
+                                    page.StageSlots.Add(stageSlot);
+                                }
+                            }
+                            stageList.Pages.Add(page);
+                            pageNumber++;
+                        }
                     }
                     // Add stage list
                     stageLists.Add(stageList);
@@ -411,16 +443,34 @@ namespace BrawlInstaller.Services
             var filePath = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageTablePath}";
             if (_fileService.FileExists(filePath))
             {
-                var fileText = _fileService.ReadTextFile(filePath);
-                var idList = _codeService.ReadTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel);
-                foreach(var id in idList)
+                if (Path.GetExtension(filePath) == ".asm")
                 {
-                    var newIds = new BrawlIds();
-                    var stageId = id.Substring(2, 2);
-                    var cosmeticId = id.Substring(4, 2);
-                    newIds.StageId = Convert.ToInt32(stageId, 16);
-                    newIds.StageCosmeticId = Convert.ToInt32(cosmeticId, 16);
-                    stageIds.Add(newIds);
+                    var fileText = _fileService.ReadTextFile(filePath);
+                    var idList = _codeService.ReadTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel);
+                    foreach (var id in idList)
+                    {
+                        var newIds = new BrawlIds();
+                        var stageId = id.Substring(2, 2);
+                        var cosmeticId = id.Substring(4, 2);
+                        newIds.StageId = Convert.ToInt32(stageId, 16);
+                        newIds.StageCosmeticId = Convert.ToInt32(cosmeticId, 16);
+                        stageIds.Add(newIds);
+                    }
+                }
+                else if (Path.GetExtension(filePath) == ".rss")
+                {
+                    var rssData = _fileService.ReadAllBytes(filePath);
+                    // Table starts at 0x104 and holds 256 values
+                    for (var i = 0x104; i < (0x104 + 256); i += 2)
+                    {
+                        if (rssData[i] != 0 && rssData[i + 1] != 0)
+                        {
+                            var newIds = new BrawlIds();
+                            newIds.StageId = rssData[i];
+                            newIds.StageCosmeticId = rssData[i + 1];
+                            stageIds.Add(newIds);
+                        }
+                    }
                 }
             }
             return stageIds;
