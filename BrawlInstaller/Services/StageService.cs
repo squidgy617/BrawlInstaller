@@ -698,42 +698,43 @@ namespace BrawlInstaller.Services
         /// <param name="stage">Stage to remove from</param>
         /// <param name="deleteOptions">Selected items to delete</param>
         /// <returns>List of files that can be optionally deleted</returns>
-        private List<string> DeleteStageEntries(StageInfo stage, List<string> deleteOptions)
+        private void DeleteStageEntries(StageInfo stage, List<string> deleteOptions)
         {
-            var toDelete = new List<string>();
-            var buildPath = _settingsService.AppSettings.BuildPath;
-            var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath);
-            var aslPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageSlots);
-            foreach(var stageEntry in stage.StageEntries)
+            if (stage != null)
             {
-                // Delete param files
-                var path = Path.Combine(paramPath, $"{stageEntry.Params.Name}.param");
-                _fileService.DeleteFile(path);
-                // Delete pac files
-                path = stageEntry.Params.PacFile;
-                _fileService.DeleteFile(path);
-                // Delete substage files
-                foreach(var substage in stageEntry.Params.Substages)
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var paramPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageParamPath);
+                var aslPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StageSlots);
+                foreach (var stageEntry in stage.StageEntries)
                 {
-                    path = substage.PacFile;
+                    // Delete param files
+                    var path = Path.Combine(paramPath, $"{stageEntry.Params.Name}.param");
+                    _fileService.DeleteFile(path);
+                    // Delete pac files
+                    path = stageEntry.Params.PacFile;
+                    _fileService.DeleteFile(path);
+                    // Delete substage files
+                    foreach (var substage in stageEntry.Params.Substages)
+                    {
+                        path = substage.PacFile;
+                        _fileService.DeleteFile(path);
+                    }
+                    // Delete soundbank file
+                    path = stageEntry.Params.SoundBankFile;
+                    _fileService.DeleteFile(path);
+                    // Delete bin file
+                    path = stageEntry.ListAlt.BinFilePath;
+                    _fileService.DeleteFile(path);
+                    // Add modules and tracklists to delete options
+                    foreach (var file in deleteOptions)
+                    {
+                        _fileService.DeleteFile(file);
+                    }
+                    // Delete ASL file
+                    path = Path.Combine(aslPath, $"{stage.Slot.StageIds.StageId:X2}.asl");
                     _fileService.DeleteFile(path);
                 }
-                // Delete soundbank file
-                path = stageEntry.Params.SoundBankFile;
-                _fileService.DeleteFile(path);
-                // Delete bin file
-                path = stageEntry.ListAlt.BinFilePath;
-                _fileService.DeleteFile(path);
-                // Add modules and tracklists to delete options
-                foreach(var file in deleteOptions)
-                {
-                    _fileService.DeleteFile(file);
-                }
-                // Delete ASL file
-                path = Path.Combine(aslPath, $"{stage.Slot.StageIds.StageId:X2}.asl");
-                _fileService.DeleteFile(path);
             }
-            return toDelete;
         }
 
         /// <summary>
