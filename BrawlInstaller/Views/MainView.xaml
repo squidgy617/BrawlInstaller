@@ -19,10 +19,10 @@
             <TabItem Header="Stages" IsEnabled="{Binding BuildSettingsExist}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="StageView" Content="{Binding StageViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
-            <TabItem Header="Music" IsEnabled="{Binding BuildPathExists}" IsEnabledChanged="TabItem_IsEnabledChanged">
+            <TabItem Header="Music" IsEnabled="{Binding BuildSettingsExist}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="TracklistView" Content="{Binding TracklistViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
-            <TabItem Header="Trophies" IsEnabled="{Binding BuildPathExists}" IsEnabledChanged="TabItem_IsEnabledChanged">
+            <TabItem Header="Trophies" IsEnabled="{Binding BuildSettingsExist}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="TrophyView" Content="{Binding TrophyViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
             <TabItem Header="Settings" IsEnabled="{Binding BuildPathExists}" IsEnabledChanged="TabItem_IsEnabledChanged">

@@ -1,7 +1,5 @@
-- Costume list now shows a preview of the cosmetic assigned to each costume next to the list entry.
-- You can now switch which cosmetics are assigned to which costumes. Small arrow buttons on the left-hand side of the costume list allow you to move cosmetics up and down the costume list.
-- Stage list alt thumbnails will now automatically be resized to 160 x 120 pixels.
-- Fixed an issue where SSE unlock icons loaded from legacy (.zip) fighter packages would not be named correctly when the package was imported.
-- Fixed an issue where empty trophies would cause an error on import.
-- Fixed an issue where saving cosmetics would rarely result in an error.
-- Changed verbiage of missing cosmetics validation error.
+- Hovering over the cosmetic icons next to a costume entry will now show an enlarged preview.
+- Fixed an issue where saving a brand new stage slot could result in an error.
+- All tabs aside from "Settings" are now disabled until settings are saved.
+- Added labels to explain that settings must be saved before you can use the application.
+- Updated program icon.

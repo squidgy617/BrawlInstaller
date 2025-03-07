@@ -326,8 +326,12 @@
                 <Label x:Name="defaultSettingsLabel" Content="Presets:" VerticalAlignment="Bottom" ToolTip="Select a default set of settings to apply"/>
                 <ComboBox x:Name="defaultSettingsDropDown" ItemsSource="{Binding DefaultSettingsOptions}" SelectedValuePath="Value" DisplayMemberPath="Key" SelectedValue="{Binding SelectedSettingsOption}" VerticalAlignment="Bottom" Width="100"/>
                 <Button x:Name="applyDefaultButton" Content="Apply" Command="{Binding ApplyDefaultSettingCommand}" VerticalAlignment="Bottom" IsEnabled="{Binding ApplyPresetButtonEnabled}"/>
+                <Label Content="← Recommended to select a preset before saving!" Foreground="Red" Visibility="{Binding BuildSettingsExist, Converter={StaticResource inverseBoolVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
             </WrapPanel>
-            <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <Label HorizontalAlignment="Right" Content="Save your settings to enable all tabs →" Foreground="Red" Visibility="{Binding BuildSettingsExist, Converter={StaticResource inverseBoolVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
+                <Button x:Name="saveButton" Content="Save" Command="{Binding SaveSettingsCommand}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

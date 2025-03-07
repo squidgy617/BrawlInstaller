@@ -133,6 +133,9 @@ namespace BrawlInstaller.ViewModels
 
         public Dictionary<string, SoundbankStyle> SoundbankStyleOptions { get => typeof(SoundbankStyle).GetDictionary<SoundbankStyle>(); }
 
+        [DependsUpon(nameof(AppSettings))]
+        public bool BuildSettingsExist { get => _fileService.FileExists(_settingsService.BuildSettingsPath); }
+
         // Methods
 
         // TODO: Should these save to a different location?
@@ -141,6 +144,7 @@ namespace BrawlInstaller.ViewModels
             _settingsService.SaveSettings(BuildSettings, _settingsService.BuildSettingsPath);
             WeakReferenceMessenger.Default.Send(new SettingsSavedMessage(BuildSettings));
             _dialogService.ShowMessage("Settings saved.", "Saved");
+            OnPropertyChanged(nameof(BuildSettingsExist));
         }
 
         private void LoadSettings()
@@ -148,6 +152,7 @@ namespace BrawlInstaller.ViewModels
             BuildSettings = _settingsService.LoadSettings(_settingsService.BuildSettingsPath);
             OnPropertyChanged(nameof(AppSettings));
             OnPropertyChanged(nameof(BuildSettings));
+            OnPropertyChanged(nameof(BuildSettingsExist));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }
 
@@ -157,6 +162,7 @@ namespace BrawlInstaller.ViewModels
             _settingsService.BuildSettings = BuildSettings;
             OnPropertyChanged(nameof(AppSettings));
             OnPropertyChanged(nameof(BuildSettings));
+            OnPropertyChanged(nameof(BuildSettingsExist));
             WeakReferenceMessenger.Default.Send(new SettingsLoadedMessage(BuildSettings));
         }
 

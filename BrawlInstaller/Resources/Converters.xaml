@@ -18,4 +18,5 @@
     <local:ResourceTypeUriStringConverter x:Key="nodeUriStringConverter"/>
     <local:MultiParamConverter x:Key="multiParamConverter"/>
     <local:CostumePreviewConverter x:Key="costumePreviewConverter"/>
+    <local:InverseBoolVisibilityConverter x:Key="inverseBoolVisConverter"/>
 </ResourceDictionary>

@@ -198,6 +198,32 @@ namespace BrawlInstaller.Resources
         }
     }
 
+    [ValueConversion(typeof(bool), typeof(Visibility))]
+    public class InverseBoolVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (parameter == null)
+            {
+                parameter = Visibility.Hidden;
+            }
+            if ((bool)value == false)
+            {
+                return Visibility.Visible;
+            }
+            return (Visibility)parameter;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((Visibility)value == Visibility.Visible)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+
     [ValueConversion(typeof(object), typeof(Visibility))]
     public class NullVisibilityConverter : IValueConverter
     {
