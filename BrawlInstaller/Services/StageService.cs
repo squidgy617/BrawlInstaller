@@ -485,14 +485,41 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Get preset count for random stage select screen
+        /// </summary>
+        /// <returns>Preset count</returns>
+        private int GetRSSPresetCount()
+        {
+            var presetCount = 7;
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.RSSFile))
+            {
+                var rssFile = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.RSSFile);
+                if (!string.IsNullOrEmpty(rssFile))
+                {
+                    var rssText = _codeService.ReadCode(rssFile);
+                    var alias = _codeService.GetCodeAlias(rssText, "NUM_PRESETS");
+                    if (alias != null)
+                    {
+                        var valid = int.TryParse(alias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int count);
+                        if (valid)
+                        {
+                            presetCount = count;
+                        }
+                    }
+                }
+            }
+            return presetCount;
+        }
+
+        /// <summary>
         /// Update names for stages on RSS
         /// </summary>
         /// <param name="stage"></param>
         private void SaveStageRandomName(StageInfo stage)
         {
-            // TODO: Load this from code in Random.asm
-            var presetCount = 7;
             var buildPath = _settingsService.AppSettings.BuildPath;
+            // Get preset count
+            var presetCount = GetRSSPresetCount();
             var randomStageLocations = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations;
             foreach(var location in randomStageLocations)
             {
