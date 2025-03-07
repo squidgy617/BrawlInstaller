@@ -302,6 +302,7 @@ namespace BrawlInstaller.ViewModels
                     FighterInfo = FighterPackage.FighterInfo.CopyNoAttributes()
                 };
                 deletePackage.FighterInfo.DisplayName = "Unknown";
+                deletePackage.FighterSettings.LLoadCharacterId = FighterPackage.FighterInfo.Ids.CSSSlotConfigId;
                 // Prompt for items to delete if applicable
                 deletePackage = SelectDeleteOptions(deletePackage);
                 // Update UI
