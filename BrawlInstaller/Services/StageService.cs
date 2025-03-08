@@ -194,7 +194,6 @@ namespace BrawlInstaller.Services
             var randomToggleList = rssData.SubArray((pageNumber - 1) * 6, 6).Reverse().ToList(); // Each bitarray is 6 bytes long, and there is one for each page
             randomToggleList.AddRange(new byte[2]); // Pad bitarray so we can convert to int64
             var randomToggleBitmask = BitConverter.ToUInt64(randomToggleList.ToArray(), 0);
-            //var randomToggles = GetStageToggles(randomToggleBitmask);
             return randomToggleBitmask;
         }
 
@@ -209,28 +208,7 @@ namespace BrawlInstaller.Services
             var hazardToggleList = rssData.SubArray(((pageNumber - 1) * 6) + 30, 6).Reverse().ToList(); // Hazard toggles start at offset 30
             hazardToggleList.AddRange(new byte[2]);
             var hazardToggleBitmask = BitConverter.ToUInt64(hazardToggleList.ToArray(), 0);
-            //var hazardToggles = GetStageToggles(hazardToggleBitmask);
             return hazardToggleBitmask;
-        }
-
-        /// <summary>
-        /// Get stage toggles from bitmask
-        /// </summary>
-        /// <param name="bitmask">Bitmask to get stage random toggles from</param>
-        /// <returns>Stage indexes that are toggled</returns>
-        private List<int> GetStageToggles(ulong bitmask)
-        {
-            List<int> toggledStages = new List<int>();
-
-            for (int i = 0; i < 64; i++)
-            {
-                if ((bitmask & (1UL << i)) != 0)
-                {
-                    toggledStages.Add(i + 1);
-                }
-            }
-
-            return toggledStages;
         }
 
         /// <summary>
@@ -968,11 +946,9 @@ namespace BrawlInstaller.Services
                         rssData[location] = (byte)page.StageSlots.Count;
                         bytes.CopyTo(rssData, location + 1);
                         // Update random toggles
-                        //var randomBitmask = GetStageToggleBitmask(page.StageSlots.Where(x => x.RandomOn).Select(x => page.StageSlots.IndexOf(x) + 1).ToList());
                         var randomBytes = BitConverter.GetBytes(page.RandomFlags).SubArray(0, 6).Reverse().ToArray();
                         randomBytes.CopyTo(rssData, (page.PageNumber - 1) * 6);
                         // Update hazard toggles
-                        //var hazardBitmask = GetStageToggleBitmask(page.StageSlots.Where(x => x.HazardsOn).Select(x => page.StageSlots.IndexOf(x) + 1).ToList());
                         var hazardBytes = BitConverter.GetBytes(page.HazardFlags).SubArray(0, 6).Reverse().ToArray();
                         hazardBytes.CopyTo(rssData, 30 + ((page.PageNumber - 1) * 6)); // Offset 30 is where hazard toggles start
                     }
@@ -984,24 +960,6 @@ namespace BrawlInstaller.Services
             stageTable.RemoveAll(x => x == dummySlot);
             // Compile code
             _codeService.CompileCodes();
-        }
-
-        /// <summary>
-        /// Get stage toggle bitmask from list of toggles
-        /// </summary>
-        /// <param name="stageToggles">List of toggles</param>
-        /// <returns>Bitmask</returns>
-        private ulong GetStageToggleBitmask(List<int> stageToggles)
-        {
-            ulong bitmask = 0;
-            foreach (int stage in stageToggles)
-            {
-                if (stage >= 1 && stage <= 64)
-                {
-                    bitmask |= (1UL << (stage - 1));
-                }
-            }
-            return bitmask;
         }
 
         /// <summary>

@@ -164,6 +164,10 @@ namespace BrawlInstaller.ViewModels
                 {
                     foreach (var slot in page.StageSlots.Where(x => x.StageIds.StageId == stageSlot.StageIds.StageId && x.StageIds.StageCosmeticId == stageSlot.StageIds.StageCosmeticId).ToList())
                     {
+                        // Update flags
+                        page.RandomFlags = page.RandomFlags.RemoveBit(page.StageSlots.IndexOf(slot));
+                        page.HazardFlags = page.HazardFlags.RemoveBit(page.StageSlots.IndexOf(slot));
+                        // Remove stage
                         page.StageSlots.Remove(slot);
                     }
                 }
@@ -251,6 +255,10 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedStageIndex > -1)
             {
+                // Update flags
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.RemoveBit(SelectedStageIndex);
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.RemoveBit(SelectedStageIndex);
+                // Remove stage
                 SelectedPage.StageSlots.RemoveAt(SelectedStageIndex);
                 if (SelectedPage.StageSlots.Count > SelectedStageIndex - 1)
                 {

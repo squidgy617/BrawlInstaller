@@ -613,5 +613,13 @@ namespace BrawlInstaller.Common
 
             return toggledBits;
         }
+
+        public static ulong RemoveBit(this ulong bitmask, int index)
+        {
+            ulong mask = ~((1UL << index) - 1);
+            ulong affectedBits = bitmask & mask;
+            ulong shiftedBits = (affectedBits >> 1) & mask;
+            return (bitmask & ~mask) | shiftedBits;
+        }
     }
 }
