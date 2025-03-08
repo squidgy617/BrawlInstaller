@@ -63,6 +63,11 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
                                 <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120">
                                     <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
                                         <ListBox.ItemTemplate>
@@ -87,6 +92,8 @@
                                     <Button x:Name="stageDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
                                     <Button x:Name="removeStageButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.RemoveStageFromListCommand}" Grid.Row="2"/>
                                 </Grid>
+                                <CheckBox Grid.Row="1" Content="Random enabled?" IsChecked="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot.RandomOn}" Visibility="{Binding Source={x:Reference userControl}, Path=DataContext.DisplayRssOptions, Converter={StaticResource boolVisConverter}}"/>
+                                <CheckBox Grid.Row="2" Content="Hazards enabled?" IsChecked="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot.HazardsOn}" Visibility="{Binding Source={x:Reference userControl}, Path=DataContext.DisplayRssOptions, Converter={StaticResource boolVisConverter}}"/>
                             </Grid>
                         </DataTemplate>
                     </TabControl.ContentTemplate>

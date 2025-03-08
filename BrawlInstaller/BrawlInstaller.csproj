@@ -110,6 +110,7 @@
     <Compile Include="Enums\InstallOptionType.cs" />
     <Compile Include="Enums\SettingsPresets.cs" />
     <Compile Include="Enums\SoundbankStyle.cs" />
+    <Compile Include="Enums\StageListType.cs" />
     <Compile Include="Enums\TracklistType.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
     <Compile Include="Program.cs" />
