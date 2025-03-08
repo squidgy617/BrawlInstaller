@@ -93,12 +93,12 @@
                                     <Button x:Name="stageDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
                                     <Button x:Name="removeStageButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.RemoveStageFromListCommand}" Grid.Row="2"/>
                                 </Grid>
-                                <CheckBox Grid.Row="1" Content="Random Enabled">
+                                <CheckBox Grid.Row="1" Content="Random Enabled" Visibility="{Binding Source={x:Reference Name=userControl}, Path=DataContext.DisplayRssOptions, Converter={StaticResource boolVisConverter}}">
                                     <CheckBox.IsChecked>
                                         <behaviors:ConverterBindableParameter Binding="{Binding Source={x:Reference Name=userControl}, Path=DataContext.RandomFlags}" Converter="{StaticResource stageRandomConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
                                     </CheckBox.IsChecked>
                                 </CheckBox>
-                                <CheckBox Grid.Row="2" Content="Hazards Enabled">
+                                <CheckBox Grid.Row="2" Content="Hazards Enabled" Visibility="{Binding Source={x:Reference Name=userControl}, Path=DataContext.DisplayRssOptions, Converter={StaticResource boolVisConverter}}">
                                     <CheckBox.IsChecked>
                                         <behaviors:ConverterBindableParameter Binding="{Binding Source={x:Reference Name=userControl}, Path=DataContext.HazardFlags}" Converter="{StaticResource stageHazardsConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
                                     </CheckBox.IsChecked>
