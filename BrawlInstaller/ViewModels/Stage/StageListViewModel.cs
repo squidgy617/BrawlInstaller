@@ -129,6 +129,14 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedStageList))]
         public bool DisplayRssOptions { get => SelectedStageList?.Type == StageListType.RSS; }
 
+        [DependsUpon(nameof(SelectedPage))]
+        [DependsUpon(nameof(SelectedStageIndex))]
+        public ulong RandomFlags { get => SelectedPage?.RandomFlags ?? 0; set { SelectedPage.RandomFlags = value; } }
+
+        [DependsUpon(nameof(SelectedPage))]
+        [DependsUpon(nameof(SelectedStageIndex))]
+        public ulong HazardFlags { get => SelectedPage?.HazardFlags ?? 0; set { SelectedPage.HazardFlags = value; } }
+
         // Methods
         public void UpdateStageList(StageSavedMessage message)
         {
@@ -169,6 +177,10 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedPage.StageSlots.FirstOrDefault() != SelectedStageSlot)
             {
+                // Update flags
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.SwapBits(SelectedStageIndex, SelectedStageIndex - 1);
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.SwapBits(SelectedStageIndex, SelectedStageIndex - 1);
+                // Move stage
                 SelectedPage.StageSlots.MoveUp(SelectedStageSlot);
                 StageSlots.MoveUp(SelectedStageSlot);
             }
@@ -189,6 +201,10 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedPage.StageSlots.LastOrDefault() != SelectedStageSlot)
             {
+                // Update flags
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.SwapBits(SelectedStageIndex, SelectedStageIndex + 1);
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.SwapBits(SelectedStageIndex, SelectedStageIndex + 1);
+                // Move stage
                 SelectedPage.StageSlots.MoveDown(SelectedStageSlot);
                 StageSlots.MoveDown(SelectedStageSlot);
             }

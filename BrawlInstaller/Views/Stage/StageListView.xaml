@@ -95,12 +95,12 @@
                                 </Grid>
                                 <CheckBox Grid.Row="1" Content="Random Enabled">
                                     <CheckBox.IsChecked>
-                                        <behaviors:ConverterBindableParameter Binding="{Binding RandomFlags}" Converter="{StaticResource stageRandomConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
+                                        <behaviors:ConverterBindableParameter Binding="{Binding Source={x:Reference Name=userControl}, Path=DataContext.RandomFlags}" Converter="{StaticResource stageRandomConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
                                     </CheckBox.IsChecked>
                                 </CheckBox>
                                 <CheckBox Grid.Row="2" Content="Hazards Enabled">
                                     <CheckBox.IsChecked>
-                                        <behaviors:ConverterBindableParameter Binding="{Binding HazardFlags}" Converter="{StaticResource stageHazardsConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
+                                        <behaviors:ConverterBindableParameter Binding="{Binding Source={x:Reference Name=userControl}, Path=DataContext.HazardFlags}" Converter="{StaticResource stageHazardsConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
                                     </CheckBox.IsChecked>
                                 </CheckBox>
                             </Grid>
