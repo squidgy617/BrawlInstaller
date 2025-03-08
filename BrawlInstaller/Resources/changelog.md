@@ -1,5 +1,1 @@
-- Hovering over the cosmetic icons next to a costume entry will now show an enlarged preview.
-- Fixed an issue where saving a brand new stage slot could result in an error.
-- All tabs aside from "Settings" are now disabled until settings are saved.
-- Added labels to explain that settings must be saved before you can use the application.
-- Updated program icon.
+- Fixed an issue where deleting a fighter would change their L-load ID to 0, which in some cases could cause the wrong fighter to be selected when returning to CSS.
