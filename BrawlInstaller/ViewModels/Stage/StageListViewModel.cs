@@ -206,8 +206,16 @@ namespace BrawlInstaller.ViewModels
             if (SelectedStageIndex > -1)
             {
                 SelectedPage.StageSlots.RemoveAt(SelectedStageIndex);
-                SelectedStageIndex = -1;
-                SelectedStageSlot = null;
+                if (SelectedPage.StageSlots.Count > SelectedStageIndex - 1)
+                {
+                    SelectedStageIndex--;
+                    SelectedStageSlot = SelectedPage.StageSlots[SelectedStageIndex];
+                }
+                else
+                {
+                    SelectedStageIndex = -1;
+                    SelectedStageSlot = null;
+                }
                 OnPropertyChanged(nameof(StageLists));
                 OnPropertyChanged(nameof(SelectedStageSlot));
                 OnPropertyChanged(nameof(SelectedStageTableEntry));
