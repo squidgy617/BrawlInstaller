@@ -45,6 +45,7 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; }
         public string FilePath { get; set; }
         public List<StagePage> Pages { get; set; } = new List<StagePage>();
+        [JsonIgnore] public StageListType Type { get => FilePath?.EndsWith(".rss") == true ? StageListType.RSS : StageListType.ASM; }
     }
 
     public class StagePage
@@ -73,6 +74,8 @@ namespace BrawlInstaller.Classes
         public BrawlIds StageIds { get; set; } = new BrawlIds();
         public string Name { get; set; } = "Unknown";
         public int Index { get; set; }
+        public bool HazardsOn { get; set; } = false;
+        public bool RandomOn { get; set; } = true;
 
         public StageSlot Copy()
         {
@@ -84,7 +87,9 @@ namespace BrawlInstaller.Classes
                 {
                     StageId = StageIds.StageId,
                     StageCosmeticId = StageIds.StageCosmeticId
-                }
+                },
+                HazardsOn = HazardsOn,
+                RandomOn = RandomOn
             };
             return newStageSlot;
         }

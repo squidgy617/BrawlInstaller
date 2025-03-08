@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
@@ -124,6 +125,9 @@ namespace BrawlInstaller.ViewModels
         public StageSlot SelectedStageTableEntry { get => _selectedStageTableEntry; set { _selectedStageTableEntry = value; OnPropertyChanged(nameof(SelectedStageTableEntry)); } }
 
         public List<int> IncompleteStageIds { get => _incompleteStageIds; set { _incompleteStageIds = value; OnPropertyChanged(nameof(IncompleteStageIds)); } }
+
+        [DependsUpon(nameof(SelectedStageList))]
+        public bool DisplayRssOptions { get => SelectedStageList?.Type == StageListType.RSS; }
 
         // Methods
         public void UpdateStageList(StageSavedMessage message)
