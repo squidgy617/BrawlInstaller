@@ -561,4 +561,42 @@ namespace BrawlInstaller.Common
             return trophy;
         }
     }
+
+    public static class ULongExtensions
+    {
+        public static ulong SwapBits(this ulong bitmask, int index1, int index2)
+        {
+            bool bit1 = (bitmask & (1UL << index1)) != 0;
+            bool bit2 = (bitmask & (1UL << index2)) != 0;
+
+            if (bit1 == bit2)
+            {
+                return bitmask;
+            }
+
+            // Toggle bits
+            bitmask ^= (1UL << index1);
+            bitmask ^= (1UL << index2);
+
+            return bitmask;
+        }
+
+        public static ulong ToggleBit(this ulong bitmask, int index)
+        {
+            bitmask ^= (1UL << index);
+            return bitmask;
+        }
+
+        public static ulong DisableBit(this ulong bitmask, int index)
+        {
+            bitmask &= (1UL << index);
+            return bitmask;
+        }
+
+        public static ulong EnableBit(this ulong bitmask, int index)
+        {
+            bitmask |= (1UL << index);
+            return bitmask;
+        }
+    }
 }
