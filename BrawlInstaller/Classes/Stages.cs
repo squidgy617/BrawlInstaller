@@ -52,6 +52,8 @@ namespace BrawlInstaller.Classes
     {
         public int PageNumber { get; set; }
         public List<StageSlot> StageSlots { get; set; } = new List<StageSlot>();
+        public ulong RandomFlags { get; set; } = 0;
+        public ulong HazardFlags { get; set; } = 0;
 
         public List<AsmTableEntry> ConvertToAsmTable()
         {
@@ -74,8 +76,6 @@ namespace BrawlInstaller.Classes
         public BrawlIds StageIds { get; set; } = new BrawlIds();
         public string Name { get; set; } = "Unknown";
         public int Index { get; set; }
-        public bool HazardsOn { get; set; } = false;
-        public bool RandomOn { get; set; } = true;
 
         public StageSlot Copy()
         {
@@ -87,9 +87,7 @@ namespace BrawlInstaller.Classes
                 {
                     StageId = StageIds.StageId,
                     StageCosmeticId = StageIds.StageCosmeticId
-                },
-                HazardsOn = HazardsOn,
-                RandomOn = RandomOn
+                }
             };
             return newStageSlot;
         }
