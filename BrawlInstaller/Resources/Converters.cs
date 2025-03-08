@@ -452,4 +452,76 @@ namespace BrawlInstaller.Resources
             return null;
         }
     }
+
+    [ValueConversion(typeof(int), typeof(ulong))]
+    public class StageRandomConverter : IValueConverter
+    {
+        private ulong target;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == DependencyProperty.UnsetValue || (int)parameter == -1)
+            {
+                return false;
+            }
+            ulong stage = System.Convert.ToUInt64(parameter); // Stage index
+            this.target = System.Convert.ToUInt64(value); // Current bitmask
+            ulong stageFlag = 1UL << (int)stage; // Bitshift stage
+            return ((stageFlag & this.target) != 0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool isChecked = (bool)value; // Checkbox value
+            ulong bitmask = System.Convert.ToUInt64(this.target); // Current bitmask
+            ulong stage = System.Convert.ToUInt64(parameter); // Stage index
+            ulong stageFlag = 1UL << (int)stage; // Bitshift stage
+
+            if (isChecked)
+            {
+                bitmask |= stageFlag; // Set the corresponding bit to 1
+            }
+            else
+            {
+                bitmask &= ~stageFlag; // Clear the corresponding bit (set to 0)
+            }
+            return bitmask;
+        }
+    }
+
+    [ValueConversion(typeof(int), typeof(ulong))]
+    public class StageHazardsConverter : IValueConverter
+    {
+        private ulong target;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == DependencyProperty.UnsetValue || (int)parameter == -1)
+            {
+                return false;
+            }
+            ulong stage = System.Convert.ToUInt64(parameter); // Stage index
+            this.target = System.Convert.ToUInt64(value); // Current bitmask
+            ulong stageFlag = 1UL << (int)stage; // Bitshift stage
+            return ((stageFlag & this.target) != 0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool isChecked = (bool)value; // Checkbox value
+            ulong bitmask = System.Convert.ToUInt64(this.target); // Current bitmask
+            ulong stage = System.Convert.ToUInt64(parameter); // Stage index
+            ulong stageFlag = 1UL << (int)stage; // Bitshift stage
+
+            if (isChecked)
+            {
+                bitmask |= stageFlag; // Set the corresponding bit to 1
+            }
+            else
+            {
+                bitmask &= ~stageFlag; // Clear the corresponding bit (set to 0)
+            }
+            return bitmask;
+        }
+    }
 }
