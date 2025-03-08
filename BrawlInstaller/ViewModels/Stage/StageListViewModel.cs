@@ -186,9 +186,21 @@ namespace BrawlInstaller.ViewModels
             }
             else if (SelectedPage != SelectedStageList.Pages.FirstOrDefault())
             {
+                // Update flags
+                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) - 1];
+                if (SelectedPage.RandomFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.RandomFlags = newPage.RandomFlags.EnableBit(newPage.StageSlots.Count);
+                }
+                if (SelectedPage.HazardFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.HazardFlags = newPage.HazardFlags.EnableBit(newPage.StageSlots.Count);
+                }
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex + 1); // Disable bit
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex + 1);
+                // Move stage
                 SelectedPage.StageSlots.Remove(SelectedStageSlot);
                 StageSlots.Remove(SelectedStageSlot);
-                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) - 1];
                 newPage.StageSlots.Add(SelectedStageSlot);
                 SelectedPage = newPage;
                 OnPropertyChanged(nameof(SelectedPage));
@@ -210,9 +222,23 @@ namespace BrawlInstaller.ViewModels
             }
             else if (SelectedPage != SelectedStageList.Pages.LastOrDefault())
             {
+                // Update flags
+                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) + 1];
+                newPage.RandomFlags = newPage.RandomFlags << 1; // Shift all flags to the left
+                newPage.HazardFlags = newPage.HazardFlags << 1;
+                if (SelectedPage.RandomFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.RandomFlags = newPage.RandomFlags.EnableBit(0);
+                }
+                if (SelectedPage.HazardFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.HazardFlags = newPage.HazardFlags.EnableBit(0);
+                }
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex + 1); // Disable bit
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex + 1);
+                // Move stage
                 SelectedPage.StageSlots.Remove(SelectedStageSlot);
                 StageSlots.Remove(SelectedStageSlot);
-                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) + 1];
                 newPage.StageSlots.Insert(0, SelectedStageSlot);
                 SelectedPage = newPage;
                 OnPropertyChanged(nameof(SelectedPage));

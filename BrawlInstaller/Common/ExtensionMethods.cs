@@ -598,5 +598,20 @@ namespace BrawlInstaller.Common
             bitmask |= (1UL << index);
             return bitmask;
         }
+
+        public static List<int> GetToggledBits(this ulong bitmask)
+        {
+            List<int> toggledBits = new List<int>();
+
+            for (int i = 0; i < 64; i++)
+            {
+                if ((bitmask & (1UL << i)) != 0)
+                {
+                    toggledBits.Add(i + 1);
+                }
+            }
+
+            return toggledBits;
+        }
     }
 }
