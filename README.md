@@ -1,4 +1,4 @@
-# BrawlInstaller
+<h1><img src="https://github.com/user-attachments/assets/7136948e-4a1c-4ad7-bf5f-b1cdc793a694" alt="BrawlInstaller Logo" width="32" height="32"/> BrawlInstaller</h1>
 An all-in-one tool for managing mods in Brawl. Manage fighters, costumes, stages, music, and trophies with flexible tools that can support virtually any build.
 
 # Features
