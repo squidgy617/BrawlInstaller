@@ -1,1 +1,1 @@
-- Fixed an issue where deleting a fighter would change their L-load ID to 0, which in some cases could cause the wrong fighter to be selected when returning to CSS.
+- Trophy description box no longer has text wrapping, so line spacing should match what appears in-game.
