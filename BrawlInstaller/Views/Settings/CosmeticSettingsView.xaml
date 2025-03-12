@@ -169,6 +169,8 @@
             <TextBox x:Name="offsetTextBox" Text="{Binding SelectedDefinition.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
             <Label x:Name="suffixLabel" Content="ID Length:" Grid.Row="3" Grid.Column="2" ToolTip="Minimum length for IDs in texture names. Will be padded with 0s to meet specified length."/>
             <TextBox x:Name="suffixTextBox" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
+            <Label x:Name="groupMultiplierLabel" Content="Group Multiplier:" Grid.Row="4" Grid.Column="2"/>
+            <TextBox x:Name="groupMultiplierTextBox" Text="{Binding SelectedDefinition.GroupMultiplier}" Grid.Row="4" Grid.Column="3" Width="60"/>
             <Label x:Name="formatLabel" Content="Format:" Grid.Row="0" Grid.Column="4" ToolTip="Graphics format to use for textures"/>
             <ComboBox x:Name="formatDropDown" ItemsSource="{Binding Formats}" Grid.Row="0" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
             <Label x:Name="widthLabel" Content="Width:" Grid.Row="1" Grid.Column="4" ToolTip="Width to resize textures to. If blank, texture width will not be changed"/>

@@ -66,6 +66,7 @@ namespace BrawlInstaller.ViewModels
             GameIconList = _trophyService.GetTrophyGameIcons();
             Trophy = trophy;
             OldTrophy = trophy;
+            SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
             OnPropertyChanged(nameof(Trophy));
             OnPropertyChanged(nameof(OldTrophy));
         }

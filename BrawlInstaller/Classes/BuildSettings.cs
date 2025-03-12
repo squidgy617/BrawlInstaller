@@ -72,6 +72,7 @@ namespace BrawlInstaller.Classes
         public int Multiplier { get; set; } = 1;
         public int Offset { get; set; } = 0;
         public int SuffixDigits { get; set; } = 3;
+        public int GroupMultiplier { get; set; } = 1;
         public IdType IdType { get; set; } = IdType.Cosmetic;
         public ImageSize Size { get; set; } = new ImageSize(null, null);
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
