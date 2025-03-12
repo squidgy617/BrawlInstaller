@@ -83,6 +83,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="filePathLabel" Content="Install Location:" ToolTip="Location to install cosmetics to. Can be a file or a folder."/>
             <StackPanel Grid.Column="1">
@@ -161,6 +162,8 @@
             </StackPanel>
             <Label x:Name="prefixLabel" Content="Prefix:" Grid.Row="5" ToolTip="Prefix used by textures associated with cosmetic"/>
             <TextBox x:Name="prefixTextBox" Text="{Binding SelectedDefinition.Prefix}" Grid.Row="5" Grid.Column="1" Width="120"/>
+            <Label x:Name="filePrefixLabel" Content="File Prefix:" Grid.Row="6" ToolTip="Prefix used for BRRES files storing cosmetics"/>
+            <TextBox x:Name="filePrefixTextBox" Text="{Binding SelectedDefinition.FilePrefix}" Grid.Row="6" Grid.Column="1" Width="120"/>
             <Label x:Name="idTypeLabel" Content="ID Type:" Grid.Row="0" Grid.Column="2" ToolTip="Type of ID when naming textures and updating frame indexes"/>
             <ComboBox x:Name="idTypeDropDown" ItemsSource="{Binding IdTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.IdType}" Grid.Row="0" Grid.Column="3" Width="120"/>
             <Label x:Name="multiplierLabel" Content="ID Multiplier" Grid.Row="1" Grid.Column="2" ToolTip="How much to multiply ID by when naming cosmetic"/>
@@ -169,7 +172,7 @@
             <TextBox x:Name="offsetTextBox" Text="{Binding SelectedDefinition.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
             <Label x:Name="suffixLabel" Content="ID Length:" Grid.Row="3" Grid.Column="2" ToolTip="Minimum length for IDs in texture names. Will be padded with 0s to meet specified length."/>
             <TextBox x:Name="suffixTextBox" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
-            <Label x:Name="groupMultiplierLabel" Content="Group Multiplier:" Grid.Row="4" Grid.Column="2"/>
+            <Label x:Name="groupMultiplierLabel" Content="Group Multiplier:" Grid.Row="4" Grid.Column="2" ToolTip="ID is divided by this number to determine the ID of BRRES group for grouped cosmetics. Only use when multiple textures belonging to different entities share BRRES files."/>
             <TextBox x:Name="groupMultiplierTextBox" Text="{Binding SelectedDefinition.GroupMultiplier}" Grid.Row="4" Grid.Column="3" Width="60"/>
             <Label x:Name="formatLabel" Content="Format:" Grid.Row="0" Grid.Column="4" ToolTip="Graphics format to use for textures"/>
             <ComboBox x:Name="formatDropDown" ItemsSource="{Binding Formats}" Grid.Row="0" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.Format}" Width="120"/>
@@ -181,7 +184,7 @@
             <ComboBox x:Name="compressionDropDown" ItemsSource="{Binding CompressionTypes}" Grid.Row="3" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.CompressionType}" Width="120"/>
             <Label x:Name="fileTypeLabel" Content="File Type:" Grid.Row="4" Grid.Column="4" ToolTip="Type of archive used for cosmetics"/>
             <ComboBox x:Name="fileTypeDropDown" ItemsSource="{Binding FileTypes}" Grid.Row="4" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.FileType}" Width="120"/>
-            <Grid x:Name="checkboxesGrid" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="5">
+            <Grid x:Name="checkboxesGrid" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -197,10 +200,11 @@
                 <CheckBox x:Name="hdFolderNameCheckBox" Content="Create new folder for HD textures" IsChecked="{Binding SelectedDefinition.CreateHDTextureFolder}" Grid.Row="1" ToolTip="Create a new folder within the specified HD texture folder when installed. Only works for cosmetics associated with fighter."/>
                 <CheckBox x:Name="alwaysInheritCheckBox" Content="Use other style if not available" IsChecked="{Binding SelectedDefinition.AlwaysInheritStyle}" Grid.Row="1" Grid.Column="1" ToolTip="When loading a character package, if this style isn't available, copy cosmetics of the same type from another style"/>
                 <CheckBox x:Name="requiredCheckBox" Content="Required" IsChecked="{Binding SelectedDefinition.Required}" Grid.Column="2" ToolTip="If checked, user will be warned when saving a fighter or stage without these cosmetics"/>
-                <CheckBox x:Name="selectableCheckBox" Content="Selectable" IsChecked="{Binding SelectedDefinition.Selectable}" Grid.Column="2" Grid.Row="1" ToolTip="If checked, user will be able to select from options via a dropdown when changing cosmetics. Only use for stage cosmetics. Mainly used for cosmetics that may be shared between stages." IsEnabled="{Binding SelectedDefinition.StageCosmetic}"/>
+                <CheckBox x:Name="alwaysCreateArchiveCheckBox" Content="Create archive files" IsChecked="{Binding SelectedDefinition.AlwaysCreateArchive}" Grid.Row="1" Grid.Column="2" ToolTip="If checked, a new archive file for cosmetics will be created if none exists. Only applies if file path is a directory."/>
+                <CheckBox x:Name="selectableCheckBox" Content="Selectable" IsChecked="{Binding SelectedDefinition.Selectable}" Grid.Column="3" Grid.Row="2" ToolTip="If checked, user will be able to select from options via a dropdown when changing cosmetics. Only use for stage cosmetics. Mainly used for cosmetics that may be shared between stages." IsEnabled="{Binding SelectedDefinition.StageCosmetic}"/>
                 <CheckBox x:Name="enabledCheckBox" Content="Enabled" IsChecked="{Binding SelectedDefinition.Enabled}" Grid.Column="3" ToolTip="If unchecked, these cosmetics will not be loaded or saved when editing a fighter, stage, etc"/>
             </Grid>
-            <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="7" Grid.ColumnSpan="6" ToolTip="Settings for texture pattern animations (PAT0)">
+            <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="8" Grid.ColumnSpan="6" ToolTip="Settings for texture pattern animations (PAT0)">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
