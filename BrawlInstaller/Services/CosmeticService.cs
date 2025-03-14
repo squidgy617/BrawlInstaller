@@ -192,7 +192,7 @@ namespace BrawlInstaller.Services
             var parentNode = !string.IsNullOrEmpty(definition.InstallLocation.NodePath) ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             if (parentNode.GetType() == typeof(ARCNode))
             {
-                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id / definition.GroupMultiplier);
             }
             if (parentNode != null)
             {
@@ -541,7 +541,8 @@ namespace BrawlInstaller.Services
         /// <returns>Name of file for cosmetic</returns>
         private string GetFileName(CosmeticDefinition definition, int? id, Cosmetic cosmetic)
         {
-            return $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
+            var prefix = !string.IsNullOrEmpty(definition.FilePrefix) ? definition.FilePrefix : definition.Prefix;
+            return $"{prefix}{FormatCosmeticId(definition, id, cosmetic)}.{definition.InstallLocation.FileExtension}";
         }
 
         /// <summary>
@@ -552,7 +553,8 @@ namespace BrawlInstaller.Services
         /// <returns>Name of file for cosmetic</returns>
         private string GetFileName(CosmeticDefinition definition, int? id)
         {
-            return $"{definition.Prefix}{FormatCosmeticId(definition, id)}.{definition.InstallLocation.FileExtension}";
+            var prefix = !string.IsNullOrEmpty(definition.FilePrefix) ? definition.FilePrefix : definition.Prefix;
+            return $"{prefix}{FormatCosmeticId(definition, id)}.{definition.InstallLocation.FileExtension}";
         }
 
         // TODO: Use for models too?
@@ -732,13 +734,13 @@ namespace BrawlInstaller.Services
             // If location is an ARC node and the BRRES does not exist, generate new BRRES
             if (node.GetType() == typeof(ARCNode))
             {
-                var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id / definition.GroupMultiplier);
                 if (foundNode == null)
                 {
                     var bres = new BRRESNode();
                     bres.Compression = definition.CompressionType.ToString();
                     bres.FileType = definition.FileType;
-                    bres.FileIndex = (short)id;
+                    bres.FileIndex = (short)(id / definition.GroupMultiplier);
                     node.InsertChild(bres, id);
                     node._children = node._children.OrderBy(x => ((ARCEntryNode)x).FileIndex).ToList();
                     bres.UpdateName();
@@ -862,18 +864,18 @@ namespace BrawlInstaller.Services
             var originalNode = parentNode;
             if (parentNode.GetType() == typeof(ARCNode))
             {
-                restrictRange = false;
-                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                restrictRange = IsSharedGroupCosmetic(definition);
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id / definition.GroupMultiplier);
             }
             if (parentNode != null)
             {
                 if (removeTextures)
                 {
-                    RemoveTextures((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
+                    RemoveTextures((BRRESNode)parentNode, definition, id, (!definition.InstallLocation.FilePath.EndsWith("\\") || IsSharedGroupCosmetic(definition)) && restrictRange);
                 }
-                RemoveModels((BRRESNode)parentNode, definition, id, !definition.InstallLocation.FilePath.EndsWith("\\") && restrictRange);
+                RemoveModels((BRRESNode)parentNode, definition, id, (!definition.InstallLocation.FilePath.EndsWith("\\") || IsSharedGroupCosmetic(definition)) && restrictRange);
                 // If location is an ARC node, remove entire BRRES
-                if (originalNode.GetType() == typeof(ARCNode))
+                if (originalNode.GetType() == typeof(ARCNode) && !IsSharedGroupCosmetic(definition))
                 {
                     originalNode.RemoveChild(parentNode);
                 }
@@ -956,7 +958,7 @@ namespace BrawlInstaller.Services
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             if (node.GetType() == typeof(ARCNode))
             {
-                node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
+                node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id / definition.GroupMultiplier);
             }
             if (node != null)
             {
@@ -1211,7 +1213,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
-                var fileName = GetFileName(definition, id);
+                var fileName = GetFileName(definition, (id / definition.GroupMultiplier) * definition.GroupMultiplier);
                 return $"{buildPath}\\{definition.InstallLocation.FilePath}{fileName}";
             }
             else
@@ -1240,7 +1242,7 @@ namespace BrawlInstaller.Services
                 FileCache.Add(node);
                 return node;
             }
-            if(definition.InstallLocation.FileExtension == "pac")
+            if(definition.InstallLocation.FileExtension == "pac" && definition.AlwaysCreateArchive)
             {
                 var newNode = new ARCNode();
                 var bresNode = new BRRESNode();
@@ -1253,7 +1255,7 @@ namespace BrawlInstaller.Services
                 FileCache.Add(newNode);
                 return newNode;
             }
-            else if (definition.InstallLocation.FileExtension == "brres")
+            else if (definition.InstallLocation.FileExtension == "brres" && definition.AlwaysCreateArchive)
             {
                 var newNode = new BRRESNode();
                 newNode.Compression = definition.CompressionType.ToString();
@@ -1443,8 +1445,8 @@ namespace BrawlInstaller.Services
                 // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
                 if (start.GetType() == typeof(ARCNode))
                 {
-                    start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id);
-                    restrictRange = false;
+                    start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id / definition.GroupMultiplier);
+                    restrictRange = IsSharedGroupCosmetic(definition);
                 }
                 if (start != null)
                 {
@@ -1489,8 +1491,8 @@ namespace BrawlInstaller.Services
                 // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for models
                 if (start.GetType() == typeof(ARCNode))
                 {
-                    start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == id));
-                    restrictRange = false;
+                    start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == id / definition.GroupMultiplier));
+                    restrictRange = IsSharedGroupCosmetic(definition);
                 }
                 var folder = start.FindChild("3DModels(NW4R)");
                 if (folder != null)
@@ -1626,6 +1628,16 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Determine whether specified definition uses shared groups
+        /// </summary>
+        /// <param name="definition">Definition to evaluate</param>
+        /// <returns>Whether or not definition is for shared group cosmetic</returns>
+        private bool IsSharedGroupCosmetic(CosmeticDefinition definition)
+        {
+            return definition.IdType != IdType.Cosmetic;
+        }
+
+        /// <summary>
         /// Get a list of fighter cosmetics
         /// </summary>
         /// <param name="fighterIds">Fighter IDs to retrieve cosmetics for</param>
@@ -1648,7 +1660,7 @@ namespace BrawlInstaller.Services
         public List<Cosmetic> GetTrophyCosmetics(BrawlIds trophyIds)
         {
             var settings = _settingsService.BuildSettings;
-            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.TrophyThumbnail).ToList();
+            var definitions = settings.CosmeticSettings.Where(x => x.CosmeticType == CosmeticType.TrophyThumbnail || x.CosmeticType == CosmeticType.TrophyStandee).ToList();
             // Load HD textures in advance
             if (_settingsService.AppSettings.ModifyHDTextures)
                 PreloadHDTextures();

@@ -30,6 +30,7 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private Trophy _trophy;
         private Trophy _oldTrophy;
+        private CosmeticType _selectedCosmeticOption;
         private List<TrophyGameIcon> _gameIconList;
 
         // Services
@@ -77,9 +78,15 @@ namespace BrawlInstaller.ViewModels
         public BitmapImage GameIcon2 { get => GameIconList.FirstOrDefault(x => x.Id == Trophy?.GameIcon2)?.Image; }
 
         [DependsUpon(nameof(Trophy))]
-        public Cosmetic Thumbnail { get => Trophy?.Thumbnails?.Items.FirstOrDefault(); }
+        public List<KeyValuePair<string, CosmeticType>> CosmeticOptions { get => DefaultCosmetics.DefaultTrophyCosmetics.Select(x => x.CosmeticType.GetKeyValuePair()).Distinct().ToList(); }
 
-        [DependsUpon(nameof(Trophy))]
+        [DependsUpon(nameof(CosmeticOptions))]
+        public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
+
+        [DependsUpon(nameof(SelectedCosmeticOption))]
+        public Cosmetic Thumbnail { get => Trophy?.Thumbnails?.Items.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption); }
+
+        [DependsUpon(nameof(SelectedCosmeticOption))]
         public int? ThumbnailId { get => Trophy?.Ids?.TrophyThumbnailId; set { Trophy.Ids.TrophyThumbnailId = value; MarkThumbnailsChanged(); OnPropertyChanged(nameof(ThumbnailId)); } }
 
         // Methods
@@ -88,6 +95,7 @@ namespace BrawlInstaller.ViewModels
             GameIconList = _trophyService.GetTrophyGameIcons();
             Trophy = _trophyService.LoadTrophyData(trophy);
             OldTrophy = Trophy.Copy();
+            SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;
             OnPropertyChanged(nameof(GameIconList));
             OnPropertyChanged(nameof(Trophy));
         }
@@ -96,7 +104,7 @@ namespace BrawlInstaller.ViewModels
         {
             var cosmetic = new Cosmetic
             {
-                CosmeticType = CosmeticType.TrophyThumbnail,
+                CosmeticType = SelectedCosmeticOption,
                 Style = "vBrawl"
             };
             Trophy.Thumbnails.Add(cosmetic);
@@ -109,15 +117,16 @@ namespace BrawlInstaller.ViewModels
             if (!string.IsNullOrEmpty(image))
             {
                 var bitmap = _fileService.LoadImage(image);
+                var cosmetic = Thumbnail;
                 if (Thumbnail == null)
                 {
-                    AddCosmetic();
+                    cosmetic = AddCosmetic();
                 }
-                Thumbnail.Image = bitmap;
-                Thumbnail.ImagePath = image;
-                Thumbnail.Texture = null;
-                Thumbnail.Palette = null;
-                Trophy.Thumbnails.ItemChanged(Thumbnail);
+                cosmetic.Image = bitmap;
+                cosmetic.ImagePath = image;
+                cosmetic.Texture = null;
+                cosmetic.Palette = null;
+                Trophy.Thumbnails.ItemChanged(cosmetic);
                 OnPropertyChanged(nameof(Thumbnail));
                 OnPropertyChanged(nameof(Trophy));
             }
@@ -129,13 +138,14 @@ namespace BrawlInstaller.ViewModels
             if (!string.IsNullOrEmpty(image))
             {
                 var bitmap = _fileService.LoadImage(image);
+                var cosmetic = Thumbnail;
                 if (Thumbnail == null)
                 {
-                    AddCosmetic();
+                    cosmetic = AddCosmetic();
                 }
-                Thumbnail.HDImage = bitmap;
-                Thumbnail.HDImagePath = image;
-                Trophy.Thumbnails.ItemChanged(Thumbnail);
+                cosmetic.HDImage = bitmap;
+                cosmetic.HDImagePath = image;
+                Trophy.Thumbnails.ItemChanged(cosmetic);
                 OnPropertyChanged(nameof(Thumbnail));
                 OnPropertyChanged(nameof(Trophy));
             }

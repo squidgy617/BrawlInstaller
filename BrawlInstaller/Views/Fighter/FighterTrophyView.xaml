@@ -90,15 +90,20 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label x:Name="imageLabel" Content="Image:" HorizontalAlignment="Left"/>
-                <Image x:Name="image" Source="{Binding Thumbnail.Image}" Width="112" Height="96" Grid.Row="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                <Button x:Name="imageButton" Content="Browse..." Grid.Row="2" Command="{Binding ReplaceThumbnailCommand}"/>
-                <Button x:Name="imageClearButton" Content="Clear" Grid.Row="3" Command="{Binding ClearThumbnailCommand}"/>
-                <Label x:Name="hdImageLabel" Content="HD Image:" HorizontalAlignment="Left" Grid.Column="1"/>
-                <Image x:Name="hdImage" Source="{Binding Thumbnail.HDImage}" Width="112" Height="96" Grid.Row="1" Grid.Column="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                <Button x:Name="hdImageButton" Content="Browse..." Grid.Row="2" Grid.Column="1" Command="{Binding ReplaceHDThumbnailCommand}"/>
-                <Button x:Name="hdImageClearButton" Content="Clear" Grid.Row="3" Grid.Column="1" Command="{Binding ClearHDThumbnailCommand}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="cosmeticTypeLabel" Content="Type:"/>
+                    <ComboBox x:Name="cosmeticTypeDropDown" ItemsSource="{Binding CosmeticOptions}" SelectedValue="{Binding SelectedCosmeticOption}" DisplayMemberPath="Key" SelectedValuePath="Value" Width="120"/>
+                </StackPanel>
+                <Label x:Name="imageLabel" Content="Image:" HorizontalAlignment="Left" Grid.Row="1"/>
+                <Image x:Name="image" Source="{Binding Thumbnail.Image}" Width="112" Height="96" Grid.Row="2" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Button x:Name="imageButton" Content="Browse..." Grid.Row="3" Command="{Binding ReplaceThumbnailCommand}"/>
+                <Button x:Name="imageClearButton" Content="Clear" Grid.Row="4" Command="{Binding ClearThumbnailCommand}"/>
+                <Label x:Name="hdImageLabel" Content="HD Image:" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1"/>
+                <Image x:Name="hdImage" Source="{Binding Thumbnail.HDImage}" Width="112" Height="96" Grid.Row="2" Grid.Column="1" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Button x:Name="hdImageButton" Content="Browse..." Grid.Row="3" Grid.Column="1" Command="{Binding ReplaceHDThumbnailCommand}"/>
+                <Button x:Name="hdImageClearButton" Content="Clear" Grid.Row="4" Grid.Column="1" Command="{Binding ClearHDThumbnailCommand}"/>
             </Grid>
         </GroupBox>
     </Grid>

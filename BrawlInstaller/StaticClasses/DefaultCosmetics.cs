@@ -52,6 +52,12 @@ namespace BrawlInstaller.StaticClasses
             (CosmeticType.CreditsIcon, "vBrawl")
         };
 
-        public static List<(CosmeticType CosmeticType, string Style)> AllDefaultCosmetics { get => DefaultStageCosmetics.Concat(DefaultCostumeCosmetics).Concat(DefaultFighterCosmetics).ToList(); }
+        public static List<(CosmeticType CosmeticType, string Style)> DefaultTrophyCosmetics = new List<(CosmeticType CosmeticType, string Style)>
+        {
+            (CosmeticType.TrophyThumbnail, "vBrawl"),
+            (CosmeticType.TrophyStandee, "vBrawl")
+        };
+
+        public static List<(CosmeticType CosmeticType, string Style)> AllDefaultCosmetics { get => DefaultStageCosmetics.Concat(DefaultCostumeCosmetics).Concat(DefaultFighterCosmetics).Concat(DefaultTrophyCosmetics).ToList(); }
     }
 }

@@ -72,6 +72,8 @@ namespace BrawlInstaller.Classes
         public int Multiplier { get; set; } = 1;
         public int Offset { get; set; } = 0;
         public int SuffixDigits { get; set; } = 3;
+        public int GroupMultiplier { get; set; } = 1;
+        public string FilePrefix { get; set; } = string.Empty;
         public IdType IdType { get; set; } = IdType.Cosmetic;
         public ImageSize Size { get; set; } = new ImageSize(null, null);
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
@@ -86,6 +88,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public bool FighterCosmetic { get => CosmeticType != CosmeticType.FranchiseIcon && !StageCosmetic; }
         [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon || CosmeticType == CosmeticType.StageName || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName || CosmeticType == CosmeticType.StageRandomBanner || CosmeticType == CosmeticType.StageReplayBanner || CosmeticType == CosmeticType.StageStats; }
         public bool Selectable { get; set; }
+        public bool AlwaysCreateArchive { get; set; } = true;
 
         public CosmeticDefinition Copy()
         {
