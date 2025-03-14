@@ -595,9 +595,16 @@ namespace BrawlInstaller.ViewModels
 
         public void AddCostume()
         {
-            var costumeId = 0;
+            var costumeId = SelectedCostume != null ? SelectedCostume.CostumeId : 0;
+            var originalCostumeId = costumeId;
             while (Costumes.Select(x => x.CostumeId).Contains(costumeId))
+            {
                 costumeId++;
+                if (originalCostumeId == costumeId)
+                {
+                    break;
+                }
+            }
             var newCostume = new Costume
             {
                 Color = 0x0B,
