@@ -16,6 +16,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 128,
@@ -29,7 +31,8 @@
       "AlwaysInheritStyle": true,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 1,
@@ -47,6 +50,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 128,
@@ -60,7 +65,8 @@
       "AlwaysInheritStyle": true,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 3,
@@ -97,6 +103,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 144,
@@ -110,7 +118,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": false,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 2,
@@ -128,6 +137,8 @@
       "Multiplier": 50,
       "Offset": 0,
       "SuffixDigits": 4,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 48,
@@ -141,7 +152,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 8,
@@ -159,6 +171,8 @@
       "Multiplier": 50,
       "Offset": 0,
       "SuffixDigits": 4,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -172,7 +186,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 0,
@@ -200,6 +215,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 64,
@@ -213,7 +230,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 0,
@@ -241,6 +259,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 80,
@@ -254,7 +274,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 6,
@@ -282,6 +303,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 64,
@@ -295,7 +318,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 9,
@@ -313,6 +337,8 @@
       "Multiplier": 1,
       "Offset": 1,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 1,
       "Size": {
         "Width": 128,
@@ -326,7 +352,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -354,6 +381,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 128,
@@ -367,7 +396,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -385,6 +415,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 80,
@@ -398,7 +430,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 10,
@@ -416,6 +449,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 7,
       "Size": {
         "Width": 56,
@@ -429,7 +464,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 11,
@@ -447,6 +483,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 8,
       "Size": {
         "Width": 48,
@@ -460,7 +498,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 12,
@@ -497,6 +536,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 312,
@@ -510,7 +551,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 13,
@@ -538,6 +580,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -551,7 +595,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": true
+      "Selectable": true,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 14,
@@ -579,6 +624,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -592,7 +639,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 14,
@@ -629,6 +677,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 128,
@@ -642,7 +692,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 14,
@@ -679,6 +730,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 128,
@@ -692,7 +745,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 13,
@@ -720,6 +774,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -733,7 +789,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": true
+      "Selectable": true,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 12,
@@ -770,6 +827,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 312,
@@ -783,7 +842,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 15,
@@ -820,6 +880,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -833,7 +895,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 15,
@@ -870,6 +933,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -883,7 +948,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 16,
@@ -911,6 +977,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 120,
@@ -924,7 +992,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": true
+      "Selectable": true,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 17,
@@ -961,6 +1030,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -974,7 +1045,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": true
+      "Selectable": true,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 17,
@@ -1011,6 +1083,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -1024,7 +1098,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": true
+      "Selectable": true,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 14,
@@ -1052,6 +1127,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -1065,7 +1142,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 21,
@@ -1083,6 +1161,8 @@
       "Multiplier": 1,
       "Offset": 16,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 1,
       "Size": {
         "Width": 80,
@@ -1096,7 +1176,8 @@
       "AlwaysInheritStyle": true,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1124,6 +1205,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1137,7 +1220,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1165,6 +1249,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1178,7 +1264,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1206,6 +1293,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1219,7 +1308,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1247,6 +1337,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1260,7 +1352,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1288,6 +1381,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1301,7 +1396,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1329,6 +1425,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1342,7 +1440,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1370,6 +1469,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1383,7 +1484,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 8,
@@ -1401,6 +1503,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1414,7 +1518,8 @@
       "AlwaysInheritStyle": true,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 7,
@@ -1442,6 +1547,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1455,7 +1562,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 6,
@@ -1473,6 +1581,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 64,
@@ -1486,7 +1596,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 6,
@@ -1523,6 +1634,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 64,
@@ -1536,7 +1649,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 18,
@@ -1573,6 +1687,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 200,
@@ -1586,7 +1702,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 18,
@@ -1623,6 +1740,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 200,
@@ -1636,7 +1755,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 19,
@@ -1664,6 +1784,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": 112,
@@ -1677,7 +1799,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 20,
@@ -1705,6 +1828,8 @@
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 10,
       "Size": {
         "Width": null,
@@ -1718,7 +1843,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": false,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 8,
@@ -1736,6 +1862,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1749,7 +1877,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 8,
@@ -1767,6 +1896,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1780,7 +1911,8 @@
       "AlwaysInheritStyle": false,
       "Required": false,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 5,
@@ -1808,6 +1940,8 @@
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": null,
@@ -1821,7 +1955,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 8,
@@ -1849,6 +1984,8 @@
       "Multiplier": 50,
       "Offset": 0,
       "SuffixDigits": 4,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1862,7 +1999,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 8,
@@ -1880,6 +2018,8 @@
       "Multiplier": 50,
       "Offset": 0,
       "SuffixDigits": 4,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1893,7 +2033,8 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
     },
     {
       "CosmeticType": 8,
@@ -1921,6 +2062,8 @@
       "Multiplier": 50,
       "Offset": 0,
       "SuffixDigits": 4,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1934,7 +2077,76 @@
       "AlwaysInheritStyle": false,
       "Required": true,
       "Enabled": true,
-      "Selectable": false
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 22,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\toy\\figdisp\\figdisp.pac",
+        "NodePath": "",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenCollDisply01",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 10,
+      "FilePrefix": "",
+      "IdType": 7,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 3,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": false
+    },
+    {
+      "CosmeticType": 22,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\toy\\figdisp\\",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenCollDisply01",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 10,
+      "FilePrefix": "figdisp",
+      "IdType": 7,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 0,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": false
     }
   ],
   "SoundSettings": {
@@ -2077,7 +2289,7 @@
       {
         "Label": "TABLE_STAGES:",
         "FileType": 16,
-        "Path": "Source\\Project+\\StageTable.asm"
+        "Path": "pf\\stage\\switch\\Switch00.rss"
       },
       {
         "Label": "ClassicResultsTable:",
@@ -2125,7 +2337,15 @@
     "StageListPaths": [
       {
         "FileType": 24,
-        "Path": "Source\\Project+\\StageTable.asm"
+        "Path": "pf\\stage\\switch\\Switch00.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch01.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch02.rss"
       }
     ],
     "RandomStageNamesLocations": [
