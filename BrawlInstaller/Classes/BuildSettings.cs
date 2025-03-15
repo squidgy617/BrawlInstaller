@@ -165,7 +165,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
             new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm"),
             new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel"),
-            new FilePath(FileType.CostumeSwapFile, "Source\\Extras\\More.asm")
+            new FilePath(FileType.CostumeSwapFile, "")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]

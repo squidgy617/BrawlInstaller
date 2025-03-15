@@ -2283,6 +2283,10 @@
       {
         "FileType": 36,
         "Path": "pf\\module\\sora_adv_menu_game_over.rel"
+      },
+      {
+        "FileType": 41,
+        "Path": ""
       }
     ],
     "AsmPaths": [
