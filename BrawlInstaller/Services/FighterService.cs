@@ -1413,7 +1413,7 @@ namespace BrawlInstaller.Services
                 foreach(var costume in costumes.Where(x => x.CostumeId == costumeSwap.CostumeId))
                 {
                     costume.SwapFighterId = costumeSwap.SwapFighterId;
-                    costume.SwapCostumeId = costumeSwap.CostumeId;
+                    costume.SwapCostumeId = costumeSwap.CostumeId != costume.CostumeId ? costumeSwap.CostumeId : (int?)null;
                 }
             }
             return costumes;
@@ -3116,7 +3116,7 @@ namespace BrawlInstaller.Services
                 if (!string.IsNullOrEmpty(code))
                 {
                     // Get costume swap macros that specify a range
-                    var costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.FighterConfigId:X2}", 0, "rangeSameCostume");
+                    var costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.SlotConfigId:X2}", 0, "rangeSameCostume");
                     foreach(var costumeSwapMacro in costumeSwapMacros)
                     {
                         var startingCostume = Convert.ToInt32(costumeSwapMacro.Parameters[1]);
@@ -3133,7 +3133,7 @@ namespace BrawlInstaller.Services
                         }
                     }
                     // Get single costume swap macros
-                    costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.FighterConfigId:X2}", 0, "single");
+                    costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.SlotConfigId:X2}", 0, "single");
                     foreach(var costumeSwapMacro in costumeSwapMacros)
                     {
                         var swapFighterId = Convert.ToInt32(costumeSwapMacro.Parameters[2].Replace("0x", ""), 16);
@@ -3197,7 +3197,7 @@ namespace BrawlInstaller.Services
                     // Generate macros for each group
                     foreach (var macroGroup in macroGroups)
                     {
-                        var newFighterName = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.FighterConfigId == macroGroup.FirstOrDefault().SwapFighterId)?.DisplayName ?? "Unknown";
+                        var newFighterName = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.SlotConfigId == macroGroup.FirstOrDefault().SwapFighterId)?.DisplayName ?? "Unknown";
                         // Groups with multiple items will generate a range macro
                         if (macroGroup.Count > 1)
                         {
@@ -3207,7 +3207,7 @@ namespace BrawlInstaller.Services
                                 Comment = $"{fighterPackage.FighterInfo.DisplayName} > {newFighterName}",
                                 Parameters = new List<string>
                                 {
-                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}",
                                     macroGroup.Min(x => x.CostumeId).ToString(),
                                     macroGroup.Max(x => x.CostumeId).ToString(),
                                     $"0x{macroGroup.FirstOrDefault().SwapFighterId:X2}"
