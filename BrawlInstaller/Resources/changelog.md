@@ -1,9 +1,7 @@
-- Trophy figure textures (as displayed inthe trophy hoard in-game) can now be customized from the trophy editor or fighter editor.
-    - A new "Trophy Figure" cosmetic type has been added to cosmetic settings.
-    - Settings presets were updated to support the new feature.
-- New cosmetic settings have been added.
-    - File Prefix: For cosmetics that save to individual BRRES files in the filesystem, this prefix will be used to name the file, similar to how the regular "Prefix" field is used to name textures. If this field is blank, the "Prefix" field will be used to name BRRES files instead.
-    - Group Multiplier: This value is used to determine how cosmetics that are grouped together should be grouped. For instance, a value of ten means that cosmetics are saved to a group that is their ID / 10 (e.g. trophy ID 631 would save to group 63 because 631 / 10 = 63 without remainder).
-    - Create Archive Files: When checked, cosmetics that are saved as a BRRES file to a directory will always generate a BRRES file if one does not exist.
-- When adding a new costume to a fighter, the costume will default to using the nearest costume ID after your currently selected costume.
-- SSE settings should now always be updated when deleting fighters.
+- From the costume editor, you can configure a selected costume to load an alternate fighter.
+    - This functionality requires your build to have the code `Character/Costume Swapper REVAMP [MarioDox]`.
+    - To enable, configure the new "Costume Swap File" setting in your build settings to point to whatever file contains the above code.
+    - The following controls will appear when you have a costume selected:
+        - Load Alt Fighter: A dropdown that allows you to select an existing fighter to load instead of the selected costume. Whenever the selected costume is loaded in-game, the specified fighter will load instead. If left blank, costume will load normally.
+        - Alt Costume ID: The costume ID to use from the alternate fighter instead of the currently-selected costume ID. If left blank, will default to currently-selected costume ID.
+- When adding a new costume, if no ID above the currently-selected costume ID is available, the automatic ID selection will loop back starting from 0.
