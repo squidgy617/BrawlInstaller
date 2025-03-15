@@ -92,6 +92,7 @@
     <Compile Include="Classes\Codes.cs" />
     <Compile Include="Classes\CosmeticTexture.cs" />
     <Compile Include="Classes\BrawlIds.cs" />
+    <Compile Include="Classes\CostumeSwap.cs" />
     <Compile Include="Classes\DataSize.cs" />
     <Compile Include="Classes\DefaultFilePath.cs" />
     <Compile Include="Classes\DialogMessage.cs" />

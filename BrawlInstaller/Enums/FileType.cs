@@ -90,6 +90,8 @@ namespace BrawlInstaller.Enums
         [Description("Netplay Code Menu Data File")]
         CodeMenuNetplayData,
         [Description("Code Menu Addons Folder")]
-        CodeMenuAddons
+        CodeMenuAddons,
+        [Description("Costume Swap Code File")]
+        CostumeSwapFile
     }
 }

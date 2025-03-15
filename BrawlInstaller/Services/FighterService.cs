@@ -1403,6 +1403,16 @@ namespace BrawlInstaller.Services
                     _fileService.CloseFile(rootNode);
                 }
             }
+            // Get costume swaps
+            var costumeSwaps = GetCostumeSwapSettings(fighterInfo);
+            foreach(var costumeSwap in costumeSwaps)
+            {
+                foreach(var costume in costumes.Where(x => x.CostumeId == costumeSwap.CostumeId))
+                {
+                    costume.SwapFighterId = costumeSwap.SwapFighterId;
+                    costume.SwapCostumeId = costumeSwap.CostumeId;
+                }
+            }
             return costumes;
         }
 
@@ -3088,7 +3098,56 @@ namespace BrawlInstaller.Services
             }
         }
 
-        
+        /// <summary>
+        /// Get costume swap settings for a fighter
+        /// </summary>
+        /// <param name="fighterInfo">Fighter info to get settings for</param>
+        /// <returns>Updated fighter settings</returns>
+        private List<CostumeSwap> GetCostumeSwapSettings(FighterInfo fighterInfo)
+        {
+            var costumeSwaps = new List<CostumeSwap>();
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.CostumeSwapFile))
+            {
+                var codePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CostumeSwapFile);
+                var code = _codeService.ReadCode(codePath);
+                if (!string.IsNullOrEmpty(code))
+                {
+                    // Get costume swap macros that specify a range
+                    var costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.FighterConfigId:X2}", 0, "rangeSameCostume");
+                    foreach(var costumeSwapMacro in costumeSwapMacros)
+                    {
+                        var startingCostume = Convert.ToInt32(costumeSwapMacro.Parameters[1]);
+                        var endingCostume = Convert.ToInt32(costumeSwapMacro.Parameters[2]);
+                        var range = Enumerable.Range(startingCostume, endingCostume + 1);
+                        var swapFighterId = Convert.ToInt32(costumeSwapMacro.Parameters[3].Replace("0x", ""), 16);
+                        foreach (var index in range)
+                        {
+                            var costumeSwap = new CostumeSwap();
+                            costumeSwap.SwapFighterId = swapFighterId;
+                            costumeSwap.CostumeId = index;
+                            costumeSwap.NewCostumeId = index;
+                            costumeSwaps.Add(costumeSwap);
+                        }
+                    }
+                    // Get single costume swap macros
+                    costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.FighterConfigId:X2}", 0, "single");
+                    foreach(var costumeSwapMacro in costumeSwapMacros)
+                    {
+                        var swapFighterId = Convert.ToInt32(costumeSwapMacro.Parameters[2].Replace("0x", ""), 16);
+                        var costumeId = Convert.ToInt32(costumeSwapMacro.Parameters[1]);
+                        var newCostumeId = Convert.ToInt32(costumeSwapMacro.Parameters[3]);
+                        var costumeSwap = new CostumeSwap
+                        {
+                            SwapFighterId = swapFighterId,
+                            CostumeId = costumeId,
+                            NewCostumeId = newCostumeId
+                        };
+                        costumeSwaps.Add(costumeSwap);
+                    }
+                }
+            }
+            return costumeSwaps;
+        }
 
         #region Fighter-Specific Settings
 

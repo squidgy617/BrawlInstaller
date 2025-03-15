@@ -82,6 +82,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="costumeIdLabel" Content="Costume ID:" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0" ToolTip="ID to use for selected costume"/>
             <ComboBox x:Name="costumeIdComboBox" ItemsSource="{Binding AvailableCostumeIds}" SelectedItem="{Binding SelectedCostume.CostumeId, Mode=TwoWay}" ItemStringFormat="D2" Width="50" Grid.Row="0" Grid.Column="1"/>
@@ -133,6 +135,10 @@
             <Label Target="{Binding ElementName=pacFileSuffixTextBox}" Style="{StaticResource errorText}" Width="120" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"/>
             <Label x:Name="colorLabel" Content="Color:" Grid.Row="4" ToolTip="Internal color of costume"/>
             <ComboBox x:Name="colorComboBox" Width="120" Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Colors}" SelectedValuePath="ID" SelectedValue="{Binding SelectedCostume.Color, Mode=TwoWay, Converter={StaticResource byteConverter}}"/>
+            <Label x:Name="swapCostumeFighterIdLabel" Content="Load Alt Fighter:" Grid.Row="5" ToolTip="Select an alternate fighter to load when this costume is selected."/>
+            <ComboBox x:Name="swapCostumeFighterIdComboBox" Width="60" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.FighterConfigId" Text="{Binding SelectedCostume.SwapFighterId, Converter={StaticResource hexConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Column="1" Grid.Row="5" IsEditable="True"/>
+            <Label x:Name="swapCostumeIdLabel" Content="Alt Costume ID:" Grid.Row="6" ToolTip="Select the costume to load for the selected alternate fighter above."/>
+            <TextBox x:Name="swapCostumeIdTextBox" Text="{Binding SelectedCostume.SwapCostumeId}" Width="60" Grid.Row="6" Grid.Column="1"/>
         </Grid>
         <GroupBox x:Name="costumeCosmeticGroupBox" Header="Cosmetics" Grid.Row="0" Grid.Column="4" Grid.RowSpan="3">
             <Grid x:Name="costumeCosmeticGrid">

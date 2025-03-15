@@ -38,6 +38,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.GetMacro(string, string, string, int, string)"/>
         AsmMacro GetMacro(string fileText, string address, string paramValue, int paramIndex, string macroName);
 
+        /// <inheritdoc cref="CodeService.GetMacros(string, string, string, int, string)"/>
+        List<AsmMacro> GetMacros(string fileText, string address, string paramValue, int paramIndex, string macroName);
+
         /// <inheritdoc cref="CodeService.InsertUpdateMacro(string, string, AsmMacro, int, int)"/>
         string InsertUpdateMacro(string fileText, string address, AsmMacro asmMacro, int paramIndex = 0, int index = 0);
 
@@ -291,13 +294,27 @@ namespace BrawlInstaller.Services
         /// <returns>Found ASM macro</returns>
         public AsmMacro GetMacro(string fileText, string address, string paramValue, int paramIndex, string macroName)
         {
+            return GetMacros(fileText, address, paramValue, paramIndex, macroName).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Get macros in hook by address
+        /// </summary>
+        /// <param name="fileText">Text containing code</param>
+        /// <param name="address">Address of hook to search for</param>
+        /// <param name="paramValue">Value to compare to</param>
+        /// <param name="paramIndex">Index of parameter to compare to</param>
+        /// <param name="macroName">Name of macro</param>
+        /// <returns>List of found ASM macros</returns>
+        public List<AsmMacro> GetMacros(string fileText, string address, string paramValue, int paramIndex, string macroName)
+        {
             var asmHook = ReadHook(fileText, address);
             if (asmHook != null)
             {
-                var macroMatch = FindMacroMatch(asmHook, paramValue, paramIndex, macroName);
-                return macroMatch.Macro;
+                var macroMatches = FindMacroMatches(asmHook, paramValue, paramIndex, macroName);
+                return macroMatches.Select(x => x.Macro).ToList();
             }
-            return null;
+            return new List<AsmMacro>();
         }
 
         /// <summary>
@@ -327,10 +344,23 @@ namespace BrawlInstaller.Services
         /// <returns>Index of matching macro</returns>
         private (int Index, AsmMacro Macro) FindMacroMatch(AsmHook asmHook, string paramValue, int paramIndex, string macroName)
         {
-            var index = -1;
-            AsmMacro newMacro = null;
-            foreach(var instruction in asmHook.Instructions)
+            return FindMacroMatches(asmHook, paramValue, paramIndex, macroName).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find matching macros in ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to search for match</param>
+        /// <param name="paramValue">Value to compare parameter to</param>
+        /// <param name="paramIndex">Which parameter to compare</param>
+        /// <returns>List of matching macros</returns>
+        private List<(int Index, AsmMacro Macro)> FindMacroMatches(AsmHook asmHook, string paramValue, int paramIndex, string macroName)
+        {
+            var matches = new List<(int Index, AsmMacro Macro)>();
+            foreach (var instruction in asmHook.Instructions)
             {
+                AsmMacro newMacro = null;
+                var index = -1;
                 var formattedInstruction = instruction.Text.Trim();
                 // Check if macro starting character (%) is present
                 if (formattedInstruction.StartsWith("%"))
@@ -361,11 +391,11 @@ namespace BrawlInstaller.Services
                     {
                         // If so, return the index of the match
                         index = asmHook.Instructions.IndexOf(instruction);
-                        return (index, newMacro);
+                        matches.Add((index, newMacro));
                     }
                 }
             }
-            return (index, null);
+            return matches;
         }
 
         /// <summary>
