@@ -223,6 +223,9 @@ namespace BrawlInstaller.ViewModels
 
         public List<string> PacFileSuffixes { get => StaticClasses.PacFiles.PacFileSuffixes; }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public bool CostumeSwapEnabled { get => !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.CostumeSwapFile); }
+
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
         {
