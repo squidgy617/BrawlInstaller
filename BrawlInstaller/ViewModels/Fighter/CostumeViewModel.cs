@@ -597,10 +597,6 @@ namespace BrawlInstaller.ViewModels
 
         public void AddCostume()
         {
-            if (Costumes.Count >= 50)
-            {
-                return;
-            }
             var costumeId = SelectedCostume != null ? SelectedCostume.CostumeId : 0;
             var originalCostumeId = costumeId;
             while (Costumes.Select(x => x.CostumeId).Contains(costumeId))
