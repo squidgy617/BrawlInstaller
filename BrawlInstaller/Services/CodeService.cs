@@ -511,7 +511,7 @@ namespace BrawlInstaller.Services
         private AsmHook RemoveMacro(AsmHook asmHook, string paramValue, string macroName, int paramIndex = 0)
         {
             var macro = FindMacroMatch(asmHook, paramValue, paramIndex, macroName);
-            if (macro.Index > -1)
+            if (macro.Macro != null && macro.Index > -1)
             {
                 asmHook = RemoveInstruction(asmHook, macro.Index);
             }
