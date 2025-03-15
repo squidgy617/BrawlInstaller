@@ -117,6 +117,8 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
 
+        public List<FighterInfo> FighterInfoList { get => _settingsService.FighterInfoList; }
+
         [DependsUpon(nameof(FighterPackage))]
         public BuildSettings BuildSettings { get => _buildSettings; set { _buildSettings = value; OnPropertyChanged(nameof(BuildSettings)); } }
 

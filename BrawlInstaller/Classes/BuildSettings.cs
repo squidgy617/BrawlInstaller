@@ -164,7 +164,8 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin"),
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
             new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm"),
-            new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel")
+            new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel"),
+            new FilePath(FileType.CostumeSwapFile, "")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -258,6 +259,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string CodeMenuData { get => GetFilePath(FileType.CodeMenuData); }
         [JsonIgnore] public string CodeMenuNetplayData { get => GetFilePath(FileType.CodeMenuNetplayData); }
         [JsonIgnore] public string CodeMenuAddons { get => GetFilePath(FileType.CodeMenuAddons); }
+        [JsonIgnore] public string CostumeSwapFile { get => GetFilePath(FileType.CostumeSwapFile); }
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<RosterFile> RosterFiles { get; set; } = new List<RosterFile> 

@@ -38,11 +38,17 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.GetMacro(string, string, string, int, string)"/>
         AsmMacro GetMacro(string fileText, string address, string paramValue, int paramIndex, string macroName);
 
+        /// <inheritdoc cref="CodeService.GetMacros(string, string, string, int, string)"/>
+        List<AsmMacro> GetMacros(string fileText, string address, string paramValue, int paramIndex, string macroName);
+
         /// <inheritdoc cref="CodeService.InsertUpdateMacro(string, string, AsmMacro, int, int)"/>
         string InsertUpdateMacro(string fileText, string address, AsmMacro asmMacro, int paramIndex = 0, int index = 0);
 
         /// <inheritdoc cref="CodeService.RemoveMacro(string, string, string, string, int)"/>
         string RemoveMacro(string fileText, string address, string paramValue, string macroName, int paramIndex = 0);
+
+        /// <inheritdoc cref="CodeService.RemoveMacros(string, string, string, string, int)"/>
+        string RemoveMacros(string fileText, string address, string paramValue, string macroName, int paramIndex = 0);
 
         /// <inheritdoc cref="CodeService.GetCodeAliases(string, string, string)"/>
         List<Alias> GetCodeAliases(string fileText, string codeName);
@@ -185,11 +191,12 @@ namespace BrawlInstaller.Services
                     if (startingBrace > -1)
                     {
                         var endingBrace = fileText.IndexOf('}', startingBrace);
-                        endingBrace = fileText.IndexOf(newLine, endingBrace);
+                        var hasNewLine = fileText.IndexOf(newLine, endingBrace) != -1;
+                        endingBrace = hasNewLine ? fileText.IndexOf(newLine, endingBrace) : endingBrace;
                         // Remove instructions between braces
                         if (endingBrace > -1)
                         {
-                            fileText = fileText.Remove(startingBrace, endingBrace + newLine.Length - startingBrace);
+                            fileText = fileText.Remove(startingBrace, endingBrace + (hasNewLine ? newLine.Length : 1) - startingBrace);
                         }
                     }
                 }
@@ -291,13 +298,27 @@ namespace BrawlInstaller.Services
         /// <returns>Found ASM macro</returns>
         public AsmMacro GetMacro(string fileText, string address, string paramValue, int paramIndex, string macroName)
         {
+            return GetMacros(fileText, address, paramValue, paramIndex, macroName).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Get macros in hook by address
+        /// </summary>
+        /// <param name="fileText">Text containing code</param>
+        /// <param name="address">Address of hook to search for</param>
+        /// <param name="paramValue">Value to compare to</param>
+        /// <param name="paramIndex">Index of parameter to compare to</param>
+        /// <param name="macroName">Name of macro</param>
+        /// <returns>List of found ASM macros</returns>
+        public List<AsmMacro> GetMacros(string fileText, string address, string paramValue, int paramIndex, string macroName)
+        {
             var asmHook = ReadHook(fileText, address);
             if (asmHook != null)
             {
-                var macroMatch = FindMacroMatch(asmHook, paramValue, paramIndex, macroName);
-                return macroMatch.Macro;
+                var macroMatches = FindMacroMatches(asmHook, paramValue, paramIndex, macroName);
+                return macroMatches.Select(x => x.Macro).ToList();
             }
-            return null;
+            return new List<AsmMacro>();
         }
 
         /// <summary>
@@ -327,10 +348,23 @@ namespace BrawlInstaller.Services
         /// <returns>Index of matching macro</returns>
         private (int Index, AsmMacro Macro) FindMacroMatch(AsmHook asmHook, string paramValue, int paramIndex, string macroName)
         {
-            var index = -1;
-            AsmMacro newMacro = null;
-            foreach(var instruction in asmHook.Instructions)
+            return FindMacroMatches(asmHook, paramValue, paramIndex, macroName).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find matching macros in ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to search for match</param>
+        /// <param name="paramValue">Value to compare parameter to</param>
+        /// <param name="paramIndex">Which parameter to compare</param>
+        /// <returns>List of matching macros</returns>
+        private List<(int Index, AsmMacro Macro)> FindMacroMatches(AsmHook asmHook, string paramValue, int paramIndex, string macroName)
+        {
+            var matches = new List<(int Index, AsmMacro Macro)>();
+            foreach (var instruction in asmHook.Instructions)
             {
+                AsmMacro newMacro = null;
+                var index = -1;
                 var formattedInstruction = instruction.Text.Trim();
                 // Check if macro starting character (%) is present
                 if (formattedInstruction.StartsWith("%"))
@@ -361,11 +395,11 @@ namespace BrawlInstaller.Services
                     {
                         // If so, return the index of the match
                         index = asmHook.Instructions.IndexOf(instruction);
-                        return (index, newMacro);
+                        matches.Add((index, newMacro));
                     }
                 }
             }
-            return (index, null);
+            return matches;
         }
 
         /// <summary>
@@ -399,7 +433,7 @@ namespace BrawlInstaller.Services
         private AsmHook InsertUpdateMacro(AsmHook asmHook, AsmMacro asmMacro, int paramIndex = 0, int index = 0)
         {
             var foundMacro = FindMacroMatch(asmHook, asmMacro, paramIndex);
-            if (foundMacro.Index > -1)
+            if (foundMacro.Macro != null && foundMacro.Index > -1)
             {
                 index = foundMacro.Index;
                 asmHook = RemoveInstruction(asmHook, index);
@@ -447,6 +481,26 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Remove macros in hook specified by address
+        /// </summary>
+        /// <param name="fileText">Code to remove macros from</param>
+        /// <param name="address">Address of hook to remove macros from</param>
+        /// <param name="paramValue">Value to use for comparison</param>
+        /// <param name="macroName">Name of macro</param>
+        /// <param name="paramIndex">Index of parameter to compare</param>
+        /// <returns>Code with macros removed</returns>
+        public string RemoveMacros(string fileText, string address, string paramValue, string macroName, int paramIndex = 0)
+        {
+            var asmHook = ReadHook(fileText, address);
+            if (asmHook != null)
+            {
+                asmHook = RemoveMacros(asmHook, paramValue, macroName, paramIndex);
+                fileText = ReplaceHook(asmHook, fileText);
+            }
+            return fileText;
+        }
+
+        /// <summary>
         /// Remove macro in ASM hook
         /// </summary>
         /// <param name="asmHook">ASM hook to remove macro from</param>
@@ -457,9 +511,30 @@ namespace BrawlInstaller.Services
         private AsmHook RemoveMacro(AsmHook asmHook, string paramValue, string macroName, int paramIndex = 0)
         {
             var macro = FindMacroMatch(asmHook, paramValue, paramIndex, macroName);
-            if (macro.Index > -1)
+            if (macro.Macro != null && macro.Index > -1)
             {
                 asmHook = RemoveInstruction(asmHook, macro.Index);
+            }
+            return asmHook;
+        }
+
+        /// <summary>
+        /// Remove macros in ASM hook
+        /// </summary>
+        /// <param name="asmHook">ASM hook to remove macros from</param>
+        /// <param name="paramValue">Parameter value to use for comparison</param>
+        /// <param name="macroName">Name of macro</param>
+        /// <param name="paramIndex">Index of parameter to compare</param>
+        /// <returns>ASM hook with macros removed</returns>
+        private AsmHook RemoveMacros(AsmHook asmHook, string paramValue, string macroName, int paramIndex = 0)
+        {
+            var macros = FindMacroMatches(asmHook, paramValue, paramIndex, macroName);
+            foreach(var macro in macros)
+            {
+                if (macro.Index > -1)
+                {
+                    asmHook = RemoveInstruction(asmHook, macro.Index);
+                }
             }
             return asmHook;
         }

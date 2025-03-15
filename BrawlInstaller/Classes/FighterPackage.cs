@@ -144,6 +144,8 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public List<FighterPacFile> PacFiles { get; set; } = new List<FighterPacFile>();
         public byte Color { get; set; }
         public int CostumeId { get; set; }
+        public int? SwapFighterId { get; set; }
+        public int? SwapCostumeId { get; set; }
 
         public Costume Copy()
         {
@@ -152,7 +154,9 @@ namespace BrawlInstaller.Classes
                 Cosmetics = Cosmetics.ToList(),
                 PacFiles = PacFiles.Copy(),
                 Color = Color,
-                CostumeId = CostumeId
+                CostumeId = CostumeId,
+                SwapFighterId = SwapFighterId,
+                SwapCostumeId = SwapCostumeId
             };
         }
     }
@@ -258,6 +262,8 @@ namespace BrawlInstaller.Classes
         public int? SSESubCharacterId { get; set; } = 0;
         public int? LLoadCharacterId { get; set; } = 0;
 
+        public CostumeSwapSettings CostumeSwapSettings { get; set; } = new CostumeSwapSettings();
+
         [JsonProperty("ExSlotIds", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
         public List<uint> ExSlotIds { get; set; } = new List<uint> { 0xFF, 0xFF, 0xFF, 0xFF };
 
@@ -265,6 +271,19 @@ namespace BrawlInstaller.Classes
         {
             var copy = JsonConvert.DeserializeObject<FighterSettings>(JsonConvert.SerializeObject(this));
             copy.KirbyHatData = KirbyHatData;
+            return copy;
+        }
+    }
+
+    public class CostumeSwapSettings
+    {
+        public int? SwapFighterId { get; set; }
+        public int? StartingCostume { get; set; }
+        public int? EndingCostume { get; set; }
+
+        public CostumeSwapSettings Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<CostumeSwapSettings>(JsonConvert.SerializeObject(this));
             return copy;
         }
     }
