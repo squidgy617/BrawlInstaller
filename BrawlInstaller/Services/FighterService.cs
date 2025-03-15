@@ -1283,6 +1283,9 @@ namespace BrawlInstaller.Services
                 // Update fighter specific settings
                 UpdateFighterSpecificSettings(fighterPackage);
             }
+
+            // Update costume swap settings
+            SaveCostumeSwapSettings(fighterPackage);
         }
 
         /// <summary>
@@ -3147,6 +3150,101 @@ namespace BrawlInstaller.Services
                 }
             }
             return costumeSwaps;
+        }
+
+        /// <summary>
+        /// Save costume swap settings for a fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to save</param>
+        private void SaveCostumeSwapSettings(FighterPackage fighterPackage)
+        {
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.CostumeSwapFile))
+            {
+                var codePath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.CostumeSwapFile);
+                var code = _codeService.ReadCode(codePath);
+                if (!string.IsNullOrEmpty(code))
+                {
+                    var costumes = fighterPackage.Costumes;
+                    var macroGroups = new List<List<CostumeSwap>>();
+                    var macros = new List<AsmMacro>();
+                    // Get costumes grouped by swap fighter ID
+                    foreach (var altFighterGroup in costumes.Where(x => x.SwapFighterId != null).GroupBy(x => x.SwapFighterId))
+                    {
+                        var currentGroup = new List<CostumeSwap>();
+                        foreach (var costume in altFighterGroup.OrderBy(x => x.CostumeId))
+                        {
+                            // If costume is sequential from last costume in group, add it to group
+                            if (currentGroup.Count == 0 || (currentGroup.LastOrDefault().CostumeId == costume.CostumeId - 1
+                                && currentGroup.LastOrDefault().NewCostumeId == currentGroup.LastOrDefault().CostumeId && (costume.SwapCostumeId ?? costume.CostumeId) == costume.CostumeId))
+                            {
+                                currentGroup.Add(new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.SwapCostumeId ?? costume.CostumeId));
+                            }
+                            // Otherwise, create a new group
+                            else
+                            {
+                                currentGroup = new List<CostumeSwap>
+                        {
+                            new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.SwapCostumeId ?? costume.CostumeId)
+                        };
+                            }
+                            // Add group to list
+                            if (!macroGroups.Contains(currentGroup))
+                            {
+                                macroGroups.Add(currentGroup);
+                            }
+                        }
+                    }
+                    // Generate macros for each group
+                    foreach (var macroGroup in macroGroups)
+                    {
+                        var newFighterName = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.FighterConfigId == macroGroup.FirstOrDefault().SwapFighterId)?.DisplayName ?? "Unknown";
+                        // Groups with multiple items will generate a range macro
+                        if (macroGroup.Count > 1)
+                        {
+                            var newMacro = new AsmMacro
+                            {
+                                MacroName = "rangeSameCostume",
+                                Comment = $"{fighterPackage.FighterInfo.DisplayName} > {newFighterName}",
+                                Parameters = new List<string>
+                                {
+                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    macroGroup.Min(x => x.CostumeId).ToString(),
+                                    macroGroup.Max(x => x.CostumeId).ToString(),
+                                    $"0x{macroGroup.FirstOrDefault().SwapFighterId:X2}"
+                                }
+                            };
+                            macros.Add(newMacro);
+                        }
+                        else
+                        {
+                            var item = macroGroup.FirstOrDefault();
+                            var newMacro = new AsmMacro
+                            {
+                                MacroName = "single",
+                                Comment = $"{fighterPackage.FighterInfo.DisplayName} > {newFighterName}",
+                                Parameters = new List<string>
+                                {
+                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    item.CostumeId.ToString(),
+                                    $"0x{item.SwapFighterId:X2}",
+                                    item.NewCostumeId.ToString()
+                                }
+                            };
+                            macros.Add(newMacro);
+                        }
+                    }
+                    // Remove existing macros
+                    code = _codeService.RemoveMacros(code, "80946174", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "rangeSameCostume", 0);
+                    code = _codeService.RemoveMacros(code, "80946174", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "single", 0);
+                    // Add new macros
+                    foreach(var macro in macros)
+                    {
+                        code = _codeService.InsertUpdateMacro(code, "80946174", macro, 0, 1);
+                    }
+                    // Save code
+                    _fileService.SaveTextFile(codePath, code);
+                }
+            }
         }
 
         #region Fighter-Specific Settings
