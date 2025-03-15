@@ -5,3 +5,4 @@
         - Load Alt Fighter: A dropdown that allows you to select an existing fighter to load instead of the selected costume. Whenever the selected costume is loaded in-game, the specified fighter will load instead. If left blank, costume will load normally.
         - Alt Costume ID: The costume ID to use from the alternate fighter instead of the currently-selected costume ID. If left blank, will default to currently-selected costume ID.
 - When adding a new costume, if no ID above the currently-selected costume ID is available, the automatic ID selection will loop back starting from 0.
+- HOTFIX: Fixed alternate fighter functionality to use slot ID instead of fighter ID.
