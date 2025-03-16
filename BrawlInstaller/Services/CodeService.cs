@@ -44,6 +44,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.InsertUpdateMacro(string, string, AsmMacro, int, int)"/>
         string InsertUpdateMacro(string fileText, string address, AsmMacro asmMacro, int paramIndex = 0, int index = 0);
 
+        /// <inheritdoc cref="CodeService.InsertMacro(string, string, AsmMacro, int)"/>
+        string InsertMacro(string fileText, string address, AsmMacro asmMacro, int index = 0);
+
         /// <inheritdoc cref="CodeService.RemoveMacro(string, string, string, string, int)"/>
         string RemoveMacro(string fileText, string address, string paramValue, string macroName, int paramIndex = 0);
 
@@ -417,6 +420,25 @@ namespace BrawlInstaller.Services
             if (asmHook != null)
             {
                 asmHook = InsertUpdateMacro(asmHook, asmMacro, paramIndex, index);
+                fileText = ReplaceHook(asmHook, fileText);
+            }
+            return fileText;
+        }
+
+        /// <summary>
+        /// Insert a macro in a hook specified by address
+        /// </summary>
+        /// <param name="fileText">Text of code</param>
+        /// <param name="address">Address of hook to insert to</param>
+        /// <param name="asmMacro">Macro to insert</param>
+        /// <param name="index">Index to insert to</param>
+        /// <returns>Updated code</returns>
+        public string InsertMacro(string fileText, string address, AsmMacro asmMacro, int index = 0)
+        {
+            var asmHook = ReadHook(fileText, address);
+            if (asmHook != null)
+            {
+                asmHook = InsertMacro(asmHook, asmMacro, index);
                 fileText = ReplaceHook(asmHook, fileText);
             }
             return fileText;
