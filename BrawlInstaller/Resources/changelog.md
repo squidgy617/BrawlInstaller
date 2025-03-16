@@ -1,8 +1,3 @@
-- From the costume editor, you can configure a selected costume to load an alternate fighter.
-    - This functionality requires your build to have the code `Character/Costume Swapper REVAMP [MarioDox]`.
-    - To enable, configure the new "Costume Swap File" setting in your build settings to point to whatever file contains the above code.
-    - The following controls will appear when you have a costume selected:
-        - Load Alt Fighter: A dropdown that allows you to select an existing fighter to load instead of the selected costume. Whenever the selected costume is loaded in-game, the specified fighter will load instead. If left blank, costume will load normally.
-        - Alt Costume ID: The costume ID to use from the alternate fighter instead of the currently-selected costume ID. If left blank, will default to currently-selected costume ID.
-- When adding a new costume, if no ID above the currently-selected costume ID is available, the automatic ID selection will loop back starting from 0.
-- HOTFIX: Fixed alternate fighter functionality to use slot ID instead of fighter ID.
+- Due to issues with the the costume swap code, the option to specify a costume ID when specifying an alternate fighter to load has been removed.
+    - Alternate fighters will now always load the costume ID that corresponds to the selected costume.
+- Fixed an issue where removing multiple macros would sometimes update codes in unexpected ways.
