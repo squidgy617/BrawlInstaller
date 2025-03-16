@@ -1413,7 +1413,6 @@ namespace BrawlInstaller.Services
                 foreach(var costume in costumes.Where(x => x.CostumeId == costumeSwap.CostumeId))
                 {
                     costume.SwapFighterId = costumeSwap.SwapFighterId;
-                    costume.SwapCostumeId = costumeSwap.NewCostumeId != costume.CostumeId ? costumeSwap.NewCostumeId : (int?)null;
                 }
             }
             return costumes;
@@ -3189,20 +3188,19 @@ namespace BrawlInstaller.Services
                     foreach (var altFighterGroup in costumes.Where(x => x.SwapFighterId != null).GroupBy(x => x.SwapFighterId))
                     {
                         var currentGroup = new List<CostumeSwap>();
-                        foreach (var costume in altFighterGroup.OrderBy(x => x.CostumeId).ThenBy(x => x.SwapCostumeId))
+                        foreach (var costume in altFighterGroup.OrderBy(x => x.CostumeId))
                         {
                             // If costume is sequential from last costume in group, add it to group
-                            if (currentGroup.Count == 0 || (currentGroup.LastOrDefault().CostumeId == costume.CostumeId - 1
-                                && currentGroup.LastOrDefault().NewCostumeId == (costume.SwapCostumeId ?? costume.CostumeId) - 1))
+                            if (currentGroup.Count == 0 || (currentGroup.LastOrDefault().CostumeId == costume.CostumeId - 1))
                             {
-                                currentGroup.Add(new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.SwapCostumeId ?? costume.CostumeId));
+                                currentGroup.Add(new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.CostumeId));
                             }
                             // Otherwise, create a new group
                             else
                             {
                                 currentGroup = new List<CostumeSwap>
                                 {
-                                    new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.SwapCostumeId ?? costume.CostumeId)
+                                    new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.CostumeId)
                                 };
                             }
                             // Add group to list
@@ -3233,24 +3231,25 @@ namespace BrawlInstaller.Services
                             };
                             macros.Add(newMacro);
                         }
-                        // Groups with an offset will generate an offset macro
-                        else if (macroGroup.Count > 1 && macroGroup.FirstOrDefault().CostumeId != macroGroup.FirstOrDefault().NewCostumeId)
-                        {
-                            var newMacro = new AsmMacro
-                            {
-                                MacroName = "rangeCostumeOffset",
-                                Comment = $"{fighterPackage.FighterInfo.DisplayName} > {newFighterName}",
-                                Parameters = new List<string>
-                                {
-                                    $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}",
-                                    macroGroup.Min(x => x.CostumeId).ToString(),
-                                    macroGroup.Max(x => x.CostumeId).ToString(),
-                                    $"0x{macroGroup.FirstOrDefault().SwapFighterId:X2}",
-                                    macroGroup.FirstOrDefault().NewCostumeId.ToString()
-                                }
-                            };
-                            macros.Add(newMacro);
-                        }
+                        // Commented out because isn't actually in current version of code
+                        //// Groups with an offset will generate an offset macro
+                        //else if (macroGroup.Count > 1 && macroGroup.FirstOrDefault().CostumeId != macroGroup.FirstOrDefault().NewCostumeId)
+                        //{
+                        //    var newMacro = new AsmMacro
+                        //    {
+                        //        MacroName = "rangeCostumeOffset",
+                        //        Comment = $"{fighterPackage.FighterInfo.DisplayName} > {newFighterName}",
+                        //        Parameters = new List<string>
+                        //        {
+                        //            $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}",
+                        //            macroGroup.Min(x => x.CostumeId).ToString(),
+                        //            macroGroup.Max(x => x.CostumeId).ToString(),
+                        //            $"0x{macroGroup.FirstOrDefault().SwapFighterId:X2}",
+                        //            macroGroup.FirstOrDefault().NewCostumeId.ToString()
+                        //        }
+                        //    };
+                        //    macros.Add(newMacro);
+                        //}
                         else
                         {
                             var item = macroGroup.FirstOrDefault();
