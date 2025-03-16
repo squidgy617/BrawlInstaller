@@ -44,6 +44,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.InsertUpdateMacro(string, string, AsmMacro, int, int)"/>
         string InsertUpdateMacro(string fileText, string address, AsmMacro asmMacro, int paramIndex = 0, int index = 0);
 
+        /// <inheritdoc cref="CodeService.InsertMacro(string, string, AsmMacro, int)"/>
+        string InsertMacro(string fileText, string address, AsmMacro asmMacro, int index = 0);
+
         /// <inheritdoc cref="CodeService.RemoveMacro(string, string, string, string, int)"/>
         string RemoveMacro(string fileText, string address, string paramValue, string macroName, int paramIndex = 0);
 
@@ -423,6 +426,25 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Insert a macro in a hook specified by address
+        /// </summary>
+        /// <param name="fileText">Text of code</param>
+        /// <param name="address">Address of hook to insert to</param>
+        /// <param name="asmMacro">Macro to insert</param>
+        /// <param name="index">Index to insert to</param>
+        /// <returns>Updated code</returns>
+        public string InsertMacro(string fileText, string address, AsmMacro asmMacro, int index = 0)
+        {
+            var asmHook = ReadHook(fileText, address);
+            if (asmHook != null)
+            {
+                asmHook = InsertMacro(asmHook, asmMacro, index);
+                fileText = ReplaceHook(asmHook, fileText);
+            }
+            return fileText;
+        }
+
+        /// <summary>
         /// Insert or update macro in ASM hook
         /// </summary>
         /// <param name="asmHook">ASM hook to insert macro to</param>
@@ -529,9 +551,9 @@ namespace BrawlInstaller.Services
         private AsmHook RemoveMacros(AsmHook asmHook, string paramValue, string macroName, int paramIndex = 0)
         {
             var macros = FindMacroMatches(asmHook, paramValue, paramIndex, macroName);
-            foreach(var macro in macros)
+            foreach(var macro in macros.OrderByDescending(x => x.Index))
             {
-                if (macro.Index > -1)
+                if (macro.Macro != null && macro.Index > -1)
                 {
                     asmHook = RemoveInstruction(asmHook, macro.Index);
                 }

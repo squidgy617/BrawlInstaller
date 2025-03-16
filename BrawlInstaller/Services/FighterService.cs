@@ -1413,7 +1413,6 @@ namespace BrawlInstaller.Services
                 foreach(var costume in costumes.Where(x => x.CostumeId == costumeSwap.CostumeId))
                 {
                     costume.SwapFighterId = costumeSwap.SwapFighterId;
-                    costume.SwapCostumeId = costumeSwap.CostumeId != costume.CostumeId ? costumeSwap.CostumeId : (int?)null;
                 }
             }
             return costumes;
@@ -3132,6 +3131,24 @@ namespace BrawlInstaller.Services
                             costumeSwaps.Add(costumeSwap);
                         }
                     }
+                    // Get costume swap macros that specify a range and offset
+                    costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.SlotConfigId:X2}", 0, "rangeCostumeOffset");
+                    foreach (var costumeSwapMacro in costumeSwapMacros)
+                    {
+                        var startingCostume = Convert.ToInt32(costumeSwapMacro.Parameters[1]);
+                        var endingCostume = Convert.ToInt32(costumeSwapMacro.Parameters[2]);
+                        var range = Enumerable.Range(startingCostume, endingCostume + 1);
+                        var swapFighterId = Convert.ToInt32(costumeSwapMacro.Parameters[3].Replace("0x", ""), 16);
+                        var newCostumeOffset = Convert.ToInt32(costumeSwapMacro.Parameters[4].Replace("0x", ""), 16);
+                        foreach (var index in range)
+                        {
+                            var costumeSwap = new CostumeSwap();
+                            costumeSwap.SwapFighterId = swapFighterId;
+                            costumeSwap.CostumeId = index;
+                            costumeSwap.NewCostumeId = index + newCostumeOffset;
+                            costumeSwaps.Add(costumeSwap);
+                        }
+                    }
                     // Get single costume swap macros
                     costumeSwapMacros = _codeService.GetMacros(code, "80946174", $"0x{fighterInfo.Ids.SlotConfigId:X2}", 0, "single");
                     foreach(var costumeSwapMacro in costumeSwapMacros)
@@ -3174,18 +3191,17 @@ namespace BrawlInstaller.Services
                         foreach (var costume in altFighterGroup.OrderBy(x => x.CostumeId))
                         {
                             // If costume is sequential from last costume in group, add it to group
-                            if (currentGroup.Count == 0 || (currentGroup.LastOrDefault().CostumeId == costume.CostumeId - 1
-                                && currentGroup.LastOrDefault().NewCostumeId == currentGroup.LastOrDefault().CostumeId && (costume.SwapCostumeId ?? costume.CostumeId) == costume.CostumeId))
+                            if (currentGroup.Count == 0 || (currentGroup.LastOrDefault().CostumeId == costume.CostumeId - 1))
                             {
-                                currentGroup.Add(new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.SwapCostumeId ?? costume.CostumeId));
+                                currentGroup.Add(new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.CostumeId));
                             }
                             // Otherwise, create a new group
                             else
                             {
                                 currentGroup = new List<CostumeSwap>
-                        {
-                            new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.SwapCostumeId ?? costume.CostumeId)
-                        };
+                                {
+                                    new CostumeSwap(costume.SwapFighterId.Value, costume.CostumeId, costume.CostumeId)
+                                };
                             }
                             // Add group to list
                             if (!macroGroups.Contains(currentGroup))
@@ -3199,7 +3215,7 @@ namespace BrawlInstaller.Services
                     {
                         var newFighterName = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.SlotConfigId == macroGroup.FirstOrDefault().SwapFighterId)?.DisplayName ?? "Unknown";
                         // Groups with multiple items will generate a range macro
-                        if (macroGroup.Count > 1)
+                        if (macroGroup.Count > 1 && macroGroup.FirstOrDefault().CostumeId == macroGroup.FirstOrDefault().NewCostumeId)
                         {
                             var newMacro = new AsmMacro
                             {
@@ -3215,6 +3231,25 @@ namespace BrawlInstaller.Services
                             };
                             macros.Add(newMacro);
                         }
+                        // Commented out because isn't actually in current version of code
+                        //// Groups with an offset will generate an offset macro
+                        //else if (macroGroup.Count > 1 && macroGroup.FirstOrDefault().CostumeId != macroGroup.FirstOrDefault().NewCostumeId)
+                        //{
+                        //    var newMacro = new AsmMacro
+                        //    {
+                        //        MacroName = "rangeCostumeOffset",
+                        //        Comment = $"{fighterPackage.FighterInfo.DisplayName} > {newFighterName}",
+                        //        Parameters = new List<string>
+                        //        {
+                        //            $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}",
+                        //            macroGroup.Min(x => x.CostumeId).ToString(),
+                        //            macroGroup.Max(x => x.CostumeId).ToString(),
+                        //            $"0x{macroGroup.FirstOrDefault().SwapFighterId:X2}",
+                        //            macroGroup.FirstOrDefault().NewCostumeId.ToString()
+                        //        }
+                        //    };
+                        //    macros.Add(newMacro);
+                        //}
                         else
                         {
                             var item = macroGroup.FirstOrDefault();
@@ -3224,7 +3259,7 @@ namespace BrawlInstaller.Services
                                 Comment = $"{fighterPackage.FighterInfo.DisplayName} > {newFighterName}",
                                 Parameters = new List<string>
                                 {
-                                    $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}",
+                                    $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}",
                                     item.CostumeId.ToString(),
                                     $"0x{item.SwapFighterId:X2}",
                                     item.NewCostumeId.ToString()
@@ -3234,12 +3269,13 @@ namespace BrawlInstaller.Services
                         }
                     }
                     // Remove existing macros
-                    code = _codeService.RemoveMacros(code, "80946174", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "rangeSameCostume", 0);
-                    code = _codeService.RemoveMacros(code, "80946174", $"0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", "single", 0);
+                    code = _codeService.RemoveMacros(code, "80946174", $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}", "rangeSameCostume", 0);
+                    code = _codeService.RemoveMacros(code, "80946174", $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}", "rangeCostumeOffset", 0);
+                    code = _codeService.RemoveMacros(code, "80946174", $"0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}", "single", 0);
                     // Add new macros
                     foreach(var macro in macros)
                     {
-                        code = _codeService.InsertUpdateMacro(code, "80946174", macro, 0, 1);
+                        code = _codeService.InsertMacro(code, "80946174", macro, 1);
                     }
                     // Save code
                     _fileService.SaveTextFile(codePath, code);

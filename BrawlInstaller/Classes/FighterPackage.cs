@@ -145,7 +145,6 @@ namespace BrawlInstaller.Classes
         public byte Color { get; set; }
         public int CostumeId { get; set; }
         public int? SwapFighterId { get; set; }
-        public int? SwapCostumeId { get; set; }
 
         public Costume Copy()
         {
@@ -156,7 +155,6 @@ namespace BrawlInstaller.Classes
                 Color = Color,
                 CostumeId = CostumeId,
                 SwapFighterId = SwapFighterId,
-                SwapCostumeId = SwapCostumeId
             };
         }
     }
