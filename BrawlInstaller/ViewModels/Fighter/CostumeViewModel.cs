@@ -140,7 +140,6 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(Costumes))]
         public Dictionary<string, CosmeticType> CosmeticOptions { get => DefaultCosmetics.DefaultCostumeCosmetics.Select(x => x.CosmeticType.GetKeyValuePair()).Distinct().ToList().ToDictionary(x => x.Key, x => x.Value); }
 
-        [DependsUpon(nameof(SelectedCostume))]
         [DependsUpon(nameof(CosmeticOptions))]
         public CosmeticType SelectedCosmeticOption { get => _selectedCosmeticOption; set { _selectedCosmeticOption = value; OnPropertyChanged(nameof(SelectedCosmeticOption)); } }
 
@@ -151,7 +150,6 @@ namespace BrawlInstaller.ViewModels
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle); }
 
         [DependsUpon(nameof(Costumes))]
-        [DependsUpon(nameof(SelectedCostume))]
         [DependsUpon(nameof(SelectedCosmeticOption))]
         public List<string> Styles
         {
