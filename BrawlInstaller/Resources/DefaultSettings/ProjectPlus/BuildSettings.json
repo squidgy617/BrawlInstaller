@@ -2293,7 +2293,7 @@
       {
         "Label": "TABLE_STAGES:",
         "FileType": 16,
-        "Path": "pf\\stage\\switch\\Switch00.rss"
+        "Path": "Source\\Project+\\StageTable.asm"
       },
       {
         "Label": "ClassicResultsTable:",
@@ -2341,15 +2341,7 @@
     "StageListPaths": [
       {
         "FileType": 24,
-        "Path": "pf\\stage\\switch\\Switch00.rss"
-      },
-      {
-        "FileType": 24,
-        "Path": "pf\\stage\\switch\\Switch01.rss"
-      },
-      {
-        "FileType": 24,
-        "Path": "pf\\stage\\switch\\Switch02.rss"
+        "Path": "Source\\Project+\\StageTable.asm"
       }
     ],
     "RandomStageNamesLocations": [
