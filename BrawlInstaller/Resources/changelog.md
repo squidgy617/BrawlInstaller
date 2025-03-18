@@ -1,2 +1,1 @@
-- Selected style will no longer be deselected when changing selected costume in costume manager.
-- Fixed incorrect settings in Project+ preset.
+- Fixed an issue where cosmetic previews in the costume list were not updated when a cosmetic was replaced or moved.
