@@ -1,3 +1,2 @@
-- Due to issues with the the costume swap code, the option to specify a costume ID when specifying an alternate fighter to load has been removed.
-    - Alternate fighters will now always load the costume ID that corresponds to the selected costume.
-- Fixed an issue where removing multiple macros would sometimes update codes in unexpected ways.
+- Selected style will no longer be deselected when changing selected costume in costume manager.
+- Fixed incorrect settings in Project+ preset.
