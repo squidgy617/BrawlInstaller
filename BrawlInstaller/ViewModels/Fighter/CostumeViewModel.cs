@@ -326,6 +326,7 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedCosmetic));
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
+            OnPropertyChanged(nameof(Costumes));
         }
 
         // TODO: Don't allow adding HD cosmetics if there is no corresponding regular texture?
@@ -367,6 +368,7 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(SelectedCosmetic));
             OnPropertyChanged(nameof(CosmeticList));
             OnPropertyChanged(nameof(SelectedCosmeticNode));
+            OnPropertyChanged(nameof(Costumes));
         }
 
         public void ClearHDCosmetic()
@@ -756,6 +758,7 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(CosmeticList));
                 OnPropertyChanged(nameof(SelectedCosmeticNode));
                 OnPropertyChanged(nameof(SelectedCostume));
+                OnPropertyChanged(nameof(Costumes));
             }
         }
 
@@ -790,6 +793,7 @@ namespace BrawlInstaller.ViewModels
                 SelectedCostume = nextCostume;
 
                 OnPropertyChanged(nameof(SelectedCostume));
+                OnPropertyChanged(nameof(Costumes));
             }
         }
     }
