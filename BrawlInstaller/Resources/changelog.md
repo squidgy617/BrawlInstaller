@@ -1,1 +1,1 @@
-- Fixed an issue where cosmetic previews in the costume list were not updated when a cosmetic was replaced or moved.
+- Fixed an issue when reading the throw release table with certain system languages.
