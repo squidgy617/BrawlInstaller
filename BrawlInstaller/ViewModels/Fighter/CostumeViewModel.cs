@@ -137,7 +137,7 @@ namespace BrawlInstaller.ViewModels
         
         public FighterPacFile SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
 
-        [DependsUpon(nameof(Costumes))]
+        [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, CosmeticType> CosmeticOptions { get => DefaultCosmetics.DefaultCostumeCosmetics.Select(x => x.CosmeticType.GetKeyValuePair()).Distinct().ToList().ToDictionary(x => x.Key, x => x.Value); }
 
         [DependsUpon(nameof(CosmeticOptions))]
