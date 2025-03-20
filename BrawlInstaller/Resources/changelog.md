@@ -1,1 +1,1 @@
-- Fixed an issue when reading the throw release table with certain system languages.
+- Fixed an issue where selected cosmetic type would change when you replaced a cosmetic in the costume manager.
