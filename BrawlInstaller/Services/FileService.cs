@@ -26,6 +26,10 @@ using System.Text.RegularExpressions;
 using System.Web.UI.Design.WebControls;
 using Newtonsoft.Json;
 using System.Xml.Linq;
+using BrawlLib.Wii;
+using BrawlLib.Wii.Compression;
+using System.Collections;
+using System.Security.Cryptography.Xml;
 
 namespace BrawlInstaller.Services
 {
@@ -597,8 +601,35 @@ namespace BrawlInstaller.Services
 
                 ICryptoTransform decryptor = aes.CreateDecryptor();
                 byte[] decryptedData = decryptor.TransformFinalBlock(binData, 0, binData.Length);
+                decryptedData = DecompressBinData(decryptedData);
                 return decryptedData;
             }
+        }
+
+        /// <summary>
+        /// Decompress decrypted bin data that is encrypted
+        /// </summary>
+        /// <param name="decryptedData">Decrypted bin data</param>
+        /// <returns>Decompressed bin data</returns>
+        private byte[] DecompressBinData(byte[] decryptedData)
+        {
+            var compressedSize = BitConverter.ToUInt32(decryptedData.Skip(0x1C).Take(4).Reverse().ToArray(), 0);
+            var decompressedSize = BitConverter.ToUInt32(decryptedData.Skip(0x18).Take(4).Reverse().ToArray(), 0);
+            // If sizes are different, decompress
+            if (compressedSize != decompressedSize)
+            {
+                unsafe
+                {
+                    byte[] decompressedData = new byte[decompressedSize];
+                    fixed (byte* srcPtr = &decryptedData[0x24]) // Data to decrypt starts at 0x24
+                    fixed (byte* dstPtr = decompressedData)
+                    {
+                        LZ77.Expand(srcPtr, dstPtr, (int)decompressedSize, true); // Bin files are compressed with LZ11, which is apparently same as ExtendedLZ77
+                    }
+                    decryptedData = decryptedData.Take(0x20).Concat(decompressedData).ToArray(); // Header ends at 0x20
+                }
+            }
+            return decryptedData;
         }
 
         /// <summary>

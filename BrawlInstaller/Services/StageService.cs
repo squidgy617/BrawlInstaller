@@ -12,6 +12,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -294,10 +295,8 @@ namespace BrawlInstaller.Services
                 var nameData = binData.AsSpan(0x70, 32).ToArray().Where(x => x != 0x0);
                 listAlt.Name = Encoding.ASCII.GetString(nameData.ToArray());
                 // Get the image data
-                var jpegHeader = new byte[4] { 0xFF, 0xD8, 0xFF, 0xE0 };
-                var jpegTrailer = new byte[2] { 0xFF, 0xD9 };
-                var imageStart = binData.IndexOf(jpegHeader);
-                var imageEnd = binData.IndexOf(jpegTrailer) + 2;
+                var imageStart = BitConverter.ToInt32(binData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
+                var imageEnd = BitConverter.ToInt32(binData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
                 var imageData = binData.AsSpan(imageStart, imageEnd - imageStart);
                 listAlt.ImageData = imageData.ToArray();
             }
@@ -653,11 +652,11 @@ namespace BrawlInstaller.Services
                 {
                     name.Add(0x0);
                 }
-                var jpegHeader = new byte[4] { 0xFF, 0xD8, 0xFF, 0xE0 };
                 // Get beginning of file
                 var fileStart = decryptedData.AsSpan(0, nameStart);
                 // Get image location
-                var imageStart = decryptedData.IndexOf(jpegHeader);
+                var imageStart = BitConverter.ToInt32(decryptedData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
+                var imageEnd = BitConverter.ToInt32(decryptedData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
                 // Get data between name and image
                 var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
                 // Get image data from our list alt
