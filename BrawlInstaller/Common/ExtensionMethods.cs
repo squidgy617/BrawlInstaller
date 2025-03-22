@@ -507,11 +507,7 @@ namespace BrawlInstaller.Common
                 char c = input[i];
 
                 // Only change actual latin characters
-                if (c >= 'A' && c <= 'Z')
-                {
-                    fullwidthChars[i] = (char)(c + 0xFEE0);
-                }
-                else if (c >= 'a' && c <= 'z')
+                if (c >= '!' && c <= '~')
                 {
                     fullwidthChars[i] = (char)(c + 0xFEE0);
                 }
