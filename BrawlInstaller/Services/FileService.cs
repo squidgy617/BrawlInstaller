@@ -607,7 +607,7 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Decompress decrypted bin data that is encrypted
+        /// Decompress decrypted bin data
         /// </summary>
         /// <param name="decryptedData">Decrypted bin data</param>
         /// <returns>Decompressed bin data</returns>
@@ -633,6 +633,28 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Compress decrypted bin data
+        /// </summary>
+        /// <param name="decryptedData">Decrypted bin data</param>
+        /// <returns>Compressed bin data</returns>
+        private byte[] CompressBinData(byte[] decryptedData)
+        {
+            unsafe
+            {
+                fixed (byte* srcPtr = &decryptedData[0x20]) // Data to compress starts at 0x20
+                {
+                    using (MemoryStream outStream = new MemoryStream())
+                    {
+                        LZ77.Compact(srcPtr, decryptedData.Length - 0x20, outStream, null, true);
+                        var compressedData = outStream.ToArray();
+                        decryptedData = decryptedData.Take(0x20).Concat(compressedData).ToArray(); // Header ends at 0x20
+                    }
+                }
+            }
+            return decryptedData;
+        }
+
+        /// <summary>
         /// Encrypt bin data
         /// </summary>
         /// <param name="binData">Decrypted bin data</param>
@@ -642,7 +664,17 @@ namespace BrawlInstaller.Services
             // Update size fields
             var size = BitConverter.GetBytes(binData.Length - 0x20).Reverse().ToArray(); // these fields are technically size - 0x20 for some reason
             size.CopyTo(binData, 0x18); // Size
-            size.CopyTo(binData, 0x1C); // Compressed size - we just use the normal size
+            // Compress file if compression is on
+            if (_settingsService.BuildSettings.MiscSettings.CompressBinFiles)
+            {
+                binData = CompressBinData(binData);
+                var compressedSize = BitConverter.GetBytes(binData.Length - 0x20).Reverse().ToArray();
+                compressedSize.CopyTo(binData, 0x1C); // Compressed size
+            }
+            else
+            {
+                size.CopyTo(binData, 0x1C); // Just use uncompressed size for both
+            }
 
             using (Aes aes = Aes.Create())
             {
@@ -650,7 +682,7 @@ namespace BrawlInstaller.Services
                 aes.Key = Encryption.SDKey;
                 aes.IV = Encryption.SDIV;
                 aes.Mode = CipherMode.CBC;
-                aes.Padding = PaddingMode.None;
+                aes.Padding = PaddingMode.Zeros;
 
                 ICryptoTransform encryptor = aes.CreateEncryptor();
                 byte[] encryptedData = encryptor.TransformFinalBlock(binData, 0, binData.Length);

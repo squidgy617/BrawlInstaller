@@ -128,6 +128,7 @@ namespace BrawlInstaller.Classes
         public uint DefaultExConfigVersion { get; set; } = 1;
         public bool SyncTracklists { get; set; } = false;
         public bool UpdateCodeMenuNames { get; set; } = true;
+        public bool CompressBinFiles { get; set; } = false;
     }
 
     public class FilePathSettings
