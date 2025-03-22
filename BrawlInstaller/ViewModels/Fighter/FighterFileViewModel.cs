@@ -148,8 +148,7 @@ namespace BrawlInstaller.ViewModels
                         byteArray[1] = Convert.ToByte(hexPair.Substring(2, 2), 16);
                         newSuffix += Encoding.BigEndianUnicode.GetString(byteArray);
                     }
-                    suffix = "$" + newSuffix;
-                    return suffix;
+                    return "Tag: " + newSuffix;
                 }
                 return string.Empty;
             }
