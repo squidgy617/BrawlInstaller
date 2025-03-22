@@ -5,6 +5,7 @@ using BrawlLib.BrawlManagerLib;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -292,8 +293,8 @@ namespace BrawlInstaller.Services
                 listAlt.BinFilePath = binFile;
                 var binData = _fileService.DecryptBinFile(binFile);
                 // Get the name
-                var nameData = binData.AsSpan(0x70, 32).ToArray().Where(x => x != 0x0);
-                listAlt.Name = Encoding.ASCII.GetString(nameData.ToArray());
+                var nameData = binData.AsSpan(0x70, 32).ToArray();
+                listAlt.Name = Encoding.BigEndianUnicode.GetString(nameData);
                 // Get the image data
                 var imageStart = BitConverter.ToInt32(binData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(binData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
