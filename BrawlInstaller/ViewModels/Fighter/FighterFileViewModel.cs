@@ -127,6 +127,34 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<FighterInstallOption> InstallOptions { get => FighterPackage?.InstallOptions != null ? new ObservableCollection<FighterInstallOption>(FighterPackage.InstallOptions) : new ObservableCollection<FighterInstallOption>(); }
 
+        [DependsUpon(nameof(SelectedPacFile))]
+        public string SelectedSuffix { get => SelectedPacFile?.Suffix; set { SelectedPacFile.Suffix = value; OnPropertyChanged(nameof(SelectedSuffix)); } }
+
+        [DependsUpon(nameof(SelectedSuffix))]
+        public string DisplaySuffix
+        {
+            get
+            {
+                var suffix = SelectedPacFile?.Suffix;
+                if (!string.IsNullOrEmpty(suffix) && suffix.StartsWith("$") && suffix.Substring(1).Length % 2 == 0)
+                {
+                    suffix = suffix.Substring(1);
+                    var newSuffix = string.Empty;
+                    for (int i = 0; i < suffix.Length; i += 4)
+                    {
+                        var hexPair = suffix.Substring(i, 4);
+                        var byteArray = new byte[2];
+                        byteArray[0] = Convert.ToByte(hexPair.Substring(0, 2), 16);
+                        byteArray[1] = Convert.ToByte(hexPair.Substring(2, 2), 16);
+                        newSuffix += Encoding.BigEndianUnicode.GetString(byteArray);
+                    }
+                    suffix = "$" + newSuffix;
+                    return suffix;
+                }
+                return string.Empty;
+            }
+        }
+
         // Methods
         public void LoadFighterFiles(FighterLoadedMessage message)
         {

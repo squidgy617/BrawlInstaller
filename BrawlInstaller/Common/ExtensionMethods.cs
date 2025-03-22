@@ -496,6 +496,35 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class StringExtensions
+    {
+        public static string ConvertToFullwidth(this string input)
+        {
+            char[] fullwidthChars = new char[input.Length];
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                char c = input[i];
+
+                // Only change actual latin characters
+                if (c >= 'A' && c <= 'Z')
+                {
+                    fullwidthChars[i] = (char)(c + 0xFEE0);
+                }
+                else if (c >= 'a' && c <= 'z')
+                {
+                    fullwidthChars[i] = (char)(c + 0xFEE0);
+                }
+                else
+                {
+                    fullwidthChars[i] = c;
+                }
+            }
+
+            return new string(fullwidthChars);
+        }
+    }
+
     public static class TyDataListEntryNodeExtensions
     {
         public static Trophy ToTrophy(this TyDataListEntryNode node)

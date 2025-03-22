@@ -25,7 +25,10 @@ namespace BrawlInstaller.StaticClasses
             "Param",
             "##Brres",
             "Brres",
-            "Fake"
+            "Fake",
+            "$TAG"
         };
+
+        public static List<string> PacFileRegexes = new List<string>(PacFileSuffixes).Append("\\$.+").ToList();
     }
 }

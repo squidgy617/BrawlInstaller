@@ -1,5 +1,6 @@
 ﻿using BrawlCrate.UI;
 using BrawlInstaller.Classes;
+using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlLib.Imaging;
 using BrawlLib.Internal;
@@ -33,6 +34,58 @@ namespace BrawlInstaller.Resources
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (int)value;
+        }
+    }
+
+    [ValueConversion(typeof(string), typeof(string))]
+    public class PacFileNameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo cultur)
+        {
+            return GetDisplayTagSuffix((string)value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo cultur)
+        {
+            return GetActualTagSuffix((string)value);
+        }
+
+        private string GetDisplayTagSuffix(string actualTagSuffix)
+        {
+            if (actualTagSuffix != null)
+            {
+                if (actualTagSuffix.StartsWith("$"))
+                {
+                    actualTagSuffix = actualTagSuffix.Substring(1);
+                    var bytes = Encoding.BigEndianUnicode.GetBytes(actualTagSuffix.ToCharArray()).ToArray();
+                    actualTagSuffix = Encoding.BigEndianUnicode.GetString(bytes);
+                    actualTagSuffix = "$" + actualTagSuffix;
+                }
+                return actualTagSuffix;
+            }
+            return null;
+        }
+
+        private static string GetActualTagSuffix(string displayTagSuffix)
+        {
+            if (displayTagSuffix != null)
+            {
+                var suffix = displayTagSuffix;
+                if (suffix.StartsWith("$"))
+                {
+                    suffix = suffix.Substring(1);
+                    suffix = suffix.ConvertToFullwidth();
+                    var bytes = Encoding.BigEndianUnicode.GetBytes(suffix);
+                    suffix = "";
+                    foreach (var b in bytes)
+                    {
+                        suffix += b.ToString("X2");
+                    }
+                    suffix = "$" + suffix;
+                }
+                return suffix;
+            }
+            return null;
         }
     }
 

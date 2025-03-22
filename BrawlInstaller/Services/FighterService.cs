@@ -949,7 +949,7 @@ namespace BrawlInstaller.Services
             // Build regex string
             var regexString = $"{pacFileName}";
             // Add suffix options
-            var suffixString = "(" + string.Join("|", PacFiles.PacFileSuffixes.Select(x => $"({x.Replace("#", "\\d")})")) + ")?";
+            var suffixString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})")) + ")?";
             regexString += suffixString;
             // Add costume IDs optionally
             regexString += "(\\d\\d)?";
@@ -1399,7 +1399,7 @@ namespace BrawlInstaller.Services
                         if (_fileService.DirectoryExists(fighterPath))
                         {
                             costume.PacFiles = GetPacFiles(fighterInfo)
-                                .Where(x => Path.GetFileNameWithoutExtension(x.FilePath).EndsWith(costume.CostumeId.ToString("D2"))).ToList();
+                                .Where(x => x.Suffix?.StartsWith("$") != true && Path.GetFileNameWithoutExtension(x.FilePath).EndsWith(costume.CostumeId.ToString("D2"))).ToList();
                         }
                         costumes.Add(costume);
                     }

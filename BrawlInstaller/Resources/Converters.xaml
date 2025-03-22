@@ -19,4 +19,5 @@
     <local:MultiParamConverter x:Key="multiParamConverter"/>
     <local:CostumePreviewConverter x:Key="costumePreviewConverter"/>
     <local:InverseBoolVisibilityConverter x:Key="inverseBoolVisConverter"/>
+    <local:PacFileNameConverter x:Key="pacFileNameConverter"/>
 </ResourceDictionary>

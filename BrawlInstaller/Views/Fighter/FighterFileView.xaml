@@ -50,7 +50,7 @@
                     <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
                 </ComboBox.Resources>
                 <ComboBox.Text>
-                    <Binding Path="SelectedPacFile.Suffix">
+                    <Binding Path="SelectedSuffix" Converter="{StaticResource pacFileNameConverter}" UpdateSourceTrigger="LostFocus">
                         <Binding.ValidationRules>
                             <validationRules:PacFileNameValidationRule>
                                 <validationRules:PacFileNameValidationRule.Wrapper>
@@ -61,6 +61,7 @@
                     </Binding>
                 </ComboBox.Text>
             </ComboBox>
+            <Label Content="{Binding DisplaySuffix}"/>
             <Label Target="{Binding ElementName=pacFileSuffixTextBox}" Style="{StaticResource errorText}" Width="120"/>
         </StackPanel>
         <Label x:Name="moduleLabel" Content="Module:" Grid.Row="2" Grid.Column="0" ToolTip="Module file to associate with fighter"/>

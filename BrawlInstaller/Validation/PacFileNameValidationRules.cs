@@ -55,7 +55,7 @@ namespace BrawlInstaller.Validation
             }
             suffixString += "$";
 
-            if (!string.IsNullOrEmpty(suffix) && !Regex.IsMatch(suffix, suffixString, RegexOptions.IgnoreCase) && !(Wrapper.AllowCostumeIds && Regex.IsMatch(suffix, $"^{costumeSuffix}$", RegexOptions.IgnoreCase)))
+            if (!string.IsNullOrEmpty(suffix) && !(suffix.StartsWith("$") && suffix.Length > 1) && !Regex.IsMatch(suffix, suffixString, RegexOptions.IgnoreCase) && !(Wrapper.AllowCostumeIds && Regex.IsMatch(suffix, $"^{costumeSuffix}$", RegexOptions.IgnoreCase)))
             {
                 return new ValidationResult(false, "File suffix is not valid.");
             }
