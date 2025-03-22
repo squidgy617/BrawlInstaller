@@ -294,7 +294,7 @@ namespace BrawlInstaller.Services
                 var binData = _fileService.DecryptBinFile(binFile);
                 // Get the name
                 var nameData = binData.AsSpan(0x70, 32).ToArray();
-                listAlt.Name = Encoding.BigEndianUnicode.GetString(nameData);
+                listAlt.Name = Encoding.BigEndianUnicode.GetString(nameData).Replace("\u0000", "");
                 // Get the image data
                 var imageStart = BitConverter.ToInt32(binData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(binData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
