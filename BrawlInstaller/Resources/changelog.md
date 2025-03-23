@@ -1,1 +1,3 @@
-- Fixed an issue where selected cosmetic type would change when you replaced a cosmetic in the costume manager.
+- Tag costumes are now supported. When modifying a fighter PAC file, in the suffix textbox, enter `$` followed by the tag you wish to tie the costume to. When you save your changes, the PAC file will automatically be renamed to follow tag costume naming standards, and using your chosen tag in-game should load the costume.
+- BrawlInstaller now supports compressed bin files for stage list alts. A new setting has also been added to compress bin files on save. This setting is off by default, but if checked, BrawlInstaller will always compress bin files when saving them.
+- Fixed an issue where replacing/adding a cosmetic would reset your selected style.
