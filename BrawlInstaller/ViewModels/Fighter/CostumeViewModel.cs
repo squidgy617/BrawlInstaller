@@ -149,7 +149,7 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(InheritedStyle))]
         public Cosmetic SelectedCosmetic { get => SelectedCostume?.Cosmetics?.FirstOrDefault(x => x.CosmeticType == SelectedCosmeticOption && x.Style == InheritedStyle); }
 
-        [DependsUpon(nameof(Costumes))]
+        [DependsUpon(nameof(FighterPackage))]
         [DependsUpon(nameof(SelectedCosmeticOption))]
         public List<string> Styles
         {
