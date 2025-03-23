@@ -5,6 +5,7 @@ using BrawlLib.BrawlManagerLib;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
+using BrawlLib.Wii.Textures;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -372,11 +374,22 @@ namespace BrawlInstaller.Services
                 var imageStart = BitConverter.ToInt32(binData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(binData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
                 var imageData = binData.AsSpan(imageStart, imageEnd - imageStart);
-                using (MemoryStream stream = new MemoryStream(imageData.ToArray()))
+                var imageHeader = binData.Skip(imageStart).Take(4).ToArray();
+                // If JPEG header is found, read as JPEG
+                if (imageHeader.Compare(new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }))
                 {
-                    var bitmap = Image.FromStream(stream, true, true);
-                    var bitmapImage = ((Bitmap)bitmap).ToBitmapImage(ImageFormat.Jpeg);
-                    listAlt.Image = bitmapImage;
+                    using (MemoryStream stream = new MemoryStream(imageData.ToArray()))
+                    {
+                        var bitmap = Image.FromStream(stream, true, true);
+                        var bitmapImage = ((Bitmap)bitmap).ToBitmapImage(ImageFormat.Jpeg);
+                        listAlt.Image = bitmapImage;
+                    }
+                }
+                // If TEX0 header is found, read as TEX0
+                else if (imageHeader.Compare(new byte[] { 0x54, 0x45, 0x58, 0x30 }))
+                {
+                    var tex = imageData.ToArray().ToResourceNode() as TEX0Node;
+                    listAlt.Image = tex.GetImage(0).ToBitmapImage();
                 }
             }
             return listAlt;
@@ -784,7 +797,15 @@ namespace BrawlInstaller.Services
                 // Get data between name and image
                 var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
                 // Get image data from our list alt
-                var imageData = listAlt.JpegData;
+                var imageData = new byte[0];
+                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
+                {
+                    imageData = _cosmeticService.GetTextureBytes(listAlt.Image, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
+                }
+                else
+                {
+                    imageData = listAlt.JpegData;
+                }
                 // Combine data leading up to image
                 var partialData = fileStart.ToArray().Append(name.ToArray()).Append(miscData.ToArray());
                 // Store image starting position

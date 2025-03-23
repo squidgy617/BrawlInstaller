@@ -19,6 +19,20 @@ using Newtonsoft.Json;
 
 namespace BrawlInstaller.Common
 {
+    public static class ByteArrayExtensions
+    {
+        public static ResourceNode ToResourceNode(this byte[] bytes)
+        {
+            unsafe
+            {
+                fixed (byte* ptr = bytes)
+                {
+                    return NodeFactory.FromAddress(null, ptr, bytes.Length);
+                }
+            }
+        }
+    }
+
     public static class BitmapExtensions
     {
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
