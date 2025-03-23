@@ -131,6 +131,7 @@ namespace BrawlInstaller.Classes
         public bool SyncTracklists { get; set; } = false;
         public bool UpdateCodeMenuNames { get; set; } = true;
         public bool CompressBinFiles { get; set; } = false;
+        public bool RGBA8Thumbnails { get; set; } = false;
     }
 
     public class FilePathSettings

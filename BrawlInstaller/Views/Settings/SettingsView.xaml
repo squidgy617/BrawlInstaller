@@ -29,6 +29,7 @@
                             <CheckBox Content="Sync tracklists" IsChecked="{Binding BuildSettings.MiscSettings.SyncTracklists}" ToolTip="Check to sync changes between standard and netplay tracklists"/>
                             <CheckBox Content="Update code menu names on save" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCodeMenuNames}" ToolTip="Check to update name displayed in code menu whenever a fighter is saved"/>
                             <CheckBox Content="Compress stage bin files" IsChecked="{Binding BuildSettings.MiscSettings.CompressBinFiles}" ToolTip="Check to compress stage builder bin files (used for list alts) when they are saved"/>
+                            <CheckBox Content="Use RGBA8 for bin thumbnails" IsChecked="{Binding BuildSettings.MiscSettings.RGBA8Thumbnails}" ToolTip="Check to always save thumbnails in stage list alt BIN files in RGBA8 format. Only use in builds that support it."/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>

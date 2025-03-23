@@ -25,11 +25,15 @@ using BrawlLib.SSBB.Types;
 using Newtonsoft.Json;
 using BrawlInstaller.StaticClasses;
 using BrawlLib.Internal;
+using System.Runtime.InteropServices;
 
 namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
+        /// <inheritdoc cref="CosmeticService.GetTextureBytes(BitmapImage, WiiPixelFormat, ImageSize)"/>
+        byte[] GetTextureBytes(BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size);
+
         /// <inheritdoc cref="CosmeticService.GetFighterCosmetics(BrawlIds)"/>
         List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds);
 
@@ -125,6 +129,37 @@ namespace BrawlInstaller.Services
             var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size, paletteCount);
             _fileService.DeleteFile($"{_settingsService.AppSettings.TempPath}\\tempNode.png");
             return node;
+        }
+
+        /// <summary>
+        /// Import a texture from image data
+        /// </summary>
+        /// <param name="cosmeticImage">Bitmap image data</param>
+        /// <param name="format">Encoding format to use</param>
+        /// <param name="size">Dimensions to scale image to</param>
+        /// <returns>TEX0Node</returns>
+        private TEX0Node ImportTexture(BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size)
+        {
+            var newBrres = new BRRESNode();
+            var node = ImportTexture(newBrres, cosmeticImage, format, size);
+            return node;
+        }
+
+        /// <summary>
+        /// Get bytes of texture from image data
+        /// </summary>
+        /// <param name="cosmeticImage">Bitmap image data</param>
+        /// <param name="format">Encoding format to use</param>
+        /// <param name="size">Dimensions to scale image to</param>
+        /// <returns>Byte array</returns>
+        public byte[] GetTextureBytes(BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size)
+        {
+            var texNode = ImportTexture(cosmeticImage, format, size);
+            // Get data
+            var length = texNode.WorkingUncompressed.Length.Align(4);
+            byte[] data = new byte[length];
+            Marshal.Copy(texNode.SourceNode.WorkingUncompressed.Address, data, 0, length);
+            return data;
         }
 
         /// <summary>
