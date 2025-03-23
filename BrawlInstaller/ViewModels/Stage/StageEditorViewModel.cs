@@ -435,26 +435,9 @@ namespace BrawlInstaller.ViewModels
                 var image = _dialogService.OpenFileDialog("Select an image", "PNG file (.png)|*.png");
                 if (!string.IsNullOrEmpty(image))
                 {
-                    SelectedStageEntry.ListAlt.ImageData = GetBinThumbnailData(image);
+                    SelectedStageEntry.ListAlt.Image = _fileService.LoadImage(image);
                     OnPropertyChanged(nameof(SelectedStageEntry));
                 }
-            }
-        }
-
-        private byte[] GetBinThumbnailData(string imagePath)
-        {
-            var imageData = _fileService.LoadImage(imagePath);
-            var bitmap = imageData.ToBitmap();
-            var pixelData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            var pixelFormat = PixelFormats.Bgra32;
-            var bitmapSource = BitmapSource.Create(bitmap.Width, bitmap.Height, 1, 1, pixelFormat, null, pixelData.Scan0, pixelData.Stride * bitmap.Height, pixelData.Stride);
-            var resizedBitmap = new TransformedBitmap(bitmapSource, new ScaleTransform(160.0 / bitmap.Width, 120.0 / bitmap.Height));
-            var encoder = new JpegBitmapEncoder();
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                encoder.Frames.Add(BitmapFrame.Create(resizedBitmap));
-                encoder.Save(outStream);
-                return outStream.ToArray();
             }
         }
 

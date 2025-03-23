@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
@@ -371,7 +372,12 @@ namespace BrawlInstaller.Services
                 var imageStart = BitConverter.ToInt32(binData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(binData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
                 var imageData = binData.AsSpan(imageStart, imageEnd - imageStart);
-                listAlt.ImageData = imageData.ToArray();
+                using (MemoryStream stream = new MemoryStream(imageData.ToArray()))
+                {
+                    var bitmap = Image.FromStream(stream, true, true);
+                    var bitmapImage = ((Bitmap)bitmap).ToBitmapImage(ImageFormat.Jpeg);
+                    listAlt.Image = bitmapImage;
+                }
             }
             return listAlt;
         }
@@ -778,7 +784,7 @@ namespace BrawlInstaller.Services
                 // Get data between name and image
                 var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
                 // Get image data from our list alt
-                var imageData = listAlt.ImageData;
+                var imageData = listAlt.JpegData;
                 // Combine data leading up to image
                 var partialData = fileStart.ToArray().Append(name.ToArray()).Append(miscData.ToArray());
                 // Store image starting position
