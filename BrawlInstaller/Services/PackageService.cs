@@ -148,18 +148,21 @@ namespace BrawlInstaller.Services
                 // If a key is found matching the definition, and it has a value different from the key style, it should be replaced
                 if (fighterPackage.Cosmetics.InheritedStyles.Any(x => x.Key.Item1 == definition.CosmeticType && x.Value == definition.Style))
                 {
-                    var inheritedStyle = fighterPackage.Cosmetics.InheritedStyles.FirstOrDefault(x => x.Key.Item1 == definition.CosmeticType && x.Value == definition.Style).Key.Item2;
-                    if (inheritedStyle != definition.Style)
+                    foreach(var inheritedDefinitionPair in fighterPackage.Cosmetics.InheritedStyles.Where(x => x.Key.Item1 == definition.CosmeticType && x.Value == definition.Style))
                     {
-                        var inheritedDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style == inheritedStyle);
-                        if (inheritedDefinition != null)
+                        var inheritedStyle = inheritedDefinitionPair.Key.Item2;
+                        if (inheritedStyle != definition.Style)
                         {
-                            // Copy the definition
-                            var newDefinition = inheritedDefinition.Copy();
-                            // Change it's style to match the style of the original definition
-                            newDefinition.Style = definition.Style;
-                            // Add it to the change list so it will be detected
-                            inheritedDefinitions.Add(newDefinition);
+                            var inheritedDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.CosmeticType == definition.CosmeticType && x.Style == inheritedStyle);
+                            if (inheritedDefinition != null)
+                            {
+                                // Copy the definition
+                                var newDefinition = inheritedDefinition.Copy();
+                                // Change it's style to match the style of the original definition
+                                newDefinition.Style = definition.Style;
+                                // Add it to the change list so it will be detected
+                                inheritedDefinitions.Add(newDefinition);
+                            }
                         }
                     }
                 }
@@ -918,7 +921,8 @@ namespace BrawlInstaller.Services
                 foreach (var image in images)
                 {
                     var hdImagePath = Path.Combine(folder, "HD");
-                    var hdImage = _fileService.GetFiles(hdImagePath, "*.png").FirstOrDefault();
+                    var hdImages = _fileService.GetFiles(hdImagePath, "*.png");
+                    var hdImage = hdImages.Count > images.IndexOf(image) ? hdImages[images.IndexOf(image)] : null;
                     var newCosmetic = new Cosmetic
                     {
                         CosmeticType = cosmeticType,

@@ -754,7 +754,7 @@ namespace BrawlInstaller.Services
             var parentNode = (BRRESNode)node;
             var textureId = GetUnusedCosmeticId(definition, id, node, cosmetic.CostumeIndex);
             // If we have a texture node of the same properties, import that
-            if (cosmetic.Texture != null && (cosmetic.Texture.SharesData ||
+            if (cosmetic.Texture != null && ((cosmetic.Texture.SharesData && !(definition.FirstOnly || definition.SeparateFiles)) ||
                 (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
                 && cosmetic.Texture.Format == definition.Format
                 && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
@@ -776,21 +776,20 @@ namespace BrawlInstaller.Services
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
             }
+            // If we should only import one cosmetic and it's a color smashed texture, reimport
+            else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
+            {
+                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null));
+                texture.Name = GetTextureName(definition, textureId, cosmetic);
+                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+            }
             // If we have neither an image nor a texture node matching the definition, but we do *have* a texture node, reimport it
             // This suggests that we got a texture from the cosmetics that didn't match the definition,
             // or we updated the HD texture but didn't change the texture itself, which we should reimport, or it will be lost
             else if (cosmetic.Texture != null)
             {
                 var texture = ImportTexture(parentNode, cosmetic.Image, definition.Format, definition.Size);
-                texture.Name = GetTextureName(definition, textureId, cosmetic);
-                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
-                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
-            }
-            // TODO: Verify this actually works
-            // If we should only import one cosmetic and it's a color smashed texture, reimport
-            else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
-            {
-                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null));
                 texture.Name = GetTextureName(definition, textureId, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
@@ -1050,6 +1049,7 @@ namespace BrawlInstaller.Services
         {
             var removeTextures = true; // Only remove textures if pat entries aren't found and removed
             var cosmetics = cosmeticList.Items.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style && !x.SelectionOption).ToList();
+            cosmetics = definition.FirstOnly && cosmetics.FirstOrDefault() != null ? new List<Cosmetic> { cosmetics.OrderBy(x => x.CostumeIndex).FirstOrDefault() } : cosmetics; // If first only, then only grab the first one
             var changedCosmetics = cosmeticList.ChangedItems.Where(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style && !x.SelectionOption).ToList();
             // If the definition doesn't use separate files, find the files and update them
             if (!definition.SeparateFiles)
