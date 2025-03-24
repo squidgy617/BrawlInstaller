@@ -900,21 +900,33 @@ namespace BrawlInstaller.Services
         private List<Cosmetic> GetLegacyCosmetics(string path, CosmeticType cosmeticType, CosmeticType nameType)
         {
             var cosmeticList = new List<Cosmetic>();
-            var folders = _fileService.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+            var folders = new List<string>();
+            var style = string.Empty;
+            // This is to handle old replay icon folder structure
+            if (cosmeticType == CosmeticType.ReplayIcon && _fileService.GetFiles(path, "*.png", SearchOption.TopDirectoryOnly).Any())
+            {
+                style = "P+";
+                folders.Add(path);
+            }
+            else
+            {
+                folders = _fileService.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+            }
             foreach (var folder in folders)
             {
                 var images = _fileService.GetFiles(folder, "*.png");
                 foreach (var image in images)
                 {
-                    var hdImagePath = Path.Combine(folder, "HD", Path.GetFileName(image));
+                    var hdImagePath = Path.Combine(folder, "HD");
+                    var hdImage = _fileService.GetFiles(hdImagePath, "*.png").FirstOrDefault();
                     var newCosmetic = new Cosmetic
                     {
                         CosmeticType = cosmeticType,
-                        Style = Path.GetFileName(folder),
+                        Style = string.IsNullOrEmpty(style) ? Path.GetFileName(folder) : style,
                         ImagePath = image,
-                        HDImagePath = _fileService.FileExists(hdImagePath) ? hdImagePath : string.Empty,
+                        HDImagePath = _fileService.FileExists(hdImage) ? hdImage : string.Empty,
                         Image = _fileService.LoadImage(image),
-                        HDImage = _fileService.FileExists(hdImagePath) ? _fileService.LoadImage(hdImagePath) : null,
+                        HDImage = _fileService.FileExists(hdImage) ? _fileService.LoadImage(hdImage) : null,
                         InternalIndex = images.IndexOf(image),
                         CostumeIndex = images.IndexOf(image) + 1,
                         SharesData = false,
