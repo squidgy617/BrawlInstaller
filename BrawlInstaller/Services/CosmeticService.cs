@@ -1461,8 +1461,9 @@ namespace BrawlInstaller.Services
                                 // If it's selectable and not a new texture, don't add it. Also set ID to null for selectable textures
                                 if (!definition.Selectable || !nodes.Select(x => x.TextureId).Contains(GetCosmeticId(child.Name, definition)))
                                 {
-                                    var nodeId = !definition.Selectable ? GetCosmeticId(child.Name, definition) : null;
-                                    nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = nodeId });
+                                    var textureId = GetCosmeticId(child.Name, definition);
+                                    var nodeId = !definition.Selectable ? textureId : null;
+                                    nodes.Add(new CosmeticTexture { Texture = (TEX0Node)child, CostumeIndex = GetCostumeIndex((TEX0Node)child, definition, id), Id = nodeId, TextureId = textureId });
                                 }
                             }
                         }
