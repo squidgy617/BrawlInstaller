@@ -1,3 +1,1 @@
-- In some cases, cosmetics with a "Copy From" setting would not be imported properly when the source cosmetics were color smashed. This has been fixed.
-- In some cases, cosmetics with the "First Only" option enabled would not be imported properly when the source cosmetics were color smashed. This has been fixed.
-- Fixed legacy fighter packages not always loading replay icons correctly.
+- Fixed an issue where selectable cosmetics with no PAT0 entry wouldn't save correctly when changed.
