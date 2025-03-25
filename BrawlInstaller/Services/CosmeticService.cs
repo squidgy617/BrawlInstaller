@@ -1284,7 +1284,7 @@ namespace BrawlInstaller.Services
             if (suffix != "" && int.TryParse(suffix, out int index))
             {
                 index = Convert.ToInt32(suffix);
-                return CheckIdRange(definition.IdType, definition.Multiplier, id, index, definition.Offset);
+                return CheckIdRange(definition.Multiplier, id, index, definition.Offset, definition.CostumeCosmetic);
             }
             return false;
         }
@@ -1299,21 +1299,20 @@ namespace BrawlInstaller.Services
         /// <returns>Whether cosmetic is within the ID range</returns>
         private bool CheckIdRange(PatSettings patSettings, CosmeticDefinition definition, int? id, int index)
         {
-            return CheckIdRange(idType: patSettings.IdType ?? definition.IdType, multiplier: patSettings.Multiplier ?? definition.Multiplier, id, index, patSettings.Offset ?? definition.Offset);
+            return CheckIdRange(patSettings.Multiplier ?? definition.Multiplier, id, index, patSettings.Offset ?? definition.Offset, definition.CostumeCosmetic);
         }
 
         /// <summary>
         /// Check if ID associated with a cosmetic is within range based on multiplier and ID
         /// </summary>
-        /// <param name="idType">Type of ID associated with cosmetic</param>
         /// <param name="multiplier">Multiplier used for IDs</param>
         /// <param name="id">ID associated with cosmetic</param>
         /// <param name="index">Number to check is within range</param>
+        /// <param name="costumeCosmetic">Whether the cosmetic is for a costume or not</param>
         /// <returns>Whether cosmetic is within the ID range</returns>
-        private bool CheckIdRange(IdType idType, int multiplier, int? id, int index, int offset)
+        private bool CheckIdRange(int multiplier, int? id, int index, int offset, bool costumeCosmetic = true)
         {
-            // TODO: Do we really only check this for cosmetic IDs?
-            if (idType != IdType.Cosmetic)
+            if (!costumeCosmetic)
                 return index == (id * multiplier) + offset;
             var minRange = (id * multiplier) + offset;
             var maxRange = multiplier > 1 ? minRange + multiplier + offset : id + offset;
@@ -1635,7 +1634,7 @@ namespace BrawlInstaller.Services
         /// <returns>Whether or not definition is for shared group cosmetic</returns>
         private bool IsSharedGroupCosmetic(CosmeticDefinition definition)
         {
-            return definition.IdType != IdType.Cosmetic;
+            return !definition.CostumeCosmetic;
         }
 
         /// <summary>
