@@ -1,1 +1,2 @@
-- Fixed an issue where selectable cosmetics with no PAT0 entry wouldn't save correctly when changed.
+- Changing a fighter's soundbank ID will now update sound lists in misc data.
+- Fixed an error that could sometimes occur when selecting color smashed textures for the "Copy From" field for cosmetics with the "First Only" setting enabled.
