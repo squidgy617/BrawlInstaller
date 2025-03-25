@@ -18,7 +18,7 @@ namespace BrawlInstaller.Services
         ResourceNode UpdateGFXIds(ResourceNode movesetDataNode, int effectPacId, int oldEffectPacId);
 
         /// <inheritdoc cref="PsaService.UpdateSFXIds(ResourceNode, int, int)"/>
-        ResourceNode UpdateSFXIds(ResourceNode movesetDataNode, int soundbankId, int oldSoundbankId);
+        ResourceNode UpdateSFXIds(ResourceNode movesetDataNode, int soundbankId, int oldSoundbankId, bool updateSoundLists);
     }
 
     [Export(typeof(IPsaService))]
@@ -98,10 +98,10 @@ namespace BrawlInstaller.Services
         /// <param name="soundbankId">Soundbank ID to update to</param>
         /// <param name="oldSoundbankId">Soundbank ID to replace</param>
         /// <returns></returns>
-        public ResourceNode UpdateSFXIds(ResourceNode movesetDataNode, int soundbankId, int oldSoundbankId)
+        public ResourceNode UpdateSFXIds(ResourceNode movesetDataNode, int soundbankId, int oldSoundbankId, bool updateSoundLists)
         {
             var data = _fileService.ReadRawData(movesetDataNode);
-            data = UpdateSFXIds(data, soundbankId, oldSoundbankId);
+            data = UpdateSFXIds(data, soundbankId, oldSoundbankId, updateSoundLists);
             _fileService.ReplaceNodeRaw(movesetDataNode, data);
             return movesetDataNode;
         }
@@ -223,7 +223,7 @@ namespace BrawlInstaller.Services
         /// <param name="soundbankId">Soundbank ID to update to</param>
         /// <param name="oldSoundbankId">Soundbank ID to replace</param>
         /// <returns></returns>
-        private byte[] UpdateSFXIds(byte[] data, int soundbankId, int oldSoundbankId)
+        private byte[] UpdateSFXIds(byte[] data, int soundbankId, int oldSoundbankId, bool updateSoundLists)
         {
             // Loop through each OpCode
             foreach (var opCode in SfxOpCodes)
@@ -271,7 +271,70 @@ namespace BrawlInstaller.Services
                     }
                 }
             }
+            // Handle sound lists for main pac file
+            if (updateSoundLists)
+            {
+                // Lots of pointer stuff I don't understand, probably can be rewritten
+                uint dataTablePtr = GetUInt32(data, 0x4) + (GetUInt32(data, 0x8) * 4); // Initial pointer to data table
+                uint dataTableCount = GetUInt32(data, 0xC);
+                uint dataOffsetPtr = 0;
+                byte[] noHeader = data.Skip(0x20).ToArray(); // Header is first 0x20 bytes
+
+                // Loop through data table
+                for (uint i = 0; i < dataTableCount; i++)
+                {
+                    if (GetUInt32(noHeader, (int)(dataTablePtr + i * 8 + 4)) == 0)
+                    {
+                        dataOffsetPtr = GetUInt32(noHeader, (int)(dataTablePtr + i * 8));
+                    }
+                }
+
+                // Nested pointer stuff
+                uint soundListsPtr = FollowPointerChain(noHeader, dataOffsetPtr, new uint[] { 0x10, 0x2C, 0x0 });
+
+                for (uint i = 0; i < 6; i++)
+                {
+                    uint soundsPtr = GetUInt32(noHeader, (int)(soundListsPtr + i * 8));
+                    uint soundsCount = GetUInt32(noHeader, (int)(soundListsPtr + i * 8 + 4));
+
+                    for (uint j = 0; j < soundsCount; j++)
+                    {
+                        uint foundSfxId = GetUInt32(noHeader, (int)(soundsPtr + j * 4));
+                        if (foundSfxId != 0xFFFFFFFF)
+                        {
+                            // Get offsets
+                            var soundbankOffset = (soundbankId - 324) * 165 + 0x4000; // 324 is first custom soundbank ID, 0x4000 is first custom SFX ID
+                            var oldSoundbankOffset = (oldSoundbankId - 324) * 165 + 0x4000; // Multiply by 165 because each soundbank has 165 SFX
+                                                                                            // Check that SFX ID is within range of SFX for old soundbank
+                            if (foundSfxId >= oldSoundbankOffset && foundSfxId < oldSoundbankOffset + 165)
+                            {
+                                var sfxOffset = foundSfxId - oldSoundbankOffset;
+                                var newSfxId = soundbankOffset + sfxOffset;
+                                byte[] newBytes = BitConverter.GetBytes((uint)newSfxId).Reverse().ToArray();
+                                newBytes.CopyTo(noHeader, soundsPtr + j * 4);
+                            }
+                            noHeader.CopyTo(data, 0x20);
+                        }
+                    }
+                }
+            }
+
             return data;
+        }
+
+        private uint FollowPointerChain(byte[] data, uint start, uint[] offsets)
+        {
+            uint current = start;
+            foreach (uint offset in offsets)
+            {
+                current = GetUInt32(data, (int)(current + offset));
+            }
+            return current;
+        }
+
+        private uint GetUInt32(byte[] data, int offset)
+        {
+            return BitConverter.ToUInt32(data.Skip(offset).Take(0x4).Reverse().ToArray(), 0);
         }
     }
 }

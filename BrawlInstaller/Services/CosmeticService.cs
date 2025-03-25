@@ -135,12 +135,12 @@ namespace BrawlInstaller.Services
         private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, ImageSize size)
         {
             var texture = GetTexture(destinationNode, cosmetic.Texture.Name);
-            var palette = texture.GetPaletteNode();
-            var index = texture.Index;
+            var palette = texture?.GetPaletteNode();
+            var index = texture?.Index ?? cosmetic.Texture.Index;
             var folder = destinationNode.GetFolder<TEX0Node>();
-            var name = texture.Name;
+            var name = texture?.Name ?? cosmetic.Texture.Name;
             _fileService.SaveImage(cosmetic.Image, $"{_settingsService.AppSettings.TempPath}\\tempNode.png");
-            texture.Remove(true);
+            texture?.Remove(true);
             palette?.Remove();
             var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size);
             _fileService.DeleteFile($"{_settingsService.AppSettings.TempPath}\\tempNode.png");

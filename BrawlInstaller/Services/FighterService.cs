@@ -718,7 +718,7 @@ namespace BrawlInstaller.Services
                         if (fighterPackage.FighterInfo.SoundbankId != null && fighterPackage.FighterInfo.OriginalSoundbankId != null &&
                             fighterPackage.FighterInfo.SoundbankId != fighterPackage.FighterInfo.OriginalSoundbankId)
                         {
-                            UpdateSFXIds(file, (int)fighterPackage.FighterInfo.SoundbankId, (int)fighterPackage.FighterInfo.OriginalSoundbankId);
+                            UpdateSFXIds(file, (int)fighterPackage.FighterInfo.SoundbankId, (int)fighterPackage.FighterInfo.OriginalSoundbankId, !regex.Success);
                         }
                     }
                     // If Kirby PAC file, update GFX IDs
@@ -734,7 +734,7 @@ namespace BrawlInstaller.Services
                         if (fighterPackage.FighterInfo.KirbySoundbankId != null && fighterPackage.FighterInfo.OriginalKirbySoundbankId != null &&
                             fighterPackage.FighterInfo.KirbySoundbankId != fighterPackage.FighterInfo.OriginalKirbySoundbankId)
                         {
-                            UpdateSFXIds(file, (int)fighterPackage.FighterInfo.KirbySoundbankId, (int)fighterPackage.FighterInfo.OriginalKirbySoundbankId);
+                            UpdateSFXIds(file, (int)fighterPackage.FighterInfo.KirbySoundbankId, (int)fighterPackage.FighterInfo.OriginalKirbySoundbankId, false);
                         }
                     }
                 }
@@ -839,7 +839,7 @@ namespace BrawlInstaller.Services
                     if (node.GetType() == typeof(TEX0Node) && regex.Success)
                     {
                         var newTraceId = effectPacId - 311;
-                        var newTraceName = Regex.Replace(node.Name, "TexCustom\\d+Trace", $"Tex{newTraceId:X2}Trace");
+                        var newTraceName = Regex.Replace(node.Name, "TexCustom\\d+Trace", $"TexCustom{newTraceId:X2}Trace");
                         node.Name = newTraceName;
                     }
                 }
@@ -868,13 +868,13 @@ namespace BrawlInstaller.Services
         /// <param name="rootNode">Root node of fighter PAC file</param>
         /// <param name="soundbankId">New soundbank ID</param>
         /// <param name="oldSoundbankId">Old soundbank ID</param>
-        private void UpdateSFXIds(ResourceNode rootNode, int soundbankId, int oldSoundbankId)
+        private void UpdateSFXIds(ResourceNode rootNode, int soundbankId, int oldSoundbankId, bool updateSoundLists)
         {
             // Find moveset data node
             var dataNode = rootNode.FindChild("Misc Data [0]");
             if (dataNode != null)
             {
-                _psaService.UpdateSFXIds(dataNode, soundbankId, oldSoundbankId);
+                _psaService.UpdateSFXIds(dataNode, soundbankId, oldSoundbankId, updateSoundLists);
             }
         }
 
