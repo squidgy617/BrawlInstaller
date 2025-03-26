@@ -31,8 +31,11 @@ namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
-        /// <inheritdoc cref="CosmeticService.GetTextureBytes(BitmapImage, WiiPixelFormat, ImageSize)"/>
-        byte[] GetTextureBytes(BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size);
+        /// <inheritdoc cref="CosmeticService.GetHDImage(string)"/>
+        BitmapImage GetHDImage(string fileName);
+
+        /// <inheritdoc cref="CosmeticService.GetFighterCosmetics(BitmapImage, BitmapImage, WiiPixelFormat, ImageSize)"/>
+        byte[] ImportBinThumbnail(BitmapImage thumbnail, BitmapImage hdThumbnail, WiiPixelFormat format, ImageSize size);
 
         /// <inheritdoc cref="CosmeticService.GetFighterCosmetics(BrawlIds)"/>
         List<Cosmetic> GetFighterCosmetics(BrawlIds fighterIds);
@@ -146,15 +149,52 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Import stage bin thumbnail
+        /// </summary>
+        /// <param name="thumbnail">Image to import</param>
+        /// <param name="format">Encoding format to use</param>
+        /// <param name="size">Dimensions to scale image to</param>
+        /// <returns>Byte array</returns>
+        public byte[] ImportBinThumbnail(BitmapImage thumbnail, BitmapImage hdThumbnail, WiiPixelFormat format, ImageSize size)
+        {
+            // Get texture
+            var texture = ImportTexture(thumbnail, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
+            // Import HD thumbnail
+            if (hdThumbnail != null && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
+            {
+                if (HDImages.Count == 0)
+                {
+                    PreloadHDTextures(); // Load HD textures if they aren't loaded yet
+                }
+                DeleteHDTexture(texture);
+                ImportHDTexture(texture, hdThumbnail, Path.Combine(_settingsService.AppSettings.HDTextures, _settingsService.BuildSettings.FilePathSettings.BinFileHDTexturePath));
+            }
+            var imageData = GetTextureBytes(texture, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
+            return imageData;
+        }
+
+        /// <summary>
         /// Get bytes of texture from image data
         /// </summary>
         /// <param name="cosmeticImage">Bitmap image data</param>
         /// <param name="format">Encoding format to use</param>
         /// <param name="size">Dimensions to scale image to</param>
         /// <returns>Byte array</returns>
-        public byte[] GetTextureBytes(BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size)
+        private byte[] GetTextureBytes(BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size)
         {
             var texNode = ImportTexture(cosmeticImage, format, size);
+            return GetTextureBytes(texNode, format, size);
+        }
+
+        /// <summary>
+        /// Get bytes of texture from TEX0
+        /// </summary>
+        /// <param name="texNode">TEX0 node</param>
+        /// <param name="format">Encoding format to use</param>
+        /// <param name="size">Dimensions to scale image to</param>
+        /// <returns>Byte array</returns>
+        private byte[] GetTextureBytes(TEX0Node texNode, WiiPixelFormat format, ImageSize size)
+        {
             // Get data
             var length = texNode.WorkingUncompressed.Length.Align(4);
             byte[] data = new byte[length];
@@ -1069,6 +1109,27 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Import an HD texture
+        /// </summary>
+        /// <param name="texture">Texture node to get name from</param>
+        /// <param name="hdImage">Image to import</param>
+        /// <param name="imagePath">Path to import image to</param>
+        private void ImportHDTexture(TEX0Node texture, BitmapImage hdImage, string imagePath)
+        {
+            if (_settingsService.AppSettings.ModifyHDTextures && !string.IsNullOrEmpty(texture?.DolphinTextureName))
+            {
+                _fileService.CreateDirectory(imagePath);
+                imagePath += $"\\{texture?.DolphinTextureName}.png";
+                _fileService.SaveImage(hdImage, imagePath);
+                // Cache HD image if it is not cached
+                if (!HDImages.AsParallel().Any(x => x.Key == texture?.DolphinTextureName))
+                {
+                    HDImages.Add(texture?.DolphinTextureName, imagePath);
+                }
+            }
+        }
+
+        /// <summary>
         /// Import cosmetics with file caching based on definition rules
         /// </summary>
         /// <param name="definitions">Definitions for cosmetics</param>
@@ -1599,7 +1660,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="fileName">Filename of HD texture</param>
         /// <returns>BitmapImage of texture</returns>
-        private BitmapImage GetHDImage(string fileName)
+        public BitmapImage GetHDImage(string fileName)
         {
             var file = GetHDTexture(fileName);
             if (!string.IsNullOrEmpty(file))

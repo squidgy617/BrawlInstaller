@@ -266,6 +266,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string CodeMenuAddons { get => GetFilePath(FileType.CodeMenuAddons); }
         [JsonIgnore] public string RSSFile { get => GetFilePath(FileType.RSSFile); }
         [JsonIgnore] public string CostumeSwapFile { get => GetFilePath(FileType.CostumeSwapFile); }
+        public string BinFileHDTexturePath { get; set; } = "BrawlInstaller\\Stage Selection Screen\\Menu Alts";
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<RosterFile> RosterFiles { get; set; } = new List<RosterFile> 
