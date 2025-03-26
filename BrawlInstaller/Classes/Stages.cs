@@ -269,6 +269,7 @@ namespace BrawlInstaller.Classes
         public string BinFilePath { get; set; } = string.Empty;
         public string Name { get; set; } = "Unknown";
         public BitmapImage Image { get; set; } = null;
+        public BitmapImage HDImage { get; set; } = null;
         [JsonIgnore] public byte[] JpegData
         {
             get
@@ -295,7 +296,8 @@ namespace BrawlInstaller.Classes
                 BinFileName = BinFileName,
                 BinFilePath = BinFilePath,
                 Name = Name,
-                Image = Image
+                Image = Image,
+                HDImage = HDImage
             };
             return copy;
         }

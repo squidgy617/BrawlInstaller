@@ -28,8 +28,6 @@
                             <CheckBox Content="Install Fighters to SSE" IsChecked="{Binding BuildSettings.MiscSettings.InstallToSse}" ToolTip="Check to install fighters to SSE mode when they are installed"/>
                             <CheckBox Content="Sync tracklists" IsChecked="{Binding BuildSettings.MiscSettings.SyncTracklists}" ToolTip="Check to sync changes between standard and netplay tracklists"/>
                             <CheckBox Content="Update code menu names on save" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCodeMenuNames}" ToolTip="Check to update name displayed in code menu whenever a fighter is saved"/>
-                            <CheckBox Content="Compress stage bin files" IsChecked="{Binding BuildSettings.MiscSettings.CompressBinFiles}" ToolTip="Check to compress stage builder bin files (used for list alts) when they are saved"/>
-                            <CheckBox Content="Use RGBA8 for bin thumbnails" IsChecked="{Binding BuildSettings.MiscSettings.RGBA8Thumbnails}" ToolTip="Check to always save thumbnails in stage list alt BIN files in RGBA8 format. Only use in builds that support it."/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -45,6 +43,28 @@
                             <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1" ToolTip="BrawlEx version to use when generating new Ex config attributes."/>
                             <TextBox x:Name="exConfigVersionTextBox" Text="{Binding BuildSettings.MiscSettings.DefaultExConfigVersion}" Grid.Column="1" Grid.Row="1"/>
                         </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Bin Thumbnail HD Texture Path:" ToolTip="HD texture path for bin files"/>
+                            <userControls:FileBox x:Name="binHdTextureBox" TextBoxWidth="240" ExcludePath="{Binding AppSettings.HDTextures}">
+                                <userControls:FileBox.Resources>
+                                    <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                                </userControls:FileBox.Resources>
+                                <userControls:FileBox.Text>
+                                    <Binding Path="BuildSettings.FilePathSettings.BinFileHDTexturePath">
+                                        <Binding.ValidationRules>
+                                            <validationRules:BuildFilePathRule>
+                                                <validationRules:BuildFilePathRule.Wrapper>
+                                                    <validationRules:BuildFilePathWrapper FilePath="{Binding Data.Path, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.HDTextures, Source={StaticResource proxy}}"/>
+                                                </validationRules:BuildFilePathRule.Wrapper>
+                                            </validationRules:BuildFilePathRule>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </userControls:FileBox.Text>
+                            </userControls:FileBox>
+                            <Label Target="{Binding ElementName=binHdTextureBox}" Style="{StaticResource errorText}" Width="120"/>
+                            <CheckBox Content="Compress stage bin files" IsChecked="{Binding BuildSettings.MiscSettings.CompressBinFiles}" ToolTip="Check to compress stage builder bin files (used for list alts) when they are saved"/>
+                            <CheckBox Content="Use RGBA8 for bin thumbnails" IsChecked="{Binding BuildSettings.MiscSettings.RGBA8Thumbnails}" ToolTip="Check to always save thumbnails in stage list alt BIN files in RGBA8 format. Only use in builds that support it."/>
+                        </StackPanel>
                         <Separator/>
                         <StackPanel Orientation="Horizontal">
                             <Grid x:Name="stageListsGrid">

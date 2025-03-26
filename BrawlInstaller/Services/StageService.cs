@@ -390,6 +390,11 @@ namespace BrawlInstaller.Services
                 {
                     var tex = imageData.ToArray().ToResourceNode() as TEX0Node;
                     listAlt.Image = tex.GetImage(0).ToBitmapImage();
+                    // Get HD texture if available
+                    if (!string.IsNullOrEmpty(tex?.DolphinTextureName) && _settingsService.AppSettings.ModifyHDTextures && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures))
+                    {
+                        listAlt.HDImage = _cosmeticService.GetHDImage(tex.DolphinTextureName);
+                    }
                 }
             }
             return listAlt;
@@ -800,7 +805,7 @@ namespace BrawlInstaller.Services
                 var imageData = new byte[0];
                 if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
                 {
-                    imageData = _cosmeticService.GetTextureBytes(listAlt.Image, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
+                    imageData = _cosmeticService.ImportBinThumbnail(listAlt.Image, listAlt.HDImage, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
                 }
                 else
                 {
