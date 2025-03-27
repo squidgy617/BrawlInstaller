@@ -160,14 +160,17 @@ namespace BrawlInstaller.Services
             // Get texture
             var texture = ImportTexture(thumbnail, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
             // Import HD thumbnail
-            if (hdThumbnail != null && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
+            if (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
             {
                 if (HDImages.Count == 0)
                 {
                     PreloadHDTextures(); // Load HD textures if they aren't loaded yet
                 }
                 DeleteHDTexture(texture);
-                ImportHDTexture(texture, hdThumbnail, Path.Combine(_settingsService.AppSettings.HDTextures, _settingsService.BuildSettings.FilePathSettings.BinFileHDTexturePath));
+                if (hdThumbnail != null)
+                {
+                    ImportHDTexture(texture, hdThumbnail, Path.Combine(_settingsService.AppSettings.HDTextures, _settingsService.BuildSettings.FilePathSettings.BinFileHDTexturePath));
+                }
             }
             var imageData = GetTextureBytes(texture, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
             return imageData;
