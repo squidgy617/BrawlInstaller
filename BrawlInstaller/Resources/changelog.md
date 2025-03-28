@@ -1,2 +1,2 @@
-- Changing a fighter's soundbank ID will now update sound lists in misc data.
-- Fixed an error that could sometimes occur when selecting color smashed textures for the "Copy From" field for cosmetics with the "First Only" setting enabled.
+- Fixed an issue where Kirby hat pac files were not properly deleted when user attempted to remove them.
+- Fixed an issue where on some systems, color smashing would try to access an inaccessible directory.
