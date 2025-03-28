@@ -158,6 +158,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(SelectedStageEntry))]
         public string SelectedBinFilePath { get => SelectedStageEntry?.ListAlt?.BinFilePath; set { SelectedStageEntry.ListAlt.BinFilePath = value; UpdateListAlt(value); OnPropertyChanged(nameof(SelectedBinFilePath)); } }
 
+        [DependsUpon(nameof(BinIndexString))]
+        public int BinFileNameLength { get => 18 - ("st_" + (!string.IsNullOrEmpty(BinIndexString) ? BinIndexString : "00") + "_").Length; }
+
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
 
