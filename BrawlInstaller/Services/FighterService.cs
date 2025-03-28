@@ -884,7 +884,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterInfo">Fighter info of fighter</param>
         private void RemovePacFiles(FighterInfo fighterInfo)
         {
-            foreach(var file in GetPacFiles(fighterInfo))
+            foreach(var file in GetPacFiles(fighterInfo, forceKirbyHats: true))
             {
                 _fileService.DeleteFile(file.FilePath);
             }
@@ -896,7 +896,7 @@ namespace BrawlInstaller.Services
         /// <param name="fighterInfo">Fighter info of fighter</param>
         /// <param name="removeCostumeId">Remove costume ID from pac name</param>
         /// <returns>List of PAC files</returns>
-        public List<FighterPacFile> GetPacFiles(FighterInfo fighterInfo, bool removeCostumeId = true)
+        public List<FighterPacFile> GetPacFiles(FighterInfo fighterInfo, bool removeCostumeId = true, bool forceKirbyHats = false)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
@@ -922,7 +922,7 @@ namespace BrawlInstaller.Services
                 }
             }
             // Get Kirby pac files
-            if (!removeCostumeId)
+            if (!removeCostumeId || forceKirbyHats)
             {
                 path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.KirbyPacFolder}";
                 foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.KirbyPacFileName, fighterInfo.KirbyPacExtension)).ToList())
