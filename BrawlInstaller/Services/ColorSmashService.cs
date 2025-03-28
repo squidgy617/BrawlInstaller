@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.StaticClasses;
 using BrawlLib.Internal.Windows.Forms;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.Wii.Textures;
@@ -37,8 +38,8 @@ namespace BrawlInstaller.Services
         }
 
         // Constants
-        public const string ColorSmashDirectory = "cs";
-        public const string ColorSmashOutDirectory = ColorSmashDirectory + "\\out";
+        private string ColorSmashDirectory { get => Path.Combine(Paths.AppPath, "cs"); }
+        private string ColorSmashOutDirectory { get => Path.Combine(ColorSmashDirectory, "out"); }
 
         // Methods
 
