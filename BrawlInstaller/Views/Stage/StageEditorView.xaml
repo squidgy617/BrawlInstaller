@@ -264,7 +264,7 @@
                                         <TextBlock Text="st_" VerticalAlignment="Center"/>
                                         <TextBlock Text="{Binding BinIndexString}" VerticalAlignment="Center"/>
                                         <TextBlock Text="_" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="binNameTextBox" Text="{Binding SelectedStageEntry.ListAlt.BinFileName}"/>
+                                        <TextBox x:Name="binNameTextBox" Text="{Binding SelectedStageEntry.ListAlt.BinFileName}" MaxLength="{Binding BinFileNameLength}"/>
                                         <TextBlock Text=".bin" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <userControls:FileBox x:Name="binFileBox" Text="{Binding SelectedBinFilePath}" Filter="BIN file (.bin)|*.bin" Grid.Row="1" Grid.Column="1" TextBoxWidth="160"/>
