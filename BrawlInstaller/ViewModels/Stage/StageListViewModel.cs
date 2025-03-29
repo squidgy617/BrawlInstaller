@@ -260,9 +260,13 @@ namespace BrawlInstaller.ViewModels
                 SelectedPage.HazardFlags = SelectedPage.HazardFlags.RemoveBit(SelectedStageIndex);
                 // Remove stage
                 SelectedPage.StageSlots.RemoveAt(SelectedStageIndex);
-                if (SelectedPage.StageSlots.Count > SelectedStageIndex - 1)
+                if (SelectedPage.StageSlots.Count > SelectedStageIndex - 1 && SelectedStageIndex > 0)
                 {
                     SelectedStageIndex--;
+                    SelectedStageSlot = SelectedPage.StageSlots[SelectedStageIndex];
+                }
+                else if (SelectedPage.StageSlots.Count > 1 && SelectedStageIndex == 0)
+                {
                     SelectedStageSlot = SelectedPage.StageSlots[SelectedStageIndex];
                 }
                 else
