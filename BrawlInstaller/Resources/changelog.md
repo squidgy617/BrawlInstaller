@@ -1,1 +1,1 @@
-- Fixed an error that could occur when trying to modify characters with a slot ID larger than what was specified in the credits music table.
+- Fixed an error that would occur when adding brand-new BRSTMs to a tracklist
