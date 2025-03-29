@@ -425,10 +425,13 @@ namespace BrawlInstaller.Services
             // Delete old tracklist
             foreach(var tracklistPath in tracklistPaths)
             {
-                var path = Path.Combine(_settingsService.GetBuildFilePath(tracklistPath), Path.GetFileName(tracklist.File));
-                if (_fileService.FileExists(path))
+                if (!string.IsNullOrEmpty(tracklist?.File))
                 {
-                    _fileService.DeleteFile(path);
+                    var path = Path.Combine(_settingsService.GetBuildFilePath(tracklistPath), Path.GetFileName(tracklist.File));
+                    if (_fileService.FileExists(path))
+                    {
+                        _fileService.DeleteFile(path);
+                    }
                 }
             }
             // Save BRSTMs
