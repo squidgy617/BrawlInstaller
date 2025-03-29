@@ -2148,7 +2148,7 @@ namespace BrawlInstaller.Services
                     asmTable.Add(newEntry);
                 }
                 // Update fighter slot if credits theme or display name are different
-                if (asmTable.Count > slotId && (asmTable[slotId.Value].Item != $"0x{id:X4}") || asmTable[slotId.Value].Comment != fighterInfo.DisplayName)
+                if (asmTable.Count > slotId && (asmTable[slotId.Value].Item != $"0x{id:X4}" || asmTable[slotId.Value].Comment != fighterInfo.DisplayName))
                 {
                     asmTable[slotId.Value].Item = $"0x{id:X4}";
                     asmTable[slotId.Value].Comment = fighterInfo.DisplayName;

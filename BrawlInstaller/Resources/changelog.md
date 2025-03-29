@@ -1,2 +1,1 @@
-- Fixed an issue where Kirby hat pac files were not properly deleted when user attempted to remove them.
-- Fixed an issue where on some systems, color smashing would try to access an inaccessible directory.
+- Fixed an error that could occur when trying to modify characters with a slot ID larger than what was specified in the credits music table.
