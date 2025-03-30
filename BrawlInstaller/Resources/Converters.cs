@@ -251,6 +251,29 @@ namespace BrawlInstaller.Resources
         }
     }
 
+    [ValueConversion(typeof(string), typeof(bool))]
+    public class EmptyStringBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var input = (string)value;
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((bool)value == false)
+            {
+                return string.Empty;
+            }
+            return true;
+        }
+    }
+
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class InverseBoolVisibilityConverter : IValueConverter
     {

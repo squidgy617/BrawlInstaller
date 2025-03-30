@@ -95,6 +95,9 @@ namespace BrawlInstaller.ViewModels
         public StageInfo OldStage { get => _oldStage; set { _oldStage = value; OnPropertyChanged(nameof(OldStage)); } }
 
         [DependsUpon(nameof(Stage))]
+        public BuildSettings BuildSettings { get => _settingsService.BuildSettings; }
+
+        [DependsUpon(nameof(Stage))]
         public ObservableCollection<StageEntry> StageEntries { get => Stage?.StageEntries != null ? new ObservableCollection<StageEntry>(Stage.StageEntries) : new ObservableCollection<StageEntry>(); }
 
         [DependsUpon(nameof(Stage))]

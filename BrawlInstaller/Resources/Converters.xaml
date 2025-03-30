@@ -22,4 +22,5 @@
     <local:StageRandomConverter x:Key="stageRandomConverter"/>
     <local:StageHazardsConverter x:Key="stageHazardsConverter"/>
     <local:PacFileNameConverter x:Key="pacFileNameConverter"/>
+    <local:EmptyStringBoolConverter x:Key="emptyStringBoolConverter"/>
 </ResourceDictionary>
