@@ -11,8 +11,10 @@ namespace BrawlInstaller.Enums
     {
         [Description("")]
         None,
-        [Description("Project+")]
-        ProjectPlus,
+        [Description("Project+ 3.1.0")]
+        ProjectPlus31,
+        [Description("Project+ 3.0.2")]
+        ProjectPlus30,
         [Description("P+Ex")]
         ProjectPlusEx,
         [Description("PMEX REMIX")]
