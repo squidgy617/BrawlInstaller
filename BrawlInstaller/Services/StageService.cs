@@ -796,7 +796,8 @@ namespace BrawlInstaller.Services
             var data = _fileService.ReadRawData(node);
             if (data != null)
             {
-                var decryptedData = _fileService.DecryptBinData(data);
+                var originalData = _fileService.DecryptBinData(data);
+                var decryptedData = originalData.ToArray();
                 // Update encoding flag
                 if (_settingsService.BuildSettings.MiscSettings.BinUTF8Encoding)
                 {
@@ -878,7 +879,7 @@ namespace BrawlInstaller.Services
                 newImageStart.CopyTo(finalData, 0x5C); // Starting position
                 newImageEnd.CopyTo(finalData, 0x60); // Ending position (wide)
                 // Encrypt
-                if (!finalData.SequenceEqual(decryptedData))
+                if (!finalData.SequenceEqual(originalData))
                 {
                     var encryptedData = _fileService.EncryptBinData(finalData);
                     _fileService.ReplaceNodeRaw(node, encryptedData);
