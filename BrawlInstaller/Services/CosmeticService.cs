@@ -31,6 +31,9 @@ namespace BrawlInstaller.Services
 {
     public interface ICosmeticService
     {
+        /// <inheritdoc cref="CosmeticService.DeleteHDTexture(TEX0Node)"/>
+        void DeleteHDTexture(TEX0Node texNode);
+
         /// <inheritdoc cref="CosmeticService.GetHDImage(string)"/>
         BitmapImage GetHDImage(string fileName);
 
@@ -472,11 +475,15 @@ namespace BrawlInstaller.Services
         /// Delete HD texture associated with a TEX0
         /// </summary>
         /// <param name="texNode">TEX0 node to delete HD texture for</param>
-        private void DeleteHDTexture(TEX0Node texNode)
+        public void DeleteHDTexture(TEX0Node texNode)
         {
             var name = texNode.DolphinTextureName;
             if (_settingsService.AppSettings.ModifyHDTextures)
             {
+                if (HDImages.Count == 0)
+                {
+                    PreloadHDTextures(); // Load HD textures if they aren't loaded yet
+                }
                 var deleteFiles = HDImages.Where(x => x.Key == name);
                 foreach (var deleteFile in deleteFiles)
                 {

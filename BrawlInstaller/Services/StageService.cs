@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+using static BrawlLib.BrawlManagerLib.TextureContainer;
 
 namespace BrawlInstaller.Services
 {
@@ -369,7 +370,7 @@ namespace BrawlInstaller.Services
                 var binData = _fileService.DecryptBinFile(binFile);
                 // Get the name
                 var nameData = binData.AsSpan(0x70, 32).ToArray();
-                listAlt.Name = Encoding.BigEndianUnicode.GetString(nameData).Replace("\u0000", "");
+                listAlt.Name = Encoding.UTF8.GetString(nameData).Replace("\u0000", "");
                 // Get the image data
                 var imageStart = BitConverter.ToInt32(binData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(binData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
@@ -788,7 +789,7 @@ namespace BrawlInstaller.Services
                 // Get name
                 var nameStart = 0x70;
                 var nameEnd = nameStart + 32;
-                var name = Encoding.BigEndianUnicode.GetBytes(listAlt.Name.ToCharArray()).ToList();
+                var name = Encoding.UTF8.GetBytes(listAlt.Name.ToCharArray()).ToList();
                 // Pad name
                 while (name.Count < 32)
                 {
@@ -799,6 +800,17 @@ namespace BrawlInstaller.Services
                 // Get image location
                 var imageStart = BitConverter.ToInt32(decryptedData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(decryptedData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
+                // Get current image
+                var currentImageData = decryptedData.Skip(imageStart).Take(imageEnd - imageStart).ToArray();
+                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
+                {
+                    var currentTex = currentImageData.ToResourceNode() as TEX0Node;
+                    // Delete HD texture if it exists
+                    if (currentTex != null && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
+                    {
+                        _cosmeticService.DeleteHDTexture(currentTex);
+                    }
+                }
                 // Get data between name and image
                 var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
                 // Get image data from our list alt
