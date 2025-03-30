@@ -370,7 +370,7 @@ namespace BrawlInstaller.Services
                 var binData = _fileService.DecryptBinFile(binFile);
                 // Get the encoding style
                 var encodingByte = binData[0x6B]; // 0x6B is the preview pic setting normally, but we are hijacking the 8th bit of it to denote encoding
-                var utf8Encoding = encodingByte.GetToggledBits().Contains(7); // If 8th bit is enabled, it's UTF8
+                var utf8Encoding = encodingByte.GetToggledBits().Contains(8); // If 8th bit is enabled, it's UTF8
                 // Get the name
                 var nameData = binData.AsSpan(0x70, 32).ToArray();
                 if (utf8Encoding)
