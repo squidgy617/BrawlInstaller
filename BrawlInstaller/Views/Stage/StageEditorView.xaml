@@ -269,8 +269,8 @@
                                     </StackPanel>
                                     <userControls:FileBox x:Name="binFileBox" Text="{Binding SelectedBinFilePath}" Filter="BIN file (.bin)|*.bin" Grid.Row="1" Grid.Column="1" TextBoxWidth="160"/>
                                     <Label x:Name="listAltNameLabel" Content="Name:" Grid.Row="2" ToolTip="Name to display for stage list alt"/>
-                                    <TextBox x:Name="listAltNameTextBox" Text="{Binding SelectedStageEntry.ListAlt.Name}" Grid.Row="2" Grid.Column="1" Width="120" MaxLength="{Binding ListAltNameLength}"/>
-                                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                                    <TextBox x:Name="listAltNameTextBox" Text="{Binding SelectedStageEntry.ListAlt.Name}" Grid.Row="2" Grid.Column="1" Width="120" MaxLength="{Binding ListAltNameLength}" IsEnabled="{Binding SelectedBinFilePath, Converter={StaticResource emptyStringBoolConverter}}"/>
+                                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" IsEnabled="{Binding SelectedBinFilePath, Converter={StaticResource emptyStringBoolConverter}}">
                                         <StackPanel>
                                             <Label x:Name="listAltImageLabel" Content="Image:" HorizontalAlignment="Left" ToolTip="Thumbnail to display for stage list alt"/>
                                             <Image x:Name="listAltImage" Source="{Binding SelectedStageEntry.ListAlt.Image}" Width="80" Height="60"/>
@@ -279,7 +279,7 @@
                                         <StackPanel>
                                             <Label x:Name="listAltHDImageLabel" Content="HD Image:" HorizontalAlignment="Left" ToolTip="HD thumbnail to display for stage list alt"/>
                                             <Image x:Name="listAltHDImage" Source="{Binding SelectedStageEntry.ListAlt.HDImage}" Width="80" Height="60"/>
-                                            <Button x:Name="listAltHDImageButton" Content="Browse..." Command="{Binding UpdateListAltHDImageCommand}"/>
+                                            <Button x:Name="listAltHDImageButton" Content="Browse..." Command="{Binding UpdateListAltHDImageCommand}" IsEnabled="{Binding BuildSettings.MiscSettings.RGBA8Thumbnails}"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>
