@@ -161,6 +161,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(BinIndexString))]
         public int BinFileNameLength { get => 18 - ("st_" + (!string.IsNullOrEmpty(BinIndexString) ? BinIndexString : "00") + "_").Length; }
 
+        [DependsUpon(nameof(Stage))]
+        public int ListAltNameLength { get => _settingsService.BuildSettings.MiscSettings.BinUTF8Encoding ? 32 : 16; }
+
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
 
