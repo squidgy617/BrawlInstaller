@@ -1,0 +1,2300 @@
+{
+  "CosmeticSettings": [
+    {
+      "CosmeticType": 1,
+      "Style": "CSS",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
+        "NodePath": "char_bust_tex_lz77",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
+      "CreateHDTextureFolder": true,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenSelchrFaceB",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 128,
+        "Height": 160
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 257,
+      "FileType": 1,
+      "AlwaysInheritStyle": true,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 1,
+      "Style": "Result",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\common\\char_bust_tex\\",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
+      "CreateHDTextureFolder": true,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenSelchrFaceB",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 128,
+        "Height": 160
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": true,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 3,
+      "Style": "PM",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Character Selection Screen\\Names\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card010/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCname4_TopN__0/Card011/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNm",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 144,
+        "Height": 32
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": false,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 2,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info\\portrite\\",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
+      "CreateHDTextureFolder": true,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "InfFace",
+      "Multiplier": 50,
+      "Offset": 0,
+      "SuffixDigits": 4,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 48,
+        "Height": 56
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": true,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 8,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\common\\StockFaceTex.brres",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
+      "CreateHDTextureFolder": true,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "InfStc",
+      "Multiplier": 50,
+      "Offset": 0,
+      "SuffixDigits": 4,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 32,
+        "Height": 32
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 0,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
+        "NodePath": "Misc Data [70]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Character Selection Screen\\Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0",
+          "FramesPerImage": 10,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": true
+        }
+      ],
+      "Prefix": "MenSelchrChrFace",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 64,
+        "Height": 64
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 0,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\adventure\\selchrcd_common.brres",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Solo\\Subspace Emissary\\Character Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "AnmTexPat(NW4R)/MenAdvChrCd0001_TopN__0/Face02/Texture0",
+          "FramesPerImage": 10,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": true
+        }
+      ],
+      "Prefix": "MenSelchrChrFace",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 80,
+        "Height": 56
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 6,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\collection\\Replay.brres",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Menu\\Replays\\Character Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "AnmTexPat(NW4R)/MenReplayPreview2_TopN__0/lambert78/Texture1",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenReplayChr",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 64,
+        "Height": 24
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 9,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\stage\\melee\\STGCHARAROLL.PAC",
+        "NodePath": "2/Texture Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "ChrRollFighter",
+      "Multiplier": 1,
+      "Offset": 1,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 1,
+      "Size": {
+        "Width": 128,
+        "Height": 160
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrCmark4_TopN__0/Card04/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 128,
+        "Height": 128
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Model",
+      "InstallLocation": {
+        "FilePath": "pf\\stage\\melee\\STGRESULT.pac",
+        "NodePath": "2/Misc Data [110]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": "2/Misc Data [110]",
+      "PatSettings": [],
+      "Prefix": "InfResultMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 80,
+        "Height": 80
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 10,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\collection\\Figure.brres",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenCollDisply01",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 7,
+      "Size": {
+        "Width": 56,
+        "Height": 48
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 11,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "MenuMain_en/Texture Data [11]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Menu\\Data\\Group Records\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenWifiListIcn",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 8,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 12,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selmap.pac",
+        "NodePath": "Misc Data [80]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Stage Banners\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/basebgM/Texture1",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/basebgMShadow/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapPrevbase",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 312,
+        "Height": 112
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 13,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selmap.pac",
+        "NodePath": "Misc Data [80]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Franchise Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/lambert113/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 64,
+        "Height": 64
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": true,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 14,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter2.pac",
+        "NodePath": "MenuRule_en/Model Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Random Stage Select\\Stage Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/MenMainSwitch0104_TopN__0/lambert100/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapIcon",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 64,
+        "Height": 56
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 14,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selmap.pac",
+        "NodePath": "Misc Data [80]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Stage Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapIcon/iconM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapIcon/iconM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": 10,
+          "Multiplier": 1,
+          "Offset": 400,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapIcon",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 128,
+        "Height": 112
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 14,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "Misc Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Stage Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapIcon/iconM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapIcon/iconM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": 10,
+          "Multiplier": 1,
+          "Offset": 400,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapIcon",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 128,
+        "Height": 112
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 13,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "Misc Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Franchise Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/lambert113/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 64,
+        "Height": 64
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": true,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 12,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "Misc Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Stage Banners\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/basebgM/Texture1",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/basebgMShadow/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapPrevbase",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 312,
+        "Height": 112
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 15,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selmap.pac",
+        "NodePath": "Misc Data [80]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Names\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameshadowM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapFrontStname",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 208,
+        "Height": 56
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 15,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "Misc Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Names\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameshadowM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapFrontStname",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 208,
+        "Height": 56
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 16,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selmap.pac",
+        "NodePath": "Misc Data [80]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Game Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnamelogoM/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 120,
+        "Height": 56
+      },
+      "Format": 2,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": true,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 17,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selmap.pac",
+        "NodePath": "Misc Data [80]",
+        "FileExtension": ""
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Names\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameM_start/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameshadowM_start/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapFrontStname",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 208,
+        "Height": 56
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": true,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 17,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "Misc Data [0]",
+        "FileExtension": ""
+      },
+      "HDImageLocation": "BrawlInstaller\\Stage Selection Screen\\Names\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameM_start/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnameshadowM_start/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapFrontStname",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 208,
+        "Height": 56
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": true,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 14,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "MenuRule_en/Model Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Random Stage Select\\Stage Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/MenMainSwitch0104_TopN__0/lambert100/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapIcon",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 64,
+        "Height": 56
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 21,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\adventure\\comer_tex\\",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Solo\\Subspace Emissary\\Character Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "tex_face",
+      "Multiplier": 1,
+      "Offset": 16,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 1,
+      "Size": {
+        "Width": 80,
+        "Height": 56
+      },
+      "Format": 14,
+      "FirstOnly": true,
+      "SeparateFiles": true,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": true,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_boss_battle.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_corps.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_corps_mg.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_homerun.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_mg.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_training.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 8,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\if_adv_mngr.pac",
+        "NodePath": "Misc Data [8]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Solo\\Subspace Emissary\\Stock Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "InfStc",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 32,
+        "Height": 32
+      },
+      "Format": 8,
+      "FirstOnly": true,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": true,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 7,
+      "Style": "Icon",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\if_adv_mngr.pac",
+        "NodePath": "Misc Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Franchise Logos\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [0]/AnmTexPat(NW4R)/InfMark_TopN__0/lambert110/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrMark",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 5,
+      "Size": {
+        "Width": 48,
+        "Height": 48
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 6,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "MenuMain_en/Texture Data [11]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Menu\\Replays\\Character Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenReplayChr",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 64,
+        "Height": 24
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 6,
+      "Style": "Event",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_sel_event.pac",
+        "NodePath": "Misc Data [40]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Menu\\Replays\\Character Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [40]/AnmTexPat(NW4R)/MenEvent0000_TopN__0/lambert78/Texture1",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "Misc Data [40]/AnmTexPat(NW4R)/MenEvent0040_TopN__0/lambert78/Texture1",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenReplayChr",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 64,
+        "Height": 24
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 18,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter2.pac",
+        "NodePath": "MenuRule_en/Model Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Random Stage Select\\Stage Banners\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/MenMainSwitch0101_TopN__0/lambert32/Texture1",
+          "FramesPerImage": 1,
+          "IdType": 10,
+          "Multiplier": 1,
+          "Offset": 1,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/101_TopN__0/lambert32/Texture1",
+          "FramesPerImage": 1,
+          "IdType": 10,
+          "Multiplier": 1,
+          "Offset": 1,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenStageSwitch",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 200,
+        "Height": 64
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 18,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "MenuRule_en/Model Data [0]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Random Stage Select\\Stage Banners\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/MenMainSwitch0101_TopN__0/lambert32/Texture1",
+          "FramesPerImage": 1,
+          "IdType": 10,
+          "Multiplier": 1,
+          "Offset": 1,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        },
+        {
+          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/101_TopN__0/lambert32/Texture1",
+          "FramesPerImage": 1,
+          "IdType": 10,
+          "Multiplier": 1,
+          "Offset": 1,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenStageSwitch",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 2,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 200,
+        "Height": 64
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 19,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\collection\\Replay.brres",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "BrawlInstaller\\Menu\\Replays\\Stage Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "AnmTexPat(NW4R)/MenReplayPhoto0_TopN__0/snap_PhotoMat/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenCollReplaySt",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": 112,
+        "Height": 88
+      },
+      "Format": 14,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 20,
+      "Style": "P+",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selmap.pac",
+        "NodePath": "Misc Data [80]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/pasted__stnamelogoM_stats/Texture0",
+          "FramesPerImage": 1,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": true,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelmapStats",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 10,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": false,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 8,
+      "Style": "All-Star",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_corps.pac",
+        "NodePath": "Misc Data [110]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "InfStc",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 32,
+        "Height": 32
+      },
+      "Format": 8,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 8,
+      "Style": "All-Star",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_corps_mg.pac",
+        "NodePath": "Misc Data [110]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "InfStc",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 32,
+        "Height": 32
+      },
+      "Format": 8,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 5,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu\\adventure\\selchrcd_common.brres",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "AnmTexPat(NW4R)/MenAdvChrCd0001_TopN__0/Face03/Texture0",
+          "FramesPerImage": 10,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": true
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true
+    },
+    {
+      "CosmeticType": 22,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\toy\\figdisp\\figdisp.pac",
+        "NodePath": "",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenCollDisply01",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 10,
+      "FilePrefix": "",
+      "IdType": 7,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 3,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": false
+    },
+    {
+      "CosmeticType": 22,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\toy\\figdisp\\",
+        "NodePath": "",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [],
+      "Prefix": "MenCollDisply01",
+      "Multiplier": 1,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 10,
+      "FilePrefix": "figdisp",
+      "IdType": 7,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 9,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 0,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": false
+    }
+  ],
+  "SoundSettings": {
+    "SoundbankStyle": 0
+  },
+  "MiscSettings": {
+    "InstallToSse": false,
+    "InstallTrophies": false,
+    "UpdateCreditsModule": false,
+    "SubspaceEx": false,
+    "InstallKirbyHats": false,
+    "DefaultExConfigVersion": 2,
+    "SyncTracklists": false,
+    "UpdateCodeMenuNames": true,
+    "CompressBinFiles": false,
+    "RGBA8Thumbnails": false,
+    "BinUTF8Encoding": true
+  },
+  "FilePathSettings": {
+    "FilePaths": [
+      {
+        "FileType": 0,
+        "Path": "pf\\fighter\\"
+      },
+      {
+        "FileType": 1,
+        "Path": ""
+      },
+      {
+        "FileType": 2,
+        "Path": "pf\\info\\costumeslots\\"
+      },
+      {
+        "FileType": 3,
+        "Path": "pf\\module\\"
+      },
+      {
+        "FileType": 4,
+        "Path": "pf\\stage\\stageslot\\"
+      },
+      {
+        "FileType": 5,
+        "Path": "pf\\stage\\stageinfo\\"
+      },
+      {
+        "FileType": 6,
+        "Path": "pf\\stage\\melee\\"
+      },
+      {
+        "FileType": 7,
+        "Path": "pf\\sound\\tracklist\\"
+      },
+      {
+        "FileType": 29,
+        "Path": ""
+      },
+      {
+        "FileType": 8,
+        "Path": ""
+      },
+      {
+        "FileType": 9,
+        "Path": "pf\\menu\\intro\\ending\\"
+      },
+      {
+        "FileType": 10,
+        "Path": ""
+      },
+      {
+        "FileType": 11,
+        "Path": "pf\\sound\\strm\\"
+      },
+      {
+        "FileType": 12,
+        "Path": "pf\\sfx\\"
+      },
+      {
+        "FileType": 13,
+        "Path": "pf\\stage\\stagelist\\"
+      },
+      {
+        "FileType": 14,
+        "Path": ""
+      },
+      {
+        "FileType": 15,
+        "Path": "pf\\module\\sora_adv_stage.rel"
+      },
+      {
+        "FileType": 25,
+        "Path": "GCTRealMate.exe"
+      },
+      {
+        "FileType": 26,
+        "Path": "pf\\stage\\stageslot\\tBreak\\"
+      },
+      {
+        "FileType": 27,
+        "Path": ""
+      },
+      {
+        "FileType": 28,
+        "Path": ""
+      },
+      {
+        "FileType": 37,
+        "Path": "Source\\CodeMenu\\CodeMenu.asm"
+      },
+      {
+        "FileType": 38,
+        "Path": "pf\\menu3\\data.cmnu"
+      },
+      {
+        "FileType": 39,
+        "Path": "pf\\menu3\\dnet.cmnu"
+      },
+      {
+        "FileType": 40,
+        "Path": "Source\\CM_Addons\\"
+      },
+      {
+        "FileType": 31,
+        "Path": "pf\\toy\\fig\\ty_fig_name_list.msbin"
+      },
+      {
+        "FileType": 32,
+        "Path": "pf\\toy\\fig\\ty_fig_ext_list.msbin"
+      },
+      {
+        "FileType": 34,
+        "Path": "pf\\toy\\fig\\"
+      },
+      {
+        "FileType": 35,
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
+      },
+      {
+        "FileType": 36,
+        "Path": "pf\\module\\sora_adv_menu_game_over.rel"
+      },
+      {
+        "FileType": 41,
+        "Path": "Source\\Project+\\Random.asm"
+      },
+      {
+        "FileType": 42,
+        "Path": ""
+      }
+    ],
+    "AsmPaths": [
+      {
+        "Label": "",
+        "FileType": 16,
+        "Path": "pf\\stage\\switch\\Switch00.rss"
+      },
+      {
+        "Label": "ClassicResultsTable:",
+        "FileType": 17,
+        "Path": "Source\\Project+\\ResultsMusic.asm"
+      },
+      {
+        "Label": "ENDINGTABLE:",
+        "FileType": 18,
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
+      },
+      {
+        "Label": "ThrowReleaseTable:",
+        "FileType": 19,
+        "Path": "Source\\ProjectM\\Modifier\\ThrowRelease.asm"
+      },
+      {
+        "Label": "",
+        "FileType": 20,
+        "Path": "Source\\ProjectM\\CloneEngine.asm"
+      },
+      {
+        "Label": "",
+        "FileType": 21,
+        "Path": ""
+      },
+      {
+        "Label": "",
+        "FileType": 22,
+        "Path": ""
+      }
+    ],
+    "FileNodePaths": [
+      {
+        "NodePath": "Misc Data [0]/tyDataList",
+        "FileType": 30,
+        "Path": "pf\\system\\common3.pac"
+      },
+      {
+        "NodePath": "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0",
+        "FileType": 33,
+        "Path": "pf\\menu\\collection\\Figure.brres"
+      }
+    ],
+    "StageListPaths": [
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch00.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch01.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch02.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch03.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch04.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch05.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch06.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\SwitchFF.rss"
+      }
+    ],
+    "RandomStageNamesLocations": [
+      {
+        "FilePath": "pf\\menu2\\sc_selcharacter2.pac",
+        "NodePath": "MenuRule_en/Misc Data [1]",
+        "FileExtension": "pac"
+      },
+      {
+        "FilePath": "pf\\menu2\\mu_menumain.pac",
+        "NodePath": "MenuRule_en/Misc Data [1]",
+        "FileExtension": "pac"
+      }
+    ],
+    "VictoryThemeTracklist": "Results",
+    "CreditsThemeTracklist": "Credits",
+    "BinFileHDTexturePath": "BrawlInstaller\\Stage Selection Screen\\Menu Alts",
+    "RosterFiles": [
+      {
+        "FilePath": "pf\\BrawlEx\\CSSRoster.dat",
+        "AddNewCharacters": true
+      }
+    ],
+    "CodeFilePaths": [
+      {
+        "FileType": 23,
+        "Path": "RSBE01.txt"
+      },
+      {
+        "FileType": 23,
+        "Path": "BOOST.txt"
+      },
+      {
+        "FileType": 23,
+        "Path": "NETPLAY.txt"
+      },
+      {
+        "FileType": 23,
+        "Path": "NETBOOST.txt"
+      }
+    ]
+  }
+}

@@ -439,12 +439,14 @@
     </None>
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx\FighterList.json" />
-    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus\BuildSettings.json" />
-    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus30\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus30\FighterList.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\REMIX\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\REMIX\FighterList.json" />
     <EmbeddedResource Include="Resources\update.json" />
     <EmbeddedResource Include="Resources\changelog.md" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus31\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus31\FighterList.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
