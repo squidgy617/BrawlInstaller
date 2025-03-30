@@ -47,7 +47,7 @@
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <CheckBox Content="Compress stage bin files" IsChecked="{Binding BuildSettings.MiscSettings.CompressBinFiles}" ToolTip="Check to compress stage builder bin files (used for list alts) when they are saved"/>
-                                    <CheckBox Content="Use UTF8 encoding for bin names" IsChecked="{Binding BuildSettings.MiscSettings.CompressBinFiles}" ToolTip="Check to save stage names in bin files in UTF8 format, allowing for longer names. Only use in builds that support it."/>
+                                    <CheckBox Content="Use UTF8 encoding for bin names" IsChecked="{Binding BuildSettings.MiscSettings.BinUTF8Encoding}" ToolTip="Check to save stage names in bin files in UTF8 format, allowing for longer names. Only use in builds that support it."/>
                                     <CheckBox Content="Use RGBA8 for bin thumbnails" IsChecked="{Binding BuildSettings.MiscSettings.RGBA8Thumbnails}" ToolTip="Check to always save thumbnails in stage list alt BIN files in RGBA8 format. Only use in builds that support it."/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
