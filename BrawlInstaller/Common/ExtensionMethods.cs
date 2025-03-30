@@ -603,7 +603,7 @@ namespace BrawlInstaller.Common
 
         public static ulong DisableBit(this ulong bitmask, int index)
         {
-            bitmask &= (1UL << index);
+            bitmask &= ~(1UL << index);
             return bitmask;
         }
 

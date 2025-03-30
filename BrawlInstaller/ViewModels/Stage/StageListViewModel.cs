@@ -200,8 +200,8 @@ namespace BrawlInstaller.ViewModels
                 {
                     newPage.HazardFlags = newPage.HazardFlags.EnableBit(newPage.StageSlots.Count);
                 }
-                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex + 1); // Disable bit
-                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex + 1);
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex); // Disable bit
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex);
                 // Move stage
                 SelectedPage.StageSlots.Remove(SelectedStageSlot);
                 StageSlots.Remove(SelectedStageSlot);
@@ -238,8 +238,8 @@ namespace BrawlInstaller.ViewModels
                 {
                     newPage.HazardFlags = newPage.HazardFlags.EnableBit(0);
                 }
-                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex + 1); // Disable bit
-                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex + 1);
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex); // Disable bit
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex);
                 // Move stage
                 SelectedPage.StageSlots.Remove(SelectedStageSlot);
                 StageSlots.Remove(SelectedStageSlot);
