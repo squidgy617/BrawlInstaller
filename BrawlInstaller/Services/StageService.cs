@@ -369,15 +369,14 @@ namespace BrawlInstaller.Services
                 listAlt.BinFilePath = binFile;
                 var binData = _fileService.DecryptBinFile(binFile);
                 // Get the encoding style
-                var encodingStyle = binData[0x68]; // 0x68 is the stage theme for stage builder stages, but we are hijacking it for text encoding
+                var encodingByte = binData[0x6B]; // 0x6B is the preview pic setting normally, but we are hijacking the 8th bit of it to denote encoding
+                var utf8Encoding = encodingByte.GetToggledBits().Contains(8); // If 8th bit is enabled, it's UTF8
                 // Get the name
                 var nameData = binData.AsSpan(0x70, 32).ToArray();
-                // 0xFF denotes it's UTF8
-                if (encodingStyle == 0xFF)
+                if (utf8Encoding)
                 {
                     listAlt.Name = Encoding.UTF8.GetString(nameData).Replace("\u0000", "");
                 }
-                // Anything else is BigEndianUnicode, aka vanilla
                 else
                 {
                     listAlt.Name = Encoding.BigEndianUnicode.GetString(nameData).Replace("\u0000", "");
@@ -799,18 +798,14 @@ namespace BrawlInstaller.Services
                 var originalData = _fileService.DecryptBinData(data);
                 var decryptedData = originalData.ToArray();
                 // Update encoding flag
+                var currentEncoding = decryptedData[0x6B];
                 if (_settingsService.BuildSettings.MiscSettings.BinUTF8Encoding)
                 {
-                    decryptedData[0x68] = 0xFF; // 0xFF denotes that we are using UTF8 encoding
+                    decryptedData[0x6B] = currentEncoding.EnableBit(8); // If we're using UTF8 encoding, enable the 8th bit to indicate such
                 }
                 else
                 {
-                    // If it's currently using UTF8 encoding, set it to something else
-                    var currentEncoding = decryptedData[0x68];
-                    if (currentEncoding == 0xFF)
-                    {
-                        decryptedData[0x68] = 0x00; // 0x00 is the "Nature" theme for stage builder stages. Doesn't matter for our use-case because we aren't using the stage builder
-                    }
+                    decryptedData[0x6B] = currentEncoding.DisableBit(8); // Otherwise, disable it, indicating UTF16/BigEndianUnicode
                 }
                 // Get name
                 var nameStart = 0x70;

@@ -636,4 +636,65 @@ namespace BrawlInstaller.Common
             return (bitmask & ~mask) | shiftedBits;
         }
     }
+
+    public static class ByteExtensions
+    {
+        public static byte SwapBits(this byte bitmask, int index1, int index2)
+        {
+            bool bit1 = (bitmask & (1 << index1)) != 0;
+            bool bit2 = (bitmask & (1 << index2)) != 0;
+
+            if (bit1 == bit2)
+            {
+                return bitmask;
+            }
+
+            // Toggle bits
+            bitmask ^= (byte)(1 << index1);
+            bitmask ^= (byte)(1 << index2);
+
+            return bitmask;
+        }
+
+        public static byte ToggleBit(this byte bitmask, int index)
+        {
+            bitmask ^= (byte)(1 << index);
+            return bitmask;
+        }
+
+        public static byte DisableBit(this byte bitmask, int index)
+        {
+            bitmask &= (byte)(1 << index);
+            return bitmask;
+        }
+
+        public static byte EnableBit(this byte bitmask, int index)
+        {
+            bitmask |= (byte)(1 << index);
+            return bitmask;
+        }
+
+        public static List<int> GetToggledBits(this byte bitmask)
+        {
+            List<int> toggledBits = new List<int>();
+
+            for (int i = 0; i < 8; i++)
+            {
+                if ((bitmask & (byte)(1 << i)) != 0)
+                {
+                    toggledBits.Add(i + 1);
+                }
+            }
+
+            return toggledBits;
+        }
+
+        public static byte RemoveBit(this byte bitmask, int index)
+        {
+            ulong mask = (byte)~((1 << index) - 1);
+            ulong affectedBits = bitmask & mask;
+            ulong shiftedBits = (affectedBits >> 1) & mask;
+            return (byte)((bitmask & ~mask) | shiftedBits);
+        }
+    }
 }
