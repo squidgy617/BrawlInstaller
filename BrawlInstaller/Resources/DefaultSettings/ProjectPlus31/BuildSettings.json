@@ -2039,7 +2039,7 @@
     "DefaultExConfigVersion": 2,
     "SyncTracklists": false,
     "UpdateCodeMenuNames": true,
-    "CompressBinFiles": false,
+    "CompressBinFiles": true,
     "RGBA8Thumbnails": false,
     "BinUTF8Encoding": true
   },

@@ -2211,7 +2211,9 @@
     "DefaultExConfigVersion": 2,
     "SyncTracklists": false,
     "UpdateCodeMenuNames": true,
-    "CompressBinFiles": false
+    "CompressBinFiles": false,
+    "RGBA8Thumbnails": false,
+    "BinUTF8Encoding": false
   },
   "FilePathSettings": {
     "FilePaths": [
@@ -2338,6 +2340,10 @@
       {
         "FileType": 41,
         "Path": ""
+      },
+      {
+        "FileType": 42,
+        "Path": ""
       }
     ],
     "AsmPaths": [
@@ -2409,6 +2415,7 @@
     ],
     "VictoryThemeTracklist": "Results",
     "CreditsThemeTracklist": "Credits",
+    "BinFileHDTexturePath": "BrawlInstaller\\Stage Selection Screen\\Menu Alts",
     "RosterFiles": [
       {
         "FilePath": "pf\\BrawlEx\\CSSRoster.dat",
