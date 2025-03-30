@@ -664,7 +664,7 @@ namespace BrawlInstaller.Common
 
         public static byte DisableBit(this byte bitmask, int index)
         {
-            bitmask &= (byte)(1 << index);
+            bitmask &= (byte)~(1 << index);
             return bitmask;
         }
 
