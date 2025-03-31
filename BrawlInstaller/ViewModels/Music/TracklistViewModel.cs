@@ -110,7 +110,7 @@ namespace BrawlInstaller.ViewModels
         public ObservableCollection<TracklistSong> TracklistSongs { get => LoadedTracklist?.TracklistSongs != null ? new ObservableCollection<TracklistSong>(LoadedTracklist?.TracklistSongs) : new ObservableCollection<TracklistSong>(); }
 
         [DependsUpon(nameof(TracklistSongs))]
-        public TracklistSong SelectedSong { get => _selectedSong; set { _selectedSong = value; OnPropertyChanged(nameof(SelectedSong)); } }
+        public TracklistSong SelectedSong { get => _selectedSong; set { _selectedSong = value; StopSong(); OnPropertyChanged(nameof(SelectedSong)); } }
 
         [DependsUpon(nameof(SelectedSong))]
         public bool PlaybackVisible { get => _fileService.FileExists(SelectedSong?.SongFile); }
@@ -179,23 +179,28 @@ namespace BrawlInstaller.ViewModels
 
         private void PlaySong()
         {
-            var brstmNode = _fileService.OpenFile(SelectedSong.SongFile) as RSTMNode;
-            if (brstmNode != null)
+            if (_soundPlayer.Stream == null)
             {
-                if (brstmNode._audioSource != DataSource.Empty)
+                var brstmNode = _fileService.OpenFile(SelectedSong.SongFile) as RSTMNode;
+                if (brstmNode != null)
                 {
-                    var bytes = WAV.ToByteArray(brstmNode.CreateStreams()[0]);
-                    var stream = new MemoryStream(bytes);
-                    _soundPlayer.Stream = stream;
-                    _soundPlayer.PlayLooping();
+                    if (brstmNode._audioSource != DataSource.Empty)
+                    {
+                        var bytes = WAV.ToByteArray(brstmNode.CreateStreams()[0]);
+                        var stream = new MemoryStream(bytes);
+                        _soundPlayer.Stream = stream;
+                        _soundPlayer.PlayLooping();
+                    }
+                    _fileService.CloseFile(brstmNode);
                 }
-                _fileService.CloseFile(brstmNode);
             }
         }
 
         private void StopSong()
         {
             _soundPlayer.Stop();
+            _soundPlayer.Stream?.Dispose();
+            _soundPlayer.Stream = null;
         }
 
         private void AdjustVolume(int value)

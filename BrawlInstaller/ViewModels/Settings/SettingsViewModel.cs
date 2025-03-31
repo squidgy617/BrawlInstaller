@@ -99,9 +99,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(BuildSettings))]
         public CompositeCollection FilePathSettings { get => new CompositeCollection
             {
-                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FilePaths },
-                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FileNodePaths },
-                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.AsmPaths }
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FilePaths.Where(x => Enum.IsDefined(typeof(FileType), x.FileType)) },
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.FileNodePaths.Where(x => Enum.IsDefined(typeof(FileType), x.FileType)) },
+                new CollectionContainer() { Collection = BuildSettings.FilePathSettings.AsmPaths.Where(x => Enum.IsDefined(typeof(FileType), x.FileType)) }
             };
         }
 
