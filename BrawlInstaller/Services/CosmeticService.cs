@@ -135,7 +135,7 @@ namespace BrawlInstaller.Services
         private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, ImageSize size)
         {
             var texture = GetTexture(destinationNode, cosmetic.Texture.Name);
-            var palette = texture?.GetPaletteNode();
+            var palette = GetPalette(destinationNode, texture);
             var index = texture?.Index ?? cosmetic.Texture.Index;
             var folder = destinationNode.GetFolder<TEX0Node>();
             var name = texture?.Name ?? cosmetic.Texture.Name;
@@ -150,6 +150,21 @@ namespace BrawlInstaller.Services
             folder.RemoveChild(node);
             folder.InsertChild(node, index);
             return node;
+        }
+
+        /// <summary>
+        /// Get palette node that matches a texture node
+        /// </summary>
+        /// <param name="parentNode">BRRES containing nodes</param>
+        /// <param name="textureNode">TEX0 node</param>
+        /// <returns>PLT0 node</returns>
+        private PLT0Node GetPalette(BRRESNode parentNode, TEX0Node textureNode)
+        {
+            if (textureNode != null)
+            {
+                return parentNode.FindChild("Palettes(NW4R)/" + textureNode.Name) as PLT0Node;
+            }
+            return null;
         }
 
         /// <summary>
