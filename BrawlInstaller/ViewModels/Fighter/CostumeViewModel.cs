@@ -719,6 +719,7 @@ namespace BrawlInstaller.ViewModels
                 foreach (var cosmetic in costume.Cosmetics)
                 {
                     cosmetic.CostumeIndex = Costumes.IndexOf(costume) + 1;
+                    FighterPackage.Cosmetics.ItemChanged(cosmetic);
                 }
             }
         }
