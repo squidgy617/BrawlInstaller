@@ -1,4 +1,1 @@
-- Fixed an issue where hitting "Play" on a selected song in the music manager too many times could crash the program.
-- Selecting another song while in music manager will now stop playing the current song.
-- Fixed an issue where cosmetic palettes could get corrupted when removing costumes with color-smashed cosmetics.
-- Updated REMIX settings preset to prevent unnecessary warnings when saving changes to fighters.
+- Fixed an issue where moving costumes would not move all cosmetics associated with them.
