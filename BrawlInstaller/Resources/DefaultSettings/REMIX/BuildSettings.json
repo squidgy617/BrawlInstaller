@@ -272,7 +272,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": true,
+      "Required": false,
       "Enabled": true,
       "Selectable": false,
       "AlwaysCreateArchive": true
@@ -1314,7 +1314,7 @@
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": true,
+      "Required": false,
       "Enabled": true,
       "Selectable": false,
       "AlwaysCreateArchive": true
@@ -1748,7 +1748,8 @@
     "InstallKirbyHats": false,
     "DefaultExConfigVersion": 2,
     "SyncTracklists": false,
-    "UpdateCodeMenuNames": true
+    "UpdateCodeMenuNames": false,
+    "CompressBinFiles": false
   },
   "FilePathSettings": {
     "FilePaths": [
@@ -1838,7 +1839,7 @@
       },
       {
         "FileType": 37,
-        "Path": "Source\\CodeMenu\\CodeMenu.asm"
+        "Path": "Source\\Project+\\CodeMenu.asm"
       },
       {
         "FileType": 38,
@@ -1850,7 +1851,7 @@
       },
       {
         "FileType": 40,
-        "Path": "Source\\CM_Addons\\"
+        "Path": ""
       },
       {
         "FileType": 31,
@@ -1870,7 +1871,7 @@
       },
       {
         "FileType": 36,
-        "Path": "pf\\module\\sora_adv_menu_game_over.rel"
+        "Path": ""
       },
       {
         "FileType": 41,
