@@ -19,8 +19,8 @@ namespace BrawlInstaller.Services
 {
     public interface IColorSmashService
     {
-        /// <inheritdoc cref="ColorSmashService.ColorSmashCosmetics(List{Cosmetic}, BRRESNode)"/>
-        void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres);
+        /// <inheritdoc cref="ColorSmashService.ColorSmashCosmetics(List{Cosmetic}, BRRESNode, int)"/>
+        void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres, int paletteCount);
     }
     [Export(typeof(IColorSmashService))]
     internal class ColorSmashService : IColorSmashService
@@ -48,8 +48,12 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="cosmetics">Cosmetics to color smash</param>
         /// <param name="bres">Parent BRRES for textures</param>
-        public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres)
+        public void ColorSmashCosmetics(List<Cosmetic> cosmetics, BRRESNode bres, int paletteCount)
         {
+            if (paletteCount > 256 || paletteCount <= 0)
+            {
+                paletteCount = 256;
+            }
             var folder = bres.GetFolder<TEX0Node>();
             var paletteFolder = bres.GetFolder<PLT0Node>();
             var colorSmashDirectory = Path.GetFullPath(ColorSmashDirectory);
@@ -61,13 +65,13 @@ namespace BrawlInstaller.Services
                 _fileService.SaveImage(cosmetic.Image, $"{colorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
             }
             // Get palette count
-            var paletteCount = 0;
-            paletteCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).GetPaletteNode().Palette.Entries.Length).Max();
-            paletteCount = Math.Min(paletteCount, 256);
+            var palettes = 0;
+            palettes = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).GetPaletteNode().Palette.Entries.Length).Max();
+            palettes = Math.Min(palettes, paletteCount);
             // Get mip count
             var mipCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).LevelOfDetail).Max();
             // Color smash
-            var success = ColorSmasher(paletteCount);
+            var success = ColorSmasher(palettes);
             // TODO: Better way to handle this? Trying twice seems silly
             // If color smashing wasn't successful, try again
             if (!success)
@@ -79,10 +83,10 @@ namespace BrawlInstaller.Services
                     _fileService.SaveImage(cosmetic.Image, $"{colorSmashDirectory}\\{cosmetics.IndexOf(cosmetic):D5}.png");
                 }
                 // Recalculate palette count, removing any alpha 0 entries
-                paletteCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).GetPaletteNode().Palette.Entries.Where(y => y.A > 0).Count()).Max();
-                paletteCount = Math.Min(paletteCount, 256);
+                palettes = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).GetPaletteNode().Palette.Entries.Where(y => y.A > 0).Count()).Max();
+                palettes = Math.Min(palettes, paletteCount);
                 // Try again
-                success = ColorSmasher(paletteCount);
+                success = ColorSmasher(palettes);
                 // If it fails again, throw an error
                 if (!success)
                 {

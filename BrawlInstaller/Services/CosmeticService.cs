@@ -989,7 +989,7 @@ namespace BrawlInstaller.Services
                 // Color smash groups
                 foreach(var group in changeGroups)
                 {
-                    _colorSmashService.ColorSmashCosmetics(group, bres);
+                    _colorSmashService.ColorSmashCosmetics(group, bres, definition.ColorSmashPaletteCount);
                 }
                 foreach(var cosmetic in sharesDataList)
                 {

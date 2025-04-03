@@ -785,37 +785,40 @@ namespace BrawlInstaller.Services
         /// <param name="backup">Backup to restore</param>
         public void RestoreBackup(Backup backup)
         {
-            var buildFiles = GetFiles(backup.BuildBackupPath, "*", SearchOption.AllDirectories);
-            var textureFiles = GetFiles(backup.TextureBackupPath, "*", SearchOption.AllDirectories);
-            // Restore build files
-            foreach(var file in buildFiles)
+            if (backup != null)
             {
-                var path = file.Replace(backup.BuildBackupPath, "");
-                path = $"{_settingsService.AppSettings.BuildPath}\\{path}";
-                CreateDirectory(Path.GetDirectoryName(path));
-                File.Copy(file, path, true);
-            }
-            // Restore textures
-            if (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
-            {
-                foreach (var file in textureFiles)
+                var buildFiles = GetFiles(backup.BuildBackupPath, "*", SearchOption.AllDirectories);
+                var textureFiles = GetFiles(backup.TextureBackupPath, "*", SearchOption.AllDirectories);
+                // Restore build files
+                foreach (var file in buildFiles)
                 {
-                    var path = file.Replace(backup.TextureBackupPath, "");
-                    path = $"{_settingsService.AppSettings.HDTextures}\\{path}";
+                    var path = file.Replace(backup.BuildBackupPath, "");
+                    path = $"{_settingsService.AppSettings.BuildPath}\\{path}";
                     CreateDirectory(Path.GetDirectoryName(path));
                     File.Copy(file, path, true);
                 }
-            }
-            // Delete added files
-            foreach(var file in backup.AddedFiles)
-            {
-                if (File.Exists($"{_settingsService.AppSettings.BuildPath}\\{file}"))
+                // Restore textures
+                if (!string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
                 {
-                    File.Delete($"{_settingsService.AppSettings.BuildPath}\\{file}");
+                    foreach (var file in textureFiles)
+                    {
+                        var path = file.Replace(backup.TextureBackupPath, "");
+                        path = $"{_settingsService.AppSettings.HDTextures}\\{path}";
+                        CreateDirectory(Path.GetDirectoryName(path));
+                        File.Copy(file, path, true);
+                    }
                 }
-                else if (File.Exists($"{_settingsService.AppSettings.HDTextures}\\{file}"))
+                // Delete added files
+                foreach (var file in backup.AddedFiles)
                 {
-                    File.Delete($"{_settingsService.AppSettings.HDTextures}\\{file}");
+                    if (File.Exists($"{_settingsService.AppSettings.BuildPath}\\{file}"))
+                    {
+                        File.Delete($"{_settingsService.AppSettings.BuildPath}\\{file}");
+                    }
+                    else if (File.Exists($"{_settingsService.AppSettings.HDTextures}\\{file}"))
+                    {
+                        File.Delete($"{_settingsService.AppSettings.HDTextures}\\{file}");
+                    }
                 }
             }
         }

@@ -184,6 +184,8 @@
             <ComboBox x:Name="compressionDropDown" ItemsSource="{Binding CompressionTypes}" Grid.Row="3" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.CompressionType}" Width="120"/>
             <Label x:Name="fileTypeLabel" Content="File Type:" Grid.Row="4" Grid.Column="4" ToolTip="Type of archive used for cosmetics"/>
             <ComboBox x:Name="fileTypeDropDown" ItemsSource="{Binding FileTypes}" Grid.Row="4" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.FileType}" Width="120"/>
+            <Label x:Name="paletteCountLabel" Content="Palette Count:" Grid.Row="5" Grid.Column="4" ToolTip="Max palette count to use when color smashing cosmetics"/>
+            <TextBox x:Name="paletteCountTextBox" Text="{Binding SelectedDefinition.ColorSmashPaletteCount}" Grid.Row="5" Grid.Column="5"/>
             <Grid x:Name="checkboxesGrid" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
