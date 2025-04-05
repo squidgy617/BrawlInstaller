@@ -86,13 +86,15 @@ namespace BrawlInstaller.Services
         /// <param name="imageSource">Path containing image source</param>
         /// <param name="format">Encoding format to use</param>
         /// <param name="size">Dimensions to scale image to</param>
+        /// <param name="paletteCount">Maximum number of colors to use in palette</param>
         /// <returns>TEX0Node</returns>
-        private TEX0Node ImportTexture(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, ImageSize size)
+        private TEX0Node ImportTexture(BRRESNode destinationNode, string imageSource, WiiPixelFormat format, ImageSize size, int paletteCount = 256)
         {
             var dialog = new TextureConverterDialog();
             dialog.ImageSource = imageSource;
             dialog.InitialFormat = format;
             dialog.Automatic = true;
+            dialog.MaxPaletteCount = paletteCount;
             // Only set size if it is configured
             if (size.Width != null && size.Height != null)
                 dialog.InitialSize = new System.Drawing.Size((int)size.Width, (int)size.Height);
@@ -114,12 +116,13 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticImage">Bitmap image data</param>
         /// <param name="format">Encoding format to use</param>
         /// <param name="size">Dimensions to scale image to</param>
+        /// <param name="paletteCount">Maximum number of colors to use in palette</param>
         /// <returns>TEX0Node</returns>
-        private TEX0Node ImportTexture(BRRESNode destinationNode, BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size)
+        private TEX0Node ImportTexture(BRRESNode destinationNode, BitmapImage cosmeticImage, WiiPixelFormat format, ImageSize size, int paletteCount = 256)
         {
             var path = $"{_settingsService.AppSettings.TempPath}\\tempNode.png";
             _fileService.SaveImage(cosmeticImage, path);
-            var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size);
+            var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size, paletteCount);
             _fileService.DeleteFile($"{_settingsService.AppSettings.TempPath}\\tempNode.png");
             return node;
         }
@@ -131,8 +134,9 @@ namespace BrawlInstaller.Services
         /// <param name="cosmetic">Cosmetic to reimport</param>
         /// <param name="format">Encoding format to use</param>
         /// <param name="size">Dimensions to scale image to</param>
+        /// <param name="paletteCount">Maximum number of colors to use in palette</param>
         /// <returns>TEX0Node</returns>
-        private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, ImageSize size)
+        private TEX0Node ReimportTexture(BRRESNode destinationNode, Cosmetic cosmetic, WiiPixelFormat format, ImageSize size, int paletteCount = 256)
         {
             var texture = GetTexture(destinationNode, cosmetic.Texture.Name);
             var palette = GetPalette(destinationNode, texture);
@@ -142,7 +146,7 @@ namespace BrawlInstaller.Services
             _fileService.SaveImage(cosmetic.Image, $"{_settingsService.AppSettings.TempPath}\\tempNode.png");
             texture?.Remove(true);
             palette?.Remove();
-            var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size);
+            var node = ImportTexture(destinationNode, $"{_settingsService.AppSettings.TempPath}\\tempNode.png", format, size, paletteCount);
             _fileService.DeleteFile($"{_settingsService.AppSettings.TempPath}\\tempNode.png");
             if (node.GetPaletteNode() != null)
                 node.GetPaletteNode().Name = name;
@@ -786,7 +790,7 @@ namespace BrawlInstaller.Services
             // If we have an image from filesystem, import that
             else if (cosmetic.ImagePath != "")
             {
-                var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(null, null));
+                var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(null, null), definition.PaletteCount);
                 texture.Name = GetTextureName(definition, textureId, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
@@ -794,7 +798,7 @@ namespace BrawlInstaller.Services
             // If we should only import one cosmetic and it's a color smashed texture, reimport
             else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
             {
-                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null));
+                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null), definition.PaletteCount);
                 texture.Name = GetTextureName(definition, textureId, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
@@ -804,7 +808,7 @@ namespace BrawlInstaller.Services
             // or we updated the HD texture but didn't change the texture itself, which we should reimport, or it will be lost
             else if (cosmetic.Texture != null)
             {
-                var texture = ImportTexture(parentNode, cosmetic.Image, definition.Format, definition.Size);
+                var texture = ImportTexture(parentNode, cosmetic.Image, definition.Format, definition.Size, definition.PaletteCount);
                 texture.Name = GetTextureName(definition, textureId, cosmetic);
                 cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
                 cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
@@ -981,7 +985,7 @@ namespace BrawlInstaller.Services
                 var sharesDataList = cosmetics.Where(x => x.ColorSmashChanged && x.SharesData == false).ToList();
                 foreach(var cosmetic in sharesDataList)
                 {
-                    cosmetic.Texture = ReimportTexture(bres, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null));
+                    cosmetic.Texture = ReimportTexture(bres, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null), definition.PaletteCount);
                 }
                 // Get color smash groups
                 var colorSmashGroups = GetColorSmashGroups(cosmetics);
@@ -989,7 +993,7 @@ namespace BrawlInstaller.Services
                 // Color smash groups
                 foreach(var group in changeGroups)
                 {
-                    _colorSmashService.ColorSmashCosmetics(group, bres, definition.ColorSmashPaletteCount);
+                    _colorSmashService.ColorSmashCosmetics(group, bres, definition.PaletteCount);
                 }
                 foreach(var cosmetic in sharesDataList)
                 {

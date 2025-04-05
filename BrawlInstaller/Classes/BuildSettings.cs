@@ -90,7 +90,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public bool StageCosmetic { get => CosmeticType == CosmeticType.StagePreview || CosmeticType == CosmeticType.StageFranchiseIcon || CosmeticType == CosmeticType.StageIcon || CosmeticType == CosmeticType.StageName || CosmeticType == CosmeticType.StageGameLogo || CosmeticType == CosmeticType.StageAltName || CosmeticType == CosmeticType.StageRandomBanner || CosmeticType == CosmeticType.StageReplayBanner || CosmeticType == CosmeticType.StageStats; }
         public bool Selectable { get; set; }
         public bool AlwaysCreateArchive { get; set; } = true;
-        public int ColorSmashPaletteCount { get; set; } = 256;
+        public int PaletteCount { get; set; } = 256;
 
         public CosmeticDefinition Copy()
         {
