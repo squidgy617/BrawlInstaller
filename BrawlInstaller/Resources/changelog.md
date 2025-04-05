@@ -1,3 +1,2 @@
-- Added a new "Palette Count" setting to cosmetic settings. This is the max palette count textures can have when color smashed. By default, this will be 256 (the maximum).
-- Fixed an issue where fighters who were assigned trophies that did not actually exist were unable to be loaded.
-- Fixed an issue where the application would crash if an error occurred when loading fighters.
+- "Palette Count" field now affects non-color smashed cosmetics as well. Due to changes, if you had already configured this setting, you will need to re-configure it for your build.
+- Settings presets updated for Project+ and P+Ex to use 32 colors for stock icons.
