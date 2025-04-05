@@ -510,8 +510,11 @@ namespace BrawlInstaller.Services
                 var installOptionJson = JsonConvert.SerializeObject(installOption, Formatting.Indented);
                 _fileService.SaveTextFile($"{outDir}\\InstallOption.json", installOptionJson);
                 // Save file
-                var installOptionFile = Path.Combine(outDir, Path.GetFileName(installOption.File));
-                _fileService.CopyFile(installOption.File, installOptionFile);
+                if (!string.IsNullOrEmpty(installOption.File))
+                {
+                    var installOptionFile = Path.Combine(outDir, Path.GetFileName(installOption.File));
+                    _fileService.CopyFile(installOption.File, installOptionFile);
+                }
             }
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
