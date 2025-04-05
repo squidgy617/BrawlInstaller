@@ -527,6 +527,11 @@ namespace BrawlInstaller.ViewModels
 
         private bool ValidateSharesData(List<Cosmetic> nodes)
         {
+            // Update internal indexes
+            foreach (var cosmetic in CosmeticList)
+            {
+                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+            }
             var startingNode = nodes.FirstOrDefault();
             var index = startingNode?.InternalIndex;
             var sharesData = startingNode?.SharesData;
