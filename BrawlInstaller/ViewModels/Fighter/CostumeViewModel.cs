@@ -747,14 +747,21 @@ namespace BrawlInstaller.ViewModels
                 {
                     if (nextCosmetics.Contains(cosmetic) || currentCosmetics.Contains(cosmetic))
                     {
+                        // Update costume index
+                        if (currentCosmetics.Contains(cosmetic))
+                        {
+                            cosmetic.CostumeIndex = Costumes.IndexOf(nextCostume);
+                        }
+                        else
+                        {
+                            cosmetic.CostumeIndex = Costumes.IndexOf(currentCostume);
+                        }
                         FighterPackage.Cosmetics.ItemChanged(cosmetic);
                     }
                 }
 
                 // Select next costume
                 SelectedCostume = nextCostume;
-
-                UpdateCostumeIndexes();
 
                 OnPropertyChanged(nameof(CosmeticList));
                 OnPropertyChanged(nameof(SelectedCosmeticNode));
@@ -784,6 +791,15 @@ namespace BrawlInstaller.ViewModels
                 // Mark as changed
                 foreach (var cosmetic in FighterPackage.Cosmetics.Items)
                 {
+                    // Update costume index
+                    if (currentCosmetics.Contains(cosmetic))
+                    {
+                        cosmetic.CostumeIndex = Costumes.IndexOf(nextCostume);
+                    }
+                    else
+                    {
+                        cosmetic.CostumeIndex = Costumes.IndexOf(currentCostume);
+                    }
                     if (nextCosmetics.Contains(cosmetic) || currentCosmetics.Contains(cosmetic))
                     {
                         FighterPackage.Cosmetics.ItemChanged(cosmetic);
