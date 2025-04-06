@@ -1,2 +1,4 @@
-- "Palette Count" field now affects non-color smashed cosmetics as well. Due to changes, if you had already configured this setting, you will need to re-configure it for your build.
-- Settings presets updated for Project+ and P+Ex to use 32 colors for stock icons.
+- Fixed an issue where all cosmetics would be updated if you moved some cosmetics between costumes.
+- Fixed an issue where attempting to save a fighter with no install options configured could sometimes result in an error.
+- Fixed an issue where BrawlInstaller would sometimes not allow you to color smash cosmetics that should have been color smashable.
+- Updated verbiage on backup restore message.
