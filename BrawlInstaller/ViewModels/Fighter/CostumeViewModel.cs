@@ -423,12 +423,13 @@ namespace BrawlInstaller.ViewModels
         public void MoveCosmeticUp()
         {
             // Update internal indexes
-            foreach(var cosmetic in CosmeticList)
+            var cosmeticList = CosmeticList.ToList();
+            foreach(var cosmetic in cosmeticList)
             {
-                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+                cosmetic.InternalIndex = cosmeticList.IndexOf(cosmetic);
             }
             // Get node groups
-            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList());
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(cosmeticList.ToList());
             var selectedNodes = new List<Cosmetic>();
             var nodesToMove = new List<Cosmetic>();
             // Select related nodes if this is the root of a color smash group
@@ -437,7 +438,7 @@ namespace BrawlInstaller.ViewModels
             else
                 selectedNodes.Add(SelectedCosmeticNode);
             // Get nodes to move past
-            var prevNode = CosmeticList.FirstOrDefault(x => x.InternalIndex == selectedNodes.FirstOrDefault()?.InternalIndex - 1);
+            var prevNode = cosmeticList.FirstOrDefault(x => x.InternalIndex == selectedNodes.FirstOrDefault()?.InternalIndex - 1);
             if (SelectedCosmeticNode.SharesData == false && prevNode != null)
                 nodesToMove = nodeGroups.FirstOrDefault(x => x.Contains(prevNode)) ?? nodesToMove;
             else if (prevNode != null)
@@ -465,12 +466,13 @@ namespace BrawlInstaller.ViewModels
         public void MoveCosmeticDown()
         {
             // Update internal indexes
-            foreach (var cosmetic in CosmeticList)
+            var cosmeticList = CosmeticList.ToList();
+            foreach (var cosmetic in cosmeticList)
             {
-                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+                cosmetic.InternalIndex = cosmeticList.IndexOf(cosmetic);
             }
             // Get node groups
-            var nodeGroups = _cosmeticService.GetSharesDataGroups(CosmeticList.ToList());
+            var nodeGroups = _cosmeticService.GetSharesDataGroups(cosmeticList.ToList());
             var selectedNodes = new List<Cosmetic>();
             var nodesToMove = new List<Cosmetic>();
             // Select related nodes if this is the root of a color smash group
@@ -479,12 +481,12 @@ namespace BrawlInstaller.ViewModels
             else
                 selectedNodes.Add(SelectedCosmeticNode);
             // Get nodes to move past
-            var nextNode = CosmeticList.FirstOrDefault(x => x.InternalIndex == selectedNodes.LastOrDefault()?.InternalIndex + 1);
+            var nextNode = cosmeticList.FirstOrDefault(x => x.InternalIndex == selectedNodes.LastOrDefault()?.InternalIndex + 1);
             if (SelectedCosmeticNode.SharesData == false && nextNode != null)
                 nodesToMove = nodeGroups.FirstOrDefault(x => x.Contains(nextNode)) ?? nodesToMove;
             else if (nextNode != null)
                 nodesToMove.Add(nextNode);
-            if (selectedNodes.LastOrDefault()?.InternalIndex < CosmeticList.Max(x => x.InternalIndex)
+            if (selectedNodes.LastOrDefault()?.InternalIndex < cosmeticList.Max(x => x.InternalIndex)
                 && !(selectedNodes.LastOrDefault()?.SharesData == true && nodesToMove.FirstOrDefault()?.SharesData == false))
             {
                 // Move selected nodes down
@@ -507,20 +509,21 @@ namespace BrawlInstaller.ViewModels
         private void MoveCosmeticToEnd(Cosmetic selectedCosmetic)
         {
             // Update internal indexes
-            foreach (var cosmetic in CosmeticList)
+            var cosmeticList = CosmeticList.ToList();
+            foreach (var cosmetic in cosmeticList)
             {
-                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+                cosmetic.InternalIndex = cosmeticList.IndexOf(cosmetic);
             }
-            var cosmeticsToMove = CosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex);
+            var cosmeticsToMove = cosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex);
             if (cosmeticsToMove.Any())
             {
                 // Decrement internal indexes of all cosmetics after this one
-                foreach (var cosmetic in CosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex))
+                foreach (var cosmetic in cosmeticList.Where(x => x.InternalIndex > selectedCosmetic.InternalIndex))
                 {
                     cosmetic.InternalIndex -= 1;
                 }
                 // Put this image at the end
-                selectedCosmetic.InternalIndex = CosmeticList.Max(x => x.InternalIndex) + 1;
+                selectedCosmetic.InternalIndex = cosmeticList.Max(x => x.InternalIndex) + 1;
                 FighterPackage.Cosmetics.ItemChanged(selectedCosmetic);
             }
         }
@@ -528,15 +531,16 @@ namespace BrawlInstaller.ViewModels
         private bool ValidateSharesData(List<Cosmetic> nodes)
         {
             // Update internal indexes
-            foreach (var cosmetic in CosmeticList)
+            var cosmeticList = CosmeticList.ToList();
+            foreach (var cosmetic in cosmeticList)
             {
-                cosmetic.InternalIndex = CosmeticList.IndexOf(cosmetic);
+                cosmetic.InternalIndex = cosmeticList.IndexOf(cosmetic);
             }
             var startingNode = nodes.FirstOrDefault();
             var index = startingNode?.InternalIndex;
             var sharesData = startingNode?.SharesData;
             var groupCount = 0;
-            var prevNode = CosmeticList.IndexOf(startingNode) > 0 ? CosmeticList[CosmeticList.IndexOf(startingNode) - 1] : null;
+            var prevNode = cosmeticList.IndexOf(startingNode) > 0 ? cosmeticList[cosmeticList.IndexOf(startingNode) - 1] : null;
             // Trying to color smash a single node, not valid
             if (nodes.Count == 1 && startingNode.SharesData == false && (prevNode == null || prevNode.SharesData == false))
                 return false;
