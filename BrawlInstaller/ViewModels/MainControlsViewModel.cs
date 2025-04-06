@@ -83,7 +83,7 @@ namespace BrawlInstaller.ViewModels
             var backups = _fileService.GetBackups().Where(x => x.BuildPath == AppSettings.BuildPath).OrderByDescending(x => x.TimeStamp);
             if (backups.Any())
             {
-                var selectedBackup = _dialogService.OpenDropDownDialog(backups, "TimeStamp", "Restore Backup", "Select a backup to restore") as Backup;
+                var selectedBackup = _dialogService.OpenDropDownDialog(backups, "TimeStamp", "Restore Backup", "Select a backup to restore.\nNOTE: Each backup contains only the files BrawlInstaller modified at that time. Restoring a backup will restore these files, but if any other changes were made to your build since the backup, those changes will be unaffected.") as Backup;
                 if (selectedBackup != null)
                 {
                     _fileService.RestoreBackup(selectedBackup);
