@@ -30,7 +30,7 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                    <ListBox ItemsSource="{Binding TrophyList}" SelectedItem="{Binding SelectedTrophy}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                    <ListBox ItemsSource="{Binding TrophyList}" SelectedItem="{Binding SelectedTrophy}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}">
