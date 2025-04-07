@@ -178,6 +178,10 @@ namespace BrawlInstaller.ViewModels
 
         public void SaveStage(StageInfo stage, bool deleteStage=false)
         {
+            if (!ErrorValidate())
+            {
+                return;
+            }
             var oldStage = Stage;
             // Create copy of stage before save
             var stageToSave = stage.Copy();
@@ -241,6 +245,25 @@ namespace BrawlInstaller.ViewModels
             _fileService.EndBackup();
             OnPropertyChanged(nameof(Stage));
             _dialogService.ShowMessage("Changes saved.", "Saved");
+        }
+
+        private bool ErrorValidate()
+        {
+            var messages = new List<DialogMessage>();
+            var result = true;
+            if (Stage.StageEntries.Any(x => string.IsNullOrEmpty(x.Params.PacName) || string.IsNullOrEmpty(x.Params.Module) || string.IsNullOrEmpty(x.Params.Name)))
+            {
+                messages.Add(new DialogMessage("Missing File Names", "One or more PAC files, modules, or entries are missing a name. Fill in all missing names to continue."));
+                result = false;
+            }
+            if (Stage.StageEntries.Any(x => !string.IsNullOrEmpty(x.Params.Module) && (!x.Params.Module.ToLower().StartsWith("st_") || !x.Params.Module.ToLower().EndsWith(".rel"))))
+            {
+                messages.Add(new DialogMessage("Invalid Module Names", "One or more modules are named incorrectly. Ensure all modules are named in the format 'st_XX.rel', where 'XX' can be anything."));
+                result = false;
+            }
+            if (messages.Count > 0)
+                _dialogService.ShowMessages("Errors have occurred that prevent your stage from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
+            return result;
         }
 
         private void MoveEntryUp()
