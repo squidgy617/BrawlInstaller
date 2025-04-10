@@ -228,6 +228,10 @@ namespace BrawlInstaller.ViewModels
 
         private void SaveTracklist()
         {
+            if (!ErrorValidate())
+            {
+                return;
+            }
             LoadedTracklist = SaveTracklist(LoadedTracklist);
             OnPropertyChanged(nameof(LoadedTracklist));
             _dialogService.ShowMessage("Changes saved.", "Saved");
@@ -314,6 +318,20 @@ namespace BrawlInstaller.ViewModels
                 OnPropertyChanged(nameof(TracklistSongs));
                 OnPropertyChanged(nameof(SelectedSong));
             }
+        }
+
+        private bool ErrorValidate()
+        {
+            var messages = new List<DialogMessage>();
+            var result = true;
+            if (LoadedTracklist.TracklistSongs.Any(x => !string.IsNullOrEmpty(x.SongFile) && string.IsNullOrEmpty(x.SongPath)))
+            {
+                messages.Add(new DialogMessage("Missing Song Paths", "One or more songs have a file, but a blank name/path. Add a path to these files to continue."));
+                result = false;
+            }
+            if (messages.Count > 0)
+                _dialogService.ShowMessages("Errors have occurred that prevent your tracklist from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
+            return result;
         }
     }
 

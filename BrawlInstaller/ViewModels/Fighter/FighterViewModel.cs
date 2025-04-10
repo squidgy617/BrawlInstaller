@@ -363,8 +363,6 @@ namespace BrawlInstaller.ViewModels
             {
                 selectedInstallOptions = _dialogService.OpenRadioButtonDialog(installOptionsGroups, "Install Options", "Select options to install").Where(x => x.IsChecked).Select(x => x.Item as FighterInstallOption).ToList();
             }
-            _dialogService.ShowProgressBar("Installing Fighter", "Installing fighter...");
-            _fileService.StartBackup();
             var packageType = FighterPackage.PackageType;
             // Set costume indexes for cosmetics
             foreach(var costume in FighterPackage.Costumes)
@@ -425,6 +423,8 @@ namespace BrawlInstaller.ViewModels
             packageToSave = SelectDeleteOptions(packageToSave);
             using (new CursorWait())
             {
+                _dialogService.ShowProgressBar("Installing Fighter", "Installing fighter...");
+                _fileService.StartBackup();
                 // Save fighter
                 _packageService.SaveFighter(packageToSave, OldFighterPackage);
                 // Save was successful, so load changes
@@ -745,6 +745,12 @@ namespace BrawlInstaller.ViewModels
                     messages.Add(new DialogMessage("Trophies", "One or more trophies has the same name and ID as another trophy in the build. Change either the name or ID to continue."));
                     result = false;
                 }
+            }
+            if ((!string.IsNullOrEmpty(FighterPackage?.VictoryTheme?.SongFile) && string.IsNullOrEmpty(FighterPackage?.VictoryTheme?.SongPath))
+                || !string.IsNullOrEmpty(FighterPackage?.CreditsTheme?.SongFile) && string.IsNullOrEmpty(FighterPackage?.CreditsTheme?.SongPath))
+            {
+                messages.Add(new DialogMessage("Missing Song Paths", "One or more songs have a file, but a blank name/path. Add a path to these files to continue."));
+                result = false;
             }
             if (messages.Count > 0)
                 _dialogService.ShowMessages("Errors have occurred that prevent your fighter from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
