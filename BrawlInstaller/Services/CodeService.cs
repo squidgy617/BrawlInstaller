@@ -808,7 +808,7 @@ namespace BrawlInstaller.Services
                     if (int.TryParse(countString, out int count))
                     {
                         // Table starts after count
-                        var tableStart = workingText.IndexOf(countString) + countString.Length + 1;
+                        var tableStart = workingText.IndexOf(match) + match.Length + 1;
                         workingText = workingText.Substring(tableStart, workingText.Length - tableStart);
                         // Values are comma-separated
                         foreach (var item in workingText.Split(','))
