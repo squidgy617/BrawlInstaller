@@ -138,7 +138,7 @@
                         </i:Interaction.Triggers>
                     </userControls:FileBox>
                     <Label x:Name="victoryThemeIdLabel" Content="ID:" Grid.Row="3" ToolTip="ID to use for victory theme. If above 0xF000, ID conflicts will be resolved automatically and any included song file will be installed. If below, song will be pulled from disk."/>
-                    <TextBox x:Name="victoryThemeIdTextBox" Text="{Binding VictoryThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120"/>
+                    <TextBox x:Name="victoryThemeIdTextBox" Text="{Binding VictoryThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120" IsEnabled="{Binding VictoryThemeIdEnabled}"/>
                 </Grid>
                 <Grid x:Name="creditsThemeGrid">
                     <Grid.RowDefinitions>
@@ -166,7 +166,7 @@
                         </i:Interaction.Triggers>
                     </userControls:FileBox>
                     <Label x:Name="creditsThemeIdLabel" Content="ID:" Grid.Row="3" ToolTip="ID to use for victory theme. If above 0xF000, ID conflicts will be resolved automatically and any included song file will be installed. If below, song will be pulled from disk."/>
-                    <TextBox x:Name="creditsThemeIdTextBox" Text="{Binding CreditsThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120"/>
+                    <TextBox x:Name="creditsThemeIdTextBox" Text="{Binding CreditsThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120" IsEnabled="{Binding CreditsThemeIdEnabled}"/>
                 </Grid>
             </StackPanel>
         </GroupBox>

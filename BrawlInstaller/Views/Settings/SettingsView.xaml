@@ -29,6 +29,10 @@
                             <CheckBox Content="Sync tracklists" IsChecked="{Binding BuildSettings.MiscSettings.SyncTracklists}" ToolTip="Check to sync changes between standard and netplay tracklists"/>
                             <CheckBox Content="Update code menu names on save" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCodeMenuNames}" ToolTip="Check to update name displayed in code menu whenever a fighter is saved"/>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="Use Fighter IDs for Victory themes" IsChecked="{Binding BuildSettings.MiscSettings.VictoryThemesUseFighterIds}" ToolTip="Check to load and save victory themes by fighter ID instead of using Ex configs"/>
+                            <CheckBox Content="Use Fighter IDs for Credits themes" IsChecked="{Binding BuildSettings.MiscSettings.CreditsThemesUseFighterIds}" ToolTip="Check to load and save credits themes by fighter IDs instead of using ASM table"/>
+                        </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
