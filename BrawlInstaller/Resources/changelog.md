@@ -1,4 +1,3 @@
-- Fixed an issue where all cosmetics would be updated if you moved some cosmetics between costumes.
-- Fixed an issue where attempting to save a fighter with no install options configured could sometimes result in an error.
-- Fixed an issue where BrawlInstaller would sometimes not allow you to color smash cosmetics that should have been color smashable.
-- Updated verbiage on backup restore message.
+- When you have an item selected in the fighter list, stage list, or trophy list, you can jump to specific items by typing their names.
+- Added validation to ensure that stage file names are filled in when saving a stage.
+- Fixed an issue where stage pages with a number of stages equal to their page number would not load the first item in the page.
