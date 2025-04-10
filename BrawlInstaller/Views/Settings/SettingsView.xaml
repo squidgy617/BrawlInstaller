@@ -23,7 +23,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Content="Kirby Hat EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.InstallKirbyHats}" ToolTip="Check if build uses Kirby Hat system from P+Ex 1.5 and up"/>
-                            <CheckBox Content="Credits EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}" ToolTip="Check if build uses Credits module system from P+Ex 1.5 and up"/>
+                            <CheckBox Content="Update Credits Module" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}" ToolTip="Check to update the credits module whenever a credits icon is added to a fighter. Only for use with P+Ex 1.5.1"/>
                             <CheckBox Content="Subspace EX" IsChecked="{Binding BuildSettings.MiscSettings.SubspaceEx}" ToolTip="Check if build uses Subspace EX"/>
                             <CheckBox Content="Install Fighters to SSE" IsChecked="{Binding BuildSettings.MiscSettings.InstallToSse}" ToolTip="Check to install fighters to SSE mode when they are installed"/>
                             <CheckBox Content="Sync tracklists" IsChecked="{Binding BuildSettings.MiscSettings.SyncTracklists}" ToolTip="Check to sync changes between standard and netplay tracklists"/>
