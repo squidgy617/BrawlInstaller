@@ -119,6 +119,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.SaveFighterTrophies(FighterPackage, FighterPackage)"/>
         void SaveFighterTrophies(FighterPackage fighterPackage, FighterPackage oldFighterPackage);
+
+        /// <inheritdoc cref="FighterService.GetCreditsThemeIds()"/>
+        List<string> GetCreditsThemeIds();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -2129,9 +2132,7 @@ namespace BrawlInstaller.Services
                 if (slotId != null)
                 {
                     // Read the credits theme table
-                    var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
-                    var code = _codeService.ReadCode(codePath);
-                    var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTableLabel);
+                    var table = GetCreditsThemeIds();
                     // Ensure slot ID is within range of table
                     if (table.Count > slotId)
                     {
@@ -2146,6 +2147,18 @@ namespace BrawlInstaller.Services
                 }
             }
             return creditsTheme;
+        }
+
+        /// <summary>
+        /// Get credits theme IDs for all fighters by slot ID
+        /// </summary>
+        /// <returns>Table of credits theme IDs</returns>
+        public List<string> GetCreditsThemeIds()
+        {
+            var codePath = Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.CreditsThemeAsmFile);
+            var code = _codeService.ReadCode(codePath);
+            var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.CreditsThemeTableLabel);
+            return table;
         }
 
         /// <summary>
