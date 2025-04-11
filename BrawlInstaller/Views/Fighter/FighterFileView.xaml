@@ -112,7 +112,7 @@
         </GroupBox>
         <GroupBox Header="Music" Grid.Row="6" Grid.ColumnSpan="4">
             <StackPanel Orientation="Horizontal">
-                <Grid x:Name="victoryThemeGrid" IsEnabled="{Binding VictoryThemeControlsEnabled}">
+                <Grid x:Name="victoryThemeGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
