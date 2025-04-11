@@ -65,7 +65,7 @@
                                                 <Binding.ValidationRules>
                                                     <validationRules:BuildFilePathRule>
                                                         <validationRules:BuildFilePathRule.Wrapper>
-                                                            <validationRules:BuildFilePathWrapper FilePath="{Binding Data.Path, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.HDTextures, Source={StaticResource proxy}}"/>
+                                                            <validationRules:BuildFilePathWrapper FilePath="{Binding Data.BuildSettings.FilePathSettings.BinFileHDTexturePath, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.HDTextures, Source={StaticResource proxy}}"/>
                                                         </validationRules:BuildFilePathRule.Wrapper>
                                                     </validationRules:BuildFilePathRule>
                                                 </Binding.ValidationRules>
