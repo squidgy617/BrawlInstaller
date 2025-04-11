@@ -22,7 +22,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65280,
-    "CreditsThemeId": 10010,
+    "CreditsThemeId": 65280,
     "SoundbankId": 1,
     "KirbySoundbankId": 57,
     "KirbyLoadType": 0,
@@ -56,7 +56,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65281,
-    "CreditsThemeId": 10029,
+    "CreditsThemeId": 65281,
     "SoundbankId": 6,
     "KirbySoundbankId": 45,
     "KirbyLoadType": 0,
@@ -90,7 +90,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65282,
-    "CreditsThemeId": 10041,
+    "CreditsThemeId": 65282,
     "SoundbankId": 2,
     "KirbySoundbankId": 53,
     "KirbyLoadType": 0,
@@ -124,7 +124,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65283,
-    "CreditsThemeId": 10056,
+    "CreditsThemeId": 65283,
     "SoundbankId": 7,
     "KirbySoundbankId": 71,
     "KirbyLoadType": 0,
@@ -158,7 +158,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65284,
-    "CreditsThemeId": 10064,
+    "CreditsThemeId": 65284,
     "SoundbankId": 8,
     "KirbySoundbankId": 75,
     "KirbyLoadType": 0,
@@ -192,7 +192,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65285,
-    "CreditsThemeId": 10074,
+    "CreditsThemeId": 65285,
     "SoundbankId": 9,
     "KirbySoundbankId": null,
     "KirbyLoadType": 0,
@@ -226,7 +226,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65286,
-    "CreditsThemeId": 10094,
+    "CreditsThemeId": 65286,
     "SoundbankId": 10,
     "KirbySoundbankId": 47,
     "KirbyLoadType": 0,
@@ -260,7 +260,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65287,
-    "CreditsThemeId": 10095,
+    "CreditsThemeId": 65287,
     "SoundbankId": 11,
     "KirbySoundbankId": 62,
     "KirbyLoadType": 0,
@@ -294,7 +294,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65288,
-    "CreditsThemeId": 10012,
+    "CreditsThemeId": 65288,
     "SoundbankId": 12,
     "KirbySoundbankId": 56,
     "KirbyLoadType": 0,
@@ -328,7 +328,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65289,
-    "CreditsThemeId": 10106,
+    "CreditsThemeId": 65289,
     "SoundbankId": 13,
     "KirbySoundbankId": 42,
     "KirbyLoadType": 0,
@@ -362,7 +362,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65290,
-    "CreditsThemeId": 10127,
+    "CreditsThemeId": 65290,
     "SoundbankId": 14,
     "KirbySoundbankId": 60,
     "KirbyLoadType": 0,
@@ -396,7 +396,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65291,
-    "CreditsThemeId": 10269,
+    "CreditsThemeId": 65291,
     "SoundbankId": 15,
     "KirbySoundbankId": 52,
     "KirbyLoadType": 0,
@@ -430,7 +430,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65292,
-    "CreditsThemeId": 10010,
+    "CreditsThemeId": 65292,
     "SoundbankId": 16,
     "KirbySoundbankId": 61,
     "KirbyLoadType": 0,
@@ -464,7 +464,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65293,
-    "CreditsThemeId": 10043,
+    "CreditsThemeId": 65293,
     "SoundbankId": 17,
     "KirbySoundbankId": 68,
     "KirbyLoadType": 0,
@@ -498,7 +498,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65294,
-    "CreditsThemeId": 10043,
+    "CreditsThemeId": 65294,
     "SoundbankId": 17,
     "KirbySoundbankId": 68,
     "KirbyLoadType": 0,
@@ -532,7 +532,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65295,
-    "CreditsThemeId": 10185,
+    "CreditsThemeId": 65295,
     "SoundbankId": 18,
     "KirbySoundbankId": 50,
     "KirbyLoadType": 0,
@@ -566,7 +566,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65297,
-    "CreditsThemeId": 10255,
+    "CreditsThemeId": 65297,
     "SoundbankId": 19,
     "KirbySoundbankId": 58,
     "KirbyLoadType": 0,
@@ -600,7 +600,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65298,
-    "CreditsThemeId": 10196,
+    "CreditsThemeId": 65298,
     "SoundbankId": 20,
     "KirbySoundbankId": 48,
     "KirbyLoadType": 0,
@@ -634,7 +634,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65299,
-    "CreditsThemeId": 10085,
+    "CreditsThemeId": 65299,
     "SoundbankId": 21,
     "KirbySoundbankId": 46,
     "KirbyLoadType": 0,
@@ -668,7 +668,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65300,
-    "CreditsThemeId": 10047,
+    "CreditsThemeId": 65300,
     "SoundbankId": 22,
     "KirbySoundbankId": 49,
     "KirbyLoadType": 0,
@@ -702,7 +702,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65301,
-    "CreditsThemeId": 10146,
+    "CreditsThemeId": 65301,
     "SoundbankId": 23,
     "KirbySoundbankId": 73,
     "KirbyLoadType": 0,
@@ -736,7 +736,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65302,
-    "CreditsThemeId": 10076,
+    "CreditsThemeId": 65302,
     "SoundbankId": 23,
     "KirbySoundbankId": 73,
     "KirbyLoadType": 0,
@@ -770,7 +770,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65303,
-    "CreditsThemeId": 10176,
+    "CreditsThemeId": 65303,
     "SoundbankId": 3,
     "KirbySoundbankId": 64,
     "KirbyLoadType": 0,
@@ -804,7 +804,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65304,
-    "CreditsThemeId": 10056,
+    "CreditsThemeId": 65304,
     "SoundbankId": 7,
     "KirbySoundbankId": 71,
     "KirbyLoadType": 0,
@@ -838,7 +838,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65305,
-    "CreditsThemeId": 10143,
+    "CreditsThemeId": 65305,
     "SoundbankId": 24,
     "KirbySoundbankId": 63,
     "KirbyLoadType": 0,
@@ -872,7 +872,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65306,
-    "CreditsThemeId": 10134,
+    "CreditsThemeId": 65306,
     "SoundbankId": 25,
     "KirbySoundbankId": 55,
     "KirbyLoadType": 0,
@@ -906,7 +906,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65307,
-    "CreditsThemeId": 10029,
+    "CreditsThemeId": 65307,
     "SoundbankId": 26,
     "KirbySoundbankId": 44,
     "KirbyLoadType": 0,
@@ -940,7 +940,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65309,
-    "CreditsThemeId": 10096,
+    "CreditsThemeId": 65309,
     "SoundbankId": 28,
     "KirbySoundbankId": 65,
     "KirbyLoadType": 0,
@@ -974,7 +974,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65310,
-    "CreditsThemeId": 10096,
+    "CreditsThemeId": 65310,
     "SoundbankId": 29,
     "KirbySoundbankId": 65,
     "KirbyLoadType": 0,
@@ -1008,7 +1008,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65311,
-    "CreditsThemeId": 10096,
+    "CreditsThemeId": 65311,
     "SoundbankId": 30,
     "KirbySoundbankId": 65,
     "KirbyLoadType": 0,
@@ -1042,7 +1042,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65312,
-    "CreditsThemeId": 10072,
+    "CreditsThemeId": 65312,
     "SoundbankId": 5,
     "KirbySoundbankId": 43,
     "KirbyLoadType": 0,
@@ -1076,7 +1076,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65313,
-    "CreditsThemeId": 10102,
+    "CreditsThemeId": 65313,
     "SoundbankId": 31,
     "KirbySoundbankId": 54,
     "KirbyLoadType": 0,
@@ -1110,7 +1110,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65314,
-    "CreditsThemeId": 10125,
+    "CreditsThemeId": 65314,
     "SoundbankId": 32,
     "KirbySoundbankId": 51,
     "KirbyLoadType": 0,
@@ -1144,7 +1144,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65315,
-    "CreditsThemeId": 10180,
+    "CreditsThemeId": 65315,
     "SoundbankId": 33,
     "KirbySoundbankId": 67,
     "KirbyLoadType": 0,
@@ -1178,7 +1178,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65317,
-    "CreditsThemeId": 10096,
+    "CreditsThemeId": 65317,
     "SoundbankId": 34,
     "KirbySoundbankId": 66,
     "KirbyLoadType": 0,
@@ -1212,7 +1212,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65321,
-    "CreditsThemeId": 10046,
+    "CreditsThemeId": 65321,
     "SoundbankId": 35,
     "KirbySoundbankId": 72,
     "KirbyLoadType": 0,
@@ -1246,7 +1246,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65324,
-    "CreditsThemeId": 10087,
+    "CreditsThemeId": 65324,
     "SoundbankId": 36,
     "KirbySoundbankId": 74,
     "KirbyLoadType": 0,
@@ -1280,7 +1280,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65326,
-    "CreditsThemeId": 10220,
+    "CreditsThemeId": 65326,
     "SoundbankId": 37,
     "KirbySoundbankId": 69,
     "KirbyLoadType": 0,
@@ -1314,7 +1314,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65327,
-    "CreditsThemeId": 10238,
+    "CreditsThemeId": 65327,
     "SoundbankId": 38,
     "KirbySoundbankId": 70,
     "KirbyLoadType": 0,
@@ -1382,7 +1382,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65329,
-    "CreditsThemeId": 10146,
+    "CreditsThemeId": 65329,
     "SoundbankId": null,
     "KirbySoundbankId": null,
     "KirbyLoadType": 0,
@@ -1416,7 +1416,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65319,
-    "CreditsThemeId": 10120,
+    "CreditsThemeId": 65319,
     "SoundbankId": 325,
     "KirbySoundbankId": 58,
     "KirbyLoadType": 2,
@@ -1450,7 +1450,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65318,
-    "CreditsThemeId": 61440,
+    "CreditsThemeId": 65318,
     "SoundbankId": 324,
     "KirbySoundbankId": 54,
     "KirbyLoadType": 1,
@@ -1484,7 +1484,7 @@
       "TrophyId": null
     },
     "VictoryThemeId": 65325,
-    "CreditsThemeId": 61441,
+    "CreditsThemeId": 65325,
     "SoundbankId": 326,
     "KirbySoundbankId": 58,
     "KirbyLoadType": 2,

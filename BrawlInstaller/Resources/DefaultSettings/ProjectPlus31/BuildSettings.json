@@ -32,7 +32,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 1,
@@ -66,7 +67,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 3,
@@ -119,7 +121,8 @@
       "Required": false,
       "Enabled": false,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 2,
@@ -153,7 +156,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 8,
@@ -187,7 +191,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 32
     },
     {
       "CosmeticType": 0,
@@ -231,7 +236,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 0,
@@ -275,7 +281,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 6,
@@ -319,7 +326,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 9,
@@ -353,7 +361,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -397,7 +406,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -431,7 +441,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 10,
@@ -465,7 +476,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 11,
@@ -499,7 +511,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 12,
@@ -552,7 +565,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 13,
@@ -596,7 +610,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": true,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 14,
@@ -640,7 +655,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 14,
@@ -693,7 +709,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 14,
@@ -746,7 +763,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 13,
@@ -790,7 +808,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": true,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 12,
@@ -843,7 +862,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 15,
@@ -896,7 +916,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 15,
@@ -949,7 +970,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 16,
@@ -993,7 +1015,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": true,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 17,
@@ -1046,7 +1069,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": true,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 17,
@@ -1099,7 +1123,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": true,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 14,
@@ -1143,7 +1168,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 21,
@@ -1177,7 +1203,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -1221,7 +1248,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -1265,7 +1293,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -1309,7 +1338,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -1353,7 +1383,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -1397,7 +1428,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -1441,7 +1473,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 7,
@@ -1485,7 +1518,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 8,
@@ -1519,7 +1553,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 32
     },
     {
       "CosmeticType": 7,
@@ -1563,7 +1598,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 6,
@@ -1597,7 +1633,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 6,
@@ -1650,7 +1687,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 18,
@@ -1703,7 +1741,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 18,
@@ -1756,7 +1795,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 19,
@@ -1800,7 +1840,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 20,
@@ -1844,7 +1885,8 @@
       "Required": false,
       "Enabled": false,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 8,
@@ -1878,7 +1920,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 32
     },
     {
       "CosmeticType": 8,
@@ -1912,7 +1955,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 32
     },
     {
       "CosmeticType": 5,
@@ -1956,7 +2000,8 @@
       "Required": true,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": true
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 22,
@@ -1990,7 +2035,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": false
+      "AlwaysCreateArchive": false,
+      "PaletteCount": 256
     },
     {
       "CosmeticType": 22,
@@ -2024,7 +2070,8 @@
       "Required": false,
       "Enabled": true,
       "Selectable": false,
-      "AlwaysCreateArchive": false
+      "AlwaysCreateArchive": false,
+      "PaletteCount": 256
     }
   ],
   "SoundSettings": {
@@ -2041,7 +2088,9 @@
     "UpdateCodeMenuNames": true,
     "CompressBinFiles": true,
     "RGBA8Thumbnails": false,
-    "BinUTF8Encoding": true
+    "BinUTF8Encoding": true,
+    "CreditsThemesUseFighterIds": true,
+    "VictoryThemesUseFighterIds": true
   },
   "FilePathSettings": {
     "FilePaths": [
