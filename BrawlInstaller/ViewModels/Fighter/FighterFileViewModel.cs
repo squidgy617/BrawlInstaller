@@ -109,7 +109,7 @@ namespace BrawlInstaller.ViewModels
         public bool KirbySoundbankIdControlEnabled { get => FighterPackage?.FighterInfo?.OriginalKirbySoundbankId == null || KirbySoundbankId == null || KirbySoundbankId >= 324; }
 
         [DependsUpon(nameof(FighterPackage))]
-        public bool VictoryThemeControlsEnabled { get => FighterPackage?.FighterInfo?.SlotAttributes != null; }
+        public bool VictoryThemeControlsEnabled { get => FighterPackage?.FighterInfo?.SlotAttributes != null || _settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds; }
 
         [DependsUpon(nameof(FighterPackage))]
         public uint? VictoryThemeId { get => FighterPackage?.VictoryTheme?.SongId; set { ChangedThemeId(FighterPackage?.VictoryTheme, value); OnPropertyChanged(nameof(VictoryThemeId)); } }
