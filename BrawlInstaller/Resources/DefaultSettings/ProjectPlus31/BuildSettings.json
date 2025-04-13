@@ -113,7 +113,7 @@
         "Height": 32
       },
       "Format": 0,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -228,7 +228,7 @@
         "Height": 64
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -273,7 +273,7 @@
         "Height": 56
       },
       "Format": 14,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -318,7 +318,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1625,7 +1625,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1679,7 +1679,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1992,7 +1992,7 @@
         "Height": null
       },
       "Format": 0,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
