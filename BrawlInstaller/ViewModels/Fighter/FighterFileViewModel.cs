@@ -113,7 +113,7 @@ namespace BrawlInstaller.ViewModels
         public uint? VictoryThemeId { get => FighterPackage?.VictoryTheme?.SongId; set { ChangedThemeId(FighterPackage?.VictoryTheme, value); OnPropertyChanged(nameof(VictoryThemeId)); } }
 
         [DependsUpon(nameof(FighterPackage))]
-        public bool VictoryThemeIdEnabled { get => !_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds || FighterPackage?.FighterInfo?.SlotAttributes != null; }
+        public bool VictoryThemeIdEnabled { get => !_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds && FighterPackage?.FighterInfo?.SlotAttributes != null; }
 
         [DependsUpon(nameof(FighterPackage))]
         public uint? CreditsThemeId { get => FighterPackage?.CreditsTheme?.SongId; set { ChangedThemeId(FighterPackage?.CreditsTheme, value); OnPropertyChanged(nameof(CreditsThemeId)); } }
