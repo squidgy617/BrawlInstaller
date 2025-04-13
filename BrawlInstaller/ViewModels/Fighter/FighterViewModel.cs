@@ -752,6 +752,13 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Missing Song Paths", "One or more songs have a file, but a blank name/path. Add a path to these files to continue."));
                 result = false;
             }
+            var allPacNames = FighterPackage.PacFiles.Select(x => $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}").ToList();
+            allPacNames.AddRange(FighterPackage.Costumes.SelectMany(c => c.PacFiles.Select(x => $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}{c.CostumeId:D2}")));
+            if (allPacNames.GroupBy(x => x).Where(g => g.Count() > 1).Any())
+            {
+                messages.Add(new DialogMessage("Duplicate PAC files", "One or more PAC files have the exact same name configured. Make all PAC file names unique to continue."));
+                result = false;
+            }
             if (messages.Count > 0)
                 _dialogService.ShowMessages("Errors have occurred that prevent your fighter from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
             return result;
