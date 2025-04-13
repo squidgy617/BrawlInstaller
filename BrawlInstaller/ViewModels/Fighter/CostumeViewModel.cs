@@ -676,7 +676,7 @@ namespace BrawlInstaller.ViewModels
             var ids = new List<int>();
             if (Costumes != null && SelectedCostume != null)
             {
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < 60; i++)
                 {
                     if (!Costumes.Select(x => x.CostumeId).Contains(i) || SelectedCostume?.CostumeId == i)
                     {
