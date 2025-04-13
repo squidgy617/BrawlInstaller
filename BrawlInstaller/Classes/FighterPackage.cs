@@ -85,7 +85,7 @@ namespace BrawlInstaller.Classes
     {
         public string FilePath { get; set; }
         public FighterFileType FileType { get; set; }
-        public string Suffix { get; set; }
+        public string Suffix { get; set; } = string.Empty;
         [JsonIgnore] public string SavePath { get; set; } = string.Empty; // Path to save the file, if one is specified
 
         public FighterPacFile Copy()
