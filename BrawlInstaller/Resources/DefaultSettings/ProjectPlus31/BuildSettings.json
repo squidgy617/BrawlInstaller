@@ -2230,9 +2230,9 @@
         "Path": "pf\\stage\\switch\\Switch00.rss"
       },
       {
-        "Label": "ClassicResultsTable:",
+        "Label": "",
         "FileType": 17,
-        "Path": "Source\\Project+\\ResultsMusic.asm"
+        "Path": ""
       },
       {
         "Label": "ENDINGTABLE:",
