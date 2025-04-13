@@ -2213,7 +2213,9 @@
     "UpdateCodeMenuNames": true,
     "CompressBinFiles": false,
     "RGBA8Thumbnails": false,
-    "BinUTF8Encoding": false
+    "BinUTF8Encoding": false,
+    "CreditsThemesUseFighterIds": false,
+    "VictoryThemesUseFighterIds": false
   },
   "FilePathSettings": {
     "FilePaths": [
