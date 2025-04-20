@@ -1,3 +1,4 @@
-- When you have an item selected in the fighter list, stage list, or trophy list, you can jump to specific items by typing their names.
-- Added validation to ensure that stage file names are filled in when saving a stage.
-- Fixed an issue where stage pages with a number of stages equal to their page number would not load the first item in the page.
+- Added validation for song paths when editing tracklists.
+- Added validation for fighter editor when a duplicate PAC name is detected.
+- Costume IDs can now go up to 60.
+- Fighter pac file names must now match in-game naming schemes exactly to be picked up by BrawlInstaller.
