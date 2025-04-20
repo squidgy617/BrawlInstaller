@@ -950,7 +950,7 @@ namespace BrawlInstaller.Services
         public bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension)
         {
             // Build regex string
-            var regexString = $"{pacFileName}";
+            var regexString = $"^{pacFileName}";
             // Add suffix options
             var suffixString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})")) + ")?";
             regexString += suffixString;
@@ -958,6 +958,7 @@ namespace BrawlInstaller.Services
             regexString += "(\\d\\d)?";
             // Add extension
             regexString += pacExtension;
+            regexString += "$";
             return Regex.IsMatch(fileName, regexString, RegexOptions.IgnoreCase);
         }
 
