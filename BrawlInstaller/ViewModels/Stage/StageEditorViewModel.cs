@@ -328,7 +328,12 @@ namespace BrawlInstaller.ViewModels
 
         private void RemoveStageEntry()
         {
-            Stage.StageEntries.Remove(SelectedStageEntry);
+            var selectedStage = SelectedStageEntry;
+            if (Stage.StageEntries.Count > 1)
+            {
+                SelectedStageEntry = Stage.StageEntries[Stage.StageEntries.IndexOf(SelectedStageEntry) - 1];
+            }
+            Stage.StageEntries.Remove(selectedStage);
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(StageEntries));
             OnPropertyChanged(nameof(SelectedStageEntry));
