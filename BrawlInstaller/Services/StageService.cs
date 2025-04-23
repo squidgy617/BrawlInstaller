@@ -5,20 +5,24 @@ using BrawlLib.BrawlManagerLib;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
+using BrawlLib.Wii.Textures;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+using static BrawlLib.BrawlManagerLib.TextureContainer;
 
 namespace BrawlInstaller.Services
 {
@@ -54,6 +58,15 @@ namespace BrawlInstaller.Services
         ISettingsService _settingsService;
         IFileService _fileService;
         ICosmeticService _cosmeticService;
+
+        // Private properties
+
+        // Table starts at 0x104 and holds 256 pairs, so 512 total bytes
+        private const int _rssStageTableStart = 0x104;
+        private const int _rssStageTableLength = 512;
+        // Pages start at 0x3C and are 40 bytes each
+        private List<int> _pageLocations = new List<int> { 0x3C, 0x64, 0x8C, 0xB4, 0xDC };
+        private const int _stagesPerPage = 39;
 
         [ImportingConstructor]
         public StageService(ICodeService codeService, ISettingsService settingsService, IFileService fileService, ICosmeticService cosmeticService) 
@@ -105,38 +118,101 @@ namespace BrawlInstaller.Services
                 if (_fileService.FileExists(filePath))
                 {
                     var stageList = new StageList { Name = Path.GetFileNameWithoutExtension(stageListFile.Path), FilePath = filePath.Replace(_settingsService.AppSettings.BuildPath, "") };
-                    // Read all pages from stage list file
-                    var fileText = _fileService.ReadTextFile(filePath);
-                    var labels = new List<string> { "TABLE_1:", "TABLE_2:", "TABLE_3:", "TABLE_4:", "TABLE_5:" };
-                    int pageNumber = 1;
-                    foreach (var label in labels)
+                    if (Path.GetExtension(filePath) == ".asm")
                     {
-                        var page = new StagePage { PageNumber = pageNumber };
-                        // Get indexes in table
-                        var indexList = _codeService.ReadTable(fileText, label);
-                        foreach(var index in indexList)
+                        // Read all pages from stage list file
+                        var fileText = _fileService.ReadTextFile(filePath);
+                        var labels = new List<string> { "TABLE_1:", "TABLE_2:", "TABLE_3:", "TABLE_4:", "TABLE_5:" };
+                        int pageNumber = 1;
+                        foreach (var label in labels)
                         {
-                            // Get IDs from index
-                            if(int.TryParse(index.Replace("0x", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result))
+                            var page = new StagePage { PageNumber = pageNumber };
+                            // Get indexes in table
+                            var indexList = _codeService.ReadTable(fileText, label);
+                            foreach (var index in indexList)
                             {
-                                if (result >= 0)
+                                // Get IDs from index
+                                if (int.TryParse(index.Replace("0x", ""), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result))
                                 {
-                                    var stageSlot = stageTable.FirstOrDefault(x => x.Index == result);
-                                    if (stageSlot != null)
+                                    if (result >= 0)
                                     {
-                                        page.StageSlots.Add(stageSlot);
+                                        var stageSlot = stageTable.FirstOrDefault(x => x.Index == result);
+                                        if (stageSlot != null)
+                                        {
+                                            page.StageSlots.Add(stageSlot);
+                                        }
                                     }
                                 }
                             }
+                            stageList.Pages.Add(page);
+                            pageNumber++;
                         }
-                        stageList.Pages.Add(page);
-                        pageNumber++;
+                    }
+                    else if (Path.GetExtension(filePath) == ".rss")
+                    {
+                        var rssData = _fileService.ReadAllBytes(filePath);
+                        
+                        int pageNumber = 1;
+                        foreach(var pageLocation in _pageLocations)
+                        {
+                            var page = new StagePage { PageNumber = pageNumber };
+                            // Get random toggles
+                            page.RandomFlags = GetStageRandomToggles(rssData, pageNumber);
+                            // Get hazard toggles
+                            page.HazardFlags = GetStageHazardToggles(rssData, pageNumber);
+                            // Get indexes in page
+                            var indexList = new List<int>();
+                            int stageCount = rssData[pageLocation];
+                            var start = pageLocation + 1;
+                            for(var i = start; i < start + stageCount; i++)
+                            {
+                                indexList.Add(rssData[i]);
+                            }
+                            foreach (var index in indexList)
+                            {
+                                var stageSlot = stageTable.FirstOrDefault(x => x.Index == index);
+                                if (stageSlot != null)
+                                {
+                                    page.StageSlots.Add(stageSlot);
+                                }
+                            }
+                            stageList.Pages.Add(page);
+                            pageNumber++;
+                        }
                     }
                     // Add stage list
                     stageLists.Add(stageList);
                 }
             }
             return stageLists;
+        }
+
+        /// <summary>
+        /// Get stage random toggles
+        /// </summary>
+        /// <param name="rssData">RSS file data</param>
+        /// <param name="pageNumber">Page number to get toggles for</param>
+        /// <returns>Stage indexes that are toggled</returns>
+        private ulong GetStageRandomToggles(byte[] rssData, int pageNumber)
+        {
+            var randomToggleList = rssData.SubArray((pageNumber - 1) * 6, 6).Reverse().ToList(); // Each bitarray is 6 bytes long, and there is one for each page
+            randomToggleList.AddRange(new byte[2]); // Pad bitarray so we can convert to int64
+            var randomToggleBitmask = BitConverter.ToUInt64(randomToggleList.ToArray(), 0);
+            return randomToggleBitmask;
+        }
+
+        /// <summary>
+        /// Get stage hazard toggles
+        /// </summary>
+        /// <param name="rssData">RSS file data</param>
+        /// <param name="pageNumber">Page number to get toggles for</param>
+        /// <returns>Stage indexes that are toggled</returns>
+        private ulong GetStageHazardToggles(byte[] rssData, int pageNumber)
+        {
+            var hazardToggleList = rssData.SubArray(((pageNumber - 1) * 6) + 30, 6).Reverse().ToList(); // Hazard toggles start at offset 30
+            hazardToggleList.AddRange(new byte[2]);
+            var hazardToggleBitmask = BitConverter.ToUInt64(hazardToggleList.ToArray(), 0);
+            return hazardToggleBitmask;
         }
 
         /// <summary>
@@ -292,14 +368,45 @@ namespace BrawlInstaller.Services
                 listAlt.BinFileName = Regex.Replace(Path.GetFileNameWithoutExtension(binFile), "st_\\d+_", "");
                 listAlt.BinFilePath = binFile;
                 var binData = _fileService.DecryptBinFile(binFile);
+                // Get the encoding style
+                var encodingByte = binData[0x6B]; // 0x6B is the preview pic setting normally, but we are hijacking the 8th bit of it to denote encoding
+                var utf8Encoding = encodingByte.GetToggledBits().Contains(8); // If 8th bit is enabled, it's UTF8
                 // Get the name
                 var nameData = binData.AsSpan(0x70, 32).ToArray();
-                listAlt.Name = Encoding.BigEndianUnicode.GetString(nameData).Replace("\u0000", "");
+                if (utf8Encoding)
+                {
+                    listAlt.Name = Encoding.UTF8.GetString(nameData).Replace("\u0000", "");
+                }
+                else
+                {
+                    listAlt.Name = Encoding.BigEndianUnicode.GetString(nameData).Replace("\u0000", "");
+                }
                 // Get the image data
                 var imageStart = BitConverter.ToInt32(binData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(binData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
                 var imageData = binData.AsSpan(imageStart, imageEnd - imageStart);
-                listAlt.ImageData = imageData.ToArray();
+                var imageHeader = binData.Skip(imageStart).Take(4).ToArray();
+                // If JPEG header is found, read as JPEG
+                if (imageHeader.Compare(new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }))
+                {
+                    using (MemoryStream stream = new MemoryStream(imageData.ToArray()))
+                    {
+                        var bitmap = Image.FromStream(stream, true, true);
+                        var bitmapImage = ((Bitmap)bitmap).ToBitmapImage(ImageFormat.Jpeg);
+                        listAlt.Image = bitmapImage;
+                    }
+                }
+                // If TEX0 header is found, read as TEX0
+                else if (imageHeader.Compare(new byte[] { 0x54, 0x45, 0x58, 0x30 }))
+                {
+                    var tex = imageData.ToArray().ToResourceNode() as TEX0Node;
+                    listAlt.Image = tex.GetImage(0).ToBitmapImage();
+                    // Get HD texture if available
+                    if (!string.IsNullOrEmpty(tex?.DolphinTextureName) && _settingsService.AppSettings.ModifyHDTextures && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures))
+                    {
+                        listAlt.HDImage = _cosmeticService.GetHDImage(tex.DolphinTextureName);
+                    }
+                }
             }
             return listAlt;
         }
@@ -411,19 +518,64 @@ namespace BrawlInstaller.Services
             var filePath = $"{_settingsService.AppSettings.BuildPath}\\{_settingsService.BuildSettings.FilePathSettings.StageTablePath}";
             if (_fileService.FileExists(filePath))
             {
-                var fileText = _fileService.ReadTextFile(filePath);
-                var idList = _codeService.ReadTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel);
-                foreach(var id in idList)
+                if (Path.GetExtension(filePath) == ".asm")
                 {
-                    var newIds = new BrawlIds();
-                    var stageId = id.Substring(2, 2);
-                    var cosmeticId = id.Substring(4, 2);
-                    newIds.StageId = Convert.ToInt32(stageId, 16);
-                    newIds.StageCosmeticId = Convert.ToInt32(cosmeticId, 16);
-                    stageIds.Add(newIds);
+                    var fileText = _fileService.ReadTextFile(filePath);
+                    var idList = _codeService.ReadTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel);
+                    foreach (var id in idList)
+                    {
+                        var newIds = new BrawlIds();
+                        var stageId = id.Substring(2, 2);
+                        var cosmeticId = id.Substring(4, 2);
+                        newIds.StageId = Convert.ToInt32(stageId, 16);
+                        newIds.StageCosmeticId = Convert.ToInt32(cosmeticId, 16);
+                        stageIds.Add(newIds);
+                    }
+                }
+                else if (Path.GetExtension(filePath) == ".rss")
+                {
+                    var rssData = _fileService.ReadAllBytes(filePath);
+                    
+                    for (var i = _rssStageTableStart; i < (_rssStageTableStart + _rssStageTableLength); i += 2)
+                    {
+                        if (rssData[i] != 0 && rssData[i + 1] != 0)
+                        {
+                            var newIds = new BrawlIds();
+                            newIds.StageId = rssData[i];
+                            newIds.StageCosmeticId = rssData[i + 1];
+                            stageIds.Add(newIds);
+                        }
+                    }
                 }
             }
             return stageIds;
+        }
+
+        /// <summary>
+        /// Get preset count for random stage select screen
+        /// </summary>
+        /// <returns>Preset count</returns>
+        private int GetRSSPresetCount()
+        {
+            var presetCount = 7;
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.RSSFile))
+            {
+                var rssFile = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.RSSFile);
+                if (!string.IsNullOrEmpty(rssFile))
+                {
+                    var rssText = _codeService.ReadCode(rssFile);
+                    var alias = _codeService.GetCodeAlias(rssText, "NUM_PRESETS");
+                    if (alias != null)
+                    {
+                        var valid = int.TryParse(alias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int count);
+                        if (valid)
+                        {
+                            presetCount = count;
+                        }
+                    }
+                }
+            }
+            return presetCount;
         }
 
         /// <summary>
@@ -432,9 +584,9 @@ namespace BrawlInstaller.Services
         /// <param name="stage"></param>
         private void SaveStageRandomName(StageInfo stage)
         {
-            // TODO: Load this from code in Random.asm
-            var presetCount = 7;
             var buildPath = _settingsService.AppSettings.BuildPath;
+            // Get preset count
+            var presetCount = GetRSSPresetCount();
             var randomStageLocations = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations;
             foreach(var location in randomStageLocations)
             {
@@ -643,11 +795,30 @@ namespace BrawlInstaller.Services
             var data = _fileService.ReadRawData(node);
             if (data != null)
             {
-                var decryptedData = _fileService.DecryptBinData(data);
+                var originalData = _fileService.DecryptBinData(data);
+                var decryptedData = originalData.ToArray();
+                // Update encoding flag
+                var currentEncoding = decryptedData[0x6B];
+                if (_settingsService.BuildSettings.MiscSettings.BinUTF8Encoding)
+                {
+                    decryptedData[0x6B] = currentEncoding.EnableBit(7); // If we're using UTF8 encoding, enable the 8th bit to indicate such
+                }
+                else
+                {
+                    decryptedData[0x6B] = currentEncoding.DisableBit(7); // Otherwise, disable it, indicating UTF16/BigEndianUnicode
+                }
                 // Get name
                 var nameStart = 0x70;
                 var nameEnd = nameStart + 32;
-                var name = Encoding.BigEndianUnicode.GetBytes(listAlt.Name.ToCharArray()).ToList();
+                var name = new List<byte>();
+                if (_settingsService.BuildSettings.MiscSettings.BinUTF8Encoding)
+                {
+                    name = Encoding.UTF8.GetBytes(listAlt.Name.ToCharArray()).ToList();
+                }
+                else
+                {
+                    name = Encoding.BigEndianUnicode.GetBytes(listAlt.Name.ToCharArray()).ToList();
+                }
                 // Pad name
                 while (name.Count < 32)
                 {
@@ -658,10 +829,29 @@ namespace BrawlInstaller.Services
                 // Get image location
                 var imageStart = BitConverter.ToInt32(decryptedData.Skip(0x5C).Take(4).Reverse().ToArray(), 0) + 0x54; // position 0x5C + 0x54 is start of image data
                 var imageEnd = BitConverter.ToInt32(decryptedData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
+                // Get current image
+                var currentImageData = decryptedData.Skip(imageStart).Take(imageEnd - imageStart).ToArray();
+                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
+                {
+                    var currentTex = currentImageData.ToResourceNode() as TEX0Node;
+                    // Delete HD texture if it exists
+                    if (currentTex != null && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
+                    {
+                        _cosmeticService.DeleteHDTexture(currentTex);
+                    }
+                }
                 // Get data between name and image
                 var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
                 // Get image data from our list alt
-                var imageData = listAlt.ImageData;
+                var imageData = new byte[0];
+                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
+                {
+                    imageData = _cosmeticService.ImportBinThumbnail(listAlt.Image, listAlt.HDImage, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
+                }
+                else
+                {
+                    imageData = listAlt.JpegData;
+                }
                 // Combine data leading up to image
                 var partialData = fileStart.ToArray().Append(name.ToArray()).Append(miscData.ToArray());
                 // Store image starting position
@@ -684,7 +874,7 @@ namespace BrawlInstaller.Services
                 newImageStart.CopyTo(finalData, 0x5C); // Starting position
                 newImageEnd.CopyTo(finalData, 0x60); // Ending position (wide)
                 // Encrypt
-                if (!finalData.SequenceEqual(decryptedData))
+                if (!finalData.SequenceEqual(originalData))
                 {
                     var encryptedData = _fileService.EncryptBinData(finalData);
                     _fileService.ReplaceNodeRaw(node, encryptedData);
@@ -754,9 +944,19 @@ namespace BrawlInstaller.Services
             var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";
             if (_fileService.FileExists(tableFilepath))
             {
-                var tableFileText = _codeService.ReadCode(tableFilepath);
-                tableFileText = _codeService.ReplaceTable(tableFileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
-                _fileService.SaveTextFile(tableFilepath, tableFileText);
+                if (Path.GetExtension(tableFilepath) == ".asm")
+                {
+                    var tableFileText = _codeService.ReadCode(tableFilepath);
+                    tableFileText = _codeService.ReplaceTable(tableFileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
+                    _fileService.SaveTextFile(tableFilepath, tableFileText);
+                }
+                else if (Path.GetExtension(tableFilepath) == ".rss")
+                {
+                    var rssData = _fileService.ReadAllBytes(tableFilepath);
+                    var bytes = stageTable.ToByteArray();
+                    bytes.CopyTo(rssData, _rssStageTableStart);
+                    _fileService.WriteAllBytes(tableFilepath, rssData);
+                }
             }
             // Update indexes
             foreach (var stageSlot in stageTable)
@@ -766,45 +966,71 @@ namespace BrawlInstaller.Services
             foreach(var stageList in stageLists)
             {
                 var filePath = $"{_settingsService.AppSettings.BuildPath}\\{stageList.FilePath}";
-                var fileText = _codeService.ReadCode(filePath);
-                foreach (var page in stageList.Pages)
+                if (Path.GetExtension(filePath) == ".asm")
                 {
+                    var fileText = _codeService.ReadCode(filePath);
                     // Update stage table if it exists
                     fileText = _codeService.ReplaceTable(fileText, _settingsService.BuildSettings.FilePathSettings.StageTableLabel, stageTableAsm, DataSize.Halfword, 4);
-                    // Update stage list
-                    var pageEntriesAsm = page.ConvertToAsmTable();
-                    fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntriesAsm, DataSize.Byte);
-                    // Update memory allocations
-                    var hookAddress = string.Empty;
-                    switch (page.PageNumber)
+                    foreach (var page in stageList.Pages)
                     {
-                        case 1:
-                            hookAddress = "806B929C";
-                            break;
-                        case 2:
-                            hookAddress = "806B92A4";
-                            break;
-                        case 3:
-                            hookAddress = "80496002";
-                            break;
-                        case 4:
-                            hookAddress = "80496003";
-                            break;
-                        case 5:
-                            hookAddress = "80496004";
-                            break;
+                        // Update stage list
+                        var pageEntriesAsm = page.ConvertToAsmTable();
+                        fileText = _codeService.ReplaceTable(fileText, $"TABLE_{page.PageNumber}:", pageEntriesAsm, DataSize.Byte);
+                        // Update memory allocations
+                        var hookAddress = string.Empty;
+                        switch (page.PageNumber)
+                        {
+                            case 1:
+                                hookAddress = "806B929C";
+                                break;
+                            case 2:
+                                hookAddress = "806B92A4";
+                                break;
+                            case 3:
+                                hookAddress = "80496002";
+                                break;
+                            case 4:
+                                hookAddress = "80496003";
+                                break;
+                            case 5:
+                                hookAddress = "80496004";
+                                break;
+                        }
+                        var hook = new AsmHook { Address = hookAddress, Instructions = new List<Instruction> { new Instruction { Text = $"byte {page.StageSlots.Count:D2}" } }, Comment = $"Page {page.PageNumber}" };
+                        fileText = _codeService.ReplaceHook(hook, fileText);
                     }
-                    var hook = new AsmHook { Address = hookAddress, Instructions = new List<Instruction> { new Instruction { Text = $"byte {page.StageSlots.Count:D2}" } }, Comment = $"Page {page.PageNumber}" };
-                   fileText = _codeService.ReplaceHook(hook, fileText);
+                    // Update total stage count
+                    var countHook = new AsmHook { Address = "800AF673", Instructions = new List<Instruction> { new Instruction { Text = $"byte {stageTable.Count(x => x != dummySlot):D2}" } }, Comment = "Stage Count" };
+                    fileText = _codeService.ReplaceHook(countHook, fileText);
+                    _fileService.SaveTextFile(filePath, fileText);
                 }
-                // Remove dummy slots
-                // TODO: Remove this if we don't need the dummy slots to begin with
-                stageTable.RemoveAll(x => x == dummySlot);
-                // Update total stage count
-                var countHook = new AsmHook { Address = "800AF673", Instructions = new List<Instruction> { new Instruction { Text = $"byte {stageTable.Count():D2}" } }, Comment = "Stage Count" };
-                fileText = _codeService.ReplaceHook(countHook, fileText);
-                _fileService.SaveTextFile(filePath, fileText);
+                else if (Path.GetExtension(filePath) == ".rss")
+                {
+                    var rssData = _fileService.ReadAllBytes(filePath);
+                    // Update stage table if it exists
+                    var tableBytes = stageTable.ToByteArray();
+                    tableBytes.CopyTo(rssData, _rssStageTableStart);
+
+                    foreach (var page in stageList.Pages)
+                    {
+                        // Update stage page
+                        var location = _pageLocations[stageList.Pages.IndexOf(page)];
+                        var bytes = page.StageSlots.Select(x => (byte)x.Index).Concat(Enumerable.Repeat<byte>(0, _stagesPerPage - page.StageSlots.Count)).ToArray();
+                        rssData[location] = (byte)page.StageSlots.Count;
+                        bytes.CopyTo(rssData, location + 1);
+                        // Update random toggles
+                        var randomBytes = BitConverter.GetBytes(page.RandomFlags).SubArray(0, 6).Reverse().ToArray();
+                        randomBytes.CopyTo(rssData, (page.PageNumber - 1) * 6);
+                        // Update hazard toggles
+                        var hazardBytes = BitConverter.GetBytes(page.HazardFlags).SubArray(0, 6).Reverse().ToArray();
+                        hazardBytes.CopyTo(rssData, 30 + ((page.PageNumber - 1) * 6)); // Offset 30 is where hazard toggles start
+                    }
+                    _fileService.WriteAllBytes(filePath, rssData);
+                }
             }
+            // Remove dummy slots
+            // TODO: Remove this if we don't need the dummy slots to begin with
+            stageTable.RemoveAll(x => x == dummySlot);
             // Compile code
             _codeService.CompileCodes();
         }

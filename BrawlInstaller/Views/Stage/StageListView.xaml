@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:resources="clr-namespace:BrawlInstaller.Resources"
+             xmlns:behaviors="clr-namespace:BrawlInstaller.Behaviors"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:StageListViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -63,6 +64,11 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
                                 <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120">
                                     <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
                                         <ListBox.ItemTemplate>
@@ -87,6 +93,16 @@
                                     <Button x:Name="stageDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.MoveDownCommand}" Grid.Row="1"/>
                                     <Button x:Name="removeStageButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding Source={x:Reference userControl}, Path=DataContext.RemoveStageFromListCommand}" Grid.Row="2"/>
                                 </Grid>
+                                <CheckBox Grid.Row="1" Content="Random Enabled" Visibility="{Binding Source={x:Reference Name=userControl}, Path=DataContext.DisplayRssOptions, Converter={StaticResource boolVisConverter}}">
+                                    <CheckBox.IsChecked>
+                                        <behaviors:ConverterBindableParameter Binding="{Binding Source={x:Reference Name=userControl}, Path=DataContext.RandomFlags}" Converter="{StaticResource stageRandomConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
+                                    </CheckBox.IsChecked>
+                                </CheckBox>
+                                <CheckBox Grid.Row="2" Content="Hazards Enabled" Visibility="{Binding Source={x:Reference Name=userControl}, Path=DataContext.DisplayRssOptions, Converter={StaticResource boolVisConverter}}">
+                                    <CheckBox.IsChecked>
+                                        <behaviors:ConverterBindableParameter Binding="{Binding Source={x:Reference Name=userControl}, Path=DataContext.HazardFlags}" Converter="{StaticResource stageHazardsConverter}" ConverterParameter="{Binding Source={x:Reference Name=userControl}, Path=DataContext.SelectedStageIndex}"/>
+                                    </CheckBox.IsChecked>
+                                </CheckBox>
                             </Grid>
                         </DataTemplate>
                     </TabControl.ContentTemplate>

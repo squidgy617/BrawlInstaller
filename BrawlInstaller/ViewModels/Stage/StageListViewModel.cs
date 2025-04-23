@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.Enums;
 using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
 using BrawlInstaller.StaticClasses;
@@ -125,6 +126,17 @@ namespace BrawlInstaller.ViewModels
 
         public List<int> IncompleteStageIds { get => _incompleteStageIds; set { _incompleteStageIds = value; OnPropertyChanged(nameof(IncompleteStageIds)); } }
 
+        [DependsUpon(nameof(SelectedStageList))]
+        public bool DisplayRssOptions { get => SelectedStageList?.Type == StageListType.RSS; }
+
+        [DependsUpon(nameof(SelectedPage))]
+        [DependsUpon(nameof(SelectedStageIndex))]
+        public ulong RandomFlags { get => SelectedPage?.RandomFlags ?? 0; set { SelectedPage.RandomFlags = value; } }
+
+        [DependsUpon(nameof(SelectedPage))]
+        [DependsUpon(nameof(SelectedStageIndex))]
+        public ulong HazardFlags { get => SelectedPage?.HazardFlags ?? 0; set { SelectedPage.HazardFlags = value; } }
+
         // Methods
         public void UpdateStageList(StageSavedMessage message)
         {
@@ -152,6 +164,10 @@ namespace BrawlInstaller.ViewModels
                 {
                     foreach (var slot in page.StageSlots.Where(x => x.StageIds.StageId == stageSlot.StageIds.StageId && x.StageIds.StageCosmeticId == stageSlot.StageIds.StageCosmeticId).ToList())
                     {
+                        // Update flags
+                        page.RandomFlags = page.RandomFlags.RemoveBit(page.StageSlots.IndexOf(slot));
+                        page.HazardFlags = page.HazardFlags.RemoveBit(page.StageSlots.IndexOf(slot));
+                        // Remove stage
                         page.StageSlots.Remove(slot);
                     }
                 }
@@ -165,14 +181,30 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedPage.StageSlots.FirstOrDefault() != SelectedStageSlot)
             {
+                // Update flags
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.SwapBits(SelectedStageIndex, SelectedStageIndex - 1);
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.SwapBits(SelectedStageIndex, SelectedStageIndex - 1);
+                // Move stage
                 SelectedPage.StageSlots.MoveUp(SelectedStageSlot);
                 StageSlots.MoveUp(SelectedStageSlot);
             }
             else if (SelectedPage != SelectedStageList.Pages.FirstOrDefault())
             {
+                // Update flags
+                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) - 1];
+                if (SelectedPage.RandomFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.RandomFlags = newPage.RandomFlags.EnableBit(newPage.StageSlots.Count);
+                }
+                if (SelectedPage.HazardFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.HazardFlags = newPage.HazardFlags.EnableBit(newPage.StageSlots.Count);
+                }
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex); // Disable bit
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex);
+                // Move stage
                 SelectedPage.StageSlots.Remove(SelectedStageSlot);
                 StageSlots.Remove(SelectedStageSlot);
-                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) - 1];
                 newPage.StageSlots.Add(SelectedStageSlot);
                 SelectedPage = newPage;
                 OnPropertyChanged(nameof(SelectedPage));
@@ -185,14 +217,32 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedPage.StageSlots.LastOrDefault() != SelectedStageSlot)
             {
+                // Update flags
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.SwapBits(SelectedStageIndex, SelectedStageIndex + 1);
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.SwapBits(SelectedStageIndex, SelectedStageIndex + 1);
+                // Move stage
                 SelectedPage.StageSlots.MoveDown(SelectedStageSlot);
                 StageSlots.MoveDown(SelectedStageSlot);
             }
             else if (SelectedPage != SelectedStageList.Pages.LastOrDefault())
             {
+                // Update flags
+                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) + 1];
+                newPage.RandomFlags = newPage.RandomFlags << 1; // Shift all flags to the left
+                newPage.HazardFlags = newPage.HazardFlags << 1;
+                if (SelectedPage.RandomFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.RandomFlags = newPage.RandomFlags.EnableBit(0);
+                }
+                if (SelectedPage.HazardFlags.GetToggledBits().Contains(SelectedStageIndex + 1))
+                {
+                    newPage.HazardFlags = newPage.HazardFlags.EnableBit(0);
+                }
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.DisableBit(SelectedStageIndex); // Disable bit
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.DisableBit(SelectedStageIndex);
+                // Move stage
                 SelectedPage.StageSlots.Remove(SelectedStageSlot);
                 StageSlots.Remove(SelectedStageSlot);
-                var newPage = SelectedStageList.Pages[SelectedStageList.Pages.IndexOf(SelectedPage) + 1];
                 newPage.StageSlots.Insert(0, SelectedStageSlot);
                 SelectedPage = newPage;
                 OnPropertyChanged(nameof(SelectedPage));
@@ -205,9 +255,25 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedStageIndex > -1)
             {
+                // Update flags
+                SelectedPage.RandomFlags = SelectedPage.RandomFlags.RemoveBit(SelectedStageIndex);
+                SelectedPage.HazardFlags = SelectedPage.HazardFlags.RemoveBit(SelectedStageIndex);
+                // Remove stage
                 SelectedPage.StageSlots.RemoveAt(SelectedStageIndex);
-                SelectedStageIndex = -1;
-                SelectedStageSlot = null;
+                if (SelectedPage.StageSlots.Count > SelectedStageIndex - 1 && SelectedStageIndex > 0)
+                {
+                    SelectedStageIndex--;
+                    SelectedStageSlot = SelectedPage.StageSlots[SelectedStageIndex];
+                }
+                else if (SelectedPage.StageSlots.Count > 1 && SelectedStageIndex == 0)
+                {
+                    SelectedStageSlot = SelectedPage.StageSlots[SelectedStageIndex];
+                }
+                else
+                {
+                    SelectedStageIndex = -1;
+                    SelectedStageSlot = null;
+                }
                 OnPropertyChanged(nameof(StageLists));
                 OnPropertyChanged(nameof(SelectedStageSlot));
                 OnPropertyChanged(nameof(SelectedStageTableEntry));

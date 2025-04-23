@@ -113,7 +113,7 @@
         "Height": 32
       },
       "Format": 0,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -228,7 +228,7 @@
         "Height": 64
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -273,7 +273,7 @@
         "Height": 56
       },
       "Format": 14,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -318,7 +318,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1625,7 +1625,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1679,7 +1679,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1992,7 +1992,7 @@
         "Height": null
       },
       "Format": 0,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -2211,7 +2211,11 @@
     "DefaultExConfigVersion": 2,
     "SyncTracklists": false,
     "UpdateCodeMenuNames": true,
-    "CompressBinFiles": false
+    "CompressBinFiles": false,
+    "RGBA8Thumbnails": false,
+    "BinUTF8Encoding": false,
+    "CreditsThemesUseFighterIds": false,
+    "VictoryThemesUseFighterIds": false
   },
   "FilePathSettings": {
     "FilePaths": [
@@ -2338,6 +2342,10 @@
       {
         "FileType": 41,
         "Path": ""
+      },
+      {
+        "FileType": 42,
+        "Path": ""
       }
     ],
     "AsmPaths": [
@@ -2409,6 +2417,7 @@
     ],
     "VictoryThemeTracklist": "Results",
     "CreditsThemeTracklist": "Credits",
+    "BinFileHDTexturePath": "BrawlInstaller\\Stage Selection Screen\\Menu Alts",
     "RosterFiles": [
       {
         "FilePath": "pf\\BrawlEx\\CSSRoster.dat",

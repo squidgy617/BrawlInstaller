@@ -24,7 +24,7 @@ namespace BrawlInstaller.StaticClasses
             new DefaultFilePath(FileType.TrophyNames, "MSBIN file (.msbin)|*.msbin"),
             new DefaultFilePath(FileType.FighterTrophyLocation, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.SSETrophyModule, "REL file (.rel)|*.rel"),
-            new DefaultFilePath(FileType.StageTablePath, "ASM file (.asm)|*.asm"),
+            new DefaultFilePath(FileType.StageTablePath, "Stage table file (*.asm, *.rss)|*.asm;*.rss"),
             new DefaultFilePath(FileType.CreditsThemeAsmFile, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.EndingAsmFile, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.ThrowReleaseAsmFile, "ASM file (.asm)|*.asm"),
@@ -33,6 +33,7 @@ namespace BrawlInstaller.StaticClasses
             new DefaultFilePath(FileType.SlotExAsmFile, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.TrophyLocation, "PAC file (.pac)|*.pac", true, new List<Type> { typeof(TyDataListNode) }),
             new DefaultFilePath(FileType.TrophyGameIconsLocation, "BRRES file (.brres)|*.brres", true, new List<Type> {typeof(PAT0TextureNode)}),
+            new DefaultFilePath(FileType.RSSFile, ".ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.CostumeSwapFile, "ASM file (.asm)|*.asm")
         };
 

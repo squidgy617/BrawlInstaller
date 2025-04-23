@@ -71,7 +71,8 @@ namespace BrawlInstaller.ViewModels
                     FighterPackage.VictoryTheme.SongId = FighterPackage.FighterInfo.VictoryThemeId;
                 OnPropertyChanged(nameof(VictoryThemeId));
                 OnPropertyChanged(nameof(SoundbankControlsEnabled));
-                OnPropertyChanged(nameof(VictoryThemeControlsEnabled));
+                OnPropertyChanged(nameof(VictoryThemeIdEnabled));
+                OnPropertyChanged(nameof(CreditsThemeIdEnabled));
             });
         }
 
@@ -109,13 +110,16 @@ namespace BrawlInstaller.ViewModels
         public bool KirbySoundbankIdControlEnabled { get => FighterPackage?.FighterInfo?.OriginalKirbySoundbankId == null || KirbySoundbankId == null || KirbySoundbankId >= 324; }
 
         [DependsUpon(nameof(FighterPackage))]
-        public bool VictoryThemeControlsEnabled { get => FighterPackage?.FighterInfo?.SlotAttributes != null; }
-
-        [DependsUpon(nameof(FighterPackage))]
         public uint? VictoryThemeId { get => FighterPackage?.VictoryTheme?.SongId; set { ChangedThemeId(FighterPackage?.VictoryTheme, value); OnPropertyChanged(nameof(VictoryThemeId)); } }
 
         [DependsUpon(nameof(FighterPackage))]
+        public bool VictoryThemeIdEnabled { get => !_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds && FighterPackage?.FighterInfo?.SlotAttributes != null; }
+
+        [DependsUpon(nameof(FighterPackage))]
         public uint? CreditsThemeId { get => FighterPackage?.CreditsTheme?.SongId; set { ChangedThemeId(FighterPackage?.CreditsTheme, value); OnPropertyChanged(nameof(CreditsThemeId)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool CreditsThemeIdEnabled { get => !_settingsService.BuildSettings.MiscSettings.CreditsThemesUseFighterIds; }
 
         [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>().ToDictionary(x => FighterPackage != null ? FighterPacFile.GetPrefix(x.Value, FighterPackage?.FighterInfo) : x.Key, x => x.Value); }

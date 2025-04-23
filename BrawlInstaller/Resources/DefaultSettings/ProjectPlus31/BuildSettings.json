@@ -113,7 +113,7 @@
         "Height": 32
       },
       "Format": 0,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -228,7 +228,7 @@
         "Height": 64
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -273,7 +273,7 @@
         "Height": 56
       },
       "Format": 14,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -318,7 +318,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1625,7 +1625,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1679,7 +1679,7 @@
         "Height": 24
       },
       "Format": 9,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -1992,7 +1992,7 @@
         "Height": null
       },
       "Format": 0,
-      "FirstOnly": false,
+      "FirstOnly": true,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
@@ -2002,131 +2002,6 @@
       "Selectable": false,
       "AlwaysCreateArchive": true,
       "PaletteCount": 256
-    },
-    {
-      "CosmeticType": 8,
-      "Style": "P+",
-      "InstallLocation": {
-        "FilePath": "pf\\info2\\info.pac",
-        "NodePath": "Misc Data [30]",
-        "FileExtension": "pac"
-      },
-      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
-      "CreateHDTextureFolder": true,
-      "ModelPath": null,
-      "PatSettings": [
-        {
-          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfStockface_TopN__0/lambert87/Texture0",
-          "FramesPerImage": 1,
-          "IdType": null,
-          "Multiplier": null,
-          "Offset": null,
-          "AddTerminatorFrame": false,
-          "NormalizeTextureIds": false
-        }
-      ],
-      "Prefix": "InfStc",
-      "Multiplier": 50,
-      "Offset": 0,
-      "SuffixDigits": 4,
-      "GroupMultiplier": 1,
-      "FilePrefix": "",
-      "IdType": 4,
-      "Size": {
-        "Width": 32,
-        "Height": 32
-      },
-      "Format": 9,
-      "FirstOnly": false,
-      "SeparateFiles": false,
-      "CompressionType": 0,
-      "FileType": 1,
-      "AlwaysInheritStyle": false,
-      "Required": true,
-      "Enabled": true,
-      "Selectable": false,
-      "AlwaysCreateArchive": true,
-      "PaletteCount": 32
-    },
-    {
-      "CosmeticType": 8,
-      "Style": "P+",
-      "InstallLocation": {
-        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
-        "NodePath": "Misc Data [90]",
-        "FileExtension": "pac"
-      },
-      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
-      "CreateHDTextureFolder": true,
-      "ModelPath": null,
-      "PatSettings": [],
-      "Prefix": "InfStc",
-      "Multiplier": 50,
-      "Offset": 0,
-      "SuffixDigits": 4,
-      "GroupMultiplier": 1,
-      "FilePrefix": "",
-      "IdType": 4,
-      "Size": {
-        "Width": 32,
-        "Height": 32
-      },
-      "Format": 9,
-      "FirstOnly": false,
-      "SeparateFiles": false,
-      "CompressionType": 0,
-      "FileType": 1,
-      "AlwaysInheritStyle": false,
-      "Required": true,
-      "Enabled": true,
-      "Selectable": false,
-      "AlwaysCreateArchive": true,
-      "PaletteCount": 32
-    },
-    {
-      "CosmeticType": 8,
-      "Style": "P+",
-      "InstallLocation": {
-        "FilePath": "pf\\stage\\melee\\STGRESULT.pac",
-        "NodePath": "2/Misc Data [120]",
-        "FileExtension": "pac"
-      },
-      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
-      "CreateHDTextureFolder": true,
-      "ModelPath": null,
-      "PatSettings": [
-        {
-          "Path": "2/Misc Data [110]/AnmTexPat(NW4R)/InfStockface_TopN__0/lambert87/Texture0",
-          "FramesPerImage": 1,
-          "IdType": null,
-          "Multiplier": null,
-          "Offset": null,
-          "AddTerminatorFrame": false,
-          "NormalizeTextureIds": false
-        }
-      ],
-      "Prefix": "InfStc",
-      "Multiplier": 50,
-      "Offset": 0,
-      "SuffixDigits": 4,
-      "GroupMultiplier": 1,
-      "FilePrefix": "",
-      "IdType": 4,
-      "Size": {
-        "Width": 32,
-        "Height": 32
-      },
-      "Format": 9,
-      "FirstOnly": false,
-      "SeparateFiles": false,
-      "CompressionType": 0,
-      "FileType": 1,
-      "AlwaysInheritStyle": false,
-      "Required": true,
-      "Enabled": true,
-      "Selectable": false,
-      "AlwaysCreateArchive": true,
-      "PaletteCount": 32
     },
     {
       "CosmeticType": 22,
@@ -2211,7 +2086,11 @@
     "DefaultExConfigVersion": 2,
     "SyncTracklists": false,
     "UpdateCodeMenuNames": true,
-    "CompressBinFiles": false
+    "CompressBinFiles": true,
+    "RGBA8Thumbnails": false,
+    "BinUTF8Encoding": true,
+    "CreditsThemesUseFighterIds": true,
+    "VictoryThemesUseFighterIds": true
   },
   "FilePathSettings": {
     "FilePaths": [
@@ -2337,19 +2216,23 @@
       },
       {
         "FileType": 41,
+        "Path": "Source\\Project+\\Random.asm"
+      },
+      {
+        "FileType": 42,
         "Path": ""
       }
     ],
     "AsmPaths": [
       {
-        "Label": "TABLE_STAGES:",
+        "Label": "",
         "FileType": 16,
-        "Path": "Source\\Project+\\StageTable.asm"
+        "Path": "pf\\stage\\switch\\Switch00.rss"
       },
       {
-        "Label": "ClassicResultsTable:",
+        "Label": "",
         "FileType": 17,
-        "Path": "Source\\Project+\\ResultsMusic.asm"
+        "Path": ""
       },
       {
         "Label": "ENDINGTABLE:",
@@ -2392,7 +2275,35 @@
     "StageListPaths": [
       {
         "FileType": 24,
-        "Path": "Source\\Project+\\StageTable.asm"
+        "Path": "pf\\stage\\switch\\Switch00.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch01.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch02.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch03.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch04.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch05.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\Switch06.rss"
+      },
+      {
+        "FileType": 24,
+        "Path": "pf\\stage\\switch\\SwitchFF.rss"
       }
     ],
     "RandomStageNamesLocations": [
@@ -2409,6 +2320,7 @@
     ],
     "VictoryThemeTracklist": "Results",
     "CreditsThemeTracklist": "Credits",
+    "BinFileHDTexturePath": "BrawlInstaller\\Stage Selection Screen\\Menu Alts",
     "RosterFiles": [
       {
         "FilePath": "pf\\BrawlEx\\CSSRoster.dat",

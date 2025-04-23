@@ -64,6 +64,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand DeleteStageCommand => new RelayCommand(param => DeleteStage());
         public ICommand ImportParamsCommand => new RelayCommand(param => ImportParams());
         public ICommand UpdateListAltImageCommand => new RelayCommand(param => UpdateListAltImage());
+        public ICommand UpdateListAltHDImageCommand => new RelayCommand(param => UpdateListAltHDImage());
 
         [ImportingConstructor]
         public StageEditorViewModel(IStageService stageService, IDialogService dialogService, ITracklistService tracklistService, IFileService fileService, ISettingsService settingsService, IStageCosmeticViewModel stageCosmeticViewModel)
@@ -92,6 +93,9 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
         public StageInfo OldStage { get => _oldStage; set { _oldStage = value; OnPropertyChanged(nameof(OldStage)); } }
+
+        [DependsUpon(nameof(Stage))]
+        public BuildSettings BuildSettings { get => _settingsService.BuildSettings; }
 
         [DependsUpon(nameof(Stage))]
         public ObservableCollection<StageEntry> StageEntries { get => Stage?.StageEntries != null ? new ObservableCollection<StageEntry>(Stage.StageEntries) : new ObservableCollection<StageEntry>(); }
@@ -156,6 +160,12 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedStageEntry))]
         public string SelectedBinFilePath { get => SelectedStageEntry?.ListAlt?.BinFilePath; set { SelectedStageEntry.ListAlt.BinFilePath = value; UpdateListAlt(value); OnPropertyChanged(nameof(SelectedBinFilePath)); } }
+
+        [DependsUpon(nameof(BinIndexString))]
+        public int BinFileNameLength { get => 18 - ("st_" + (!string.IsNullOrEmpty(BinIndexString) ? BinIndexString : "00") + "_").Length; }
+
+        [DependsUpon(nameof(Stage))]
+        public int ListAltNameLength { get => _settingsService.BuildSettings.MiscSettings.BinUTF8Encoding ? 32 : 16; }
 
         // ViewModels
         public IStageCosmeticViewModel StageCosmeticViewModel { get; }
@@ -318,7 +328,12 @@ namespace BrawlInstaller.ViewModels
 
         private void RemoveStageEntry()
         {
-            Stage.StageEntries.Remove(SelectedStageEntry);
+            var selectedStage = SelectedStageEntry;
+            if (Stage.StageEntries.Count > 1)
+            {
+                SelectedStageEntry = Stage.StageEntries[Stage.StageEntries.IndexOf(SelectedStageEntry) - 1];
+            }
+            Stage.StageEntries.Remove(selectedStage);
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(StageEntries));
             OnPropertyChanged(nameof(SelectedStageEntry));
@@ -435,26 +450,22 @@ namespace BrawlInstaller.ViewModels
                 var image = _dialogService.OpenFileDialog("Select an image", "PNG file (.png)|*.png");
                 if (!string.IsNullOrEmpty(image))
                 {
-                    SelectedStageEntry.ListAlt.ImageData = GetBinThumbnailData(image);
+                    SelectedStageEntry.ListAlt.Image = _fileService.LoadImage(image);
                     OnPropertyChanged(nameof(SelectedStageEntry));
                 }
             }
         }
 
-        private byte[] GetBinThumbnailData(string imagePath)
+        private void UpdateListAltHDImage()
         {
-            var imageData = _fileService.LoadImage(imagePath);
-            var bitmap = imageData.ToBitmap();
-            var pixelData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            var pixelFormat = PixelFormats.Bgra32;
-            var bitmapSource = BitmapSource.Create(bitmap.Width, bitmap.Height, 1, 1, pixelFormat, null, pixelData.Scan0, pixelData.Stride * bitmap.Height, pixelData.Stride);
-            var resizedBitmap = new TransformedBitmap(bitmapSource, new ScaleTransform(160.0 / bitmap.Width, 120.0 / bitmap.Height));
-            var encoder = new JpegBitmapEncoder();
-            using (MemoryStream outStream = new MemoryStream())
+            if (SelectedStageEntry?.ListAlt != null)
             {
-                encoder.Frames.Add(BitmapFrame.Create(resizedBitmap));
-                encoder.Save(outStream);
-                return outStream.ToArray();
+                var image = _dialogService.OpenFileDialog("Select an image", "PNG file (.png)|*.png");
+                if (!string.IsNullOrEmpty(image))
+                {
+                    SelectedStageEntry.ListAlt.HDImage = _fileService.LoadImage(image);
+                    OnPropertyChanged(nameof(SelectedStageEntry));
+                }
             }
         }
 

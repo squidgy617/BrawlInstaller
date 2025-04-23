@@ -23,12 +23,15 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Content="Kirby Hat EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.InstallKirbyHats}" ToolTip="Check if build uses Kirby Hat system from P+Ex 1.5 and up"/>
-                            <CheckBox Content="Credits EX 1.5+" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}" ToolTip="Check if build uses Credits module system from P+Ex 1.5 and up"/>
+                            <CheckBox Content="Update Credits Module" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCreditsModule}" ToolTip="Check to update the credits module whenever a credits icon is added to a fighter. Only for use with P+Ex 1.5.1"/>
                             <CheckBox Content="Subspace EX" IsChecked="{Binding BuildSettings.MiscSettings.SubspaceEx}" ToolTip="Check if build uses Subspace EX"/>
                             <CheckBox Content="Install Fighters to SSE" IsChecked="{Binding BuildSettings.MiscSettings.InstallToSse}" ToolTip="Check to install fighters to SSE mode when they are installed"/>
                             <CheckBox Content="Sync tracklists" IsChecked="{Binding BuildSettings.MiscSettings.SyncTracklists}" ToolTip="Check to sync changes between standard and netplay tracklists"/>
                             <CheckBox Content="Update code menu names on save" IsChecked="{Binding BuildSettings.MiscSettings.UpdateCodeMenuNames}" ToolTip="Check to update name displayed in code menu whenever a fighter is saved"/>
-                            <CheckBox Content="Compress stage bin files" IsChecked="{Binding BuildSettings.MiscSettings.CompressBinFiles}" ToolTip="Check to compress stage builder bin files (used for list alts) when they are saved"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="Use Fighter IDs for Victory themes" IsChecked="{Binding BuildSettings.MiscSettings.VictoryThemesUseFighterIds}" ToolTip="Check to load and save victory themes by fighter ID instead of using Ex configs"/>
+                            <CheckBox Content="Use Fighter IDs for Credits themes" IsChecked="{Binding BuildSettings.MiscSettings.CreditsThemesUseFighterIds}" ToolTip="Check to load and save credits themes by fighter IDs instead of using ASM table"/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -44,6 +47,35 @@
                             <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1" ToolTip="BrawlEx version to use when generating new Ex config attributes."/>
                             <TextBox x:Name="exConfigVersionTextBox" Text="{Binding BuildSettings.MiscSettings.DefaultExConfigVersion}" Grid.Column="1" Grid.Row="1"/>
                         </Grid>
+                        <GroupBox Header="Bin Files">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Content="Compress stage bin files" IsChecked="{Binding BuildSettings.MiscSettings.CompressBinFiles}" ToolTip="Check to compress stage builder bin files (used for list alts) when they are saved"/>
+                                    <CheckBox Content="Use UTF8 encoding for bin names" IsChecked="{Binding BuildSettings.MiscSettings.BinUTF8Encoding}" ToolTip="Check to save stage names in bin files in UTF8 format, allowing for longer names. Only use in builds that support it."/>
+                                    <CheckBox Content="Use RGBA8 for bin thumbnails" IsChecked="{Binding BuildSettings.MiscSettings.RGBA8Thumbnails}" ToolTip="Check to always save thumbnails in stage list alt BIN files in RGBA8 format. Only use in builds that support it."/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Bin Thumbnail HD Texture Path:" ToolTip="HD texture path for bin files"/>
+                                    <userControls:FileBox x:Name="binHdTextureBox" TextBoxWidth="240" ExcludePath="{Binding AppSettings.HDTextures}" IsEnabled="{Binding BuildSettings.MiscSettings.RGBA8Thumbnails}">
+                                        <userControls:FileBox.Resources>
+                                            <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
+                                        </userControls:FileBox.Resources>
+                                        <userControls:FileBox.Text>
+                                            <Binding Path="BuildSettings.FilePathSettings.BinFileHDTexturePath">
+                                                <Binding.ValidationRules>
+                                                    <validationRules:BuildFilePathRule>
+                                                        <validationRules:BuildFilePathRule.Wrapper>
+                                                            <validationRules:BuildFilePathWrapper FilePath="{Binding Data.BuildSettings.FilePathSettings.BinFileHDTexturePath, Source={StaticResource proxy}}" BuildPath="{Binding Data.AppSettings.HDTextures, Source={StaticResource proxy}}"/>
+                                                        </validationRules:BuildFilePathRule.Wrapper>
+                                                    </validationRules:BuildFilePathRule>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </userControls:FileBox.Text>
+                                    </userControls:FileBox>
+                                    <Label Target="{Binding ElementName=binHdTextureBox}" Style="{StaticResource errorText}" Width="120"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
                         <Separator/>
                         <StackPanel Orientation="Horizontal">
                             <Grid x:Name="stageListsGrid">
@@ -60,7 +92,7 @@
                                 <Label x:Name="stageListsLabel" Content="Stage Lists:" HorizontalAlignment="Left" ToolTip="Stage lists in build"/>
                                 <ListBox x:Name="stageListsListBox" ItemsSource="{Binding StageListPaths}" SelectedValue="{Binding SelectedStageListPath}" DisplayMemberPath="Path" Grid.Column="1" Height="120" Width="200"/>
                                 <Label x:Name="stagePathLabel" Content="Path:" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ToolTip="Stage list file"/>
-                                <userControls:FileBox x:Name="stagePathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="ASM file (.asm)|*.asm">
+                                <userControls:FileBox x:Name="stagePathTextBox" TextBoxWidth="160" Grid.Column="1" Grid.Row="1" Visibility="{Binding SelectedStageListPath, Converter={StaticResource nullVisConverter}}" ExcludePath="{Binding AppSettings.BuildPath}" Filter="Stage list file (*.asm, *.rss)|*.asm;*.rss">
                                     <userControls:FileBox.Resources>
                                         <resources:BindingProxy x:Key="proxy" Data="{Binding}"/>
                                     </userControls:FileBox.Resources>

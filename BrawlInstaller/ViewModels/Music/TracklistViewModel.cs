@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -55,6 +56,7 @@ namespace BrawlInstaller.ViewModels
         IFileService _fileService;
         ITracklistService _tracklistService;
         IDialogService _dialogService;
+        IFighterService _fighterService;
 
         // Commands
         public ICommand LoadTracklistCommand => new RelayCommand(param => LoadTracklist());
@@ -67,14 +69,16 @@ namespace BrawlInstaller.ViewModels
         public ICommand MoveSongDownCommand => new RelayCommand(param => MoveSongDown());
         public ICommand AddSongCommand => new RelayCommand(param => AddSong());
         public ICommand RemoveSongCommand => new RelayCommand(param => RemoveSong());
+        public ICommand AlignFighterIdsCommand => new RelayCommand(param => AlignSongIdsWithFighterIds());
 
         [ImportingConstructor]
-        public TracklistViewModel(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, IDialogService dialogService)
+        public TracklistViewModel(ISettingsService settingsService, IFileService fileService, ITracklistService tracklistService, IDialogService dialogService, IFighterService fighterService)
         {
             _settingsService = settingsService;
             _fileService = fileService;
             _tracklistService = tracklistService;
             _dialogService = dialogService;
+            _fighterService = fighterService;
 
             TracklistOptions = new ObservableCollection<TracklistOption>();
             Volume = 100;
@@ -116,6 +120,10 @@ namespace BrawlInstaller.ViewModels
         public bool PlaybackVisible { get => _fileService.FileExists(SelectedSong?.SongFile); }
 
         public int Volume { get => _volume; set { _volume = value; AdjustVolume(value); OnPropertyChanged(nameof(Volume)); } }
+
+        [DependsUpon(nameof(LoadedTracklist))]
+        public bool AlignIdsEnabled { get => LoadedTracklist?.Name == _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist 
+                || LoadedTracklist?.Name == _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist; }
 
         // Methods
         private void RefreshTracklists()
@@ -329,9 +337,69 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Missing Song Paths", "One or more songs have a file, but a blank name/path. Add a path to these files to continue."));
                 result = false;
             }
+            if (LoadedTracklist.TracklistSongs.GroupBy(x => x.SongId).Any(x => x.Count() > 1))
+            {
+                messages.Add(new DialogMessage("Duplicate Song IDs", "One or more songs have the same song ID. Give all songs a unique song ID to continue."));
+                result = false;
+            }
             if (messages.Count > 0)
                 _dialogService.ShowMessages("Errors have occurred that prevent your tracklist from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
             return result;
+        }
+
+        private void AlignSongIdsWithFighterIds()
+        {
+            if (!_dialogService.ShowMessage("This will update all song IDs to align with fighter IDs like in vanilla Brawl. You will have a chance to review before saving. Continue?", "Align IDs", MessageBoxButton.YesNo))
+            {
+                return;
+            }
+            var fighterList = _fighterService.GetAllFighterInfo();
+            // Get credits theme IDs
+            var creditsTable = _fighterService.GetCreditsThemeIds();
+            foreach(var fighter in fighterList)
+            {
+                var slotId = fighter.Ids.SlotConfigId;
+                if (slotId != null && creditsTable.Count > slotId)
+                {
+                    var id = creditsTable[slotId.Value];
+                    var result = uint.TryParse(id.Replace("0x", string.Empty), NumberStyles.HexNumber, null, out uint foundId);
+                    if (result)
+                    {
+                        fighter.CreditsThemeId = foundId;
+                    }
+                }
+            }
+            // Iterate through songs and update IDs
+            var newSongs = new List<TracklistSong>();
+            foreach(var song in LoadedTracklist.TracklistSongs)
+            {
+                var fighters = new List<FighterInfo>();
+                if (LoadedTracklist.Name == _settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist)
+                {
+                    fighters = fighterList.Where(x => x.VictoryThemeId == song.SongId && x.Ids.FighterConfigId != null).ToList();
+                }
+                else if (LoadedTracklist.Name == _settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist)
+                {
+                    fighters = fighterList.Where(x => x.CreditsThemeId == song.SongId && x.Ids.FighterConfigId != null).ToList();
+                }
+                if (fighters.Any())
+                {
+                    foreach(var fighter in fighters)
+                    {
+                        var newSong = song.Copy();
+                        newSong.SongId = 0xFF00 + (uint)fighter.Ids.FighterConfigId;
+                        newSong.Name = fighter.DisplayName;
+                        newSongs.Add(newSong);
+                    }
+                }
+                else
+                {
+                    newSongs.Add(song.Copy());
+                }
+            }
+            LoadedTracklist.TracklistSongs = newSongs.OrderBy(x => x.SongId).ToList();
+            OnPropertyChanged(nameof(LoadedTracklist));
+            _dialogService.ShowMessage("Song IDs updated. To apply changes to your build, make sure to save the tracklist.", "Success");
         }
     }
 

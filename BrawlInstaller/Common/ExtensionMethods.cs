@@ -19,6 +19,20 @@ using Newtonsoft.Json;
 
 namespace BrawlInstaller.Common
 {
+    public static class ByteArrayExtensions
+    {
+        public static ResourceNode ToResourceNode(this byte[] bytes)
+        {
+            unsafe
+            {
+                fixed (byte* ptr = bytes)
+                {
+                    return NodeFactory.FromAddress(null, ptr, bytes.Length);
+                }
+            }
+        }
+    }
+
     public static class BitmapExtensions
     {
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
@@ -559,6 +573,128 @@ namespace BrawlInstaller.Common
                 Pad0x48 = node.Pad0x48
             };
             return trophy;
+        }
+    }
+
+    public static class ULongExtensions
+    {
+        public static ulong SwapBits(this ulong bitmask, int index1, int index2)
+        {
+            bool bit1 = (bitmask & (1UL << index1)) != 0;
+            bool bit2 = (bitmask & (1UL << index2)) != 0;
+
+            if (bit1 == bit2)
+            {
+                return bitmask;
+            }
+
+            // Toggle bits
+            bitmask ^= (1UL << index1);
+            bitmask ^= (1UL << index2);
+
+            return bitmask;
+        }
+
+        public static ulong ToggleBit(this ulong bitmask, int index)
+        {
+            bitmask ^= (1UL << index);
+            return bitmask;
+        }
+
+        public static ulong DisableBit(this ulong bitmask, int index)
+        {
+            bitmask &= ~(1UL << index);
+            return bitmask;
+        }
+
+        public static ulong EnableBit(this ulong bitmask, int index)
+        {
+            bitmask |= (1UL << index);
+            return bitmask;
+        }
+
+        public static List<int> GetToggledBits(this ulong bitmask)
+        {
+            List<int> toggledBits = new List<int>();
+
+            for (int i = 0; i < 64; i++)
+            {
+                if ((bitmask & (1UL << i)) != 0)
+                {
+                    toggledBits.Add(i + 1);
+                }
+            }
+
+            return toggledBits;
+        }
+
+        public static ulong RemoveBit(this ulong bitmask, int index)
+        {
+            ulong mask = ~((1UL << index) - 1);
+            ulong affectedBits = bitmask & mask;
+            ulong shiftedBits = (affectedBits >> 1) & mask;
+            return (bitmask & ~mask) | shiftedBits;
+        }
+    }
+
+    public static class ByteExtensions
+    {
+        public static byte SwapBits(this byte bitmask, int index1, int index2)
+        {
+            bool bit1 = (bitmask & (1 << index1)) != 0;
+            bool bit2 = (bitmask & (1 << index2)) != 0;
+
+            if (bit1 == bit2)
+            {
+                return bitmask;
+            }
+
+            // Toggle bits
+            bitmask ^= (byte)(1 << index1);
+            bitmask ^= (byte)(1 << index2);
+
+            return bitmask;
+        }
+
+        public static byte ToggleBit(this byte bitmask, int index)
+        {
+            bitmask ^= (byte)(1 << index);
+            return bitmask;
+        }
+
+        public static byte DisableBit(this byte bitmask, int index)
+        {
+            bitmask &= (byte)~(1 << index);
+            return bitmask;
+        }
+
+        public static byte EnableBit(this byte bitmask, int index)
+        {
+            bitmask |= (byte)(1 << index);
+            return bitmask;
+        }
+
+        public static List<int> GetToggledBits(this byte bitmask)
+        {
+            List<int> toggledBits = new List<int>();
+
+            for (int i = 0; i < 8; i++)
+            {
+                if ((bitmask & (byte)(1 << i)) != 0)
+                {
+                    toggledBits.Add(i + 1);
+                }
+            }
+
+            return toggledBits;
+        }
+
+        public static byte RemoveBit(this byte bitmask, int index)
+        {
+            ulong mask = (byte)~((1 << index) - 1);
+            ulong affectedBits = bitmask & mask;
+            ulong shiftedBits = (affectedBits >> 1) & mask;
+            return (byte)((bitmask & ~mask) | shiftedBits);
         }
     }
 }

@@ -131,6 +131,10 @@ namespace BrawlInstaller.Classes
         public bool SyncTracklists { get; set; } = false;
         public bool UpdateCodeMenuNames { get; set; } = true;
         public bool CompressBinFiles { get; set; } = false;
+        public bool RGBA8Thumbnails { get; set; } = false;
+        public bool BinUTF8Encoding { get; set; } = true;
+        public bool CreditsThemesUseFighterIds { get; set; } = false;
+        public bool VictoryThemesUseFighterIds { get; set; } = false;
     }
 
     public class FilePathSettings
@@ -168,6 +172,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
             new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm"),
             new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel"),
+            new FilePath(FileType.RSSFile, "Source\\Project+\\Random.asm"),
             new FilePath(FileType.CostumeSwapFile, "")
         };
 
@@ -262,7 +267,9 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string CodeMenuData { get => GetFilePath(FileType.CodeMenuData); }
         [JsonIgnore] public string CodeMenuNetplayData { get => GetFilePath(FileType.CodeMenuNetplayData); }
         [JsonIgnore] public string CodeMenuAddons { get => GetFilePath(FileType.CodeMenuAddons); }
+        [JsonIgnore] public string RSSFile { get => GetFilePath(FileType.RSSFile); }
         [JsonIgnore] public string CostumeSwapFile { get => GetFilePath(FileType.CostumeSwapFile); }
+        public string BinFileHDTexturePath { get; set; } = "BrawlInstaller\\Stage Selection Screen\\Menu Alts";
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<RosterFile> RosterFiles { get; set; } = new List<RosterFile> 

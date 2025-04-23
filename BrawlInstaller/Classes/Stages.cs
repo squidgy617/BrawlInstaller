@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using static BrawlLib.SSBB.ResourceNodes.ProjectPlus.STEXNode;
 using System.Windows.Interop;
 using BrawlInstaller.Common;
+using System.Windows.Media;
 
 namespace BrawlInstaller.Classes
 {
@@ -45,12 +46,15 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; }
         public string FilePath { get; set; }
         public List<StagePage> Pages { get; set; } = new List<StagePage>();
+        [JsonIgnore] public StageListType Type { get => FilePath?.EndsWith(".rss") == true ? StageListType.RSS : StageListType.ASM; }
     }
 
     public class StagePage
     {
         public int PageNumber { get; set; }
         public List<StageSlot> StageSlots { get; set; } = new List<StageSlot>();
+        public ulong RandomFlags { get; set; } = 0;
+        public ulong HazardFlags { get; set; } = 0;
 
         public List<AsmTableEntry> ConvertToAsmTable()
         {
@@ -110,6 +114,18 @@ namespace BrawlInstaller.Classes
                 list.Add(slot.ConvertToAsmTableEntry());
             }
             return list;
+        }
+
+        public static byte[] ToByteArray(this List<StageSlot> list)
+        {
+            var slotIds = new List<byte>();
+            foreach (var item in list)
+            {
+                slotIds.Add((byte)item.StageIds.StageId);
+                slotIds.Add((byte)item.StageIds.StageCosmeticId);
+            }
+            var bytes = slotIds.ToArray();
+            return bytes;
         }
     }
 
@@ -252,23 +268,26 @@ namespace BrawlInstaller.Classes
         public string BinFileName { get; set; } = "Unknown";
         public string BinFilePath { get; set; } = string.Empty;
         public string Name { get; set; } = "Unknown";
-        public BitmapImage Image
+        public BitmapImage Image { get; set; } = null;
+        public BitmapImage HDImage { get; set; } = null;
+        [JsonIgnore] public byte[] JpegData
         {
             get
             {
-                if (ImageData != null)
+                var bitmap = Image.ToBitmap();
+                var pixelData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+                var pixelFormat = PixelFormats.Bgra32;
+                var bitmapSource = BitmapSource.Create(bitmap.Width, bitmap.Height, 1, 1, pixelFormat, null, pixelData.Scan0, pixelData.Stride * bitmap.Height, pixelData.Stride);
+                var resizedBitmap = new TransformedBitmap(bitmapSource, new ScaleTransform(160.0 / bitmap.Width, 120.0 / bitmap.Height));
+                var encoder = new JpegBitmapEncoder();
+                using (MemoryStream outStream = new MemoryStream())
                 {
-                    using (MemoryStream stream = new MemoryStream(ImageData.ToArray()))
-                    {
-                        var bitmap = System.Drawing.Image.FromStream(stream, true, true);
-                        var bitmapImage = ((Bitmap)bitmap).ToBitmapImage(ImageFormat.Jpeg);
-                        return bitmapImage;
-                    }
+                    encoder.Frames.Add(BitmapFrame.Create(resizedBitmap));
+                    encoder.Save(outStream);
+                    return outStream.ToArray();
                 }
-                return null;
-            } 
+            }
         }
-        public byte[] ImageData { get; set; }
 
         public ListAlt Copy()
         {
@@ -276,14 +295,10 @@ namespace BrawlInstaller.Classes
             {
                 BinFileName = BinFileName,
                 BinFilePath = BinFilePath,
-                Name = Name
+                Name = Name,
+                Image = Image,
+                HDImage = HDImage
             };
-            if (ImageData != null)
-            {
-                var imageData = new byte[ImageData.Length];
-                ImageData.CopyTo(imageData, 0);
-                copy.ImageData = imageData;
-            }
             return copy;
         }
     }
