@@ -200,6 +200,7 @@ namespace BrawlInstaller.ViewModels
             var deleteOptions = OldStage?.StageEntries?.Select(x => x.Params.ModuleFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.Select(y => y.Params.ModuleFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>();
             deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>());
             deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.PacFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.Select(y => y.Params.PacFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>());
+            deleteOptions.AddRange(OldStage?.StageEntries?.SelectMany(x => x.Params.Substages).Select(x => x.PacFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.SelectMany(y => y.Params.Substages).Select(y => y.PacFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>());
             // Add netplay tracklists if syncing is on
             if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
             {
