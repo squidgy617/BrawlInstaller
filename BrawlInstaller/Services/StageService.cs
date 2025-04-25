@@ -619,8 +619,7 @@ namespace BrawlInstaller.Services
         /// <returns>List of stage names</returns>
         private List<string> GetStageRandomNames()
         {
-            // TODO: Load this from code in Random.asm
-            var presetCount = 7;
+            var presetCount = GetRSSPresetCount();
             var names = new List<string>();
             var buildPath = _settingsService.AppSettings.BuildPath;
             var randomStageLocation = _settingsService.BuildSettings.FilePathSettings.RandomStageNamesLocations.FirstOrDefault();
