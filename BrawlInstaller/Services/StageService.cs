@@ -710,45 +710,61 @@ namespace BrawlInstaller.Services
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
             var files = new List<ResourceNode>();
-            foreach (var entry in stage.StageEntries)
+            foreach (var stageParams in stage.StageEntries.Select(x => x.Params).Distinct())
             {
                 // Open pac files
-                var pacFile = _fileService.OpenFile(entry.Params.PacFile);
+                var pacFile = _fileService.OpenFile(stageParams.PacFile);
                 if (pacFile != null)
                 {
                     // Set install path so it will save to the correct location
-                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath, $"STG{entry.Params.PacName.ToUpper()}.pac");
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath, $"STG{stageParams.PacName.ToUpper()}.pac");
                     pacFile._origPath = installPath;
                     files.Add(pacFile);
-                    entry.Params.PacFile = installPath;
+                    stageParams.PacFile = installPath;
                 }
                 // Open soundbanks
-                var soundbank = _fileService.OpenFile(entry.Params.SoundBankFile);
+                var soundbank = _fileService.OpenFile(stageParams.SoundBankFile);
                 if (soundbank != null)
                 {
-                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, $"{entry.Params.SoundBank:X3}_{entry.Params.PacName}.sawnd");
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.SoundbankPath, $"{stageParams.SoundBank:X3}_{stageParams.PacName}.sawnd");
                     soundbank._origPath = installPath;
                     files.Add(soundbank);
-                    entry.Params.SoundBankFile = installPath;
+                    stageParams.SoundBankFile = installPath;
                 }
                 // Open modules
-                var module = _fileService.OpenFile(entry.Params.ModuleFile);
+                var module = _fileService.OpenFile(stageParams.ModuleFile);
                 if (module != null)
                 {
-                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules, $"{entry.Params.Module.ToLower()}");
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.Modules, $"{stageParams.Module.ToLower()}");
                     module._origPath = installPath;
                     files.Add(module);
-                    entry.Params.ModuleFile = installPath;
+                    stageParams.ModuleFile = installPath;
                 }
                 // Open tracklists
-                var tracklist = _fileService.OpenFile(entry.Params.TrackListFile);
+                var tracklist = _fileService.OpenFile(stageParams.TrackListFile);
                 if (tracklist != null)
                 {
-                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath, $"{entry.Params.TrackList}.tlst");
+                    var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.TracklistPath, $"{stageParams.TrackList}.tlst");
                     tracklist._origPath = installPath;
                     files.Add(tracklist);
-                    entry.Params.TrackListFile = installPath;
+                    stageParams.TrackListFile = installPath;
                 }
+                // Get substages for install
+                foreach (var substage in stageParams.Substages)
+                {
+                    var substageFile = _fileService.OpenFile(substage.PacFile);
+                    if (substageFile != null)
+                    {
+                        var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath,
+                            $"STG{stageParams.PacName.ToUpper()}_{substage.Name}.pac");
+                        substageFile._origPath = installPath;
+                        files.Add(substageFile);
+                        substage.PacFile = installPath;
+                    }
+                }
+            }
+            foreach(var entry in stage.StageEntries)
+            {
                 // Open bin files
                 if (entry.IsRAlt || entry.IsLAlt)
                 {
@@ -764,19 +780,6 @@ namespace BrawlInstaller.Services
                         binFile._origPath = installPath;
                         files.Add(binFile);
                         entry.ListAlt.BinFilePath = installPath;
-                    }
-                }
-                // Get substages for install
-                foreach (var substage in entry.Params.Substages)
-                {
-                    var substageFile = _fileService.OpenFile(substage.PacFile);
-                    if (substageFile != null)
-                    {
-                        var installPath = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.StagePacPath,
-                            $"STG{entry.Params.PacName.ToUpper()}_{substage.Name}.pac");
-                        substageFile._origPath = installPath;
-                        files.Add(substageFile);
-                        substage.PacFile = installPath;
                     }
                 }
             }
