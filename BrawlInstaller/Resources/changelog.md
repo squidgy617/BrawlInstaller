@@ -1,12 +1,1 @@
-- Stages can now be loaded from RSS files instead of ASM files.
-    - This can be done with both stage lists and the stage table.
-- Stages loaded from an RSS file can have hazards and random settings toggled on or off in compatible builds (such as Project+).
-- Stage list alt bin files now support UTF8 encoding, if the build supports it, allowing for list alt names to be double the length.
-    - This can be configured in settings.
-- Stage list alt bin files now support HD textures if the setting "Use RGBA8 for bin thumbnails" is enabled and your build supports RGBA8 thumbnails.
-- Stage bin files can now be compressed automatically on save by checking "Compress stage bin files" in settings.
-- New settings "Use Fighter IDs for Victory themes" and "Use Fighter IDs for Credits themes" have been added.
-    - When these settings are checked, fighter victory/credits themes will always be saved with an ID based on their fighter ID instead of you setting the ID yourself. This allows your themes to match up with how they are configured in vanilla Brawl.
-- When editing a credits or victory tracklist, a new actions button has been added with an option "Align song IDs with fighter IDs". Selecting this option will automatically update songs in the tracklist to align with fighter IDs. This can be useful to do before using the new settings.
-- Added new "Project+ 3.1.0" preset and renamed the original Project+ preset to "Project+ 3.0.2".
-- Updated all presets to use new settings appropriately.
+- Fixed an issue where RSS preset count would not load from RSS settings file when a stage was loaded into the editor.
