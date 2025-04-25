@@ -899,9 +899,6 @@ namespace BrawlInstaller.Services
                     // Delete param files
                     var path = Path.Combine(paramPath, $"{stageEntry.Params.Name}.param");
                     _fileService.DeleteFile(path);
-                    // Delete pac files
-                    path = stageEntry.Params.PacFile;
-                    _fileService.DeleteFile(path);
                     // Delete substage files
                     foreach (var substage in stageEntry.Params.Substages)
                     {
@@ -914,7 +911,7 @@ namespace BrawlInstaller.Services
                     // Delete bin file
                     path = stageEntry.ListAlt.BinFilePath;
                     _fileService.DeleteFile(path);
-                    // Add modules and tracklists to delete options
+                    // Delete selected options
                     foreach (var file in deleteOptions)
                     {
                         _fileService.DeleteFile(file);

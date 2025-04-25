@@ -197,13 +197,14 @@ namespace BrawlInstaller.ViewModels
             var stageToSave = stage.Copy();
 
             // Get delete options
-            var deleteOptions = OldStage?.StageEntries?.Select(x => x.Params.ModuleFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.ModuleFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>();
-            deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>());
+            var deleteOptions = OldStage?.StageEntries?.Select(x => x.Params.ModuleFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.Select(y => y.Params.ModuleFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>();
+            deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>());
+            deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.PacFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.Select(y => y.Params.PacFile).Contains(x)).Where(x => x != null).Distinct().ToList() ?? new List<string>());
             // Add netplay tracklists if syncing is on
             if (_settingsService.BuildSettings.MiscSettings.SyncTracklists && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
             {
                 var netplayListPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath);
-                deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Select(x => Path.Combine(netplayListPath, Path.GetFileName(x))).Distinct().Where(x => _fileService.FileExists(x)).ToList() ?? new List<string>());
+                deleteOptions.AddRange(OldStage?.StageEntries?.Select(x => x.Params.TrackListFile).Where(x => Stage == null || deleteStage || !Stage.StageEntries.Select(y => y.Params.TrackListFile).Contains(x)).Select(x => Path.Combine(netplayListPath, Path.GetFileName(x))).Distinct().Where(x => _fileService.FileExists(x)).ToList() ?? new List<string>());
             }
 
             // Prompt user for delete options
@@ -211,7 +212,7 @@ namespace BrawlInstaller.ViewModels
             var stageDeleteOptions = new List<string>();
             foreach (var item in deleteOptions)
             {
-                deleteItems.Add(new CheckListItem(item, Path.GetFileName(item), item));
+                deleteItems.Add(new CheckListItem(item, Path.GetFileName(item), item, deleteStage));
             }
             if (deleteItems.Count > 0)
             {
@@ -329,9 +330,13 @@ namespace BrawlInstaller.ViewModels
         private void RemoveStageEntry()
         {
             var selectedStage = SelectedStageEntry;
-            if (Stage.StageEntries.Count > 1)
+            if (Stage.StageEntries.Count > 1 && selectedStage != StageEntries.FirstOrDefault())
             {
                 SelectedStageEntry = Stage.StageEntries[Stage.StageEntries.IndexOf(SelectedStageEntry) - 1];
+            }
+            else if (selectedStage != StageEntries.LastOrDefault())
+            {
+                SelectedStageEntry = Stage.StageEntries[Stage.StageEntries.IndexOf(SelectedStageEntry) + 1];
             }
             Stage.StageEntries.Remove(selectedStage);
             OnPropertyChanged(nameof(Stage));
