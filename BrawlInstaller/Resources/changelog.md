@@ -1,1 +1,5 @@
-- Fixed an issue where RSS preset count would not load from RSS settings file when a stage was loaded into the editor.
+- When saving changes to a stage, you will now be prompted to select PAC files you wish to delete instead of them being deleted automatically.
+- When deleting a stage, you will now be prompted to select which files are to be deleted instead of them being deleted automatically.
+- When saving changes to a stage, you will now only be prompted to delete stage files if the file name has changed. Replacing a file with a new one without changing the name will not prompt you.
+- Fixed an issue where remove the first entry of a stage entry list could result in an error.
+- Fixed an issue where stages with multiple entries that shared params would not always save changes made to one of the entries.
