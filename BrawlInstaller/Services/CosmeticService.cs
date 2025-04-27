@@ -1952,6 +1952,16 @@ namespace BrawlInstaller.Services
                     var modelPath = Path.GetFullPath(model);
                     cosmetic.ModelPath = modelPath;
                 }
+                // If there's a higher priority definition (one that should always have a cosmetic), set to use that style
+                // This prevents unnecessary cosmetics from being loaded into the editor (e.g. a package only has CSS style,
+                // but the build only really wants Result style, we should fill Result style instead of CSS)
+                // Packages with both styles will still load both, which should ensure cosmetics that are needed are all loaded
+                var priorityDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style != cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle);
+                if (!_settingsService.BuildSettings.CosmeticSettings.Any(x => x.Style == cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle) 
+                    && priorityDefinition != null && !cosmetics.Any(x => x.CosmeticType == priorityDefinition.CosmeticType && x.Style == priorityDefinition.Style))
+                {
+                    cosmetic.Style = priorityDefinition.Style;
+                }
             }
             var cosmeticList = new CosmeticList
             {
