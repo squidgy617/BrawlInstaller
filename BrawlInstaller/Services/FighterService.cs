@@ -733,6 +733,11 @@ namespace BrawlInstaller.Services
                         {
                             UpdateEffectPac(file, (int)fighterPackage.FighterInfo.KirbyEffectPacId, (int)fighterPackage.FighterInfo.OriginalKirbyEffectPacId);
                         }
+                        if (fighterPackage.FighterInfo.EffectPacId != null && fighterPackage.FighterInfo.OriginalEffectPacId != null &&
+                            fighterPackage.FighterInfo.EffectPacId != fighterPackage.FighterInfo.OriginalEffectPacId)
+                        {
+                            UpdateEffectPac(file, (int)fighterPackage.FighterInfo.EffectPacId, (int)fighterPackage.FighterInfo.OriginalEffectPacId);
+                        }
                         // Update SFX IDs if they've changed
                         if (fighterPackage.FighterInfo.KirbySoundbankId != null && fighterPackage.FighterInfo.OriginalKirbySoundbankId != null &&
                             fighterPackage.FighterInfo.KirbySoundbankId != fighterPackage.FighterInfo.OriginalKirbySoundbankId)
