@@ -1,5 +1,1 @@
-- Added preset for P+Ex 1.5.5 in preparation for update
-- When loading a fighter package, styles with "Use other style if not available" setting and "Required" setting checked will be prioritized, while cosmetics without either of these settings will not be loaded unless necessary, preventing unnecessary cosmetics from being installed to your build.
-- Updated all presets to set "Use other style if not available" on stock icons.
-- When changing a fighter's Effect.pac, any Kirby .pac files associated with the fighter that contain the fighter's Effect.pac ID will also be updated.
-- Added a new "Import Textures" setting to cosmetic settings. Defaults to checked. When unchecked, installing cosmetics to the configured location will not install textures and will instead only update PAT0 animations.
+- Fixed an issue where in certain circumstances, cosmetics with the "Copy From" option set to a different style would sometimes not save to all locations.
