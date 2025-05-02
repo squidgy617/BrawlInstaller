@@ -857,46 +857,49 @@ namespace BrawlInstaller.Services
             }
             var parentNode = (BRRESNode)node;
             var textureId = GetUnusedCosmeticId(definition, id, node, cosmetic.CostumeIndex);
-            // If we have a texture node of the same properties, import that
-            if (cosmetic.Texture != null && ((cosmetic.Texture.SharesData && !(definition.FirstOnly || definition.SeparateFiles)) ||
-                (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
-                && cosmetic.Texture.Format == definition.Format
-                && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
+            if (definition.ImportTextures)
             {
-                cosmetic.Texture.Name = GetTextureName(definition, textureId, cosmetic);
-                var texture = ImportTexture(parentNode, cosmetic.Texture);
-                if (cosmetic.Palette != null)
+                // If we have a texture node of the same properties, import that
+                if (cosmetic.Texture != null && ((cosmetic.Texture.SharesData && !(definition.FirstOnly || definition.SeparateFiles)) ||
+                    (cosmetic.Texture.Width == definition.Size.Width && cosmetic.Texture.Height == definition.Size.Height
+                    && cosmetic.Texture.Format == definition.Format
+                    && !(cosmetic.Texture.SharesData && (definition.FirstOnly || definition.SeparateFiles)))))
                 {
-                    cosmetic.Palette.Name = texture.Name;
-                    var palette = ImportPalette(parentNode, cosmetic.Palette);
+                    cosmetic.Texture.Name = GetTextureName(definition, textureId, cosmetic);
+                    var texture = ImportTexture(parentNode, cosmetic.Texture);
+                    if (cosmetic.Palette != null)
+                    {
+                        cosmetic.Palette.Name = texture.Name;
+                        var palette = ImportPalette(parentNode, cosmetic.Palette);
+                    }
                 }
-            }
-            // TODO: Could the below two if statements be consolidated into one? Do we even need the image path?
-            // If we have an image from filesystem, import that
-            else if (cosmetic.ImagePath != "")
-            {
-                var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(null, null), definition.PaletteCount);
-                texture.Name = GetTextureName(definition, textureId, cosmetic);
-                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
-                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
-            }
-            // If we should only import one cosmetic and it's a color smashed texture, reimport
-            else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
-            {
-                var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null), definition.PaletteCount);
-                texture.Name = GetTextureName(definition, textureId, cosmetic);
-                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
-                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
-            }
-            // If we have neither an image nor a texture node matching the definition, but we do *have* a texture node, reimport it
-            // This suggests that we got a texture from the cosmetics that didn't match the definition,
-            // or we updated the HD texture but didn't change the texture itself, which we should reimport, or it will be lost
-            else if (cosmetic.Texture != null)
-            {
-                var texture = ImportTexture(parentNode, cosmetic.Image, definition.Format, definition.Size, definition.PaletteCount);
-                texture.Name = GetTextureName(definition, textureId, cosmetic);
-                cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
-                cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                // TODO: Could the below two if statements be consolidated into one? Do we even need the image path?
+                // If we have an image from filesystem, import that
+                else if (cosmetic.ImagePath != "")
+                {
+                    var texture = ImportTexture(parentNode, cosmetic.ImagePath, definition.Format, definition.Size ?? new ImageSize(null, null), definition.PaletteCount);
+                    texture.Name = GetTextureName(definition, textureId, cosmetic);
+                    cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                    cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                }
+                // If we should only import one cosmetic and it's a color smashed texture, reimport
+                else if (cosmetic.Texture?.SharesData == true && (definition.FirstOnly || definition.SeparateFiles))
+                {
+                    var texture = ReimportTexture(parentNode, cosmetic, definition.Format, definition.Size ?? new ImageSize(null, null), definition.PaletteCount);
+                    texture.Name = GetTextureName(definition, textureId, cosmetic);
+                    cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                    cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                }
+                // If we have neither an image nor a texture node matching the definition, but we do *have* a texture node, reimport it
+                // This suggests that we got a texture from the cosmetics that didn't match the definition,
+                // or we updated the HD texture but didn't change the texture itself, which we should reimport, or it will be lost
+                else if (cosmetic.Texture != null)
+                {
+                    var texture = ImportTexture(parentNode, cosmetic.Image, definition.Format, definition.Size, definition.PaletteCount);
+                    texture.Name = GetTextureName(definition, textureId, cosmetic);
+                    cosmetic.Texture = (TEX0Node)_fileService.CopyNode(texture);
+                    cosmetic.Palette = texture.GetPaletteNode() != null ? (PLT0Node)_fileService.CopyNode(texture.GetPaletteNode()) : null;
+                }
             }
             // Create pat entry
             if (definition.PatSettings.Count > 0)
@@ -907,7 +910,7 @@ namespace BrawlInstaller.Services
                     node = rootNode.FindChild(path);
                     if (node != null)
                     {
-                        CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, id, cosmetic, patSetting.Offset ?? definition.Offset), cosmetic?.Texture?.Name, cosmetic?.Palette?.Name);
+                        CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, id, cosmetic, patSetting.Offset ?? definition.Offset), cosmetic?.Texture?.Name ?? "PLACEHOLDER", cosmetic?.Palette?.Name ?? "PLACEHOLDER");
                     }
                 }
             }
@@ -1224,16 +1227,18 @@ namespace BrawlInstaller.Services
                     {
                         ImportCosmetic(definition, cosmetic, id, rootNode);
                     }
-                    if (!definition.FirstOnly && !definition.SeparateFiles)
+                    if (!definition.FirstOnly && !definition.SeparateFiles && definition.ImportTextures)
                     {
                         ColorSmashCosmetics(cosmetics.OrderBy(x => x.InternalIndex).ToList(), rootNode, definition, id);
                     }
                     // Save HD cosmetics if they exist
-                    if (_settingsService.AppSettings.ModifyHDTextures)
-                        foreach(var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
+                    if (_settingsService.AppSettings.ModifyHDTextures && definition.ImportTextures)
+                    {
+                        foreach (var cosmetic in cosmetics.OrderBy(x => x.InternalIndex))
                         {
                             ImportHDTexture(rootNode, definition, cosmetic, id, name);
                         }
+                    }
                 }
             }
             // If the definition does use separate files, generate new files for each cosmetic
@@ -1249,7 +1254,7 @@ namespace BrawlInstaller.Services
                     FileCache.Add(rootNode);
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, id);
-                    if (_settingsService.AppSettings.ModifyHDTextures)
+                    if (_settingsService.AppSettings.ModifyHDTextures && definition.ImportTextures)
                     {
                         ImportHDTexture(rootNode, definition, cosmetic, id, name);
                     }
@@ -1951,6 +1956,16 @@ namespace BrawlInstaller.Services
                 {
                     var modelPath = Path.GetFullPath(model);
                     cosmetic.ModelPath = modelPath;
+                }
+                // If there's a higher priority definition (one that should always have a cosmetic), set to use that style
+                // This prevents unnecessary cosmetics from being loaded into the editor (e.g. a package only has CSS style,
+                // but the build only really wants Result style, we should fill Result style instead of CSS)
+                // Packages with both styles will still load both, which should ensure cosmetics that are needed are all loaded
+                var priorityDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style != cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle);
+                if (!_settingsService.BuildSettings.CosmeticSettings.Any(x => x.Style == cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle) 
+                    && priorityDefinition != null && !cosmetics.Any(x => x.CosmeticType == priorityDefinition.CosmeticType && x.Style == priorityDefinition.Style))
+                {
+                    cosmetic.Style = priorityDefinition.Style;
                 }
             }
             var cosmeticList = new CosmeticList

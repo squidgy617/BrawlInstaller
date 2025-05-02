@@ -196,6 +196,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <CheckBox x:Name="firstOnlyCheckBox" Content="Use First Image Only" IsChecked="{Binding SelectedDefinition.FirstOnly}" ToolTip="When installing a group of cosmetics to this location (such as for costumes), only install the first image"/>
                 <CheckBox x:Name="separateFilesCheckBox" Content="Create Separate File for Each Image" IsChecked="{Binding SelectedDefinition.SeparateFiles}" Grid.Column="1" ToolTip="Store each cosmetic in it's own archive file. Often used for BPs."/>
@@ -205,6 +206,7 @@
                 <CheckBox x:Name="alwaysCreateArchiveCheckBox" Content="Create archive files" IsChecked="{Binding SelectedDefinition.AlwaysCreateArchive}" Grid.Row="1" Grid.Column="2" ToolTip="If checked, a new archive file for cosmetics will be created if none exists. Only applies if file path is a directory."/>
                 <CheckBox x:Name="selectableCheckBox" Content="Selectable" IsChecked="{Binding SelectedDefinition.Selectable}" Grid.Column="3" Grid.Row="2" ToolTip="If checked, user will be able to select from options via a dropdown when changing cosmetics. Only use for stage cosmetics. Mainly used for cosmetics that may be shared between stages." IsEnabled="{Binding SelectedDefinition.StageCosmetic}"/>
                 <CheckBox x:Name="enabledCheckBox" Content="Enabled" IsChecked="{Binding SelectedDefinition.Enabled}" Grid.Column="3" ToolTip="If unchecked, these cosmetics will not be loaded or saved when editing a fighter, stage, etc"/>
+                <CheckBox x:Name="importTexturesCheckBox" Content="Import Textures" IsChecked="{Binding SelectedDefinition.ImportTextures}" Grid.Row="3" ToolTip="If unchecked, textures will not be imported when cosmetics are installed to this location. Use if you ONLY want to update PAT0 animations."/>
             </Grid>
             <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="8" Grid.ColumnSpan="6" ToolTip="Settings for texture pattern animations (PAT0)">
                 <Grid>
