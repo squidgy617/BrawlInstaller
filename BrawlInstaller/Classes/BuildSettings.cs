@@ -91,6 +91,7 @@ namespace BrawlInstaller.Classes
         public bool Selectable { get; set; }
         public bool AlwaysCreateArchive { get; set; } = true;
         public int PaletteCount { get; set; } = 256;
+        public bool ImportTextures { get; set; } = true;
 
         public CosmeticDefinition Copy()
         {
