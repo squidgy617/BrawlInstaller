@@ -1962,7 +1962,7 @@ namespace BrawlInstaller.Services
                 // but the build only really wants Result style, we should fill Result style instead of CSS)
                 // Packages with both styles will still load both, which should ensure cosmetics that are needed are all loaded
                 var priorityDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style != cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle);
-                if (!_settingsService.BuildSettings.CosmeticSettings.Any(x => x.Style == cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle) 
+                if (!_settingsService.BuildSettings.CosmeticSettings.Any(x => x.Style == cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && (x.AlwaysInheritStyle || x.Required))
                     && priorityDefinition != null && !cosmetics.Any(x => x.CosmeticType == priorityDefinition.CosmeticType && x.Style == priorityDefinition.Style))
                 {
                     cosmetic.Style = priorityDefinition.Style;
