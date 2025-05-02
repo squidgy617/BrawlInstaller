@@ -143,7 +143,7 @@ namespace BrawlInstaller.Services
             var inheritedDefinitions = new List<CosmeticDefinition>();
 
             // Handle inherited styles
-            foreach (var definition in changedDefinitions)
+            foreach (var definition in changedDefinitions.ToList())
             {
                 // If a key is found matching the definition, and it has a value different from the key style, it should be replaced
                 if (fighterPackage.Cosmetics.InheritedStyles.Any(x => x.Key.Item1 == definition.CosmeticType && x.Value == definition.Style))
@@ -162,6 +162,8 @@ namespace BrawlInstaller.Services
                                 newDefinition.Style = definition.Style;
                                 // Add it to the change list so it will be detected
                                 inheritedDefinitions.Add(newDefinition);
+                                // Remove old definition
+                                changedDefinitions.Remove(inheritedDefinition);
                             }
                         }
                     }
