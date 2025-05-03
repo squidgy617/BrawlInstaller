@@ -1,1 +1,1 @@
-- Fixed an issue where in certain circumstances, cosmetics with the "Copy From" option set to a different style would sometimes not save to all locations.
+- Updated Project+ 3.1.0 settings preset to retrieve SSE Unlock Icons correctly.
