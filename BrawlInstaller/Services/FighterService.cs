@@ -3009,9 +3009,15 @@ namespace BrawlInstaller.Services
                 else
                 {
                     newTrophy = _trophyService.LoadTrophyData(trophy);
-                    oldTrophy = newTrophy.Copy();
+                    if (newTrophy != null)
+                    {
+                        oldTrophy = newTrophy.Copy();
+                    }
                 }
-                fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.AllStar, OldTrophy = oldTrophy });
+                if (newTrophy != null)
+                {
+                    fighterTrophies.Add(new FighterTrophy { Trophy = newTrophy, Type = TrophyType.AllStar, OldTrophy = oldTrophy });
+                }
             }
             return fighterTrophies;
         }
