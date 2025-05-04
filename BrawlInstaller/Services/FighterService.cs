@@ -744,6 +744,11 @@ namespace BrawlInstaller.Services
                         {
                             UpdateSFXIds(file, (int)fighterPackage.FighterInfo.KirbySoundbankId, (int)fighterPackage.FighterInfo.OriginalKirbySoundbankId, false);
                         }
+                        if (fighterPackage.FighterInfo.SoundbankId != null && fighterPackage.FighterInfo.OriginalSoundbankId != null &&
+                            fighterPackage.FighterInfo.SoundbankId != fighterPackage.FighterInfo.OriginalSoundbankId)
+                        {
+                            UpdateSFXIds(file, (int)fighterPackage.FighterInfo.SoundbankId, (int)fighterPackage.FighterInfo.OriginalSoundbankId, false);
+                        }
                     }
                 }
             }
