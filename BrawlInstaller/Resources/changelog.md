@@ -1,1 +1,1 @@
-- Updated Project+ 3.1.0 settings preset to retrieve SSE Unlock Icons correctly.
+- Fixed an error that would occur when loading fighters who had an All-Star trophy set that did not actually exist.
