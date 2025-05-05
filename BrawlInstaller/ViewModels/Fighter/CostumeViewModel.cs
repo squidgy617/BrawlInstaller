@@ -614,7 +614,7 @@ namespace BrawlInstaller.ViewModels
             while (Costumes.Select(x => x.CostumeId).Contains(costumeId))
             {
                 costumeId++;
-                if (costumeId >= 50)
+                if (costumeId >= 60)
                 {
                     costumeId = 0;
                 }
