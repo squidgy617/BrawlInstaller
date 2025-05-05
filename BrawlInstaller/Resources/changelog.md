@@ -1,1 +1,1 @@
-- Fixed an error that would occur when loading fighters who had an All-Star trophy set that did not actually exist.
+- Base fighter SFX IDs within Kirby hat files will now be updated when fighter SFX IDs are updated.
