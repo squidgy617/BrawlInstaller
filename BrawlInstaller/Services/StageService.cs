@@ -399,7 +399,7 @@ namespace BrawlInstaller.Services
                 // If TEX0 header is found, read as TEX0
                 else if (imageHeader.Compare(new byte[] { 0x54, 0x45, 0x58, 0x30 }))
                 {
-                    var tex = imageData.ToArray().ToResourceNode() as TEX0Node;
+                    var tex = _fileService.CreateNode(imageData.ToArray()) as TEX0Node;
                     listAlt.Image = tex.GetImage(0).ToBitmapImage();
                     // Get HD texture if available
                     if (!string.IsNullOrEmpty(tex?.DolphinTextureName) && _settingsService.AppSettings.ModifyHDTextures && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures))
@@ -835,7 +835,7 @@ namespace BrawlInstaller.Services
                 var currentImageData = decryptedData.Skip(imageStart).Take(imageEnd - imageStart).ToArray();
                 if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
                 {
-                    var currentTex = currentImageData.ToResourceNode() as TEX0Node;
+                    var currentTex = _fileService.CreateNode(currentImageData.ToArray()) as TEX0Node;
                     // Delete HD texture if it exists
                     if (currentTex != null && !string.IsNullOrEmpty(_settingsService.AppSettings.HDTextures) && _settingsService.AppSettings.ModifyHDTextures)
                     {

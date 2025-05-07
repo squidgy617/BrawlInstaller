@@ -50,6 +50,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.CopyNode(ResourceNode)"/>
         ResourceNode CopyNode(ResourceNode node);
 
+        /// <inheritdoc cref="FileService.CreateNode(byte[])"/>
+        ResourceNode CreateNode(byte[] bytes);
+
         /// <inheritdoc cref="FileService.CopyFile(string, string)"/>
         void CopyFile(string inFile, string outFile);
 
@@ -279,6 +282,23 @@ namespace BrawlInstaller.Services
             }
             File.Delete(path);
             newNode.Name = node.Name;
+            return newNode;
+        }
+
+        /// <summary>
+        /// Create a ResourceNode from raw bytes
+        /// </summary>
+        /// <param name="bytes">Bytes to create node from</param>
+        /// <returns>ResourceNode</returns>
+        public ResourceNode CreateNode(byte[] bytes)
+        {
+            var guid = Guid.NewGuid().ToString();
+            var path = $"{_settingsService.AppSettings.TempPath}\\{guid}";
+            CreateDirectory(Path.GetDirectoryName(path));
+            WriteAllBytes(path, bytes);
+            ResourceNode newNode = null;
+            newNode = NodeFactory.FromFile(null, path);
+            File.Delete(path);
             return newNode;
         }
 
