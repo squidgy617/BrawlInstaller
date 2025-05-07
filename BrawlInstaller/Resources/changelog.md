@@ -1,1 +1,1 @@
-- Base fighter SFX IDs within Kirby hat files will now be updated when fighter SFX IDs are updated.
+- Fixed an issue where saving or loading stage list alts would occasionally crash the program.
