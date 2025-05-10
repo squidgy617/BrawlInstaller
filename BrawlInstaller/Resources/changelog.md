@@ -1,1 +1,2 @@
-- Fixed an issue where saving or loading stage list alts would occasionally crash the program.
+- Fixed all settings presets having the incorrect frame count configured for replay icons.
+- Fixed an error that would occur when trying to load fighter trophies with a nonexistent trophy location.
