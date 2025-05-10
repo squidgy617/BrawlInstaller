@@ -305,7 +305,7 @@
       "PatSettings": [
         {
           "Path": "AnmTexPat(NW4R)/MenReplayPreview2_TopN__0/lambert78/Texture1",
-          "FramesPerImage": 1,
+          "FramesPerImage": 10,
           "IdType": null,
           "Multiplier": null,
           "Offset": null,
@@ -1687,7 +1687,7 @@
       "PatSettings": [
         {
           "Path": "Misc Data [40]/AnmTexPat(NW4R)/MenEvent0000_TopN__0/lambert78/Texture1",
-          "FramesPerImage": 1,
+          "FramesPerImage": 10,
           "IdType": null,
           "Multiplier": null,
           "Offset": null,
@@ -1696,7 +1696,7 @@
         },
         {
           "Path": "Misc Data [40]/AnmTexPat(NW4R)/MenEvent0040_TopN__0/lambert78/Texture1",
-          "FramesPerImage": 1,
+          "FramesPerImage": 10,
           "IdType": null,
           "Multiplier": null,
           "Offset": null,
