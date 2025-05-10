@@ -2976,16 +2976,19 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(trophyFile))
             {
                 var trophyFileText = _codeService.ReadCode(trophyFile);
-                // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
-                var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]");
-                // Get alias for fighter's slot ID
-                var slotAlias = aliases.FirstOrDefault(x => x.Name.Contains("Slot") && int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == slotId);
-                if (slotAlias != null)
+                if (!string.IsNullOrEmpty(trophyFileText))
                 {
-                    // Get classic trophy
-                    classicTrophyId = GetFighterTrophyFromHook(slotAlias, "806E29D0", trophyFileText, aliases);
-                    // Get All-Star trophy
-                    allStarTrophyId = GetFighterTrophyFromHook(slotAlias, "806E47D8", trophyFileText, aliases);
+                    // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
+                    var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]");
+                    // Get alias for fighter's slot ID
+                    var slotAlias = aliases.FirstOrDefault(x => x.Name.Contains("Slot") && int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == slotId);
+                    if (slotAlias != null)
+                    {
+                        // Get classic trophy
+                        classicTrophyId = GetFighterTrophyFromHook(slotAlias, "806E29D0", trophyFileText, aliases);
+                        // Get All-Star trophy
+                        allStarTrophyId = GetFighterTrophyFromHook(slotAlias, "806E47D8", trophyFileText, aliases);
+                    }
                 }
             }
             // Use trophy IDs to load trophies
