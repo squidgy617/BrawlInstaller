@@ -1,2 +1,2 @@
-- Fixed all settings presets having the incorrect frame count configured for replay icons.
-- Fixed an error that would occur when trying to load fighter trophies with a nonexistent trophy location.
+- Fixed an issue where deleting a fighter would not fully delete their victory or credits theme.
+- Fixed an issue where installing a new fighter with settings configured to use fighter ID for victory/credits themes would not always update the ID properly.
