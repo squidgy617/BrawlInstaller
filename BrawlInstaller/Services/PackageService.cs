@@ -172,6 +172,24 @@ namespace BrawlInstaller.Services
 
             changedDefinitions.AddRange(inheritedDefinitions);
 
+            // Update victory and credits theme IDs as needed
+            if (_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds && fighterPackage.VictoryTheme != null)
+            {
+                var fighterId = fighterPackage.FighterInfo.Ids.FighterConfigId;
+                if (fighterId != null)
+                {
+                    fighterPackage.VictoryTheme.SongId = (uint)(0xFF00 + fighterId.Value);
+                }
+            }
+            if (_settingsService.BuildSettings.MiscSettings.CreditsThemesUseFighterIds && fighterPackage.CreditsTheme != null)
+            {
+                var fighterId = fighterPackage.FighterInfo.Ids.FighterConfigId;
+                if (fighterId != null)
+                {
+                    fighterPackage.CreditsTheme.SongId = (uint)(0xFF00 + fighterId.Value);
+                }
+            }
+
             // Import cosmetics
             _cosmeticService.ImportCosmetics(changedDefinitions, fighterPackage.Cosmetics, fighterPackage.FighterInfo.Ids, fighterPackage.FighterInfo.DisplayName);
             // Import fighter files

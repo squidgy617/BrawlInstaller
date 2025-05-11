@@ -1188,18 +1188,21 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(kirbySoundbank);
                 fighterPackage.KirbySoundbank = path;
             }
-            // Import victory theme
-            fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme, fighterPackage.FighterInfo);
-            // Import credits theme
-            fighterPackage.FighterInfo.CreditsThemeId = ImportCreditsTheme(fighterPackage.CreditsTheme, creditsTheme, fighterPackage.FighterInfo);
-            // Import classic intro
-            fighterPackage.ClassicIntro = ImportClassicIntro(classicIntro, fighterPackage.FighterInfo.Ids.CosmeticId);
-            // Import ending files
-            fighterPackage.FighterInfo.EndingId = ImportEndingPacFiles(endingFiles, fighterPackage);
-            // Import ending movie
-            fighterPackage.EndingMovie = ImportEndingMovie(endingMovie, fighterPackage.FighterInfo.FighterFileName);
-            // TODO: Placeholder, handle target test files. Eventually we'll want to actually manage these properly in a package
-            UpdateTargetTestFiles(fighterPackage);
+            if (fighterPackage.PackageType != PackageType.Delete)
+            {
+                // Import victory theme
+                fighterPackage.FighterInfo.VictoryThemeId = ImportVictoryTheme(fighterPackage.VictoryTheme, victoryTheme, fighterPackage.FighterInfo);
+                // Import credits theme
+                fighterPackage.FighterInfo.CreditsThemeId = ImportCreditsTheme(fighterPackage.CreditsTheme, creditsTheme, fighterPackage.FighterInfo);
+                // Import classic intro
+                fighterPackage.ClassicIntro = ImportClassicIntro(classicIntro, fighterPackage.FighterInfo.Ids.CosmeticId);
+                // Import ending files
+                fighterPackage.FighterInfo.EndingId = ImportEndingPacFiles(endingFiles, fighterPackage);
+                // Import ending movie
+                fighterPackage.EndingMovie = ImportEndingMovie(endingMovie, fighterPackage.FighterInfo.FighterFileName);
+                // TODO: Placeholder, handle target test files. Eventually we'll want to actually manage these properly in a package
+                UpdateTargetTestFiles(fighterPackage);
+            }
             // Update and import ex configs
             var updateLinks = fighterPackage.PackageType == PackageType.New;
             var cssSlotConfig = fighterPackage.FighterInfo.CSSSlotAttributes?.ToCSSCNode(fighterPackage.FighterInfo, updateLinks);
@@ -2103,7 +2106,7 @@ namespace BrawlInstaller.Services
         /// <returns>ID of added song</returns>
         private uint ImportVictoryTheme(TracklistSong tracklistSong, ResourceNode brstmNode, FighterInfo fighterInfo)
         {
-            if (_settingsService.BuildSettings.MiscSettings.CreditsThemesUseFighterIds)
+            if (_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds)
             {
                 var fighterId = fighterInfo.Ids.FighterConfigId;
                 if (fighterId != null)
