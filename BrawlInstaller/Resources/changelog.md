@@ -1,2 +1,1 @@
-- Fixed an issue where deleting a fighter would not fully delete their victory or credits theme.
-- Fixed an issue where installing a new fighter with settings configured to use fighter ID for victory/credits themes would not always update the ID properly.
+- Fixed an issue where opening a stage with an invalid param name would result in an error.
