@@ -441,6 +441,10 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var paramPath = _settingsService.BuildSettings.FilePathSettings.StageParamPath;
             var path = $"{buildPath}\\{paramPath}";
+            if (name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                return stageParams;
+            }
             var file = _fileService.GetFiles(path, $"{name}.param").FirstOrDefault();
             if (file != null)
             {
