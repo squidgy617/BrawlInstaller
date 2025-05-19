@@ -54,7 +54,7 @@
                         <Binding.ValidationRules>
                             <validationRules:PacFileNameValidationRule>
                                 <validationRules:PacFileNameValidationRule.Wrapper>
-                                    <validationRules:PacFileNameWrapper Suffix="{Binding Data.SelectedPacFile.Suffix, Source={StaticResource proxy}}" AllowCostumeIds="True"/>
+                                    <validationRules:PacFileNameWrapper Suffix="{Binding Data.SelectedPacFile.Suffix, Source={StaticResource proxy}}" AllowCostumeIds="True" ExtraSuffixes="{Binding Data.ExtraSuffixes, Source={StaticResource proxy}}"/>
                                 </validationRules:PacFileNameValidationRule.Wrapper>
                             </validationRules:PacFileNameValidationRule>
                         </Binding.ValidationRules>

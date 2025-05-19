@@ -79,6 +79,8 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public FighterPackage FighterPackage { get => _fighterPackage; set { _fighterPackage = value; OnPropertyChanged(nameof(FighterPackage)); } }
 
+        public List<FighterInfo> FighterInfoList { get => _settingsService.FighterInfoList; }
+
         [DependsUpon(nameof(FighterPackage))]
         public FighterPacFile SelectedPacFile { get => _selectedPacFile; set { _selectedPacFile = value; OnPropertyChanged(nameof(SelectedPacFile)); } }
 
@@ -133,6 +135,9 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(SelectedPacFile))]
         public string SelectedSuffix { get => GetDisplaySuffix(SelectedPacFile?.Suffix); set { SelectedPacFile.Suffix = value; OnPropertyChanged(nameof(SelectedSuffix)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public List<string> ExtraSuffixes { get => FighterPackage?.FighterInfo?.IsKirby == true ? FighterInfoList.Where(x => !x.IsKirby).Select(x => x.PartialPacName).ToList() : new List<string>(); }
 
         // Methods
         private string GetDisplaySuffix(string suffix)

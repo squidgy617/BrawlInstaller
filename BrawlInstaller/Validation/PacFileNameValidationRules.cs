@@ -19,6 +19,9 @@ namespace BrawlInstaller.Validation
         public static readonly DependencyProperty AllowCostumeIdsProperty
             = DependencyProperty.Register(nameof(AllowCostumeIds), typeof(bool), typeof(PacFileNameWrapper), new FrameworkPropertyMetadata(false));
 
+        public static readonly DependencyProperty ExtraSuffixesProperty
+            = DependencyProperty.Register(nameof(ExtraSuffixes), typeof(List<string>), typeof(PacFileNameWrapper), new FrameworkPropertyMetadata(new List<string>()));
+
         public string Suffix
         {
             get { return (string)GetValue(SuffixProperty);}
@@ -29,6 +32,12 @@ namespace BrawlInstaller.Validation
         {
             get { return (bool)GetValue(AllowCostumeIdsProperty); }
             set { SetValue(AllowCostumeIdsProperty, value); }
+        }
+
+        public List<string> ExtraSuffixes
+        {
+            get { return (List<string>)GetValue(ExtraSuffixesProperty); }
+            set { SetValue(ExtraSuffixesProperty, value); }
         }
     }
     public class PacFileNameValidationRule : ValidationRule
@@ -47,6 +56,7 @@ namespace BrawlInstaller.Validation
 
             var suffixString = "^(";
             suffixString += string.Join("|", PacFiles.PacFileSuffixes.Select(x => $"({x.Replace("#", "\\d")})"));
+            suffixString += string.Join("|", Wrapper.ExtraSuffixes);
             suffixString += ")+";
             if (Wrapper.AllowCostumeIds)
             {

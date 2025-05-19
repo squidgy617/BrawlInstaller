@@ -111,8 +111,8 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FighterService.IsExModule(string)"/>
         bool IsExModule(string filePath);
 
-        /// <inheritdoc cref="FighterService.VerifyFighterPacName(string, string, string)"/>
-        bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension);
+        /// <inheritdoc cref="FighterService.VerifyFighterPacName(string, string, string, bool)"/>
+        bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension, bool isKirby = false);
 
         /// <inheritdoc cref="FighterService.GetFighterTrophies(int?)"/>
         List<FighterTrophy> GetFighterTrophies(int? slotId);
@@ -575,7 +575,12 @@ namespace BrawlInstaller.Services
         public FighterPacFile GetFighterPacName(FighterPacFile pacFile, FighterInfo fighterInfo, bool removeCostumeId=true)
         {
             // List of strings that can be found in pac file names
-            var modifierStrings = PacFiles.PacFileSuffixes;
+            var modifierStrings = PacFiles.PacFileSuffixes.ToList();
+            // If the fighter is Kirby, than any fighter name is a valid suffix too
+            if (fighterInfo.IsKirby)
+            {
+                modifierStrings.AddRange(_settingsService.FighterInfoList.Where(x => !x.IsKirby).Select(x => x.PartialPacName));
+            }
             var name = Path.GetFileNameWithoutExtension(pacFile.FilePath);
             var oldFighterName = name;
             // Remove numbers
@@ -599,14 +604,14 @@ namespace BrawlInstaller.Services
             cleanName = prefix.Replace(cleanName, string.Empty, 1);
             var newName = string.Empty;
             // Use Kirby pac name if it's a Kirby pac file and fighter is not Kirby
-            if (cleanName.ToLower().Contains("kirby") && fighterInfo.PartialPacName.ToLower() != "kirby")
+            if (cleanName.ToLower().Contains("kirby") && !fighterInfo.IsKirby)
             {
-                newName = oldFighterName.Replace(cleanName, fighterInfo.PartialKirbyPacName);
+                newName = cleanName.Length > 0 ? oldFighterName.Replace(cleanName, fighterInfo.PartialKirbyPacName) : fighterInfo.PartialKirbyPacName;
             }
             // Otherwise use regular pac name
             else
             {
-                newName = oldFighterName.Replace(cleanName, fighterInfo.PartialPacName);
+                newName = cleanName.Length > 0 ? oldFighterName.Replace(cleanName, fighterInfo.PartialPacName) : fighterInfo.PartialPacName;
             }
             // Replace first match of name with the new fighter name
             var newPacFile = GetFighterPacFile(pacFile.FilePath, oldFighterName, fighterInfo, removeCostumeId, newName);
@@ -915,8 +920,9 @@ namespace BrawlInstaller.Services
             var settings = _settingsService.BuildSettings;
             // Get pac files
             var path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.PacFolder}";
+            var isKirby = fighterInfo.IsKirby;
             var files = new List<FighterPacFile>();
-            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.PacFileName, fighterInfo.PacExtension)))
+            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.PacFileName, fighterInfo.PacExtension, isKirby)))
             {
                 var pacFile = GetFighterPacFile(file, fighterInfo.PacFileName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
@@ -926,7 +932,7 @@ namespace BrawlInstaller.Services
             }
             // Get item pac files
             path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.PacFolder}\\item";
-            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), $"Itm{fighterInfo.PartialPacName}", fighterInfo.PacExtension)))
+            foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), $"Itm{fighterInfo.PartialPacName}", fighterInfo.PacExtension, isKirby)))
             {
                 var pacFile = GetFighterPacFile(file, "Itm" + fighterInfo.PartialPacName, fighterInfo, removeCostumeId);
                 if (pacFile != null)
@@ -938,7 +944,7 @@ namespace BrawlInstaller.Services
             if (!removeCostumeId || forceKirbyHats)
             {
                 path = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.KirbyPacFolder}";
-                foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.KirbyPacFileName, fighterInfo.KirbyPacExtension)).ToList())
+                foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.KirbyPacFileName, fighterInfo.KirbyPacExtension, isKirby)).ToList())
                 {
                     var pacFile = GetFighterPacFile(file, fighterInfo.KirbyPacFileName, fighterInfo, removeCostumeId);
                     if (pacFile != null)
@@ -956,13 +962,21 @@ namespace BrawlInstaller.Services
         /// <param name="fileName">File to verify</param>
         /// <param name="pacFileName">File name to check against</param>
         /// <param name="pacExtension">Extension to check against</param>
+        /// <param name="isKirby">Whether or not the fighter is Kirby</param>
         /// <returns></returns>
-        public bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension)
+        public bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension, bool isKirby = false)
         {
             // Build regex string
             var regexString = $"^{pacFileName}";
             // Add suffix options
-            var suffixString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})")) + ")*";
+            var suffixString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})"));
+            // If fighter is Kirby, fighter names are valid
+            if (isKirby)
+            {
+                suffixString += string.Join("|", _settingsService.FighterInfoList.Where(x => !x.IsKirby).Select(x => $"({x.PartialPacName})"));
+            }
+            // Add regex ending
+            suffixString += ")*";
             regexString += suffixString;
             // Add costume IDs optionally
             regexString += "(\\d\\d)?";

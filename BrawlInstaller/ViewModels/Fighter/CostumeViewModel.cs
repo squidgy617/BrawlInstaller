@@ -224,6 +224,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public bool CostumeSwapEnabled { get => !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.CostumeSwapFile); }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public List<string> ExtraSuffixes { get => FighterPackage?.FighterInfo?.IsKirby == true ? FighterInfoList.Where(x => !x.IsKirby).Select(x => x.PartialPacName).ToList() : new List<string>(); }
+
         // Methods
         public void LoadCostumes(FighterLoadedMessage message)
         {
