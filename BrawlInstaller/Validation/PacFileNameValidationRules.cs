@@ -47,7 +47,7 @@ namespace BrawlInstaller.Validation
 
             var suffixString = "^(";
             suffixString += string.Join("|", PacFiles.PacFileSuffixes.Select(x => $"({x.Replace("#", "\\d")})"));
-            suffixString += "){1}";
+            suffixString += ")+";
             if (Wrapper.AllowCostumeIds)
             {
                 costumeSuffix += "(\\d\\d)?";

@@ -962,7 +962,7 @@ namespace BrawlInstaller.Services
             // Build regex string
             var regexString = $"^{pacFileName}";
             // Add suffix options
-            var suffixString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})")) + ")?";
+            var suffixString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})")) + ")*";
             regexString += suffixString;
             // Add costume IDs optionally
             regexString += "(\\d\\d)?";
