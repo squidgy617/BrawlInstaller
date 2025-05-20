@@ -1,1 +1,3 @@
-- Fixed an issue where opening a stage with an invalid param name would result in an error.
+- Fighter PAC files can now have multiple suffixes instead of just one (e.g. FitMarioEtcAltR)
+- Kirby will now load all FitKirby PAC files and fighter names will be treated as valid suffixes when adding files to Kirby
+- Fixed an issue where invalid strings were not removed from PAC file suffixes when adding a new PAC file to a fighter
