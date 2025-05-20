@@ -649,6 +649,7 @@ namespace BrawlInstaller.Services
                     if (nameLocation + newName.Length < fileName.Length)
                     {
                         pacFile.Suffix = fileName.Substring(nameLocation + name.Length);
+                        pacFile.Suffix = FilterFighterSuffix(pacFile.Suffix, fighterInfo.IsKirby);
                     }
                 }
                 return pacFile;
@@ -984,6 +985,34 @@ namespace BrawlInstaller.Services
             regexString += pacExtension;
             regexString += "$";
             return Regex.IsMatch(fileName, regexString, RegexOptions.IgnoreCase);
+        }
+
+        /// <summary>
+        /// Filter invalid strings from fighter pac file suffix
+        /// </summary>
+        /// <param name="suffix">Suffix to filter</param>
+        /// <param name="isKirby">Whether or not the fighter is Kirby</param>
+        /// <returns></returns>
+        public string FilterFighterSuffix(string suffix, bool isKirby = false)
+        {
+            // Build regex string
+            var regexString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})"));
+            // If fighter is Kirby, fighter names are valid
+            if (isKirby)
+            {
+                regexString += string.Join("|", _settingsService.FighterInfoList.Where(x => !x.IsKirby).Select(x => $"({x.PartialPacName})"));
+            }
+            // Add regex ending
+            regexString += ")*";
+            var result = Regex.Match(suffix, regexString, RegexOptions.IgnoreCase);
+            if (result.Success)
+            {
+                return result.Value;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
