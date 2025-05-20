@@ -967,15 +967,17 @@ namespace BrawlInstaller.Services
         /// <returns></returns>
         public bool VerifyFighterPacName(string fileName, string pacFileName, string pacExtension, bool isKirby = false)
         {
-            // Build regex string
-            var regexString = $"^{pacFileName}";
-            // Add suffix options
-            var suffixString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})"));
+            // Get list of suffixes
+            var suffixes = PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})").ToList();
             // If fighter is Kirby, fighter names are valid
             if (isKirby)
             {
-                suffixString += string.Join("|", _settingsService.FighterInfoList.Where(x => !x.IsKirby).Select(x => $"({x.PartialPacName})"));
+                suffixes.AddRange(_settingsService.FighterInfoList.Where(x => !x.IsKirby).Select(x => $"({x.PartialPacName})"));
             }
+            // Build regex string
+            var regexString = $"^{pacFileName}";
+            // Add suffix options
+            var suffixString = "(" + string.Join("|", suffixes.OrderByDescending(x => x.Length));
             // Add regex ending
             suffixString += ")*";
             regexString += suffixString;
@@ -995,15 +997,16 @@ namespace BrawlInstaller.Services
         /// <returns></returns>
         public string FilterFighterSuffix(string suffix, bool isKirby = false)
         {
-            // Build regex string
-            var regexString = "(" + string.Join("|", PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})"));
+            // Get list of suffixes
+            var suffixes = PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})").ToList();
             // If fighter is Kirby, fighter names are valid
             if (isKirby)
             {
-                regexString += string.Join("|", _settingsService.FighterInfoList.Where(x => !x.IsKirby).Select(x => $"({x.PartialPacName})"));
+                suffixes.AddRange(_settingsService.FighterInfoList.Where(x => !x.IsKirby).Select(x => $"({x.PartialPacName})"));
             }
-            // Add regex ending
-            regexString += ")*";
+            // Build regex string
+            var regexString = "(" + string.Join("|", suffixes.OrderByDescending(x => x.Length)) + ")*"; // We order by length so the longest matches are checked against first
+            // Filter
             var result = Regex.Match(suffix, regexString, RegexOptions.IgnoreCase);
             if (result.Success)
             {

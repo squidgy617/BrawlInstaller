@@ -54,9 +54,11 @@ namespace BrawlInstaller.Validation
             var suffix = (string)value;
             var costumeSuffix = string.Empty;
 
+            var suffixes = PacFiles.PacFileSuffixes.Select(x => $"({x.Replace("#", "\\d")})").ToList();
+            suffixes.AddRange(Wrapper.ExtraSuffixes);
+
             var suffixString = "^(";
-            suffixString += string.Join("|", PacFiles.PacFileSuffixes.Select(x => $"({x.Replace("#", "\\d")})"));
-            suffixString += string.Join("|", Wrapper.ExtraSuffixes);
+            suffixString += string.Join("|", suffixes.OrderByDescending(x => x.Length));
             suffixString += ")+";
             if (Wrapper.AllowCostumeIds)
             {
