@@ -273,6 +273,11 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Invalid Module Names", "One or more modules are named incorrectly. Ensure all modules are named in the format 'st_XX.rel', where 'XX' can be anything."));
                 result = false;
             }
+            if (Stage.AllParams.GroupBy(x => x.Name).Any(x => x.Count() > 1))
+            {
+                messages.Add(new DialogMessage("Duplicate Param Names", "One or more stage param entries have the same name. Please make all names unique to continue."));
+                result = false;
+            }
             if (messages.Count > 0)
                 _dialogService.ShowMessages("Errors have occurred that prevent your stage from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
             return result;
@@ -395,10 +400,11 @@ namespace BrawlInstaller.ViewModels
                 var stageParams = _dialogService.OpenMultiFileDialog("Select param files", "PARAM file (.param)|*.param");
                 foreach (var param in stageParams)
                 {
-                    var rootNode = _fileService.OpenFile(param);
+                    var rootNode = _fileService.OpenFile(param) as STEXNode;
                     if (rootNode != null)
                     {
-                        var newParams = ((STEXNode)rootNode).ToStageParams();
+                        var newParams = rootNode.ToStageParams();
+                        newParams.TrackListFile = Tracklists.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == rootNode.TrackList);
                         Stage.AllParams.Add(newParams);
                         Stage.StageEntries.Add(new StageEntry { Params = newParams });
                     }
