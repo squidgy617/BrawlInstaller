@@ -84,7 +84,9 @@
                                 </Grid.RowDefinitions>
                                 <Label x:Name="songListLabel" Content="Songs:" HorizontalAlignment="Left" ToolTip="List of songs in tracklist"/>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                    <ListBox x:Name="songListBox" ItemsSource="{Binding TracklistSongs}" SelectedItem="{Binding SelectedSong}" DisplayMemberPath="Name" Width="140" Height="200"/>
+                                    <ContentControl Style="{StaticResource resizeContainer}" MinWidth="140">
+                                        <ListBox x:Name="songListBox" ItemsSource="{Binding TracklistSongs}" SelectedItem="{Binding SelectedSong}" DisplayMemberPath="Name" Height="250" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+                                    </ContentControl>
                                     <StackPanel>
                                         <Button x:Name="moveSongUpButton" Content="↑" Style="{StaticResource sideButton}" Command="{Binding MoveSongUpCommand}" IsEnabled="{Binding SelectedSong, Converter={StaticResource nullBoolConverter}}"/>
                                         <Button x:Name="moveSongDownButton" Content="↓" Style="{StaticResource sideButton}" Command="{Binding MoveSongDownCommand}" IsEnabled="{Binding SelectedSong, Converter={StaticResource nullBoolConverter}}"/>
@@ -111,11 +113,11 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Label x:Name="songNameLabel" Content="Name:" ToolTip="Name to use for track internally"/>
-                                    <TextBox x:Name="songNameTextBox" Text="{Binding SelectedSong.Name}" Width="100" Grid.Column="1"/>
+                                    <TextBox x:Name="songNameTextBox" Text="{Binding SelectedSong.Name}" Width="200" Grid.Column="1"/>
                                     <Label x:Name="songPathLabel" Grid.Row="1" Content="Path:" ToolTip="Relative path in build where track will be saved"/>
-                                    <TextBox x:Name="songPathTextBox" Grid.Row="1" Text="{Binding SelectedSong.SongPath}" Width="100" Grid.Column="1"/>
+                                    <TextBox x:Name="songPathTextBox" Grid.Row="1" Text="{Binding SelectedSong.SongPath}" Width="200" Grid.Column="1"/>
                                     <Label x:Name="songFileLabel" Grid.Row="2" Content="File:" ToolTip="BRSTM file to use for the track"/>
-                                    <userControls:FileBox x:Name="songFileBox" Grid.Row="2" Text="{Binding SelectedSong.SongFile}" TextBoxWidth="100" Grid.Column="1" Filter="BRSTM file (.brstm)|*.brstm"/>
+                                    <userControls:FileBox x:Name="songFileBox" Grid.Row="2" Text="{Binding SelectedSong.SongFile}" TextBoxWidth="200" Grid.Column="1" Grid.ColumnSpan="2" Filter="BRSTM file (.brstm)|*.brstm"/>
                                     <Label x:Name="songIdLabel" Grid.Row="3" Content="ID:" ToolTip="Song ID to use for track"/>
                                     <TextBox x:Name="songIdTextBox" Grid.Row="3" Text="{Binding SelectedSong.SongId, Converter={StaticResource hexUIntConverter}}" Width="100" Grid.Column="1"/>
                                     <Label x:Name="songDelayLabel" Grid.Row="4" Content="Delay:" ToolTip="Delay before track starts playing in a match"/>
