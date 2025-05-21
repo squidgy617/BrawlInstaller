@@ -19,7 +19,10 @@
                 <ItemsControl x:Name="listbox" ItemsSource="{Binding CheckListItems}">
                     <ItemsControl.ItemTemplate>
                         <HierarchicalDataTemplate>
-                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" ToolTip="{Binding Description}">
+                            <CheckBox IsChecked="{Binding IsChecked}" ToolTip="{Binding Description}">
+                                <CheckBox.Content>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </CheckBox.Content>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseEnter">
                                         <i:InvokeCommandAction CommandParameter="{Binding}" Command="{Binding DataContext.ChangeHoveredItemCommand, ElementName=checkListView}"/>
