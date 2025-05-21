@@ -1,3 +1,3 @@
-- Fighter PAC files can now have multiple suffixes instead of just one (e.g. FitMarioEtcAltR)
-- Kirby will now load all FitKirby PAC files and fighter names will be treated as valid suffixes when adding files to Kirby
-- Fixed an issue where invalid strings were not removed from PAC file suffixes when adding a new PAC file to a fighter
+- Added a validation error if you try to save a stage with multiple param entries of the same name.
+- Fixed an issue where the first underscore in a checklist item would not be displayed when a checklist was visible.
+- Tracklists can now be searched in both the stage editor and music tab. Click the listbox/dropdown and simply start typing a tracklist name to jump to the closest match.
