@@ -132,11 +132,11 @@ namespace BrawlInstaller.ViewModels
             TracklistOptions = new ObservableCollection<TracklistOption>();
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.TracklistPath))
             {
-                TracklistOptions.Add(new TracklistOption("Standard", TracklistType.Standard, new ObservableCollection<string>(_tracklistService.GetTracklists())));
+                TracklistOptions.Add(new TracklistOption("Standard", TracklistType.Standard, new ObservableCollection<string>(_tracklistService.GetTracklists().Select(x => Path.GetFileNameWithoutExtension(x)))));
             }
             if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.NetplaylistPath))
             {
-                TracklistOptions.Add(new TracklistOption("Netplay", TracklistType.Netplay, new ObservableCollection<string>(_tracklistService.GetTracklists(TracklistType.Netplay))));
+                TracklistOptions.Add(new TracklistOption("Netplay", TracklistType.Netplay, new ObservableCollection<string>(_tracklistService.GetTracklists(TracklistType.Netplay).Select(x => Path.GetFileNameWithoutExtension(x)))));
             }
             if (selectedTracklistIndex != -1 && TracklistOptions.Count > selectedTracklistIndex)
             {
@@ -178,7 +178,7 @@ namespace BrawlInstaller.ViewModels
             {
                 using (new CursorWait())
                 {
-                    var tracklist = _tracklistService.LoadTracklist(Path.GetFileNameWithoutExtension(SelectedTracklist), SelectedTracklistOption.TracklistType);
+                    var tracklist = _tracklistService.LoadTracklist(SelectedTracklist, SelectedTracklistOption.TracklistType);
                     LoadedTracklist = tracklist.Copy();
                     OnPropertyChanged(nameof(LoadedTracklist));
                 }

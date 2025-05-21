@@ -39,7 +39,7 @@ namespace BrawlInstaller.ViewModels
         private StageInfo _oldStage;
         private StageEntry _selectedStageEntry;
         private Substage _selectedSubstage;
-        private List<string> _tracklists;
+        private List<Tracklist> _tracklists;
         private string _originalRandomName;
 
         // Services
@@ -156,7 +156,7 @@ namespace BrawlInstaller.ViewModels
                 : (LListAlt ? StageEntries.Where(x => x.IsLAlt).ToList().IndexOf(SelectedStageEntry).ToString("D2") : "");
         }
 
-        public List<string> Tracklists { get => _tracklists; set { _tracklists = value; OnPropertyChanged(nameof(Tracklists)); } }
+        public List<Tracklist> Tracklists { get => _tracklists; set { _tracklists = value; OnPropertyChanged(nameof(Tracklists)); } }
 
         [DependsUpon(nameof(SelectedStageEntry))]
         public string SelectedBinFilePath { get => SelectedStageEntry?.ListAlt?.BinFilePath; set { SelectedStageEntry.ListAlt.BinFilePath = value; UpdateListAlt(value); OnPropertyChanged(nameof(SelectedBinFilePath)); } }
@@ -181,7 +181,7 @@ namespace BrawlInstaller.ViewModels
             Stage = message.Value.Stage;
             OldStage = message.Value.NewStage ? null : message.Value.Stage.Copy();
             _originalRandomName = Stage.RandomName;
-            Tracklists = _tracklistService.GetTracklists();
+            Tracklists = _tracklistService.GetTracklists().Select(x => new Tracklist { File = x, Name = Path.GetFileNameWithoutExtension(x) }).ToList();
             OnPropertyChanged(nameof(Stage));
             OnPropertyChanged(nameof(Tracklists));
         }
@@ -404,7 +404,7 @@ namespace BrawlInstaller.ViewModels
                     if (rootNode != null)
                     {
                         var newParams = rootNode.ToStageParams();
-                        newParams.TrackListFile = Tracklists.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == rootNode.TrackList);
+                        newParams.TrackListFile = Tracklists.FirstOrDefault(x => x.Name == rootNode.TrackList).File;
                         Stage.AllParams.Add(newParams);
                         Stage.StageEntries.Add(new StageEntry { Params = newParams });
                     }

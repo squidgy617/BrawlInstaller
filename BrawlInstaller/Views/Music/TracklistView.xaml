@@ -38,7 +38,7 @@
                                 <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Path=., Converter={StaticResource filePathNoExtensionConverter}}" ToolTip="{Binding}">
+                                            <TextBlock Text="{Binding Path=.}">
                                                 <TextBlock.InputBindings>
                                                     <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTracklistCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
                                                 </TextBlock.InputBindings>
