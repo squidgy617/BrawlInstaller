@@ -395,7 +395,7 @@ namespace BrawlInstaller.Services
                         terminator.Palette = terminator.Texture;
                     }
                 }
-                pat0Node.FrameCount = (int)destinationNode.Children.Max(x => ((PAT0TextureEntryNode)x).FrameIndex) + patSetting.FramesPerImage;
+                pat0Node.FrameCount = (int)pat0Node.Children.SelectMany(x => x.Children).SelectMany(x => x.Children).Max(x => ((PAT0TextureEntryNode)x).FrameIndex + patSetting.FramesPerImage);
                 return node;
             }
             return null;
