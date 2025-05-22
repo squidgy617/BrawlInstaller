@@ -1,3 +1,4 @@
-- Added a validation error if you try to save a stage with multiple param entries of the same name.
-- Fixed an issue where the first underscore in a checklist item would not be displayed when a checklist was visible.
-- Tracklists can now be searched in both the stage editor and music tab. Click the listbox/dropdown and simply start typing a tracklist name to jump to the closest match.
+- Increased size of textboxes in tracklist editor.
+- Made song list resizable in tracklist editor.
+- Adding an entry to a PAT0 animation will now set the framecount based on all PAT0Texture nodes instead of only the one that was modified.
+- Updated all settings presets to correctly set stage stats ID length to 2.
