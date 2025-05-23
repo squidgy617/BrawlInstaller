@@ -1,4 +1,3 @@
-- Increased size of textboxes in tracklist editor.
-- Made song list resizable in tracklist editor.
-- Adding an entry to a PAT0 animation will now set the framecount based on all PAT0Texture nodes instead of only the one that was modified.
-- Updated all settings presets to correctly set stage stats ID length to 2.
+- Image data inside of stage list .bin files will not be changed if user did not make any changes to the image.
+- When adding a new stage entry to a slot, a corresponding param will be added as well and selected automatically.
+- Stage IDs are now visible in the stage editor next to the save button. They are readonly for now.
