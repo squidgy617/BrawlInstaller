@@ -463,6 +463,7 @@ namespace BrawlInstaller.ViewModels
                 if (!string.IsNullOrEmpty(image))
                 {
                     SelectedStageEntry.ListAlt.Image = _fileService.LoadImage(image);
+                    SelectedStageEntry.ListAlt.ImageChanged = true;
                     OnPropertyChanged(nameof(SelectedStageEntry));
                 }
             }
@@ -476,6 +477,7 @@ namespace BrawlInstaller.ViewModels
                 if (!string.IsNullOrEmpty(image))
                 {
                     SelectedStageEntry.ListAlt.HDImage = _fileService.LoadImage(image);
+                    SelectedStageEntry.ListAlt.ImageChanged = true;
                     OnPropertyChanged(nameof(SelectedStageEntry));
                 }
             }

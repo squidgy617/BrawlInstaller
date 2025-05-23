@@ -837,7 +837,7 @@ namespace BrawlInstaller.Services
                 var imageEnd = BitConverter.ToInt32(decryptedData.Skip(0x58).Take(4).Reverse().ToArray(), 0) + 0x34; // position 0x58 + 0x34 is end of image data
                 // Get current image
                 var currentImageData = decryptedData.Skip(imageStart).Take(imageEnd - imageStart).ToArray();
-                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
+                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails && listAlt.ImageChanged)
                 {
                     var currentTex = _fileService.CreateNode(currentImageData.ToArray()) as TEX0Node;
                     // Delete HD texture if it exists
@@ -850,13 +850,17 @@ namespace BrawlInstaller.Services
                 var miscData = decryptedData.AsSpan(nameEnd, imageStart - nameEnd);
                 // Get image data from our list alt
                 var imageData = new byte[0];
-                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails)
+                if (_settingsService.BuildSettings.MiscSettings.RGBA8Thumbnails && listAlt.ImageChanged)
                 {
                     imageData = _cosmeticService.ImportBinThumbnail(listAlt.Image, listAlt.HDImage, WiiPixelFormat.RGBA8, new ImageSize(160, 120));
                 }
-                else
+                else if (listAlt.ImageChanged)
                 {
                     imageData = listAlt.JpegData;
+                }
+                else
+                {
+                    imageData = currentImageData;
                 }
                 // Combine data leading up to image
                 var partialData = fileStart.ToArray().Append(name.ToArray()).Append(miscData.ToArray());
@@ -885,6 +889,8 @@ namespace BrawlInstaller.Services
                     var encryptedData = _fileService.EncryptBinData(finalData);
                     _fileService.ReplaceNodeRaw(node, encryptedData);
                 }
+                // Mark images as unchanged
+                listAlt.ImageChanged = false;
             }
         }
 
