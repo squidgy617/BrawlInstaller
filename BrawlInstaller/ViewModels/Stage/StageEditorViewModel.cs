@@ -318,14 +318,7 @@ namespace BrawlInstaller.ViewModels
         private void AddStageEntry()
         {
             var newEntry = new StageEntry();
-            if (Stage.AllParams.Count > 0)
-            {
-                newEntry.Params = Stage.AllParams.FirstOrDefault();
-            }
-            else
-            {
-                Stage.AllParams.Add(newEntry.Params);
-            }
+            Stage.AllParams.Add(newEntry.Params);
             Stage.StageEntries.Add(newEntry);
             SelectedStageEntry = newEntry;
             OnPropertyChanged(nameof(Stage));
