@@ -354,7 +354,19 @@
                 </Grid>
             </Grid>
         </ScrollViewer>
-        <Button x:Name="deleteStageButton" Content="Delete" HorizontalAlignment="Left" Grid.Row="1" Command="{Binding DeleteStageCommand}"/>
-        <Button x:Name="saveStageButton" Content="Save" HorizontalAlignment="Right" Grid.Row="1" Command="{Binding SaveStageCommand}"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="deleteStageButton" Content="Delete" HorizontalAlignment="Left" Command="{Binding DeleteStageCommand}"/>
+            <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                <Label x:Name="stageIdLabel" Content="Stage ID:" ToolTip="ASL ID used by stage"/>
+                <TextBox x:Name="stageIdTextBox" Text="{Binding Stage.Slot.StageIds.StageId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="True"/>
+                <Label x:Name="cosmeticIdLabel" Content="Cosmetic ID:" ToolTip="Cosmetic ID used by stage"/>
+                <TextBox x:Name="cosmeticIdTextBox" Text="{Binding Stage.Slot.StageIds.StageCosmeticId, Converter={StaticResource hexConverter}}" Width="30" IsReadOnly="True"/>
+                <Button x:Name="saveStageButton" Content="Save" HorizontalAlignment="Right" Command="{Binding SaveStageCommand}"/>
+            </WrapPanel>
+        </Grid>
     </Grid>
 </UserControl>
