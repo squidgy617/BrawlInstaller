@@ -397,7 +397,7 @@ namespace BrawlInstaller.ViewModels
                     if (rootNode != null)
                     {
                         var newParams = rootNode.ToStageParams();
-                        newParams.TrackListFile = Tracklists.FirstOrDefault(x => x.Name == rootNode.TrackList).File;
+                        newParams.TrackListFile = Tracklists.FirstOrDefault(x => x.Name == rootNode.TrackList)?.File;
                         Stage.AllParams.Add(newParams);
                         Stage.StageEntries.Add(new StageEntry { Params = newParams });
                     }
