@@ -136,6 +136,8 @@ namespace BrawlInstaller.Classes
         public bool BinUTF8Encoding { get; set; } = true;
         public bool CreditsThemesUseFighterIds { get; set; } = false;
         public bool VictoryThemesUseFighterIds { get; set; } = false;
+        public bool GctDebugMode { get; set; } = false;
+        public int GctTimeoutSeconds { get; set; } = 5;
     }
 
     public class FilePathSettings

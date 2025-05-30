@@ -851,7 +851,7 @@ namespace BrawlInstaller.Services
                         _fileService.BackupBuildFile(gctFile);
                     }
                 }
-                var args = "-g -l -q";
+                var args = "-g -l" + (!_settingsService.BuildSettings.MiscSettings.GctDebugMode ? " -q" : "");
                 var argList = _settingsService.BuildSettings.FilePathSettings.CodeFilePaths.Where(x => _fileService.FileExists(_settingsService.GetBuildFilePath(x.Path))).Select(s => $" \"{Path.Combine(buildPath, s.Path)}\"");
                 foreach(var arg in argList)
                 {
@@ -860,10 +860,17 @@ namespace BrawlInstaller.Services
                 Process gctRm = Process.Start(new ProcessStartInfo
                 {
                     FileName = Path.Combine(buildPath, _settingsService.BuildSettings.FilePathSettings.GctRealMateExe),
-                    WindowStyle = ProcessWindowStyle.Hidden,
+                    WindowStyle = !_settingsService.BuildSettings.MiscSettings.GctDebugMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                     Arguments = args
                 });
-                gctRm?.WaitForExit(5000);
+                if (!_settingsService.BuildSettings.MiscSettings.GctDebugMode)
+                {
+                    gctRm?.WaitForExit(_settingsService.BuildSettings.MiscSettings.GctTimeoutSeconds * 1000);
+                }
+                else
+                {
+                    gctRm?.WaitForExit();
+                }
                 if (gctRm?.HasExited == false)
                 {
                     var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.FilePathSettings.GctRealMateExe} encountered an error. Verify you are using the latest GCTRealMate and that your code files are valid and don't contain errors.");

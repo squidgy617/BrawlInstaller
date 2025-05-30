@@ -32,9 +32,12 @@
                         <StackPanel Orientation="Horizontal">
                             <CheckBox Content="Use Fighter IDs for Victory themes" IsChecked="{Binding BuildSettings.MiscSettings.VictoryThemesUseFighterIds}" ToolTip="Check to load and save victory themes by fighter ID instead of using Ex configs"/>
                             <CheckBox Content="Use Fighter IDs for Credits themes" IsChecked="{Binding BuildSettings.MiscSettings.CreditsThemesUseFighterIds}" ToolTip="Check to load and save credits themes by fighter IDs instead of using ASM table"/>
+                            <CheckBox Content="Run GCTRealMate in debug mode" IsChecked="{Binding BuildSettings.MiscSettings.GctDebugMode}" ToolTip="Show GCTRealMate console when codes are compiled"/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
@@ -44,6 +47,8 @@
                             </Grid.RowDefinitions>
                             <Label x:Name="soundbankStyleLabel" Content="Soundbank Style:" ToolTip="Whether soundbanks are named based on their info index or their group ID"/>
                             <ComboBox x:Name="soundbankStyleDropDown" ItemsSource="{Binding SoundbankStyleOptions}" SelectedValuePath="Value" SelectedValue="{Binding BuildSettings.SoundSettings.SoundbankStyle}" DisplayMemberPath="Key" Grid.Column="1" Width="120"/>
+                            <Label x:Name="gctTimeoutLabel" Content="GCTRealMate Timeout:" ToolTip="Number of seconds to wait for GCTRealMate to compile before returning an error" Grid.Column="2"/>
+                            <TextBox x:Name="gctTimeoutTextBox" Text="{Binding BuildSettings.MiscSettings.GctTimeoutSeconds}" Grid.Column="3"/>
                             <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1" ToolTip="BrawlEx version to use when generating new Ex config attributes."/>
                             <TextBox x:Name="exConfigVersionTextBox" Text="{Binding BuildSettings.MiscSettings.DefaultExConfigVersion}" Grid.Column="1" Grid.Row="1"/>
                         </Grid>
