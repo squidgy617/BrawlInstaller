@@ -344,7 +344,7 @@ namespace BrawlInstaller.Services
         public uint ImportTracklistSong(TracklistSong tracklistSong, string tracklist, ResourceNode brstmNode, TracklistType tracklistType = TracklistType.Standard)
         {
             var id = tracklistSong.SongId;
-            if (id == null)
+            if (id == null || string.IsNullOrEmpty(tracklistSong.SongPath))
             {
                 return 0x0000;
             }
