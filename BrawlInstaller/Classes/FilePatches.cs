@@ -44,6 +44,8 @@ namespace BrawlInstaller.Classes
         public List<NodeDef> Children { get; set; } = new List<NodeDef>();
         public bool IsChanged { get; set; } = false;
         public NodeChangeType Change { get; set; } = NodeChangeType.None;
+        public ResourceType ResourceType { get; set; } = ResourceType.Unknown;
+        public string Name { get; set; }
     }
 
     public enum NodeChangeType
