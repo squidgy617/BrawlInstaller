@@ -645,10 +645,7 @@ namespace BrawlInstaller.Common
             foreach(var nodeDef in nodeDefs)
             {
                 flatList.Add(nodeDef);
-                foreach(var child in nodeDef.Children)
-                {
-                    flatList.Add(child);
-                }
+                flatList.AddRange(nodeDef.Children.FlattenList());
             }
             return flatList;
         }

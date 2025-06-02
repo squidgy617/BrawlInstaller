@@ -113,7 +113,9 @@ namespace BrawlInstaller.Services
                 Index = GetPatchNodeIndex(node),
                 MD5 = node.MD5Str(),
                 Node = node,
-                Path = node.TreePath
+                Path = node.TreePath,
+                ResourceType = node.ResourceFileType,
+                Name = node.Name
             };
             if (IsContainer(node))
             {
@@ -167,9 +169,9 @@ namespace BrawlInstaller.Services
             {
                 if (!node.Children.Any(x => x.Name != "Bones" || x.Name != "Definitions"))
                 {
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             }
             // MDL0BoneNodes are only containers if they have children
             if (node.GetType() == typeof(MDL0BoneNode) && node.Children.Count > 0)
