@@ -99,6 +99,7 @@
     <Compile Include="Classes\DialogMessage.cs" />
     <Compile Include="Classes\FighterInfo.cs" />
     <Compile Include="Classes\FighterPackage.cs" />
+    <Compile Include="Classes\FilePatches.cs" />
     <Compile Include="Classes\ImageSize.cs" />
     <Compile Include="Classes\Position.cs" />
     <Compile Include="Classes\PSA.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Enums\TracklistType.cs" />
     <Compile Include="Exceptions\CompilerTimeoutException.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Services\PatchService.cs" />
     <Compile Include="Services\PsaService.cs" />
     <Compile Include="Services\TracklistService.cs" />
     <Compile Include="Services\TrophyService.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="ViewModels\Fighter\FighterSettingsViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ImageDropDownViewModel.cs" />
     <Compile Include="ViewModels\Fighter\FighterTrophyViewModel.cs" />
+    <Compile Include="ViewModels\Files\FilesViewModel.cs" />
     <Compile Include="ViewModels\MainControlsViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CosmeticViewModel.cs" />
     <Compile Include="ViewModels\Fighter\CostumeViewModel.cs" />
@@ -223,6 +226,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\ProgressBarView.xaml.cs">
       <DependentUpon>ProgressBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Files\FilesView.xaml.cs">
+      <DependentUpon>FilesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\FighterInfoView.xaml.cs">
       <DependentUpon>FighterInfoView.xaml</DependentUpon>
@@ -347,6 +353,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Dialogs\ProgressBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Files\FilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
