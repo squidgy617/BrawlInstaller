@@ -88,4 +88,7 @@
     <DataTemplate DataType="{x:Type viewModels:FighterTrophyViewModel}">
         <views:FighterTrophyView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:FilesViewModel}">
+        <views:FilesView/>
+    </DataTemplate>
 </ResourceDictionary>

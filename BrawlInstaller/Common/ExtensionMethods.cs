@@ -637,6 +637,32 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class NodeDefListExtensions
+    {
+        public static List<NodeDef> FlattenList(this List<NodeDef> nodeDefs)
+        {
+            var flatList = new List<NodeDef>();
+            foreach(var nodeDef in nodeDefs)
+            {
+                flatList.Add(nodeDef);
+                foreach(var child in nodeDef.Children)
+                {
+                    flatList.Add(child);
+                }
+            }
+            return flatList;
+        }
+
+        public static IEnumerable<NodeDef> RecursiveSelect(this IEnumerable<NodeDef> nodeDefs, Func<NodeDef, bool> keep)
+        {
+            foreach(var nodeDef in nodeDefs)
+            {
+                nodeDef.Children = nodeDef.Children?.RecursiveSelect(keep).ToList();
+                if (keep(nodeDef)) yield return nodeDef;
+            }
+        }
+    }
+
     public static class ByteExtensions
     {
         public static byte SwapBits(this byte bitmask, int index1, int index2)
