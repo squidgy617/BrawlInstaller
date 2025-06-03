@@ -1,6 +1,7 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
 using BrawlLib.SSBB.ResourceNodes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -12,8 +13,11 @@ namespace BrawlInstaller.Services
 {
     public interface IPatchService
     {
-        /// <inheritdoc cref="PatchService.CompareFiles(string, string)"/>
+        /// <inheritdoc cref="PatchService.CompareFiles(ResourceNode, ResourceNode)"/>
         List<NodeDef> CompareFiles(ResourceNode leftFile, ResourceNode rightFile);
+
+        /// <inheritdoc cref="PatchService.ExportFilePatch(List{NodeDef}, string)"/>
+        void ExportFilePatch(List<NodeDef> nodeDefs, string outFile);
     }
 
     [Export(typeof(IPatchService))]
@@ -32,6 +36,12 @@ namespace BrawlInstaller.Services
 
         // Methods
 
+        /// <summary>
+        /// Compare two files
+        /// </summary>
+        /// <param name="leftFile">Left file for comparison</param>
+        /// <param name="rightFile">Right file for comparison</param>
+        /// <returns>List of altered nodes</returns>
         public List<NodeDef> CompareFiles(ResourceNode leftFile, ResourceNode rightFile)
         {
             // Get nodes for both files for comparison
@@ -84,6 +94,32 @@ namespace BrawlInstaller.Services
             }
             finalNodeDefs = finalNodeDefs.RecursiveSelect(x => x.IsChanged || x.Children.Any(y => y.IsChanged)).ToList();
             return finalNodeDefs;
+        }
+
+        /// <summary>
+        /// Export file patch to selected location
+        /// </summary>
+        /// <param name="nodeDefs">Node definitions to export</param>
+        /// <param name="outFile">Location to export to</param>
+        public void ExportFilePatch(List<NodeDef> nodeDefs, string outFile)
+        {
+            var path = _settingsService.AppSettings.TempPath + "\\FilePatchExport";
+            // Save node list
+            var json = JsonConvert.SerializeObject(nodeDefs, Formatting.Indented);
+            _fileService.SaveTextFile($"{path}\\FilePatch.json", json);
+            // Save nodes
+            foreach(var nodeDef in nodeDefs.FlattenList())
+            {
+                if (!FilePatches.Folders.Contains(nodeDef.Node.GetType()))
+                {
+                    _fileService.SaveFileAs(nodeDef.Node, $"{path}\\{nodeDef.Id}");
+                }
+            }
+            // Delete patch if it's being overwritten
+            _fileService.DeleteFile(outFile);
+            // Generate patch file
+            _fileService.GenerateZipFileFromDirectory(path, outFile);
+            _fileService.DeleteDirectory(path);
         }
 
         /// <summary>

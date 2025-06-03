@@ -37,6 +37,7 @@ namespace BrawlInstaller.ViewModels
 
         // Commands
         public ICommand CompareFilesCommand => new RelayCommand(param => CompareFiles());
+        public ICommand ExportFilePatchCommand => new RelayCommand(param => ExportFilePatch());
 
         [ImportingConstructor]
         public FilesViewModel(IPatchService patchService, IDialogService dialogService, IFileService fileService)
@@ -75,6 +76,17 @@ namespace BrawlInstaller.ViewModels
             }
             _dialogService.CloseProgressBar();
             OnPropertyChanged(nameof(NodeList));
+        }
+
+        // TODO: Possibly update context here so the editor can do a "Save" instead of just a "Save As" afterward
+        public void ExportFilePatch()
+        {
+            var file = _dialogService.SaveFileDialog("Save file patch", "File patch file (.fpatch)|*.fpatch");
+            if (!string.IsNullOrEmpty(file))
+            {
+                _patchService.ExportFilePatch(NodeList, file);
+                _dialogService.ShowMessage("Exported successfully.", "Success");
+            }
         }
 
         public void SelectedItemChanged(object param)
