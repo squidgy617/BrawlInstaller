@@ -13,7 +13,7 @@ namespace BrawlInstaller.Services
     public interface IPatchService
     {
         /// <inheritdoc cref="PatchService.CompareFiles(string, string)"/>
-        List<NodeDef> CompareFiles(string leftFile, string rightFile);
+        List<NodeDef> CompareFiles(ResourceNode leftFile, ResourceNode rightFile);
     }
 
     [Export(typeof(IPatchService))]
@@ -32,7 +32,7 @@ namespace BrawlInstaller.Services
 
         // Methods
 
-        public List<NodeDef> CompareFiles(string leftFile, string rightFile)
+        public List<NodeDef> CompareFiles(ResourceNode leftFile, ResourceNode rightFile)
         {
             // Get nodes for both files for comparison
             var leftFileNodeDefs = GetNodeDefinitions(leftFile).FlattenList();
@@ -91,9 +91,8 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="filePath">Path to get nodes from</param>
         /// <returns>Node definition</returns>
-        private List<NodeDef> GetNodeDefinitions(string filePath)
+        private List<NodeDef> GetNodeDefinitions(ResourceNode rootNode)
         {
-            var rootNode = _fileService.OpenFile(filePath);
             var nodeDefs = new List<NodeDef>();
             if (rootNode != null)
             {
@@ -102,8 +101,6 @@ namespace BrawlInstaller.Services
                     var nodeDef = GetNodeDefinition(node);
                     nodeDefs.Add(nodeDef);
                 }
-                //_fileService.CloseFile(rootNode);
-                // TODO: Close files after getting them. Probably need to do that outside of this method, may need to make it accept a ResourceNode instead
             }
             return nodeDefs;
         }

@@ -38,7 +38,8 @@ namespace BrawlInstaller.Classes
 
     public class NodeDef
     {
-        public ResourceNode Node { get; set; } = null;
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        [JsonIgnore] public ResourceNode Node { get; set; } = null;
         public string MD5 { get; set; } = string.Empty;
         public int Index { get; set; } = 0;
         public string Path { get; set; } = string.Empty;

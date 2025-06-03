@@ -25,26 +25,32 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private string _leftFilePath;
         private string _rightFilePath;
+        private ResourceNode _leftFileNode;
+        private ResourceNode _rightFileNode;
         private List<NodeDef> _nodeList;
         private NodeDef _selectedNode;
 
         // Services
         IPatchService _patchService;
         IDialogService _dialogService;
+        IFileService _fileService;
 
         // Commands
         public ICommand CompareFilesCommand => new RelayCommand(param => CompareFiles());
 
         [ImportingConstructor]
-        public FilesViewModel(IPatchService patchService, IDialogService dialogService)
+        public FilesViewModel(IPatchService patchService, IDialogService dialogService, IFileService fileService)
         {
             _patchService = patchService;
             _dialogService = dialogService;
+            _fileService = fileService;
         }
 
         // Properties
-        public string LeftFilePath { get => _leftFilePath; set { _leftFilePath = value; OnPropertyChanged(LeftFilePath); } }
-        public string RightFilePath { get => _rightFilePath; set { _rightFilePath = value;OnPropertyChanged(RightFilePath); } }
+        public string LeftFilePath { get => _leftFilePath; set { _leftFilePath = value; OnPropertyChanged(nameof(LeftFilePath)); } }
+        public string RightFilePath { get => _rightFilePath; set { _rightFilePath = value;OnPropertyChanged(nameof(RightFilePath)); } }
+        public ResourceNode LeftFileNode { get => _leftFileNode; set { _leftFileNode = value; OnPropertyChanged(nameof(LeftFileNode)); } }
+        public ResourceNode RightFileNode { get => _rightFileNode; set { _rightFileNode = value; OnPropertyChanged(nameof(RightFileNode)); } }
         public string FileFilter { get => SupportedFilesHandler.GetAllSupportedFilter(true); }
         public List<NodeDef> NodeList { get => _nodeList; set { _nodeList = value; OnPropertyChanged(nameof(NodeList)); } }
         public NodeDef SelectedNode { get => _selectedNode; set { _selectedNode = value; OnPropertyChanged(nameof(SelectedNode)); } }
@@ -56,7 +62,16 @@ namespace BrawlInstaller.ViewModels
             _dialogService.ShowProgressBar("Comparing", "Comparing files...");
             using (new CursorWait())
             {
-                NodeList = _patchService.CompareFiles(LeftFilePath, RightFilePath);
+                var rightFileNode = _fileService.OpenFile(RightFilePath);
+                var leftFileNode = _fileService.OpenFile(LeftFilePath);
+                if (rightFileNode != null && leftFileNode != null)
+                {
+                    _fileService.CloseFile(RightFileNode);
+                    _fileService.CloseFile(LeftFileNode);
+                    RightFileNode = rightFileNode;
+                    LeftFileNode = leftFileNode;
+                    NodeList = _patchService.CompareFiles(LeftFileNode, RightFileNode);
+                }
             }
             _dialogService.CloseProgressBar();
             OnPropertyChanged(nameof(NodeList));
