@@ -75,8 +75,13 @@ namespace BrawlInstaller.Services
                     leftFileNodeDefs.Remove(removeNode);
                 }
             }
-            // TODO: Create removal nodes for nodes that couldn't be found at all
-            // To create removal nodes, we should be able to check remaining nodes in the left file, and then use their node path to find what node they should be a child of, and add them as a child of that node
+            // Mark nodes for removal
+            foreach(var removedNode in leftFileNodeDefs)
+            {
+                removedNode.IsChanged = true;
+                removedNode.Change = NodeChangeType.Removed;
+                finalNodeDefs.AddNode(removedNode);
+            }
             finalNodeDefs = finalNodeDefs.RecursiveSelect(x => x.IsChanged || x.Children.Any(y => y.IsChanged)).ToList();
             return finalNodeDefs;
         }
@@ -122,7 +127,7 @@ namespace BrawlInstaller.Services
             {
                 foreach (var child in node.Children)
                 {
-                    nodeDef.Children.Add(GetNodeDefinition(child));
+                    nodeDef.AddChild(GetNodeDefinition(child));
                 }
             }
             return nodeDef;
