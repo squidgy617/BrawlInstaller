@@ -36,6 +36,11 @@ namespace BrawlInstaller.Classes
         };
     }
 
+    public class FilePatch
+    {
+        public List<NodeDef> NodeDefs { get; set; } = new List<NodeDef>();
+    }
+
     public class NodeDef
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
