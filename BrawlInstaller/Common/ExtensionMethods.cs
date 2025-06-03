@@ -692,7 +692,7 @@ namespace BrawlInstaller.Common
                 match = newNode;
             }
             // Only drill down into containers
-            if (FilePatches.Containers.Contains(match.GetType()))
+            if (FilePatches.Containers.Contains(match.Node.GetType()))
             {
                 // Get the next node in the path
                 var nextNode = newNode.Children.ToList().RecursiveSelect(x => x == finalNode || x.Children.Contains(finalNode)).FirstOrDefault();
