@@ -14,13 +14,13 @@ namespace BrawlInstaller.Services
     public interface IPatchService
     {
         /// <inheritdoc cref="PatchService.CompareFiles(ResourceNode, ResourceNode)"/>
-        List<NodeDef> CompareFiles(ResourceNode leftFile, ResourceNode rightFile);
+        FilePatch CompareFiles(ResourceNode leftFile, ResourceNode rightFile);
 
-        /// <inheritdoc cref="PatchService.ExportFilePatch(List{NodeDef}, string)"/>
-        void ExportFilePatch(List<NodeDef> nodeDefs, string outFile);
+        /// <inheritdoc cref="PatchService.ExportFilePatch(FilePatch, string)"/>
+        void ExportFilePatch(FilePatch filePatch, string outFile);
 
         /// <inheritdoc cref="PatchService.OpenFilePatch(string)"/>
-        List<NodeDef> OpenFilePatch(string inFile);
+        FilePatch OpenFilePatch(string inFile);
     }
 
     [Export(typeof(IPatchService))]
@@ -44,8 +44,8 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="leftFile">Left file for comparison</param>
         /// <param name="rightFile">Right file for comparison</param>
-        /// <returns>List of altered nodes</returns>
-        public List<NodeDef> CompareFiles(ResourceNode leftFile, ResourceNode rightFile)
+        /// <returns>File patch with altered nodes</returns>
+        public FilePatch CompareFiles(ResourceNode leftFile, ResourceNode rightFile)
         {
             // Get nodes for both files for comparison
             var leftFileNodeDefs = GetNodeDefinitions(leftFile).FlattenList();
@@ -96,7 +96,7 @@ namespace BrawlInstaller.Services
                 finalNodeDefs.AddNode(removedNode);
             }
             finalNodeDefs = finalNodeDefs.RecursiveSelect(x => x.IsChanged || x.Children.Any(y => y.IsChanged)).ToList();
-            return finalNodeDefs;
+            return new FilePatch { NodeDefs = finalNodeDefs };
         }
 
         /// <summary>
@@ -104,8 +104,9 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="nodeDefs">Node definitions to export</param>
         /// <param name="outFile">Location to export to</param>
-        public void ExportFilePatch(List<NodeDef> nodeDefs, string outFile)
+        public void ExportFilePatch(FilePatch filePatch, string outFile)
         {
+            var nodeDefs = filePatch.NodeDefs;
             var path = _settingsService.AppSettings.TempPath + "\\FilePatchExport";
             // Save node list
             var json = JsonConvert.SerializeObject(nodeDefs, Formatting.Indented);
@@ -129,8 +130,8 @@ namespace BrawlInstaller.Services
         /// Open file patch
         /// </summary>
         /// <param name="inFile">File to open</param>
-        /// <returns>List of nodes</returns>
-        public List<NodeDef> OpenFilePatch(string inFile)
+        /// <returns>File patch</returns>
+        public FilePatch OpenFilePatch(string inFile)
         {
             var nodeDefs = new List<NodeDef>();
             var path = _settingsService.AppSettings.TempPath + "\\FilePatchImport";
@@ -145,7 +146,7 @@ namespace BrawlInstaller.Services
                     nodeDef.Node = _fileService.OpenFile($"{path}\\{nodeDef.Id}");
                 });
             }
-            return nodeDefs;
+            return new FilePatch { NodeDefs = nodeDefs };
         }
 
         /// <summary>

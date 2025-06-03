@@ -27,7 +27,7 @@ namespace BrawlInstaller.ViewModels
         private string _rightFilePath;
         private ResourceNode _leftFileNode;
         private ResourceNode _rightFileNode;
-        private List<NodeDef> _nodeList;
+        private FilePatch _filePatch;
         private NodeDef _selectedNode;
 
         // Services
@@ -54,7 +54,10 @@ namespace BrawlInstaller.ViewModels
         public ResourceNode LeftFileNode { get => _leftFileNode; set { _leftFileNode = value; OnPropertyChanged(nameof(LeftFileNode)); } }
         public ResourceNode RightFileNode { get => _rightFileNode; set { _rightFileNode = value; OnPropertyChanged(nameof(RightFileNode)); } }
         public string FileFilter { get => SupportedFilesHandler.GetAllSupportedFilter(true); }
-        public List<NodeDef> NodeList { get => _nodeList; set { _nodeList = value; OnPropertyChanged(nameof(NodeList)); } }
+        public FilePatch FilePatch { get => _filePatch; set { _filePatch = value; OnPropertyChanged(nameof(FilePatch)); } }
+
+        [DependsUpon(nameof(FilePatch))]
+        public List<NodeDef> NodeList { get => FilePatch?.NodeDefs ?? new List<NodeDef>(); } // TODO: Should this default to a list like this?
         public NodeDef SelectedNode { get => _selectedNode; set { _selectedNode = value; OnPropertyChanged(nameof(SelectedNode)); } }
         public ICommand SelectedItemChangedCommand => new RelayCommand(param => SelectedItemChanged(param));
 
@@ -76,11 +79,11 @@ namespace BrawlInstaller.ViewModels
                     _fileService.CloseFile(LeftFileNode);
                     RightFileNode = rightFileNode;
                     LeftFileNode = leftFileNode;
-                    NodeList = _patchService.CompareFiles(LeftFileNode, RightFileNode);
+                    FilePatch = _patchService.CompareFiles(LeftFileNode, RightFileNode);
                 }
             }
             _dialogService.CloseProgressBar();
-            OnPropertyChanged(nameof(NodeList));
+            OnPropertyChanged(nameof(FilePatch));
         }
 
         // TODO: Possibly update context here so the editor can do a "Save" instead of just a "Save As" afterward
@@ -89,7 +92,7 @@ namespace BrawlInstaller.ViewModels
             var file = _dialogService.SaveFileDialog("Save file patch", "File patch file (.fpatch)|*.fpatch");
             if (!string.IsNullOrEmpty(file))
             {
-                _patchService.ExportFilePatch(NodeList, file);
+                _patchService.ExportFilePatch(FilePatch, file);
                 _dialogService.ShowMessage("Exported successfully.", "Success");
             }
         }
@@ -102,8 +105,8 @@ namespace BrawlInstaller.ViewModels
                 _dialogService.ShowProgressBar("Loading", "Loading file patch...");
                 using (new CursorWait())
                 {
-                    NodeList = _patchService.OpenFilePatch(file);
-                    OnPropertyChanged(nameof(NodeList));
+                    FilePatch = _patchService.OpenFilePatch(file);
+                    OnPropertyChanged(nameof(FilePatch));
                 }
                 _dialogService.CloseProgressBar();
             }
