@@ -44,7 +44,7 @@ namespace BrawlInstaller.Classes
         public int Index { get; set; } = 0;
         public string Path { get; set; } = string.Empty;
         public List<NodeDef> Children { get; set; } = new List<NodeDef>();
-        public NodeDef Parent { get; set; } = null;
+        [JsonIgnore] public NodeDef Parent { get; set; } = null;
         public bool IsChanged { get; set; } = false;
         public NodeChangeType Change { get; set; } = NodeChangeType.None;
         public ResourceType ResourceType { get; set; } = ResourceType.Unknown;
