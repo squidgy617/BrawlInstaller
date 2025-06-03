@@ -103,6 +103,7 @@ namespace BrawlInstaller.Services
                     nodeDefs.Add(nodeDef);
                 }
                 //_fileService.CloseFile(rootNode);
+                // TODO: Close files after getting them. Probably need to do that outside of this method, may need to make it accept a ResourceNode instead
             }
             return nodeDefs;
         }
