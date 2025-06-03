@@ -684,7 +684,7 @@ namespace BrawlInstaller.Common
         private static void AddRecursive(List<NodeDef> nodeDefs, NodeDef newNode, NodeDef finalNode)
         {
             // Search for match
-            var match = nodeDefs.FirstOrDefault(x => x.Path == newNode.Path);
+            var match = nodeDefs.FirstOrDefault(x => x.Path == newNode.Path && x.Index == newNode.Index);
             // If there is no match, add the node as new
             if (match == null)
             {
@@ -692,7 +692,7 @@ namespace BrawlInstaller.Common
                 match = newNode;
             }
             // Only drill down into containers
-            if (FilePatches.Containers.Contains(match.Node.GetType()))
+            if (FilePatches.Containers.Contains(match.Node.GetType())) // TODO: May need to account for other stuff in IsContainer, because of MDL0Nodes
             {
                 // Get the next node in the path
                 var nextNode = newNode.Children.ToList().RecursiveSelect(x => x == finalNode || x.Children.Contains(finalNode)).FirstOrDefault();
