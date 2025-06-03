@@ -38,6 +38,7 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand CompareFilesCommand => new RelayCommand(param => CompareFiles());
         public ICommand ExportFilePatchCommand => new RelayCommand(param => ExportFilePatch());
+        public ICommand OpenFilePatchCommand => new RelayCommand(param => OpenFilePatch());
 
         [ImportingConstructor]
         public FilesViewModel(IPatchService patchService, IDialogService dialogService, IFileService fileService)
@@ -67,6 +68,10 @@ namespace BrawlInstaller.ViewModels
                 var leftFileNode = _fileService.OpenFile(LeftFilePath);
                 if (rightFileNode != null && leftFileNode != null)
                 {
+                    Parallel.ForEach(NodeList.FlattenList().AsParallel(), node =>
+                    {
+                        _fileService.CloseFile(node.Node);
+                    });
                     _fileService.CloseFile(RightFileNode);
                     _fileService.CloseFile(LeftFileNode);
                     RightFileNode = rightFileNode;
@@ -86,6 +91,21 @@ namespace BrawlInstaller.ViewModels
             {
                 _patchService.ExportFilePatch(NodeList, file);
                 _dialogService.ShowMessage("Exported successfully.", "Success");
+            }
+        }
+
+        public void OpenFilePatch()
+        {
+            var file = _dialogService.OpenFileDialog("Open file patch", "File patch file (.fpatch)|*.fpatch");
+            if (!string.IsNullOrEmpty(file))
+            {
+                _dialogService.ShowProgressBar("Loading", "Loading file patch...");
+                using (new CursorWait())
+                {
+                    NodeList = _patchService.OpenFilePatch(file);
+                    OnPropertyChanged(nameof(NodeList));
+                }
+                _dialogService.CloseProgressBar();
             }
         }
 

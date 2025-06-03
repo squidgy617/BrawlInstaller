@@ -18,6 +18,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="PatchService.ExportFilePatch(List{NodeDef}, string)"/>
         void ExportFilePatch(List<NodeDef> nodeDefs, string outFile);
+
+        /// <inheritdoc cref="PatchService.OpenFilePatch(string)"/>
+        List<NodeDef> OpenFilePatch(string inFile);
     }
 
     [Export(typeof(IPatchService))]
@@ -120,6 +123,29 @@ namespace BrawlInstaller.Services
             // Generate patch file
             _fileService.GenerateZipFileFromDirectory(path, outFile);
             _fileService.DeleteDirectory(path);
+        }
+
+        /// <summary>
+        /// Open file patch
+        /// </summary>
+        /// <param name="inFile">File to open</param>
+        /// <returns>List of nodes</returns>
+        public List<NodeDef> OpenFilePatch(string inFile)
+        {
+            var nodeDefs = new List<NodeDef>();
+            var path = _settingsService.AppSettings.TempPath + "\\FilePatchImport";
+            _fileService.ExtractZipFile(inFile, path);
+            // Read node list
+            var json = _fileService.ReadTextFile($"{path}\\FilePatch.json");
+            if (!string.IsNullOrEmpty(json))
+            {
+                nodeDefs = JsonConvert.DeserializeObject<List<NodeDef>>(json);
+                Parallel.ForEach(nodeDefs.FlattenList(), nodeDef =>
+                {
+                    nodeDef.Node = _fileService.OpenFile($"{path}\\{nodeDef.Id}");
+                });
+            }
+            return nodeDefs;
         }
 
         /// <summary>
