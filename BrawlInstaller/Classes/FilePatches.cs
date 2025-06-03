@@ -1,4 +1,5 @@
 ﻿using BrawlLib.SSBB.ResourceNodes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,10 +43,27 @@ namespace BrawlInstaller.Classes
         public int Index { get; set; } = 0;
         public string Path { get; set; } = string.Empty;
         public List<NodeDef> Children { get; set; } = new List<NodeDef>();
+        public NodeDef Parent { get; set; } = null;
         public bool IsChanged { get; set; } = false;
         public NodeChangeType Change { get; set; } = NodeChangeType.None;
         public ResourceType ResourceType { get; set; } = ResourceType.Unknown;
         public string Name { get; set; }
+        [JsonIgnore] public string Symbol { get => GetSymbol(); }
+
+        private string GetSymbol()
+        {
+            switch (Change)
+            {
+                case NodeChangeType.Altered:
+                    return "~ ";
+                case NodeChangeType.Added:
+                    return "+ ";
+                case NodeChangeType.Removed: 
+                    return "- ";
+                default:
+                    return "";
+            }
+        }
     }
 
     public enum NodeChangeType

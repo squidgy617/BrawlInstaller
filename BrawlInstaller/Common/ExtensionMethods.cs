@@ -637,6 +637,15 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class NodeDefExtensions
+    {
+        public static void AddChild(this NodeDef nodeDef, NodeDef child)
+        {
+            nodeDef.Children.Add(child);
+            child.Parent = nodeDef;
+        }
+    }
+
     public static class NodeDefListExtensions
     {
         public static List<NodeDef> FlattenList(this List<NodeDef> nodeDefs)
@@ -656,6 +665,42 @@ namespace BrawlInstaller.Common
             {
                 nodeDef.Children = nodeDef.Children?.RecursiveSelect(keep).ToList();
                 if (keep(nodeDef)) yield return nodeDef;
+            }
+        }
+
+        public static List<NodeDef> AddNode(this List<NodeDef> nodeDefs, NodeDef newNode)
+        {
+            // Get top-level parent
+            var currentNode = newNode;
+            while (currentNode.Parent != null)
+            {
+                currentNode = currentNode.Parent;
+            }
+            // Add node recursively
+            AddRecursive(nodeDefs, currentNode, newNode);
+            return nodeDefs;
+        }
+
+        private static void AddRecursive(List<NodeDef> nodeDefs, NodeDef newNode, NodeDef finalNode)
+        {
+            // Search for match
+            var match = nodeDefs.FirstOrDefault(x => x.Path == newNode.Path);
+            // If there is no match, add the node as new
+            if (match == null)
+            {
+                nodeDefs.Add(newNode);
+                match = newNode;
+            }
+            // Only drill down into containers
+            if (FilePatches.Containers.Contains(match.GetType()))
+            {
+                // Get the next node in the path
+                var nextNode = newNode.Children.ToList().RecursiveSelect(x => x == finalNode || x.Children.Contains(finalNode)).FirstOrDefault();
+                // Drill down into next node
+                if (nextNode != null)
+                {
+                    AddRecursive(match.Children, nextNode, finalNode);
+                }
             }
         }
     }
