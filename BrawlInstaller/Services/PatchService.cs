@@ -184,7 +184,7 @@ namespace BrawlInstaller.Services
                 ResourceType = node.ResourceFileType,
                 Name = node.Name
             };
-            if (IsContainer(node))
+            if (nodeDef.IsContainer())
             {
                 foreach (var child in node.Children)
                 {
@@ -217,36 +217,6 @@ namespace BrawlInstaller.Services
                 }
             }
             return 1;
-        }
-
-        /// <summary>
-        /// Checks if a node is considered a container or not
-        /// </summary>
-        /// <param name="node">Node to check</param>
-        /// <returns>Whether or not node is container</returns>
-        private bool IsContainer(ResourceNode node)
-        {
-            // Whitelisted containers are always true
-            if (FilePatches.Containers.Contains(node.GetType()))
-            {
-                return true;
-            }
-            // MDL0Nodes are only containers if they don't have anything other than Bones and Definitions
-            if (node.GetType() == typeof(MDL0Node))
-            {
-                if (!node.Children.Any(x => x.Name != "Bones" || x.Name != "Definitions"))
-                {
-                    return true;
-                }
-                return false;
-            }
-            // MDL0BoneNodes are only containers if they have children
-            if (node.GetType() == typeof(MDL0BoneNode) && node.Children.Count > 0)
-            {
-                return true;
-            }
-            // If no checks passed, it's not a container
-            return false;
         }
 
         /// <summary>
