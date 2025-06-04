@@ -76,6 +76,31 @@ namespace BrawlInstaller.Classes
             Children.Add(child);
             child.Parent = this;
         }
+
+        public bool IsContainer()
+        {
+            // Whitelisted containers are always true
+            if (FilePatches.Containers.Contains(Node.GetType()))
+            {
+                return true;
+            }
+            // MDL0Nodes are only containers if they don't have anything other than Bones and Definitions
+            if (Node.GetType() == typeof(MDL0Node))
+            {
+                if (!Children.Any(x => x.Name != "Bones" || x.Name != "Definitions") && !Node.Children.Any(x => x?.Name != "Bones" || x?.Name != "Definitions"))
+                {
+                    return true;
+                }
+                return false;
+            }
+            // MDL0BoneNodes are only containers if they have children
+            if (Node.GetType() == typeof(MDL0BoneNode) && (Children.Count > 0 || Node.Children?.Count > 0))
+            {
+                return true;
+            }
+            // If no checks passed, it's not a container
+            return false;
+        }
     }
 
     public enum NodeChangeType

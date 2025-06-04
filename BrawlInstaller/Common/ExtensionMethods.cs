@@ -683,7 +683,7 @@ namespace BrawlInstaller.Common
                 match = newNode;
             }
             // Only drill down into containers
-            if (FilePatches.Containers.Contains(match.Node.GetType())) // TODO: May need to account for other stuff in IsContainer, because of MDL0Nodes
+            if (match.IsContainer())
             {
                 // Get the next node in the path
                 var nextNode = newNode.Children.ToList().RecursiveSelect(x => x == finalNode || x.Children.Contains(finalNode)).FirstOrDefault();
