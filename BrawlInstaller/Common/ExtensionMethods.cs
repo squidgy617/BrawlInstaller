@@ -637,15 +637,6 @@ namespace BrawlInstaller.Common
         }
     }
 
-    public static class NodeDefExtensions
-    {
-        public static void AddChild(this NodeDef nodeDef, NodeDef child)
-        {
-            nodeDef.Children.Add(child);
-            child.Parent = nodeDef;
-        }
-    }
-
     public static class NodeDefListExtensions
     {
         public static List<NodeDef> FlattenList(this List<NodeDef> nodeDefs)

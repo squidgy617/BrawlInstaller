@@ -70,6 +70,12 @@ namespace BrawlInstaller.Classes
                     return "";
             }
         }
+
+        public void AddChild(NodeDef child)
+        {
+            Children.Add(child);
+            child.Parent = this;
+        }
     }
 
     public enum NodeChangeType
