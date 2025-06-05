@@ -29,12 +29,14 @@ namespace BrawlInstaller.Services
         IFileService _fileService { get; }
         // TODO: Get rid of this, for testing only
         IDialogService _dialogService { get; }
+        ISettingsService _settingsService { get; }
 
         [ImportingConstructor]
-        public ColorSmashService(IFileService fileService, IDialogService dialogService)
+        public ColorSmashService(IFileService fileService, IDialogService dialogService, ISettingsService settingsService)
         {
             _fileService = fileService;
             _dialogService = dialogService;
+            _settingsService = settingsService;
         }
 
         // Constants
@@ -183,10 +185,10 @@ namespace BrawlInstaller.Services
             Process cSmash = Process.Start(new ProcessStartInfo
             {
                 FileName = "color_smash.exe",
-                WindowStyle = ProcessWindowStyle.Hidden,
+                WindowStyle = !_settingsService.BuildSettings.MiscSettings.ColorSmashDebugMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                 Arguments = $"-c RGB5A3 -n {paletteCount}"
             });
-            cSmash?.WaitForExit();
+            cSmash?.WaitForExit(_settingsService.BuildSettings.MiscSettings.ColorSmashTimeoutSeconds * 1000);
             // If there are any images in the "in" folder that don't exist in the "out" folder, it didn't actually succeed
             return !_fileService.GetFiles(ColorSmashDirectory, "*.png").Any(x => !_fileService.GetFiles(ColorSmashOutDirectory, "*.png").Select(y => Path.GetFileNameWithoutExtension(y)).Contains(Path.GetFileNameWithoutExtension(x)));
         }

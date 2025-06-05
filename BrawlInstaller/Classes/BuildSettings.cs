@@ -138,6 +138,8 @@ namespace BrawlInstaller.Classes
         public bool VictoryThemesUseFighterIds { get; set; } = false;
         public bool GctDebugMode { get; set; } = false;
         public int GctTimeoutSeconds { get; set; } = 5;
+        public bool ColorSmashDebugMode { get; set; } = false;
+        public int ColorSmashTimeoutSeconds { get; set; } = 60;
     }
 
     public class FilePathSettings

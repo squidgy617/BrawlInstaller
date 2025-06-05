@@ -33,9 +33,12 @@
                             <CheckBox Content="Use Fighter IDs for Victory themes" IsChecked="{Binding BuildSettings.MiscSettings.VictoryThemesUseFighterIds}" ToolTip="Check to load and save victory themes by fighter ID instead of using Ex configs"/>
                             <CheckBox Content="Use Fighter IDs for Credits themes" IsChecked="{Binding BuildSettings.MiscSettings.CreditsThemesUseFighterIds}" ToolTip="Check to load and save credits themes by fighter IDs instead of using ASM table"/>
                             <CheckBox Content="Run GCTRealMate in debug mode" IsChecked="{Binding BuildSettings.MiscSettings.GctDebugMode}" ToolTip="Show GCTRealMate console when codes are compiled"/>
+                            <CheckBox Content="Run Color Smasher in debug mode" IsChecked="{Binding BuildSettings.MiscSettings.ColorSmashDebugMode}" ToolTip="Show Color Smash console when textures are color smashed"/>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -49,6 +52,8 @@
                             <ComboBox x:Name="soundbankStyleDropDown" ItemsSource="{Binding SoundbankStyleOptions}" SelectedValuePath="Value" SelectedValue="{Binding BuildSettings.SoundSettings.SoundbankStyle}" DisplayMemberPath="Key" Grid.Column="1" Width="120"/>
                             <Label x:Name="gctTimeoutLabel" Content="GCTRealMate Timeout:" ToolTip="Number of seconds to wait for GCTRealMate to compile before returning an error" Grid.Column="2"/>
                             <TextBox x:Name="gctTimeoutTextBox" Text="{Binding BuildSettings.MiscSettings.GctTimeoutSeconds}" Grid.Column="3"/>
+                            <Label x:Name="colorSmashTimeoutLabel" Content="Color Smash Timeout:" ToolTip="Number of seconds to wait for color smasher to run before returning an error" Grid.Column="4"/>
+                            <TextBox x:Name="colorSmashTimeoutTextBox" Text="{Binding BuildSettings.MiscSettings.ColorSmashTimeoutSeconds}" Grid.Column="5"/>
                             <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1" ToolTip="BrawlEx version to use when generating new Ex config attributes."/>
                             <TextBox x:Name="exConfigVersionTextBox" Text="{Binding BuildSettings.MiscSettings.DefaultExConfigVersion}" Grid.Column="1" Grid.Row="1"/>
                         </Grid>
