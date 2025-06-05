@@ -1,5 +1,3 @@
-- Added new settings for debugging issues with GCTRealMate.
-    - When "Run GCTRealMate in debug mode" is enabled, GCTRealMate will display a console window when it is run by BrawlInstaller, allowing you to see any errors that occur.
-    - "GCTRealMate Timeout" is the number of seconds that GCTRealMate can run before BrawlInstaller considers it timed out and throws an error. This setting is treated as indefinite if BrawlInstaller is configured to run GCTRealMate in debug mode.
-- Fixed an issue where attempting to import a stage param with a tracklist that does not exist in your build would result in an error.
-- Fixed an issue where saving fighters with no corresponding tracklist entry in the "Results" or "Credits" tracklists would create empty tracklist entries if settings to align song IDs were enabled.
+- Added new settings for debugging issues with the color smasher.
+    - When "Run color smasher in debug mode" is enabled, color smasher will display a console window when it is run by BrawlInstaller, allowing you to see any errors that occur.
+    - "Color Smash Timeout" is the number of seconds that color smasher can run before BrawlInstaller considers it timed out and throws an error. This setting is treated as indefinite if BrawlInstaller is configured to run color smasher in debug mode.
