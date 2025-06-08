@@ -55,6 +55,7 @@ namespace BrawlInstaller.Classes
         public ResourceType ResourceType { get; set; } = ResourceType.Unknown;
         public string Name { get; set; }
         [JsonIgnore] public string Symbol { get => GetSymbol(); }
+        public string GroupName { get; set; } = string.Empty;
 
         private string GetSymbol()
         {

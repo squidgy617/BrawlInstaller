@@ -184,6 +184,29 @@ namespace BrawlInstaller.Services
                 ResourceType = node.ResourceFileType,
                 Name = node.Name
             };
+            // Get color smash group if applicable
+            if (node.GetType() == typeof(TEX0Node))
+            {
+                var texNode = node as TEX0Node;
+                if (texNode.SharesData)
+                {
+                    var currentNode = texNode;
+                    while (currentNode.NextSibling() != null)
+                    {
+                        currentNode = currentNode.NextSibling() as TEX0Node;
+                        if (!currentNode.SharesData)
+                        {
+                            break;
+                        }
+                    }
+                    nodeDef.GroupName = currentNode.Name;
+                }
+                else if (node.PrevSibling() != null && ((TEX0Node)node.PrevSibling()).SharesData)
+                {
+                    nodeDef.GroupName = node.Name;
+                }
+            }
+            // Drill down into containers
             if (nodeDef.IsContainer())
             {
                 foreach (var child in node.Children)
