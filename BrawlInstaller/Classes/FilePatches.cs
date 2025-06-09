@@ -84,12 +84,12 @@ namespace BrawlInstaller.Classes
         public bool IsContainer()
         {
             // Whitelisted containers are always true
-            if (FilePatches.Containers.Contains(Node.GetType()))
+            if (FilePatches.Containers.Contains(NodeType))
             {
                 return true;
             }
             // MDL0Nodes are only containers if they don't have anything other than Bones and Definitions
-            if (Node.GetType() == typeof(MDL0Node))
+            if (NodeType == typeof(MDL0Node))
             {
                 if (!Children.Any(x => x.Name != "Bones" || x.Name != "Definitions") && !Node.Children.Any(x => x?.Name != "Bones" || x?.Name != "Definitions"))
                 {
@@ -98,7 +98,7 @@ namespace BrawlInstaller.Classes
                 return false;
             }
             // MDL0BoneNodes are only containers if they have children
-            if (Node.GetType() == typeof(MDL0BoneNode) && (Children.Count > 0 || Node.Children?.Count > 0))
+            if (NodeType == typeof(MDL0BoneNode) && (Children.Count > 0 || Node.Children?.Count > 0))
             {
                 return true;
             }
