@@ -39,6 +39,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand CompareFilesCommand => new RelayCommand(param => CompareFiles());
         public ICommand ExportFilePatchCommand => new RelayCommand(param => ExportFilePatch());
         public ICommand OpenFilePatchCommand => new RelayCommand(param => OpenFilePatch());
+        public ICommand ApplyFilePatchCommand => new RelayCommand(param => ApplyFilePatch());
 
         [ImportingConstructor]
         public FilesViewModel(IPatchService patchService, IDialogService dialogService, IFileService fileService)
@@ -107,6 +108,19 @@ namespace BrawlInstaller.ViewModels
                 {
                     FilePatch = _patchService.OpenFilePatch(file);
                     OnPropertyChanged(nameof(FilePatch));
+                }
+                _dialogService.CloseProgressBar();
+            }
+        }
+
+        public void ApplyFilePatch()
+        {
+            if (!string.IsNullOrEmpty(LeftFilePath) && FilePatch != null)
+            {
+                _dialogService.ShowProgressBar("Applying", "Applying file patch...");
+                using (new CursorWait())
+                {
+                    _patchService.ApplyFilePatch(FilePatch, LeftFilePath); // TODO: Change this to use a different path and not the left one
                 }
                 _dialogService.CloseProgressBar();
             }

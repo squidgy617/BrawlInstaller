@@ -21,6 +21,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="PatchService.OpenFilePatch(string)"/>
         FilePatch OpenFilePatch(string inFile);
+
+        /// <inheritdoc cref="PatchService.ApplyFilePatch(FilePatch, string)"/>
+        void ApplyFilePatch(FilePatch patch, string targetFile);
     }
 
     [Export(typeof(IPatchService))]
@@ -71,7 +74,7 @@ namespace BrawlInstaller.Services
                         if (rightNodeDef.MD5 != leftNodeDef.MD5 || GetNodeGroupRoot(rightNodeDef, rightFileNodeDefs).MD5 != GetNodeGroupRoot(leftNodeDef, leftFileNodeDefs).MD5)
                         {
                             rightNodeDef.IsChanged = true; // TODO: Probably have to do some stuff from exportPatchNode in old logic
-                            rightNodeDef.Change = NodeChangeType.Altered;
+                            rightNodeDef.Change = !rightNodeDef.IsContainer() ? NodeChangeType.Altered : NodeChangeType.Container;
                             break;
                         }
                     }
@@ -97,6 +100,104 @@ namespace BrawlInstaller.Services
             }
             finalNodeDefs = finalNodeDefs.RecursiveSelect(x => x.IsChanged || x.Children.Any(y => y.IsChanged)).ToList();
             return new FilePatch { NodeDefs = finalNodeDefs };
+        }
+
+        /// <summary>
+        /// Apply a patch to a file
+        /// </summary>
+        /// <param name="patch">Patch to apply</param>
+        /// <param name="targetFile">Target file</param>
+        public void ApplyFilePatch(FilePatch patch, string targetFile)
+        {
+            var file = _fileService.OpenFile(targetFile);
+            if (file != null)
+            {
+                foreach(var nodeDef in patch.NodeDefs)
+                {
+                    ApplyNodeChange(file, nodeDef);
+                }
+                _fileService.SaveFile(file);
+                _fileService.CloseFile(file);
+            }
+        }
+
+        /// <summary>
+        /// Apply a change to a node in file
+        /// </summary>
+        /// <param name="rootNode">Root node of file to change</param>
+        /// <param name="nodeChange">Definition of change to apply</param>
+        private void ApplyNodeChange(ResourceNode rootNode, NodeDef nodeChange)
+        {
+            // Get top-level parent
+            var currentNodeDef = nodeChange;
+            while (currentNodeDef.Parent != null)
+            {
+                currentNodeDef = currentNodeDef.Parent;
+            }
+            // Add node recursively
+            ApplyNodeChangeRecursive(rootNode, currentNodeDef);
+        }
+
+        /// <summary>
+        /// Recursively apply a node change
+        /// </summary>
+        /// <param name="rootNode">Root node of file to change</param>
+        /// <param name="nodeChange">Definition of next node to apply change to</param>
+        /// <param name="finalNodeDef">Definition of final change to make</param>
+        private void ApplyNodeChangeRecursive(ResourceNode rootNode, NodeDef nodeChange)
+        {
+            ResourceNode changedNode = null;
+            // Search for a match, skipping past a number of elements based on the index
+            var match = rootNode.Children.Where(x => x.TreePath == nodeChange.Path).Skip(nodeChange.Index - 1).FirstOrDefault();
+            changedNode = match;
+            // Take action on the node
+            // TODO: Handle changes to containers that are just param changes and stuff
+            if (nodeChange.Change != NodeChangeType.None && nodeChange.Change != NodeChangeType.Container)
+            {
+                // Remove existing node
+                if (match != null)
+                {
+                    rootNode.RemoveChild(match);
+                }
+            }
+            if (nodeChange.Change == NodeChangeType.Altered || nodeChange.Change == NodeChangeType.Added)
+            {
+                // Add new node
+                var newNode = _fileService.CreateNode(nodeChange.NodeType);
+                rootNode.InsertChild(newNode, nodeChange.ContainerIndex);
+                if (nodeChange.Node != null && !FilePatches.Folders.Contains(nodeChange.NodeType))
+                {
+                    newNode.Replace(nodeChange.Node);
+                }
+                newNode.Name = nodeChange.Name;
+                // Handle color smashing
+                if (nodeChange.NodeType == typeof(TEX0Node) && nodeChange.GroupName != nodeChange.Name)
+                {
+                    ((TEX0Node)newNode).SharesData = true;
+                }
+                // TODO: uniquePropertyUpdate?
+                changedNode = newNode;
+                // If node was placed in middle of color smash group, move it
+                if (nodeChange.GroupName == "" && changedNode != null && changedNode.GetType() == typeof(TEX0Node) && changedNode.PrevSibling() != null)
+                {
+                    while (changedNode.PrevSibling() != null && ((TEX0Node)changedNode.PrevSibling()).SharesData)
+                    {
+                        changedNode.MoveUp();
+                    }
+                }
+            }
+            // TODO: Force add, param updates, settings updates, all that good stuff
+            // Drill down and apply changes
+            if (nodeChange.IsContainer())
+            {
+                foreach(var nodeChangeChild in nodeChange.Children)
+                {
+                    if (changedNode != null)
+                    {
+                        ApplyNodeChangeRecursive(changedNode, nodeChangeChild);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -146,6 +247,7 @@ namespace BrawlInstaller.Services
                     nodeDef.Node = _fileService.OpenFile($"{path}\\{nodeDef.Id}");
                 });
             }
+            // TODO: Delete folder after? If we can keep nodes in mem
             return new FilePatch { NodeDefs = nodeDefs };
         }
 
@@ -182,7 +284,9 @@ namespace BrawlInstaller.Services
                 Node = node,
                 Path = node.TreePath,
                 ResourceType = node.ResourceFileType,
-                Name = node.Name
+                Name = node.Name,
+                NodeType = node.GetType(),
+                ContainerIndex = node.Index
             };
             // Get color smash group if applicable
             if (node.GetType() == typeof(TEX0Node))

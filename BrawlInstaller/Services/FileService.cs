@@ -53,6 +53,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="FileService.CreateNode(byte[])"/>
         ResourceNode CreateNode(byte[] bytes);
 
+        /// <inheritdoc cref="FileService.CreateNode(Type)"/>
+        ResourceNode CreateNode(Type nodeType);
+
         /// <inheritdoc cref="FileService.CopyFile(string, string)"/>
         void CopyFile(string inFile, string outFile);
 
@@ -300,6 +303,17 @@ namespace BrawlInstaller.Services
             newNode = NodeFactory.FromFile(null, path);
             File.Delete(path);
             return newNode;
+        }
+
+        /// <summary>
+        /// Create a node from a type
+        /// </summary>
+        /// <param name="nodeType">Type of node to create</param>
+        /// <returns>New node</returns>
+        public ResourceNode CreateNode(Type nodeType)
+        {
+            var node = Activator.CreateInstance(nodeType);
+            return node as ResourceNode;
         }
 
         /// <summary>

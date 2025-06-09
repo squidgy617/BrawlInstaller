@@ -35,6 +35,7 @@
                 <!--TODO: Probably move this button to be more consistent with save buttons on other forms-->
                 <Button x:Name="exportButton" Content="Export" Command="{Binding ExportFilePatchCommand}"/>
                 <Button x:Name="openButton" Content="Browse..." Command="{Binding OpenFilePatchCommand}"/>
+                <Button x:Name="applyButton" Content="Apply" Command="{Binding ApplyFilePatchCommand}"/>
             </StackPanel>
         </Grid>
         <Separator Grid.Column="1" HorizontalAlignment="Left">

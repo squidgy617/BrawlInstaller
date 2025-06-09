@@ -56,12 +56,15 @@ namespace BrawlInstaller.Classes
         public string Name { get; set; }
         [JsonIgnore] public string Symbol { get => GetSymbol(); }
         public string GroupName { get; set; } = string.Empty;
+        public Type NodeType { get; set; }
+        public int ContainerIndex { get; set; }
 
         private string GetSymbol()
         {
             switch (Change)
             {
                 case NodeChangeType.Altered:
+                case NodeChangeType.Container:
                     return "~ ";
                 case NodeChangeType.Added:
                     return "+ ";
@@ -109,6 +112,7 @@ namespace BrawlInstaller.Classes
         None,
         Altered,
         Added,
-        Removed
+        Removed,
+        Container
     }
 }
