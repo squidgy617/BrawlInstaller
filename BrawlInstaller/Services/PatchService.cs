@@ -186,6 +186,23 @@ namespace BrawlInstaller.Services
                     }
                 }
             }
+            // Apply property changes to container nodes
+            // TODO: Do we even need this? Is it for MDL0 containers?
+            // TODO: Move to FileService?
+            if (changedNode != null && nodeChange.Change == NodeChangeType.Container && nodeChange.Node != null && !FilePatches.Folders.Contains(nodeChange.NodeType))
+            {
+                // Copy node properties from new node to existing
+                foreach(var property in changedNode.GetType().GetProperties())
+                {
+                    if (property.CanWrite && property.GetSetMethod() != null)
+                    {
+                        if (property.GetValue(changedNode) != property.GetValue(nodeChange.Node) && !FilePatches.ParamBlacklist.Contains(property.Name))
+                        {
+                            property.SetValue(changedNode, property.GetValue(nodeChange.Node));
+                        }
+                    }
+                }
+            }
             // TODO: Force add, param updates, settings updates, all that good stuff
             // Drill down and apply changes
             if (nodeChange.IsContainer())

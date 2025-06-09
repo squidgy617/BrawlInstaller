@@ -34,6 +34,17 @@ namespace BrawlInstaller.Classes
             typeof(BRESGroupNode),
             typeof(MDL0GroupNode)
         };
+
+        public static List<string> ParamBlacklist = new List<string>
+        {
+            "FileType",
+            "FileIndex",
+            "GroupID",
+            "RedirectIndex",
+            "RedirectTarget",
+            "Children",
+            "Parent"
+        };
     }
 
     public class FilePatch
