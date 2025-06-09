@@ -1,4 +1,5 @@
 ﻿using BrawlLib.SSBB.ResourceNodes;
+using BrawlLib.SSBB.Types;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -69,6 +70,7 @@ namespace BrawlInstaller.Classes
         public string GroupName { get; set; } = string.Empty;
         public Type NodeType { get; set; }
         public int ContainerIndex { get; set; }
+        public ARCEntrySettings ARCSettings { get; set; } = null;
 
         private string GetSymbol()
         {
@@ -116,6 +118,15 @@ namespace BrawlInstaller.Classes
             // If no checks passed, it's not a container
             return false;
         }
+    }
+
+    public class ARCEntrySettings
+    {
+        public ARCFileType FileType { get; set; }
+        public short FileIndex { get; set; }
+        public byte GroupID { get; set; }
+        public short RedirectIndex { get; set; }
+        public string RedirectTarget { get; set; }
     }
 
     public enum NodeChangeType

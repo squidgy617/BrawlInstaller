@@ -203,6 +203,16 @@ namespace BrawlInstaller.Services
                     }
                 }
             }
+            // Apply ARC settings if applicable
+            if (changedNode != null && changedNode.GetType().IsSubclassOf(typeof(ARCEntryNode)))
+            {
+                var arcEntryNode = changedNode as ARCEntryNode;
+                arcEntryNode.FileType = nodeChange.ARCSettings.FileType;
+                arcEntryNode.FileIndex = nodeChange.ARCSettings.FileIndex;
+                arcEntryNode.GroupID = nodeChange.ARCSettings.GroupID;
+                arcEntryNode.RedirectIndex = nodeChange.ARCSettings.RedirectIndex;
+                arcEntryNode.RedirectTarget = nodeChange.ARCSettings.RedirectTarget;
+            }
             // TODO: Force add, param updates, settings updates, all that good stuff
             // Drill down and apply changes
             if (nodeChange.IsContainer())
@@ -326,6 +336,19 @@ namespace BrawlInstaller.Services
                 {
                     nodeDef.GroupName = node.Name;
                 }
+            }
+            // Get ARC settings if applicable
+            if (node.GetType().IsSubclassOf(typeof(ARCEntryNode)))
+            {
+                var arcEntryNode = node as ARCEntryNode;
+                nodeDef.ARCSettings = new ARCEntrySettings
+                {
+                    FileType = arcEntryNode.FileType,
+                    FileIndex = arcEntryNode.FileIndex,
+                    GroupID = arcEntryNode.GroupID,
+                    RedirectIndex = arcEntryNode.RedirectIndex,
+                    RedirectTarget = arcEntryNode.RedirectTarget
+                };
             }
             // Drill down into containers
             if (nodeDef.IsContainer())
