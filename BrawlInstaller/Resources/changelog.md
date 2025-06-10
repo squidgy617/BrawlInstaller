@@ -1,1 +1,1 @@
-- Fixed an issue where an error would occur when trying to color smash cosmetics with a different format than CI8.
+- Improved validation error message when duplicate pac file names are detected.
