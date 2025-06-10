@@ -1,3 +1,1 @@
-- Added new settings for debugging issues with the color smasher.
-    - When "Run color smasher in debug mode" is enabled, color smasher will display a console window when it is run by BrawlInstaller, allowing you to see any errors that occur.
-    - "Color Smash Timeout" is the number of seconds that color smasher can run before BrawlInstaller considers it timed out and throws an error. This setting is treated as indefinite if BrawlInstaller is configured to run color smasher in debug mode.
+- Fixed an issue where an error would occur when trying to color smash cosmetics with a different format than CI8.
