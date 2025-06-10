@@ -752,11 +752,14 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Missing Song Paths", "One or more songs have a file, but a blank name/path. Add a path to these files to continue."));
                 result = false;
             }
-            var allPacNames = FighterPackage.PacFiles.Select(x => $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}").ToList();
-            allPacNames.AddRange(FighterPackage.Costumes.SelectMany(c => c.PacFiles.Select(x => $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}{c.CostumeId:D2}")));
-            if (allPacNames.GroupBy(x => x).Where(g => g.Count() > 1).Any())
+            List<(FighterPacFile PacFile, string Name)> allPacNames = FighterPackage.PacFiles.Select(x => (x, $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}")).ToList();
+            allPacNames.AddRange(FighterPackage.Costumes.SelectMany(c => c.PacFiles.Select(x => (x, $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}{c.CostumeId:D2}"))));
+            var duplicatePacs = allPacNames.GroupBy(x => x.Name).Where(g => g.Count() > 1);
+            if (duplicatePacs.Any())
             {
-                messages.Add(new DialogMessage("Duplicate PAC files", "One or more PAC files have the exact same name configured. Make all PAC file names unique to continue."));
+                var duplicatePacStringList = duplicatePacs.Select(group => $"Calculated Name: {group.Key}\nFiles:\n{string.Join("\n",group.Select(x => x.PacFile.FilePath))}");
+                var duplicatePacString = string.Join("\n\n", duplicatePacStringList);
+                messages.Add(new DialogMessage("Duplicate PAC files", $"One or more PAC files have the exact same name configured. Make all PAC file names unique to continue:\n\n{duplicatePacString}"));
                 result = false;
             }
             if (messages.Count > 0)
