@@ -68,7 +68,7 @@ namespace BrawlInstaller.Services
             }
             // Get palette count
             var palettes = 0;
-            palettes = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).GetPaletteNode().Palette.Entries.Length).Max();
+            palettes = cosmetics.Select(x => GetTexture(bres, x.Texture.Name)?.GetPaletteNode()?.Palette?.Entries?.Length ?? 256).Max();
             palettes = Math.Min(palettes, paletteCount);
             // Get mip count
             var mipCount = cosmetics.Select(x => GetTexture(bres, x.Texture.Name).LevelOfDetail).Max();
