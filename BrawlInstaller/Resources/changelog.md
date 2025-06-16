@@ -1,1 +1,1 @@
-- Fixed an issue where cosmetic styles could be assigned incorrectly when opening a fighter package with certain build settings.
+- Fixed an issue where loading packages with shared styles could cause first cosmetic image to be used for all cosmetics associated with that style using certain build settings.
