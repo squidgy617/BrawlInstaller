@@ -1,1 +1,1 @@
-- Improved validation error message when duplicate pac file names are detected.
+- Fixed an issue where cosmetic styles could be assigned incorrectly when opening a fighter package with certain build settings.
