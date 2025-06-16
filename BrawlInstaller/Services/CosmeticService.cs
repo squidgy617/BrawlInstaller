@@ -1934,6 +1934,7 @@ namespace BrawlInstaller.Services
         {
             var cosmeticsJson = _fileService.ReadTextFile($"{path}\\CosmeticList.json");
             var cosmetics = JsonConvert.DeserializeObject<List<Cosmetic>>(cosmeticsJson);
+            var originalCosmetics = cosmetics.Copy();
             foreach(var cosmetic in cosmetics)
             {
                 var index = cosmetics.Where(x => x.CosmeticType == cosmetic.CosmeticType && x.Style == cosmetic.Style).ToList().IndexOf(cosmetic);
@@ -1963,7 +1964,7 @@ namespace BrawlInstaller.Services
                 // Packages with both styles will still load both, which should ensure cosmetics that are needed are all loaded
                 var priorityDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style != cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle);
                 if (!_settingsService.BuildSettings.CosmeticSettings.Any(x => x.Style == cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && (x.AlwaysInheritStyle || x.Required))
-                    && priorityDefinition != null && !cosmetics.Any(x => x.CosmeticType == priorityDefinition.CosmeticType && x.Style == priorityDefinition.Style))
+                    && priorityDefinition != null && !originalCosmetics.Any(x => x.CosmeticType == priorityDefinition.CosmeticType && x.Style == priorityDefinition.Style))
                 {
                     cosmetic.Style = priorityDefinition.Style;
                 }
