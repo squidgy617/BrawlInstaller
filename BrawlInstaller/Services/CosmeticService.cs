@@ -1934,44 +1934,46 @@ namespace BrawlInstaller.Services
         {
             var cosmeticsJson = _fileService.ReadTextFile($"{path}\\CosmeticList.json");
             var cosmetics = JsonConvert.DeserializeObject<List<Cosmetic>>(cosmeticsJson);
-            var originalCosmetics = cosmetics.Copy();
+            var newCosmetics = new List<Cosmetic>();
             foreach(var cosmetic in cosmetics)
             {
-                var index = cosmetics.Where(x => x.CosmeticType == cosmetic.CosmeticType && x.Style == cosmetic.Style).ToList().IndexOf(cosmetic);
-                var image = _fileService.GetFiles($"{path}\\{cosmetic.CosmeticType}\\{cosmetic.Style}\\SD", $"{index:D4}.png").FirstOrDefault();
+                var newCosmetic = cosmetic.Copy();
+                var index = cosmetics.Where(x => x.CosmeticType == newCosmetic.CosmeticType && x.Style == newCosmetic.Style).ToList().IndexOf(cosmetic);
+                var image = _fileService.GetFiles($"{path}\\{newCosmetic.CosmeticType}\\{newCosmetic.Style}\\SD", $"{index:D4}.png").FirstOrDefault();
                 if (!string.IsNullOrEmpty(image))
                 {
                     var imagePath = Path.GetFullPath(image);
-                    cosmetic.ImagePath = imagePath;
-                    cosmetic.Image = _fileService.LoadImage(imagePath);
+                    newCosmetic.ImagePath = imagePath;
+                    newCosmetic.Image = _fileService.LoadImage(imagePath);
                 }
-                var hdImage = _fileService.GetFiles($"{path}\\{cosmetic.CosmeticType}\\{cosmetic.Style}\\HD", $"{index:D4}.png").FirstOrDefault();
+                var hdImage = _fileService.GetFiles($"{path}\\{newCosmetic.CosmeticType}\\{newCosmetic.Style}\\HD", $"{index:D4}.png").FirstOrDefault();
                 if (!string.IsNullOrEmpty(hdImage))
                 {
                     var hdImagePath = Path.GetFullPath(hdImage);
-                    cosmetic.HDImagePath = hdImagePath;
-                    cosmetic.HDImage = _fileService.LoadImage(hdImagePath);
+                    newCosmetic.HDImagePath = hdImagePath;
+                    newCosmetic.HDImage = _fileService.LoadImage(hdImagePath);
                 }
-                var model = _fileService.GetFiles($"{path}\\{cosmetic.CosmeticType}\\{cosmetic.Style}\\Model", $"{index:D4}.mdl0").FirstOrDefault();
+                var model = _fileService.GetFiles($"{path}\\{newCosmetic.CosmeticType}\\{newCosmetic.Style}\\Model", $"{index:D4}.mdl0").FirstOrDefault();
                 if (!string.IsNullOrEmpty(model))
                 {
                     var modelPath = Path.GetFullPath(model);
-                    cosmetic.ModelPath = modelPath;
+                    newCosmetic.ModelPath = modelPath;
                 }
                 // If there's a higher priority definition (one that should always have a cosmetic), set to use that style
                 // This prevents unnecessary cosmetics from being loaded into the editor (e.g. a package only has CSS style,
                 // but the build only really wants Result style, we should fill Result style instead of CSS)
                 // Packages with both styles will still load both, which should ensure cosmetics that are needed are all loaded
-                var priorityDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style != cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && x.AlwaysInheritStyle);
-                if (!_settingsService.BuildSettings.CosmeticSettings.Any(x => x.Style == cosmetic.Style && x.CosmeticType == cosmetic.CosmeticType && (x.AlwaysInheritStyle || x.Required))
-                    && priorityDefinition != null && !originalCosmetics.Any(x => x.CosmeticType == priorityDefinition.CosmeticType && x.Style == priorityDefinition.Style))
+                var priorityDefinition = _settingsService.BuildSettings.CosmeticSettings.FirstOrDefault(x => x.Style != newCosmetic.Style && x.CosmeticType == newCosmetic.CosmeticType && x.AlwaysInheritStyle);
+                if (!_settingsService.BuildSettings.CosmeticSettings.Any(x => x.Style == newCosmetic.Style && x.CosmeticType == newCosmetic.CosmeticType && (x.AlwaysInheritStyle || x.Required))
+                    && priorityDefinition != null && !cosmetics.Any(x => x.CosmeticType == priorityDefinition.CosmeticType && x.Style == priorityDefinition.Style))
                 {
-                    cosmetic.Style = priorityDefinition.Style;
+                    newCosmetic.Style = priorityDefinition.Style;
                 }
+                newCosmetics.Add(newCosmetic);
             }
             var cosmeticList = new CosmeticList
             {
-                Items = cosmetics
+                Items = newCosmetics
             };
             // Inherit missing cosmetics that require it
             foreach(var definition in _settingsService.BuildSettings.CosmeticSettings)
