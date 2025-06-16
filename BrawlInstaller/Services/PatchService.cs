@@ -171,7 +171,7 @@ namespace BrawlInstaller.Services
                 }
                 newNode.Name = nodeChange.Name;
                 // Handle color smashing
-                if (nodeChange.NodeType == typeof(TEX0Node) && nodeChange.GroupName != nodeChange.Name)
+                if (nodeChange.NodeType == typeof(TEX0Node) && !string.IsNullOrEmpty(nodeChange.GroupName) && nodeChange.GroupName != nodeChange.Name)
                 {
                     ((TEX0Node)newNode).SharesData = true;
                 }
