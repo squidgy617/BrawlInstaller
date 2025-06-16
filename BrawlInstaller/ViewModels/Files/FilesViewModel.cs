@@ -6,6 +6,7 @@ using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,7 @@ namespace BrawlInstaller.ViewModels
         private ResourceNode _leftFileNode;
         private ResourceNode _rightFileNode;
         private FilePatch _filePatch;
-        private NodeDef _selectedNode;
+        private NodeDefViewModel _selectedNode;
 
         // Services
         IPatchService _patchService;
@@ -58,8 +59,8 @@ namespace BrawlInstaller.ViewModels
         public FilePatch FilePatch { get => _filePatch; set { _filePatch = value; OnPropertyChanged(nameof(FilePatch)); } }
 
         [DependsUpon(nameof(FilePatch))]
-        public List<NodeDef> NodeList { get => FilePatch?.NodeDefs ?? new List<NodeDef>(); } // TODO: Should this default to a list like this?
-        public NodeDef SelectedNode { get => _selectedNode; set { _selectedNode = value; OnPropertyChanged(nameof(SelectedNode)); } }
+        public ObservableCollection<NodeDefViewModel> NodeList { get => FilePatch?.NodeDefs != null ? new ObservableCollection<NodeDefViewModel>(FilePatch.NodeDefs.ToViewModel()) : new ObservableCollection<NodeDefViewModel>(); } // TODO: Should this default to a list like this?
+        public NodeDefViewModel SelectedNode { get => _selectedNode; set { _selectedNode = value; OnPropertyChanged(nameof(SelectedNode)); } }
         public ICommand SelectedItemChangedCommand => new RelayCommand(param => SelectedItemChanged(param));
 
         // Methods
@@ -72,7 +73,7 @@ namespace BrawlInstaller.ViewModels
                 var leftFileNode = _fileService.OpenFile(LeftFilePath);
                 if (rightFileNode != null && leftFileNode != null)
                 {
-                    Parallel.ForEach(NodeList.FlattenList().AsParallel(), node =>
+                    Parallel.ForEach(NodeList.ToNodeDefs().FlattenList().AsParallel(), node =>
                     {
                         _fileService.CloseFile(node.Node);
                     });
@@ -128,8 +129,39 @@ namespace BrawlInstaller.ViewModels
 
         public void SelectedItemChanged(object param)
         {
-            SelectedNode = (NodeDef)param;
+            SelectedNode = (NodeDefViewModel)param;
             OnPropertyChanged(nameof(SelectedNode));
+        }
+    }
+
+    public class NodeDefViewModel : ViewModelBase
+    {
+        private NodeDef _nodeDef;
+        private ObservableCollection<NodeDefViewModel> _children = new ObservableCollection<NodeDefViewModel>();
+        private NodeDefViewModel _parent;
+        private bool _isEnabled = true;
+
+        public NodeDef NodeDef { get => _nodeDef; set { _nodeDef = value; OnPropertyChanged(nameof(NodeDef)); } }
+        public ObservableCollection<NodeDefViewModel> Children { get => _children; set { _children = value; OnPropertyChanged(nameof(Children)); } }
+        public NodeDefViewModel Parent { get => _parent; set { _parent = value; OnPropertyChanged(nameof(Parent)); } }
+        public bool IsEnabled { get => _isEnabled; set { UpdateEnableState(value); } }
+
+        private void UpdateEnableState(bool isEnabled, bool updateChildren = true)
+        {
+            _isEnabled = isEnabled;
+            NodeDef.IsEnabled = isEnabled;
+            if (updateChildren)
+            {
+                foreach (var child in Children)
+                {
+                    child.UpdateEnableState(isEnabled);
+                }
+            }
+            if (isEnabled && Parent != null)
+            {
+                Parent.UpdateEnableState(isEnabled, false);
+            }
+            OnPropertyChanged(nameof(IsEnabled));
         }
     }
 }

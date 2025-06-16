@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using BrawlInstaller.Classes;
 using BrawlInstaller.Enums;
+using BrawlInstaller.ViewModels;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
@@ -637,8 +638,31 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class NodeDefViewModelCollectionExtensions
+    {
+        public static List<NodeDef> ToNodeDefs(this ObservableCollection<NodeDefViewModel> nodeDefVms)
+        {
+            var nodeDefs = new List<NodeDef>();
+            foreach(var nodeDefVm in nodeDefVms)
+            {
+                nodeDefs.Add(nodeDefVm.NodeDef);
+            }
+            return nodeDefs;
+        }
+    }
+
     public static class NodeDefListExtensions
     {
+        public static ObservableCollection<NodeDefViewModel> ToViewModel(this List<NodeDef> nodeDefs)
+        {
+            var nodeDefVms = new ObservableCollection<NodeDefViewModel>();
+            foreach(var nodeDef in nodeDefs)
+            {
+                nodeDefVms.Add(nodeDef.ToViewModel());
+            }
+            return nodeDefVms;
+        }
+
         public static List<NodeDef> FlattenList(this List<NodeDef> nodeDefs)
         {
             var flatList = new List<NodeDef>();

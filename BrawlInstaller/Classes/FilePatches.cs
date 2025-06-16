@@ -1,4 +1,5 @@
-﻿using BrawlLib.SSBB.ResourceNodes;
+﻿using BrawlInstaller.ViewModels;
+using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.Types;
 using Newtonsoft.Json;
 using System;
@@ -71,6 +72,7 @@ namespace BrawlInstaller.Classes
         public Type NodeType { get; set; }
         public int ContainerIndex { get; set; }
         public ARCEntrySettings ARCSettings { get; set; } = null;
+        [JsonIgnore] public bool IsEnabled { get; set; } = true;
 
         private string GetSymbol()
         {
@@ -117,6 +119,19 @@ namespace BrawlInstaller.Classes
             }
             // If no checks passed, it's not a container
             return false;
+        }
+
+        public NodeDefViewModel ToViewModel()
+        {
+            var nodeDefVm = new NodeDefViewModel();
+            nodeDefVm.NodeDef = this;
+            foreach(var child in Children)
+            {
+                var childVm = child.ToViewModel();
+                childVm.Parent = nodeDefVm;
+                nodeDefVm.Children.Add(childVm);
+            }
+            return nodeDefVm;
         }
     }
 

@@ -53,9 +53,10 @@
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding ResourceType, Converter={StaticResource nodeUriStringConverter}}" Width="16" Height="16"/>
-                            <TextBlock Text="{Binding Symbol}"/>
-                            <TextBlock Text="{Binding Name}"/>
+                            <CheckBox IsChecked="{Binding IsEnabled}"/>
+                            <Image Source="{Binding NodeDef.ResourceType, Converter={StaticResource nodeUriStringConverter}}" Width="16" Height="16"/>
+                            <TextBlock Text="{Binding NodeDef.Symbol}"/>
+                            <TextBlock Text="{Binding NodeDef.Name}"/>
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>

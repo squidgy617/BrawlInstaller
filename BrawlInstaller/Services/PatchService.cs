@@ -112,7 +112,8 @@ namespace BrawlInstaller.Services
             var file = _fileService.OpenFile(targetFile);
             if (file != null)
             {
-                foreach(var nodeDef in patch.NodeDefs)
+                var nodeDefs = patch.NodeDefs.RecursiveSelect(x => x.IsEnabled);
+                foreach(var nodeDef in nodeDefs)
                 {
                     ApplyNodeChange(file, nodeDef);
                 }
@@ -234,7 +235,7 @@ namespace BrawlInstaller.Services
         /// <param name="outFile">Location to export to</param>
         public void ExportFilePatch(FilePatch filePatch, string outFile)
         {
-            var nodeDefs = filePatch.NodeDefs;
+            var nodeDefs = filePatch.NodeDefs.RecursiveSelect(x => x.IsEnabled).ToList();
             var path = _settingsService.AppSettings.TempPath + "\\FilePatchExport";
             // Save node list
             var json = JsonConvert.SerializeObject(nodeDefs, Formatting.Indented);
