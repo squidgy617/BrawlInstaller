@@ -77,6 +77,11 @@ namespace BrawlInstaller.Services
                             rightNodeDef.Change = !rightNodeDef.IsContainer() ? NodeChangeType.Altered : NodeChangeType.Container;
                             break;
                         }
+                        // If there's no MD5, a match will never be found, so move on
+                        else if (string.IsNullOrEmpty(rightNodeDef.MD5))
+                        {
+                            break;
+                        }
                     }
                 }
                 // If we never found a match for a node in the right file, it's a brand new node, and should also be exported
@@ -190,7 +195,8 @@ namespace BrawlInstaller.Services
             // Apply property changes to container nodes
             // TODO: Do we even need this? Is it for MDL0 containers?
             // TODO: Move to FileService?
-            if (changedNode != null && nodeChange.Change == NodeChangeType.Container && nodeChange.Node != null && !FilePatches.Folders.Contains(nodeChange.NodeType))
+            if (changedNode != null && nodeChange.Change == NodeChangeType.Container && nodeChange.Node != null && !FilePatches.Folders.Contains(nodeChange.NodeType)
+                && !FilePatches.AlwaysReplace.Contains(nodeChange.NodeType)) // Nodes that should always be replaced will not have properties updated
             {
                 // Copy node properties from new node to existing
                 foreach(var property in changedNode.GetType().GetProperties())
@@ -272,6 +278,7 @@ namespace BrawlInstaller.Services
                 nodeDefs = JsonConvert.DeserializeObject<List<NodeDef>>(json);
                 Parallel.ForEach(nodeDefs.FlattenList(), nodeDef =>
                 {
+                    // TODO: Investigate - opening file with bone nodes seems to blow up sometimes?
                     nodeDef.Node = _fileService.OpenFile($"{path}\\{nodeDef.Id}");
                 });
             }

@@ -47,6 +47,12 @@ namespace BrawlInstaller.Classes
             "Children",
             "Parent"
         };
+
+        // Nodes that should never be updated like containers and instead should always be fully replaced, even if they can have children
+        public static List<Type> AlwaysReplace = new List<Type>
+        {
+            typeof(MDL0BoneNode)
+        };
     }
 
     public class FilePatch
@@ -104,9 +110,10 @@ namespace BrawlInstaller.Classes
                 return true;
             }
             // MDL0Nodes are only containers if they don't have anything other than Bones and Definitions
+            // TODO: We need to somehow check that BOTH source AND target are containers, otherwise we get folders looking like they're added when they shouldn't be
             if (NodeType == typeof(MDL0Node))
             {
-                if (!Children.Any(x => x.Name != "Bones" || x.Name != "Definitions") && !Node.Children.Any(x => x?.Name != "Bones" || x?.Name != "Definitions"))
+                if (!Children.Any(x => x.Name != "Bones" && x.Name != "Definitions") && !Node.Children.Any(x => x?.Name != "Bones" && x?.Name != "Definitions"))
                 {
                     return true;
                 }
