@@ -175,6 +175,11 @@ namespace BrawlInstaller.Services
                 {
                     newNode.Replace(nodeChange.Node);
                 }
+                // If it is on filesystem, pull it from there
+                else if (!string.IsNullOrEmpty(nodeChange.NodeFilePath) && !FilePatches.Folders.Contains(nodeChange.NodeType))
+                {
+                    newNode.Replace(nodeChange.NodeFilePath);
+                }
                 newNode.Name = nodeChange.Name;
                 // Handle color smashing
                 if (nodeChange.NodeType == typeof(TEX0Node) && !string.IsNullOrEmpty(nodeChange.GroupName) && nodeChange.GroupName != nodeChange.Name)
@@ -196,7 +201,7 @@ namespace BrawlInstaller.Services
             // TODO: Do we even need this? Is it for MDL0 containers?
             // TODO: Move to FileService?
             if (changedNode != null && nodeChange.Change == NodeChangeType.Container && nodeChange.Node != null && !FilePatches.Folders.Contains(nodeChange.NodeType)
-                && !FilePatches.AlwaysReplace.Contains(nodeChange.NodeType)) // Nodes that should always be replaced will not have properties updated
+                && !FilePatches.ParentRequired.Contains(nodeChange.NodeType)) // Nodes that should always be replaced will not have properties updated
             {
                 // Copy node properties from new node to existing
                 foreach(var property in changedNode.GetType().GetProperties())
@@ -278,11 +283,17 @@ namespace BrawlInstaller.Services
                 nodeDefs = JsonConvert.DeserializeObject<List<NodeDef>>(json);
                 Parallel.ForEach(nodeDefs.FlattenList(), nodeDef =>
                 {
-                    // TODO: Investigate - opening file with bone nodes seems to blow up sometimes?
-                    nodeDef.Node = _fileService.OpenFile($"{path}\\{nodeDef.Id}");
+                    if (!FilePatches.ParentRequired.Contains(nodeDef.NodeType))
+                    {
+                        nodeDef.Node = _fileService.OpenFile($"{path}\\{nodeDef.Id}");
+                    }
+                    else
+                    {
+                        nodeDef.NodeFilePath = $"{path}\\{nodeDef.Id}";
+                    }
                 });
             }
-            // TODO: Delete folder after? If we can keep nodes in mem
+            // TODO: Delete folder after? If we can keep nodes in mem (Probably can't delete it, because bones must come from filesystem)
             return new FilePatch { NodeDefs = nodeDefs };
         }
 

@@ -48,8 +48,8 @@ namespace BrawlInstaller.Classes
             "Parent"
         };
 
-        // Nodes that should never be updated like containers and instead should always be fully replaced, even if they can have children
-        public static List<Type> AlwaysReplace = new List<Type>
+        // Nodes that are required to have parents and thus cannot be instantiated, they must always replace a node in the proper tree structure
+        public static List<Type> ParentRequired = new List<Type>
         {
             typeof(MDL0BoneNode)
         };
@@ -79,6 +79,7 @@ namespace BrawlInstaller.Classes
         public int ContainerIndex { get; set; }
         public ARCEntrySettings ARCSettings { get; set; } = null;
         [JsonIgnore] public bool IsEnabled { get; set; } = true;
+        [JsonIgnore] public string NodeFilePath { get; set; } = string.Empty;
 
         private string GetSymbol()
         {
@@ -113,14 +114,14 @@ namespace BrawlInstaller.Classes
             // TODO: We need to somehow check that BOTH source AND target are containers, otherwise we get folders looking like they're added when they shouldn't be
             if (NodeType == typeof(MDL0Node))
             {
-                if (!Children.Any(x => x.Name != "Bones" && x.Name != "Definitions") && !Node.Children.Any(x => x?.Name != "Bones" && x?.Name != "Definitions"))
+                if (!Children.Any(x => x.Name != "Bones" && x.Name != "Definitions") && !(Node?.Children.Any(x => x?.Name != "Bones" && x?.Name != "Definitions") == true))
                 {
                     return true;
                 }
                 return false;
             }
             // MDL0BoneNodes are only containers if they have children
-            if (NodeType == typeof(MDL0BoneNode) && (Children.Count > 0 || Node.Children?.Count > 0))
+            if (NodeType == typeof(MDL0BoneNode) && (Children.Count > 0 || Node?.Children?.Count > 0))
             {
                 return true;
             }
