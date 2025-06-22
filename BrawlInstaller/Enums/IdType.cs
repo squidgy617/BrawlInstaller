@@ -32,6 +32,8 @@ namespace BrawlInstaller.Enums
         [Description("Stage Cosmetic")]
         StageCosmetic,
         [Description("Masquerade")]
-        Masquerade
+        Masquerade,
+        [Description("Costume")]
+        Costume
     }
 }

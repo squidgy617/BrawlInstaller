@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using BrawlLib.Internal;
 using System.Globalization;
 using BrawlLib.SSBB.ResourceNodes;
+using System.IO;
 
 namespace BrawlInstaller.Classes
 {
@@ -72,7 +73,27 @@ namespace BrawlInstaller.Classes
         public int Multiplier { get; set; } = 1;
         public int Offset { get; set; } = 0;
         public int SuffixDigits { get; set; } = 3;
-        public int GroupMultiplier { get; set; } = 1;
+        public float ArchiveMultiplier { get; set; } = 1;
+        public int ArchiveRange { get; set; } = 1;
+        public int GroupMultiplier 
+        { 
+            set 
+            {
+                if (value > 1)
+                {
+                    if (!InstallLocation.FilePath.EndsWith("\\"))
+                    {
+                        ArchiveMultiplier = (float)(value * 0.01);
+                    }
+                    else
+                    {
+                        ArchiveMultiplier = (float)(value * 0.1);
+
+                    }
+                    ArchiveRange = value;
+                }
+            } 
+        }
         public string FilePrefix { get; set; } = string.Empty;
         public IdType IdType { get; set; } = IdType.Cosmetic;
         public ImageSize Size { get; set; } = new ImageSize(null, null);
@@ -99,15 +120,33 @@ namespace BrawlInstaller.Classes
             return copy;
         }
 
-        public int GetArchiveId(BrawlIds ids)
+        public int GetBaseArchiveId(BrawlIds ids)
         {
             var id = ids.GetIdOfType(IdType) ?? -1;
             return id;
         }
 
+        public int GetArchiveId(BrawlIds ids)
+        {
+            var id = (int)((GetBaseArchiveId(ids) / ArchiveRange * ArchiveRange) * ArchiveMultiplier);
+            return id;
+        }
+
+        public int GetArchiveId(int id)
+        {
+            return (int)((id / ArchiveRange * ArchiveRange) * ArchiveMultiplier);
+        }
+
+        public int GetArchiveFileId(string fileName)
+        {
+            var idString = Path.GetFileNameWithoutExtension(fileName).Replace(Prefix, string.Empty);
+            var id = Convert.ToInt32(idString);
+            return id;
+        }
+
         public int GetTextureBaseId(BrawlIds ids)
         {
-            return GetArchiveId(ids);
+            return GetBaseArchiveId(ids);
         }
     }
 
@@ -138,7 +177,7 @@ namespace BrawlInstaller.Classes
 
         public int GetFrameId(CosmeticDefinition definition, BrawlIds ids)
         {
-            var id = ids.GetIdOfType(IdType ?? definition.IdType) ?? -1;
+            var id = IdType != null ? ids.GetIdOfType(IdType.Value) ?? definition.GetTextureBaseId(ids) : definition.GetTextureBaseId(ids);
             return id;
         }
     }

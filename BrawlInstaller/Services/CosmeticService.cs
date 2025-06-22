@@ -292,7 +292,7 @@ namespace BrawlInstaller.Services
             var parentNode = !string.IsNullOrEmpty(definition.InstallLocation.NodePath) ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             if (parentNode.GetType() == typeof(ARCNode))
             {
-                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == id / definition.GroupMultiplier);
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == definition.GetArchiveId(id));
             }
             if (parentNode != null)
             {
@@ -674,7 +674,7 @@ namespace BrawlInstaller.Services
         /// <returns>Name of file for cosmetic</returns>
         private string GetFileName(CosmeticDefinition definition, BrawlIds ids, Cosmetic cosmetic)
         {
-            var archiveId = definition.GetArchiveId(ids);
+            var archiveId = definition.GetBaseArchiveId(ids);
             var prefix = !string.IsNullOrEmpty(definition.FilePrefix) ? definition.FilePrefix : definition.Prefix;
             return $"{prefix}{FormatCosmeticId(definition, archiveId, cosmetic)}.{definition.InstallLocation.FileExtension}";
         }
@@ -865,18 +865,18 @@ namespace BrawlInstaller.Services
         private Cosmetic ImportCosmetic(CosmeticDefinition definition, Cosmetic cosmetic, BrawlIds ids, ResourceNode rootNode)
         {
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
-            var archiveId = definition.GetArchiveId(ids);
+            var archiveId = definition.GetBaseArchiveId(ids);
             var textureBaseId = definition.GetTextureBaseId(ids);
             // If location is an ARC node and the BRRES does not exist, generate new BRRES
             if (node.GetType() == typeof(ARCNode))
             {
-                var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
+                var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == definition.GetArchiveId(archiveId));
                 if (foundNode == null)
                 {
                     var bres = new BRRESNode();
                     bres.Compression = definition.CompressionType.ToString();
                     bres.FileType = definition.FileType;
-                    bres.FileIndex = (short)(archiveId / definition.GroupMultiplier);
+                    bres.FileIndex = (short)definition.GetArchiveId(archiveId);
                     node.InsertChild(bres, textureBaseId);
                     node._children = node._children.OrderBy(x => ((ARCEntryNode)x).FileIndex).ToList();
                     bres.UpdateName();
@@ -1003,12 +1003,12 @@ namespace BrawlInstaller.Services
             // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
             var parentNode = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             var originalNode = parentNode;
-            var archiveId = definition.GetArchiveId(ids);
+            var archiveId = definition.GetBaseArchiveId(ids);
             var textureBaseId = definition.GetTextureBaseId(ids);
             if (parentNode.GetType() == typeof(ARCNode))
             {
                 restrictRange = IsSharedGroupCosmetic(definition);
-                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
+                parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == definition.GetArchiveId(archiveId));
             }
             if (parentNode != null)
             {
@@ -1059,7 +1059,7 @@ namespace BrawlInstaller.Services
         /// <param name="ids">IDs associated with cosmetics</param>
         private void RemoveCosmetics(CosmeticDefinition definition, BrawlIds ids)
         {
-            var archiveId = definition.GetArchiveId(ids);
+            var archiveId = definition.GetBaseArchiveId(ids);
             var files = GetCosmeticPaths(definition, ids);
             // This is just to remove HD textures
             foreach(var file in files)
@@ -1127,12 +1127,12 @@ namespace BrawlInstaller.Services
         /// <param name="ids">IDs associated with cosmetics</param>
         private void ColorSmashCosmetics(List<Cosmetic> cosmetics, ResourceNode rootNode, CosmeticDefinition definition, BrawlIds ids)
         {
-            var archiveId = definition.GetArchiveId(ids);
+            var archiveId = definition.GetBaseArchiveId(ids);
             var textureBaseId = definition.GetTextureBaseId(ids);
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
             if (node.GetType() == typeof(ARCNode))
             {
-                node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
+                node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == definition.GetArchiveId(archiveId));
             }
             if (node != null)
             {
@@ -1252,7 +1252,7 @@ namespace BrawlInstaller.Services
             // If the definition doesn't use separate files, find the files and update them
             if (!definition.SeparateFiles)
             {
-                var archiveId = definition.GetArchiveId(ids);
+                var archiveId = definition.GetBaseArchiveId(ids);
                 var rootNode = GetCosmeticFile(definition, archiveId);
                 if (rootNode != null)
                 {
@@ -1376,7 +1376,7 @@ namespace BrawlInstaller.Services
             var paths = new List<string>();
             if (definition.InstallLocation.FilePath.EndsWith("\\") && _fileService.DirectoryExists(_settingsService.GetBuildFilePath(definition.InstallLocation.FilePath)))
             {
-                var archiveId = definition.GetArchiveId(ids);
+                var archiveId = definition.GetBaseArchiveId(ids);
                 if (archiveId > -1)
                 {
                     var directoryInfo = new DirectoryInfo(Path.Combine(buildPath, definition.InstallLocation.FilePath));
@@ -1403,7 +1403,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             if (definition.InstallLocation.FilePath.EndsWith("\\"))
             {
-                var fileName = GetFileName(definition, (id / definition.GroupMultiplier) * definition.GroupMultiplier);
+                var fileName = GetFileName(definition, definition.GetArchiveId(id));
                 return $"{buildPath}\\{definition.InstallLocation.FilePath}{fileName}";
             }
             else
@@ -1594,7 +1594,7 @@ namespace BrawlInstaller.Services
         private List<CosmeticTexture> GetTextures(CosmeticDefinition definition, ResourceNode node, BrawlIds brawlIds, bool restrictRange)
         {
             // Try to get all textures for cosmetic definition
-            var archiveId = definition.GetArchiveId(brawlIds);
+            var archiveId = definition.GetBaseArchiveId(brawlIds);
             var textureBaseId = definition.GetTextureBaseId(brawlIds);
             var nodes = new List<CosmeticTexture>();
             // If the definition contains PatSettings, check the PAT0 first
@@ -1633,7 +1633,7 @@ namespace BrawlInstaller.Services
             // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
             if (start.GetType() == typeof(ARCNode))
             {
-                start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
+                start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == definition.GetArchiveId(archiveId));
                 restrictRange = IsSharedGroupCosmetic(definition);
             }
             if (start != null)
@@ -1670,7 +1670,7 @@ namespace BrawlInstaller.Services
         /// <returns>List of models</returns>
         private List<MDL0Node> GetModels(CosmeticDefinition definition, ResourceNode node, BrawlIds brawlIds, bool restrictRange)
         {
-            var archiveId = definition.GetArchiveId(brawlIds);
+            var archiveId = definition.GetBaseArchiveId(brawlIds);
             var textureBaseId = definition.GetTextureBaseId(brawlIds);
             // Try to get all models for cosmetic definition
             var nodes = new List<MDL0Node>();
@@ -1678,7 +1678,7 @@ namespace BrawlInstaller.Services
             // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for models
             if (start.GetType() == typeof(ARCNode))
             {
-                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier));
+                start = start.Children.First(x => x.ResourceFileType == ResourceType.BRES && (!restrictRange || ((BRRESNode)x).FileIndex == definition.GetArchiveId(archiveId)));
                 restrictRange = IsSharedGroupCosmetic(definition);
             }
             var folder = start.FindChild("3DModels(NW4R)");
@@ -1921,7 +1921,6 @@ namespace BrawlInstaller.Services
         {
             var cosmetics = new ConcurrentBag<Cosmetic>();
             Parallel.ForEach(definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList(), cosmeticGroup =>
-            //foreach(var cosmeticGroup in definitions.Where(x => x.CosmeticType == CosmeticType.ReplayIcon && x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
             {
                 // Check each definition in the group for cosmetics
                 // Order them to ensure that cosmetics with multiple definitions favor definitions that have multiple cosmetics, also order by size to ensure highest-quality cosmetic is loaded first
