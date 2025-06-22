@@ -75,13 +75,8 @@ namespace BrawlInstaller.Services
                         {
                             rightNodeDef.IsChanged = true; // TODO: Probably have to do some stuff from exportPatchNode in old logic
                             rightNodeDef.Change = !rightNodeDef.IsContainer() ? NodeChangeType.Altered : NodeChangeType.Container;
-                            break;
                         }
-                        // If there's no MD5, a match will never be found, so move on
-                        else if (string.IsNullOrEmpty(rightNodeDef.MD5))
-                        {
-                            break;
-                        }
+                        break;
                     }
                 }
                 // If we never found a match for a node in the right file, it's a brand new node, and should also be exported
