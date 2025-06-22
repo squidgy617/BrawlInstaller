@@ -141,6 +141,17 @@ namespace BrawlInstaller.Classes
             }
             return nodeDefVm;
         }
+
+        public List<NodeDef> GetChildrenRecursive()
+        {
+            var childList = new List<NodeDef>();
+            foreach(var child in Children)
+            {
+                childList.Add(child);
+                childList.AddRange(child.GetChildrenRecursive());
+            }
+            return childList;
+        }
     }
 
     public class ARCEntrySettings

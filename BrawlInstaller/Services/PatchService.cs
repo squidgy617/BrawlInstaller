@@ -56,7 +56,8 @@ namespace BrawlInstaller.Services
             var rightFileNodeDefs = finalNodeDefs.FlattenList();
 
             // Iterate through nodes from right file
-            foreach(var rightNodeDef in rightFileNodeDefs)
+            var skipNodeList = new List<NodeDef>();
+            foreach(var rightNodeDef in rightFileNodeDefs.Where(x => !skipNodeList.Contains(x)))
             {
                 NodeDef removeNode = null;
                 var matchFound = false;
@@ -73,8 +74,14 @@ namespace BrawlInstaller.Services
                         // If the node is color smashed, use the root of the color smash group to determine if altered
                         if (rightNodeDef.MD5 != leftNodeDef.MD5 || GetNodeGroupRoot(rightNodeDef, rightFileNodeDefs).MD5 != GetNodeGroupRoot(leftNodeDef, leftFileNodeDefs).MD5)
                         {
+                            var isContainer = rightNodeDef.IsContainer() && leftNodeDef.IsContainer();
                             rightNodeDef.IsChanged = true; // TODO: Probably have to do some stuff from exportPatchNode in old logic
-                            rightNodeDef.Change = !rightNodeDef.IsContainer() ? NodeChangeType.Altered : NodeChangeType.Container;
+                            rightNodeDef.Change = !isContainer ? NodeChangeType.Altered : NodeChangeType.Container;
+                            // If not a container, mark children to be skipped, so they don't show up as changes unnecessarily
+                            if (!isContainer)
+                            {
+                                skipNodeList.AddRange(rightNodeDef.GetChildrenRecursive());
+                            }
                         }
                         break;
                     }
@@ -409,12 +416,13 @@ namespace BrawlInstaller.Services
         private NodeDef GetNodeGroupRoot(NodeDef nodeDef, List<NodeDef> nodeDefs)
         {
             var groupRoot = nodeDef;
+            var groupNodes = nodeDefs.Where(x => x.Node.Parent == nodeDef.Node.Parent).ToList();
             if (nodeDef.Node?.GetType() == typeof(TEX0Node) && ((TEX0Node)nodeDef.Node).SharesData)
             {
                 var currentNode = nodeDef;
-                while (nodeDefs.IndexOf(currentNode) + 1 < nodeDefs.Count)
+                while (groupNodes.IndexOf(currentNode) + 1 < groupNodes.Count)
                 {
-                    currentNode = nodeDefs[nodeDefs.IndexOf(currentNode) + 1];
+                    currentNode = groupNodes[groupNodes.IndexOf(currentNode) + 1];
                     if (!((TEX0Node)nodeDef.Node).SharesData)
                     {
                         break;
