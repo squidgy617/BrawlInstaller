@@ -73,8 +73,9 @@ namespace BrawlInstaller.Classes
         public int Multiplier { get; set; } = 1;
         public int Offset { get; set; } = 0;
         public int SuffixDigits { get; set; } = 3;
-        public float ArchiveMultiplier { get; set; } = 1;
-        public int ArchiveRange { get; set; } = 1;
+        public float? ArchiveMultiplier { get; set; } = null;
+        public int? ArchiveRange { get; set; } = null;
+        public int? ArchiveOffset { get; set; } = null;
         public int GroupMultiplier 
         { 
             set 
@@ -99,7 +100,20 @@ namespace BrawlInstaller.Classes
         public ImageSize Size { get; set; } = new ImageSize(null, null);
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
         public bool FirstOnly { get; set; } = false;
-        public bool SeparateFiles { get; set; } = false;
+        public bool SeparateFiles 
+        {
+            get
+            {
+                return ArchiveOffset == 1;
+            }
+            set
+            {
+                if (value)
+                {
+                    ArchiveOffset = 1;
+                }
+            }
+        }
         public CompressionType CompressionType { get; set; } = CompressionType.None;
         public ARCFileType FileType { get; set; } = ARCFileType.MiscData;
         public bool AlwaysInheritStyle { get; set; } = false;
@@ -128,20 +142,40 @@ namespace BrawlInstaller.Classes
 
         public int GetArchiveId(BrawlIds ids)
         {
-            var id = (int)((GetBaseArchiveId(ids) / ArchiveRange * ArchiveRange) * ArchiveMultiplier);
+            var archiveRange = ArchiveRange ?? 1;
+            var archiveMultiplier = ArchiveMultiplier ?? Multiplier;
+            var archiveOffset = ArchiveOffset ?? Offset;
+            var id = (int)((GetBaseArchiveId(ids) / archiveRange * archiveRange) * archiveMultiplier) + archiveOffset;
             return id;
         }
 
         public int GetArchiveId(int id)
         {
-            return (int)((id / ArchiveRange * ArchiveRange) * ArchiveMultiplier);
+            var archiveRange = ArchiveRange ?? 1;
+            var archiveMultiplier = ArchiveMultiplier ?? Multiplier;
+            var archiveOffset = ArchiveOffset ?? Offset;
+            return (int)((id / archiveRange * archiveRange) * archiveMultiplier) + archiveOffset;
         }
 
-        public int GetArchiveFileId(string fileName)
+        private int GetArchiveFileId(string fileName)
         {
             var idString = Path.GetFileNameWithoutExtension(fileName).Replace(Prefix, string.Empty);
             var id = Convert.ToInt32(idString);
             return id;
+        }
+
+        public bool ArchiveIsInRange(string fileName, BrawlIds ids)
+        {
+            var archiveId = GetArchiveFileId(fileName);
+            var baseArchiveId = GetBaseArchiveId(ids);
+            return ArchiveIdIsInRange(archiveId, baseArchiveId);
+        }
+
+        private bool ArchiveIdIsInRange(int archiveId, int baseArchiveId)
+        {
+            var archiveMultiplier = ArchiveMultiplier ?? Multiplier;
+            var archiveOffset = ArchiveOffset ?? Offset;
+            return (archiveId >= (baseArchiveId * archiveMultiplier) + archiveOffset) && (archiveId < ((baseArchiveId * archiveMultiplier) + archiveMultiplier + archiveOffset)) && (ArchiveRange != null ? archiveId % ArchiveRange == 0 : true);
         }
 
         public int GetTextureBaseId(BrawlIds ids)

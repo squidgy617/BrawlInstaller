@@ -1376,16 +1376,9 @@ namespace BrawlInstaller.Services
             var paths = new List<string>();
             if (definition.InstallLocation.FilePath.EndsWith("\\") && _fileService.DirectoryExists(_settingsService.GetBuildFilePath(definition.InstallLocation.FilePath)))
             {
-                var archiveId = definition.GetBaseArchiveId(ids);
-                if (archiveId > -1)
-                {
-                    var directoryInfo = new DirectoryInfo(Path.Combine(buildPath, definition.InstallLocation.FilePath));
-                    var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
-                    if (definition.SeparateFiles)
-                        paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, archiveId, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
-                    else
-                        paths = files.Where(f => f.Name == GetFileName(definition, archiveId)).Select(f => f.FullName).ToList();
-                }
+                var directoryInfo = new DirectoryInfo(Path.Combine(buildPath, definition.InstallLocation.FilePath));
+                var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
+                paths = files.Where(f => definition.ArchiveIsInRange(f.FullName, ids)).Select(f => f.FullName).ToList();
             }
             else if (_fileService.FileExists(buildPath + definition.InstallLocation.FilePath))
                 paths.Add(buildPath + definition.InstallLocation.FilePath);
@@ -1920,7 +1913,8 @@ namespace BrawlInstaller.Services
         private List<Cosmetic> GetCosmetics(BrawlIds brawlIds, List<CosmeticDefinition> definitions, bool restrictRange)
         {
             var cosmetics = new ConcurrentBag<Cosmetic>();
-            Parallel.ForEach(definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList(), cosmeticGroup =>
+            //Parallel.ForEach(definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList(), cosmeticGroup =>
+            foreach(var cosmeticGroup in definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
             {
                 // Check each definition in the group for cosmetics
                 // Order them to ensure that cosmetics with multiple definitions favor definitions that have multiple cosmetics, also order by size to ensure highest-quality cosmetic is loaded first
@@ -1941,7 +1935,7 @@ namespace BrawlInstaller.Services
                     if (cosmetics.Count > 0)
                         break;
                 }
-            });
+            }
             return cosmetics.ToList();
         }
 
