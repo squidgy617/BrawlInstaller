@@ -84,7 +84,7 @@ namespace BrawlInstaller.Classes
                 {
                     if (!InstallLocation.FilePath.EndsWith("\\"))
                     {
-                        ArchiveMultiplier = (float)(value * 0.01);
+                        ArchiveMultiplier = (float)(value * Multiplier * 0.01);
                     }
                     else
                     {
@@ -104,13 +104,14 @@ namespace BrawlInstaller.Classes
         {
             get
             {
-                return ArchiveOffset == 1;
+                return false;
             }
             set
             {
                 if (value)
                 {
                     ArchiveOffset = 1;
+                    ArchiveRange = 1;
                 }
             }
         }
@@ -140,7 +141,7 @@ namespace BrawlInstaller.Classes
             return id;
         }
 
-        public int GetArchiveId(BrawlIds ids)
+        public int GetDefinitionArchiveId(BrawlIds ids)
         {
             var archiveRange = ArchiveRange ?? 1;
             var archiveMultiplier = ArchiveMultiplier ?? Multiplier;
@@ -149,15 +150,7 @@ namespace BrawlInstaller.Classes
             return id;
         }
 
-        public int GetArchiveId(int id)
-        {
-            var archiveRange = ArchiveRange ?? 1;
-            var archiveMultiplier = ArchiveMultiplier ?? Multiplier;
-            var archiveOffset = ArchiveOffset ?? Offset;
-            return (int)((id / archiveRange * archiveRange) * archiveMultiplier) + archiveOffset;
-        }
-
-        private int GetArchiveFileId(string fileName)
+        public int GetArchiveFileId(string fileName)
         {
             var idString = Path.GetFileNameWithoutExtension(fileName).Replace(Prefix, string.Empty);
             var id = Convert.ToInt32(idString);
