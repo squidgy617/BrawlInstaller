@@ -1907,8 +1907,8 @@ namespace BrawlInstaller.Services
         private List<Cosmetic> GetCosmetics(BrawlIds brawlIds, List<CosmeticDefinition> definitions, bool restrictRange)
         {
             var cosmetics = new ConcurrentBag<Cosmetic>();
-            //Parallel.ForEach(definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList(), cosmeticGroup =>
-            foreach(var cosmeticGroup in definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
+            Parallel.ForEach(definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList(), cosmeticGroup =>
+            //foreach(var cosmeticGroup in definitions.Where(x => x.Enabled).GroupBy(c => new { c.CosmeticType, c.Style }).ToList())
             {
                 // Check each definition in the group for cosmetics
                 // Order them to ensure that cosmetics with multiple definitions favor definitions that have multiple cosmetics, also order by size to ensure highest-quality cosmetic is loaded first
@@ -1929,7 +1929,7 @@ namespace BrawlInstaller.Services
                     if (cosmetics.Count > 0)
                         break;
                 }
-            }
+            });
             return cosmetics.ToList();
         }
 
