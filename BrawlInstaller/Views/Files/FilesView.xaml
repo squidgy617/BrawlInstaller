@@ -86,13 +86,18 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Label x:Name="nodeNameLabel" Content="Name:"/>
+                            <Label x:Name="nodeNameLabel" Content="Name:" ToolTip="Name of the node that was changed."/>
                             <Label x:Name="nodeNameText" Content="{Binding SelectedNode.NodeDef.Name}" Grid.Column="1" HorizontalAlignment="Left"/>
-                            <Label x:Name="nodeTypeLabel" Content="Type:" Grid.Row="1"/>
+                            <Label x:Name="nodeTypeLabel" Content="Type:" Grid.Row="1" ToolTip="Type of node that was changed."/>
                             <Label x:Name="nodeTypeText" Content="{Binding SelectedNode.NodeDef.ResourceType}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
-                            <Label x:Name="nodeStatusLabel" Content="Status:" Grid.Row="2"/>
+                            <Label x:Name="nodeStatusLabel" Content="Status:" Grid.Row="2" ToolTip="Type of change that was performed on the node between the files that generated it."/>
                             <Label x:Name="nodeStatusText" Content="{Binding SelectedNode.NodeDef.Change}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+                            <StackPanel x:Name="nodeInfoStackPanel" Grid.Row="3" Grid.ColumnSpan="2">
+                                <CheckBox x:Name="forceAddCheckbox" IsChecked="{Binding SelectedNode.NodeDef.ForceAdd}" Content="Force Add" Visibility="{Binding SelectedNode.AllowForceAdd, Converter={StaticResource boolVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}" ToolTip="Always add this node when patch is applied, even if a matching node is found in the target file."/>
+                                <CheckBox x:Name="replaceAllContentsCheckBox" IsChecked="{Binding SelectedNode.NodeDef.ReplaceAllContents}" Content="Replace All Contents" Visibility="{Binding SelectedNode.AllowReplaceAllContents, Converter={StaticResource boolVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}" ToolTip="If a match is found, replace the entire archive with the one from the patch, including any contents that were within it in the original file from which it was created."/>
+                            </StackPanel>
                         </Grid>
                     </GroupBox>
                 </Grid>

@@ -85,6 +85,8 @@ namespace BrawlInstaller.Classes
         public ARCEntrySettings ARCSettings { get; set; } = null;
         [JsonIgnore] public bool IsEnabled { get; set; } = true;
         [JsonIgnore] public string NodeFilePath { get; set; } = string.Empty;
+        public bool ForceAdd { get; set; } = false;
+        public bool ReplaceAllContents { get; set; } = false;
 
         private string GetSymbol()
         {
