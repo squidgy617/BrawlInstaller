@@ -188,7 +188,20 @@ namespace BrawlInstaller.Services
                 {
                     ((TEX0Node)newNode).SharesData = true;
                 }
-                // TODO: uniquePropertyUpdate?
+                // Update unique properties as needed
+                foreach(var property in newNode.GetType().GetProperties().Where(x => FilePatches.UniqueProperties.Contains(x.Name)))
+                {
+                    // Get siblings with matching properties
+                    var siblings = rootNode.Children.Where(x => x != newNode);
+                    var usedValues = siblings.Select(x => x.GetType().GetProperties().FirstOrDefault(y => y.Name == property.Name)?.GetValue(x)).Where(x => x != null);
+                    int value = (int)property.GetValue(newNode);
+                    // Increment the value until it doesn't match any of the sibling values
+                    while (usedValues.Contains(value))
+                    {
+                        value += 1;
+                    }
+                    property.SetValue(newNode, value);
+                }
                 changedNode = newNode;
                 // If node was placed in middle of color smash group, move it
                 if (nodeChange.GroupName == "" && changedNode != null && changedNode.GetType() == typeof(TEX0Node) && changedNode.PrevSibling() != null)

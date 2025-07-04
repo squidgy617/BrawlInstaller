@@ -48,6 +48,11 @@ namespace BrawlInstaller.Classes
             "Parent"
         };
 
+        public static List<string> UniqueProperties = new List<string>
+        {
+            "BoneIndex"
+        };
+
         // Nodes that are required to have parents and thus cannot be instantiated, they must always replace a node in the proper tree structure
         public static List<Type> ParentRequired = new List<Type>
         {
