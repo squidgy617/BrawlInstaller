@@ -44,23 +44,68 @@
             </Separator.LayoutTransform>
         </Separator>
         <Grid Grid.Column="1" Margin="3,0,0,0">
-            <TreeView x:Name="treeView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemsSource="{Binding NodeList}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectedItemChanged">
-                        <i:InvokeCommandAction CommandParameter="{Binding ElementName=treeView, Path=SelectedItem}" Command="{Binding SelectedItemChangedCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsEnabled}"/>
-                            <Image Source="{Binding NodeDef.ResourceType, Converter={StaticResource nodeUriStringConverter}}" Width="16" Height="16"/>
-                            <TextBlock Text="{Binding NodeDef.Symbol}"/>
-                            <TextBlock Text="{Binding NodeDef.Name}"/>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Changes" Visibility="{Binding FilePatch, Converter={StaticResource nullVisConverter}}" MaxHeight="{Binding ElementName=scrollViewer, Path=ViewportHeight}">
+                        <ContentControl Style="{StaticResource resizeContainer}" MinWidth="140">
+                            <TreeView x:Name="treeView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemsSource="{Binding NodeList}" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectedItemChanged">
+                                        <i:InvokeCommandAction CommandParameter="{Binding ElementName=treeView, Path=SelectedItem}" Command="{Binding SelectedItemChangedCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsEnabled}"/>
+                                            <Image Source="{Binding NodeDef.ResourceType, Converter={StaticResource nodeUriStringConverter}}" Width="16" Height="16"/>
+                                            <TextBlock Text="{Binding NodeDef.Symbol}"/>
+                                            <TextBlock Text="{Binding NodeDef.Name}"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
+                        </ContentControl>
+                    </GroupBox>
+                    <GroupBox Header="Node Info" Visibility="{Binding SelectedNode, Converter={StaticResource nullVisConverter}}" Grid.Column="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="nodeNameLabel" Content="Name:"/>
+                            <Label x:Name="nodeNameText" Content="{Binding SelectedNode.NodeDef.Name}" Grid.Column="1" HorizontalAlignment="Left"/>
+                            <Label x:Name="nodeTypeLabel" Content="Type:" Grid.Row="1"/>
+                            <Label x:Name="nodeTypeText" Content="{Binding SelectedNode.NodeDef.ResourceType}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
+                            <Label x:Name="nodeStatusLabel" Content="Status:" Grid.Row="2"/>
+                            <Label x:Name="nodeStatusText" Content="{Binding SelectedNode.NodeDef.Change}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </ScrollViewer>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="deleteButton" Content="Test"/>
+                <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Button x:Name="saveButton" Content="Save"/>
+                </WrapPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>
