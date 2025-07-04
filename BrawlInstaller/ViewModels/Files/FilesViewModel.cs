@@ -26,6 +26,7 @@ namespace BrawlInstaller.ViewModels
         // Private properties
         private string _leftFilePath;
         private string _rightFilePath;
+        private string _targetFilePath;
         private ResourceNode _leftFileNode;
         private ResourceNode _rightFileNode;
         private FilePatch _filePatch;
@@ -53,6 +54,7 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public string LeftFilePath { get => _leftFilePath; set { _leftFilePath = value; OnPropertyChanged(nameof(LeftFilePath)); } }
         public string RightFilePath { get => _rightFilePath; set { _rightFilePath = value;OnPropertyChanged(nameof(RightFilePath)); } }
+        public string TargetFilePath { get => _targetFilePath; set { _targetFilePath = value; OnPropertyChanged(nameof(TargetFilePath)); } }
         public ResourceNode LeftFileNode { get => _leftFileNode; set { _leftFileNode = value; OnPropertyChanged(nameof(LeftFileNode)); } }
         public ResourceNode RightFileNode { get => _rightFileNode; set { _rightFileNode = value; OnPropertyChanged(nameof(RightFileNode)); } }
         public string FileFilter { get => SupportedFilesHandler.GetAllSupportedFilter(true); }
@@ -63,9 +65,17 @@ namespace BrawlInstaller.ViewModels
         public NodeDefViewModel SelectedNode { get => _selectedNode; set { _selectedNode = value; OnPropertyChanged(nameof(SelectedNode)); } }
         public ICommand SelectedItemChangedCommand => new RelayCommand(param => SelectedItemChanged(param));
 
+        [DependsUpon(nameof(LeftFilePath))]
+        [DependsUpon(nameof(RightFilePath))]
+        public bool FilePathsEnabled { get => !string.IsNullOrEmpty(LeftFilePath) && !string.IsNullOrEmpty(RightFilePath); }
+
         // Methods
         public void CompareFiles()
         {
+            if (string.IsNullOrEmpty(RightFilePath) || string.IsNullOrEmpty(LeftFilePath))
+            {
+                return;
+            }
             _dialogService.ShowProgressBar("Comparing", "Comparing files...");
             using (new CursorWait())
             {
@@ -82,6 +92,7 @@ namespace BrawlInstaller.ViewModels
                     RightFileNode = rightFileNode;
                     LeftFileNode = leftFileNode;
                     FilePatch = _patchService.CompareFiles(LeftFileNode, RightFileNode);
+                    TargetFilePath = LeftFilePath;
                 }
             }
             _dialogService.CloseProgressBar();
@@ -116,14 +127,15 @@ namespace BrawlInstaller.ViewModels
 
         public void ApplyFilePatch()
         {
-            if (!string.IsNullOrEmpty(LeftFilePath) && FilePatch != null)
+            if (!string.IsNullOrEmpty(TargetFilePath) && FilePatch != null)
             {
                 _dialogService.ShowProgressBar("Applying", "Applying file patch...");
                 using (new CursorWait())
                 {
-                    _patchService.ApplyFilePatch(FilePatch, LeftFilePath); // TODO: Change this to use a different path and not the left one
+                    _patchService.ApplyFilePatch(FilePatch, TargetFilePath);
                 }
                 _dialogService.CloseProgressBar();
+                _dialogService.ShowMessage("Changes applied successfully.", "Success");
             }
         }
 

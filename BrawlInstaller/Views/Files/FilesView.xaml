@@ -16,34 +16,33 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Label x:Name="leftFileLabel" Content="Left File:"/>
-            <userControls:FileBox x:Name="leftFileBox" TextBoxWidth="300" Text="{Binding LeftFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Column="1"/>
-            <Label x:Name="rightFileLabel" Content="Right File:" Grid.Row="1"/>
-            <userControls:FileBox x:Name="rightFileBox" TextBoxWidth="300" Text="{Binding RightFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Row="1" Grid.Column="1"/>
-            <StackPanel Grid.Row="2">
-                <Button x:Name="compareButton" Content="Compare" Command="{Binding CompareFilesCommand}"/>
-                <!--TODO: Probably move this button to be more consistent with save buttons on other forms-->
-                <Button x:Name="exportButton" Content="Export" Command="{Binding ExportFilePatchCommand}"/>
-                <Button x:Name="openButton" Content="Browse..." Command="{Binding OpenFilePatchCommand}"/>
-                <Button x:Name="applyButton" Content="Apply" Command="{Binding ApplyFilePatchCommand}"/>
-            </StackPanel>
-        </Grid>
+        <GroupBox Header="Compare Files" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="leftFileLabel" Content="Left File:"/>
+                <userControls:FileBox x:Name="leftFileBox" TextBoxWidth="300" Text="{Binding LeftFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Column="1"/>
+                <Label x:Name="rightFileLabel" Content="Right File:" Grid.Row="1"/>
+                <userControls:FileBox x:Name="rightFileBox" TextBoxWidth="300" Text="{Binding RightFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Row="1" Grid.Column="1"/>
+                <StackPanel Grid.Row="2">
+                    <Button x:Name="compareButton" Content="Compare" Command="{Binding CompareFilesCommand}" IsEnabled="{Binding FilePathsEnabled}"/>
+                    <Button x:Name="openButton" Content="Browse..." Command="{Binding OpenFilePatchCommand}"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
         <Separator Grid.Column="1" HorizontalAlignment="Left">
             <Separator.LayoutTransform>
                 <RotateTransform Angle="90"/>
             </Separator.LayoutTransform>
         </Separator>
-        <Grid Grid.Column="1" Margin="3,0,0,0">
+        <Grid Grid.Column="1" Margin="3,0,0,0" Visibility="{Binding FilePatch, Converter={StaticResource nullVisConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -54,7 +53,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Changes" Visibility="{Binding FilePatch, Converter={StaticResource nullVisConverter}}" MaxHeight="{Binding ElementName=scrollViewer, Path=ViewportHeight}">
+                    <GroupBox Header="Changes" MaxHeight="{Binding ElementName=scrollViewer, Path=ViewportHeight}">
                         <ContentControl Style="{StaticResource resizeContainer}" MinWidth="140">
                             <TreeView x:Name="treeView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemsSource="{Binding NodeList}" >
                                 <i:Interaction.Triggers>
@@ -101,9 +100,13 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="deleteButton" Content="Test"/>
+                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label x:Name="targetFileLabel" Content="Target File:"/>
+                    <userControls:FileBox x:Name="targetFileBox" Text="{Binding TargetFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" TextBoxWidth="300"/>
+                </WrapPanel>
                 <WrapPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                    <Button x:Name="saveButton" Content="Save"/>
+                    <Button x:Name="exportButton" Content="Save as..." Command="{Binding ExportFilePatchCommand}"/>
+                    <Button x:Name="applyButton" Content="Apply to Target" Width="Auto" Command="{Binding ApplyFilePatchCommand}" IsEnabled="{Binding TargetFilePath, Converter={StaticResource emptyStringBoolConverter}}"/>
                 </WrapPanel>
             </Grid>
         </Grid>
