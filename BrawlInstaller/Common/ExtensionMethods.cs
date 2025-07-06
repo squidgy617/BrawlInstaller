@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using BrawlInstaller.Classes;
 using BrawlInstaller.Enums;
+using BrawlInstaller.ViewModels;
 using BrawlLib.Internal;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
@@ -634,6 +635,88 @@ namespace BrawlInstaller.Common
             ulong affectedBits = bitmask & mask;
             ulong shiftedBits = (affectedBits >> 1) & mask;
             return (bitmask & ~mask) | shiftedBits;
+        }
+    }
+
+    public static class NodeDefViewModelCollectionExtensions
+    {
+        public static List<NodeDef> ToNodeDefs(this ObservableCollection<NodeDefViewModel> nodeDefVms)
+        {
+            var nodeDefs = new List<NodeDef>();
+            foreach(var nodeDefVm in nodeDefVms)
+            {
+                nodeDefs.Add(nodeDefVm.NodeDef);
+            }
+            return nodeDefs;
+        }
+    }
+
+    public static class NodeDefListExtensions
+    {
+        public static ObservableCollection<NodeDefViewModel> ToViewModel(this List<NodeDef> nodeDefs)
+        {
+            var nodeDefVms = new ObservableCollection<NodeDefViewModel>();
+            foreach(var nodeDef in nodeDefs)
+            {
+                nodeDefVms.Add(nodeDef.ToViewModel());
+            }
+            return nodeDefVms;
+        }
+
+        public static List<NodeDef> FlattenList(this List<NodeDef> nodeDefs)
+        {
+            var flatList = new List<NodeDef>();
+            foreach(var nodeDef in nodeDefs)
+            {
+                flatList.Add(nodeDef);
+                flatList.AddRange(nodeDef.Children.FlattenList());
+            }
+            return flatList;
+        }
+
+        public static IEnumerable<NodeDef> RecursiveSelect(this IEnumerable<NodeDef> nodeDefs, Func<NodeDef, bool> keep)
+        {
+            foreach(var nodeDef in nodeDefs)
+            {
+                nodeDef.Children = nodeDef.Children?.RecursiveSelect(keep).ToList();
+                if (keep(nodeDef)) yield return nodeDef;
+            }
+        }
+
+        public static List<NodeDef> AddNode(this List<NodeDef> nodeDefs, NodeDef newNode)
+        {
+            // Get top-level parent
+            var currentNode = newNode;
+            while (currentNode.Parent != null)
+            {
+                currentNode = currentNode.Parent;
+            }
+            // Add node recursively
+            AddRecursive(nodeDefs, currentNode, newNode);
+            return nodeDefs;
+        }
+
+        private static void AddRecursive(List<NodeDef> nodeDefs, NodeDef newNode, NodeDef finalNode)
+        {
+            // Search for match
+            var match = nodeDefs.FirstOrDefault(x => x.Path == newNode.Path && x.Index == newNode.Index);
+            // If there is no match, add the node as new
+            if (match == null)
+            {
+                nodeDefs.Add(newNode);
+                match = newNode;
+            }
+            // Only drill down into containers
+            if (match.IsContainer())
+            {
+                // Get the next node in the path
+                var nextNode = newNode.Children.ToList().RecursiveSelect(x => x == finalNode || x.Children.Contains(finalNode)).FirstOrDefault();
+                // Drill down into next node
+                if (nextNode != null)
+                {
+                    AddRecursive(match.Children, nextNode, finalNode);
+                }
+            }
         }
     }
 

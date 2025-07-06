@@ -36,7 +36,7 @@ namespace BrawlInstaller.ViewModels
         [ImportingConstructor]
         // Order of viewmodels in this constructor determines the order they load in!
         public MainViewModel(IDialogService dialogService, ISettingsService settingsService, IFileService fileService, IMainControlsViewModel mainControlsViewModel, ISettingsViewModel settingsViewModel,
-            IFighterViewModel fighterViewModel, IStageViewModel stageViewModel, ITracklistViewModel tracklistViewModel, ITrophyViewModel trophyViewModel)
+            IFighterViewModel fighterViewModel, IStageViewModel stageViewModel, ITracklistViewModel tracklistViewModel, ITrophyViewModel trophyViewModel, IFilesViewModel filesViewModel)
         {
             _dialogService = dialogService;
             _settingsService = settingsService;
@@ -47,6 +47,7 @@ namespace BrawlInstaller.ViewModels
             StageViewModel = stageViewModel;
             TracklistViewModel = tracklistViewModel;
             TrophyViewModel = trophyViewModel;
+            FilesViewModel = filesViewModel;
 
             Application.Current.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(AppDispatcherUnhandledException);
 
@@ -72,6 +73,7 @@ namespace BrawlInstaller.ViewModels
         public IStageViewModel StageViewModel { get; set; }
         public ITracklistViewModel TracklistViewModel { get; set; }
         public ITrophyViewModel TrophyViewModel { get; set; }
+        public IFilesViewModel FilesViewModel { get; set; }
 
         //Methods
         private void UpdateSettings()
