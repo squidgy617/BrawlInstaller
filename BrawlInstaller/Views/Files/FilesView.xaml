@@ -97,6 +97,8 @@
                             <StackPanel x:Name="nodeInfoStackPanel" Grid.Row="3" Grid.ColumnSpan="2">
                                 <CheckBox x:Name="forceAddCheckbox" IsChecked="{Binding SelectedNode.NodeDef.ForceAdd}" Content="Force Add" Visibility="{Binding SelectedNode.AllowForceAdd, Converter={StaticResource boolVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}" ToolTip="Always add this node when patch is applied, even if a matching node is found in the target file."/>
                                 <CheckBox x:Name="replaceAllContentsCheckBox" IsChecked="{Binding SelectedNode.NodeDef.ReplaceAllContents}" Content="Replace All Contents" Visibility="{Binding SelectedNode.AllowReplaceAllContents, Converter={StaticResource boolVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}" ToolTip="If a match is found, replace the entire archive with the one from the patch, including any contents that were within it in the original file from which it was created."/>
+                                <Image x:Name="previewImage" Height="128" Width="128" Source="{Binding SelectedNode.NodeDef.Image}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                                <TextBlock x:Name="colorSmashText" Text="{Binding SelectedNode.NodeDef.GroupName, StringFormat=Color smashed with {0}}" Visibility="{Binding SelectedNode.NodeDef.GroupName, Converter={StaticResource stringVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}"/>
                             </StackPanel>
                         </Grid>
                     </GroupBox>

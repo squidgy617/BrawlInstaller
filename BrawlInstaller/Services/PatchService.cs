@@ -75,7 +75,7 @@ namespace BrawlInstaller.Services
                         if (rightNodeDef.MD5 != leftNodeDef.MD5 || GetNodeGroupRoot(rightNodeDef, rightFileNodeDefs).MD5 != GetNodeGroupRoot(leftNodeDef, leftFileNodeDefs).MD5)
                         {
                             var isContainer = rightNodeDef.IsContainer() && leftNodeDef.IsContainer();
-                            rightNodeDef.IsChanged = true; // TODO: Probably have to do some stuff from exportPatchNode in old logic
+                            rightNodeDef.IsChanged = true;
                             rightNodeDef.Change = !isContainer ? NodeChangeType.Altered : NodeChangeType.Container;
                             // If not a container, mark children to be skipped, so they don't show up as changes unnecessarily
                             if (!isContainer)
@@ -89,13 +89,18 @@ namespace BrawlInstaller.Services
                 // If we never found a match for a node in the right file, it's a brand new node, and should also be exported
                 if (!matchFound)
                 {
-                    rightNodeDef.IsChanged = true; // TODO: Probably have to do some stuff from exportPatchNode in old logic
+                    rightNodeDef.IsChanged = true;
                     rightNodeDef.Change = NodeChangeType.Added;
                 }
                 // If we found a match at all, the left file node should be removed from the list for comparison, to speed up searchs and prevent false positives
                 if (removeNode != null)
                 {
                     leftFileNodeDefs.Remove(removeNode);
+                }
+                // If there is a change and it's a TEX0 node, get the image associated
+                if (rightNodeDef.IsChanged && rightNodeDef.Node.GetType() == typeof(TEX0Node))
+                {
+                    rightNodeDef.Image = ((TEX0Node)rightNodeDef.Node).GetImage(0).ToBitmapImage();
                 }
             }
             // Mark nodes for removal
@@ -270,6 +275,10 @@ namespace BrawlInstaller.Services
                 if (!FilePatches.Folders.Contains(nodeDef.Node.GetType()))
                 {
                     _fileService.SaveFileAs(nodeDef.Node, $"{path}\\{nodeDef.Id}");
+                    if (nodeDef.Image != null)
+                    {
+                        _fileService.SaveImage(nodeDef.Image, $"{path}\\{nodeDef.Id}.png");
+                    }
                 }
             }
             // Delete patch if it's being overwritten
@@ -300,13 +309,18 @@ namespace BrawlInstaller.Services
                     {
                         nodeDef.Node = _fileService.OpenFile($"{path}\\{nodeDef.Id}");
                     }
+                    // For nodes that require parents, we cannot open them right away, so just have to store the path
                     else
                     {
                         nodeDef.NodeFilePath = $"{path}\\{nodeDef.Id}";
                     }
+                    var imagePath = $"{path}\\{nodeDef.Id}.png";
+                    if (_fileService.FileExists(imagePath))
+                    {
+                        nodeDef.Image = _fileService.LoadImage(imagePath);
+                    }
                 });
             }
-            // TODO: Delete folder after? If we can keep nodes in mem (Probably can't delete it, because bones must come from filesystem)
             return new FilePatch { NodeDefs = nodeDefs };
         }
 

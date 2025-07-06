@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace BrawlInstaller.Classes
 {
@@ -87,6 +88,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string NodeFilePath { get; set; } = string.Empty;
         public bool ForceAdd { get; set; } = false;
         public bool ReplaceAllContents { get; set; } = false;
+        [JsonIgnore] public BitmapImage Image { get; set; }
 
         private string GetSymbol()
         {
@@ -118,7 +120,6 @@ namespace BrawlInstaller.Classes
                 return true;
             }
             // MDL0Nodes are only containers if they don't have anything other than Bones and Definitions
-            // TODO: We need to somehow check that BOTH source AND target are containers, otherwise we get folders looking like they're added when they shouldn't be
             if (NodeType == typeof(MDL0Node))
             {
                 if (!Children.Any(x => x.Name != "Bones" && x.Name != "Definitions") && !(Node?.Children.Any(x => x?.Name != "Bones" && x?.Name != "Definitions") == true))

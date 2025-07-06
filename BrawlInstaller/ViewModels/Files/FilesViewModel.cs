@@ -158,7 +158,7 @@ namespace BrawlInstaller.ViewModels
         public NodeDefViewModel Parent { get => _parent; set { _parent = value; OnPropertyChanged(nameof(Parent)); } }
         public bool IsEnabled { get => _isEnabled; set { UpdateEnableState(value); } }
         public bool AllowForceAdd { get => NodeDef?.Change == NodeChangeType.Altered || NodeDef?.Change == NodeChangeType.Added; }
-        public bool AllowReplaceAllContents { get => FilePatches.Containers.Contains(NodeDef?.NodeType) && !FilePatches.Folders.Contains(NodeDef?.NodeType); }
+        public bool AllowReplaceAllContents { get => NodeDef?.IsContainer() == true && !FilePatches.Folders.Contains(NodeDef?.NodeType); }
 
         private void UpdateEnableState(bool isEnabled, bool updateChildren = true)
         {
