@@ -55,7 +55,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Changes" MaxHeight="{Binding ElementName=scrollViewer, Path=ViewportHeight}">
+                    <GroupBox Header="Changes" Height="{Binding ElementName=scrollViewer, Path=ViewportHeight}">
                         <ContentControl Style="{StaticResource resizeContainer}" MinWidth="140">
                             <TreeView x:Name="treeView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemsSource="{Binding NodeList}" >
                                 <i:Interaction.Triggers>
