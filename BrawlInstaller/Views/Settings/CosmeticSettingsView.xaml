@@ -262,8 +262,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <!--<Label x:Name="patIdTypeLabel" Content="ID Type:" ToolTip="Type of ID to use for frame indexes for this cosmetic"/>
-                        <ComboBox x:Name="patIdComboBox" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedPatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="1" Width="120" IsEnabled="{Binding PatControlsEnabled}"/>-->
+                        <Label x:Name="patIdTypeLabel" Content="ID Type:" ToolTip="Type of ID to use for frame indexes for this cosmetic"/>
+                        <ComboBox x:Name="patIdComboBox" ItemsSource="{Binding IdTypes}" SelectedValue="{Binding SelectedPatSettings.IdType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="1" Width="120" IsEnabled="{Binding PatControlsEnabled}"/>
                         <Label x:Name="patMultiplierLabel" Content="ID Multiplier:" Grid.Row="1" ToolTip="Amount to multiply ID by when using it for frame index"/>
                         <TextBox x:Name="patMultiplerTextBox" Text="{Binding SelectedPatSettings.Multiplier}" Grid.Row="1" Grid.Column="1" Width="60" IsEnabled="{Binding PatControlsEnabled}"/>
                         <Label x:Name="patOffsetLabel" Content="ID Offset:" Grid.Row="2" ToolTip="Amount to add to ID when using it for frame index. Applied after multiplier"/>

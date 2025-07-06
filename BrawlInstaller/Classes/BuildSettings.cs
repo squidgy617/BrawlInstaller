@@ -98,6 +98,17 @@ namespace BrawlInstaller.Classes
             var copy = JsonConvert.DeserializeObject<CosmeticDefinition>(JsonConvert.SerializeObject(this));
             return copy;
         }
+
+        public int GetArchiveId(BrawlIds ids)
+        {
+            var id = ids.GetIdOfType(IdType) ?? -1;
+            return id;
+        }
+
+        public int GetTextureBaseId(BrawlIds ids)
+        {
+            return GetArchiveId(ids);
+        }
     }
 
     public class PatSettings
@@ -111,6 +122,25 @@ namespace BrawlInstaller.Classes
         public int? Offset { get; set; } = null;
         public bool AddTerminatorFrame { get; set; } = false;
         public bool NormalizeTextureIds { get; set; } = false;
+        [JsonIgnore] public bool? CostumeCosmetic { 
+            get 
+            { 
+                if (IdType == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return IdType == Enums.IdType.Cosmetic;
+                }
+            } 
+        }
+
+        public int GetFrameId(CosmeticDefinition definition, BrawlIds ids)
+        {
+            var id = ids.GetIdOfType(IdType ?? definition.IdType) ?? -1;
+            return id;
+        }
     }
 
     public class SoundSettings
