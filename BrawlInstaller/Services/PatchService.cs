@@ -159,8 +159,7 @@ namespace BrawlInstaller.Services
             var match = rootNode.Children.Where(x => x.TreePath == nodeChange.Path).Skip(nodeChange.Index - 1).FirstOrDefault();
             changedNode = match;
             // Take action on the node
-            // TODO: Handle changes to containers that are just param changes and stuff
-            if (nodeChange.Change != NodeChangeType.None && nodeChange.Change != NodeChangeType.Container)
+            if (nodeChange.Change != NodeChangeType.None && (nodeChange.Change != NodeChangeType.Container || nodeChange.ReplaceAllContents) && !nodeChange.ForceAdd)
             {
                 // Remove existing node
                 if (match != null)
@@ -168,7 +167,7 @@ namespace BrawlInstaller.Services
                     rootNode.RemoveChild(match);
                 }
             }
-            if (nodeChange.Change == NodeChangeType.Altered || nodeChange.Change == NodeChangeType.Added)
+            if (nodeChange.Change == NodeChangeType.Altered || nodeChange.Change == NodeChangeType.Added || nodeChange.ForceAdd || nodeChange.ReplaceAllContents)
             {
                 // Add new node
                 var newNode = _fileService.CreateNode(nodeChange.NodeType);
@@ -240,9 +239,8 @@ namespace BrawlInstaller.Services
                 arcEntryNode.RedirectIndex = nodeChange.ARCSettings.RedirectIndex;
                 arcEntryNode.RedirectTarget = nodeChange.ARCSettings.RedirectTarget;
             }
-            // TODO: Force add, param updates, settings updates, all that good stuff
             // Drill down and apply changes
-            if (nodeChange.IsContainer())
+            if (nodeChange.IsContainer() && !nodeChange.ReplaceAllContents)
             {
                 foreach(var nodeChangeChild in nodeChange.Children)
                 {
