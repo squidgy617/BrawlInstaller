@@ -25,7 +25,7 @@
             <TabItem Header="Trophies" IsEnabled="{Binding BuildSettingsExist}" IsEnabledChanged="TabItem_IsEnabledChanged">
                 <ContentControl x:Name="TrophyView" Content="{Binding TrophyViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
-            <TabItem Header="Files">
+            <TabItem Header="Files" x:Name="filesTab">
                 <ContentControl x:Name="FilesView" Content="{Binding FilesViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </TabItem>
             <TabItem Header="Settings" IsEnabled="{Binding BuildPathExists}" IsEnabledChanged="TabItem_IsEnabledChanged">

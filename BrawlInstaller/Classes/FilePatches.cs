@@ -82,6 +82,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string Symbol { get => GetSymbol(); }
         public string GroupName { get; set; } = string.Empty;
         public Type NodeType { get; set; }
+        [JsonIgnore] public string TypeName { get => NodeType.Name; }
         public int ContainerIndex { get; set; }
         public ARCEntrySettings ARCSettings { get; set; } = null;
         [JsonIgnore] public bool IsEnabled { get; set; } = true;

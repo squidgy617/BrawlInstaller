@@ -26,7 +26,7 @@ namespace BrawlInstaller.Views
 
         private void TabItem_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            MainTabControl.SelectedItem = MainTabControl.Items.OfType<TabItem>().FirstOrDefault(x => x.IsEnabled);
+            MainTabControl.SelectedItem = MainTabControl.Items.OfType<TabItem>().FirstOrDefault(x => x.IsEnabled && x.Name != "filesTab");
         }
     }
 }
