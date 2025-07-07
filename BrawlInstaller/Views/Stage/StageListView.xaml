@@ -11,15 +11,11 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Name="userControl">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid>
+        <ScrollViewer x:Name="stageListScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid Height="{Binding ElementName=stageListScrollViewer, Path=ViewportHeight}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -32,10 +28,14 @@
                     <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
                     <Button x:Name="stageListSaveButton" Content="Save" Command="{Binding SaveStageListCommand}"/>
                 </StackPanel>
-                <StackPanel x:Name="stageTableStackPanel" Grid.Row="1">
+                <Grid x:Name="stageTableStackPanel" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Label x:Name="stageTableLabel" Content="All Stages:" HorizontalAlignment="Left" ToolTip="All stages in build"/>
-                    <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120">
-                        <ListBox x:Name="stageTableListBox" ItemsSource="{Binding StageTable}" SelectedValue="{Binding SelectedStageTableEntry}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
+                    <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120" Grid.Row="1">
+                        <ListBox x:Name="stageTableListBox" ItemsSource="{Binding StageTable}" SelectedValue="{Binding SelectedStageTableEntry}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Name}">
@@ -47,11 +47,15 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </ContentControl>
+                </Grid>
+                <StackPanel Grid.Row="2">
+                    <Button x:Name="loadStageButton" Content="Load" CommandParameter="{Binding SelectedStageTableEntry}" Command="{Binding LoadStageCommand}" IsEnabled="{Binding SelectedStageTableEntry, Converter={StaticResource nullBoolConverter}}"/>
+                    <Button x:Name="newStageButton" Content="New" Command="{Binding NewStageCommand}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Button x:Name="setStageUnusedButton" Content="→" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding AddStageToListCommand}" IsEnabled="{Binding SelectedStageTableEntry, Converter={StaticResource nullBoolConverter}}"/>
+                    <Button x:Name="setStageUnusedButton" Grid.Column="2" Grid.Row="1" Content="→" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding AddStageToListCommand}" IsEnabled="{Binding SelectedStageTableEntry, Converter={StaticResource nullBoolConverter}}"/>
                 </StackPanel>
-                <TabControl x:Name="pageTabControl" SelectedItem="{Binding SelectedPage, Mode=TwoWay}" SelectedIndex="0" ItemsSource="{Binding SelectedStageList.Pages}" Grid.Row="1" Grid.Column="3" Width="Auto" Height="Auto">
+                <TabControl x:Name="pageTabControl" SelectedItem="{Binding SelectedPage, Mode=TwoWay}" SelectedIndex="0" ItemsSource="{Binding SelectedStageList.Pages}" Grid.Row="1" Grid.Column="3" Width="Auto" VerticalAlignment="Stretch">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding PageNumber}"/>
@@ -65,12 +69,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <ContentControl Style="{StaticResource resizeContainer}" MinWidth="120">
-                                    <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
+                                    <ListBox x:Name="stageListBox" ItemsSource="{Binding Source={x:Reference userControl}, Path=DataContext.StageSlots}" SelectedIndex="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageIndex}" SelectedValue="{Binding Source={x:Reference userControl}, Path=DataContext.SelectedStageSlot}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}">
@@ -109,9 +113,5 @@
                 </TabControl>
             </Grid>
         </ScrollViewer>
-        <StackPanel Grid.Row="1">
-            <Button x:Name="loadStageButton" Content="Load" CommandParameter="{Binding SelectedStageTableEntry}" Command="{Binding LoadStageCommand}" IsEnabled="{Binding SelectedStageTableEntry, Converter={StaticResource nullBoolConverter}}"/>
-            <Button x:Name="newStageButton" Content="New" Command="{Binding NewStageCommand}"/>
-        </StackPanel>
     </Grid>
 </UserControl>

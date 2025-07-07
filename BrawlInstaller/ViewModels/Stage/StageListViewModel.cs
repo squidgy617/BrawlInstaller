@@ -127,7 +127,8 @@ namespace BrawlInstaller.ViewModels
         public List<int> IncompleteStageIds { get => _incompleteStageIds; set { _incompleteStageIds = value; OnPropertyChanged(nameof(IncompleteStageIds)); } }
 
         [DependsUpon(nameof(SelectedStageList))]
-        public bool DisplayRssOptions { get => SelectedStageList?.Type == StageListType.RSS; }
+        [DependsUpon(nameof(SelectedStageSlot))]
+        public bool DisplayRssOptions { get => SelectedStageList?.Type == StageListType.RSS && SelectedStageSlot != null; }
 
         [DependsUpon(nameof(SelectedPage))]
         [DependsUpon(nameof(SelectedStageIndex))]

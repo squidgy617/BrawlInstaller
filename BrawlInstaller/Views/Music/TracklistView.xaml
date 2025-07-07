@@ -22,38 +22,33 @@
         </Separator>
         <Grid>
             <GroupBox x:Name="tracklistGroupBox" Header="Tracklists" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <ComboBox x:Name="tracklistOptionsDropDown" ItemsSource="{Binding TracklistOptions}" SelectedItem="{Binding SelectedTracklistOption}" Width="120" DisplayMemberPath="Name"/>
-                            <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" MinWidth="120">
-                                <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" Height="400" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Path=.}">
-                                                <TextBlock.InputBindings>
-                                                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTracklistCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
-                                                </TextBlock.InputBindings>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </ContentControl>
-                        </Grid>
-                    </ScrollViewer>
-                    <StackPanel Grid.Row="1">
-                        <Button x:Name="loadButton" Content="Load" Command="{Binding LoadTracklistCommand}" IsEnabled="{Binding SelectedTracklist, Converter={StaticResource nullBoolConverter}}"/>
-                        <Button x:Name="newButton" Content="New" Command="{Binding NewTracklistCommand}"/>
-                    </StackPanel>
-                </Grid>
+                <ScrollViewer x:Name="trackListScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid Height="{Binding ElementName=trackListScrollViewer, Path=ViewportHeight}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="tracklistOptionsDropDown" ItemsSource="{Binding TracklistOptions}" SelectedItem="{Binding SelectedTracklistOption}" Width="120" DisplayMemberPath="Name"/>
+                        <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" MinWidth="120">
+                            <ListBox x:Name="tracklistsListBox" ItemsSource="{Binding Tracklists}" SelectedValue="{Binding SelectedTracklist}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=.}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.LoadTracklistCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ContentControl>
+                        <StackPanel Grid.Row="2">
+                            <Button x:Name="loadButton" Content="Load" Command="{Binding LoadTracklistCommand}" IsEnabled="{Binding SelectedTracklist, Converter={StaticResource nullBoolConverter}}"/>
+                            <Button x:Name="newButton" Content="New" Command="{Binding NewTracklistCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
             </GroupBox>
         </Grid>
         <Grid Grid.Column="1" Margin="3,0,0,0" Visibility="{Binding LoadedTracklist, Converter={StaticResource nullVisConverter}}">
