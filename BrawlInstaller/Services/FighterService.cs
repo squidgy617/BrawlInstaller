@@ -1772,11 +1772,11 @@ namespace BrawlInstaller.Services
                 // Update fighter slot
                 if (asmTable.Count > (fighterId * 2) + 1)
                 {
-                    var x = $"{throwReleasePoint.X}";
+                    var x = throwReleasePoint.X.ToString(CultureInfo.CreateSpecificCulture("en-US"));
                     x = x.Contains(".") ? x : x += ".0";
                     asmTable[fighterId.Value * 2].Item = x;
                     asmTable[fighterId.Value * 2].Comment = fighterInfo.DisplayName;
-                    var y = $"{throwReleasePoint.Y}";
+                    var y = throwReleasePoint.Y.ToString(CultureInfo.CreateSpecificCulture("en-US"));
                     y = y.Contains(".") ? y : y += ".0";
                     asmTable[(fighterId.Value * 2) + 1].Item = y;
                 }

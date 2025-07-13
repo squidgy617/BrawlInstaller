@@ -591,8 +591,8 @@ namespace BrawlInstaller.Services
                     if (iniData.TryGetValue("throwReleasePoint", out string throwRelease))
                     {
                         var throwReleasePoints = throwRelease.Split(',');
-                        var resultX = double.TryParse(throwReleasePoints[0], out double x);
-                        var resultY = double.TryParse(throwReleasePoints[1], out double y);
+                        var resultX = double.TryParse(throwReleasePoints[0], NumberStyles.Number, CultureInfo.InvariantCulture, out double x);
+                        var resultY = double.TryParse(throwReleasePoints[1], NumberStyles.Number, CultureInfo.InvariantCulture, out double y);
                         if (resultX && resultY)
                             fighterPackage.FighterSettings.ThrowReleasePoint = new Position(x, y);
                     }
