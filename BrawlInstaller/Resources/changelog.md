@@ -1,6 +1,1 @@
-- New feature: File Comparison and Patching
-    - This feature allows you to compare BrawlLib-compatible files, generate patches based on their differences, and then apply those changes to files.
-    - For more detailed information, view the "Files" page on the wiki.
-- New field added to PAT0 settings: ID Type
-    - Allows you to configure a different ID type between textures and frame indexes for installed cosmetics.
-- Fighter, stage, music, and trophy lists will now extend the length of the window instead of having a fixed length.
+- Fixed an issue where cultures that use `,` instead of `.` for decimal values would sometimes write throw release values incorrectly.
