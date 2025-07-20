@@ -2695,7 +2695,7 @@ namespace BrawlInstaller.Services
             {
                 var code = _codeService.ReadCode(bonusFighterPath);
                 var numFightersAlias = _codeService.GetCodeAlias(code, "MaxChar");
-                if (numFightersAlias != null)
+                if (numFightersAlias != null && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.BonusFighterLabel))
                 {
                     var numFighters = Convert.ToInt32(numFightersAlias.Value);
                     var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.BonusFighterLabel);
@@ -2813,6 +2813,29 @@ namespace BrawlInstaller.Services
                         _fileService.SaveFile(rootNode);
                         _fileService.CloseFile(rootNode);
                     }
+                }
+            }
+            var bonusRoster = rosters.FirstOrDefault(x => x.RosterType == RosterType.Bonus);
+            if (bonusRoster != null)
+            {
+                var bonusFighterPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BonusFighterFile);
+                if (_fileService.FileExists(bonusFighterPath) && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.BonusFighterLabel))
+                {
+                    var code = _codeService.ReadCode(bonusFighterPath);
+                    // Replace ASM table
+                    var asmTable = bonusRoster.ConvertToAsmTable();
+                    // Fill asm table with placeholder values
+                    while (asmTable.Count < 32)
+                    {
+                        asmTable.Add(new AsmTableEntry { Item = "0xFF", Comment = "Unknown" });
+                    }
+                    code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.BonusFighterLabel, asmTable, DataSize.Byte, 4);
+                    // Replace fighter number alias
+                    var alias = _codeService.GetCodeAlias(code, "MaxChar");
+                    var startIndex = alias.Index;
+                    var endIndex = code.IndexOf("\r\n", startIndex);
+                    code = code.Substring(0, startIndex) + $".alias {alias.Name} = {bonusRoster.Entries.Count - 1}" + code.Substring(endIndex);
+                    _fileService.SaveTextFile(bonusFighterPath, code);
                 }
             }
         }

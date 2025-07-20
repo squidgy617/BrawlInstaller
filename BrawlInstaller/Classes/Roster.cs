@@ -15,6 +15,21 @@ namespace BrawlInstaller.Classes
         public bool AddNewCharacters { get; set; } = true;
         public RosterType RosterType { get; set; } = RosterType.CSS;
         public IdType IdType { get => RosterType == RosterType.CodeMenu ? IdType.SlotConfig : IdType.CSSSlotConfig; }
+
+        public List<AsmTableEntry> ConvertToAsmTable()
+        {
+            var newAsmTable = new List<AsmTableEntry>();
+            foreach (var entry in Entries)
+            {
+                var newAsmEntry = new AsmTableEntry
+                {
+                    Item = $"0x{entry.Id:X2}",
+                    Comment = entry.Name
+                };
+                newAsmTable.Add(newAsmEntry);
+            }
+            return newAsmTable;
+        }
     }
 
     public class RosterEntry
