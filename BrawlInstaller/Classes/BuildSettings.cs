@@ -220,7 +220,8 @@ namespace BrawlInstaller.Classes
             new AsmPath(FileType.ThrowReleaseAsmFile, "Source\\ProjectM\\Modifier\\ThrowRelease.asm", "ThrowReleaseTable:"),
             new AsmPath(FileType.FighterSpecificAsmFile, "Source\\ProjectM\\CloneEngine.asm"),
             new AsmPath(FileType.LLoadAsmFile, "Source\\ProjectM\\CSS.asm", ".GOTO->Table_Skip"),
-            new AsmPath(FileType.SlotExAsmFile, "Source\\P+Ex\\SlotEx.asm", "Table:")
+            new AsmPath(FileType.SlotExAsmFile, "Source\\P+Ex\\SlotEx.asm", "Table:"),
+            new AsmPath(FileType.BonusFighterFile, "", "ExtraFighterData:")
         };
 
         [JsonProperty("FileNodePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -304,6 +305,8 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string CodeMenuAddons { get => GetFilePath(FileType.CodeMenuAddons); }
         [JsonIgnore] public string RSSFile { get => GetFilePath(FileType.RSSFile); }
         [JsonIgnore] public string CostumeSwapFile { get => GetFilePath(FileType.CostumeSwapFile); }
+        [JsonIgnore] public string BonusFighterFile { get => GetAsmPath(FileType.BonusFighterFile); }
+        [JsonIgnore] public string BonusFighterLabel { get => GetLabel(FileType.BonusFighterFile); }
         public string BinFileHDTexturePath { get; set; } = "BrawlInstaller\\Stage Selection Screen\\Menu Alts";
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]

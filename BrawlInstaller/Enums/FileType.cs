@@ -94,6 +94,8 @@ namespace BrawlInstaller.Enums
         [Description("RSS Settings File")]
         RSSFile,
         [Description("Costume Swap Code File")]
-        CostumeSwapFile
+        CostumeSwapFile,
+        [Description("DLC Table File")]
+        BonusFighterFile
     }
 }

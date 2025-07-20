@@ -932,7 +932,7 @@ namespace BrawlInstaller.Services
         /// <returns>Alias</returns>
         public Alias GetCodeAlias(string fileText, string aliasName)
         {
-            var match = Regex.Match(fileText, "\\.alias\\s+NUM_PRESETS\\s+=\\s+(0[xX][0-9a-fA-F]+|\\d+)");
+            var match = Regex.Match(fileText, $"\\.alias\\s+{aliasName}\\s+=\\s+(0[xX][0-9a-fA-F]+|\\d+)");
             if (match.Success)
             {
                 var alias = GetAlias(match.Value, match.Index);

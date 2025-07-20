@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.StaticClasses;
+using BrawlLib.Internal;
 using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
@@ -2686,6 +2687,33 @@ namespace BrawlInstaller.Services
                         }
                     }
                     _fileService.CloseFile(rootNode);
+                }
+            }
+            // Get bonus fighters
+            var bonusFighterPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BonusFighterFile);
+            if (_fileService.FileExists(bonusFighterPath))
+            {
+                var code = _codeService.ReadCode(bonusFighterPath);
+                var numFightersAlias = _codeService.GetCodeAlias(code, "MaxChar");
+                if (numFightersAlias != null)
+                {
+                    var numFighters = Convert.ToInt32(numFightersAlias.Value);
+                    var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.BonusFighterLabel);
+                    var bonusRoster = new Roster { AddNewCharacters = false, Name = "DLC", RosterType = RosterType.Bonus };
+                    for (var i = 0; i <= numFighters; i++)
+                    {
+                        var result = int.TryParse(table[i].Replace("0x", ""), NumberStyles.HexNumber, null, out int id);
+                        if (result)
+                        {
+                            var newEntry = new RosterEntry
+                            {
+                                Id = id,
+                                Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == id)?.DisplayName ?? (id == 0x29 ? "Random" : "Unknown")
+                            };
+                            bonusRoster.Entries.Add(newEntry);
+                        }
+                    }
+                    rosters.Add(bonusRoster);
                 }
             }
             return rosters;

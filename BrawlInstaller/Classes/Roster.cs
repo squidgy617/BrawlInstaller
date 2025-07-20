@@ -29,6 +29,7 @@ namespace BrawlInstaller.Classes
     {
         CSS,
         CodeMenu,
-        SSE
+        SSE,
+        Bonus
     }
 }
