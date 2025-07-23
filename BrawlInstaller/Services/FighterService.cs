@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.Enums;
 using BrawlInstaller.StaticClasses;
+using BrawlLib.Internal;
 using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.ResourceNodes.ProjectPlus;
@@ -2688,6 +2689,33 @@ namespace BrawlInstaller.Services
                     _fileService.CloseFile(rootNode);
                 }
             }
+            // Get bonus fighters
+            var bonusFighterPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BonusFighterFile);
+            if (_fileService.FileExists(bonusFighterPath))
+            {
+                var code = _codeService.ReadCode(bonusFighterPath);
+                var numFightersAlias = _codeService.GetCodeAlias(code, "MaxChar");
+                if (numFightersAlias != null && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.BonusFighterLabel))
+                {
+                    var numFighters = Convert.ToInt32(numFightersAlias.Value);
+                    var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.BonusFighterLabel);
+                    var bonusRoster = new Roster { AddNewCharacters = false, Name = "DLC", RosterType = RosterType.Bonus };
+                    for (var i = 0; i <= numFighters; i++)
+                    {
+                        var result = int.TryParse(table[i].Replace("0x", ""), NumberStyles.HexNumber, null, out int id);
+                        if (result)
+                        {
+                            var newEntry = new RosterEntry
+                            {
+                                Id = id,
+                                Name = _settingsService.FighterInfoList.FirstOrDefault(x => x.Ids.CSSSlotConfigId == id)?.DisplayName ?? (id == 0x29 ? "Random" : "Unknown")
+                            };
+                            bonusRoster.Entries.Add(newEntry);
+                        }
+                    }
+                    rosters.Add(bonusRoster);
+                }
+            }
             return rosters;
         }
 
@@ -2785,6 +2813,29 @@ namespace BrawlInstaller.Services
                         _fileService.SaveFile(rootNode);
                         _fileService.CloseFile(rootNode);
                     }
+                }
+            }
+            var bonusRoster = rosters.FirstOrDefault(x => x.RosterType == RosterType.Bonus);
+            if (bonusRoster != null)
+            {
+                var bonusFighterPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.BonusFighterFile);
+                if (_fileService.FileExists(bonusFighterPath) && !string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.BonusFighterLabel))
+                {
+                    var code = _codeService.ReadCode(bonusFighterPath);
+                    // Replace ASM table
+                    var asmTable = bonusRoster.ConvertToAsmTable();
+                    // Fill asm table with placeholder values
+                    while (asmTable.Count < 32)
+                    {
+                        asmTable.Add(new AsmTableEntry { Item = "0xFF", Comment = "Unknown" });
+                    }
+                    code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.BonusFighterLabel, asmTable, DataSize.Byte, 4);
+                    // Replace fighter number alias
+                    var alias = _codeService.GetCodeAlias(code, "MaxChar");
+                    var startIndex = alias.Index;
+                    var endIndex = code.IndexOf("\r\n", startIndex);
+                    code = code.Substring(0, startIndex) + $".alias {alias.Name} = {bonusRoster.Entries.Count - 1}" + code.Substring(endIndex);
+                    _fileService.SaveTextFile(bonusFighterPath, code);
                 }
             }
         }
