@@ -1601,7 +1601,7 @@ namespace BrawlInstaller.Services
                         y = table[(fighterId.Value * 2) + 1];
                     }
                     throwRelease.X = Convert.ToDouble(x, CultureInfo.InvariantCulture);
-                    throwRelease.Y = Convert.ToDouble(x, CultureInfo.InvariantCulture);
+                    throwRelease.Y = Convert.ToDouble(y, CultureInfo.InvariantCulture);
                 }
             }
             return throwRelease;
