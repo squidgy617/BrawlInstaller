@@ -1,5 +1,1 @@
-- Added support for the code `Extra Fighters on Random Select [GeraRReal]`
-    - A new setting, "DLC Table File", has been added to general settings. This is the path to the ASM file containing the code.
-    - If this path is configured, you can modify which fighters are available as "DLC" in the roster section of the fighters tab. It will show up like any other roster.
-        - You should always have at least one slot in this table for Random
-- Fixed an issue where the number of RSS presets was not correctly loaded from the ASM file, causing BrawlInstaller to always assume you had 7 stage presets and thus causing RSS names to display incorrectly
+- Fixed loaded fighters always having the same X and Y values for their throw release points.
