@@ -763,6 +763,11 @@ namespace BrawlInstaller.Services
                 // TODO: Get Kirby hat files?
                 // Get non-costume pac files
                 fighterPackage.PacFiles = pacFileObjects.Where(x => !fighterPackage.Costumes.SelectMany(y => y.PacFiles).Contains(x)).ToList();
+                // Reobtain pac names for non-costume files so any with costume IDs but no CSS slot entry will still be captured
+                for (var i = 0; i < fighterPackage.PacFiles.Count; i++)
+                {
+                    fighterPackage.PacFiles[i] = _fighterService.GetFighterPacName(fighterPackage.PacFiles[i], fighterPackage.FighterInfo, false);
+                }
                 // Get module
                 fighterPackage.Module = _fileService.GetFiles(Path.Combine(path, "Module"), "*.rel").FirstOrDefault();
                 // Get ending pac files
