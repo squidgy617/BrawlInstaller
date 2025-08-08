@@ -1,1 +1,1 @@
-- Fixed loaded fighters always having the same X and Y values for their throw release points.
+- Fixed an issue where loading legacy fighter packages that included costume PAC files that are not in the CSS slot config would result in PAC files being loaded with conflicting names.
