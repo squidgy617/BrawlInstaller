@@ -236,7 +236,7 @@ namespace BrawlInstaller.ViewModels
 
         private void SaveTracklist()
         {
-            if (!ErrorValidate())
+            if (!ErrorValidate() || !Validate())
             {
                 return;
             }
@@ -337,13 +337,24 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Missing Song Paths", "One or more songs have a file, but a blank name/path. Add a path to these files to continue."));
                 result = false;
             }
+            if (messages.Count > 0)
+                _dialogService.ShowMessages("Errors have occurred that prevent your tracklist from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
+            return result;
+        }
+
+        private bool Validate()
+        {
+            var messages = new List<DialogMessage>();
+            var result = true;
             if (LoadedTracklist.TracklistSongs.GroupBy(x => x.SongId).Any(x => x.Count() > 1))
             {
-                messages.Add(new DialogMessage("Duplicate Song IDs", "One or more songs have the same song ID. Give all songs a unique song ID to continue."));
+                messages.Add(new DialogMessage("Duplicate Song IDs", "One or more songs have the same song ID. It is recommended you give all songs a different song ID."));
                 result = false;
             }
             if (messages.Count > 0)
-                _dialogService.ShowMessages("Errors have occurred that prevent your tracklist from saving.", "Errors", messages, MessageBoxButton.OK, MessageBoxImage.Error);
+            {
+                result = _dialogService.ShowMessages("Validation errors have occurred. It is recommended you correct these issues before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            }
             return result;
         }
 
