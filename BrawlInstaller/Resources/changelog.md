@@ -1,1 +1,1 @@
-- Fixed an issue where loading legacy fighter packages that included costume PAC files that are not in the CSS slot config would result in PAC files being loaded with conflicting names.
+- The "Duplicate Song ID" validation error when saving a tracklist is now a soft error instead of a hard error, allowing you to continue past it if you do not wish to address it.
