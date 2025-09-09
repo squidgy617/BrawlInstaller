@@ -1,1 +1,1 @@
-- The "Duplicate Song ID" validation error when saving a tracklist is now a soft error instead of a hard error, allowing you to continue past it if you do not wish to address it.
+- Fixed an issue where clearing a trophy from a fighter would not actually unassign the trophy from them when saved.
