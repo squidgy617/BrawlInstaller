@@ -3280,7 +3280,7 @@ namespace BrawlInstaller.Services
             }
             // Only update code if we have a slot ID and if any trophy IDs have changed
             if (fighterPackage?.FighterInfo?.Ids?.SlotConfigId != null && (fighterPackage.Trophies.Any(x => !oldFighterPackage?.Trophies?.Select(y => y?.Trophy?.Ids?.TrophyId).Contains(x?.Trophy?.Ids?.TrophyId) == true) 
-                || fighterPackage.Trophies.Any(x => x.Trophy?.Ids?.TrophyId != x.OldTrophy?.Ids?.TrophyId) || fighterPackage.PackageType == PackageType.Delete))
+                || fighterPackage.Trophies.Any(x => x.Trophy?.Ids?.TrophyId != x.OldTrophy?.Ids?.TrophyId) || fighterPackage.Trophies.Count != oldFighterPackage.Trophies.Count || fighterPackage.PackageType == PackageType.Delete))
             {
                 UpdateFighterTrophyCode(fighterPackage.FighterInfo.PartialPacName, fighterPackage.FighterInfo.Ids.SlotConfigId.Value, oldFighterPackage.FighterInfo.Ids.SlotConfigId.Value, fighterPackage.Trophies);
             }
@@ -3288,6 +3288,10 @@ namespace BrawlInstaller.Services
             if (fighterTrophyId != null)
             {
                 UpdateSSETrophy(fighterPackage, fighterTrophyId);
+            }
+            else if (fighterPackage.Trophies.Count != oldFighterPackage.Trophies.Count)
+            {
+                UpdateSSETrophy(fighterPackage, fighterPackage.Trophies.FirstOrDefault()?.Trophy?.Ids?.TrophyId ?? 0);
             }
         }
 
