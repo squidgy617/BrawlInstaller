@@ -1,1 +1,1 @@
-- Fixed an issue where clearing a trophy from a fighter would not actually unassign the trophy from them when saved.
+- BrawlLib now runs in compatibility mode. This should prevent some occasional crashes with files that have invalid models in them.
