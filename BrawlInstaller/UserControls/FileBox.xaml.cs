@@ -136,7 +136,7 @@ namespace BrawlInstaller.UserControls
         public string Title { get; set; } = "Select a file";
         public string FolderTitle { get; set; } = "Select a folder";
         public int TextBoxWidth { get; set; } = 60;
-        public bool IsReadOnly { get; set; } = true;
+        public bool IsReadOnly { get; set; } = false;
 
         public event EventHandler FilePathChanged;
 
