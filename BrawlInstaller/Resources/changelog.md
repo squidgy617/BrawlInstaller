@@ -1,1 +1,1 @@
-- BrawlLib now runs in compatibility mode. This should prevent some occasional crashes with files that have invalid models in them.
+- File boxes are no longer read-only. Writing manually in a box will not trigger validation errors, so be careful!
