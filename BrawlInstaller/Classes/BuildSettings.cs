@@ -179,7 +179,7 @@ namespace BrawlInstaller.Classes
         {
             new FilePath(FileType.FighterFiles, "pf\\fighter\\"),
             new FilePath(FileType.BrawlEx, "pf\\BrawlEx\\"),
-            // new FilePath(FileType.ExConfigsFile, ""),
+            new FilePath(FileType.ExConfigsFile, ""),
             new FilePath(FileType.MasqueradePath, "pf\\info\\costumeslots\\"),
             new FilePath(FileType.Modules, "pf\\module\\"),
             new FilePath(FileType.StageSlots, "pf\\stage\\stageslot\\"),
@@ -308,7 +308,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string CostumeSwapFile { get => GetFilePath(FileType.CostumeSwapFile); }
         [JsonIgnore] public string BonusFighterFile { get => GetAsmPath(FileType.BonusFighterFile); }
         [JsonIgnore] public string BonusFighterLabel { get => GetLabel(FileType.BonusFighterFile); }
-        [JsonIgnore] public string ExConfigsFile { get => GetLabel(FileType.ExConfigsFile); }
+        [JsonIgnore] public string ExConfigsFile { get => GetFilePath(FileType.ExConfigsFile); }
         public string BinFileHDTexturePath { get; set; } = "BrawlInstaller\\Stage Selection Screen\\Menu Alts";
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
