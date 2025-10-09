@@ -1,1 +1,1 @@
-- File boxes are no longer read-only. Writing manually in a box will not trigger validation errors, so be careful!
+- Added REX settings preset.
