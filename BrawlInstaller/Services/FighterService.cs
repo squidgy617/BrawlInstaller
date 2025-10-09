@@ -215,17 +215,43 @@ namespace BrawlInstaller.Services
         /// <returns>List of configs as nodes</returns>
         private List<ResourceNode> GetExConfigs(IdType type)
         {
-            var configs = new ConcurrentBag<ResourceNode>();
+            var configBag = new ConcurrentBag<ResourceNode>();
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var prefix = GetConfigPrefix(type);
-            var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
-            var files = _fileService.GetFiles(directory, $"{prefix}*.dat").AsParallel().ToList();
-            Parallel.ForEach(files, file =>
+            // Get configs from single pac file
+            if (!string.IsNullOrEmpty(settings.FilePathSettings.ExConfigsFile))
             {
-                configs.Add(_fileService.OpenFile(file));
-            });
-            return configs.ToList();
+                var exConfigPath = _settingsService.GetBuildFilePath(settings.FilePathSettings.ExConfigsFile);
+                if (!string.IsNullOrEmpty(exConfigPath))
+                {
+                    var exConfigPac = _fileService.OpenFile(exConfigPath);
+                    if (exConfigPac != null)
+                    {
+                        var arcNode = exConfigPac.FindChild($"{prefix}Config");
+                        if (arcNode != null)
+                        {
+                            Parallel.ForEach(arcNode.Children.ToList(), config =>
+                            {
+                                var arcEntry = config as ARCEntryNode;
+                                config.Name = $"{prefix}{arcEntry.FileIndex:X2}";
+                                configBag.Add(config);
+                            });
+                        }
+                    }
+                }
+            }
+            // If no configs found, get them from folders instead
+            if (configBag.Count <= 0 && settings.FilePathSettings.BrawlEx != null)
+            {
+                var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
+                var files = _fileService.GetFiles(directory, $"{prefix}*.dat").AsParallel().ToList();
+                Parallel.ForEach(files, file =>
+                {
+                    configBag.Add(_fileService.OpenFile(file));
+                });
+            }
+            return configBag.ToList();
         }
 
         /// <summary>
@@ -355,16 +381,16 @@ namespace BrawlInstaller.Services
             var fighterIds = LinkExConfigs(fighterInfo.Ids, cosmeticConfigs, cssSlotConfigs, slotConfigs);
 
             fighterInfo.CosmeticConfig = GetExConfig(fighterIds.CosmeticConfigId, IdType.CosmeticConfig);
-            var cosmeticConfig = cosmeticConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CosmeticConfig);
+            var cosmeticConfig = cosmeticConfigs.FirstOrDefault(x => x.Name == fighterInfo.CosmeticConfig || ((ARCEntryNode)x).FileIndex == fighterIds.CosmeticConfigId);
 
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
-            var cssSlotConfig = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig);
+            var cssSlotConfig = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig || ((ARCEntryNode)x).FileIndex == fighterIds.CSSSlotConfigId);
 
             fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
-            var slotConfig = slotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.SlotConfig);
+            var slotConfig = slotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.SlotConfig || ((ARCEntryNode)x).FileIndex == fighterIds.SlotConfigId);
 
             fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
-            var fighterConfig = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig);
+            var fighterConfig = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig || ((ARCEntryNode)x).FileIndex == fighterIds.FighterConfigId);
 
             fighterInfo = GetFighterInfo(fighterInfo, fighterConfig, cosmeticConfig, cssSlotConfig, slotConfig);
 
