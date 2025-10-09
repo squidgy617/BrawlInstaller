@@ -1839,42 +1839,6 @@
       "ImportTextures": true
     },
     {
-      "CosmeticType": 1,
-      "Style": "BrawlEx",
-      "InstallLocation": {
-        "FilePath": "pf\\BrawlEx\\char_bust_tex\\",
-        "NodePath": "",
-        "FileExtension": "brres"
-      },
-      "HDImageLocation": "BrawlInstaller\\Character Cosmetics\\",
-      "CreateHDTextureFolder": true,
-      "ModelPath": null,
-      "PatSettings": [],
-      "Prefix": "MenSelchrFaceB",
-      "Multiplier": 10,
-      "Offset": 0,
-      "SuffixDigits": 3,
-      "GroupMultiplier": 1,
-      "FilePrefix": "",
-      "IdType": 4,
-      "Size": {
-        "Width": 128,
-        "Height": 160
-      },
-      "Format": 9,
-      "FirstOnly": false,
-      "SeparateFiles": false,
-      "CompressionType": 0,
-      "FileType": 1,
-      "AlwaysInheritStyle": true,
-      "Required": false,
-      "Enabled": true,
-      "Selectable": false,
-      "AlwaysCreateArchive": true,
-      "PaletteCount": 256,
-      "ImportTextures": true
-    },
-    {
       "CosmeticType": 16,
       "Style": "vBrawl",
       "InstallLocation": {
