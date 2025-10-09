@@ -1,1 +1,1 @@
-- Added REX settings preset.
+- Removed unnecessary styles from REX settings preset.
