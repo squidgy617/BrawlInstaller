@@ -96,6 +96,8 @@ namespace BrawlInstaller.Enums
         [Description("Costume Swap Code File")]
         CostumeSwapFile,
         [Description("DLC Table File")]
-        BonusFighterFile
+        BonusFighterFile,
+        [Description("ExConfigs File")]
+        ExConfigsFile
     }
 }

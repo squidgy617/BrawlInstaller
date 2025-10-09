@@ -13,6 +13,7 @@ namespace BrawlInstaller.StaticClasses
     {
         public static List<DefaultFilePath> DefaultFilePaths = new List<DefaultFilePath>
         {
+            new DefaultFilePath(FileType.ExConfigsFile, "PAC file (.pac)|*.pac"),
             new DefaultFilePath(FileType.CreditsModule, "REL file (.rel)|*.rel"),
             new DefaultFilePath(FileType.SSEModule, "REL file (.rel)|*.rel"),
             new DefaultFilePath(FileType.GctRealMateExe, "EXE file (.exe)|*.exe"),
