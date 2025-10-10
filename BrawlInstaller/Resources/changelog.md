@@ -1,1 +1,1 @@
-- Removed unnecessary styles from REX settings preset.
+- Fixed an issue where loading Kirby would sometimes load a duplicate KirbyYoshi file on some builds.
