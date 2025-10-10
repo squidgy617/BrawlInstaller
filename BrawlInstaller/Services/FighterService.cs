@@ -212,37 +212,30 @@ namespace BrawlInstaller.Services
         /// Get all configs of type
         /// </summary>
         /// <param name="type">Type of configs to retrieve</param>
+        /// <param name="pacFile">PAC file to retrieve configs from</param>
         /// <returns>List of configs as nodes</returns>
-        private List<ResourceNode> GetExConfigs(IdType type)
+        private List<ResourceNode> GetExConfigs(IdType type, ResourceNode pacFile = null)
         {
             var configBag = new ConcurrentBag<ResourceNode>();
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var prefix = GetConfigPrefix(type);
-            // Get configs from single pac file
-            if (!string.IsNullOrEmpty(settings.FilePathSettings.ExConfigsFile))
+            // First try to get from pac file
+            if (pacFile != null)
             {
-                var exConfigPath = _settingsService.GetBuildFilePath(settings.FilePathSettings.ExConfigsFile);
-                if (!string.IsNullOrEmpty(exConfigPath))
+                var arcNode = pacFile.FindChild($"{prefix}Config");
+                if (arcNode != null)
                 {
-                    var exConfigPac = _fileService.OpenFile(exConfigPath);
-                    if (exConfigPac != null)
+                    Parallel.ForEach(arcNode.Children.ToList(), config =>
                     {
-                        var arcNode = exConfigPac.FindChild($"{prefix}Config");
-                        if (arcNode != null)
-                        {
-                            Parallel.ForEach(arcNode.Children.ToList(), config =>
-                            {
-                                var arcEntry = config as ARCEntryNode;
-                                config.Name = $"{prefix}{arcEntry.FileIndex:X2}";
-                                configBag.Add(config);
-                            });
-                        }
-                    }
+                        var arcEntry = config as ARCEntryNode;
+                        config.Name = $"{prefix}{arcEntry.FileIndex:X2}";
+                        configBag.Add(config);
+                    });
                 }
             }
-            // If no configs found, get them from folders instead
-            if (configBag.Count <= 0 && settings.FilePathSettings.BrawlEx != null)
+            // Then try to get from loose configs
+            if (configBag.Count() <= 0)
             {
                 var directory = $"{buildPath}\\{settings.FilePathSettings.BrawlEx}\\{prefix}Config";
                 var files = _fileService.GetFiles(directory, $"{prefix}*.dat").AsParallel().ToList();
@@ -346,11 +339,21 @@ namespace BrawlInstaller.Services
         /// <returns>Fighter information</returns>
         public FighterInfo GetFighterInfo(FighterInfo fighterInfo)
         {
+            ResourceNode pacFile = null;
+            // Find PAC file
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile))
+            {
+                var pacPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile);
+                if (!string.IsNullOrEmpty(pacPath))
+                {
+                    pacFile = _fileService.OpenFile(pacPath);
+                }
+            }
             // Open configs
-            var fighterConfigs = GetExConfigs(IdType.FighterConfig);
-            var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig);
-            var cssSlotConfigs = GetExConfigs(IdType.CSSSlotConfig);
-            var slotConfigs = GetExConfigs(IdType.SlotConfig);
+            var fighterConfigs = GetExConfigs(IdType.FighterConfig, pacFile);
+            var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig, pacFile);
+            var cssSlotConfigs = GetExConfigs(IdType.CSSSlotConfig, pacFile);
+            var slotConfigs = GetExConfigs(IdType.SlotConfig, pacFile);
             // Get fighter info
             fighterInfo = GetFighterInfo(fighterInfo, fighterConfigs, cosmeticConfigs, cssSlotConfigs, slotConfigs);
             // Close configs
@@ -362,6 +365,7 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(config);
             foreach (var config in cssSlotConfigs)
                 _fileService.CloseFile(config);
+            _fileService.CloseFile(pacFile);
             return fighterInfo;
         }
 
@@ -516,11 +520,21 @@ namespace BrawlInstaller.Services
         {
             var fighterInfo = new ConcurrentBag<FighterInfo>();
             var fighterIds = new ConcurrentBag<BrawlIds>();
-            // Get configs
-            var fighterConfigs = GetExConfigs(IdType.FighterConfig);
-            var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig);
-            var cssSlotConfigs = GetExConfigs(IdType.CSSSlotConfig);
-            var slotConfigs = GetExConfigs(IdType.SlotConfig);
+            ResourceNode pacFile = null;
+            // Get PAC file
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile))
+            {
+                var pacPath = _settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile);
+                if (!string.IsNullOrEmpty(pacPath))
+                {
+                    pacFile = _fileService.OpenFile(pacPath);
+                }
+            }
+            // Open configs
+            var fighterConfigs = GetExConfigs(IdType.FighterConfig, pacFile);
+            var cosmeticConfigs = GetExConfigs(IdType.CosmeticConfig, pacFile);
+            var cssSlotConfigs = GetExConfigs(IdType.CSSSlotConfig, pacFile);
+            var slotConfigs = GetExConfigs(IdType.SlotConfig, pacFile);
             // Get fighter IDs
             Parallel.ForEach(fighterConfigs, fighterConfig =>
             {
@@ -544,6 +558,7 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(config);
             foreach (var config in cssSlotConfigs)
                 _fileService.CloseFile(config);
+            _fileService.CloseFile(pacFile);
             return fighterInfo.ToList();
         }
 
@@ -1461,24 +1476,36 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var settings = _settingsService.BuildSettings;
             var configPath = string.Empty;
+            ResourceNode pacFileNode = null;
+            ResourceNode rootNode = null;
             Type entryType = null;
-            if (!string.IsNullOrEmpty(fighterInfo.CSSSlotConfig))
+            // First try to get from PAC file
+            if (!string.IsNullOrEmpty(settings.FilePathSettings.ExConfigsFile))
             {
-                
+                configPath = _settingsService.GetBuildFilePath(settings.FilePathSettings.ExConfigsFile);
+                entryType = typeof(CSSCEntryNode);
+                pacFileNode = _fileService.OpenFile(configPath);
+                var cssSlotNode = pacFileNode.FindChild($"CSSSlotConfig");
+                rootNode = cssSlotNode.Children.FirstOrDefault(x => ((ARCEntryNode)x).FileIndex == fighterInfo.Ids.CSSSlotConfigId);
+            }
+            // Then try to get from loose configs
+            if (rootNode == null && !string.IsNullOrEmpty(fighterInfo.CSSSlotConfig))
+            {
                 configPath = fighterInfo.CSSSlotConfig;
                 entryType = typeof(CSSCEntryNode);
+                rootNode = _fileService.OpenFile(configPath);
             }
+            // Then try to get from masquerade
             else if (!string.IsNullOrEmpty(fighterInfo.Masquerade))
             {
                 configPath = fighterInfo.Masquerade;
                 entryType = typeof(MasqueradeEntryNode);
+                rootNode = _fileService.OpenFile(configPath);
             }
-            if (entryType != null)
+            if (entryType != null && rootNode != null)
             {
                 var fighterPath = $"{buildPath}\\{settings.FilePathSettings.FighterFiles}\\{fighterInfo.PacFolder}";
-                ResourceNode rootNode = null;
 
-                rootNode = _fileService.OpenFile(configPath);
                 if (rootNode != null)
                 {
                     foreach (var entry in rootNode.Children)
@@ -1495,7 +1522,9 @@ namespace BrawlInstaller.Services
                         }
                         costumes.Add(costume);
                     }
+                    // Close loose config and pac file
                     _fileService.CloseFile(rootNode);
+                    _fileService.CloseFile(pacFileNode);
                 }
             }
             // Get costume swaps
