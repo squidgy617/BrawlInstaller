@@ -937,7 +937,7 @@ namespace BrawlInstaller.Services
             foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.PacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), $"Itm{fighterInfo.PartialPacName}", fighterInfo.PacExtension, isKirby)))
             {
                 var pacFile = GetFighterPacFile(file, "Itm" + fighterInfo.PartialPacName, fighterInfo, removeCostumeId);
-                if (pacFile != null)
+                if (pacFile != null && !files.Any(x => x.FilePath == file))
                 {
                     files.Add(pacFile);
                 }
@@ -949,7 +949,7 @@ namespace BrawlInstaller.Services
                 foreach (var file in _fileService.GetFiles(path, $"*{fighterInfo.KirbyPacExtension}").Where(x => VerifyFighterPacName(Path.GetFileName(x), fighterInfo.KirbyPacFileName, fighterInfo.KirbyPacExtension, isKirby)).ToList())
                 {
                     var pacFile = GetFighterPacFile(file, fighterInfo.KirbyPacFileName, fighterInfo, removeCostumeId);
-                    if (pacFile != null)
+                    if (pacFile != null && !files.Any(x => x.FilePath == file))
                     {
                         files.Add(pacFile);
                     }

@@ -754,7 +754,7 @@ namespace BrawlInstaller.ViewModels
             }
             List<(FighterPacFile PacFile, string Name)> allPacNames = FighterPackage.PacFiles.Select(x => (x, $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}")).ToList();
             allPacNames.AddRange(FighterPackage.Costumes.SelectMany(c => c.PacFiles.Select(x => (x, $"{x.GetPrefix(FighterPackage.FighterInfo)}{x.Suffix}{c.CostumeId:D2}"))));
-            var duplicatePacs = allPacNames.GroupBy(x => x.Name).Where(g => g.Count() > 1);
+            var duplicatePacs = allPacNames.GroupBy(x => x.Name).Where(g => g.Select(item => item.PacFile.FilePath).Distinct().Count() > 1).Where(g => g.Count() > 1);
             if (duplicatePacs.Any())
             {
                 var duplicatePacStringList = duplicatePacs.Select(group => $"Calculated Name: {group.Key}\nFiles:\n{string.Join("\n",group.Select(x => x.PacFile.FilePath))}");
