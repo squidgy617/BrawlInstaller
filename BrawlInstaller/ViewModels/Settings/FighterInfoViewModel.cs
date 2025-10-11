@@ -138,7 +138,7 @@ namespace BrawlInstaller.ViewModels
             var newFighterList = new List<FighterInfo>();
             var fighterList = _fighterService.GetAllFighterInfo();
             // Get only fighters where all configs could be found
-            var completeFighters = fighterList.Where(x => x.FighterConfig != "" && x.CosmeticConfig != "" && x.CSSSlotConfig != "" && x.SlotConfig != "").ToList();
+            var completeFighters = fighterList.Where(x => x.FighterAttributes != null && x.CosmeticAttributes != null && x.CSSSlotAttributes != null && x.SlotAttributes != null).ToList();
             foreach (var fighter in completeFighters)
             {
                 // Remove attributes
