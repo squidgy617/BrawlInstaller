@@ -2026,6 +2026,10 @@
         "Path": "pf\\BrawlEx\\"
       },
       {
+        "FileType": 44,
+        "Path": "pf\\BrawlEx\\ExConfigs.pac"
+      },
+      {
         "FileType": 2,
         "Path": ""
       },
