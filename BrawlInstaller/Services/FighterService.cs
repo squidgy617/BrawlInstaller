@@ -1328,6 +1328,15 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(cosmeticConfig);
                 fighterPackage.FighterInfo.CosmeticConfig = configPath;
             }
+            // Insert ex configs to pac file
+            var configs = new List<ResourceNode>
+            {
+                cssSlotConfig,
+                fighterConfig,
+                slotConfig,
+                cosmeticConfig
+            };
+            InsertExConfigPac(configs, fighterPackage.FighterInfo);
         }
 
         private void UpdateTargetTestFiles(FighterPackage fighterPackage)
@@ -1416,6 +1425,91 @@ namespace BrawlInstaller.Services
             if (fighterInfo?.SlotConfig != null)
             {
                 _fileService.DeleteFile(fighterInfo?.SlotConfig);
+            }
+            // Remove stuff from main pac file if it exists
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile))
+            {
+                var rootNode = _fileService.OpenFile(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile));
+                if (rootNode != null)
+                {
+                    List<(string ConfigName, IdType IdType)> configList = new List<(string ConfigName, IdType IdType)>
+                    {
+                        ("FighterConfig", IdType.FighterConfig),
+                        ("CosmeticConfig", IdType.CosmeticConfig),
+                        ("CSSSlotConfig", IdType.CSSSlotConfig),
+                        ("SlotConfig", IdType.SlotConfig)
+                    };
+                    foreach(var configType in configList)
+                    {
+                        var configRoot = rootNode.FindChild(configType.ConfigName);
+                        if (configRoot != null)
+                        {
+                            var config = configRoot.Children.FirstOrDefault(x => ((ARCEntryNode)x).FileIndex == fighterInfo?.Ids.GetIdOfType(configType.IdType));
+                            if (config != null)
+                            {
+                                configRoot.RemoveChild(config);
+                            }
+                        }
+                    }
+                    _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Insert ex configs into PAC file
+        /// </summary>
+        /// <param name="exConfigs">List of ex configs to insert</param>
+        private void InsertExConfigPac(List<ResourceNode> exConfigs, FighterInfo fighterInfo)
+        {
+            if (!string.IsNullOrEmpty(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile))
+            {
+                var rootNode = _fileService.OpenFile(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.ExConfigsFile));
+                if (rootNode != null)
+                {
+                    foreach (var config in exConfigs.Where(x => x != null))
+                    {
+                        // Find the correct parent node for the config
+                        var idType = IdType.FighterConfig;
+                        var configString = string.Empty;
+                        if (config.GetType() == typeof(FCFGNode))
+                        {
+                            idType = IdType.FighterConfig;
+                            configString = "FighterConfig";
+                        }
+                        else if (config.GetType() == typeof(COSCNode))
+                        {
+                            idType = IdType.CosmeticConfig;
+                            configString = "CosmeticConfig";
+                        }
+                        else if (config.GetType() == typeof(CSSCNode))
+                        {
+                            idType = IdType.CSSSlotConfig;
+                            configString = "CSSSlotConfig";
+                        }
+                        else if (config.GetType() == typeof(SLTCNode))
+                        {
+                            idType = IdType.SlotConfig;
+                            configString = "SlotConfig";
+                        }
+
+                        // Add config to list
+                        if (!string.IsNullOrEmpty(configString))
+                        {
+                            var configNode = rootNode.FindChild(configString);
+                            if (configNode != null)
+                            {
+                                ((ARCEntryNode)config).FileType = ARCFileType.MiscData;
+                                ((ARCEntryNode)config).FileIndex = (short)fighterInfo.Ids.GetIdOfType(idType);
+                                configNode.AddChild(config);
+                                configNode._children = configNode._children.OrderBy(x => ((ARCEntryNode)x).FileIndex).ToList();
+                            }
+                        }
+                    }
+                    _fileService.SaveFile(rootNode);
+                    _fileService.CloseFile(rootNode);
+                }
             }
         }
 
