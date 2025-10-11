@@ -385,7 +385,7 @@ namespace BrawlInstaller.Services
             var fighterIds = LinkExConfigs(fighterInfo.Ids, cosmeticConfigs, cssSlotConfigs, slotConfigs);
 
             fighterInfo.CosmeticConfig = GetExConfig(fighterIds.CosmeticConfigId, IdType.CosmeticConfig);
-            var cosmeticConfig = cosmeticConfigs.FirstOrDefault(x => x.Name == fighterInfo.CosmeticConfig || ((ARCEntryNode)x).FileIndex == fighterIds.CosmeticConfigId);
+            var cosmeticConfig = cosmeticConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CosmeticConfig || ((ARCEntryNode)x).FileIndex == fighterIds.CosmeticConfigId);
 
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
             var cssSlotConfig = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig || ((ARCEntryNode)x).FileIndex == fighterIds.CSSSlotConfigId);
