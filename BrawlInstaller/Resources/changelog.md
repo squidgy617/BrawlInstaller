@@ -1,3 +1,1 @@
-- Added a new setting, `ExConfigs File`. This setting allows you to select a PAC file containing your Ex configs for builds that use one unified file for them.
-	- For REX, this setting should be set to `pf/BrawlEx/ExConfigs.pac`.
-	- This setting is now automatically configured in the REX preset. If you already applied the REX preset, you'll need to reapply it or add the setting manually.
+- Fixed an issue where using "Find Missing Fighters" wouldn't be able to find cosmetic configs with certain settings.
