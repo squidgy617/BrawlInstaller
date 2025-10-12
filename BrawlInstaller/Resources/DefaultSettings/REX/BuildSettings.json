@@ -338,42 +338,6 @@
       "ImportTextures": true
     },
     {
-      "CosmeticType": 9,
-      "Style": "vBrawl",
-      "InstallLocation": {
-        "FilePath": "pf\\stage\\melee\\STGCHARAROLL.PAC",
-        "NodePath": "2/Texture Data [0]",
-        "FileExtension": "pac"
-      },
-      "HDImageLocation": "",
-      "CreateHDTextureFolder": false,
-      "ModelPath": null,
-      "PatSettings": [],
-      "Prefix": "ChrRollFighter",
-      "Multiplier": 1,
-      "Offset": 1,
-      "SuffixDigits": 2,
-      "GroupMultiplier": 1,
-      "FilePrefix": "",
-      "IdType": 1,
-      "Size": {
-        "Width": 128,
-        "Height": 160
-      },
-      "Format": 9,
-      "FirstOnly": false,
-      "SeparateFiles": false,
-      "CompressionType": 0,
-      "FileType": 1,
-      "AlwaysInheritStyle": false,
-      "Required": false,
-      "Enabled": true,
-      "Selectable": false,
-      "AlwaysCreateArchive": true,
-      "PaletteCount": 256,
-      "ImportTextures": true
-    },
-    {
       "CosmeticType": 7,
       "Style": "Icon",
       "InstallLocation": {

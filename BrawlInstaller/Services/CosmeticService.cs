@@ -868,7 +868,7 @@ namespace BrawlInstaller.Services
             var archiveId = definition.GetArchiveId(ids);
             var textureBaseId = definition.GetTextureBaseId(ids);
             // If location is an ARC node and the BRRES does not exist, generate new BRRES
-            if (node.GetType() == typeof(ARCNode))
+            if (node != null && node.GetType() == typeof(ARCNode))
             {
                 var foundNode = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
                 if (foundNode == null)
@@ -889,7 +889,7 @@ namespace BrawlInstaller.Services
             }
             var parentNode = (BRRESNode)node;
             var textureId = GetUnusedCosmeticId(definition, textureBaseId, node, cosmetic.CostumeIndex);
-            if (definition.ImportTextures)
+            if (parentNode != null && definition.ImportTextures)
             {
                 // If we have a texture node of the same properties, import that
                 if (cosmetic.Texture != null && ((cosmetic.Texture.SharesData && !(definition.FirstOnly || definition.SeparateFiles)) ||
@@ -964,7 +964,7 @@ namespace BrawlInstaller.Services
                 }
             }
             // Otherwise, import model from filesystem
-            else if (cosmetic.ModelPath != "" && definition.ModelPath != null)
+            else if (parentNode != null && cosmetic.ModelPath != "" && definition.ModelPath != null)
             {
                 var model = ImportModel(parentNode, cosmetic.ModelPath);
                 model.Name = GetModelName(definition, textureBaseId, cosmetic);
@@ -1005,7 +1005,7 @@ namespace BrawlInstaller.Services
             var originalNode = parentNode;
             var archiveId = definition.GetArchiveId(ids);
             var textureBaseId = definition.GetTextureBaseId(ids);
-            if (parentNode.GetType() == typeof(ARCNode))
+            if (parentNode != null && parentNode.GetType() == typeof(ARCNode))
             {
                 restrictRange = IsSharedGroupCosmetic(definition);
                 parentNode = parentNode.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
@@ -1130,7 +1130,7 @@ namespace BrawlInstaller.Services
             var archiveId = definition.GetArchiveId(ids);
             var textureBaseId = definition.GetTextureBaseId(ids);
             var node = definition.InstallLocation.NodePath != "" ? rootNode.FindChild(definition.InstallLocation.NodePath) : rootNode;
-            if (node.GetType() == typeof(ARCNode))
+            if (node != null && node.GetType() == typeof(ARCNode))
             {
                 node = node.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
             }
