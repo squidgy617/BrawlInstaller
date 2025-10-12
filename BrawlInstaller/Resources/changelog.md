@@ -1,1 +1,2 @@
-- Fixed an issue where using "Find Missing Fighters" wouldn't be able to find cosmetic configs with certain settings.
+- Fixed an issue where BrawlInstaller would sometimes try to install cosmetics to locations that were defined in settings but did not actually exist.
+- Udpated REX preset to remove unused STGCHARAROLL.pac install location for credits icons.
