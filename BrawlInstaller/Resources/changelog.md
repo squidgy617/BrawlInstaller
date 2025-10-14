@@ -1,2 +1,2 @@
-- Fixed an issue where BrawlInstaller would sometimes try to install cosmetics to locations that were defined in settings but did not actually exist.
-- Udpated REX preset to remove unused STGCHARAROLL.pac install location for credits icons.
+- Fixed an issue where loading a fighter package containing a trophy with a vanilla trophy ID but a non-vanilla thumbnail ID would cause BrawlInstaller to try to replace the existing trophy.
+    - This also caused trophy thumbnails meeting this criteria to display incorrectly in the editor.
