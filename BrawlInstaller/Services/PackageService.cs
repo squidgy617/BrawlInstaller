@@ -913,7 +913,7 @@ namespace BrawlInstaller.Services
             }
             _trophyService.GetUnusedTrophyIds(trophy.Trophy.Ids);
             // If NOT a custom trophy ID, set old trophy to matching trophy in build
-            if (trophy.Trophy.Ids.TrophyId < 631)
+            if (trophy.Trophy.Ids.TrophyId < 631 && trophy.Trophy.Ids.TrophyThumbnailId < 631)
             {
                 var existingTrophy = _trophyService.LoadTrophyData(trophy.Trophy);
                 trophy.OldTrophy = existingTrophy;

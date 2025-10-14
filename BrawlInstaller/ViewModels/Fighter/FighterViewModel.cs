@@ -739,7 +739,7 @@ namespace BrawlInstaller.ViewModels
             if (changedTrophies.Any())
             {
                 var trophyConflict = _trophyService.GetTrophyList().FirstOrDefault(x => changedTrophies.Any(y => y.Trophy.Ids.TrophyId == x.Ids.TrophyId
-                && y.OldTrophy.Ids.TrophyId != x.Ids.TrophyId && y.Trophy.Name == x.Name));
+                && y.OldTrophy?.Ids.TrophyId != x.Ids.TrophyId && y.Trophy.Name == x.Name));
                 if (trophyConflict != null)
                 {
                     messages.Add(new DialogMessage("Trophies", "One or more trophies has the same name and ID as another trophy in the build. Change either the name or ID to continue."));
