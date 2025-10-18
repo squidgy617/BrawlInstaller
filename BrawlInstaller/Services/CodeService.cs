@@ -762,8 +762,8 @@ namespace BrawlInstaller.Services
                             }
                             i++;
                         }
-                        // Jump to newline if there is one
-                        if (fileText.IndexOf(newLine, i) > -1)
+                        // Jump to newline if we were not already on newline and there is one
+                        if (i > 0 && fileText[i - 1] != '\n' && fileText.IndexOf(newLine, i) > -1)
                         {
                             i = fileText.IndexOf(newLine, i);
                         }
