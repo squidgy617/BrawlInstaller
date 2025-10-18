@@ -1,2 +1,1 @@
-- Fixed an issue where loading a fighter package containing a trophy with a vanilla trophy ID but a non-vanilla thumbnail ID would cause BrawlInstaller to try to replace the existing trophy.
-    - This also caused trophy thumbnails meeting this criteria to display incorrectly in the editor.
+- Fixed an issue where labels following an ASM table would sometimes get erased if the table did not end in a comment and the label was immediately after it
