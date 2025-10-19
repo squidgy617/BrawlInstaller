@@ -66,7 +66,13 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<string, int> FighterEffectPacs { get => EffectPacs.FighterEffectPacs; }
 
         [DependsUpon(nameof(FighterPackage))]
+        public int? OldFighterEffectPac { get => FighterPackage?.FighterInfo?.OriginalEffectPacId; set { FighterPackage.FighterInfo.OriginalEffectPacId = value; } }
+
+        [DependsUpon(nameof(FighterPackage))]
         public int? SelectedFighterEffectPac { get => FighterPackage?.FighterInfo?.EffectPacId; set { ChangedFighterEffectPac(FighterPackage.FighterInfo.OriginalEffectPacId, value); OnPropertyChanged(nameof(SelectedFighterEffectPac)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public int? OldKirbyEffectPac { get => FighterPackage?.FighterInfo?.OriginalKirbyEffectPacId; set { FighterPackage.FighterInfo.OriginalKirbyEffectPacId = value; } }
 
         [DependsUpon(nameof(FighterPackage))]
         public int? SelectedKirbyEffectPac { get => FighterPackage?.FighterInfo?.KirbyEffectPacId; set { ChangedKirbyEffectPac(FighterPackage.FighterInfo.OriginalKirbyEffectPacId, value); OnPropertyChanged(nameof(SelectedKirbyEffectPac)); } }

@@ -28,6 +28,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GroupBox Header="File Names" Grid.ColumnSpan="3">
             <Grid>
@@ -57,32 +59,36 @@
                 <TextBox x:Name="displayNameTextBox" Text="{Binding FighterPackage.FighterInfo.DisplayName}" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding DisplayNameEnabled}" Width="120"/>
             </Grid>
         </GroupBox>
-        <Label x:Name="effectPacLabel" Content="Effect PAC:" Grid.Row="1" ToolTip="Effect.pac to use for fighter"/>
-        <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+        <Label x:Name="oldEffectPacLabel" Content="Current Effect PAC:" Grid.Row="1" ToolTip="Current Effect.pac of fighter"/>
+        <ComboBox x:Name="oldEffectPacDropDown" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding OldFighterEffectPac, UpdateSourceTrigger=LostFocus}" Width="120"/>
+        <Label x:Name="effectPacLabel" Content="New Effect PAC:" Grid.Row="2" ToolTip="Effect.pac to use for fighter on save"/>
+        <StackPanel Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal">
             <ComboBox x:Name="effectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedFighterEffectPac, UpdateSourceTrigger=LostFocus}" Width="120"/>
             <Button x:Name="refreshEffectPacButton" Content="↺" Style="{StaticResource condensedButton}" Command="{Binding RefreshEffectPacCommand}"/>
         </StackPanel>
-        <Label x:Name="kirbyEffectPacLabel" Content="Kirby Effect PAC:" Grid.Row="2" ToolTip="Effect.pac to use for fighter Kirby hat"/>
-        <StackPanel Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal">
+        <Label x:Name="oldKirbyEffectPacLabel" Content="Current Kirby Effect PAC:" Grid.Row="3" ToolTip="Current Effect.pac for fighter Kirby hat"/>
+        <ComboBox x:Name="oldKirbyEffectPacDropDown" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding OldKirbyEffectPac, UpdateSourceTrigger=LostFocus}" Width="120"/>
+        <Label x:Name="kirbyEffectPacLabel" Content="New Kirby Effect PAC:" Grid.Row="4" ToolTip="Effect.pac to use for fighter Kirby hat on save"/>
+        <StackPanel Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="3" Orientation="Horizontal">
             <ComboBox x:Name="kirbyEffectPacDropDown" ItemsSource="{Binding FighterEffectPacs}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedKirbyEffectPac, UpdateSourceTrigger=LostFocus}" Width="120"/>
             <Button x:Name="refreshKirbyEffectPacButton" Content="↺" Style="{StaticResource condensedButton}" Command="{Binding RefreshKirbyEffectPacCommand}"/>
         </StackPanel>
-        <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:" Grid.Row="3" ToolTip="Kirby hat data to associate with fighter. Can import XML files generated from lavaKirbyHatManager V2."/>
-        <TextBlock x:Name="kirbyHatKindTextBlock" VerticalAlignment="Center" Text="{Binding FighterPackage.FighterSettings.KirbyHatData.TopStatusKind}" Grid.Row="3" Grid.Column="1"/>
-        <Button x:Name="kirbyHatBrowseButton" Content="Browse..." Command="{Binding LoadKirbyHatCommand}" Grid.Column="2" Grid.Row="3"/>
-        <Button x:Name="kirbyHatClearButton" Content="Clear" Command="{Binding ClearKirbyHatCommand}" Grid.Column="3" Grid.Row="3"/>
-        <Label x:Name="kirbyHatLoadTypeLabel" Content="Kirby Hat Load Type:" Grid.Row="4" ToolTip="Load type for Kirby hats. Only enabled if fighter attributes are present."/>
-        <ComboBox x:Name="kirbyHatLoadTypeDropDown" ItemsSource="{Binding KirbyLoadFlagOptions}" SelectedValue="{Binding FighterPackage.FighterInfo.KirbyLoadType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Row="4" Grid.Column="1" IsEnabled="{Binding KirbyHatTypeEnabled}"/>
-        <Label x:Name="throwReleaseLabel" Content="Throw Release Point:" Grid.Row="5" ToolTip="Throw release point to use for fighter"/>
-        <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="5" Grid.Column="1"/>
-        <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="5" Grid.Column="2"/>
-        <Label x:Name="lLoadLabel" Content="L-Load ID:" Grid.Row="6" ToolTip="CSS slot ID of fighter to use as an L-load for this fighter"/>
-        <ComboBox x:Name="lLoadTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.LLoadCharacterId, Converter={StaticResource hexConverter}, TargetNullValue='', Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="6" Grid.Column="1"/>
-        <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="7" ToolTip="Door ID to use for unlocking character in SSE"/>
-        <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="7" Grid.Column="1"/>
-        <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="8" ToolTip="CSS slot ID of character to use as sub-character for SSE mode"/>
-        <ComboBox x:Name="ssesubcharacterIdTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Row="8" Grid.Column="1" Width="60"/>
-        <GroupBox Header="Alternate Slots" Grid.Row="9" Grid.ColumnSpan="4" ToolTip="For SlotEx system used for fighters like Pokemon Trainer and the alloys in P+Ex">
+        <Label x:Name="kirbyHatDataLabel" Content="Kirby Hat Data:" Grid.Row="5" ToolTip="Kirby hat data to associate with fighter. Can import XML files generated from lavaKirbyHatManager V2."/>
+        <TextBlock x:Name="kirbyHatKindTextBlock" VerticalAlignment="Center" Text="{Binding FighterPackage.FighterSettings.KirbyHatData.TopStatusKind}" Grid.Row="5" Grid.Column="1"/>
+        <Button x:Name="kirbyHatBrowseButton" Content="Browse..." Command="{Binding LoadKirbyHatCommand}" Grid.Column="2" Grid.Row="5"/>
+        <Button x:Name="kirbyHatClearButton" Content="Clear" Command="{Binding ClearKirbyHatCommand}" Grid.Column="3" Grid.Row="5"/>
+        <Label x:Name="kirbyHatLoadTypeLabel" Content="Kirby Hat Load Type:" Grid.Row="6" ToolTip="Load type for Kirby hats. Only enabled if fighter attributes are present."/>
+        <ComboBox x:Name="kirbyHatLoadTypeDropDown" ItemsSource="{Binding KirbyLoadFlagOptions}" SelectedValue="{Binding FighterPackage.FighterInfo.KirbyLoadType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Row="6" Grid.Column="1" IsEnabled="{Binding KirbyHatTypeEnabled}"/>
+        <Label x:Name="throwReleaseLabel" Content="Throw Release Point:" Grid.Row="7" ToolTip="Throw release point to use for fighter"/>
+        <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="7" Grid.Column="1"/>
+        <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="7" Grid.Column="2"/>
+        <Label x:Name="lLoadLabel" Content="L-Load ID:" Grid.Row="8" ToolTip="CSS slot ID of fighter to use as an L-load for this fighter"/>
+        <ComboBox x:Name="lLoadTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.LLoadCharacterId, Converter={StaticResource hexConverter}, TargetNullValue='', Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="8" Grid.Column="1"/>
+        <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="9" ToolTip="Door ID to use for unlocking character in SSE"/>
+        <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="9" Grid.Column="1"/>
+        <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="10" ToolTip="CSS slot ID of character to use as sub-character for SSE mode"/>
+        <ComboBox x:Name="ssesubcharacterIdTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Row="10" Grid.Column="1" Width="60"/>
+        <GroupBox Header="Alternate Slots" Grid.Row="11" Grid.ColumnSpan="4" ToolTip="For SlotEx system used for fighters like Pokemon Trainer and the alloys in P+Ex">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -104,7 +110,7 @@
                 <ComboBox IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.ExSlotIds[0], Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="1" Grid.Column="3"/>
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="10" Grid.ColumnSpan="4" ToolTip="Fighter-specific code settings">
+        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="12" Grid.ColumnSpan="4" ToolTip="Fighter-specific code settings">
             <StackPanel>
                 <Expander x:Name="lucarioExpander" Header="Lucario Clone Settings" ToolTip="Settings for Lucario clones">
                     <Grid>
@@ -212,7 +218,7 @@
                 </Expander>
             </StackPanel>
         </GroupBox>
-        <StackPanel Grid.Column="4" Grid.RowSpan="12">
+        <StackPanel Grid.Column="4" Grid.RowSpan="14">
             <TabControl>
                 <TabItem Header="Fighter" ToolTip="Fighter attributes">
                     <StackPanel>
