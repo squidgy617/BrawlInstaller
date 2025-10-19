@@ -217,7 +217,12 @@ namespace BrawlInstaller.ViewModels
             }
             if (deleteItems.Count > 0)
             {
-                var selectedItems = _dialogService.OpenCheckListDialog(deleteItems, "Select items to delete", "The following items are no longer found in this stage slot, but may be used by other stages. Verify they are not used by other stages and then select the options you wish to delete.").Where(x => x.IsChecked);
+                var response = _dialogService.OpenCheckListDialog(deleteItems, "Select items to delete", "The following items are no longer found in this stage slot, but may be used by other stages. Verify they are not used by other stages and then select the options you wish to delete.");
+                if (!response.Result)
+                {
+                    return;
+                }
+                var selectedItems = response.ChecklistItems.Where(x => x.IsChecked);
                 foreach (var selectedItem in selectedItems)
                 {
                     stageDeleteOptions.Add((string)selectedItem.Item);
@@ -435,7 +440,12 @@ namespace BrawlInstaller.ViewModels
                 }
                 if (deleteCosmetics.Count > 0)
                 {
-                    var selectedItems = _dialogService.OpenCheckListDialog(deleteCosmetics, "Select items to delete", "The following cosmetics may be used by other stages. Verify they are not used by other stages and select the ones you'd like to delete.").Where(x => x.IsChecked);
+                    var response = _dialogService.OpenCheckListDialog(deleteCosmetics, "Select items to delete", "The following cosmetics may be used by other stages. Verify they are not used by other stages and select the ones you'd like to delete.");
+                    if (!response.Result)
+                    {
+                        return;
+                    }
+                    var selectedItems = response.ChecklistItems.Where(x => x.IsChecked);
                     selectableCosmeticsToDelete = selectedItems.Select(x => ((CosmeticType, string))x.Item).ToList();
                 }
                 // Mark selectable cosmetics as changed

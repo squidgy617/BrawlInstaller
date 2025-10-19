@@ -227,10 +227,13 @@ namespace BrawlInstaller.ViewModels
             if (result)
             {
                 var tracklistToDelete = new Tracklist { File = LoadedTracklist.File };
-                SaveTracklist(tracklistToDelete);
-                LoadedTracklist = null;
-                OnPropertyChanged(nameof(LoadedTracklist));
-                _dialogService.ShowMessage("Changes saved.", "Saved");
+                var confirmed = SaveTracklist(tracklistToDelete);
+                if (confirmed)
+                {
+                    LoadedTracklist = null;
+                    OnPropertyChanged(nameof(LoadedTracklist));
+                    _dialogService.ShowMessage("Changes saved.", "Saved");
+                }
             }
         }
 
@@ -240,12 +243,15 @@ namespace BrawlInstaller.ViewModels
             {
                 return;
             }
-            LoadedTracklist = SaveTracklist(LoadedTracklist);
-            OnPropertyChanged(nameof(LoadedTracklist));
-            _dialogService.ShowMessage("Changes saved.", "Saved");
+            var confirmed = SaveTracklist(LoadedTracklist);
+            if (confirmed)
+            {
+                OnPropertyChanged(nameof(LoadedTracklist));
+                _dialogService.ShowMessage("Changes saved.", "Saved");
+            }
         }
 
-        private Tracklist SaveTracklist(Tracklist tracklist)
+        private bool SaveTracklist(Tracklist tracklist)
         {
             // Copy tracklist before save
             var tracklistToSave = tracklist.Copy();
@@ -262,7 +268,12 @@ namespace BrawlInstaller.ViewModels
             var items = new List<CheckListItem>();
             if (deleteOptions.Count > 0)
             {
-                items = _dialogService.OpenCheckListDialog(checklistItems, "Select items to delete", "The following items were changed, but may be shared in other tracklists. Ensure they are not used in other tracklists and then select the items you would like to delete.");
+                var response = _dialogService.OpenCheckListDialog(checklistItems, "Select items to delete", "The following items were changed, but may be shared in other tracklists. Ensure they are not used in other tracklists and then select the items you would like to delete.");
+                if (!response.Result)
+                {
+                    return false;
+                }
+                items = response.ChecklistItems;
             }
             var itemsToDelete = items.Where(x => x.IsChecked).Select(x => x.Item.ToString()).ToList();
 
@@ -280,7 +291,7 @@ namespace BrawlInstaller.ViewModels
 
                 _fileService.EndBackup();
             }
-            return tracklist;
+            return true;
         }
 
         private void MoveSongUp()

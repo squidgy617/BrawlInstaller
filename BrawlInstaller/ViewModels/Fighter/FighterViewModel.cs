@@ -304,7 +304,11 @@ namespace BrawlInstaller.ViewModels
                 deletePackage.FighterInfo.DisplayName = "Unknown";
                 deletePackage.FighterSettings.LLoadCharacterId = FighterPackage.FighterInfo.Ids.CSSSlotConfigId;
                 // Prompt for items to delete if applicable
-                deletePackage = SelectDeleteOptions(deletePackage);
+                var confirmed = SelectDeleteOptions(deletePackage);
+                if (!confirmed)
+                {
+                    return;
+                }
                 // Update UI
                 FighterPackage = null;
                 OnPropertyChanged(nameof(FighterPackage));
@@ -420,7 +424,11 @@ namespace BrawlInstaller.ViewModels
             }
             packageToSave.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? packageToSave.FighterInfo.Ids.FranchiseId;
             // Prompt for items to delete if applicable
-            packageToSave = SelectDeleteOptions(packageToSave);
+            var result = SelectDeleteOptions(packageToSave);
+            if (!result)
+            {
+                return;
+            }
             using (new CursorWait())
             {
                 _dialogService.ShowProgressBar("Installing Fighter", "Installing fighter...");
@@ -949,7 +957,7 @@ namespace BrawlInstaller.ViewModels
             return effectPacIdConflicts;
         }
 
-        private FighterPackage SelectDeleteOptions(FighterPackage fighterPackage)
+        private bool SelectDeleteOptions(FighterPackage fighterPackage)
         {
             var deleteOptions = new List<CheckListItem>();
             // Victory Theme
@@ -993,7 +1001,12 @@ namespace BrawlInstaller.ViewModels
             // Open dialog
             if (deleteOptions.Count > 0)
             {
-                var items = _dialogService.OpenCheckListDialog(deleteOptions, "Select items to delete", "The following items were changed, but may be shared by other fighters. Ensure they are not used by other fighters and then select the items you would like to delete.");
+                var response = _dialogService.OpenCheckListDialog(deleteOptions, "Select items to delete", "The following items were changed, but may be shared by other fighters. Ensure they are not used by other fighters and then select the items you would like to delete.");
+                if (!response.Result)
+                {
+                    return false;
+                }
+                var items = response.ChecklistItems;
                 var selectedItems = items.Where(x => x.IsChecked);
                 if (items.Any(x => (string)x.Item == "VictoryTheme"))
                 {
@@ -1033,7 +1046,7 @@ namespace BrawlInstaller.ViewModels
                     }
                 }
             }
-            return fighterPackage;
+            return true;
         }
 
         private void ChangeSelectedTrophyType(TrophyType trophyType)

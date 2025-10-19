@@ -56,7 +56,7 @@ namespace BrawlInstaller.Services
         object OpenDropDownDialog(IEnumerable<object> list, string displayMemberPath, string title = "Select an item", string caption = "Select an item");
 
         /// <inheritdoc cref="DialogService.OpenCheckListDialog(IEnumerable{CheckListItem}, string, string)"/>
-        List<CheckListItem> OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items");
+        (List<CheckListItem> ChecklistItems, bool Result) OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items");
 
         /// <inheritdoc cref="DialogService.OpenRadioButtonDialog(IEnumerable{RadioButtonGroup}, string, string)"/>
         List<RadioButtonItem> OpenRadioButtonDialog(IEnumerable<RadioButtonGroup> radioButtonGroups, string title = "Select items", string caption = "Select items");
@@ -357,7 +357,7 @@ namespace BrawlInstaller.Services
         /// <param name="title">Title to display on window</param>
         /// <param name="caption">Caption to display</param>
         /// <returns>Selected items</returns>
-        public List<CheckListItem> OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items")
+        public (List<CheckListItem> ChecklistItems, bool Result) OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items")
         {
             var dialog = GenerateWindow(title);
             _checkListViewModel.Caption = caption;
@@ -370,9 +370,9 @@ namespace BrawlInstaller.Services
             dialog.ShowDialog();
             if (_checkListViewModel.DialogResult)
             {
-                return _checkListViewModel.CheckListItems.ToList();
+                return (_checkListViewModel.CheckListItems.ToList(), _checkListViewModel.DialogResult);
             }
-            return new List<CheckListItem>();
+            return (new List<CheckListItem>(), false);
         }
 
         /// <summary>
