@@ -170,6 +170,7 @@ namespace BrawlInstaller.Classes
         public int GctTimeoutSeconds { get; set; } = 5;
         public bool ColorSmashDebugMode { get; set; } = false;
         public int ColorSmashTimeoutSeconds { get; set; } = 60;
+        public int TrophyCategoryOffset { get; set; } = 23;
     }
 
     public class FilePathSettings
@@ -205,6 +206,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.CodeMenuAddons, "Source\\CM_Addons\\"),
             new FilePath(FileType.TrophyNames, "pf\\toy\\fig\\ty_fig_name_list.msbin"),
             new FilePath(FileType.TrophyDescriptions, "pf\\toy\\fig\\ty_fig_ext_list.msbin"),
+            new FilePath(FileType.TrophyCategories, "pf\\toy\\fig\\ty_fig_category.msbin"),
             new FilePath(FileType.TrophyBrresLocation, "pf\\toy\\fig\\"),
             new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm"),
             new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel"),
@@ -296,6 +298,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public FileNodePath TrophyLocation { get => GetFileNodePath(FileType.TrophyLocation); }
         [JsonIgnore] public string TrophyNames { get => GetFilePath(FileType.TrophyNames); }
         [JsonIgnore] public string TrophyDescriptions { get => GetFilePath(FileType.TrophyDescriptions); }
+        [JsonIgnore] public string TrophyCategories { get => GetFilePath(FileType.TrophyCategories); }
         [JsonIgnore] public FileNodePath TrophyGameIconsLocation { get => GetFileNodePath(FileType.TrophyGameIconsLocation); }
         [JsonIgnore] public string TrophyBrresLocation { get => GetFilePath(FileType.TrophyBrresLocation); }
         [JsonIgnore] public string FighterTrophyLocation { get => GetFilePath(FileType.FighterTrophyLocation); }

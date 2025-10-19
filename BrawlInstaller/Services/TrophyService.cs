@@ -1,5 +1,6 @@
 ﻿using BrawlInstaller.Classes;
 using BrawlInstaller.Common;
+using BrawlInstaller.StaticClasses;
 using BrawlLib.SSBB.ResourceNodes;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,12 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="TrophyService.GetTrophyGameIcons()"/>
         List<TrophyGameIcon> GetTrophyGameIcons();
+
+        /// <inheritdoc cref="TrophyService.GetTrophySeries()"/>
+        Dictionary<string, int> GetTrophySeries();
+
+        /// <inheritdoc cref="TrophyService.GetTrophyCategories()"/>
+        Dictionary<string, int> GetTrophyCategories();
 
         /// <inheritdoc cref="TrophyService.SaveTrophy(Trophy, Trophy, bool)"/>
         Trophy SaveTrophy(Trophy trophy, Trophy oldTrophy, bool addTrophy = true);
@@ -174,6 +181,54 @@ namespace BrawlInstaller.Services
                 _fileService.CloseFile(rootNode);
             }
             return gameIcons;
+        }
+
+        /// <summary>
+        /// Get trophy series' in build
+        /// </summary>
+        /// <returns>Dictionary of trophy series' names and IDs</returns>
+        public Dictionary<string, int> GetTrophySeries()
+        {
+            var trophyCategoryFile = _fileService.OpenFile(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyCategories)) as MSBinNode;
+            if (trophyCategoryFile != null)
+            {
+                var seriesList = new Dictionary<string, int>();
+                for (int i = 0; i < _settingsService.BuildSettings.MiscSettings.TrophyCategoryOffset - 1; i++)
+                {
+                    seriesList.Add(trophyCategoryFile._strings[i], i);
+                }
+                _fileService.CloseFile(trophyCategoryFile);
+                return seriesList;
+            }
+            else
+            {
+                return Trophies.Series;
+            }
+        }
+
+        /// <summary>
+        /// Get trophy categories in build
+        /// </summary>
+        /// <returns>Dictionary of trophy category names and IDs</returns>
+        public Dictionary<string, int> GetTrophyCategories()
+        {
+            var trophyCategoryFile = _fileService.OpenFile(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.TrophyCategories)) as MSBinNode;
+            if (trophyCategoryFile != null)
+            {
+                var categoryList = new Dictionary<string, int>();
+                int j = 23; // Trophy category indexes always start at 23 even if the read is offset
+                for (int i = _settingsService.BuildSettings.MiscSettings.TrophyCategoryOffset; i < trophyCategoryFile._strings.Count; i++)
+                {
+                    categoryList.Add(trophyCategoryFile._strings[i], j);
+                    j++;
+                }
+                _fileService.CloseFile(trophyCategoryFile);
+                return categoryList;
+            }
+            else
+            {
+                return Trophies.Categories;
+            }
         }
 
         /// <summary>

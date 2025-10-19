@@ -64,6 +64,8 @@ namespace BrawlInstaller.ViewModels
         public new void LoadTrophy(Trophy trophy)
         {
             GameIconList = _trophyService.GetTrophyGameIcons();
+            TrophySeries = _trophyService.GetTrophySeries();
+            TrophyCategories = _trophyService.GetTrophyCategories();
             Trophy = trophy;
             OldTrophy = trophy;
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;

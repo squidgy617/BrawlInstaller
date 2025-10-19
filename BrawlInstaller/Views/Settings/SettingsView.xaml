@@ -43,6 +43,8 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -54,6 +56,8 @@
                             <TextBox x:Name="gctTimeoutTextBox" Text="{Binding BuildSettings.MiscSettings.GctTimeoutSeconds}" Grid.Column="3"/>
                             <Label x:Name="colorSmashTimeoutLabel" Content="Color Smash Timeout:" ToolTip="Number of seconds to wait for color smasher to run before returning an error" Grid.Column="4"/>
                             <TextBox x:Name="colorSmashTimeoutTextBox" Text="{Binding BuildSettings.MiscSettings.ColorSmashTimeoutSeconds}" Grid.Column="5"/>
+                            <Label Content="Trophy Category Offset:" ToolTip="Index offset for reading trophy categories in trophy category file" Grid.Column="6"/>
+                            <TextBox Text="{Binding BuildSettings.MiscSettings.TrophyCategoryOffset}" Grid.Column="7"/>
                             <Label x:Name="exConfigVersionLabel" Content="EX Config Version:" Grid.Row="1" ToolTip="BrawlEx version to use when generating new Ex config attributes."/>
                             <TextBox x:Name="exConfigVersionTextBox" Text="{Binding BuildSettings.MiscSettings.DefaultExConfigVersion}" Grid.Column="1" Grid.Row="1"/>
                         </Grid>

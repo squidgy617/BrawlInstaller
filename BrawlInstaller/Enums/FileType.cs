@@ -98,6 +98,8 @@ namespace BrawlInstaller.Enums
         [Description("DLC Table File")]
         BonusFighterFile,
         [Description("ExConfigs File")]
-        ExConfigsFile
+        ExConfigsFile,
+        [Description("Trophy Categories List")]
+        TrophyCategories
     }
 }
