@@ -49,6 +49,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand RefreshKirbySoundbankIdCommand => new RelayCommand(param => RefreshKirbySoundbankId());
         public ICommand RemoveInstallOptionCommand => new RelayCommand(param => RemoveInstallOption(param));
         public ICommand AddInstallOptionCommand => new RelayCommand(param => AddInstallOption());
+        public ICommand UpdateInstallOptionSelectionCommand => new RelayCommand(param => UpdateInstallOptionSelection(param));
 
         // Importing constructor
         [ImportingConstructor]
@@ -315,6 +316,12 @@ namespace BrawlInstaller.ViewModels
                 return newSoundbankId;
             }
             return currentId;
+        }
+
+        private void UpdateInstallOptionSelection(object param)
+        {
+            var installOption = param as FighterInstallOption;
+            OnPropertyChanged(nameof(InstallOptions));
         }
 
         private void RemoveInstallOption(object param)

@@ -182,7 +182,13 @@
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Style="{StaticResource miniButton}" Content="-" CommandParameter="{Binding}" Command="{Binding DataContext.RemoveInstallOptionCommand, ElementName=fighterFileView}"/>
-                                    <ComboBox ItemsSource="{Binding DataContext.InstallOptionTypes, ElementName=fighterFileView}" Width="120" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Type}"/>
+                                    <ComboBox ItemsSource="{Binding DataContext.InstallOptionTypes, ElementName=fighterFileView}" Width="120" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Type}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction CommandParameter="{Binding}" Command="{Binding DataContext.UpdateInstallOptionSelectionCommand, ElementName=fighterFileView}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </ComboBox>
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
