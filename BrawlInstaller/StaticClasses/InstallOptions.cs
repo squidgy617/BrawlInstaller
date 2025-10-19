@@ -14,7 +14,9 @@ namespace BrawlInstaller.StaticClasses
             { InstallOptionType.MovesetFile, "PAC file (.pac)|*.pac" },
             { InstallOptionType.Module, "REL file (.rel)|*.rel" },
             { InstallOptionType.Sounbank, "SAWND file (.sawnd)|*.sawnd" },
-            { InstallOptionType.KirbySoundbank, "SAWND file (.sawnd)|*.sawnd" }
+            { InstallOptionType.KirbySoundbank, "SAWND file (.sawnd)|*.sawnd" },
+            { InstallOptionType.VictoryTheme, "BRSTM file (.brstm)|*.brstm" },
+            { InstallOptionType.CreditsTheme, "BRSTM file (.brstm)|*.brstm" }
         };
 
         public static Dictionary<InstallOptionType, string> InstallOptionExtensions = new Dictionary<InstallOptionType, string>
@@ -22,7 +24,9 @@ namespace BrawlInstaller.StaticClasses
             { InstallOptionType.MovesetFile, "pac" },
             { InstallOptionType.Module, "rel" },
             { InstallOptionType.Sounbank, "sawnd" },
-            { InstallOptionType.KirbySoundbank, "sawnd" }
+            { InstallOptionType.KirbySoundbank, "sawnd" },
+            { InstallOptionType.VictoryTheme, "brstm" },
+            { InstallOptionType.CreditsTheme, "brstm" }
         };
     }
 }

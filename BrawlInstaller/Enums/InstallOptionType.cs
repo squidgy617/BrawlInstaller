@@ -16,6 +16,10 @@ namespace BrawlInstaller.Enums
         [Description("Soundbank")]
         Sounbank,
         [Description("Kirby Soundbank")]
-        KirbySoundbank
+        KirbySoundbank,
+        [Description("Victory Theme")]
+        VictoryTheme,
+        [Description("Credits Theme")]
+        CreditsTheme
     }
 }

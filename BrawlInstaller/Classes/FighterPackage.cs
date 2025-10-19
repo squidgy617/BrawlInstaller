@@ -50,7 +50,9 @@ namespace BrawlInstaller.Classes
             new FighterInstallOption(InstallOptionType.MovesetFile),
             new FighterInstallOption(InstallOptionType.Module),
             new FighterInstallOption(InstallOptionType.Sounbank),
-            new FighterInstallOption(InstallOptionType.KirbySoundbank)
+            new FighterInstallOption(InstallOptionType.KirbySoundbank),
+            new FighterInstallOption(InstallOptionType.VictoryTheme),
+            new FighterInstallOption(InstallOptionType.CreditsTheme)
         };
 
         public FighterPackage Copy()

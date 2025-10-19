@@ -513,6 +513,14 @@ namespace BrawlInstaller.ViewModels
                         movesetPac.FilePath = installOption.File;
                     }
                 }
+                else if (installOption.Type == InstallOptionType.VictoryTheme)
+                {
+                    fighterPackage.VictoryTheme.SongFile = installOption.File;
+                }
+                else if (installOption.Type == InstallOptionType.CreditsTheme)
+                {
+                    fighterPackage.CreditsTheme.SongFile = installOption.File;
+                }
             }
             return fighterPackage;
         }
