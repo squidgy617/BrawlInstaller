@@ -365,7 +365,12 @@ namespace BrawlInstaller.ViewModels
             }
             if (installOptionsGroups.Count > 0)
             {
-                selectedInstallOptions = _dialogService.OpenRadioButtonDialog(installOptionsGroups, "Install Options", "Select options to install").Where(x => x.IsChecked).Select(x => x.Item as FighterInstallOption).ToList();
+                var response = _dialogService.OpenRadioButtonDialog(installOptionsGroups, "Install Options", "Select options to install");
+                if (!response.Result)
+                {
+                    return;
+                }
+                selectedInstallOptions = response.Items.Where(x => x.IsChecked).Select(x => x.Item as FighterInstallOption).ToList();
             }
             var packageType = FighterPackage.PackageType;
             // Set costume indexes for cosmetics

@@ -59,7 +59,7 @@ namespace BrawlInstaller.Services
         (List<CheckListItem> ChecklistItems, bool Result) OpenCheckListDialog(IEnumerable<CheckListItem> checkListItems, string title = "Select items", string caption = "Select items");
 
         /// <inheritdoc cref="DialogService.OpenRadioButtonDialog(IEnumerable{RadioButtonGroup}, string, string)"/>
-        List<RadioButtonItem> OpenRadioButtonDialog(IEnumerable<RadioButtonGroup> radioButtonGroups, string title = "Select items", string caption = "Select items");
+        (List<RadioButtonItem> Items, bool Result) OpenRadioButtonDialog(IEnumerable<RadioButtonGroup> radioButtonGroups, string title = "Select items", string caption = "Select items");
 
         /// <inheritdoc cref="DialogService.OpenTextureViewer(string, string, string)"/>
         void OpenTextureViewer(string filePath, string title = "Select a texture", string caption = "Select a texture");
@@ -382,7 +382,7 @@ namespace BrawlInstaller.Services
         /// <param name="title">Title to display on window</param>
         /// <param name="caption">Caption to display</param>
         /// <returns>Selected items</returns>
-        public List<RadioButtonItem> OpenRadioButtonDialog(IEnumerable<RadioButtonGroup> radioButtonGroups, string title = "Select items", string caption = "Select items")
+        public (List<RadioButtonItem> Items, bool Result) OpenRadioButtonDialog(IEnumerable<RadioButtonGroup> radioButtonGroups, string title = "Select items", string caption = "Select items")
         {
             var dialog = GenerateWindow(title);
             _radioButtonViewModel.Caption = caption;
@@ -395,9 +395,9 @@ namespace BrawlInstaller.Services
             dialog.ShowDialog();
             if (_radioButtonViewModel.DialogResult)
             {
-                return _radioButtonViewModel.RadioButtonItems.ToList();
+                return (_radioButtonViewModel.RadioButtonItems.ToList(), _radioButtonViewModel.DialogResult);
             }
-            return new List<RadioButtonItem>();
+            return (new List<RadioButtonItem>(), false);
         }
 
         /// <summary>
