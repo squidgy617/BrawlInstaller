@@ -100,10 +100,16 @@ namespace BrawlInstaller.ViewModels
         public bool SoundbankControlsEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
 
         [DependsUpon(nameof(FighterPackage))]
+        public uint? OldSoundbankId { get => FighterPackage?.FighterInfo?.OriginalSoundbankId; set { FighterPackage.FighterInfo.OriginalSoundbankId = value; } }
+
+        [DependsUpon(nameof(FighterPackage))]
         public uint? SoundbankId { get => FighterPackage?.FighterInfo?.SoundbankId; set { ChangedSoundbankId(FighterPackage.FighterInfo.OriginalSoundbankId, value); OnPropertyChanged(nameof(SoundbankId)); } }
 
         [DependsUpon(nameof(SoundbankId))]
         public bool SoundbankIdControlEnabled { get => FighterPackage?.FighterInfo?.OriginalSoundbankId == null || SoundbankId == null || SoundbankId >= 324; }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public uint? OldKirbySoundbankId { get => FighterPackage?.FighterInfo?.OriginalKirbySoundbankId; set { FighterPackage.FighterInfo.OriginalKirbySoundbankId = value; } }
 
         [DependsUpon(nameof(FighterPackage))]
         public uint? KirbySoundbankId { get => FighterPackage?.FighterInfo?.KirbySoundbankId; set { ChangedKirbySoundbankId(FighterPackage.FighterInfo.OriginalKirbySoundbankId, value); OnPropertyChanged(nameof(KirbySoundbankId)); } }
