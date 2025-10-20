@@ -262,6 +262,9 @@ namespace BrawlInstaller.Classes
         public int? SSESubCharacterId { get; set; } = 0;
         public int? LLoadCharacterId { get; set; } = 0;
 
+        [JsonProperty("CustomPhysicsModifiers", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+        public List<CustomPhysicsModifier> CustomPhysicsModifiers { get; set; } = new List<CustomPhysicsModifier>();
+
         public CostumeSwapSettings CostumeSwapSettings { get; set; } = new CostumeSwapSettings();
 
         [JsonProperty("ExSlotIds", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
@@ -273,6 +276,14 @@ namespace BrawlInstaller.Classes
             copy.KirbyHatData = KirbyHatData;
             return copy;
         }
+    }
+
+    public class CustomPhysicsModifier
+    {
+        public byte ICBasic { get; set; }
+        public int Action { get; set; }
+        public float Value { get; set; }
+        public string Comment { get; set; } = string.Empty;
     }
 
     public class CostumeSwapSettings

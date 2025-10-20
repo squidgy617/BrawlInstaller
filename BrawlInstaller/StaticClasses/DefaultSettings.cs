@@ -37,7 +37,8 @@ namespace BrawlInstaller.StaticClasses
             new DefaultFilePath(FileType.TrophyGameIconsLocation, "BRRES file (.brres)|*.brres", true, new List<Type> {typeof(PAT0TextureNode)}),
             new DefaultFilePath(FileType.RSSFile, ".ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.CostumeSwapFile, "ASM file (.asm)|*.asm"),
-            new DefaultFilePath(FileType.BonusFighterFile, "ASM file (.asm)|*.asm")
+            new DefaultFilePath(FileType.BonusFighterFile, "ASM file (.asm)|*.asm"),
+            new DefaultFilePath(FileType.PhysicsDataFile, "ASM file (.asm)|*.asm")
         };
 
         public static DefaultFilePath GetFilePath(FileType type)

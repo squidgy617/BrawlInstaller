@@ -1723,6 +1723,9 @@ namespace BrawlInstaller.Services
             // Get fighter-specific settings
             fighterSettings = GetFighterSpecificSettings(fighterPackage);
 
+            // Get physics modifiers
+            fighterSettings.CustomPhysicsModifiers = GetCustomPhysicsModifiers(fighterPackage);
+
             return fighterSettings;
         }
 
@@ -3626,6 +3629,95 @@ namespace BrawlInstaller.Services
                 }
             }
         }
+
+        // TODO: There is most definitely a better way to do this that involves properly reading the tables
+        /// <summary>
+        /// Get custom physics modifiers for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to get modifiers for</param>
+        /// <returns>List of modifiers</returns>
+        private List<CustomPhysicsModifier> GetCustomPhysicsModifiers(FighterPackage fighterPackage)
+        {
+            var physicsModifiers = new List<CustomPhysicsModifier>();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var codePath = _settingsService.BuildSettings.FilePathSettings.PhysicsDataFile;
+            var label = _settingsService.BuildSettings.FilePathSettings.PhysicsDataLabel;
+            var path = Path.Combine(buildPath, codePath);
+            var code = _codeService.ReadCode(path);
+            if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(codePath) && !string.IsNullOrEmpty(label))
+            {
+                // Find table
+                var labelPosition = code.IndexOf(label);
+                var endPosition = code.IndexOf("Skip:", labelPosition);
+                var currentIndex = labelPosition;
+                // Iterate through code to find matches
+                while (currentIndex > -1 && currentIndex < code.Length && currentIndex < endPosition)
+                {
+                    currentIndex = code.IndexOf($"byte[2] 0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", currentIndex);
+                    if (currentIndex > -1)
+                    {
+                        // Get the end of the line
+                        var endLine = code.IndexOf("\r\n", currentIndex);
+                        if (endLine <= -1)
+                        {
+                            endLine = code.Length;
+                        }
+                        if (endLine >= endPosition)
+                        {
+                            endLine = endPosition;
+                        }
+                        // Pull numbers from line
+                        var modifierString = code.Substring(currentIndex, endLine - currentIndex);
+                        var regex = new Regex("(\\b(0x)[0-9a-fA-F]+\\b)|(\\b[0-9]+\\.[0-9]+)|(\\b[0-9]+\\b)");
+                        var matches = regex.Matches(modifierString);
+                        if (matches.Count == 5) // Should always be 5 hits
+                        {
+                            var results = new List<bool>();
+                            byte icBasic;
+                            int action;
+                            float value;
+                            results.Add(matches[2].Value.StartsWith("0x") ? byte.TryParse(matches[2].Value.Substring(2), NumberStyles.HexNumber, null, out icBasic) : byte.TryParse(matches[2].Value, NumberStyles.Number, null, out icBasic));
+                            results.Add(matches[3].Value.StartsWith("0x") ? int.TryParse(matches[3].Value.Substring(2), NumberStyles.HexNumber, null, out action) : int.TryParse(matches[3].Value, NumberStyles.Number, null, out action));
+                            results.Add(float.TryParse(matches[4].Value, NumberStyles.Number, null, out value));
+                            if (!results.Any(result => result == false))
+                            {
+                                // Generate modifier if valid
+                                var modifier = new CustomPhysicsModifier
+                                {
+                                    ICBasic = icBasic,
+                                    Action = action,
+                                    Value = value
+                                };
+                                // Add comment if there is one
+                                var commentIndex = modifierString.IndexOf("#");
+                                if (commentIndex > -1)
+                                {
+                                    var commentString = modifierString.Substring(commentIndex + 1, modifierString.Length - commentIndex - 1);
+                                    modifier.Comment = commentString.Trim();
+                                }
+                                physicsModifiers.Add(modifier);
+                            }
+                        }
+                        // Skip to next line
+                        if (endLine > -1)
+                        {
+                            currentIndex = endLine;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return physicsModifiers;
+        }
+
+        
 
         #region Fighter-Specific Settings
 

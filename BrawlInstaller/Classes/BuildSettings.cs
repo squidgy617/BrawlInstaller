@@ -211,7 +211,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.FighterTrophyLocation, "Source\\ProjectM\\CloneEngine.asm"),
             new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel"),
             new FilePath(FileType.RSSFile, "Source\\Project+\\Random.asm"),
-            new FilePath(FileType.CostumeSwapFile, "")
+            new FilePath(FileType.CostumeSwapFile, ""),
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -224,7 +224,8 @@ namespace BrawlInstaller.Classes
             new AsmPath(FileType.FighterSpecificAsmFile, "Source\\ProjectM\\CloneEngine.asm"),
             new AsmPath(FileType.LLoadAsmFile, "Source\\ProjectM\\CSS.asm", ".GOTO->Table_Skip"),
             new AsmPath(FileType.SlotExAsmFile, "Source\\P+Ex\\SlotEx.asm", "Table:"),
-            new AsmPath(FileType.BonusFighterFile, "", "ExtraFighterData:")
+            new AsmPath(FileType.BonusFighterFile, "", "ExtraFighterData:"),
+            new AsmPath(FileType.PhysicsDataFile, "Source\\ProjectM\\Modifier\\Physics.asm", "PHYSICS_DATA:")
         };
 
         [JsonProperty("FileNodePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -312,6 +313,8 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string BonusFighterFile { get => GetAsmPath(FileType.BonusFighterFile); }
         [JsonIgnore] public string BonusFighterLabel { get => GetLabel(FileType.BonusFighterFile); }
         [JsonIgnore] public string ExConfigsFile { get => GetFilePath(FileType.ExConfigsFile); }
+        [JsonIgnore] public string PhysicsDataFile { get => GetAsmPath(FileType.PhysicsDataFile); }
+        [JsonIgnore] public string PhysicsDataLabel { get => GetLabel(FileType.PhysicsDataFile); }
         public string BinFileHDTexturePath { get; set; } = "BrawlInstaller\\Stage Selection Screen\\Menu Alts";
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
