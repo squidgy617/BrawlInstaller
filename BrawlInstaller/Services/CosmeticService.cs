@@ -1305,8 +1305,7 @@ namespace BrawlInstaller.Services
                 {
                     var rootNode = new BRRESNode();
                     ImportCosmetic(definition, cosmetic, ids, rootNode);
-                    rootNode._origPath = $"{_settingsService.AppSettings.BuildPath}{definition.InstallLocation.FilePath}" +
-                        GetFileName(definition, ids, cosmetic);
+                    rootNode._origPath = Path.Combine(_settingsService.GetBuildFilePath(definition.InstallLocation.FilePath), GetFileName(definition, ids, cosmetic));
                     FileCache.Add(rootNode);
                     // Save HD cosmetic if it exists
                     var texture = GetTexture(rootNode, definition, cosmetic.Texture?.Name, textureBaseId);
@@ -1387,8 +1386,8 @@ namespace BrawlInstaller.Services
                         paths = files.Where(f => f.Name == GetFileName(definition, archiveId)).Select(f => f.FullName).ToList();
                 }
             }
-            else if (_fileService.FileExists(buildPath + definition.InstallLocation.FilePath))
-                paths.Add(buildPath + definition.InstallLocation.FilePath);
+            else if (_fileService.FileExists(_settingsService.GetBuildFilePath(definition.InstallLocation.FilePath)))
+                paths.Add(_settingsService.GetBuildFilePath(definition.InstallLocation.FilePath));
             return paths;
         }
 
