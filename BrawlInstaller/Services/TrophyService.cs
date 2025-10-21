@@ -195,7 +195,7 @@ namespace BrawlInstaller.Services
                 var seriesList = new Dictionary<string, int>();
                 for (int i = 0; i < _settingsService.BuildSettings.MiscSettings.TrophyCategoryOffset - 1; i++)
                 {
-                    if (!string.IsNullOrEmpty(trophyCategoryFile._strings[i]))
+                    if (!string.IsNullOrWhiteSpace(trophyCategoryFile._strings[i]))
                     {
                         seriesList.Add(trophyCategoryFile._strings[i], i);
                     }
