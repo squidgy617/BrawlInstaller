@@ -32,8 +32,8 @@ namespace BrawlInstaller.ViewModels
         private Trophy _oldTrophy;
         private CosmeticType _selectedCosmeticOption;
         private List<TrophyGameIcon> _gameIconList;
-        private Dictionary<string, int> _trophySeries;
-        private Dictionary<string, int> _trophyCategories;
+        private Dictionary<int, string> _trophySeries;
+        private Dictionary<int, string> _trophyCategories;
 
         // Services
         ISettingsService _settingsService;
@@ -63,8 +63,8 @@ namespace BrawlInstaller.ViewModels
         // Properties
         public Trophy Trophy { get => _trophy; set { _trophy = value; OnPropertyChanged(nameof(Trophy)); } }
         public Trophy OldTrophy { get => _oldTrophy; set { _oldTrophy = value; OnPropertyChanged(nameof(OldTrophy)); } }
-        public Dictionary<string, int> TrophySeries { get => _trophySeries; set { _trophySeries = value; OnPropertyChanged(nameof(TrophySeries)); } }
-        public Dictionary<string, int> TrophyCategories { get => _trophyCategories; set { _trophyCategories = value; OnPropertyChanged(nameof(TrophyCategories)); } }
+        public Dictionary<int, string> TrophySeries { get => _trophySeries; set { _trophySeries = value; OnPropertyChanged(nameof(TrophySeries)); } }
+        public Dictionary<int, string> TrophyCategories { get => _trophyCategories; set { _trophyCategories = value; OnPropertyChanged(nameof(TrophyCategories)); } }
         public List<TrophyGameIcon> GameIconList { get => _gameIconList; set { _gameIconList = value; OnPropertyChanged(nameof(GameIconList)); } }
 
         [DependsUpon(nameof(Trophy))]

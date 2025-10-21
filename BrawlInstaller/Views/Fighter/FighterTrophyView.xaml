@@ -75,9 +75,9 @@
                 <Image x:Name="gameIcon2Image" Source="{Binding GameIcon2}" Width="64" Height="32"/>
             </StackPanel>
             <Label x:Name="seriesLabel" Content="Series:" Grid.Row="9" ToolTip="Series trophy is listed under in-game"/>
-            <ComboBox x:Name="seriesDropDown" ItemsSource="{Binding TrophySeries}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.SeriesIndex}" Grid.Row="9" Grid.Column="1" Width="120"/>
+            <ComboBox x:Name="seriesDropDown" ItemsSource="{Binding TrophySeries}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Trophy.SeriesIndex}" Grid.Row="9" Grid.Column="1" Width="120"/>
             <Label x:Name="categoryLabel" Content="Category:" Grid.Row="10" ToolTip="Category trophy is listed under in-game"/>
-            <ComboBox x:Name="categoryDropDown" ItemsSource="{Binding TrophyCategories}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Trophy.CategoryIndex}" Grid.Row="10" Grid.Column="1" Width="120"/>
+            <ComboBox x:Name="categoryDropDown" ItemsSource="{Binding TrophyCategories}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Trophy.CategoryIndex}" Grid.Row="10" Grid.Column="1" Width="120"/>
         </Grid>
         <GroupBox x:Name="thumbnailGroupBox" Header="Thumbnail" Grid.Column="1">
             <Grid>
