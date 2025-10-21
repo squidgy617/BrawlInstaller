@@ -1,18 +1,6 @@
-- Added P+Ex 1.6 preset.
-- Added "Current ID" fields to fighter and Kirby soundbanks in the fighter editor, and changed the "ID" fields to "New ID".
-    - These fields represent what the fighter's current soundbank is in their files.
-    - By default, the values for these fields are read from the fighter's ex configs.
-    - When a fighter is saved, their soundbank IDs will always be updated from whatever is in the "Current ID" fields to whatever is in the "New ID" fields. This allows you to forcefully update soundbanks in the event your ex configs list the wrong ID.
-- Added "Current Effect PAC" fields for fighter and Kirby effect pacs in the fighter editor, and changed the "Effect PAC" fields to "New Effect PAC".
-    - These fields represent what the fighter's current effect PAC is in their files.
-    - By default, the values for these fields are ready from the fighter's main moveset PAC file.
-    - When a fighter is saved, their effect PAC IDs and GFX calls will always be updated from whatever is in the "Current Effect PAC" fields to whatever is in the "New Effect PAC" fields. This allows you to forcefully update GFX IDs in the event your PAC file lists the wrong effect PAC.
-- Added new "Trophy Category File" setting.
-    - When configured, trophy categories and series' will be read from this file whenever editing trophies in BrawlInstaller, allowing you to customize your categories and series' and have that reflected in the app.
-- Added new "Trophy Category Offset" setting.
-    - This setting tells BrawlInstaller at what index in your "Trophy Category File" the categories are located, since both series' and categories are in that file.
-    - This allows compatibility with the code `Trophy Category Expansion [MarioDox]` if you set the offset to 100.
-- Added victory themes and credits themes as file types you can configure in the "Alternate Files" section of the fighter editor.
-    - This allows you to include multiple victory themes or credits themes in a fighter package that the user can select between when installing the fighter.
-- Fixed an issue where cancelling out of checklist dialogs or radio button dialogs would not cancel the current operation.
-- Fixed an issue where the file selector would not update in the "Alternate Files" section when you changed the file type, preventing you from selecting the correct type of file.
+- Added new setting "Physics Data File" setting.
+    - This is the ASM file that contains the "Physics Data Table", usually Physics.asm in most builds.
+- Added new "Custom Physics Modifiers" section to Files/Settings tab in the fighter editor.
+    - This section allows you to specify custom physics modifiers that will be saved to the "Physics Data File".
+- Fixed an issue where the trophy category file was marked as required.
+- Blank lines will no longer be loaded into the trophy series dropdown when loading a trophy.
