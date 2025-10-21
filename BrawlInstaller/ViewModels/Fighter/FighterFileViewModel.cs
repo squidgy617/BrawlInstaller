@@ -198,7 +198,7 @@ namespace BrawlInstaller.ViewModels
         {
             if (song.SongId < 0xF000)
             {
-                song.SongId = 0xF000;
+                song.SongId = 0xFF00;
                 OnPropertyChanged(nameof(FighterPackage));
             }
         }

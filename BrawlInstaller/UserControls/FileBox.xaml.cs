@@ -140,6 +140,8 @@ namespace BrawlInstaller.UserControls
 
         public event EventHandler FilePathChanged;
 
+        private string _originalText;
+
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             FilePathChanged?.Invoke(this, EventArgs.Empty);
@@ -203,6 +205,19 @@ namespace BrawlInstaller.UserControls
                 }
                 Text += "\\";
             }
+        }
+
+        private void textBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (_originalText != this.Text)
+            {
+                FilePathChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private void textBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            _originalText = this.Text;
         }
     }
 }

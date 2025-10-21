@@ -13,7 +13,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="textBox" Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="{Binding Path=TextBoxWidth, RelativeSource={RelativeSource AncestorType=UserControl}}" IsReadOnly="{Binding Path=IsReadOnly, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+        <TextBox x:Name="textBox" Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="{Binding Path=TextBoxWidth, RelativeSource={RelativeSource AncestorType=UserControl}}" IsReadOnly="{Binding Path=IsReadOnly, RelativeSource={RelativeSource AncestorType=UserControl}}" LostFocus="textBox_LostFocus" GotFocus="textBox_GotFocus"/>
         <Button Content="..." Grid.Column="1" Style="{StaticResource condensedButton}" Click="BrowseButton_Click"/>
         <Button Content="📁" Grid.Column="2" Style="{StaticResource condensedButton}" Visibility="{Binding Path=FolderButtonVisibility, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Click="FolderButton_Click"/>
         <Button Content="✕" Grid.Column="3" Style="{StaticResource condensedButton}" Click="ClearButton_Click"/>
