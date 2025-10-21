@@ -1398,6 +1398,9 @@ namespace BrawlInstaller.Services
 
                 // Update fighter specific settings
                 UpdateFighterSpecificSettings(fighterPackage);
+
+                // Update physics modifiers
+                UpdateCustomPhysicsModifiers(fighterPackage);
             }
 
             // Update costume swap settings
@@ -3653,7 +3656,7 @@ namespace BrawlInstaller.Services
                 // Iterate through code to find matches
                 while (currentIndex > -1 && currentIndex < code.Length && currentIndex < endPosition)
                 {
-                    currentIndex = code.IndexOf($"byte[2] 0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", currentIndex);
+                    currentIndex = code.IndexOf($"\tbyte[2] 0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", currentIndex);
                     if (currentIndex > -1)
                     {
                         // Get the end of the line
@@ -3686,7 +3689,8 @@ namespace BrawlInstaller.Services
                                 {
                                     ICBasic = icBasic,
                                     Action = action,
-                                    Value = value
+                                    Value = value,
+                                    Index = currentIndex
                                 };
                                 // Add comment if there is one
                                 var commentIndex = modifierString.IndexOf("#");
@@ -3717,7 +3721,58 @@ namespace BrawlInstaller.Services
             return physicsModifiers;
         }
 
-        
+        /// <summary>
+        /// Update custom physics modifiers for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update modifiers for</param>
+        private void UpdateCustomPhysicsModifiers(FighterPackage fighterPackage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var codePath = _settingsService.BuildSettings.FilePathSettings.PhysicsDataFile;
+            var label = _settingsService.BuildSettings.FilePathSettings.PhysicsDataLabel;
+            var path = Path.Combine(buildPath, codePath);
+            var code = _codeService.ReadCode(path);
+            var modifiers = GetCustomPhysicsModifiers(fighterPackage);
+            if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(codePath) && !string.IsNullOrEmpty(label))
+            {
+                var newCode = code;
+                var i = 0;
+                // Remove current modifier strings
+                foreach (var modifier in modifiers.Where(x => x.Index > -1))
+                {
+                    modifier.Index -= i; // Decrement index on account of modifiers that have already been removed
+                    var endIndex = newCode.IndexOf("\r\n", modifier.Index);
+                    newCode = newCode.Substring(0, modifier.Index) + newCode.Substring(endIndex + 2);
+                    i += endIndex + 2 - modifier.Index;
+                }
+                // Add new modifier strings
+                if (fighterPackage.PackageType != PackageType.Delete)
+                {
+                    // Find position to write to
+                    var startIndex = modifiers.FirstOrDefault()?.Index ?? -1;
+                    // If there are no modifiers already, get position just before end of tables
+                    if (startIndex <= -1)
+                    {
+                        var labelIndex = newCode.IndexOf(label);
+                        var endIndex = newCode.IndexOf("Skip:", labelIndex);
+                        if (endIndex > -1)
+                        {
+                            startIndex = endIndex;
+                        }
+                    }
+                    if (startIndex > -1)
+                    {
+                        var reversedList = fighterPackage.FighterSettings.CustomPhysicsModifiers.ToList();
+                        reversedList.Reverse();
+                        foreach (var modifier in reversedList)
+                        {
+                            newCode = newCode.Insert(startIndex, modifier.ToAsmString(fighterPackage.FighterInfo.Ids.FighterConfigId.Value));
+                        }
+                    }
+                    _fileService.SaveTextFile(path, newCode);
+                }
+            }
+        }
 
         #region Fighter-Specific Settings
 

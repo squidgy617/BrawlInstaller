@@ -284,6 +284,18 @@ namespace BrawlInstaller.Classes
         public int Action { get; set; }
         public float Value { get; set; }
         public string Comment { get; set; } = string.Empty;
+        [JsonIgnore] public int Index { get; set; } = -1;
+
+        public string ToAsmString(int fighterId)
+        {
+            var modifierString = $"\tbyte[2] 0x{fighterId:X2}, 0x{ICBasic:X2}; half 0x{Action:X2}; float {Value}";
+            if (!string.IsNullOrEmpty(Comment))
+            {
+                modifierString += $"\t# {Comment}";
+            }
+            modifierString += "\r\n";
+            return modifierString;
+        }
     }
 
     public class CostumeSwapSettings

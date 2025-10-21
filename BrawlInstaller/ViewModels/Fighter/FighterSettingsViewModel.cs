@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Globalization;
 using System.IO;
@@ -45,6 +46,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand GenerateCSSSlotAttributesCommand => new RelayCommand(param => GenerateCSSSlotAttributes());
         public ICommand RefreshEffectPacCommand => new RelayCommand(param => RefreshEffectPac());
         public ICommand RefreshKirbyEffectPacCommand => new RelayCommand(param => RefreshKirbyEffectPac());
+        public ICommand RemovePhysicsModifierCommand => new RelayCommand(param => RemovePhysicsModifier(param));
+        public ICommand AddPhysicsModifierCommand => new RelayCommand(param => AddPhysicsModifier());
 
         // Importing constructor
         [ImportingConstructor]
@@ -91,6 +94,9 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public string FighterFileName { get => FighterPackage?.FighterInfo?.FighterFileName; set { FighterPackage.FighterInfo.FighterFileName = value; UpdateFighterName(); OnPropertyChanged(nameof(FighterFileName)); } }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public ObservableCollection<CustomPhysicsModifier> CustomPhysicsModifiers { get => (FighterPackage?.FighterSettings?.CustomPhysicsModifiers != null) ? new ObservableCollection<CustomPhysicsModifier>(FighterPackage.FighterSettings.CustomPhysicsModifiers) : new ObservableCollection<CustomPhysicsModifier>(); }
 
         // Methods
         public void ChangedFighterEffectPac(int? oldEffectPacId, int? newEffectPacId)
@@ -216,6 +222,22 @@ namespace BrawlInstaller.ViewModels
                 return newEffectPacId;
             }
             return currentId;
+        }
+
+        private void RemovePhysicsModifier(object param)
+        {
+            var physicsModifier = param as CustomPhysicsModifier;
+            if (physicsModifier != null)
+            {
+                FighterPackage.FighterSettings.CustomPhysicsModifiers.Remove(physicsModifier);
+                OnPropertyChanged(nameof(CustomPhysicsModifiers));
+            }
+        }
+
+        private void AddPhysicsModifier()
+        {
+            FighterPackage.FighterSettings.CustomPhysicsModifiers.Add(new CustomPhysicsModifier());
+            OnPropertyChanged(nameof(CustomPhysicsModifiers));
         }
     }
 

@@ -23,7 +23,7 @@ namespace BrawlInstaller.StaticClasses
             new DefaultFilePath(FileType.CodeMenuData, "CMNU file (.cmnu)|*.cmnu", false),
             new DefaultFilePath(FileType.CodeMenuNetplayData, "CMNU file (.cmnu)|*.cmnu", false),
             new DefaultFilePath(FileType.TrophyNames, "MSBIN file (.msbin)|*.msbin"),
-            new DefaultFilePath(FileType.TrophyCategories, "MSBIN file (.msbin)|*.msbin"),
+            new DefaultFilePath(FileType.TrophyCategories, "MSBIN file (.msbin)|*.msbin", false),
             new DefaultFilePath(FileType.FighterTrophyLocation, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.SSETrophyModule, "REL file (.rel)|*.rel"),
             new DefaultFilePath(FileType.StageTablePath, "Stage table file (*.asm, *.rss)|*.asm;*.rss"),
@@ -38,7 +38,7 @@ namespace BrawlInstaller.StaticClasses
             new DefaultFilePath(FileType.RSSFile, ".ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.CostumeSwapFile, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.BonusFighterFile, "ASM file (.asm)|*.asm"),
-            new DefaultFilePath(FileType.PhysicsDataFile, "ASM file (.asm)|*.asm")
+            new DefaultFilePath(FileType.PhysicsDataFile, "ASM file (.asm)|*.asm", false)
         };
 
         public static DefaultFilePath GetFilePath(FileType type)
