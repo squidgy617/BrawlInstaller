@@ -1,5 +1,1 @@
-- Fixed an issue where blank strings would sometimes appear in trophy categories when they were read from a file.
-- Fixed an issue where having a misconfigured offset for trophy categories could result in errors when reading from the file.
-- Fixed an issue where BPs would sometimes save to the wrong location.
-- Fixed an issue where song ID would not be updated when manually editing the victory/credits theme file box on a fighter.
-- Deleting an L-load, subcharacter, or SlotEx fighter will also remove them from their corresponding tables.
+- Fixed an issue where unused params with the same name as a used one would prevent saving.
