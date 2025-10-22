@@ -1,6 +1,5 @@
-- Added new setting "Physics Data File" setting.
-    - This is the ASM file that contains the "Physics Data Table", usually Physics.asm in most builds.
-- Added new "Custom Physics Modifiers" section to Files/Settings tab in the fighter editor.
-    - This section allows you to specify custom physics modifiers that will be saved to the "Physics Data File".
-- Fixed an issue where the trophy category file was marked as required.
-- Blank lines will no longer be loaded into the trophy series dropdown when loading a trophy.
+- Fixed an issue where blank strings would sometimes appear in trophy categories when they were read from a file.
+- Fixed an issue where having a misconfigured offset for trophy categories could result in errors when reading from the file.
+- Fixed an issue where BPs would sometimes save to the wrong location.
+- Fixed an issue where song ID would not be updated when manually editing the victory/credits theme file box on a fighter.
+- Deleting an L-load, subcharacter, or SlotEx fighter will also remove them from their corresponding tables.
