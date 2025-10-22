@@ -1851,6 +1851,36 @@ namespace BrawlInstaller.Services
                     asmTable[cssSlotId.Value].Item = $"0x{exSlots[0]:X2}{exSlots[1]:X2}{exSlots[2]:X2}{exSlots[3]:X2}";
                     asmTable[cssSlotId.Value].Comment = fighterPackage.FighterInfo.DisplayName;
                 }
+                // Remove slots that reference the fighter
+                if (fighterPackage.PackageType == PackageType.Delete)
+                {
+                    for(var i = 0; i < asmTable.Count; i++)
+                    {
+                        var regex = new Regex("[0-9A-F]{1,2}");
+                        var slotValues = asmTable[i].Item.Replace("0x", "");
+                        var slots = regex.Matches(slotValues);
+                        var matchIndex = -1;
+                        foreach(Match slot in slots)
+                        {
+                            if (int.TryParse(slot.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int result))
+                            {
+                                if (result == cssSlotId)
+                                {
+                                    matchIndex = slot.Index;
+                                    break;
+                                }
+                            }
+                        }
+                        // Rebuild SlotEx string
+                        if (matchIndex > -1)
+                        {
+                            var originalString = asmTable[i].Item;
+                            asmTable[i].Item = originalString.Substring(0, matchIndex + 2);
+                            asmTable[i].Item += "FF";
+                            asmTable[i].Item += originalString.Substring(matchIndex + 4);
+                        }
+                    }
+                }
                 // Write table
                 code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.SlotExTableLabel, asmTable, DataSize.Word, 4);
                 _fileService.SaveTextFile(codePath, code);
@@ -1889,6 +1919,18 @@ namespace BrawlInstaller.Services
                 {
                     asmTable[cssSlotId.Value].Item = $"0x{fighterPackage.FighterSettings.LLoadCharacterId:X2}";
                     asmTable[cssSlotId.Value].Comment = fighterPackage.FighterInfo.DisplayName;
+                }
+                // Remove from other fighter slots
+                if (fighterPackage.PackageType == PackageType.Delete)
+                {
+                    for(var i = 0; i < asmTable.Count; i++)
+                    {
+                        var parsed = int.TryParse(asmTable[i].Item.Replace("0x", ""), NumberStyles.HexNumber, null, out int result);
+                        if (parsed && result == cssSlotId)
+                        {
+                            asmTable[i].Item = $"0x{i:X2}";
+                        }
+                    }
                 }
                 // Write table
                 code = _codeService.ReplaceTable(code, _settingsService.BuildSettings.FilePathSettings.LLoadTableLabel, asmTable, DataSize.Byte, 4);
@@ -2606,6 +2648,18 @@ namespace BrawlInstaller.Services
                             if (sectionData.Length > subcharacterPosition && fighterPackage.FighterSettings.SSESubCharacterId != null)
                             {
                                 sectionData[subcharacterPosition] = (byte)fighterPackage.FighterSettings.SSESubCharacterId;
+                            }
+                            // Remove sub characters that match
+                            if (fighterPackage.PackageType == PackageType.Delete)
+                            {
+                                var startPosition = 0x84;
+                                for(var i = 0; i < 244 && i + startPosition < sectionData.Length; i++)
+                                {
+                                    if (sectionData[i + startPosition] == fighterPackage.FighterInfo.Ids.CSSSlotConfigId)
+                                    {
+                                        sectionData[i + startPosition] = (byte)i;
+                                    }
+                                }
                             }
                             _fileService.ReplaceNodeRaw(section, sectionData);
                         }
