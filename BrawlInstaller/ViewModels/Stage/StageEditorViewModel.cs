@@ -278,7 +278,7 @@ namespace BrawlInstaller.ViewModels
                 messages.Add(new DialogMessage("Invalid Module Names", "One or more modules are named incorrectly. Ensure all modules are named in the format 'st_XX.rel', where 'XX' can be anything."));
                 result = false;
             }
-            if (Stage.AllParams.GroupBy(x => x.Name).Any(x => x.Count() > 1))
+            if (Stage.StageEntries.Select(x => x.Params).Distinct().GroupBy(x => x.Name).Any(x => x.Count() > 1))
             {
                 messages.Add(new DialogMessage("Duplicate Param Names", "One or more stage param entries have the same name. Please make all names unique to continue."));
                 result = false;
