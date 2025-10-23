@@ -333,7 +333,7 @@ namespace BrawlInstaller.Services
                 {
                     // Bin files correspond to button flags in alphabetical order (e.g. the first file in alphabetical order will be attached to button flag ending in 00
                     var index = GetButtonFlagIndex(entry);
-                    var files = _fileService.GetFiles(folder, "*.bin");
+                    var files = _fileService.GetFiles(folder, "*.bin").OrderBy(x => Path.GetFileName(x)).ToList();
                     string file = null;
                     if (index < files.Count())
                         file = files[index];
