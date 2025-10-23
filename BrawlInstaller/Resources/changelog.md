@@ -1,1 +1,1 @@
-- Fixed an issue where unused params with the same name as a used one would prevent saving.
+- Fixed an issue where bin files would not always be retrieved in the correct order when loading a stage.
