@@ -346,7 +346,7 @@ namespace BrawlInstaller.Services
             var id = tracklistSong.SongId;
             if (id == null || string.IsNullOrEmpty(tracklistSong.SongPath))
             {
-                return 0x0000;
+                return tracklistSong.SongId ?? 0x0000;
             }
             // Only add the song if it's using a custom TLST ID, otherwise it's a vBrawl song and should not be added
             if (tracklistSong.SongId >= 0x0000F000)
