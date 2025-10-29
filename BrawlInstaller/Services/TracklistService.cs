@@ -68,7 +68,7 @@ namespace BrawlInstaller.Services
             var buildPath = _settingsService.AppSettings.BuildPath;
             var tracklistPath = GetTracklistPath(tracklistType);
             var path = Path.Combine(buildPath, tracklistPath);
-            tracklists = _fileService.GetFiles(path, "*.tlst").ToList();
+            tracklists = _fileService.GetFiles(path, "*.tlst").OrderBy(x => Path.GetFileName(x)).ToList();
             return tracklists;
         }
 
