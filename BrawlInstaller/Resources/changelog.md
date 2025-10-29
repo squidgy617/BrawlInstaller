@@ -1,1 +1,1 @@
-- Fixed an issue where tracklists would not always be ordered alphabetically when loading them.
+- Fixed an issue where changing a victory theme or credit theme ID without adding a BRSTM would not properly update their IDs in the ex config if a tracklist entry didn't already exist.
