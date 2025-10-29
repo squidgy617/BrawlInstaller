@@ -1,1 +1,1 @@
-- Fixed an issue where bin files would not always be retrieved in the correct order when loading a stage.
+- Fixed an issue where tracklists would not always be ordered alphabetically when loading them.
