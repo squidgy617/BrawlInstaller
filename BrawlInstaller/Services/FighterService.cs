@@ -2285,20 +2285,21 @@ namespace BrawlInstaller.Services
                         if (name != node.Name)
                             node.Name = name;
                     }
-                    regex = new Regex("GmSimpleChr\\d+");
-                    if (regex.IsMatch(node.Name))
-                    {
-                        var name = regex.Replace(node.Name, $"GmSimpleChr{id:D2}", 1);
-                        if (name != node.Name)
-                            node.Name = name;
-                    }
-                    regex = new Regex("GmSimpleChrEy\\d+");
-                    if (regex.IsMatch(node.Name))
-                    {
-                        var name = regex.Replace(node.Name, $"GmSimpleChrEy{id:D2}", 1);
-                        if (name != node.Name)
-                            node.Name = name;
-                    }
+                    // Renaming textures can corrupt them if they're CI8 (even though they probably shouldn't be), and renaming them isn't necessary anyway, so don't bother
+                    //regex = new Regex("GmSimpleChr\\d+");
+                    //if (regex.IsMatch(node.Name))
+                    //{
+                    //    var name = regex.Replace(node.Name, $"GmSimpleChr{id:D2}", 1);
+                    //    if (name != node.Name)
+                    //        node.Name = name;
+                    //}
+                    //regex = new Regex("GmSimpleChrEy\\d+");
+                    //if (regex.IsMatch(node.Name))
+                    //{
+                    //    var name = regex.Replace(node.Name, $"GmSimpleChrEy{id:D2}", 1);
+                    //    if (name != node.Name)
+                    //        node.Name = name;
+                    //}
                 }
                 // Save file
                 var buildPath = _settingsService.AppSettings.BuildPath;
