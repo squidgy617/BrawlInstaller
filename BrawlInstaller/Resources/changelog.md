@@ -1,1 +1,4 @@
-- Fixed an issue where changing a victory theme or credit theme ID without adding a BRSTM would not properly update their IDs in the ex config if a tracklist entry didn't already exist.
+- BrawlInstaller will no longer rename textures, palettes, or materials when importing a classic mode intro.
+    - This is to prevent issues where CI8 textures using unusual dimensions could end up looking corrupted in-game after installing a classic intro.
+        - This could also be prevented by using textures with dimensions that are multiples of eight or using a different texture format than CI8.
+    - Classic intros should still work correctly in-game even if textures are not renamed.
