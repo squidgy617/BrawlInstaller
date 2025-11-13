@@ -1630,7 +1630,7 @@ namespace BrawlInstaller.Services
             }
             var start = definition.InstallLocation.NodePath != "" ? node.FindChild(definition.InstallLocation.NodePath) : node;
             // If the node path is an ARC node, search for a matching BRRES first and don't restrict range for textures
-            if (start.GetType() == typeof(ARCNode))
+            if (start != null && start.GetType() == typeof(ARCNode))
             {
                 start = start.Children.FirstOrDefault(x => x.ResourceFileType == ResourceType.BRES && ((BRRESNode)x).FileIndex == archiveId / definition.GroupMultiplier);
                 restrictRange = IsSharedGroupCosmetic(definition);
