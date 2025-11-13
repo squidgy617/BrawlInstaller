@@ -1,4 +1,1 @@
-- BrawlInstaller will no longer rename textures, palettes, or materials when importing a classic mode intro.
-    - This is to prevent issues where CI8 textures using unusual dimensions could end up looking corrupted in-game after installing a classic intro.
-        - This could also be prevented by using textures with dimensions that are multiples of eight or using a different texture format than CI8.
-    - Classic intros should still work correctly in-game even if textures are not renamed.
+- Fixed an issue where installing a fighter who was missing a credits icon could result in errors when loading fighters on builds with certain settings.
