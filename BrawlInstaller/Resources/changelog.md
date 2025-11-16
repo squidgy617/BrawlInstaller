@@ -1,1 +1,2 @@
-- Fixed an issue where installing a fighter who was missing a credits icon could result in errors when loading fighters on builds with certain settings.
+- 48 and 49 will no longer be automatically picked as cosmetic IDs when configuring a new fighter.
+    - These IDs seemed to sometimes cause issues when used by fighters.
