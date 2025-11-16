@@ -17,6 +17,8 @@ namespace BrawlInstaller.StaticClasses
             20, // Reserved because Ganondorf uses both frame 19 and 20 in SSE for some reason
             27, // Used by Pokemon Trainer, which is still in SSE even in builds that don't have him
             39, // Empty slot
+            48, // Seems to cause issues when used by fighters
+            49, // Seems to cause issues when used by fighters, related to random?
             50, // Random
             60, // Sandbag
             61, // Target Test
