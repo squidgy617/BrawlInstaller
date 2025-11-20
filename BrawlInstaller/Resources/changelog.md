@@ -1,1 +1,2 @@
-- When updating the fighter trophy code, `-` characters will be excluded from fighter names.
+- Added P+Ex 1.6 (PM CSS) preset
+    - For use with SoN1c2001's PMEX CSS for P+Ex: https://gamebanana.com/mods/376449
