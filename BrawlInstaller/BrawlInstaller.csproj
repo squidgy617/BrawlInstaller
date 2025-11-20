@@ -463,6 +463,8 @@
     <EmbeddedResource Include="Resources\DefaultSettings\REX\FighterList.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx16\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx16\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx16PM\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx16PM\BuildSettings.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

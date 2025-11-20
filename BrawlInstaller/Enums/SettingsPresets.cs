@@ -24,6 +24,8 @@ namespace BrawlInstaller.Enums
         [Description("REX")]
         REX,
         [Description("PMEX REMIX")]
-        REMIX
+        REMIX,
+        [Description("P+Ex 1.6 (PM CSS)")]
+        ProjectPlusEx16PM
     }
 }
