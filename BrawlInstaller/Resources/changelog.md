@@ -1,2 +1,1 @@
-- 48 and 49 will no longer be automatically picked as cosmetic IDs when configuring a new fighter.
-    - These IDs seemed to sometimes cause issues when used by fighters.
+- When updating the fighter trophy code, `-` characters will be excluded from fighter names.
