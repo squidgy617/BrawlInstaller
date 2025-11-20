@@ -3379,7 +3379,7 @@ namespace BrawlInstaller.Services
                 var slotAliasName = string.Empty;
                 if (fighterTrophies.Any(x => x.Trophy != null))
                 {
-                    slotAliasName = $"{fighterName}_Slot";
+                    slotAliasName = $"{fighterName.Replace("-", "")}_Slot";
                     aliases.Add(new Alias { Name = slotAliasName, Value = $"0x{slotId:X2}" });
                 }
                 foreach(var fighterTrophy in fighterTrophies.Where(x => x.Trophy != null))
@@ -3387,7 +3387,7 @@ namespace BrawlInstaller.Services
                     var trophySuffix = fighterTrophy.Type == TrophyType.Fighter ? "_Trophy" : "_Trophy_AllStar";
                     var register1 = fighterTrophy.Type == TrophyType.Fighter ? "r29" : "r26";
                     var register2 = fighterTrophy.Type == TrophyType.Fighter ? "r28" : "r4";
-                    var trophyAliasName = $"{fighterName}{trophySuffix}";
+                    var trophyAliasName = $"{fighterName.Replace("-", "")}{trophySuffix}";
                     aliases.Add(new Alias { Name = trophyAliasName, Value = $"0x{fighterTrophy.Trophy.Ids.TrophyId:X2}" });
                     var instruction = $"li {register1}, {trophyAliasName};cmpwi {register2}, {slotAliasName};beq+ GotTrophy";
                     var comment = $"if it's {fighterName}'s P+Ex slot";
