@@ -47,6 +47,17 @@ namespace BrawlInstaller.Classes
         public string FilePath { get; set; }
         public List<StagePage> Pages { get; set; } = new List<StagePage>();
         [JsonIgnore] public StageListType Type { get => FilePath?.EndsWith(".rss") == true ? StageListType.RSS : StageListType.ASM; }
+
+        public StageList Copy()
+        {
+            var newStageList = new StageList
+            {
+                Name = Name,
+                FilePath = FilePath,
+                Pages = Pages.Copy()
+            };
+            return newStageList;
+        }
     }
 
     public class StagePage
@@ -69,6 +80,31 @@ namespace BrawlInstaller.Classes
                 newAsmTable.Add(newAsmEntry);
             }
             return newAsmTable;
+        }
+
+        public StagePage Copy()
+        {
+            var newPage = new StagePage
+            {
+                PageNumber = PageNumber,
+                StageSlots = StageSlots.Copy(),
+                RandomFlags = RandomFlags,
+                HazardFlags = HazardFlags
+            };
+            return newPage;
+        }
+    }
+
+    public static class StagePageListExtensions
+    {
+        public static List<StagePage> Copy(this List<StagePage> stagePageList)
+        {
+            var newPageList = new List<StagePage>();
+            foreach (var stagePage in stagePageList)
+            {
+                newPageList.Add(stagePage.Copy());
+            }
+            return newPageList;
         }
     }
 
@@ -126,6 +162,16 @@ namespace BrawlInstaller.Classes
             }
             var bytes = slotIds.ToArray();
             return bytes;
+        }
+
+        public static List<StageSlot> Copy(this List<StageSlot> stageSlotList)
+        {
+            var newSlotList = new List<StageSlot>();
+            foreach(var stageSlot in stageSlotList)
+            {
+                newSlotList.Add(stageSlot.Copy());
+            }
+            return newSlotList;
         }
     }
 

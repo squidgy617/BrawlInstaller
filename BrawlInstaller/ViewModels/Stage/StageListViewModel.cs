@@ -33,7 +33,7 @@ namespace BrawlInstaller.ViewModels
     {
         // Private properties
         private StageInfo _stage;
-        private List<StageList> _stageLists;
+        private ObservableCollection<StageList> _stageLists;
         private StageList _selectedStageList;
         private StagePage _selectedPage;
         private StageSlot _selectedStageSlot;
@@ -56,6 +56,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand SaveStageListCommand => new RelayCommand(param => { SaveAllStageLists(); });
         public ICommand LoadStageCommand => new RelayCommand(param => LoadStage(param));
         public ICommand NewStageCommand => new RelayCommand(param =>  NewStage());
+        public ICommand CopyStageListCommand => new RelayCommand(param => CopyStageList());
 
         [ImportingConstructor]
         public StageListViewModel(IStageService stageService, ICosmeticService cosmeticService, IDialogService dialogService, IFileService fileService)
@@ -67,7 +68,7 @@ namespace BrawlInstaller.ViewModels
 
             StageTable = new ObservableCollection<StageSlot>(_stageService.GetStageSlots());
 
-            StageLists = _stageService.GetStageLists(StageTable.ToList());
+            StageLists = new ObservableCollection<StageList>(_stageService.GetStageLists(StageTable.ToList()));
 
             SelectedStageList = StageLists.FirstOrDefault();
 
@@ -95,7 +96,7 @@ namespace BrawlInstaller.ViewModels
 
         // Properties
         public StageInfo Stage { get => _stage; set { _stage = value; OnPropertyChanged(nameof(Stage)); } }
-        public List<StageList> StageLists { get => _stageLists; set { _stageLists = value; OnPropertyChanged(nameof(StageLists)); } }
+        public ObservableCollection<StageList> StageLists { get => _stageLists; set { _stageLists = value; OnPropertyChanged(nameof(StageLists)); } }
 
         [DependsUpon(nameof(StageLists))]
         public StageList SelectedStageList { get => _selectedStageList; set { _selectedStageList = value; OnPropertyChanged(nameof(SelectedStageList)); } }
@@ -176,6 +177,27 @@ namespace BrawlInstaller.ViewModels
             OnPropertyChanged(nameof(StageTable));
             OnPropertyChanged(nameof(StageLists));
             SaveStageList();
+        }
+
+        public void CopyStageList()
+        {
+            if (SelectedStageList != null)
+            {
+                var targetStageList = _dialogService.OpenDropDownDialog(StageLists.Where(x => x != SelectedStageList), "Name", "Select destination to copy to", "Destination") as StageList;
+                if (targetStageList != null)
+                {
+                    var name = targetStageList.Name;
+                    var filePath = targetStageList.FilePath;
+                    var newStageList = SelectedStageList.Copy();
+                    newStageList.Name = name;
+                    newStageList.FilePath = filePath;
+                    StageLists.Insert(StageLists.IndexOf(targetStageList), newStageList);
+                    StageLists.Remove(targetStageList);
+                    OnPropertyChanged(nameof(StageTable));
+                    OnPropertyChanged(nameof(StageLists));
+                    _dialogService.ShowMessage("Stage list copied. Save target stage list to apply changes.", "Success");
+                }
+            }
         }
 
         public void MoveStageUp()
@@ -298,7 +320,7 @@ namespace BrawlInstaller.ViewModels
 
         private void SaveStageList()
         {
-            _stageService.SaveStageLists(StageLists, StageTable.ToList());
+            _stageService.SaveStageLists(StageLists.ToList(), StageTable.ToList());
         }
 
         private void SaveAllStageLists()
@@ -363,7 +385,7 @@ namespace BrawlInstaller.ViewModels
         private void UpdateSettings()
         {
             StageTable = new ObservableCollection<StageSlot>(_stageService.GetStageSlots());
-            StageLists = _stageService.GetStageLists(StageTable.ToList());
+            StageLists = new ObservableCollection<StageList>(_stageService.GetStageLists(StageTable.ToList()));
             SelectedStageList = StageLists.FirstOrDefault();
             SelectedPage = SelectedStageList?.Pages?.FirstOrDefault();
             IncompleteStageIds = _stageService.GetIncompleteStageIds();

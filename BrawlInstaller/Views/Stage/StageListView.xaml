@@ -27,6 +27,13 @@
                 <StackPanel Orientation="Horizontal" Grid.Column="3">
                     <ComboBox x:Name="stageListsComboBox" ItemsSource="{Binding StageLists}" SelectedValue="{Binding SelectedStageList, Mode=TwoWay}" Width="120" DisplayMemberPath="Name"/>
                     <Button x:Name="stageListSaveButton" Content="Save" Command="{Binding SaveStageListCommand}"/>
+                    <Button x:Name="stageListActionsButton" Style="{StaticResource condensedButton}" Content="≡" behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True">
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Copy to another list" Command="{Binding CopyStageListCommand}"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
                 </StackPanel>
                 <Grid x:Name="stageTableStackPanel" Grid.Row="1">
                     <Grid.RowDefinitions>
