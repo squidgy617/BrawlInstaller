@@ -1,2 +1,6 @@
-- Added P+Ex 1.6 (PM CSS) preset
-    - For use with SoN1c2001's PMEX CSS for P+Ex: https://gamebanana.com/mods/376449
+﻿- Added a new feature to copy stage lists from one file to another
+    - Next to the "Save" button in the stage list section of the stages tab, there is now a `≡` button.
+    - Clicking this button will reveal the new option "Copy to another list".
+    - When selected, this option will allow you to choose another stage list to copy to. All contents of the currently-selected stage list will be copied to your chosen stage list, effectively replacing it.
+    - This feature can be used to copy contents of one RSS file to another, or copy contents of an ASM file to an RSS file.
+    - After copying, you must save the updated stage list to apply the changes.
