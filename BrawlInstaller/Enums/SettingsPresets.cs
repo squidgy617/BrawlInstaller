@@ -26,6 +26,8 @@ namespace BrawlInstaller.Enums
         [Description("PMEX REMIX")]
         REMIX,
         [Description("P+Ex 1.6 (PM CSS)")]
-        ProjectPlusEx16PM
+        ProjectPlusEx16PM,
+        [Description("KJP's vBrawl Build")]
+        KJPBuild
     }
 }
