@@ -1,3 +1,1 @@
-﻿- Added a preset for KJP's vBrawl build.
-    - For use with this build: https://drive.google.com/file/d/1sNiVAk2UwAVTXFbjwx4ee0eCyUfp4Bfv/view?usp=sharing
-    - Note: Many files need to be added to this build to properly use it with BrawlInstaller.
+﻿- Fixed an issue where BrawlInstaller would attempt create archives when a file didn't exist if it was specified in settings, which could result in errors.
