@@ -1431,7 +1431,7 @@ namespace BrawlInstaller.Services
                 FileCache.Add(node);
                 return node;
             }
-            if(definition.InstallLocation.FileExtension == "pac" && definition.AlwaysCreateArchive)
+            if(definition.InstallLocation.FileExtension == "pac" && definition.AlwaysCreateArchive && definition.InstallLocation.FilePath.EndsWith("\\"))
             {
                 var newNode = new ARCNode();
                 var bresNode = new BRRESNode();
@@ -1444,7 +1444,7 @@ namespace BrawlInstaller.Services
                 FileCache.Add(newNode);
                 return newNode;
             }
-            else if (definition.InstallLocation.FileExtension == "brres" && definition.AlwaysCreateArchive)
+            else if (definition.InstallLocation.FileExtension == "brres" && definition.AlwaysCreateArchive && definition.InstallLocation.FilePath.EndsWith("\\"))
             {
                 var newNode = new BRRESNode();
                 newNode.Compression = definition.CompressionType.ToString();
