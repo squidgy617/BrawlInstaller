@@ -1,1 +1,1 @@
-﻿- Fixed an issue where BrawlInstaller would attempt create archives when a file didn't exist if it was specified in settings, which could result in errors.
+﻿- Fixed an issue where an error occuring during character installation or uninstallation would still update the "All Fighters" list.
