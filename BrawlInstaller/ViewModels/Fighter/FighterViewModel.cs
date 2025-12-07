@@ -317,16 +317,6 @@ namespace BrawlInstaller.ViewModels
                 using (new CursorWait())
                 {
                     _packageService.SaveFighter(deletePackage, OldFighterPackage);
-                    // Remove from fighter list
-                    var foundFighters = FighterList.Where(x => x.Ids.FighterConfigId == deletePackage.FighterInfo.Ids.FighterConfigId
-                    && x.Ids.CSSSlotConfigId == deletePackage.FighterInfo.Ids.CSSSlotConfigId
-                    && x.Ids.SlotConfigId == deletePackage.FighterInfo.Ids.SlotConfigId
-                    && x.Ids.CosmeticConfigId == deletePackage.FighterInfo.Ids.CosmeticConfigId);
-                    foreach (var foundFighter in foundFighters.ToList())
-                    {
-                        _settingsService.FighterInfoList.Remove(foundFighter);
-                    }
-                    _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
                     // Set package path to internal fighter
                     FighterPackagePath = string.Empty;
                     // Update rosters
@@ -338,6 +328,16 @@ namespace BrawlInstaller.ViewModels
                     WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
                     // Compile GCT
                     _codeService.CompileCodes();
+                    // Remove from fighter list
+                    var foundFighters = FighterList.Where(x => x.Ids.FighterConfigId == deletePackage.FighterInfo.Ids.FighterConfigId
+                    && x.Ids.CSSSlotConfigId == deletePackage.FighterInfo.Ids.CSSSlotConfigId
+                    && x.Ids.SlotConfigId == deletePackage.FighterInfo.Ids.SlotConfigId
+                    && x.Ids.CosmeticConfigId == deletePackage.FighterInfo.Ids.CosmeticConfigId);
+                    foreach (var foundFighter in foundFighters.ToList())
+                    {
+                        _settingsService.FighterInfoList.Remove(foundFighter);
+                    }
+                    _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
                     _fileService.EndBackup();
                 }
                 _dialogService.CloseProgressBar();
@@ -454,6 +454,18 @@ namespace BrawlInstaller.ViewModels
                 _oldCreditsThemePath = FighterPackage.CreditsTheme?.SongPath;
                 // Set package path to internal fighter
                 FighterPackagePath = string.Empty;
+                // Update rosters
+                UpdateRoster(packageType, FighterPackage.FighterInfo);
+                // Reset old fighter package
+                OldFighterPackage = packageToSave.Copy();
+                // Update UI
+                OnPropertyChanged(nameof(FighterPackage));
+                OnPropertyChanged(nameof(FighterList));
+                SendFighterLoadedMessage(FighterPackage);
+                WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
+                // Compile GCT
+                _codeService.CompileCodes();
                 // Update fighter list
                 var newFighterInfo = FighterPackage.FighterInfo.CopyNoAttributes();
                 if (packageType == PackageType.New)
@@ -471,18 +483,6 @@ namespace BrawlInstaller.ViewModels
                     }
                 }
                 _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
-                // Update rosters
-                UpdateRoster(packageType, FighterPackage.FighterInfo);
-                // Reset old fighter package
-                OldFighterPackage = packageToSave.Copy();
-                // Update UI
-                OnPropertyChanged(nameof(FighterPackage));
-                OnPropertyChanged(nameof(FighterList));
-                SendFighterLoadedMessage(FighterPackage);
-                WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
-                WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
-                // Compile GCT
-                _codeService.CompileCodes();
                 _fileService.EndBackup();
             }
             _dialogService.CloseProgressBar();
