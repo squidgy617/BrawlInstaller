@@ -1,1 +1,1 @@
-﻿- Fixed an issue where an error occuring during character installation or uninstallation would still update the "All Fighters" list.
+﻿- Updated the P+Ex 1.6 (PM CSS) preset to fix an issue where portrait names and CSS icon names would not be installed with this preset.
