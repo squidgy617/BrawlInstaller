@@ -121,7 +121,7 @@
       "FileType": 1,
       "AlwaysInheritStyle": false,
       "Required": false,
-      "Enabled": false,
+      "Enabled": true,
       "Selectable": false,
       "AlwaysCreateArchive": true,
       "PaletteCount": 256,
@@ -2117,6 +2117,52 @@
       "Enabled": true,
       "Selectable": false,
       "AlwaysCreateArchive": false,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 5,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
+        "NodePath": "Misc Data [70]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face06/Texture0",
+          "FramesPerImage": 10,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": true
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": true,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
       "PaletteCount": 256,
       "ImportTextures": true
     }
