@@ -16,6 +16,7 @@ using System.ComponentModel;
 using BrawlInstaller.Services;
 using BrawlInstaller.Common;
 using BrawlInstaller.StaticClasses;
+using System.Globalization;
 
 namespace BrawlInstaller.Classes
 {
@@ -288,7 +289,7 @@ namespace BrawlInstaller.Classes
 
         public string ToAsmString(int fighterId)
         {
-            var modifierString = $"\tbyte[2] 0x{fighterId:X2}, 0x{ICBasic:X2}; half 0x{Action:X2}; float {Value}";
+            var modifierString = $"\tbyte[2] 0x{fighterId:X2}, 0x{ICBasic:X2}; half 0x{Action:X2}; float {Value.ToString(CultureInfo.CreateSpecificCulture("en-US"))}";
             if (!string.IsNullOrEmpty(Comment))
             {
                 modifierString += $"\t# {Comment}";

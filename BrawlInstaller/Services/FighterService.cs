@@ -3736,7 +3736,7 @@ namespace BrawlInstaller.Services
                             float value;
                             results.Add(matches[2].Value.StartsWith("0x") ? byte.TryParse(matches[2].Value.Substring(2), NumberStyles.HexNumber, null, out icBasic) : byte.TryParse(matches[2].Value, NumberStyles.Number, null, out icBasic));
                             results.Add(matches[3].Value.StartsWith("0x") ? int.TryParse(matches[3].Value.Substring(2), NumberStyles.HexNumber, null, out action) : int.TryParse(matches[3].Value, NumberStyles.Number, null, out action));
-                            results.Add(float.TryParse(matches[4].Value, NumberStyles.Number, null, out value));
+                            results.Add(float.TryParse(matches[4].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out value));
                             if (!results.Any(result => result == false))
                             {
                                 // Generate modifier if valid
