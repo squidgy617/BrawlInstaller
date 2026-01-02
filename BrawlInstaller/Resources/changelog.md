@@ -1,1 +1,1 @@
-﻿- Updated the P+Ex 1.6 (PM CSS) preset to fix an issue where portrait names and CSS icon names would not be installed with this preset.
+﻿- Fixed an issue where running the program in certain regions would cause float values to be incorrect for custom physics modifiers.
