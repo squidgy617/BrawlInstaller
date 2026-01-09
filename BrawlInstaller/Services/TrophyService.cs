@@ -38,7 +38,7 @@ namespace BrawlInstaller.Services
         void SaveTrophyList(List<Trophy> trophyList);
 
         /// <inheritdoc cref="TrophyService.GetUnusedTrophyIds(BrawlIds)"/>
-        BrawlIds GetUnusedTrophyIds(BrawlIds ids);
+        BrawlIds GetUnusedTrophyIds(BrawlIds ids, List<Trophy> usedTrophies = null);
     }
 
     [Export(typeof(ITrophyService))]
@@ -462,7 +462,7 @@ namespace BrawlInstaller.Services
         /// </summary>
         /// <param name="ids">BrawlIds to update</param>
         /// <returns>Updated IDs</returns>
-        public BrawlIds GetUnusedTrophyIds(BrawlIds ids)
+        public BrawlIds GetUnusedTrophyIds(BrawlIds ids, List<Trophy> usedTrophies = null)
         {
             if (ids != null)
             {
@@ -471,6 +471,10 @@ namespace BrawlInstaller.Services
                 if (ids.TrophyId == null)
                 {
                     trophyList = GetTrophyList();
+                    if (usedTrophies != null)
+                    {
+                        trophyList.AddRange(usedTrophies);
+                    }
                     ids.TrophyId = 631; // 631 is first custom trophy ID
                     while (trophyList.Any(x => x.Ids.TrophyId == ids.TrophyId))
                     {
@@ -482,6 +486,10 @@ namespace BrawlInstaller.Services
                     if (trophyList == null)
                     {
                         trophyList = GetTrophyList();
+                        if (usedTrophies != null)
+                        {
+                            trophyList.AddRange(usedTrophies);
+                        }
                     }
                     ids.TrophyThumbnailId = 631; // 631 is first custom trophy ID
                     while (trophyList.Any(x => x.Ids.TrophyThumbnailId == ids.TrophyThumbnailId))
