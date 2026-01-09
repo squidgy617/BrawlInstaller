@@ -1,1 +1,1 @@
-﻿- Fixed an issue where running the program in certain regions would cause float values to be incorrect for custom physics modifiers.
+﻿- Fixed an issue where fighter packages with multiple trophies (All Star and Classic) would sometimes load with both trophies set to the same ID.
