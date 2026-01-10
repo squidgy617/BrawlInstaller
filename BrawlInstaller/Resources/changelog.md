@@ -1,1 +1,1 @@
-﻿- Fixed an issue where fighter packages with multiple trophies (All Star and Classic) would sometimes load with both trophies set to the same ID.
+﻿- Fixed an issue where loading legacy packages that had a trophy shared between Classic and All-Star could result in the program hanging.
