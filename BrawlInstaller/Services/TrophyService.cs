@@ -466,20 +466,22 @@ namespace BrawlInstaller.Services
         {
             if (ids != null)
             {
+                var trophyId = ids.TrophyId;
                 List<Trophy> trophyList = null;
                 // Get IDs if they aren't there
-                if (ids.TrophyId == null)
+                if (trophyId == null)
                 {
                     trophyList = GetTrophyList();
                     if (usedTrophies != null)
                     {
                         trophyList.AddRange(usedTrophies);
                     }
-                    ids.TrophyId = 631; // 631 is first custom trophy ID
-                    while (trophyList.Any(x => x.Ids.TrophyId == ids.TrophyId))
+                    trophyId = 631; // 631 is first custom trophy ID
+                    while (trophyList.Any(x => x.Ids.TrophyId == trophyId))
                     {
-                        ids.TrophyId++;
+                        trophyId++;
                     }
+                    ids.TrophyId = trophyId;
                 }
                 if (ids.TrophyThumbnailId == null)
                 {
@@ -491,11 +493,13 @@ namespace BrawlInstaller.Services
                             trophyList.AddRange(usedTrophies);
                         }
                     }
-                    ids.TrophyThumbnailId = 631; // 631 is first custom trophy ID
-                    while (trophyList.Any(x => x.Ids.TrophyThumbnailId == ids.TrophyThumbnailId))
+                    var thumbnailId = ids.TrophyThumbnailId;
+                    thumbnailId = 631; // 631 is first custom trophy ID
+                    while (trophyList.Any(x => x.Ids.TrophyThumbnailId == thumbnailId))
                     {
-                        ids.TrophyThumbnailId++;
+                        thumbnailId++;
                     }
+                    ids.TrophyThumbnailId = thumbnailId;
                 }
             }
             return ids;
