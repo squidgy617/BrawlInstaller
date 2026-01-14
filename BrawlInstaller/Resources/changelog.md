@@ -1,1 +1,2 @@
-﻿- Fixed an issue where loading legacy packages that had a trophy shared between Classic and All-Star could result in the program hanging.
+﻿- Fixed an issue where imported fighters would not appear on fighter list until after restarting the application.
+- Fixed an issue where saving a fighter after import would sometimes treat trophies as though they had changed and throw a validation error.
