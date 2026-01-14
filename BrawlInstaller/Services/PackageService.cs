@@ -209,6 +209,11 @@ namespace BrawlInstaller.Services
             }
             // Update trophies
             _fighterService.SaveFighterTrophies(fighterPackage, oldFighter);
+            // Set old trophies to current ones
+            foreach(var trophy in fighterPackage.Trophies)
+            {
+                trophy.OldTrophy = trophy.Trophy;
+            }
             // Clean up inheritance
             fighterPackage = CleanupCosmeticInheritance(fighterPackage);
             // Set package type to update, in case it was a new package

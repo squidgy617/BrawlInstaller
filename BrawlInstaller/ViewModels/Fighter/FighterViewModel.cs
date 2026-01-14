@@ -323,9 +323,6 @@ namespace BrawlInstaller.ViewModels
                     UpdateRoster(PackageType.Delete, deletePackage.FighterInfo);
                     // Reset old fighter package
                     OldFighterPackage = null;
-                    OnPropertyChanged(nameof(FighterList));
-                    WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
-                    WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
                     // Compile GCT
                     _codeService.CompileCodes();
                     // Remove from fighter list
@@ -338,6 +335,9 @@ namespace BrawlInstaller.ViewModels
                         _settingsService.FighterInfoList.Remove(foundFighter);
                     }
                     _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
+                    OnPropertyChanged(nameof(FighterList));
+                    WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                    WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
                     _fileService.EndBackup();
                 }
                 _dialogService.CloseProgressBar();
@@ -458,12 +458,6 @@ namespace BrawlInstaller.ViewModels
                 UpdateRoster(packageType, FighterPackage.FighterInfo);
                 // Reset old fighter package
                 OldFighterPackage = packageToSave.Copy();
-                // Update UI
-                OnPropertyChanged(nameof(FighterPackage));
-                OnPropertyChanged(nameof(FighterList));
-                SendFighterLoadedMessage(FighterPackage);
-                WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
-                WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
                 // Compile GCT
                 _codeService.CompileCodes();
                 // Update fighter list
@@ -483,6 +477,12 @@ namespace BrawlInstaller.ViewModels
                     }
                 }
                 _settingsService.SaveFighterInfoSettings(_settingsService.FighterInfoList.ToList());
+                // Update UI
+                OnPropertyChanged(nameof(FighterPackage));
+                OnPropertyChanged(nameof(FighterList));
+                SendFighterLoadedMessage(FighterPackage);
+                WeakReferenceMessenger.Default.Send(new UpdateFighterListMessage(_settingsService.FighterInfoList));
+                WeakReferenceMessenger.Default.Send(new FighterSavedMessage(FighterPackage));
                 _fileService.EndBackup();
             }
             _dialogService.CloseProgressBar();
