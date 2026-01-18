@@ -101,22 +101,24 @@ namespace BrawlInstaller.ViewModels
         public bool SoundbankControlsEnabled { get => FighterPackage?.FighterInfo?.FighterAttributes != null; }
 
         [DependsUpon(nameof(FighterPackage))]
-        public uint? OldSoundbankId { get => FighterPackage?.FighterInfo?.OriginalSoundbankId; set { FighterPackage.FighterInfo.OriginalSoundbankId = value; } }
+        public uint? OldSoundbankId { get => FighterPackage?.FighterInfo?.OriginalSoundbankId; set { FighterPackage.FighterInfo.OriginalSoundbankId = value; OnPropertyChanged(nameof(OldSoundbankId)); } }
 
         [DependsUpon(nameof(FighterPackage))]
         public uint? SoundbankId { get => FighterPackage?.FighterInfo?.SoundbankId; set { ChangedSoundbankId(FighterPackage.FighterInfo.OriginalSoundbankId, value); OnPropertyChanged(nameof(SoundbankId)); } }
 
         [DependsUpon(nameof(SoundbankId))]
-        public bool SoundbankIdControlEnabled { get => FighterPackage?.FighterInfo?.OriginalSoundbankId == null || SoundbankId == null || SoundbankId >= 324; }
+        [DependsUpon(nameof(OldSoundbankId))]
+        public bool SoundbankIdControlEnabled { get => OldSoundbankId == null || SoundbankId == null || OldSoundbankId >= 324; }
 
         [DependsUpon(nameof(FighterPackage))]
-        public uint? OldKirbySoundbankId { get => FighterPackage?.FighterInfo?.OriginalKirbySoundbankId; set { FighterPackage.FighterInfo.OriginalKirbySoundbankId = value; } }
+        public uint? OldKirbySoundbankId { get => FighterPackage?.FighterInfo?.OriginalKirbySoundbankId; set { FighterPackage.FighterInfo.OriginalKirbySoundbankId = value; OnPropertyChanged(nameof(OldKirbySoundbankId)); } }
 
         [DependsUpon(nameof(FighterPackage))]
+        [DependsUpon(nameof(OldKirbySoundbankId))]
         public uint? KirbySoundbankId { get => FighterPackage?.FighterInfo?.KirbySoundbankId; set { ChangedKirbySoundbankId(FighterPackage.FighterInfo.OriginalKirbySoundbankId, value); OnPropertyChanged(nameof(KirbySoundbankId)); } }
 
         [DependsUpon(nameof(KirbySoundbankId))]
-        public bool KirbySoundbankIdControlEnabled { get => FighterPackage?.FighterInfo?.OriginalKirbySoundbankId == null || KirbySoundbankId == null || KirbySoundbankId >= 324; }
+        public bool KirbySoundbankIdControlEnabled { get => OldKirbySoundbankId == null || KirbySoundbankId == null || OldKirbySoundbankId >= 324; }
 
         [DependsUpon(nameof(FighterPackage))]
         public uint? VictoryThemeId { get => FighterPackage?.VictoryTheme?.SongId; set { ChangedThemeId(FighterPackage?.VictoryTheme, value); OnPropertyChanged(nameof(VictoryThemeId)); } }

@@ -69,7 +69,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding SoundbankControlsEnabled}">
             <userControls:FileBox x:Name="soundbankFileBox" Text="{Binding FighterPackage.Soundbank, Mode=TwoWay}" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
             <Label x:Name="oldSoundbankIdLabel" Content="Current ID:" ToolTip="Current ID of fighter's soundbank"/>
-            <TextBox x:Name="oldSoundbankTextBox" Text="{Binding OldSoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding SoundbankIdControlEnabled}"/>
+            <TextBox x:Name="oldSoundbankTextBox" Text="{Binding OldSoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}"/>
             <Label x:Name="soundbankIdLabel" Content="New ID:" ToolTip="ID to use for fighter's soundbank on save"/>
             <TextBox x:Name="soundbankTextBox" Text="{Binding SoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding SoundbankIdControlEnabled}"/>
             <Button Style="{StaticResource condensedButton}" Content="↺" Command="{Binding RefreshSoundbankIdCommand}" IsEnabled="{Binding SoundbankIdControlEnabled}"/>
@@ -78,7 +78,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding SoundbankControlsEnabled}">
             <userControls:FileBox x:Name="kirbySoundbankFileBox" Text="{Binding FighterPackage.KirbySoundbank, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" TextBoxWidth="120" Filter="SAWND file (.sawnd)|*.sawnd"/>
             <Label x:Name="oldKirbySoundbankIdLabel" Content="Current ID:" ToolTip="Current ID of Kirby hat soundbank"/>
-            <TextBox x:Name="oldKirbySoundbankTextBox" Text="{Binding OldKirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding KirbySoundbankIdControlEnabled}"/>
+            <TextBox x:Name="oldKirbySoundbankTextBox" Text="{Binding OldKirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}"/>
             <Label x:Name="kirbySoundbankIdLabel" Content="New ID:" ToolTip="ID to use for Kirby hat soundbank on save"/>
             <TextBox x:Name="kirbySoundbankTextBox" Text="{Binding KirbySoundbankId, Converter={StaticResource hexUInt2CharConverter}, UpdateSourceTrigger=LostFocus}" IsEnabled="{Binding KirbySoundbankIdControlEnabled}"/>
             <Button Style="{StaticResource condensedButton}" Content="↺" Command="{Binding RefreshKirbySoundbankIdCommand}" IsEnabled="{Binding KirbySoundbankIdControlEnabled}"/>
