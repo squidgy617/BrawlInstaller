@@ -1,3 +1,1 @@
-﻿- Added a new option for victory and credits themes in the fighter editor: "Share tracklist entry?"
-    - Enable this setting when saving a fighter to ensure that any tracklist entry with a matching ID will be reused by this fighter, rather than a new entry being created.
-- In builds that do not use fighter IDs for victory or credits themes, selecting a song from the search option in the fighter editor will autofill all fields and enable the "Share tracklist entry?" option.
+﻿- Current soundbank ID for fighters can now be changed regardless of whether fighter has a vanilla soundbank or not.
