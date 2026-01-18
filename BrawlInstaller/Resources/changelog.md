@@ -1,2 +1,3 @@
-﻿- Fixed an issue where imported fighters would not appear on fighter list until after restarting the application.
-- Fixed an issue where saving a fighter after import would sometimes treat trophies as though they had changed and throw a validation error.
+﻿- Added a new option for victory and credits themes in the fighter editor: "Share tracklist entry?"
+    - Enable this setting when saving a fighter to ensure that any tracklist entry with a matching ID will be reused by this fighter, rather than a new entry being created.
+- In builds that do not use fighter IDs for victory or credits themes, selecting a song from the search option in the fighter editor will autofill all fields and enable the "Share tracklist entry?" option.
