@@ -385,16 +385,16 @@ namespace BrawlInstaller.Services
             var fighterIds = LinkExConfigs(fighterInfo.Ids, cosmeticConfigs, cssSlotConfigs, slotConfigs);
 
             fighterInfo.CosmeticConfig = GetExConfig(fighterIds.CosmeticConfigId, IdType.CosmeticConfig);
-            var cosmeticConfig = cosmeticConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CosmeticConfig || ((ARCEntryNode)x).FileIndex == fighterIds.CosmeticConfigId);
+            var cosmeticConfig = cosmeticConfigs.FirstOrDefault(x => string.Equals(x.FilePath, fighterInfo.CosmeticConfig, StringComparison.OrdinalIgnoreCase) || ((ARCEntryNode)x).FileIndex == fighterIds.CosmeticConfigId);
 
             fighterInfo.CSSSlotConfig = GetExConfig(fighterIds.CSSSlotConfigId, IdType.CSSSlotConfig);
-            var cssSlotConfig = cssSlotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.CSSSlotConfig || ((ARCEntryNode)x).FileIndex == fighterIds.CSSSlotConfigId);
+            var cssSlotConfig = cssSlotConfigs.FirstOrDefault(x => string.Equals(x.FilePath, fighterInfo.CSSSlotConfig, StringComparison.OrdinalIgnoreCase) || ((ARCEntryNode)x).FileIndex == fighterIds.CSSSlotConfigId);
 
             fighterInfo.SlotConfig = GetExConfig(fighterIds.SlotConfigId, IdType.SlotConfig);
-            var slotConfig = slotConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.SlotConfig || ((ARCEntryNode)x).FileIndex == fighterIds.SlotConfigId);
+            var slotConfig = slotConfigs.FirstOrDefault(x => string.Equals(x.FilePath, fighterInfo.SlotConfig, StringComparison.OrdinalIgnoreCase) || ((ARCEntryNode)x).FileIndex == fighterIds.SlotConfigId);
 
             fighterInfo.FighterConfig = GetExConfig(fighterIds.FighterConfigId, IdType.FighterConfig);
-            var fighterConfig = fighterConfigs.FirstOrDefault(x => x.FilePath == fighterInfo.FighterConfig || ((ARCEntryNode)x).FileIndex == fighterIds.FighterConfigId);
+            var fighterConfig = fighterConfigs.FirstOrDefault(x => string.Equals(x.FilePath, fighterInfo.FighterConfig, StringComparison.OrdinalIgnoreCase) || ((ARCEntryNode)x).FileIndex == fighterIds.FighterConfigId);
 
             fighterInfo = GetFighterInfo(fighterInfo, fighterConfig, cosmeticConfig, cssSlotConfig, slotConfig);
 
