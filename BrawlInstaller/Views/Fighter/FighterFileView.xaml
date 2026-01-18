@@ -122,6 +122,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -143,9 +144,11 @@
                     </userControls:FileBox>
                     <Label x:Name="victoryThemeIdLabel" Content="ID:" Grid.Row="3" ToolTip="ID to use for victory theme. If above 0xF000, ID conflicts will be resolved automatically and any included song file will be installed. If below, song will be pulled from disk."/>
                     <TextBox x:Name="victoryThemeIdTextBox" Text="{Binding VictoryThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120" IsEnabled="{Binding VictoryThemeIdEnabled}"/>
+                    <CheckBox x:Name="victoryThemeReplaceCheckBox" Grid.Row="4" Grid.Column="1" Content="Share tracklist entry?" IsChecked="{Binding FighterPackage.VictoryTheme.ReplaceExisting}" IsEnabled="{Binding ReplaceVictoryThemeEnabled}" ToolTip="If checked, fighter will share tracklist entry with an existing entry with the same ID if one already exists."/>
                 </Grid>
                 <Grid x:Name="creditsThemeGrid">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -171,6 +174,7 @@
                     </userControls:FileBox>
                     <Label x:Name="creditsThemeIdLabel" Content="ID:" Grid.Row="3" ToolTip="ID to use for victory theme. If above 0xF000, ID conflicts will be resolved automatically and any included song file will be installed. If below, song will be pulled from disk."/>
                     <TextBox x:Name="creditsThemeIdTextBox" Text="{Binding CreditsThemeId, Mode=TwoWay, Converter={StaticResource hexUIntConverter}, UpdateSourceTrigger=LostFocus}" Grid.Row="3" Grid.Column="1" Width="120" IsEnabled="{Binding CreditsThemeIdEnabled}"/>
+                    <CheckBox x:Name="creditsThemeReplaceCheckBox" Grid.Row="4" Grid.Column="1" Content="Share tracklist entry?" IsChecked="{Binding FighterPackage.CreditsTheme.ReplaceExisting}" IsEnabled="{Binding ReplaceCreditsThemeEnabled}" ToolTip="If checked, fighter will share tracklist entry with an existing entry with the same ID if one already exists."/>
                 </Grid>
             </StackPanel>
         </GroupBox>

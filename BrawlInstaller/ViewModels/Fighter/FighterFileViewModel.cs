@@ -125,10 +125,16 @@ namespace BrawlInstaller.ViewModels
         public bool VictoryThemeIdEnabled { get => !_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds && FighterPackage?.FighterInfo?.SlotAttributes != null; }
 
         [DependsUpon(nameof(FighterPackage))]
+        public bool ReplaceVictoryThemeEnabled { get => !_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds; }
+
+        [DependsUpon(nameof(FighterPackage))]
         public uint? CreditsThemeId { get => FighterPackage?.CreditsTheme?.SongId; set { ChangedThemeId(FighterPackage?.CreditsTheme, value); OnPropertyChanged(nameof(CreditsThemeId)); } }
 
         [DependsUpon(nameof(FighterPackage))]
         public bool CreditsThemeIdEnabled { get => !_settingsService.BuildSettings.MiscSettings.CreditsThemesUseFighterIds; }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public bool ReplaceCreditsThemeEnabled { get => !_settingsService.BuildSettings.MiscSettings.CreditsThemesUseFighterIds; }
 
         [DependsUpon(nameof(FighterPackage))]
         public Dictionary<string, FighterFileType> FighterFileTypes { get => typeof(FighterFileType).GetDictionary<FighterFileType>().ToDictionary(x => FighterPackage != null ? FighterPacFile.GetPrefix(x.Value, FighterPackage?.FighterInfo) : x.Key, x => x.Value); }
@@ -269,6 +275,12 @@ namespace BrawlInstaller.ViewModels
             var result = SelectTracklistSong(_settingsService.BuildSettings.FilePathSettings.VictoryThemeTracklist, "Select a victory theme");
             if (result != null)
             {
+                if (!_settingsService.BuildSettings.MiscSettings.VictoryThemesUseFighterIds)
+                {
+                    FighterPackage.VictoryTheme.Name = result.Name;
+                    FighterPackage.VictoryTheme.SongId = result.SongId;
+                    FighterPackage.VictoryTheme.ReplaceExisting = true;
+                }
                 FighterPackage.VictoryTheme.SongFile = result.SongFile;
                 FighterPackage.VictoryTheme.SongPath = result.SongPath;
                 OnPropertyChanged(nameof(FighterPackage));
@@ -280,6 +292,12 @@ namespace BrawlInstaller.ViewModels
             var result = SelectTracklistSong(_settingsService.BuildSettings.FilePathSettings.CreditsThemeTracklist, "Select a credits theme");
             if (result != null)
             {
+                if (!_settingsService.BuildSettings.MiscSettings.CreditsThemesUseFighterIds)
+                {
+                    FighterPackage.CreditsTheme.Name = result.Name;
+                    FighterPackage.CreditsTheme.SongId = result.SongId;
+                    FighterPackage.CreditsTheme.ReplaceExisting = true;
+                }
                 FighterPackage.CreditsTheme.SongFile = result.SongFile;
                 FighterPackage.CreditsTheme.SongPath = result.SongPath;
                 OnPropertyChanged(nameof(FighterPackage));

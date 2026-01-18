@@ -47,6 +47,7 @@ namespace BrawlInstaller.Classes
         public bool DisableStockPinch { get; set; } = false;
         public bool HiddenFromTracklist { get; set; } = false;
         public int Index { get; set; } = -1;
+        public bool ReplaceExisting { get; set; } = false;
 
         public TLSTEntryNode ConvertToNode()
         {

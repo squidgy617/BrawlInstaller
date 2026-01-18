@@ -306,7 +306,7 @@ namespace BrawlInstaller.Services
                 // Generate tracklist node from object
                 var newNode = tracklistSong.ConvertToNode();
                 // If song ID is taken, generate a new one
-                if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId.Value))
+                if (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId.Value) && !tracklistSong.ReplaceExisting)
                 {
                     tracklistSong.SongId = 0x0000F000;
                     while (rootNode.Children.Select(x => ((TLSTEntryNode)x).SongID).ToList().Contains(tracklistSong.SongId.Value))
@@ -314,6 +314,15 @@ namespace BrawlInstaller.Services
                         tracklistSong.SongId++;
                     }
                     newNode.SongID = tracklistSong.SongId.Value;
+                }
+                if (tracklistSong.ReplaceExisting)
+                {
+                    var existingNode = rootNode.Children.FirstOrDefault(x => ((TLSTEntryNode)x).SongID == tracklistSong.SongId) as TLSTEntryNode;
+                    if (existingNode != null)
+                    {
+                        tracklistSong.Index = existingNode.Index;
+                        rootNode.RemoveChild(existingNode);
+                    }
                 }
                 if (tracklistSong.Index <= -1)
                 {
