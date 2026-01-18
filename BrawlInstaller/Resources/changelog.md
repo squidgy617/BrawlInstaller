@@ -1,1 +1,1 @@
-﻿- Current soundbank ID for fighters can now be changed regardless of whether fighter has a vanilla soundbank or not.
+﻿- Fixed an issue where Ex configs that had hex IDs that weren't uppercase would not be found using "Find Missing Fighters"
