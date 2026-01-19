@@ -1,1 +1,2 @@
-﻿- Fixed an issue where Ex configs that had hex IDs that weren't uppercase would not be found using "Find Missing Fighters"
+﻿- Moved preset selection to top of settings tab instead of bottom.
+- Adjusted verbiage of some error messages to improve user experience.
