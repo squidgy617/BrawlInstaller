@@ -873,7 +873,7 @@ namespace BrawlInstaller.Services
                 }
                 if (gctRm?.HasExited == false)
                 {
-                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.FilePathSettings.GctRealMateExe} encountered an error. Verify you are using the latest GCTRealMate and that your code files are valid and don't contain errors.");
+                    var error = new CompilerTimeoutException($"{_settingsService.BuildSettings.FilePathSettings.GctRealMateExe} encountered an error. Try increasing the 'GCTRealMate' timeout setting or enabling the 'GCTRealMate Timeout' setting in the 'Settings' tab.");
                     gctRm?.Kill();
                     throw error;
                 }

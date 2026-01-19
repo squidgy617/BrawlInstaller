@@ -95,7 +95,7 @@ namespace BrawlInstaller.ViewModels
             // If there's a progress bar, kill it
             _dialogService.CloseProgressBar();
 
-            _dialogService.ShowMessage("An error has occurred. View Error.txt in the app directory for more information.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            _dialogService.ShowMessage($"An error has occurred. View Error.txt in the app directory for more information.\nApp Directory: {Paths.LocalStore}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             var errorText = e.Exception.Message + "\r\n" + e.Exception.StackTrace;
             _fileService.SaveTextFile(Paths.ErrorPath, errorText);
