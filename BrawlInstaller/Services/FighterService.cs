@@ -1052,8 +1052,6 @@ namespace BrawlInstaller.Services
             }
             // Build regex string
             var regexString = "(" + string.Join("|", suffixes.OrderByDescending(x => x.Length)) + ")*"; // We order by length so the longest matches are checked against first
-            // Add costume IDs optionally
-            regexString += "(\\d\\d)?";
             // Filter
             var result = Regex.Match(suffix, regexString, RegexOptions.IgnoreCase);
             if (result.Success)
