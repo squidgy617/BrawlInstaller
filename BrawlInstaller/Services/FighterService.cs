@@ -1039,6 +1039,10 @@ namespace BrawlInstaller.Services
         /// <returns></returns>
         public string FilterFighterSuffix(string suffix, bool isKirby = false)
         {
+            // Remove numbers
+            var numbers = new Regex("\\d\\d");
+            var costumeIdResult = numbers.Match(suffix);
+            suffix = numbers.Replace(suffix, string.Empty);
             // Get list of suffixes
             var suffixes = PacFiles.PacFileRegexes.Select(x => $"({x.Replace("#", "\\d")})").ToList();
             // If fighter is Kirby, fighter names are valid
@@ -1054,7 +1058,7 @@ namespace BrawlInstaller.Services
             var result = Regex.Match(suffix, regexString, RegexOptions.IgnoreCase);
             if (result.Success)
             {
-                return result.Value;
+                return result.Value + (costumeIdResult.Success ? costumeIdResult.Value : string.Empty);
             }
             else
             {
