@@ -1,2 +1,1 @@
-﻿- Moved preset selection to top of settings tab instead of bottom.
-- Adjusted verbiage of some error messages to improve user experience.
+﻿- Fixed an issue where Kirby hat PAC files for fighters whose names end in a number could be erroneously detected as costumes for a different fighter.
