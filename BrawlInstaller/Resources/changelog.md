@@ -1,1 +1,1 @@
-﻿- Fixed an issue where Kirby hat PAC files for fighters whose names end in a number could be erroneously detected as costumes for a different fighter.
+﻿- Fixed an issue where loading a fighter with ItemEx PAC files would sometimes name the PAC files incorrectly on import.
