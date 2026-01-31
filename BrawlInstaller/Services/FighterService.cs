@@ -3364,7 +3364,7 @@ namespace BrawlInstaller.Services
                 // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
                 var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]");
                 // Get alias for fighter's slot ID
-                var slotAlias = aliases.FirstOrDefault(x => int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == oldSlotId);
+                var slotAlias = aliases.FirstOrDefault(x => int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == oldSlotId && x.Name.Contains("slot", StringComparison.OrdinalIgnoreCase));
                 // Get classic trophy
                 var classicTrophy = GetFighterTrophyAliasFromHook(slotAlias, "806E29D0", trophyFileText, aliases);
                 // Get All-Star trophy
