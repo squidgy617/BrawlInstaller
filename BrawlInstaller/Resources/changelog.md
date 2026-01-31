@@ -1,1 +1,1 @@
-﻿- Fixed an issue where loading a fighter with ItemEx PAC files would sometimes name the PAC files incorrectly on import.
+﻿- Fixed an issue where changing trophies for fighters could inadvertently remove a different fighter's trophy if their slot ID was the same as another fighter's trophy ID.
