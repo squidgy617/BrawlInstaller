@@ -1,1 +1,1 @@
-﻿- Fixed an issue where changing trophies for fighters could inadvertently remove a different fighter's trophy if their slot ID was the same as another fighter's trophy ID.
+﻿- Updated REX preset to correct victory theme IDs for vanilla fighters.
