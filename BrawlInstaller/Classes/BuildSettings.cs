@@ -69,11 +69,13 @@ namespace BrawlInstaller.Classes
         public string ModelPath { get; set; } = null;
         public List<PatSettings> PatSettings { get; set; } = new List<PatSettings>();
         public string Prefix { get; set; } = "";
+        public string Suffix { get; set; } = "";
         public int Multiplier { get; set; } = 1;
         public int Offset { get; set; } = 0;
         public int SuffixDigits { get; set; } = 3;
         public int GroupMultiplier { get; set; } = 1;
         public string FilePrefix { get; set; } = string.Empty;
+        public string FileSuffix { get; set; } = string.Empty;
         public IdType IdType { get; set; } = IdType.Cosmetic;
         public ImageSize Size { get; set; } = new ImageSize(null, null);
         public WiiPixelFormat Format { get; set; } = WiiPixelFormat.CI8;
