@@ -536,7 +536,7 @@ namespace BrawlInstaller.Services
             {
                 var toRemove = new List<TEX0Node>();
                 // Remove all HD textures
-                foreach (var node in folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)))
+                foreach (var node in folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix, definition.Suffix)))
                 {
                     var texNode = (TEX0Node)node;
                     DeleteHDTexture(texNode);
@@ -581,7 +581,7 @@ namespace BrawlInstaller.Services
             var folder = parentNode.GetFolder<PLT0Node>();
             if (folder != null)
             {
-                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)).ToList();
+                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix, definition.Suffix)).ToList();
                 foreach (var node in toRemove)
                 {
                     folder.RemoveChild(node);
@@ -601,7 +601,7 @@ namespace BrawlInstaller.Services
             var folder = parentNode.GetFolder<MDL0Node>();
             if (folder != null)
             {
-                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)).ToList();
+                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix, definition.Suffix)).ToList();
                 foreach (var node in toRemove)
                 {
                     folder.RemoveChild(node);
@@ -622,7 +622,7 @@ namespace BrawlInstaller.Services
             var folder = parentNode.GetFolder<CLR0Node>();
             if (folder != null)
             {
-                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix)).ToList();
+                var toRemove = folder.Children.Where(x => !restrictRange || CheckIdRange(definition, id, x.Name, definition.Prefix, definition.Suffix)).ToList();
                 foreach (var node in toRemove)
                 {
                     folder.RemoveChild(node);
@@ -639,7 +639,7 @@ namespace BrawlInstaller.Services
         /// <returns>Texture node name</returns>
         private string GetTextureName(CosmeticDefinition definition, int id, Cosmetic cosmetic)
         {
-            return $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}";
+            return $"{definition.Prefix}.{FormatCosmeticId(definition, id, cosmetic)}{definition.Suffix}";
         }
 
         /// <summary>
@@ -650,7 +650,7 @@ namespace BrawlInstaller.Services
         /// <returns>Texture node name</returns>
         private string GetTextureName(CosmeticDefinition definition, int id)
         {
-            return $"{definition.Prefix}.{FormatCosmeticId(definition, id)}";
+            return $"{definition.Prefix}.{FormatCosmeticId(definition, id)}{definition.Suffix}";
         }
 
         /// <summary>
@@ -662,7 +662,7 @@ namespace BrawlInstaller.Services
         /// <returns>Model node name</returns>
         private string GetModelName(CosmeticDefinition definition, int id, Cosmetic cosmetic)
         {
-            return $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}_TopN";
+            return $"{definition.Prefix}{FormatCosmeticId(definition, id, cosmetic)}_TopN{definition.Suffix}";
         }
 
         /// <summary>
@@ -676,7 +676,8 @@ namespace BrawlInstaller.Services
         {
             var archiveId = definition.GetArchiveId(ids);
             var prefix = !string.IsNullOrEmpty(definition.FilePrefix) ? definition.FilePrefix : definition.Prefix;
-            return $"{prefix}{FormatCosmeticId(definition, archiveId, cosmetic)}.{definition.InstallLocation.FileExtension}";
+            var suffix = !string.IsNullOrEmpty(definition.FileSuffix) ? definition.FileSuffix : definition.Suffix;
+            return $"{prefix}{FormatCosmeticId(definition, archiveId, cosmetic)}{suffix}.{definition.InstallLocation.FileExtension}";
         }
 
         /// <summary>
@@ -688,7 +689,8 @@ namespace BrawlInstaller.Services
         private string GetFileName(CosmeticDefinition definition, int? id)
         {
             var prefix = !string.IsNullOrEmpty(definition.FilePrefix) ? definition.FilePrefix : definition.Prefix;
-            return $"{prefix}{FormatCosmeticId(definition, id)}.{definition.InstallLocation.FileExtension}";
+            var suffix = !string.IsNullOrEmpty(definition.FileSuffix) ? definition.FileSuffix : definition.Suffix;
+            return $"{prefix}{FormatCosmeticId(definition, id)}{suffix}.{definition.InstallLocation.FileExtension}";
         }
 
         // TODO: Use for models too?
@@ -732,13 +734,13 @@ namespace BrawlInstaller.Services
                 }
                 var textureFolder = ((BRRESNode)node).GetFolder<TEX0Node>();
                 // Check each texture in definition for IDs
-                var textures = textureFolder?.Children?.Where(x => x.Name.StartsWith(definition.Prefix));
+                var textures = textureFolder?.Children?.Where(x => x.Name.StartsWith(definition.Prefix) && x.Name.EndsWith(definition.Suffix));
                 if (textures != null)
                 {
                     foreach (var texture in textures)
                     {
                         // If the texture ends with a number, add it to the list
-                        var result = int.TryParse(texture.Name.Replace(definition.Prefix + ".", ""), out int id);
+                        var result = int.TryParse(texture.Name.Replace(definition.Prefix + ".", "").Replace(definition.Suffix, ""), out int id);
                         if (result && !idList.Contains(id))
                         {
                             idList.Add(id);
@@ -785,7 +787,7 @@ namespace BrawlInstaller.Services
                     if (texture != null && !textureDict.ContainsKey(node.Texture))
                     {
                         // If the texture doesn't end with a number, it's a special case and should be skipped
-                        if (!int.TryParse(texture.Name.Replace(definition.Prefix + ".", ""), out int result))
+                        if (!int.TryParse(texture.Name.Replace(definition.Prefix + ".", "").Replace(definition.Suffix, ""), out int result))
                         {
                             i++;
                             continue;
@@ -829,7 +831,7 @@ namespace BrawlInstaller.Services
                         }
                         // Rename texture based on frame index
                         var unformattedId = UnformatCosmeticId(definition, id);
-                        texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, unformattedId.id, unformattedId.costumeIndex)}";
+                        texture.Name = $"{definition.Prefix}.{FormatCosmeticId(definition, unformattedId.id, unformattedId.costumeIndex)}{definition.Suffix}";
                         // Mark the texture as already renamed
                         textureDict[textureDict.FirstOrDefault(x => x.Value == node.Texture).Key] = texture.Name;
                         node.Texture = texture.Name;
@@ -977,7 +979,7 @@ namespace BrawlInstaller.Services
                 var folder = parentNode.GetFolder<CLR0Node>();
                 if (folder != null)
                 {
-                    var clr0 = folder.Children.FirstOrDefault(x => x.Name.StartsWith(definition.Prefix));
+                    var clr0 = folder.Children.FirstOrDefault(x => x.Name.StartsWith(definition.Prefix) && x.Name.EndsWith(definition.Suffix));
                     if (clr0 != null)
                     {
                         cosmetic.ColorSequence = (CLR0Node)_fileService.CopyNode(clr0);
@@ -1381,7 +1383,7 @@ namespace BrawlInstaller.Services
                     var directoryInfo = new DirectoryInfo(Path.Combine(buildPath, definition.InstallLocation.FilePath));
                     var files = directoryInfo.GetFiles("*." + definition.InstallLocation.FileExtension, SearchOption.TopDirectoryOnly);
                     if (definition.SeparateFiles)
-                        paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && CheckIdRange(definition, archiveId, f.Name.Replace(f.Extension, ""), definition.Prefix)).Select(f => f.FullName).ToList();
+                        paths = files.Where(f => f.Name.StartsWith(definition.Prefix) && Path.GetFileNameWithoutExtension(f.FullName).EndsWith(definition.Suffix) && CheckIdRange(definition, archiveId, f.Name.Replace(f.Extension, ""), definition.Prefix, definition.Suffix)).Select(f => f.FullName).ToList();
                     else
                         paths = files.Where(f => f.Name == GetFileName(definition, archiveId)).Select(f => f.FullName).ToList();
                 }
@@ -1465,14 +1467,14 @@ namespace BrawlInstaller.Services
         /// <param name="name">Name of texture to check ID range on</param>
         /// <param name="prefix">Prefix of cosmetic name</param>
         /// <returns>Whether cosmetic is within the ID range</returns>
-        private bool CheckIdRange(CosmeticDefinition definition, int? id, string name, string prefix)
+        private bool CheckIdRange(CosmeticDefinition definition, int? id, string name, string prefix, string suffix)
         {
             if (!name.StartsWith(prefix))
                 return false;
-            var suffix = name.Replace(prefix, "").Replace(".", "").Replace("_TopN", "");
-            if (suffix != "" && int.TryParse(suffix, out int index))
+            var idString = name.Replace(prefix, "").Replace(".", "").Replace("_TopN", "").Replace(suffix, "");
+            if (idString != "" && int.TryParse(idString, out int index))
             {
-                index = Convert.ToInt32(suffix);
+                index = Convert.ToInt32(idString);
                 return CheckIdRange(definition.Multiplier, id, index, definition.Offset, definition.CostumeCosmetic);
             }
             return false;
@@ -1521,9 +1523,9 @@ namespace BrawlInstaller.Services
         {
             string suffix;
             if (definition.SeparateFiles)
-                suffix = node.RootNode.FileName.Replace(definition.Prefix, "").Replace("." + definition.InstallLocation.FileExtension, "");
+                suffix = node.RootNode.FileName.Replace(definition.Prefix, "").Replace(definition.Suffix, "").Replace("." + definition.InstallLocation.FileExtension, "");
             else
-                suffix = node.Name.Replace(definition.Prefix, "").Replace(".", "");
+                suffix = node.Name.Replace(definition.Prefix, "").Replace(definition.Suffix, "").Replace(".", "");
             var isNumeric = int.TryParse(suffix, out int index);
             if (isNumeric)
             {
@@ -1555,9 +1557,9 @@ namespace BrawlInstaller.Services
         /// <returns>ID of cosmetic</returns>
         private int? GetCosmeticId(string name, CosmeticDefinition definition)
         {
-            if (name != null && name.StartsWith(definition.Prefix))
+            if (name != null && name.StartsWith(definition.Prefix) && name.EndsWith(definition.Suffix))
             {
-                var success = int.TryParse(name.Replace(definition.Prefix, "").Replace(".", "").Replace("_TopN",""), System.Globalization.NumberStyles.Integer, null, out int id);
+                var success = int.TryParse(name.Replace(definition.Prefix, "").Replace(".", "").Replace("_TopN","").Replace(definition.Suffix, ""), System.Globalization.NumberStyles.Integer, null, out int id);
                 if (success)
                     return id;
             }
@@ -1643,7 +1645,7 @@ namespace BrawlInstaller.Services
                     foreach (var child in folder.Children)
                     {
                         // Get textures that match definition
-                        if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || child.Name.StartsWith(definition.Prefix)) && (!restrictRange || CheckIdRange(definition, textureBaseId, child.Name, definition.Prefix)))
+                        if (child.GetType() == typeof(TEX0Node) && (definition.SeparateFiles || (child.Name.StartsWith(definition.Prefix) && child.Name.EndsWith(definition.Suffix))) && (!restrictRange || CheckIdRange(definition, textureBaseId, child.Name, definition.Prefix, definition.Suffix)))
                         {
                             // If it's selectable and not a new texture, don't add it. Also set ID to null for selectable textures
                             if (!definition.Selectable || !nodes.Select(x => x.TextureId).Contains(GetCosmeticId(child.Name, definition)))
@@ -1686,7 +1688,7 @@ namespace BrawlInstaller.Services
                 foreach (var child in folder.Children)
                 {
                     // Get models that match definition
-                    if (child.GetType() == typeof(MDL0Node) && child.Name.StartsWith(definition.Prefix) && (!restrictRange || CheckIdRange(definition, textureBaseId, child.Name.Replace("_TopN", ""), definition.Prefix)))
+                    if (child.GetType() == typeof(MDL0Node) && child.Name.StartsWith(definition.Prefix) && child.Name.EndsWith(definition.Suffix) && (!restrictRange || CheckIdRange(definition, textureBaseId, child.Name.Replace("_TopN", ""), definition.Prefix, definition.Suffix)))
                         nodes.Add((MDL0Node)child);
                 }
             }
