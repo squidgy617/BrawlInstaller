@@ -16,29 +16,74 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="Compare Files" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label x:Name="leftFileLabel" Content="Left File:"/>
-                    <userControls:FileBox x:Name="leftFileBox" TextBoxWidth="300" Text="{Binding LeftFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Column="1"/>
-                    <Label x:Name="rightFileLabel" Content="Right File:" Grid.Row="1"/>
-                    <userControls:FileBox x:Name="rightFileBox" TextBoxWidth="300" Text="{Binding RightFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Row="1" Grid.Column="1"/>
-                    <StackPanel Grid.Row="2">
-                        <Button x:Name="compareButton" Content="Compare" Command="{Binding CompareFilesCommand}" IsEnabled="{Binding FilePathsEnabled}"/>
-                        <Button x:Name="openButton" Content="Browse..." Command="{Binding OpenFilePatchCommand}"/>
-                    </StackPanel>
-                </Grid>
-            </ScrollViewer>
-        </GroupBox>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Compare Files" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="leftFileLabel" Content="Left File:"/>
+                        <userControls:FileBox x:Name="leftFileBox" TextBoxWidth="300" Text="{Binding LeftFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Column="1"/>
+                        <Label x:Name="rightFileLabel" Content="Right File:" Grid.Row="1"/>
+                        <userControls:FileBox x:Name="rightFileBox" TextBoxWidth="300" Text="{Binding RightFilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Row="1" Grid.Column="1"/>
+                        <StackPanel Grid.Row="2">
+                            <Button x:Name="compareButton" Content="Compare" Command="{Binding CompareFilesCommand}" IsEnabled="{Binding FilePathsEnabled}"/>
+                            <Button x:Name="openButton" Content="Browse..." Command="{Binding OpenFilePatchCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </GroupBox>
+            <GroupBox Header="Build Patch" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox x:Name="buildFileListBox" ItemsSource="{Binding BuildFilePatches}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="120" DisplayMemberPath="TargetPath" SelectedItem="{Binding SelectedBuildFilePatch}"/>
+                        <StackPanel Grid.Column="1">
+                            <Button x:Name="addBuildPatchFilesButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddBuildPatchEntryCommand}"/>
+                            <Button x:Name="removeBuildPatchFilesButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveBuildPatchEntryCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Button x:Name="buildFileBrowseButton" Content="Browse..."/>
+                    <Grid Visibility="{Binding SelectedBuildFilePatch, Mode=OneWay, Converter={StaticResource nullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Search for the file at this location... (ex. 'pf\menu2\sc_selcharacter.pac')" Grid.ColumnSpan="2"/>
+                        <Label Content="Path:" Grid.Row="1"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedBuildFilePatch.TargetPath}" Width="300"/>
+                        <TextBlock Text="If the file is found, apply this patch..." Grid.Row="2" Grid.ColumnSpan="2"/>
+                        <Label Content="Patch File:" Grid.Row="3"/>
+                        <userControls:FileBox x:Name="patchFileBox" TextBoxWidth="300" Text="{Binding SelectedBuildFilePatch.FilePatchPath}" Filter="File patch file (.fpatch)|*.fpatch" Grid.Column="1" Grid.Row="3"/>
+                        <TextBlock Text="If file is not found or there's no patch, install this file..." Grid.Row="4" Grid.ColumnSpan="2"/>
+                        <Label Content="File:" Grid.Row="5"/>
+                        <userControls:FileBox x:Name="fileBox" TextBoxWidth="300" Text="{Binding SelectedBuildFilePatch.FilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Column="1" Grid.Row="5"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
         <Separator Grid.Column="1" HorizontalAlignment="Left">
             <Separator.LayoutTransform>
                 <RotateTransform Angle="90"/>

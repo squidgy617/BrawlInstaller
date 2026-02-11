@@ -61,6 +61,19 @@ namespace BrawlInstaller.Classes
         };
     }
 
+    public class BuildPatch
+    {
+        public List<BuildFilePatch> BuildFilePatches { get; set; } = new List<BuildFilePatch>();
+    }
+
+    public class BuildFilePatch
+    {
+        public string TargetPath { get; set; }
+        [JsonIgnore] public string FilePath { get; set; }
+        [JsonIgnore] public string FilePatchPath { get; set; }
+        public FilePatch FilePatch { get; set; }
+    }
+
     public class FilePatch
     {
         public List<NodeDef> NodeDefs { get; set; } = new List<NodeDef>();

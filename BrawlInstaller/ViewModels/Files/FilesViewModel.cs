@@ -31,6 +31,8 @@ namespace BrawlInstaller.ViewModels
         private ResourceNode _rightFileNode;
         private FilePatch _filePatch;
         private NodeDefViewModel _selectedNode;
+        private BuildPatch _buildPatch;
+        private BuildFilePatch _selectedBuildFilePatch;
 
         // Services
         IPatchService _patchService;
@@ -42,6 +44,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand ExportFilePatchCommand => new RelayCommand(param => ExportFilePatch());
         public ICommand OpenFilePatchCommand => new RelayCommand(param => OpenFilePatch());
         public ICommand ApplyFilePatchCommand => new RelayCommand(param => ApplyFilePatch());
+        public ICommand AddBuildPatchEntryCommand => new RelayCommand(param => AddBuildPatchEntry());
+        public ICommand RemoveBuildPatchEntryCommand => new RelayCommand(param => RemoveBuildPatchEntry());
 
         [ImportingConstructor]
         public FilesViewModel(IPatchService patchService, IDialogService dialogService, IFileService fileService)
@@ -49,6 +53,8 @@ namespace BrawlInstaller.ViewModels
             _patchService = patchService;
             _dialogService = dialogService;
             _fileService = fileService;
+
+            BuildPatch = new BuildPatch();
         }
 
         // Properties
@@ -68,6 +74,14 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(LeftFilePath))]
         [DependsUpon(nameof(RightFilePath))]
         public bool FilePathsEnabled { get => !string.IsNullOrEmpty(LeftFilePath) && !string.IsNullOrEmpty(RightFilePath); }
+
+        public BuildPatch BuildPatch { get => _buildPatch; set { _buildPatch = value; OnPropertyChanged(nameof(BuildPatch)); } }
+
+        [DependsUpon(nameof(BuildPatch))]
+        public ObservableCollection<BuildFilePatch> BuildFilePatches { get => BuildPatch?.BuildFilePatches != null ? new ObservableCollection<BuildFilePatch>(BuildPatch.BuildFilePatches) : new ObservableCollection<BuildFilePatch>(); }
+
+        [DependsUpon(nameof(BuildFilePatches))]
+        public BuildFilePatch SelectedBuildFilePatch { get => _selectedBuildFilePatch; set { _selectedBuildFilePatch = value; OnPropertyChanged(nameof(SelectedBuildFilePatch)); } }
 
         // Methods
         public void CompareFiles()
@@ -123,6 +137,20 @@ namespace BrawlInstaller.ViewModels
                 }
                 _dialogService.CloseProgressBar();
             }
+        }
+
+        public void AddBuildPatchEntry()
+        {
+            BuildPatch.BuildFilePatches.Add(new BuildFilePatch());
+            OnPropertyChanged(nameof(BuildPatch));
+            OnPropertyChanged(nameof(BuildFilePatches));
+        }
+
+        public void RemoveBuildPatchEntry()
+        {
+            BuildPatch.BuildFilePatches.Remove(SelectedBuildFilePatch);
+            OnPropertyChanged(nameof(BuildPatch));
+            OnPropertyChanged(nameof(BuildFilePatches));
         }
 
         public void ApplyFilePatch()
