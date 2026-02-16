@@ -231,6 +231,11 @@ namespace BrawlInstaller.ViewModels
 
         public void ApplyBuildPatch()
         {
+            var confirm = _dialogService.ShowMessage("Are you sure you would like to apply this build patch to your build? This cannot be undone except by restoring a backup.", "Confirm Build Patch Application", buttonType: System.Windows.MessageBoxButton.YesNo);
+            if (!confirm)
+            {
+                return;
+            }
             if (BuildPatch != null && !string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath))
             {
                 _fileService.StartBackup();
