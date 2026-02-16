@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +20,17 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="PatchService.ExportFilePatch(FilePatch, string)"/>
         void ExportFilePatch(FilePatch filePatch, string outFile);
 
+        /// <inheritdoc cref="PatchService.ExportBuildPatch(BuildPatch, string)"/>
+        void ExportBuildPatch(BuildPatch buildPatch, string outFile);
+
         /// <inheritdoc cref="PatchService.OpenFilePatch(string)"/>
         FilePatch OpenFilePatch(string inFile);
+
+        /// <inheritdoc cref="PatchService.OpenBuildPatch(string)"/>
+        BuildPatch OpenBuildPatch(string inFile);
+
+        /// <inheritdoc cref="PatchService.ApplyBuildPatch(BuildPatch)"/>
+        void ApplyBuildPatch(BuildPatch buildPatch);
 
         /// <inheritdoc cref="PatchService.ApplyFilePatch(FilePatch, string)"/>
         void ApplyFilePatch(FilePatch patch, string targetFile);
@@ -112,6 +122,48 @@ namespace BrawlInstaller.Services
             }
             finalNodeDefs = finalNodeDefs.RecursiveSelect(x => x.IsChanged || x.Children.Any(y => y.IsChanged)).ToList();
             return new FilePatch { NodeDefs = finalNodeDefs };
+        }
+
+        /// <summary>
+        /// Apply a build patch to the build
+        /// </summary>
+        /// <param name="patch">Build patch to apply</param>
+        public void ApplyBuildPatch(BuildPatch patch)
+        {
+            var path = _settingsService.AppSettings.BuildPath;
+            if (!string.IsNullOrEmpty(path))
+            {
+                foreach(var buildFilePatch in patch.BuildFilePatches)
+                {
+                    // First, check if file exists
+                    if (!string.IsNullOrEmpty(buildFilePatch.TargetPath))
+                    {
+                        var filePath = Path.Combine(_settingsService.AppSettings.BuildPath, buildFilePatch.TargetPath);
+                        if (_fileService.FileExists(filePath))
+                        {
+                            // If we find the file, first attempt to patch
+                            if (!string.IsNullOrEmpty(buildFilePatch.FilePatchPath))
+                            {
+                                var filePatch = OpenFilePatch(buildFilePatch.FilePatchPath);
+                                if (filePatch != null)
+                                {
+                                    ApplyFilePatch(filePatch, filePath);
+                                }
+                            }
+                            // If there's no patch, try overwriting
+                            else if (buildFilePatch.OverwriteIfFileExists && !string.IsNullOrEmpty(buildFilePatch.FilePath))
+                            {
+                                _fileService.CopyFile(buildFilePatch.FilePath, filePath);
+                            }
+                        }
+                        // If we don't find the file, place file if the patch contains one
+                        else if (!string.IsNullOrEmpty(buildFilePatch.FilePath))
+                        {
+                            _fileService.CopyFile(buildFilePatch.FilePath, filePath);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -289,6 +341,38 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
+        /// Export build patch to selected location
+        /// </summary>
+        /// <param name="buildPatch">Build patch to export</param>
+        /// <param name="outFile">Location to export to</param>
+        public void ExportBuildPatch(BuildPatch buildPatch, string outFile)
+        {
+            var path = _settingsService.AppSettings.TempPath + "\\BuildPatchExport";
+            // Save json
+            var json = JsonConvert.SerializeObject(buildPatch, Formatting.Indented);
+            _fileService.SaveTextFile($"{path}\\BuildPatch.json", json);
+            // Save build file patches
+            foreach(var buildFilePatch in buildPatch.BuildFilePatches)
+            {
+                // Copy base file
+                if (!string.IsNullOrEmpty(buildFilePatch.FilePath) && !string.IsNullOrEmpty(buildFilePatch.TargetPath))
+                {
+                    _fileService.CopyFile(buildFilePatch.FilePath, Path.Combine(path, buildFilePatch.TargetPath));
+                }
+                // Copy patch
+                if (!string.IsNullOrEmpty(buildFilePatch.FilePatchPath))
+                {
+                    _fileService.CopyFile(buildFilePatch.FilePatchPath, Path.Combine(path, $"{buildFilePatch.FilePatchName}.fpatch"));
+                }
+            }
+            // Delete patch if it's being overwritten
+            _fileService.DeleteFile(outFile);
+            // Generate patch file
+            _fileService.GenerateZipFileFromDirectory(path, outFile);
+            _fileService.DeleteDirectory(path);
+        }
+
+        /// <summary>
         /// Open file patch
         /// </summary>
         /// <param name="inFile">File to open</param>
@@ -322,6 +406,30 @@ namespace BrawlInstaller.Services
                 });
             }
             return new FilePatch { NodeDefs = nodeDefs };
+        }
+
+        /// <summary>
+        /// Open build patch
+        /// </summary>
+        /// <param name="inFile">File to open</param>
+        /// <returns>Build patch</returns>
+        public BuildPatch OpenBuildPatch(string inFile)
+        {
+            BuildPatch buildPatch = new BuildPatch();
+            var path = _settingsService.AppSettings.TempPath + "\\BuildPatchImport";
+            _fileService.ExtractZipFile(inFile, path);
+            // Read file list
+            var json = _fileService.ReadTextFile($"{path}\\BuildPatch.json");
+            if (!string.IsNullOrEmpty(json))
+            {
+                buildPatch = JsonConvert.DeserializeObject<BuildPatch>(json);
+                foreach (var buildFilePatch in buildPatch.BuildFilePatches)
+                {
+                    buildFilePatch.FilePath = Path.Combine(path, buildFilePatch.TargetPath);
+                    buildFilePatch.FilePatchPath = Path.Combine(path, $"{buildFilePatch.FilePatchName}.fpatch");
+                }    
+            }
+            return buildPatch;
         }
 
         /// <summary>

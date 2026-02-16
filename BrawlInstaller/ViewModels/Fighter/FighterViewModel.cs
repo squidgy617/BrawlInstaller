@@ -384,6 +384,27 @@ namespace BrawlInstaller.ViewModels
             // Create copy of package before save
             var packageToSave = FighterPackage.Copy();
             packageToSave = ApplyInstallOptions(selectedInstallOptions, packageToSave);
+            // Set build patches
+            var buildPatchOptions = new List<CheckListItem>();
+            if (packageToSave.PackageType != PackageType.Delete && packageToSave.BuildPatches.Count > 0)
+            {
+                foreach (var buildPatch in packageToSave.BuildPatches)
+                {
+                    buildPatchOptions.Add(new CheckListItem(buildPatch, buildPatch.Name, buildPatch.Description));
+                }
+            }
+            if (buildPatchOptions.Count > 0)
+            {
+                var response = _dialogService.OpenCheckListDialog(buildPatchOptions, "Select build patches to install", "This package contains build patches you can install along with it. Select which build patches you would like to install. Note that BrawlInstaller cannot uninstall a build patch once it is installed.");
+                if (!response.Result)
+                {
+                    return;
+                }
+                foreach (var item in response.ChecklistItems)
+                {
+                    ((FighterBuildPatch)item.Item).InstallBuildPatch = item.IsChecked;
+                }
+            }
             // Update entry name if necessary
             if (packageToSave.FighterInfo.EntryName == null)
             {
@@ -781,6 +802,18 @@ namespace BrawlInstaller.ViewModels
                 var duplicatePacStringList = duplicatePacs.Select(group => $"Calculated Name: {group.Key}\nFiles:\n{string.Join("\n",group.Select(x => x.PacFile.FilePath))}");
                 var duplicatePacString = string.Join("\n\n", duplicatePacStringList);
                 messages.Add(new DialogMessage("Duplicate PAC files", $"One or more PAC files have the exact same name configured. Make all PAC file names unique to continue:\n\n{duplicatePacString}"));
+                result = false;
+            }
+            var duplicateBuildPatches = FighterPackage.BuildPatches.GroupBy(x => x.Name).Any(g => g.Count() > 1);
+            if (duplicateBuildPatches)
+            {
+                messages.Add(new DialogMessage("Duplicate Build Patches", "One or more build patches have the same name. Make all build patch names unique to continue."));
+                result = false;
+            }
+            var emptyBuildPatchNames = FighterPackage.BuildPatches.Any(x => string.IsNullOrEmpty(x.Name));
+            if (emptyBuildPatchNames)
+            {
+                messages.Add(new DialogMessage("Unnamed Build Patches", "One or more build patches do not have a name. Ensure all build patches have a name to continue."));
                 result = false;
             }
             if (messages.Count > 0)
