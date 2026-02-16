@@ -452,9 +452,10 @@ namespace BrawlInstaller.Classes
 
     public class FighterBuildPatch
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public BuildPatch BuildPatch { get; set; } = new BuildPatch();
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        [JsonIgnore] public string BuildPatchFile { get; set; } = string.Empty;
+        [JsonIgnore] public bool InstallBuildPatch { get; set; } = false;
 
         public FighterBuildPatch Copy()
         {
@@ -462,7 +463,7 @@ namespace BrawlInstaller.Classes
             {
                 Name = Name,
                 Description = Description,
-                BuildPatch = BuildPatch.Copy()
+                BuildPatchFile = BuildPatchFile
             };
             return copy;
         }

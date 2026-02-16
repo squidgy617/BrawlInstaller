@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,12 +31,14 @@ namespace BrawlInstaller.ViewModels
         private FighterPacFile _selectedPacFile;
         private string _selectedExConfig;
         private string _selectedEndingPacFile;
+        private FighterBuildPatch _selectedBuildPatch;
 
         // Services
         IDialogService _dialogService { get; }
         IFighterService _fighterService { get; }
         ITracklistService _tracklistService { get; }
         ISettingsService _settingsService { get; }
+        IPatchService _patchService { get; }
 
         // Commands
         public ICommand AddPacFilesCommand => new RelayCommand(param => AddPacFiles());
@@ -50,15 +53,18 @@ namespace BrawlInstaller.ViewModels
         public ICommand RemoveInstallOptionCommand => new RelayCommand(param => RemoveInstallOption(param));
         public ICommand AddInstallOptionCommand => new RelayCommand(param => AddInstallOption());
         public ICommand UpdateInstallOptionSelectionCommand => new RelayCommand(param => UpdateInstallOptionSelection(param));
+        public ICommand AddBuildPatchCommand => new RelayCommand(param => AddBuildPatch());
+        public ICommand RemoveBuildPatchCommand => new RelayCommand(param => RemoveBuildPatch());
 
         // Importing constructor
         [ImportingConstructor]
-        public FighterFileViewModel(IDialogService dialogService, IFighterService fighterService, ITracklistService tracklistService, ISettingsService settingsService)
+        public FighterFileViewModel(IDialogService dialogService, IFighterService fighterService, ITracklistService tracklistService, ISettingsService settingsService, IPatchService patchService)
         {
             _dialogService = dialogService;
             _fighterService = fighterService;
             _tracklistService = tracklistService;
             _settingsService = settingsService;
+            _patchService = patchService;
             WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
             {
                 LoadFighterFiles(message);
@@ -158,6 +164,9 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<FighterBuildPatch> BuildPatches { get => FighterPackage?.BuildPatches != null ? new ObservableCollection<FighterBuildPatch>(FighterPackage.BuildPatches) : new ObservableCollection<FighterBuildPatch>(); }
+
+        [DependsUpon(nameof(BuildPatches))]
+        public FighterBuildPatch SelectedBuildPatch { get => _selectedBuildPatch; set { _selectedBuildPatch = value; OnPropertyChanged(nameof(SelectedBuildPatch)); } }
 
         // Methods
         private string GetDisplaySuffix(string suffix)
@@ -268,6 +277,31 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage.PacFiles.Remove(SelectedPacFile);
             OnPropertyChanged(nameof(FighterPackage));
+        }
+
+        public void AddBuildPatch()
+        {
+            var file = _dialogService.OpenFileDialog("Select build patch", "Build patch files (.bpatch)|*.bpatch");
+            if (!string.IsNullOrEmpty(file))
+            {
+                var buildPatch = new FighterBuildPatch
+                {
+                    BuildPatchFile = file,
+                    Name = Path.GetFileNameWithoutExtension(file)
+                };
+                FighterPackage.BuildPatches.Add(buildPatch);
+                SelectedBuildPatch = BuildPatches.LastOrDefault();
+                OnPropertyChanged(nameof(FighterPackage));
+            }
+        }
+
+        public void RemoveBuildPatch()
+        {
+            if (SelectedBuildPatch != null)
+            {
+                FighterPackage.BuildPatches.Remove(SelectedBuildPatch);
+                OnPropertyChanged(nameof(FighterPackage));
+            }
         }
 
         public void AddEndingPacFiles()

@@ -48,9 +48,10 @@ namespace BrawlInstaller.Services
         IFighterService _fighterService { get; }
         ICodeService _codeService { get; }
         ITrophyService _trophyService { get; }
+        IPatchService _patchService { get; }
 
         [ImportingConstructor]
-        public PackageService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService, ICodeService codeService, ITrophyService trophyService) 
+        public PackageService(IFileService fileService, ISettingsService settingsService, ICosmeticService cosmeticService, IFighterService fighterService, ICodeService codeService, ITrophyService trophyService, IPatchService patchService) 
         {
             _fileService = fileService;
             _settingsService = settingsService;
@@ -58,6 +59,7 @@ namespace BrawlInstaller.Services
             _fighterService = fighterService;
             _codeService = codeService;
             _trophyService = trophyService;
+            _patchService = patchService;
         }
 
         // Methods
@@ -213,6 +215,16 @@ namespace BrawlInstaller.Services
             foreach(var trophy in fighterPackage.Trophies)
             {
                 trophy.OldTrophy = trophy.Trophy;
+            }
+            // Apply build patches
+            if (fighterPackage.PackageType != PackageType.Delete && fighterPackage.BuildPatches.Where(x => x.InstallBuildPatch).Count() > 0)
+            {
+                ProgressTracker.Start("Applying build patches...");
+                foreach (var buildPatch in fighterPackage.BuildPatches.Where(x => x.InstallBuildPatch))
+                {
+                    var patch = _patchService.OpenBuildPatch(buildPatch.BuildPatchFile);
+                    _patchService.ApplyBuildPatch(patch);
+                }
             }
             // Clean up inheritance
             fighterPackage = CleanupCosmeticInheritance(fighterPackage);
@@ -434,6 +446,23 @@ namespace BrawlInstaller.Services
                         }
                     }
                 }
+                // Get build patches
+                var buildPatchPath = $"{path}\\BuildPatches";
+                if (_fileService.DirectoryExists(buildPatchPath))
+                {
+                    fighterPackage.BuildPatches = new List<FighterBuildPatch>();
+                    foreach(var buildPatchJson in _fileService.GetFiles(buildPatchPath, "*.json"))
+                    {
+                        var jsonText = _fileService.ReadTextFile(buildPatchJson);
+                        var buildPatch = JsonConvert.DeserializeObject<FighterBuildPatch>(jsonText);
+                        var buildPatchFile = Path.Combine(buildPatchPath, $"{buildPatch.Name}.bpatch");
+                        if (_fileService.FileExists(buildPatchFile))
+                        {
+                            buildPatch.BuildPatchFile = buildPatchFile;
+                            fighterPackage.BuildPatches.Add(buildPatch);
+                        }
+                    }
+                }
                 fighterPackage.PackageType = PackageType.New;
                 return fighterPackage;
             }
@@ -539,6 +568,21 @@ namespace BrawlInstaller.Services
                 {
                     var installOptionFile = Path.Combine(outDir, Path.GetFileName(installOption.File));
                     _fileService.CopyFile(installOption.File, installOptionFile);
+                }
+            }
+            // Export build patches
+            var buildPatchPath = $"{path}\\BuildPatches";
+            foreach(var buildPatch in fighterPackage.BuildPatches)
+            {
+                // Save json
+                var jsonPath = Path.Combine(buildPatchPath, $"{buildPatch.Name}.json");
+                var buildPatchJson = JsonConvert.SerializeObject(buildPatch, Formatting.Indented);
+                _fileService.SaveTextFile(jsonPath, buildPatchJson);
+                // Save file
+                if (!string.IsNullOrEmpty(buildPatch.BuildPatchFile))
+                {
+                    var filePath = Path.Combine(buildPatchPath, $"{buildPatch.Name}.bpatch");
+                    _fileService.CopyFile(buildPatch.BuildPatchFile, filePath);
                 }
             }
             // Export info and settings

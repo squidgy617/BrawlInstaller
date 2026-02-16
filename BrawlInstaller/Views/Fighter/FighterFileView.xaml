@@ -27,6 +27,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="pacFileLabel" Content="Pac Files:" Grid.Column="0" ToolTip="PAC files associated with fighter that aren't associated with a costume"/>
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.ColumnSpan="2">
@@ -178,7 +179,32 @@
                 </Grid>
             </StackPanel>
         </GroupBox>
-        <Expander Header="Alternate Files" Grid.Row="7" Grid.ColumnSpan="4">
+        <GroupBox Header="Build Patches" Grid.Row="7" Grid.ColumnSpan="4">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <ListBox x:Name="buildPatchListBox" ItemsSource="{Binding BuildPatches}" DisplayMemberPath="Name" Width="120" Height="80" SelectedItem="{Binding SelectedBuildPatch}"/>
+                    <StackPanel>
+                        <Button x:Name="addBuildPatch" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddBuildPatchCommand}"/>
+                        <Button x:Name="removeBuildPatch" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveBuildPatchCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+                <Grid  Visibility="{Binding SelectedBuildPatch, Converter={StaticResource nullVisConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label x:Name="buildPatchNameLabel" Content="Name:"/>
+                    <TextBox x:Name="buildPatchNameTextBox" Text="{Binding SelectedBuildPatch.Name}" Grid.Column="1"/>
+                    <Label x:Name="buildPatchDescriptionLabel" Content="Description:" Grid.Row="1"/>
+                    <TextBox x:Name="buildPatchDescriptionTextBox" Text="{Binding SelectedBuildPatch.Description}" AcceptsReturn="True" Width="180" Height="100" HorizontalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="1"/>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+        <Expander Header="Alternate Files" Grid.Row="8" Grid.ColumnSpan="4">
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding InstallOptions}">
                     <ItemsControl.ItemTemplate>
