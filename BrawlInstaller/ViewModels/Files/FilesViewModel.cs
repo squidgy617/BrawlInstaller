@@ -151,6 +151,16 @@ namespace BrawlInstaller.ViewModels
 
         public void ExportBuildPatch()
         {
+            if (BuildPatch.BuildFilePatches.Count <= 0)
+            {
+                _dialogService.ShowMessage("Build patch has no entries!", "Empty Build Patch", System.Windows.MessageBoxImage.Error);
+                return;
+            }
+            else if (BuildPatch.BuildFilePatches.Any(x => string.IsNullOrEmpty(x.TargetPath) || (string.IsNullOrEmpty(x.FilePatchPath) && string.IsNullOrEmpty(x.FilePath))))
+            {
+                _dialogService.ShowMessage("Every entry must have a path and either a file or patch file!", "Missing Paths", System.Windows.MessageBoxImage.Error);
+                return;
+            }
             var file = _dialogService.SaveFileDialog("Save build patch", "Build patch file (.bpatch)|*.bpatch");
             if (!string.IsNullOrEmpty(file))
             {
