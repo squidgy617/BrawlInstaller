@@ -73,6 +73,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string FilePath { get; set; }
         [JsonIgnore] public string FilePatchPath { get; set; }
         [JsonIgnore] public string FilePatchName { get => XxHash64.HashToUInt64(Encoding.UTF8.GetBytes(TargetPath)).ToString("x16"); }
+        public bool OverwriteIfFileExists { get; set; } = false;
     }
 
     public class FilePatch

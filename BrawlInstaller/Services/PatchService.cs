@@ -29,6 +29,9 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="PatchService.OpenBuildPatch(string)"/>
         BuildPatch OpenBuildPatch(string inFile);
 
+        /// <inheritdoc cref="PatchService.ApplyBuildPatch(BuildPatch)"/>
+        void ApplyBuildPatch(BuildPatch buildPatch);
+
         /// <inheritdoc cref="PatchService.ApplyFilePatch(FilePatch, string)"/>
         void ApplyFilePatch(FilePatch patch, string targetFile);
     }
@@ -119,6 +122,48 @@ namespace BrawlInstaller.Services
             }
             finalNodeDefs = finalNodeDefs.RecursiveSelect(x => x.IsChanged || x.Children.Any(y => y.IsChanged)).ToList();
             return new FilePatch { NodeDefs = finalNodeDefs };
+        }
+
+        /// <summary>
+        /// Apply a build patch to the build
+        /// </summary>
+        /// <param name="patch">Build patch to apply</param>
+        public void ApplyBuildPatch(BuildPatch patch)
+        {
+            var path = _settingsService.AppSettings.BuildPath;
+            if (!string.IsNullOrEmpty(path))
+            {
+                foreach(var buildFilePatch in patch.BuildFilePatches)
+                {
+                    // First, check if file exists
+                    if (!string.IsNullOrEmpty(buildFilePatch.TargetPath))
+                    {
+                        var filePath = Path.Combine(_settingsService.AppSettings.BuildPath, buildFilePatch.TargetPath);
+                        if (_fileService.FileExists(filePath))
+                        {
+                            // If we find the file, first attempt to patch
+                            if (!string.IsNullOrEmpty(buildFilePatch.FilePatchPath))
+                            {
+                                var filePatch = OpenFilePatch(buildFilePatch.FilePatchPath);
+                                if (filePatch != null)
+                                {
+                                    ApplyFilePatch(filePatch, filePath);
+                                }
+                            }
+                            // If there's no patch, try overwriting
+                            else if (buildFilePatch.OverwriteIfFileExists && !string.IsNullOrEmpty(buildFilePatch.FilePath))
+                            {
+                                _fileService.CopyFile(buildFilePatch.FilePath, filePath);
+                            }
+                        }
+                        // If we don't find the file, place file if the patch contains one
+                        else if (!string.IsNullOrEmpty(buildFilePatch.FilePath))
+                        {
+                            _fileService.CopyFile(buildFilePatch.FilePath, filePath);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

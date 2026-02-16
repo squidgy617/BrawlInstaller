@@ -70,6 +70,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="Search for the file at this location... (ex. 'pf\menu2\sc_selcharacter.pac')" Grid.ColumnSpan="2"/>
                         <Label Content="Path:" Grid.Row="1"/>
@@ -80,8 +81,10 @@
                         <TextBlock Text="If file is not found or there's no patch, install this file..." Grid.Row="4" Grid.ColumnSpan="2"/>
                         <Label Content="File:" Grid.Row="5"/>
                         <userControls:FileBox x:Name="fileBox" TextBoxWidth="300" Text="{Binding SelectedBuildFilePatch.FilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Column="1" Grid.Row="5"/>
+                        <CheckBox Content="Overwrite file if it exists" Grid.Row="6" Grid.ColumnSpan="2" IsChecked="{Binding SelectedBuildFilePatch.OverwriteIfFileExists}" ToolTip="Check to overwrite corresponding file if it exists in build and no patch is included"/>
                     </Grid>
                     <Button x:Name="buildFileExportButton" Content="Save as..." Command="{Binding ExportBuildPatchCommand}"/>
+                    <Button x:Name="applyBuildFileButton" Content="Apply" Command="{Binding ApplyBuildPatchCommand}" IsEnabled="{Binding BuildSettingsExist}"/>
                 </StackPanel>
             </GroupBox>
         </Grid>

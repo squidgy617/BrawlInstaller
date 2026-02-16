@@ -116,6 +116,7 @@ namespace BrawlInstaller.Services
 
         private void GenerateWindowAsync(object content, string title = "Title")
         {
+            var windowReady = new ManualResetEventSlim(false);
             var x = Application.Current.MainWindow.Left + (Application.Current.MainWindow.Width / 2) - (300 / 2);
             var y = Application.Current.MainWindow.Top + (Application.Current.MainWindow.Height / 2) - (172 / 2);
             Thread thread = new Thread(() =>
@@ -131,6 +132,7 @@ namespace BrawlInstaller.Services
                         });
                     }
                 });
+                w.Loaded += (s, e) => windowReady.Set();
                 w.Show();
 
                 w.Closed += (sender, e) => w.Dispatcher.InvokeShutdown();
@@ -140,6 +142,8 @@ namespace BrawlInstaller.Services
 
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
+
+            windowReady.Wait(); // Ensure window is actually populated before continuing
         }
 
         /// <summary>

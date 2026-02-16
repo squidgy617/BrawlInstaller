@@ -4,6 +4,7 @@ using BrawlInstaller.Helpers;
 using BrawlInstaller.Services;
 using BrawlLib.SSBB;
 using BrawlLib.SSBB.ResourceNodes;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static BrawlInstaller.ViewModels.MainControlsViewModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -38,6 +40,7 @@ namespace BrawlInstaller.ViewModels
         IPatchService _patchService;
         IDialogService _dialogService;
         IFileService _fileService;
+        ISettingsService _settingsService;
 
         // Commands
         public ICommand CompareFilesCommand => new RelayCommand(param => CompareFiles());
@@ -48,18 +51,32 @@ namespace BrawlInstaller.ViewModels
         public ICommand ApplyFilePatchCommand => new RelayCommand(param => ApplyFilePatch());
         public ICommand AddBuildPatchEntryCommand => new RelayCommand(param => AddBuildPatchEntry());
         public ICommand RemoveBuildPatchEntryCommand => new RelayCommand(param => RemoveBuildPatchEntry());
+        public ICommand ApplyBuildPatchCommand => new RelayCommand(param => ApplyBuildPatch());
 
         [ImportingConstructor]
-        public FilesViewModel(IPatchService patchService, IDialogService dialogService, IFileService fileService)
+        public FilesViewModel(IPatchService patchService, IDialogService dialogService, IFileService fileService, ISettingsService settingsService)
         {
             _patchService = patchService;
             _dialogService = dialogService;
             _fileService = fileService;
+            _settingsService = settingsService;
 
             BuildPatch = new BuildPatch();
+
+            WeakReferenceMessenger.Default.Register<UpdateSettingsMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
+            });
+
+            WeakReferenceMessenger.Default.Register<SettingsSavedMessage>(this, (recipient, message) =>
+            {
+                UpdateSettings();
+            });
         }
 
         // Properties
+        public bool BuildSettingsExist { get => _fileService.FileExists(_settingsService.BuildSettingsPath); }
+        public bool BuildPathExists { get => !string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath) && _fileService.DirectoryExists(_settingsService.AppSettings.BuildPath); }
         public string LeftFilePath { get => _leftFilePath; set { _leftFilePath = value; OnPropertyChanged(nameof(LeftFilePath)); } }
         public string RightFilePath { get => _rightFilePath; set { _rightFilePath = value;OnPropertyChanged(nameof(RightFilePath)); } }
         public string TargetFilePath { get => _targetFilePath; set { _targetFilePath = value; OnPropertyChanged(nameof(TargetFilePath)); } }
@@ -86,6 +103,12 @@ namespace BrawlInstaller.ViewModels
         public BuildFilePatch SelectedBuildFilePatch { get => _selectedBuildFilePatch; set { _selectedBuildFilePatch = value; OnPropertyChanged(nameof(SelectedBuildFilePatch)); } }
 
         // Methods
+        private void UpdateSettings()
+        {
+            OnPropertyChanged(nameof(BuildSettingsExist));
+            OnPropertyChanged(nameof(BuildPathExists));
+        }
+
         public void CompareFiles()
         {
             if (string.IsNullOrEmpty(RightFilePath) || string.IsNullOrEmpty(LeftFilePath))
@@ -192,6 +215,22 @@ namespace BrawlInstaller.ViewModels
                     _patchService.ApplyFilePatch(FilePatch, TargetFilePath);
                 }
                 _dialogService.CloseProgressBar();
+                _dialogService.ShowMessage("Changes applied successfully.", "Success");
+            }
+        }
+
+        public void ApplyBuildPatch()
+        {
+            if (BuildPatch != null && !string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath))
+            {
+                _fileService.StartBackup();
+                _dialogService.ShowProgressBar("Applying", "Applying build patch...");
+                using (new CursorWait())
+                {
+                    _patchService.ApplyBuildPatch(BuildPatch);
+                }
+                _dialogService.CloseProgressBar();
+                _fileService.EndBackup();
                 _dialogService.ShowMessage("Changes applied successfully.", "Success");
             }
         }
