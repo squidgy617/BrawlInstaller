@@ -1,4 +1,5 @@
-﻿using BrawlInstaller.ViewModels;
+﻿using BrawlInstaller.Common;
+using BrawlInstaller.ViewModels;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.SSBB.Types;
 using Newtonsoft.Json;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 
 namespace BrawlInstaller.Classes
 {
@@ -65,6 +67,15 @@ namespace BrawlInstaller.Classes
     public class BuildPatch
     {
         public List<BuildFilePatch> BuildFilePatches { get; set; } = new List<BuildFilePatch>();
+
+        public BuildPatch Copy()
+        {
+            var copy = new BuildPatch
+            {
+                BuildFilePatches = BuildFilePatches.Copy()
+            };
+            return copy;
+        }
     }
 
     public class BuildFilePatch
@@ -74,6 +85,18 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string FilePatchPath { get; set; }
         [JsonIgnore] public string FilePatchName { get => XxHash64.HashToUInt64(Encoding.UTF8.GetBytes(TargetPath)).ToString("x16"); }
         public bool OverwriteIfFileExists { get; set; } = false;
+
+        public BuildFilePatch Copy()
+        {
+            var copy = new BuildFilePatch
+            {
+                TargetPath = TargetPath,
+                FilePath = FilePath,
+                FilePatchPath = FilePatchPath,
+                OverwriteIfFileExists = OverwriteIfFileExists
+            };
+            return copy;
+        }
     }
 
     public class FilePatch

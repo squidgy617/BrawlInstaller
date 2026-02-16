@@ -156,6 +156,9 @@ namespace BrawlInstaller.ViewModels
         [DependsUpon(nameof(FighterPackage))]
         public List<string> ExtraSuffixes { get => FighterPackage?.FighterInfo?.IsKirby == true ? FighterInfoList.Where(x => !x.IsKirby).Select(x => x.PartialPacName).ToList() : new List<string>(); }
 
+        [DependsUpon(nameof(FighterPackage))]
+        public ObservableCollection<FighterBuildPatch> BuildPatches { get => FighterPackage?.BuildPatches != null ? new ObservableCollection<FighterBuildPatch>(FighterPackage.BuildPatches) : new ObservableCollection<FighterBuildPatch>(); }
+
         // Methods
         private string GetDisplaySuffix(string suffix)
         {

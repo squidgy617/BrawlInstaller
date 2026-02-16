@@ -55,6 +55,7 @@ namespace BrawlInstaller.Classes
             new FighterInstallOption(InstallOptionType.VictoryTheme),
             new FighterInstallOption(InstallOptionType.CreditsTheme)
         };
+        public List<FighterBuildPatch> BuildPatches { get; set; } = new List<FighterBuildPatch>();
 
         public FighterPackage Copy()
         {
@@ -78,7 +79,8 @@ namespace BrawlInstaller.Classes
                 FighterDeleteOptions = FighterDeleteOptions.Copy(),
                 PackageType = PackageType,
                 Trophies = Trophies.Copy(),
-                InstallOptions = InstallOptions.Copy()
+                InstallOptions = InstallOptions.Copy(),
+                BuildPatches = BuildPatches.Copy()
             };
             return fighterPackage;
         }
@@ -443,6 +445,24 @@ namespace BrawlInstaller.Classes
                 Type = Type,
                 Trophy = Trophy?.Copy(),
                 OldTrophy = OldTrophy?.Copy()
+            };
+            return copy;
+        }
+    }
+
+    public class FighterBuildPatch
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public BuildPatch BuildPatch { get; set; } = new BuildPatch();
+
+        public FighterBuildPatch Copy()
+        {
+            var copy = new FighterBuildPatch
+            {
+                Name = Name,
+                Description = Description,
+                BuildPatch = BuildPatch.Copy()
             };
             return copy;
         }

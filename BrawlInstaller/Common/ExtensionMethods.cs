@@ -453,6 +453,32 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class FighterBuildPatchExtensions
+    {
+        public static List<FighterBuildPatch> Copy(this List<FighterBuildPatch> list)
+        {
+            var newList = new List<FighterBuildPatch>();
+            foreach (var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
+
+    public static class BuildFilePatchExtensions
+    {
+        public static List<BuildFilePatch> Copy(this List<BuildFilePatch> list)
+        {
+            var newList = new List<BuildFilePatch>();
+            foreach (var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
+
     public static class FighterTrophyListExtensions
     {
         public static List<FighterTrophy> Copy(this List<FighterTrophy> list)
