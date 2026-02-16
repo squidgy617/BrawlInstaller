@@ -84,7 +84,7 @@
                         <CheckBox Content="Overwrite file if it exists" Grid.Row="6" Grid.ColumnSpan="2" IsChecked="{Binding SelectedBuildFilePatch.OverwriteIfFileExists}" ToolTip="Check to overwrite corresponding file if it exists in build and no patch is included"/>
                     </Grid>
                     <Button x:Name="buildFileExportButton" Content="Save as..." Command="{Binding ExportBuildPatchCommand}"/>
-                    <Button x:Name="applyBuildFileButton" Content="Apply" Command="{Binding ApplyBuildPatchCommand}" IsEnabled="{Binding BuildSettingsExist}"/>
+                    <Button x:Name="applyBuildFileButton" Content="Apply to Build" Width="Auto" Command="{Binding ApplyBuildPatchCommand}" IsEnabled="{Binding BuildSettingsExist}"/>
                 </StackPanel>
             </GroupBox>
         </Grid>
