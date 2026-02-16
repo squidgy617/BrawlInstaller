@@ -57,7 +57,7 @@
                             <Button x:Name="removeBuildPatchFilesButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveBuildPatchEntryCommand}"/>
                         </StackPanel>
                     </Grid>
-                    <Button x:Name="buildFileBrowseButton" Content="Browse..."/>
+                    <Button x:Name="buildFileBrowseButton" Content="Browse..." Command="{Binding OpenBuildPatchCommand}"/>
                     <Grid Visibility="{Binding SelectedBuildFilePatch, Mode=OneWay, Converter={StaticResource nullVisConverter}, ConverterParameter={x:Static Visibility.Collapsed}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -81,6 +81,7 @@
                         <Label Content="File:" Grid.Row="5"/>
                         <userControls:FileBox x:Name="fileBox" TextBoxWidth="300" Text="{Binding SelectedBuildFilePatch.FilePath}" Filter="{Binding FileFilter, Mode=OneWay}" Grid.Column="1" Grid.Row="5"/>
                     </Grid>
+                    <Button x:Name="buildFileExportButton" Content="Save as..." Command="{Binding ExportBuildPatchCommand}"/>
                 </StackPanel>
             </GroupBox>
         </Grid>

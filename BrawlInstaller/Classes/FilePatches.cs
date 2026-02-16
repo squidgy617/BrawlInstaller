@@ -4,6 +4,7 @@ using BrawlLib.SSBB.Types;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO.Hashing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,7 +72,7 @@ namespace BrawlInstaller.Classes
         public string TargetPath { get; set; }
         [JsonIgnore] public string FilePath { get; set; }
         [JsonIgnore] public string FilePatchPath { get; set; }
-        public FilePatch FilePatch { get; set; }
+        [JsonIgnore] public string FilePatchName { get => XxHash64.HashToUInt64(Encoding.UTF8.GetBytes(TargetPath)).ToString("x16"); }
     }
 
     public class FilePatch

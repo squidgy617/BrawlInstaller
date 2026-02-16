@@ -42,7 +42,9 @@ namespace BrawlInstaller.ViewModels
         // Commands
         public ICommand CompareFilesCommand => new RelayCommand(param => CompareFiles());
         public ICommand ExportFilePatchCommand => new RelayCommand(param => ExportFilePatch());
+        public ICommand ExportBuildPatchCommand => new RelayCommand(param => ExportBuildPatch());
         public ICommand OpenFilePatchCommand => new RelayCommand(param => OpenFilePatch());
+        public ICommand OpenBuildPatchCommand => new RelayCommand(param => OpenBuildPatch());
         public ICommand ApplyFilePatchCommand => new RelayCommand(param => ApplyFilePatch());
         public ICommand AddBuildPatchEntryCommand => new RelayCommand(param => AddBuildPatchEntry());
         public ICommand RemoveBuildPatchEntryCommand => new RelayCommand(param => RemoveBuildPatchEntry());
@@ -124,6 +126,16 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
+        public void ExportBuildPatch()
+        {
+            var file = _dialogService.SaveFileDialog("Save build patch", "Build patch file (.bpatch)|*.bpatch");
+            if (!string.IsNullOrEmpty(file))
+            {
+                _patchService.ExportBuildPatch(BuildPatch, file);
+                _dialogService.ShowMessage("Exported successfully.", "Success");
+            }
+        }
+
         public void OpenFilePatch()
         {
             var file = _dialogService.OpenFileDialog("Open file patch", "File patch file (.fpatch)|*.fpatch");
@@ -139,11 +151,28 @@ namespace BrawlInstaller.ViewModels
             }
         }
 
+        public void OpenBuildPatch()
+        {
+            var file = _dialogService.OpenFileDialog("Open build patch", "Build patch file (.bpatch)|*.bpatch");
+            if (!string.IsNullOrEmpty(file))
+            {
+                _dialogService.ShowProgressBar("Loading", "Loading build patch...");
+                using (new CursorWait())
+                {
+                    BuildPatch = _patchService.OpenBuildPatch(file);
+                    OnPropertyChanged(nameof(BuildPatch));
+                }
+                _dialogService.CloseProgressBar();
+            }
+        }
+
         public void AddBuildPatchEntry()
         {
             BuildPatch.BuildFilePatches.Add(new BuildFilePatch());
+            SelectedBuildFilePatch = BuildPatch.BuildFilePatches.LastOrDefault();
             OnPropertyChanged(nameof(BuildPatch));
             OnPropertyChanged(nameof(BuildFilePatches));
+            OnPropertyChanged(nameof(SelectedBuildFilePatch));
         }
 
         public void RemoveBuildPatchEntry()
