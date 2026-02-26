@@ -1,5 +1,1 @@
-﻿- Added build patches.
-    - Build patches allow you to package multiple file patches together and apply them to a build all at once.
-    - Build patches can be created and applied from the "Files" tab.
-    - Build patches can be included with fighter packages in the "Files/Settings" tab of the fighter manager.
-    - For more information, see the wiki.
+﻿- Fixed an issue where the DLC roster would display extra, unknown fighters if the ASM file had a mismatch between the number of fighters and the MaxChar alias.
