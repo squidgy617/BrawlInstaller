@@ -2914,7 +2914,7 @@ namespace BrawlInstaller.Services
                     var numFighters = Convert.ToInt32(numFightersAlias.Value);
                     var table = _codeService.ReadTable(code, _settingsService.BuildSettings.FilePathSettings.BonusFighterLabel);
                     var bonusRoster = new Roster { AddNewCharacters = false, Name = "DLC", RosterType = RosterType.Bonus };
-                    for (var i = 0; i <= numFighters; i++)
+                    for (var i = 0; i <= numFighters && table[i] != "0xFF"; i++)
                     {
                         var result = int.TryParse(table[i].Replace("0x", ""), NumberStyles.HexNumber, null, out int id);
                         if (result)
