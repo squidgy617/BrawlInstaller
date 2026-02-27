@@ -1,1 +1,1 @@
-﻿- Fixed an issue where the DLC roster would display extra, unknown fighters if the ASM file had a mismatch between the number of fighters and the MaxChar alias.
+﻿- Fixed an issue where trace texture names would not be updated if they had hex numbers in their name when changing an Effect.pac ID.
