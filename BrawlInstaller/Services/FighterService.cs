@@ -896,11 +896,11 @@ namespace BrawlInstaller.Services
                 var nodes = rootNode.GetChildrenRecursive();
                 foreach (var node in nodes)
                 {
-                    var regex = Regex.Match(node.Name, "TexCustom\\d+Trace\\d+");
+                    var regex = Regex.Match(node.Name, "TexCustom[a-fA-F0-9]+Trace\\d+");
                     if (node.GetType() == typeof(TEX0Node) && regex.Success)
                     {
                         var newTraceId = effectPacId - 311;
-                        var newTraceName = Regex.Replace(node.Name, "TexCustom\\d+Trace", $"TexCustom{newTraceId:X2}Trace");
+                        var newTraceName = Regex.Replace(node.Name, "TexCustom[a-fA-F0-9]+Trace", $"TexCustom{newTraceId:X2}Trace");
                         node.Name = newTraceName;
                     }
                 }
