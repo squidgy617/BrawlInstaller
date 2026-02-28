@@ -1,1 +1,1 @@
-﻿- Fixed an issue where trace texture names would not be updated if they had hex numbers in their name when changing an Effect.pac ID.
+﻿- Fixed an issue where newly installed fighters would always be assigned an ending ID even if they did not come with any ending PAC files.
