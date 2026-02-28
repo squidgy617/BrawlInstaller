@@ -2144,7 +2144,7 @@ namespace BrawlInstaller.Services
                 }
                 // Update fighter slot if ending ID changed and there are ending files and ending ID or name has changed or fighter is being deleted
                 if (asmTable.Count > cosmeticConfigId && ((endingPacFiles.Count > 0 && 
-                    (asmTable[cosmeticConfigId.Value].Item != fighterInfo.EndingId.ToString()) || asmTable[cosmeticConfigId.Value].Comment != fighterInfo.DisplayName)
+                    (asmTable[cosmeticConfigId.Value].Item != fighterInfo.EndingId.ToString() || asmTable[cosmeticConfigId.Value].Comment != fighterInfo.DisplayName))
                     || fighterPackage.PackageType == PackageType.Delete))
                 {
                     asmTable[cosmeticConfigId.Value].Item = $"{fighterInfo.EndingId:D}";
