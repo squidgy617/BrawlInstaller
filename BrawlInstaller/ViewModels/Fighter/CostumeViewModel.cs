@@ -307,24 +307,36 @@ namespace BrawlInstaller.ViewModels
             foreach(var image in images)
             {
                 var currentCostume = costumes[images.IndexOf(image)];
-                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
+                var currentCosmetics = currentCostume.Cosmetics.Where(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
                 if (!string.IsNullOrEmpty(image))
                 {
                     var bitmap = _fileService.LoadImage(image);
-                    if (currentCosmetic == null)
-                        currentCosmetic = AddCosmetic(currentCostume);
-                    currentCosmetic.Image = bitmap;
-                    currentCosmetic.ImagePath = image;
-                    currentCosmetic.Texture = null;
-                    currentCosmetic.Palette = null;
-                    FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
+                    if (currentCosmetics.Any())
+                    {
+                        foreach(var currentCosmetic in currentCosmetics)
+                        {
+                            currentCosmetic.Image = bitmap;
+                            currentCosmetic.ImagePath = image;
+                            currentCosmetic.Texture = null;
+                            currentCosmetic.Palette = null;
+                            FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
+                        }
+                    }
+                    else
+                    {
+                        var newCosmetic = AddCosmetic(currentCostume);
+                        FighterPackage.Cosmetics.ItemChanged(newCosmetic);
+                    }
                 }
             }
             // Adjust color smashing based on cosmetics replaced
             foreach (var costume in costumes)
             {
-                var cosmetic = costume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
-                FlipColorSmashedCosmetics(cosmetic);
+                var cosmetics = costume.Cosmetics.Where(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
+                foreach(var cosmetic in cosmetics)
+                {
+                    FlipColorSmashedCosmetics(cosmetic);
+                }
             }
             OnPropertyChanged(nameof(SelectedCosmetic));
             OnPropertyChanged(nameof(CosmeticList));
@@ -348,15 +360,24 @@ namespace BrawlInstaller.ViewModels
             foreach (var image in images)
             {
                 var currentCostume = costumes[images.IndexOf(image)];
-                var currentCosmetic = currentCostume.Cosmetics.FirstOrDefault(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
+                var currentCosmetics = currentCostume.Cosmetics.Where(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption);
                 if (!string.IsNullOrEmpty(image))
                 {
                     var bitmap = _fileService.LoadImage(image);
-                    if (currentCosmetic == null)
-                        currentCosmetic = AddCosmetic(currentCostume);
-                    currentCosmetic.HDImage = bitmap;
-                    currentCosmetic.HDImagePath = image;
-                    FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
+                    if (currentCosmetics.Any())
+                    {
+                        foreach (var currentCosmetic in currentCosmetics)
+                        {
+                            currentCosmetic.HDImage = bitmap;
+                            currentCosmetic.HDImagePath = image;
+                            FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
+                        }
+                    }
+                    else
+                    {
+                        var newCosmetic = AddCosmetic(currentCostume);
+                        FighterPackage.Cosmetics.ItemChanged(newCosmetic);
+                    }
                 }
             }
             OnPropertyChanged(nameof(SelectedCosmetic));
@@ -365,31 +386,45 @@ namespace BrawlInstaller.ViewModels
 
         public void ClearCosmetic()
         {
-            FlipColorSmashedCosmetics(SelectedCosmetic);
-            FighterPackage.Cosmetics.Remove(SelectedCosmetic);
-            SelectedCostume.Cosmetics.Remove(SelectedCosmetic);
-            OnPropertyChanged(nameof(SelectedCosmetic));
-            OnPropertyChanged(nameof(CosmeticList));
-            OnPropertyChanged(nameof(SelectedCosmeticNode));
-            OnPropertyChanged(nameof(Costumes));
+            var currentCosmetics = SelectedCostume.Cosmetics.Where(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption).ToList();
+            if (currentCosmetics.Any())
+            {
+                foreach(var currentCosmetic in currentCosmetics)
+                {
+                    FlipColorSmashedCosmetics(currentCosmetic);
+                    FighterPackage.Cosmetics.Remove(currentCosmetic);
+                    SelectedCostume.Cosmetics.Remove(currentCosmetic);
+                }
+                OnPropertyChanged(nameof(SelectedCosmetic));
+                OnPropertyChanged(nameof(CosmeticList));
+                OnPropertyChanged(nameof(SelectedCosmeticNode));
+                OnPropertyChanged(nameof(Costumes));
+            }
         }
 
         public void ClearHDCosmetic()
         {
-            if (SelectedCosmetic.Image == null)
+            var currentCosmetics = SelectedCostume.Cosmetics.Where(x => x.Style == InheritedStyle && x.CosmeticType == SelectedCosmeticOption).ToList();
+            if (currentCosmetics.Any())
             {
-                FighterPackage.Cosmetics.Remove(SelectedCosmetic);
-                SelectedCostume.Cosmetics.Remove(SelectedCosmetic);
+                foreach (var currentCosmetic in currentCosmetics)
+                {
+                    if (SelectedCosmetic.Image == null)
+                    {
+                        FighterPackage.Cosmetics.Remove(currentCosmetic);
+                        SelectedCostume.Cosmetics.Remove(currentCosmetic);
+                    }
+                    else
+                    {
+                        SelectedCosmetic.HDImage = null;
+                        SelectedCosmetic.HDImagePath = "";
+                        FighterPackage.Cosmetics.ItemChanged(currentCosmetic);
+                    }
+                }
+                OnPropertyChanged(nameof(SelectedCosmetic));
+                OnPropertyChanged(nameof(CosmeticList));
+                OnPropertyChanged(nameof(SelectedCosmeticNode));
             }
-            else
-            {
-                SelectedCosmetic.HDImage = null;
-                SelectedCosmetic.HDImagePath = "";
-                FighterPackage.Cosmetics.ItemChanged(SelectedCosmetic);
-            }
-            OnPropertyChanged(nameof(SelectedCosmetic));
-            OnPropertyChanged(nameof(CosmeticList));
-            OnPropertyChanged(nameof(SelectedCosmeticNode));
         }
 
         private void MoveCostume()

@@ -118,8 +118,11 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedTrophy != null)
             {
+                var selectedTrophy = SelectedTrophy;
                 TrophyList.MoveUp(SelectedTrophy);
+                SelectedTrophy = selectedTrophy;
                 OnPropertyChanged(nameof(TrophyList));
+                OnPropertyChanged(nameof(SelectedTrophy));
             }
         }
 
@@ -127,8 +130,11 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedTrophy != null)
             {
+                var selectedTrophy = SelectedTrophy;
                 TrophyList.MoveDown(SelectedTrophy);
+                SelectedTrophy = selectedTrophy;
                 OnPropertyChanged(nameof(TrophyList));
+                OnPropertyChanged(nameof(SelectedTrophy));
             }
         }
     }

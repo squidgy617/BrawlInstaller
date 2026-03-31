@@ -1,1 +1,2 @@
-﻿- Fixed an issue where newly installed fighters would always be assigned an ending ID even if they did not come with any ending PAC files.
+﻿- Fixed an issue where in some situations, updating the image for a cosmetic would not actually update the image preview.
+- Trophies will now remain selected when moving them up and down the trophy list.
