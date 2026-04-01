@@ -1,2 +1,1 @@
-﻿- Fixed an issue where in some situations, updating the image for a cosmetic would not actually update the image preview.
-- Trophies will now remain selected when moving them up and down the trophy list.
+﻿- Fixed an issue where updating a cosmetic on a new costume would not always update the image in the UI.
