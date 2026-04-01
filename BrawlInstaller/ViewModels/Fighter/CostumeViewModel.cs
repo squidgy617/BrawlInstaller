@@ -325,6 +325,10 @@ namespace BrawlInstaller.ViewModels
                     else
                     {
                         var newCosmetic = AddCosmetic(currentCostume);
+                        newCosmetic.Image = bitmap;
+                        newCosmetic.ImagePath = image;
+                        newCosmetic.Texture = null;
+                        newCosmetic.Palette = null;
                         FighterPackage.Cosmetics.ItemChanged(newCosmetic);
                     }
                 }
@@ -376,6 +380,8 @@ namespace BrawlInstaller.ViewModels
                     else
                     {
                         var newCosmetic = AddCosmetic(currentCostume);
+                        newCosmetic.HDImage = bitmap;
+                        newCosmetic.HDImagePath = image;
                         FighterPackage.Cosmetics.ItemChanged(newCosmetic);
                     }
                 }
