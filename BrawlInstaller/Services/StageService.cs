@@ -940,8 +940,14 @@ namespace BrawlInstaller.Services
             // Add dummy slots
             // TODO: Is this how we should handle this? Do we need this?
             var dummySlot = new StageSlot { Name = "NOTHING", StageIds = new BrawlIds { StageId = 0xFF, StageCosmeticId = 0x64 } };
-            stageTable.Insert(41, dummySlot);
-            stageTable.Insert(42, dummySlot);
+            if (stageTable.Count > 41)
+            {
+                stageTable.Insert(41, dummySlot);
+            }
+            if (stageTable.Count > 42)
+            {
+                stageTable.Insert(42, dummySlot);
+            }
             // Update stage table
             var stageTableAsm = stageTable.ConvertToAsmTable();
             var tableFilepath = $"{Path.Combine(_settingsService.AppSettings.BuildPath, _settingsService.BuildSettings.FilePathSettings.StageTablePath)}";

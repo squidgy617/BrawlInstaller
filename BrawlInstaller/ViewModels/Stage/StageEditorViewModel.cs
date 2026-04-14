@@ -105,6 +105,11 @@ namespace BrawlInstaller.ViewModels
         public StageEntry SelectedStageEntry { get => _selectedStageEntry; set { _selectedStageEntry = value; OnPropertyChanged(nameof(SelectedStageEntry)); } }
 
         [DependsUpon(nameof(Stage))]
+        [DependsUpon(nameof(StageEntries))]
+        [DependsUpon(nameof(SelectedStageEntry))]
+        public string ModuleFile { get => SelectedStageEntry?.Params?.ModuleFile; set { SelectedStageEntry.Params.ModuleFile = value; OnPropertyChanged(nameof(ModuleFile)); UpdateModuleFile(); } }
+
+        [DependsUpon(nameof(Stage))]
         public ObservableCollection<StageParams> ParamList { get => Stage?.AllParams != null ? new ObservableCollection<StageParams>(Stage.AllParams) :  new ObservableCollection<StageParams>(); }
 
         [DependsUpon(nameof(SelectedStageEntry))]
@@ -491,6 +496,15 @@ namespace BrawlInstaller.ViewModels
             if (SelectedStageEntry?.ListAlt != null)
             {
                 SelectedStageEntry.ListAlt = _stageService.GetListAlt(filePath);
+                OnPropertyChanged(nameof(SelectedStageEntry));
+            }
+        }
+
+        private void UpdateModuleFile()
+        {
+            if (!string.IsNullOrEmpty(ModuleFile) && SelectedStageEntry?.Params != null && !ModuleFile.Any(c => Path.GetInvalidPathChars().Contains(c)))
+            {
+                SelectedStageEntry.Params.Module = Path.GetFileName(ModuleFile);
                 OnPropertyChanged(nameof(SelectedStageEntry));
             }
         }
