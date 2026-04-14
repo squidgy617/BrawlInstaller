@@ -1,1 +1,2 @@
-﻿- Fixed an issue where updating a cosmetic on a new costume would not always update the image in the UI.
+﻿- Fixed an error when saving stage lists if "All Stages" table had less than 41 slots.
+- Stage module names will now get updated automatically when a module file is selected, to help prevent users from accidentally saving over existing modules.
