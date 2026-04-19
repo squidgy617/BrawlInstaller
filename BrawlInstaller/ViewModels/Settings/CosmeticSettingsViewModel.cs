@@ -234,12 +234,19 @@ namespace BrawlInstaller.ViewModels
         {
             if (SelectedDefinition != null)
             {
-                var newDefinition = SelectedDefinition.Copy();
-                CosmeticSettings.Add(newDefinition);
-                SelectedDefinition = newDefinition;
-                OnPropertyChanged(nameof(CosmeticSettings));
-                OnPropertyChanged(nameof(DefinitionList));
-                OnPropertyChanged(nameof(SelectedDefinition));
+                var selectedStyle = _dialogService.OpenDropDownDialog(Styles, "", "Select a style", "Select a style to copy to");
+                if (selectedStyle != null)
+                {
+                    var newDefinition = SelectedDefinition.Copy();
+                    newDefinition.Style = selectedStyle.ToString();
+                    CosmeticSettings.Add(newDefinition);
+                    SelectedDefinition = newDefinition;
+                    OnPropertyChanged(nameof(CosmeticSettings));
+                    OnPropertyChanged(nameof(DefinitionList));
+                    OnPropertyChanged(nameof(SelectedDefinition));
+                    SelectedStyle = selectedStyle.ToString();
+                    OnPropertyChanged(nameof(SelectedStyle));
+                }
             }
         }
 
