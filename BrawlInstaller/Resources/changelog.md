@@ -1,2 +1,1 @@
-﻿- Fixed an error when saving stage lists if "All Stages" table had less than 41 slots.
-- Stage module names will now get updated automatically when a module file is selected, to help prevent users from accidentally saving over existing modules.
+﻿- The "Copy" button next to the definition list in the cosmetic settings tab will now prompt you to select a style to copy the definition to.
