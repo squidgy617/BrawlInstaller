@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.IO.Hashing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -475,7 +476,9 @@ namespace BrawlInstaller.Services
         /// <param name="fighterPackage">Fighter package to export</param>
         public void ExportFighter(FighterPackage fighterPackage, string outFile)
         {
-            var path = _settingsService.AppSettings.TempPath + "\\FighterPackageExport";
+            var guid = Guid.NewGuid().ToString();
+            var exportPath = XxHash64.HashToUInt64(Encoding.UTF8.GetBytes(guid)).ToString("x16");
+            var path = Path.Combine(_settingsService.AppSettings.TempPath, exportPath);
             _cosmeticService.ExportCosmetics($"{path}\\Cosmetics", fighterPackage.Cosmetics);
             var fighterSettings = JsonConvert.SerializeObject(fighterPackage.FighterSettings, Formatting.Indented);
             // Set pac files for export

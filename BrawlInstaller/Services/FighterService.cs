@@ -1713,7 +1713,10 @@ namespace BrawlInstaller.Services
             var fighterSettings = fighterPackage.FighterSettings;
 
             // Get Kirby hat data
-            fighterSettings.KirbyHatData = GetKirbyHatData(fighterPackage.FighterInfo.Ids.FighterConfigId);
+            if (fighterPackage.FighterInfo.ReadModules)
+            {
+                fighterSettings.KirbyHatData = GetKirbyHatData(fighterPackage.FighterInfo.Ids.FighterConfigId);
+            }
 
             // Get throw release point
             fighterSettings.ThrowReleasePoint = GetThrowReleasePoint(fighterPackage.FighterInfo.Ids.FighterConfigId);
@@ -1725,7 +1728,10 @@ namespace BrawlInstaller.Services
             fighterSettings.ExSlotIds = GetExSlots(fighterPackage.FighterInfo.Ids.CSSSlotConfigId);
 
             // Get SSE settings
-            fighterPackage = GetSSESettings(fighterPackage);
+            if (fighterPackage.FighterInfo.ReadModules)
+            {
+                fighterPackage = GetSSESettings(fighterPackage);
+            }
 
             // Get fighter-specific settings
             fighterSettings = GetFighterSpecificSettings(fighterPackage);

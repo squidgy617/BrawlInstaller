@@ -57,6 +57,7 @@ namespace BrawlInstaller.Classes
         public CosmeticAttributes CosmeticAttributes { get; set; } = null;
         public CSSSlotAttributes CSSSlotAttributes { get; set; } = null;
         [JsonIgnore] public bool IsKirby { get => PartialPacName.ToLower() == "kirby"; }
+        [JsonIgnore] public bool ReadModules { get; set; } = true;
 
         public FighterInfo Copy()
         {

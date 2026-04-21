@@ -51,7 +51,16 @@
                         <!--<Button x:Name="refreshButton" Content="⟳" Command="{Binding RefreshFightersCommand}" Grid.Row="1" Grid.Column="1" Style="{StaticResource miniButton}"/>-->
                         <Button x:Name="copyFighterButton" Grid.Column="1" Grid.Row="1" Content="→" VerticalAlignment="Center" Command="{Binding CopyFighterCommand}" IsEnabled="{Binding SelectedFighter, Converter={StaticResource nullBoolConverter}}"/>
                         <ComboBox x:Name="rosterDropDown" Grid.Column="2" ItemsSource="{Binding Rosters}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedRoster}" Width="120"/>
-                        <Button x:Name="saveRosterButton" Grid.Column="3" Content="Save" Command="{Binding SaveRostersCommand}"/>
+                        <StackPanel Orientation="Horizontal" Grid.Column="3">
+                            <Button x:Name="fighterListActionsButton" Style="{StaticResource condensedButton}" Content="≡" behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Extract all fighters..." Command="{Binding ExtractAllFightersCommand}"/>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            <Button x:Name="saveRosterButton" Content="Save" Command="{Binding SaveRostersCommand}"/>
+                        </StackPanel>
                         <ContentControl Style="{StaticResource resizeContainer}" Grid.Row="1" Grid.Column="2" MinWidth="120">
                             <ListBox x:Name="rosterListBox" ItemsSource="{Binding RosterEntries}" SelectedValue="{Binding SelectedRosterEntry}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
                                 <ListBox.ItemTemplate>

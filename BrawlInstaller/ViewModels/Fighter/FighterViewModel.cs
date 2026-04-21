@@ -27,6 +27,9 @@ using static BrawlInstaller.ViewModels.MainControlsViewModel;
 using BrawlLib.SSBB.Types;
 using BrawlInstaller.StaticClasses;
 using System.IO;
+using BrawlLib.SSBB;
+using System.IO.Packaging;
+using System.Collections.Concurrent;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -82,6 +85,7 @@ namespace BrawlInstaller.ViewModels
         public ICommand NewTrophyCommand => new RelayCommand(param => NewTrophy());
         public ICommand ClearTrophyCommand => new RelayCommand(param => ClearTrophy());
         public ICommand ExportCosmeticsCommand => new RelayCommand(param => ExportCosmetics());
+        public ICommand ExtractAllFightersCommand => new RelayCommand(param => ExtractAllFighters());
 
         // Importing constructor tells us that we want to get instance items provided in the constructor
         [ImportingConstructor]
@@ -191,6 +195,39 @@ namespace BrawlInstaller.ViewModels
                 else
                 {
                     _dialogService.ShowMessage("Could not find fighter in fighter list.", "Fighter Not Found");
+                }
+            }
+        }
+
+        public void ExtractAllFighters()
+        {
+            var folder = _dialogService.OpenFolderDialog("Select folder to save to");
+            if (!string.IsNullOrEmpty(folder))
+            {
+                _dialogService.ShowProgressBar("Extracting fighters", "Reading fighters...");
+                using (new CursorWait())
+                {
+                    var franchiseIcons = _cosmeticService.GetFranchiseIcons(_settingsService.AppSettings.ModifyHDTextures);
+                    var packages = new ConcurrentBag<FighterPackage>();
+                    Parallel.ForEach(FighterList.ToList(), fighterInfo =>
+                    {
+                        var fighter = fighterInfo.Copy();
+                        fighter.ReadModules = false;
+                        var package = _packageService.ExtractFighter(fighter);
+                        var franchiseIcon = franchiseIcons.Items.FirstOrDefault(x => x.Id == fighter.Ids.FranchiseId);
+                        if (franchiseIcon != null)
+                        {
+                            package.Cosmetics.Add(franchiseIcon);
+                        }
+                        packages.Add(package);
+                    });
+                    ProgressTracker.UpdateCaption($"Extracting fighters...");
+                    Parallel.ForEach(packages.ToList(), package =>
+                    {
+                        _packageService.ExportFighter(package, Path.Combine(folder, $"{package.FighterInfo.FighterFileName}.fighterpackage"));
+                    });
+                    _dialogService.CloseProgressBar();
+                    _dialogService.ShowMessage("All fighters exported.", "Finished");
                 }
             }
         }
