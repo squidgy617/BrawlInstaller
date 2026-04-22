@@ -114,6 +114,16 @@ namespace BrawlInstaller.ViewModels
             {
                 path += "\\";
                 AppSettings.BuildPath = path;
+                var foundPath = AppSettings.BuildPaths.FirstOrDefault(x => x.BuildPath == path);
+                if (foundPath != null)
+                {
+                    AppSettings.HDTextures = foundPath.HDTextures;
+                }
+                else
+                {
+                    AppSettings.HDTextures = string.Empty;
+                }
+                AppSettings.ModifyHDTextures = !string.IsNullOrEmpty(AppSettings.HDTextures);
                 OnPropertyChanged(nameof(AppSettings));
             }
         }
