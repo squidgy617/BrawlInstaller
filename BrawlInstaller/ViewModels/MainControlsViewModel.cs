@@ -17,6 +17,7 @@ using Velopack;
 using System.Windows.Threading;
 using System.Reflection;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace BrawlInstaller.ViewModels
 {
@@ -40,6 +41,9 @@ namespace BrawlInstaller.ViewModels
         public ICommand RefreshCommand => new RelayCommand(param => RefreshSettings());
         public ICommand RestoreBackupCommand => new RelayCommand(param => RestoreBackup());
         public ICommand UpdateCommand => new RelayCommand(param => Update(true));
+        public ICommand BrowseBuildPathCommand => new RelayCommand(param => BrowseBuildPath());
+        public ICommand ClearBuildPathCommand => new RelayCommand(param => ClearBuildPath());
+        public ICommand BuildPathSelectedCommand => new RelayCommand(param => BuildPathSelected(param));
 
         [ImportingConstructor]
         public MainControlsViewModel(ISettingsService settingsService, IFileService fileService, IDialogService dialogService)
@@ -61,16 +65,25 @@ namespace BrawlInstaller.ViewModels
         public bool BuildPathExists { get => !string.IsNullOrEmpty(_settingsService.AppSettings.BuildPath) && _fileService.DirectoryExists(_settingsService.AppSettings.BuildPath); }
         public VersionInfo VersionInfo { get => GetVersionInfo(); }
 
+        [DependsUpon(nameof(AppSettings))]
+        public ObservableCollection<CombinedBuildPath> BuildPaths { get => AppSettings?.BuildPaths != null ? new ObservableCollection<CombinedBuildPath>(AppSettings.BuildPaths) : new ObservableCollection<CombinedBuildPath>(); }
+
         // Methods
         private void RefreshSettings()
         {
             if (_fileService.DirectoryExists(AppSettings.BuildPath) && _fileService.GetDirectories(AppSettings.BuildPath, "pf", SearchOption.TopDirectoryOnly).Count > 0)
             {
+                var buildPath = AppSettings.BuildPath;
+                var hdTextures = AppSettings.HDTextures;
                 _settingsService.AppSettings = AppSettings;
                 _settingsService.SaveAppSettings(AppSettings);
                 _settingsService.BuildSettings = _settingsService.LoadSettings(_settingsService.BuildSettingsPath);
                 _settingsService.FighterInfoList = _settingsService.LoadFighterInfoSettings();
                 WeakReferenceMessenger.Default.Send(new UpdateSettingsMessage(AppSettings));
+                OnPropertyChanged(nameof(BuildPaths));
+                AppSettings.BuildPath = buildPath;
+                AppSettings.HDTextures = hdTextures;
+                OnPropertyChanged(nameof(AppSettings));
             }
             else
             {
@@ -92,6 +105,38 @@ namespace BrawlInstaller.ViewModels
                     _dialogService.ShowMessage("Backup restored.", "Success");
                 }
             }
+        }
+
+        private void BrowseBuildPath()
+        {
+            var path = _dialogService.OpenFolderDialog("Select build folder");
+            if (!string.IsNullOrEmpty(path))
+            {
+                path += "\\";
+                AppSettings.BuildPath = path;
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void BuildPathSelected(object selectedValue)
+        {
+            if (selectedValue != null)
+            {
+                var path = (string)selectedValue;
+                var foundPath = AppSettings.BuildPaths.FirstOrDefault(x => x.BuildPath == path);
+                if (foundPath != null)
+                {
+                    AppSettings.HDTextures = foundPath.HDTextures;
+                }
+                AppSettings.ModifyHDTextures = !string.IsNullOrEmpty(AppSettings.HDTextures);
+                OnPropertyChanged(nameof(AppSettings));
+            }
+        }
+
+        private void ClearBuildPath()
+        {
+            AppSettings.BuildPath = string.Empty;
+            OnPropertyChanged(nameof(AppSettings));
         }
 
         private VersionInfo GetVersionInfo()

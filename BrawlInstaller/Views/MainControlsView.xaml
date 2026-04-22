@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:BrawlInstaller.Views"
              xmlns:viewModels="clr-namespace:BrawlInstaller.ViewModels" d:DataContext="{d:DesignInstance Type=viewModels:MainControlsViewModel}"
              xmlns:userControls="clr-namespace:BrawlInstaller.UserControls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid HorizontalAlignment="Stretch">
@@ -37,7 +38,17 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="buildPathLabel" Content="Build Path:" Grid.Column="0" ToolTip="Root folder of build to edit"/>
-            <userControls:FileBox x:Name="buildPathTextBox" Text="{Binding AppSettings.BuildPath, Mode=TwoWay}" TextBoxWidth="360" Grid.Column="1"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <ComboBox x:Name="buildPathComboBox" Text="{Binding AppSettings.BuildPath, Mode=TwoWay}" Width="360" IsEditable="True" ItemsSource="{Binding BuildPaths}" DisplayMemberPath="BuildPath" SelectedValuePath="BuildPath">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction CommandParameter="{Binding ElementName=buildPathComboBox, Path=SelectedValue}" Command="{Binding BuildPathSelectedCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+                <Button Content="..." Style="{StaticResource condensedButton}" Command="{Binding BrowseBuildPathCommand}"/>
+                <Button Content="✕" Style="{StaticResource condensedButton}" Command="{Binding ClearBuildPathCommand}"/>
+            </StackPanel>
             <Label x:Name="hdTexturePathLabel" Content="HD Texture Path:" Grid.Column="0" Grid.Row="1" ToolTip="Root folder of HD textures for build"/>
             <userControls:FileBox x:Name="hdTexturePathTextBox" Text="{Binding AppSettings.HDTextures}" TextBoxWidth="360" Grid.Column="1" Grid.Row="1"/>
             <Button x:Name="refreshButton" Content="Apply" Command="{Binding RefreshCommand}" Grid.Column="2"/>

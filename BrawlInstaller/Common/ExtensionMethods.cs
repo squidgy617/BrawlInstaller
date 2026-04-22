@@ -401,6 +401,19 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class CombinedBuildPathListExtensions
+    {
+        public static List<CombinedBuildPath> Copy(this List<CombinedBuildPath> list)
+        {
+            var newList = new List<CombinedBuildPath>();
+            foreach (var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
+
     public static class CosmeticListExtensions
     {
         public static List<Cosmetic> Copy(this List<Cosmetic> list)

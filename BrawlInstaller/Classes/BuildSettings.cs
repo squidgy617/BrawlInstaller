@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using BrawlLib.Internal;
 using System.Globalization;
 using BrawlLib.SSBB.ResourceNodes;
+using BrawlInstaller.Common;
 
 namespace BrawlInstaller.Classes
 {
@@ -24,6 +25,7 @@ namespace BrawlInstaller.Classes
         public bool ModifyHDTextures { get; set; } = false;
         [JsonIgnore] public string TempPath { get => Paths.TempPath; }
         public uint BackupCount { get; set; } = 10;
+        [JsonProperty("BuildPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)] public List<CombinedBuildPath> BuildPaths { get; set; } = new List<CombinedBuildPath>();
 
         public AppSettings Copy()
         {
@@ -32,7 +34,24 @@ namespace BrawlInstaller.Classes
                 BuildPath = BuildPath,
                 HDTextures = HDTextures,
                 ModifyHDTextures = ModifyHDTextures,
-                BackupCount = BackupCount
+                BackupCount = BackupCount,
+                BuildPaths = BuildPaths.Copy()
+            };
+            return copy;
+        }
+    }
+
+    public class CombinedBuildPath
+    {
+        public string BuildPath { get; set; }
+        public string HDTextures { get; set; }
+
+        public CombinedBuildPath Copy()
+        {
+            var copy = new CombinedBuildPath
+            {
+                BuildPath = BuildPath,
+                HDTextures = HDTextures
             };
             return copy;
         }

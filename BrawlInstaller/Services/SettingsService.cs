@@ -97,6 +97,17 @@ namespace BrawlInstaller.Services
         /// <param name="appSettings">App settings to save</param>
         public void SaveAppSettings(AppSettings appSettings)
         {
+            // Remove build path if it's already in the list
+            var foundPath = appSettings.BuildPaths.Where(x => x.BuildPath ==  AppSettings.BuildPath).FirstOrDefault();
+            if (foundPath != null)
+            {
+                appSettings.BuildPaths.Remove(foundPath);
+            }
+            // Add build path to list
+            appSettings.BuildPaths.Insert(0, new CombinedBuildPath { BuildPath = appSettings.BuildPath, HDTextures = appSettings.HDTextures });
+            // Truncate list
+            appSettings.BuildPaths.RemoveAll(x => appSettings.BuildPaths.IndexOf(x) > 9);
+            // Save settings
             var jsonString = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
             File.WriteAllText(Paths.AppSettingsPath, jsonString);
             AppSettings = appSettings;
