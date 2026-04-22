@@ -1,1 +1,1 @@
-﻿- The "Copy" button next to the definition list in the cosmetic settings tab will now prompt you to select a style to copy the definition to.
+﻿- Build path field will now remember your recent build paths and the HD texture paths associated with them. Use the dropdown to select them!
