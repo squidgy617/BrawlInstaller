@@ -2,6 +2,7 @@
 using BrawlInstaller.Common;
 using BrawlInstaller.StaticClasses;
 using BrawlLib.SSBB.ResourceNodes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -11,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 
 namespace BrawlInstaller.Services
 {
@@ -503,6 +505,42 @@ namespace BrawlInstaller.Services
                 }
             }
             return ids;
+        }
+
+        public void SaveTrophyPackage(Trophy trophy, string outFile)
+        {
+            var path = _settingsService.AppSettings.TempPath + "\\TrophyExport";
+            var trophyJson = JsonConvert.SerializeObject(trophy, Formatting.Indented);
+            _fileService.SaveTextFile($"{path}\\Trophy.json", trophyJson);
+            // Export thumbnails
+            _cosmeticService.ExportCosmetics($"{path}\\Thumbnails", trophy?.Thumbnails);
+            // Export BRRES
+            _fileService.CopyFile(trophy?.BrresFile, $"{path}\\{trophy?.Brres}.brres");
+            // Delete trophy package file if it exists
+            _fileService.DeleteFile(outFile);
+            // Generate trophy package file
+            _fileService.GenerateZipFileFromDirectory(path, outFile);
+            _fileService.DeleteDirectory(path);
+        }
+
+        public Trophy LoadTrophyPackage(string inFile)
+        {
+            var path = _settingsService.AppSettings.TempPath + "\\TrophyImport";
+            var output = _fileService.ExtractZipFile(inFile, path);
+            if (_fileService.DirectoryExists(output))
+            {
+                var trophyJson = _fileService.ReadTextFile($"{path}\\Trophy.json");
+                if (!string.IsNullOrEmpty(trophyJson))
+                {
+                    var trophy = JsonConvert.DeserializeObject<Trophy>(trophyJson);
+                    // Get BRRES
+                    trophy.BrresFile = _fileService.GetFiles(path, "*.brres", SearchOption.AllDirectories).FirstOrDefault();
+                    // Get cosmetics
+                    trophy.Thumbnails = _cosmeticService.LoadCosmetics($"{path}\\Thumbnails");
+                    return trophy;
+                }
+            }
+            return null;
         }
     }
 }
