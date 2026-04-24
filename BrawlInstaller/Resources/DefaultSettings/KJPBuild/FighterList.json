@@ -1392,5 +1392,39 @@
     "SlotAttributes": null,
     "CosmeticAttributes": null,
     "CSSSlotAttributes": null
+  },
+  {
+    "EntryName": "Pokemon Trainer",
+    "FighterFileName": "PokeTrainer",
+    "FullPacFileName": "poketrainer/FitPokeTrainer.pac",
+    "FullKirbyPacFileName": "kirby/FitKirbyPokeTrainer.pac",
+    "ModuleFileName": "ft_poke.rel",
+    "InternalName": "POKETRAINER",
+    "DisplayName": "Pok∈mon Trainer",
+    "Ids": {
+      "FighterConfigId": 28,
+      "CosmeticConfigId": 27,
+      "SlotConfigId": 72,
+      "CSSSlotConfigId": 27,
+      "CosmeticId": 27,
+      "FranchiseId": 8,
+      "TrophyThumbnailId": null,
+      "RecordsIconId": 27,
+      "StageId": null,
+      "StageCosmeticId": null,
+      "MasqueradeId": null,
+      "TrophyId": null
+    },
+    "VictoryThemeId": null,
+    "CreditsThemeId": null,
+    "SoundbankId": null,
+    "KirbySoundbankId": null,
+    "KirbyLoadType": 0,
+    "EffectPacId": null,
+    "KirbyEffectPacId": null,
+    "FighterAttributes": null,
+    "SlotAttributes": null,
+    "CosmeticAttributes": null,
+    "CSSSlotAttributes": null
   }
 ]

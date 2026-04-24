@@ -547,15 +547,6 @@
           "Offset": null,
           "AddTerminatorFrame": false,
           "NormalizeTextureIds": false
-        },
-        {
-          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapPreview/basebgMShadow/Texture0",
-          "FramesPerImage": 1,
-          "IdType": null,
-          "Multiplier": null,
-          "Offset": null,
-          "AddTerminatorFrame": false,
-          "NormalizeTextureIds": false
         }
       ],
       "Prefix": "MenSelmapPrevbase",
@@ -566,8 +557,8 @@
       "FilePrefix": "",
       "IdType": 10,
       "Size": {
-        "Width": 312,
-        "Height": 112
+        "Width": 176,
+        "Height": 176
       },
       "Format": 14,
       "FirstOnly": false,
@@ -661,14 +652,14 @@
         "Width": 64,
         "Height": 56
       },
-      "Format": 14,
+      "Format": 9,
       "FirstOnly": false,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": true,
-      "Enabled": true,
+      "Required": false,
+      "Enabled": false,
       "Selectable": false,
       "AlwaysCreateArchive": true,
       "PaletteCount": 256,
@@ -694,15 +685,6 @@
           "Offset": null,
           "AddTerminatorFrame": false,
           "NormalizeTextureIds": false
-        },
-        {
-          "Path": "Misc Data [80]/AnmTexPat(NW4R)/MenSelmapIcon/iconM/Texture0",
-          "FramesPerImage": 1,
-          "IdType": 10,
-          "Multiplier": 1,
-          "Offset": 400,
-          "AddTerminatorFrame": false,
-          "NormalizeTextureIds": false
         }
       ],
       "Prefix": "MenSelmapIcon",
@@ -713,8 +695,8 @@
       "FilePrefix": "",
       "IdType": 10,
       "Size": {
-        "Width": 128,
-        "Height": 112
+        "Width": 64,
+        "Height": 56
       },
       "Format": 9,
       "FirstOnly": false,
@@ -749,15 +731,6 @@
           "Offset": null,
           "AddTerminatorFrame": false,
           "NormalizeTextureIds": false
-        },
-        {
-          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapIcon/iconM/Texture0",
-          "FramesPerImage": 1,
-          "IdType": 10,
-          "Multiplier": 1,
-          "Offset": 400,
-          "AddTerminatorFrame": false,
-          "NormalizeTextureIds": false
         }
       ],
       "Prefix": "MenSelmapIcon",
@@ -768,8 +741,8 @@
       "FilePrefix": "",
       "IdType": 10,
       "Size": {
-        "Width": 128,
-        "Height": 112
+        "Width": 64,
+        "Height": 56
       },
       "Format": 9,
       "FirstOnly": false,
@@ -850,15 +823,6 @@
           "Offset": null,
           "AddTerminatorFrame": false,
           "NormalizeTextureIds": false
-        },
-        {
-          "Path": "Misc Data [0]/AnmTexPat(NW4R)/MenSelmapPreview/basebgMShadow/Texture0",
-          "FramesPerImage": 1,
-          "IdType": null,
-          "Multiplier": null,
-          "Offset": null,
-          "AddTerminatorFrame": false,
-          "NormalizeTextureIds": false
         }
       ],
       "Prefix": "MenSelmapPrevbase",
@@ -869,8 +833,8 @@
       "FilePrefix": "",
       "IdType": 10,
       "Size": {
-        "Width": 312,
-        "Height": 112
+        "Width": 176,
+        "Height": 176
       },
       "Format": 14,
       "FirstOnly": false,
@@ -1090,7 +1054,7 @@
       "FileType": 1,
       "AlwaysInheritStyle": false,
       "Required": false,
-      "Enabled": true,
+      "Enabled": false,
       "Selectable": true,
       "AlwaysCreateArchive": true,
       "PaletteCount": 256,
@@ -1145,7 +1109,7 @@
       "FileType": 1,
       "AlwaysInheritStyle": false,
       "Required": false,
-      "Enabled": true,
+      "Enabled": false,
       "Selectable": true,
       "AlwaysCreateArchive": true,
       "PaletteCount": 256,
@@ -1184,14 +1148,14 @@
         "Width": 64,
         "Height": 56
       },
-      "Format": 14,
+      "Format": 9,
       "FirstOnly": false,
       "SeparateFiles": false,
       "CompressionType": 0,
       "FileType": 1,
       "AlwaysInheritStyle": false,
-      "Required": true,
-      "Enabled": true,
+      "Required": false,
+      "Enabled": false,
       "Selectable": false,
       "AlwaysCreateArchive": true,
       "PaletteCount": 256,
@@ -1748,15 +1712,6 @@
           "Offset": 1,
           "AddTerminatorFrame": true,
           "NormalizeTextureIds": false
-        },
-        {
-          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/101_TopN__0/lambert32/Texture1",
-          "FramesPerImage": 1,
-          "IdType": 10,
-          "Multiplier": 1,
-          "Offset": 1,
-          "AddTerminatorFrame": true,
-          "NormalizeTextureIds": false
         }
       ],
       "Prefix": "MenStageSwitch",
@@ -1767,7 +1722,7 @@
       "FilePrefix": "",
       "IdType": 10,
       "Size": {
-        "Width": 200,
+        "Width": 128,
         "Height": 64
       },
       "Format": 14,
@@ -1803,15 +1758,6 @@
           "Offset": 1,
           "AddTerminatorFrame": true,
           "NormalizeTextureIds": false
-        },
-        {
-          "Path": "MenuRule_en/Model Data [0]/AnmTexPat(NW4R)/101_TopN__0/lambert32/Texture1",
-          "FramesPerImage": 1,
-          "IdType": 10,
-          "Multiplier": 1,
-          "Offset": 1,
-          "AddTerminatorFrame": true,
-          "NormalizeTextureIds": false
         }
       ],
       "Prefix": "MenStageSwitch",
@@ -1822,7 +1768,7 @@
       "FilePrefix": "",
       "IdType": 10,
       "Size": {
-        "Width": 200,
+        "Width": 128,
         "Height": 64
       },
       "Format": 14,
@@ -2522,18 +2468,7 @@
         "Path": "..\\..\\..\\..\\codes\\Source\\Project+\\StageTable.asm"
       }
     ],
-    "RandomStageNamesLocations": [
-      {
-        "FilePath": "pf\\menu2\\sc_selcharacter2.pac",
-        "NodePath": "MenuRule_en/Misc Data [1]",
-        "FileExtension": "pac"
-      },
-      {
-        "FilePath": "pf\\menu2\\mu_menumain.pac",
-        "NodePath": "MenuRule_en/Misc Data [1]",
-        "FileExtension": "pac"
-      }
-    ],
+    "RandomStageNamesLocations": [],
     "VictoryThemeTracklist": "Results",
     "CreditsThemeTracklist": "Credits",
     "BinFileHDTexturePath": "BrawlInstaller\\Stage Selection Screen\\Menu Alts",
