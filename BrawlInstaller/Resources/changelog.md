@@ -1,2 +1,1 @@
-﻿- Build path field will now remember your recent build paths and the HD texture paths associated with them. Use the dropdown to select them!
-- Browsing to a different build path will update your HD texture path. If you previously used an HD texture path with the build path, it will be set to that. Otherwise, it will be cleared.
+﻿- Fixed inaccuracies with the preset for KJP's Brawl build. Not applied retroactively, users will need to re-apply the preset if they were using it.
