@@ -1,1 +1,1 @@
-﻿- Fixed inaccuracies with the preset for KJP's Brawl build. Not applied retroactively, users will need to re-apply the preset if they were using it.
+﻿- Fixed an issue where switching between Classic and All-Star trophies for a fighter could sometimes cause their game icons to get set to 0 (blank).
