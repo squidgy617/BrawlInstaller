@@ -67,6 +67,7 @@ namespace BrawlInstaller.ViewModels
         public Dictionary<int, string> TrophyCategories { get => _trophyCategories; set { _trophyCategories = value; OnPropertyChanged(nameof(TrophyCategories)); } }
         public List<TrophyGameIcon> GameIconList { get => _gameIconList; set { _gameIconList = value; OnPropertyChanged(nameof(GameIconList)); } }
 
+        // TODO: Seems like we shouldn't need these, but for some reason icon doesn't update without them
         [DependsUpon(nameof(Trophy))]
         public int? SelectedGameIcon1 { get => Trophy?.GameIcon1; set { Trophy.GameIcon1 = (value ?? 0); OnPropertyChanged(nameof(SelectedGameIcon1)); } }
 
