@@ -56,6 +56,18 @@ namespace BrawlInstaller.ViewModels
                 var trophy = message.Value;
                 LoadTrophy(trophy);
             });
+
+            WeakReferenceMessenger.Default.Register<FighterLoadedMessage>(this, (recipient, message) =>
+            {
+                var fighterPackage = message.Value;
+                LoadTrophy(fighterPackage.Trophies.FirstOrDefault()?.Trophy);
+            });
+
+            WeakReferenceMessenger.Default.Register<TrophySwappedMessage>(this, (recipient, message) =>
+            {
+                var trophy = message.Value;
+                SwapTrophy(trophy);
+            });
         }
 
         // Properties
@@ -66,6 +78,11 @@ namespace BrawlInstaller.ViewModels
             GameIconList = _trophyService.GetTrophyGameIcons();
             TrophySeries = _trophyService.GetTrophySeries();
             TrophyCategories = _trophyService.GetTrophyCategories();
+            SwapTrophy(trophy);
+        }
+
+        public void SwapTrophy(Trophy trophy)
+        {
             Trophy = trophy;
             OldTrophy = trophy;
             SelectedCosmeticOption = CosmeticOptions.FirstOrDefault().Value;

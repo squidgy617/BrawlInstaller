@@ -1098,7 +1098,7 @@ namespace BrawlInstaller.ViewModels
         private void ChangeSelectedTrophyType(TrophyType trophyType)
         {
             var trophy = FighterPackage?.Trophies?.FirstOrDefault(x => x.Type == trophyType);
-            WeakReferenceMessenger.Default.Send(new TrophyChangedMessage(trophy?.Trophy));
+            WeakReferenceMessenger.Default.Send(new TrophySwappedMessage(trophy?.Trophy));
             OnPropertyChanged(nameof(SelectedTrophyType));
         }
 
@@ -1197,6 +1197,13 @@ namespace BrawlInstaller.ViewModels
     {
         public TrophyChangedMessage(Trophy trophy) : base(trophy)
         {
+        }
+    }
+
+    public class TrophySwappedMessage : ValueChangedMessage<Trophy>
+    {
+        public TrophySwappedMessage(Trophy trophy) : base(trophy)
+        { 
         }
     }
 
