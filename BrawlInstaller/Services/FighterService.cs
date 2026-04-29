@@ -3720,11 +3720,12 @@ namespace BrawlInstaller.Services
                 // Iterate through code to find matches
                 while (currentIndex > -1 && currentIndex < code.Length && currentIndex < endPosition)
                 {
-                    currentIndex = code.IndexOf($"\tbyte[4] 0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", currentIndex);
+                    currentIndex = code.IndexOf($"\tbyte[4] 0x{fighterPackage.FighterInfo.Ids.SlotConfigId:X2}", currentIndex);
                     if (currentIndex > -1)
                     {
                         // Get the end of the line
                         var endLine = code.IndexOf("\r\n", currentIndex);
+                        var commentStartIndex = code.IndexOf("#", currentIndex);
                         if (endLine <= -1)
                         {
                             endLine = code.Length;
@@ -3733,10 +3734,15 @@ namespace BrawlInstaller.Services
                         {
                             endLine = endPosition;
                         }
+                        if (commentStartIndex <= -1)
+                        {
+                            commentStartIndex = endLine;
+                        }
                         // Pull numbers from line
                         var modifierString = code.Substring(currentIndex, endLine - currentIndex);
+                        var modifierStringNoComment = code.Substring(currentIndex, commentStartIndex - currentIndex);
                         var regex = new Regex("(\\b(0x)[0-9a-fA-F]+\\b)|(\\b[0-9]+\\.[0-9]+)|(\\b[0-9]+\\b)");
-                        var matches = regex.Matches(modifierString);
+                        var matches = regex.Matches(modifierStringNoComment);
                         if (matches.Count == 5) // Should always be 5 hits
                         {
                             var results = new List<bool>();
@@ -3979,7 +3985,7 @@ namespace BrawlInstaller.Services
                         reversedList.Reverse();
                         foreach (var modifier in reversedList)
                         {
-                            newCode = newCode.Insert(startIndex, modifier.ToAsmString(fighterPackage.FighterInfo.Ids.FighterConfigId.Value));
+                            newCode = newCode.Insert(startIndex, modifier.ToAsmString(fighterPackage.FighterInfo.Ids.SlotConfigId.Value));
                         }
                     }
                     // Update entry count
