@@ -244,7 +244,8 @@ namespace BrawlInstaller.Classes
             new AsmPath(FileType.LLoadAsmFile, "Source\\ProjectM\\CSS.asm", ".GOTO->Table_Skip"),
             new AsmPath(FileType.SlotExAsmFile, "Source\\P+Ex\\SlotEx.asm", "Table:"),
             new AsmPath(FileType.BonusFighterFile, "", "ExtraFighterData:"),
-            new AsmPath(FileType.PhysicsDataFile, "Source\\ProjectM\\Modifier\\Physics.asm", "PHYSICS_DATA:")
+            new AsmPath(FileType.PhysicsDataFile, "Source\\ProjectM\\Modifier\\Physics.asm", "PHYSICS_DATA:"),
+            new AsmPath(FileType.VictoryCameraDataFile, "Source\\Project+\\VictoryCamera.asm", "VICTORYTABLE:")
         };
 
         [JsonProperty("FileNodePaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -334,6 +335,8 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string ExConfigsFile { get => GetFilePath(FileType.ExConfigsFile); }
         [JsonIgnore] public string PhysicsDataFile { get => GetAsmPath(FileType.PhysicsDataFile); }
         [JsonIgnore] public string PhysicsDataLabel { get => GetLabel(FileType.PhysicsDataFile); }
+        [JsonIgnore] public string VictoryCameraDataFile { get => GetAsmPath(FileType.VictoryCameraDataFile); }
+        [JsonIgnore] public string VictoryCameraDataLabel { get => GetLabel(FileType.VictoryCameraDataFile); }
         public string BinFileHDTexturePath { get; set; } = "BrawlInstaller\\Stage Selection Screen\\Menu Alts";
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]

@@ -48,6 +48,8 @@ namespace BrawlInstaller.ViewModels
         public ICommand RefreshKirbyEffectPacCommand => new RelayCommand(param => RefreshKirbyEffectPac());
         public ICommand RemovePhysicsModifierCommand => new RelayCommand(param => RemovePhysicsModifier(param));
         public ICommand AddPhysicsModifierCommand => new RelayCommand(param => AddPhysicsModifier());
+        public ICommand RemoveVictoryCameraModifierCommand => new RelayCommand(param => RemoveVictoryCameraModifier(param));
+        public ICommand AddVictoryCameraModifierCommand => new RelayCommand(param => AddVictoryCameraModifier());
 
         // Importing constructor
         [ImportingConstructor]
@@ -97,6 +99,9 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(FighterPackage))]
         public ObservableCollection<CustomPhysicsModifier> CustomPhysicsModifiers { get => (FighterPackage?.FighterSettings?.CustomPhysicsModifiers != null) ? new ObservableCollection<CustomPhysicsModifier>(FighterPackage.FighterSettings.CustomPhysicsModifiers) : new ObservableCollection<CustomPhysicsModifier>(); }
+
+        [DependsUpon(nameof(FighterPackage))]
+        public ObservableCollection<VictoryCameraModifier> VictoryCameraModifiers { get => (FighterPackage?.FighterSettings?.VictoryCameraModifiers != null) ? new ObservableCollection<VictoryCameraModifier>(FighterPackage.FighterSettings.VictoryCameraModifiers) : new ObservableCollection<VictoryCameraModifier>(); }
 
         // Methods
         public void ChangedFighterEffectPac(int? oldEffectPacId, int? newEffectPacId)
@@ -238,6 +243,22 @@ namespace BrawlInstaller.ViewModels
         {
             FighterPackage.FighterSettings.CustomPhysicsModifiers.Add(new CustomPhysicsModifier());
             OnPropertyChanged(nameof(CustomPhysicsModifiers));
+        }
+
+        private void RemoveVictoryCameraModifier(object param)
+        {
+            var cameraModifier = param as VictoryCameraModifier;
+            if (cameraModifier != null)
+            {
+                FighterPackage.FighterSettings.VictoryCameraModifiers.Remove(cameraModifier);
+                OnPropertyChanged(nameof(VictoryCameraModifiers));
+            }
+        }
+
+        private void AddVictoryCameraModifier()
+        {
+            FighterPackage.FighterSettings.VictoryCameraModifiers.Add(new VictoryCameraModifier());
+            OnPropertyChanged(nameof(VictoryCameraModifiers));
         }
     }
 

@@ -1405,6 +1405,9 @@ namespace BrawlInstaller.Services
 
                 // Update physics modifiers
                 UpdateCustomPhysicsModifiers(fighterPackage);
+
+                // Update victory camera modifiers
+                UpdateVictoryCameraModifiers(fighterPackage);
             }
 
             // Update costume swap settings
@@ -1732,6 +1735,9 @@ namespace BrawlInstaller.Services
 
             // Get physics modifiers
             fighterSettings.CustomPhysicsModifiers = GetCustomPhysicsModifiers(fighterPackage);
+
+            // Get victory camera modifiers
+            fighterSettings.VictoryCameraModifiers = GetVictoryCameraModifiers(fighterPackage);
 
             return fighterSettings;
         }
@@ -3692,6 +3698,93 @@ namespace BrawlInstaller.Services
             }
         }
 
+        /// <summary>
+        /// Get victory camera modifiers for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to get modifiers for</param>
+        /// <returns>List of modifiers</returns>
+        private List<VictoryCameraModifier> GetVictoryCameraModifiers(FighterPackage fighterPackage)
+        {
+            var cameraModifiers = new List<VictoryCameraModifier>();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var codePath = _settingsService.BuildSettings.FilePathSettings.VictoryCameraDataFile;
+            var label = _settingsService.BuildSettings.FilePathSettings.VictoryCameraDataLabel;
+            var path = Path.Combine(buildPath, codePath);
+            var code = _codeService.ReadCode(path);
+            if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(codePath) && !string.IsNullOrEmpty(label))
+            {
+                // Find table
+                var labelPosition = code.IndexOf(label);
+                var endPosition = code.IndexOf("VICTORYTABLE_SKIP:", labelPosition);
+                var currentIndex = labelPosition;
+                // Iterate through code to find matches
+                while (currentIndex > -1 && currentIndex < code.Length && currentIndex < endPosition)
+                {
+                    currentIndex = code.IndexOf($"\tbyte[4] 0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X2}", currentIndex);
+                    if (currentIndex > -1)
+                    {
+                        // Get the end of the line
+                        var endLine = code.IndexOf("\r\n", currentIndex);
+                        if (endLine <= -1)
+                        {
+                            endLine = code.Length;
+                        }
+                        if (endLine >= endPosition)
+                        {
+                            endLine = endPosition;
+                        }
+                        // Pull numbers from line
+                        var modifierString = code.Substring(currentIndex, endLine - currentIndex);
+                        var regex = new Regex("(\\b(0x)[0-9a-fA-F]+\\b)|(\\b[0-9]+\\.[0-9]+)|(\\b[0-9]+\\b)");
+                        var matches = regex.Matches(modifierString);
+                        if (matches.Count == 5) // Should always be 5 hits
+                        {
+                            var results = new List<bool>();
+                            byte winId;
+                            byte sceneId1;
+                            byte sceneId2;
+                            results.Add(byte.TryParse(matches[2].Value, NumberStyles.Number, null, out winId));
+                            results.Add(byte.TryParse(matches[3].Value, NumberStyles.Number, null, out sceneId1));
+                            results.Add(byte.TryParse(matches[4].Value, NumberStyles.Number, null, out sceneId2));
+                            if (!results.Any(result => result == false))
+                            {
+                                // Generate modifier if valid
+                                var modifier = new VictoryCameraModifier
+                                {
+                                    WinId = winId,
+                                    SceneId1 = sceneId1,
+                                    SceneId2 = sceneId2,
+                                    Index = currentIndex
+                                };
+                                // Add comment if there is one
+                                var commentIndex = modifierString.IndexOf("#");
+                                if (commentIndex > -1)
+                                {
+                                    var commentString = modifierString.Substring(commentIndex + 1, modifierString.Length - commentIndex - 1);
+                                    modifier.Comment = commentString.Trim();
+                                }
+                                cameraModifiers.Add(modifier);
+                            }
+                        }
+                        // Skip to next line
+                        if (endLine > -1)
+                        {
+                            currentIndex = endLine;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return cameraModifiers;
+        }
+
         // TODO: There is most definitely a better way to do this that involves properly reading the tables
         /// <summary>
         /// Get custom physics modifiers for fighter
@@ -3827,6 +3920,88 @@ namespace BrawlInstaller.Services
                         {
                             newCode = newCode.Insert(startIndex, modifier.ToAsmString(fighterPackage.FighterInfo.Ids.FighterConfigId.Value));
                         }
+                    }
+                    _fileService.SaveTextFile(path, newCode);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update victory camera modifiers for fighter
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to update modifiers for</param>
+        private void UpdateVictoryCameraModifiers(FighterPackage fighterPackage)
+        {
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var codePath = _settingsService.BuildSettings.FilePathSettings.VictoryCameraDataFile;
+            var label = _settingsService.BuildSettings.FilePathSettings.VictoryCameraDataLabel;
+            var path = Path.Combine(buildPath, codePath);
+            var code = _codeService.ReadCode(path);
+            var modifiers = GetVictoryCameraModifiers(fighterPackage);
+            if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(codePath) && !string.IsNullOrEmpty(label))
+            {
+                var newCode = code;
+                var i = 0;
+                // Remove current modifier strings
+                foreach (var modifier in modifiers.Where(x => x.Index > -1))
+                {
+                    modifier.Index -= i; // Decrement index on account of modifiers that have already been removed
+                    var endIndex = newCode.IndexOf("\r\n", modifier.Index);
+                    newCode = newCode.Substring(0, modifier.Index) + newCode.Substring(endIndex + 2);
+                    i += endIndex + 2 - modifier.Index;
+                }
+                // Add new modifier strings
+                if (fighterPackage.PackageType != PackageType.Delete)
+                {
+                    // Find position to write to
+                    var startIndex = modifiers.FirstOrDefault()?.Index ?? -1;
+                    // Find existing entries
+                    var labelIndex = newCode.IndexOf(label);
+                    var endIndex = newCode.IndexOf("VICTORYTABLE_SKIP:", labelIndex);
+                    var matches = Regex.Matches(newCode.Substring(labelIndex, endIndex - labelIndex), "byte\\[4\\].*\r\n");
+                    if (matches.Count > 0)
+                    {
+                        // Set position to end of list
+                        var lastMatch = matches.Cast<Match>().LastOrDefault();
+                        startIndex = lastMatch.Index + labelIndex + lastMatch.Length;
+                    }
+                    // If there are no modifiers already, get position just before end of tables
+                    if (startIndex <= -1)
+                    {
+                        if (endIndex > -1)
+                        {
+                            startIndex = endIndex;
+                        }
+                    }
+                    if (startIndex > -1)
+                    {
+                        var reversedList = fighterPackage.FighterSettings.VictoryCameraModifiers.ToList();
+                        reversedList.Reverse();
+                        foreach (var modifier in reversedList)
+                        {
+                            newCode = newCode.Insert(startIndex, modifier.ToAsmString(fighterPackage.FighterInfo.Ids.FighterConfigId.Value));
+                        }
+                    }
+                    // Update entry count
+                    var count = matches.Count + fighterPackage.FighterSettings.VictoryCameraModifiers.Count;
+                    // Find the range we're writing in
+                    var endLabelIndex = newCode.IndexOf("VICTORYTABLE_SKIP:", labelIndex);
+                    var firstEntry = Regex.Match(newCode.Substring(labelIndex, endLabelIndex - labelIndex), "byte\\[4\\].*\r\n");
+                    endIndex = -1;
+                    if (firstEntry.Success)
+                    {
+                        endIndex = firstEntry.Index + labelIndex;
+                    }
+                    else
+                    {
+                        endIndex = endLabelIndex;
+                    }
+                    // Find integer to write
+                    var integerStringMatch = Regex.Match(newCode.Substring(labelIndex, endIndex - labelIndex), "\tint.*\r\n");
+                    if (integerStringMatch.Success)
+                    {
+                        // Replace integer string
+                        newCode = newCode.Substring(0, integerStringMatch.Index + labelIndex) + $"\tint {count}\r\n" + newCode.Substring(integerStringMatch.Index + labelIndex + integerStringMatch.Length, newCode.Length - (integerStringMatch.Index + labelIndex + integerStringMatch.Length));
                     }
                     _fileService.SaveTextFile(path, newCode);
                 }

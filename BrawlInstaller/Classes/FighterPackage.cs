@@ -268,6 +268,9 @@ namespace BrawlInstaller.Classes
         [JsonProperty("CustomPhysicsModifiers", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<CustomPhysicsModifier> CustomPhysicsModifiers { get; set; } = new List<CustomPhysicsModifier>();
 
+        [JsonProperty("VictoryCameraModifiers", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+        public List<VictoryCameraModifier> VictoryCameraModifiers { get; set; } = new List<VictoryCameraModifier>();
+
         public CostumeSwapSettings CostumeSwapSettings { get; set; } = new CostumeSwapSettings();
 
         [JsonProperty("ExSlotIds", ObjectCreationHandling = ObjectCreationHandling.Replace)] 
@@ -292,6 +295,26 @@ namespace BrawlInstaller.Classes
         public string ToAsmString(int fighterId)
         {
             var modifierString = $"\tbyte[2] 0x{fighterId:X2}, 0x{ICBasic:X2}; half 0x{Action:X2}; float {Value.ToString(CultureInfo.CreateSpecificCulture("en-US"))}";
+            if (!string.IsNullOrEmpty(Comment))
+            {
+                modifierString += $"\t# {Comment}";
+            }
+            modifierString += "\r\n";
+            return modifierString;
+        }
+    }
+
+    public class VictoryCameraModifier
+    {
+        public byte WinId { get; set; }
+        public byte SceneId1 { get; set; }
+        public byte SceneId2 { get; set; }
+        public string Comment { get; set; } = string.Empty;
+        [JsonIgnore] public int Index { get; set; } = -1;
+
+        public string ToAsmString(int fighterId)
+        {
+            var modifierString = $"\tbyte[4] 0x{fighterId:X2}, {WinId}, {SceneId1}, {SceneId2}";
             if (!string.IsNullOrEmpty(Comment))
             {
                 modifierString += $"\t# {Comment}";
