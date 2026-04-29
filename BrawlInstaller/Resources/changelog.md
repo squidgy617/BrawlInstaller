@@ -1,3 +1,4 @@
 ﻿- Fixed an issue introduced in the last update where trophy game icons would not always populate correctly.
 - Fixed an issue where switching between Classic and All-Star trophies for a fighter could sometimes cause their game icons to get set to 0 (blank).
 - Added "Victory Camera Modifiers" to fighters. This allows you to configure a fighter to modify the code `Victory Camera Modifier Engine [DukeItOut]`, enabling custom victory camera behavior.
+    - Fixed an issue with this where comments with numbers in them could break reading the victory camera values.
