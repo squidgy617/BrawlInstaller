@@ -33,6 +33,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GroupBox Header="File Names" Grid.ColumnSpan="3">
             <Grid>
@@ -83,15 +84,19 @@
         <Label x:Name="kirbyHatLoadTypeLabel" Content="Kirby Hat Load Type:" Grid.Row="6" ToolTip="Load type for Kirby hats. Only enabled if fighter attributes are present."/>
         <ComboBox x:Name="kirbyHatLoadTypeDropDown" ItemsSource="{Binding KirbyLoadFlagOptions}" SelectedValue="{Binding FighterPackage.FighterInfo.KirbyLoadType}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Row="6" Grid.Column="1" IsEnabled="{Binding KirbyHatTypeEnabled}"/>
         <Label x:Name="throwReleaseLabel" Content="Throw Release Point:" Grid.Row="7" ToolTip="Throw release point to use for fighter"/>
-        <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="7" Grid.Column="1"/>
-        <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="7" Grid.Column="2"/>
+        <TextBox x:Name="throwReleaseXTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.X}" Grid.Row="7" Grid.Column="1" ToolTip="Disable slippery walk animation speed modifiers"/>
+        <TextBox x:Name="throwReleaseYTextBox" Text="{Binding FighterPackage.FighterSettings.ThrowReleasePoint.Y}" Grid.Row="7" Grid.Column="2" ToolTip="Disable slippery dash speed modifiers"/>
         <Label x:Name="lLoadLabel" Content="L-Load ID:" Grid.Row="8" ToolTip="CSS slot ID of fighter to use as an L-load for this fighter"/>
         <ComboBox x:Name="lLoadTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.LLoadCharacterId, Converter={StaticResource hexConverter}, TargetNullValue='', Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="8" Grid.Column="1"/>
         <Label x:Name="sseDoorIdLabel" Content="SSE Unlock ID:" Grid.Row="9" ToolTip="Door ID to use for unlocking character in SSE"/>
         <TextBox x:Name="sseDoorIdTextBox" Text="{Binding FighterPackage.FighterSettings.DoorId, Converter={StaticResource hexUIntConverter}}" Grid.Row="9" Grid.Column="1"/>
         <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="10" ToolTip="CSS slot ID of character to use as sub-character for SSE mode"/>
         <ComboBox x:Name="ssesubcharacterIdTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Row="10" Grid.Column="1" Width="60"/>
-        <GroupBox Header="Alternate Slots" Grid.Row="11" Grid.ColumnSpan="4" ToolTip="For SlotEx system used for fighters like Pokemon Trainer and the alloys in P+Ex">
+        <StackPanel Orientation="Vertical" Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="3">
+            <CheckBox Content="Disable slippery walk anims" IsChecked="{Binding FighterPackage.FighterSettings.SlipperySettings.SlipperyWalkDisabled}"/>
+            <CheckBox Content="Disable slippery dash speed" IsChecked="{Binding FighterPackage.FighterSettings.SlipperySettings.SlipperyDashDisabled}"/>
+        </StackPanel>
+        <GroupBox Header="Alternate Slots" Grid.Row="12" Grid.ColumnSpan="4" ToolTip="For SlotEx system used for fighters like Pokemon Trainer and the alloys in P+Ex">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -113,7 +118,7 @@
                 <ComboBox IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.ExSlotIds[0], Converter={StaticResource hexUInt2CharConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="60" Grid.Row="1" Grid.Column="3"/>
             </Grid>
         </GroupBox>
-        <Expander Header="Custom Physics Modifiers" Grid.Row="12" Grid.ColumnSpan="4">
+        <Expander Header="Custom Physics Modifiers" Grid.Row="13" Grid.ColumnSpan="4">
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding CustomPhysicsModifiers}">
                     <ItemsControl.ItemTemplate>
@@ -150,7 +155,7 @@
                 <Button Content="+" Style="{StaticResource miniButton}" Command="{Binding DataContext.AddPhysicsModifierCommand, ElementName=fighterSettingsView}"/>
             </StackPanel>
         </Expander>
-        <Expander Header="Victory Camera Modifiers" Grid.Row="13" Grid.ColumnSpan="4">
+        <Expander Header="Victory Camera Modifiers" Grid.Row="14" Grid.ColumnSpan="4">
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding VictoryCameraModifiers}">
                     <ItemsControl.ItemTemplate>
@@ -199,7 +204,7 @@
                 <Button Content="+" Style="{StaticResource miniButton}" Command="{Binding DataContext.AddVictoryCameraModifierCommand, ElementName=fighterSettingsView}"/>
             </StackPanel>
         </Expander>
-        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="14" Grid.ColumnSpan="4" ToolTip="Fighter-specific code settings">
+        <GroupBox x:Name="fighterSpecificGroupBox" Header="Clone-Specific Settings" Grid.Row="15" Grid.ColumnSpan="4" ToolTip="Fighter-specific code settings">
             <StackPanel>
                 <Expander x:Name="lucarioExpander" Header="Lucario Clone Settings" ToolTip="Settings for Lucario clones">
                     <Grid>
@@ -307,7 +312,7 @@
                 </Expander>
             </StackPanel>
         </GroupBox>
-        <StackPanel Grid.Column="4" Grid.RowSpan="15">
+        <StackPanel Grid.Column="4" Grid.RowSpan="16">
             <TabControl>
                 <TabItem Header="Fighter" ToolTip="Fighter attributes">
                     <StackPanel>

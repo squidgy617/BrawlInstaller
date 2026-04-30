@@ -4167,10 +4167,10 @@ namespace BrawlInstaller.Services
                 var stopInstructions = new List<string> { "lwz r12,.*0xD0\\(r31\\).*", "lfs f0,.*0x250\\(r13\\).*", "lwz r3,.*0x7C\\(r29\\).*", "lwz r12,.*0xD0\\(r31\\).*" };
                 var instructionSearches = new List<string>
                 {
-                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
-                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
-                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
-                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*"
+                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+",
+                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+",
+                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+",
+                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+"
                 };
                 for (var i = 0; i < hooks.Count; i++)
                 {
@@ -4189,7 +4189,7 @@ namespace BrawlInstaller.Services
                             stopIndex = hook.Instructions.Count - 1;
                         }
                         // Find fighter instructions
-                        var fighterInstruction = hook.Instructions.FirstOrDefault(x => hook.Instructions.IndexOf(x) > startIndexes[i] && hook.Instructions.IndexOf(x) < stopIndex
+                        var fighterInstruction = hook.Instructions.FirstOrDefault(x => hook.Instructions.IndexOf(x) >= startIndexes[i] && hook.Instructions.IndexOf(x) < stopIndex
                         && Regex.Match(x.Text, instructionSearches[i]).Success);
                         if (fighterInstruction != null)
                         {
@@ -4228,10 +4228,10 @@ namespace BrawlInstaller.Services
                 var stopInstructions = new List<string> { "lwz r12,.*0xD0\\(r31\\).*", "lfs f0,.*0x250\\(r13\\).*", "lwz r3,.*0x7C\\(r29\\).*", "lwz r12,.*0xD0\\(r31\\).*" };
                 var instructionSearches = new List<string>
                 {
-                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
-                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
-                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
-                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*"
+                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+",
+                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+",
+                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+",
+                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}\\s+"
                 };
                 var instructions = new List<Instruction>
                 {
