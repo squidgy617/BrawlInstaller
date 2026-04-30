@@ -414,6 +414,19 @@ namespace BrawlInstaller.Common
         }
     }
 
+    public static class VictoryCameraModifierListExtensions
+    {
+        public static List<VictoryCameraModifier> Copy(this List<VictoryCameraModifier> list)
+        {
+            var newList = new List<VictoryCameraModifier>();
+            foreach (var item in list)
+            {
+                newList.Add(item.Copy());
+            }
+            return newList;
+        }
+    }
+
     public static class CosmeticListExtensions
     {
         public static List<Cosmetic> Copy(this List<Cosmetic> list)
