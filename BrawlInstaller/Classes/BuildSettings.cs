@@ -231,6 +231,7 @@ namespace BrawlInstaller.Classes
             new FilePath(FileType.SSETrophyModule, "pf\\module\\sora_adv_menu_game_over.rel"),
             new FilePath(FileType.RSSFile, "Source\\Project+\\Random.asm"),
             new FilePath(FileType.CostumeSwapFile, ""),
+            new FilePath(FileType.SlipperyCodeFile, "Source\\Project+\\Slippery.asm")
         };
 
         [JsonProperty("AsmPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -347,6 +348,7 @@ namespace BrawlInstaller.Classes
         [JsonIgnore] public string PhysicsDataLabel { get => GetLabel(FileType.PhysicsDataFile); }
         [JsonIgnore] public string VictoryCameraDataFile { get => GetAsmPath(FileType.VictoryCameraDataFile); }
         [JsonIgnore] public string VictoryCameraDataLabel { get => GetLabel(FileType.VictoryCameraDataFile); }
+        [JsonIgnore] public string SlipperyCodeFile { get => GetFilePath(FileType.SlipperyCodeFile); }
         public string BinFileHDTexturePath { get; set; } = "BrawlInstaller\\Stage Selection Screen\\Menu Alts";
 
         [JsonProperty("RosterFiles", ObjectCreationHandling = ObjectCreationHandling.Replace)]
