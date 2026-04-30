@@ -104,6 +104,8 @@ namespace BrawlInstaller.Enums
         [Description("Physics Data File")]
         PhysicsDataFile,
         [Description("Victory Camera Data File")]
-        VictoryCameraDataFile
+        VictoryCameraDataFile,
+        [Description("Slippery Walk Code File")]
+        SlipperyCodeFile
     }
 }

@@ -264,6 +264,7 @@ namespace BrawlInstaller.Classes
         public uint DoorId { get; set; } = 0;
         public int? SSESubCharacterId { get; set; } = 0;
         public int? LLoadCharacterId { get; set; } = 0;
+        public bool DisableSlipperyWalk { get; set; } = false;
 
         [JsonProperty("CustomPhysicsModifiers", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<CustomPhysicsModifier> CustomPhysicsModifiers { get; set; } = new List<CustomPhysicsModifier>();

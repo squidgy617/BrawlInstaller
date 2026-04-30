@@ -38,7 +38,8 @@ namespace BrawlInstaller.StaticClasses
             new DefaultFilePath(FileType.RSSFile, ".ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.CostumeSwapFile, "ASM file (.asm)|*.asm"),
             new DefaultFilePath(FileType.BonusFighterFile, "ASM file (.asm)|*.asm"),
-            new DefaultFilePath(FileType.PhysicsDataFile, "ASM file (.asm)|*.asm", false)
+            new DefaultFilePath(FileType.PhysicsDataFile, "ASM file (.asm)|*.asm", false),
+            new DefaultFilePath(FileType.SlipperyCodeFile, "ASM file (.asm)|*.asm", false)
         };
 
         public static DefaultFilePath GetFilePath(FileType type)
