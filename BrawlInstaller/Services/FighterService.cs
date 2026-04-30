@@ -1749,7 +1749,7 @@ namespace BrawlInstaller.Services
             fighterSettings.VictoryCameraModifiers = GetVictoryCameraModifiers(fighterPackage);
 
             // Get slippery walk
-            fighterSettings.DisableSlipperyWalk = GetSlipperyWalkEnabled(fighterPackage);
+            fighterSettings.SlipperySettings = GetSlipperyWalkSettings(fighterPackage);
 
             return fighterSettings;
         }
@@ -4148,12 +4148,13 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Checks if slippery walk functionality is disabled for the fighter
+        /// Get slippery settings for fighter
         /// </summary>
         /// <param name="fighterPackage">Fighter package to check</param>
-        /// <returns>Slippery walk disabled</returns>
-        private bool GetSlipperyWalkEnabled(FighterPackage fighterPackage)
+        /// <returns>Slippery walk settings</returns>
+        private SlipperySettings GetSlipperyWalkSettings(FighterPackage fighterPackage)
         {
+            var slipperySettings = new SlipperySettings();
             var buildPath = _settingsService.AppSettings.BuildPath;
             var codePath = _settingsService.BuildSettings.FilePathSettings.SlipperyCodeFile;
             var path = Path.Combine(buildPath, codePath);
@@ -4161,13 +4162,14 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(code))
             {
                 // Check each hook for a match
-                var hooks = new List<string> { "8086FC80", "80870D64", "808686DC" };
-                var startIndexes = new List<int> { 11, 11, 12 };
-                var stopInstructions = new List<string> { "lwz r12,.*0xD0\\(r31\\).*", "lfs f0,.*0x250\\(r13\\).*", "lwz r3,.*0x7C\\(r29\\).*" };
+                var hooks = new List<string> { "8086FC80", "80870D64", "808686DC", "80870738" };
+                var startIndexes = new List<int> { 11, 11, 11, 7 };
+                var stopInstructions = new List<string> { "lwz r12,.*0xD0\\(r31\\).*", "lfs f0,.*0x250\\(r13\\).*", "lwz r3,.*0x7C\\(r29\\).*", "lwz r12,.*0xD0\\(r31\\).*" };
                 var instructionSearches = new List<string>
                 {
                     $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
                     $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
+                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
                     $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*"
                 };
                 for (var i = 0; i < hooks.Count; i++)
@@ -4175,6 +4177,7 @@ namespace BrawlInstaller.Services
                     var hook = _codeService.ReadHook(code, hooks[i]);
                     if (hook != null)
                     {
+                        // Find instruction to stop search at
                         var stopIndex = -1;
                         var stopInstruction = hook.Instructions.FirstOrDefault(x => Regex.Match(x.Text, stopInstructions[i]).Success);
                         if (stopInstruction != null)
@@ -4185,18 +4188,32 @@ namespace BrawlInstaller.Services
                         {
                             stopIndex = hook.Instructions.Count - 1;
                         }
+                        // Find fighter instructions
                         var fighterInstruction = hook.Instructions.FirstOrDefault(x => hook.Instructions.IndexOf(x) > startIndexes[i] && hook.Instructions.IndexOf(x) < stopIndex
                         && Regex.Match(x.Text, instructionSearches[i]).Success);
                         if (fighterInstruction != null)
                         {
-                            return true;
+                            // Last hook is for the dash
+                            if (hooks[i] == "80870738")
+                            {
+                                slipperySettings.SlipperyDashDisabled = true;
+                            }
+                            // Otherwise it's for walk
+                            else
+                            {
+                                slipperySettings.SlipperyWalkDisabled = true;
+                            }
                         }
                     }
                 }
             }
-            return false;
+            return slipperySettings;
         }
 
+        /// <summary>
+        /// Update slippery walk settings in build
+        /// </summary>
+        /// <param name="fighterPackage">Fighter package to use for update</param>
         private void UpdateSlipperyWalk(FighterPackage fighterPackage)
         {
             var buildPath = _settingsService.AppSettings.BuildPath;
@@ -4206,13 +4223,14 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(code))
             {
                 // Iterate through each hook
-                var hooks = new List<string> { "8086FC80", "80870D64", "808686DC" };
-                var startIndexes = new List<int> { 11, 11, 11 };
-                var stopInstructions = new List<string> { "lwz r12,.*0xD0\\(r31\\).*", "lfs f0,.*0x250\\(r13\\).*", "lwz r3,.*0x7C\\(r29\\).*" };
-                var instructionSearches = new List<string> 
-                { 
-                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*", 
+                var hooks = new List<string> { "8086FC80", "80870D64", "808686DC", "80870738" };
+                var startIndexes = new List<int> { 11, 11, 11, 7 };
+                var stopInstructions = new List<string> { "lwz r12,.*0xD0\\(r31\\).*", "lfs f0,.*0x250\\(r13\\).*", "lwz r3,.*0x7C\\(r29\\).*", "lwz r12,.*0xD0\\(r31\\).*" };
+                var instructionSearches = new List<string>
+                {
                     $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
+                    $"cmpwi r12,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
+                    $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*",
                     $"cmpwi r3,.*0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}.*"
                 };
                 var instructions = new List<Instruction>
@@ -4225,6 +4243,11 @@ namespace BrawlInstaller.Services
                     new Instruction
                     {
                         Text = $"cmpwi r12, 0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}",
+                        Comment = $"Are they {fighterPackage.FighterInfo.DisplayName}?"
+                    },
+                    new Instruction
+                    {
+                        Text = $"cmpwi r3, 0x{fighterPackage.FighterInfo.Ids.FighterConfigId:X1}",
                         Comment = $"Are they {fighterPackage.FighterInfo.DisplayName}?"
                     },
                     new Instruction
@@ -4249,6 +4272,11 @@ namespace BrawlInstaller.Services
                     {
                         Text = $"beq- normal",
                         Comment = $"No ice animation!"
+                    },
+                    new Instruction
+                    {
+                        Text = $"beq- finish",
+                        Comment = $"Skip dash speed alterations!"
                     }
                 };
                 for (var i = 0; i < hooks.Count; i++)
@@ -4276,7 +4304,8 @@ namespace BrawlInstaller.Services
                             hook.Instructions.RemoveAt(removeIndex); // Remove the branch after the comparison
                         }
                         // Add new instructions
-                        if (fighterPackage.FighterSettings.DisableSlipperyWalk)
+                        if ((fighterPackage.FighterSettings.SlipperySettings.SlipperyWalkDisabled && hooks[i] != "80870738") 
+                            || fighterPackage.FighterSettings.SlipperySettings.SlipperyDashDisabled && hooks[i] == "80870738")
                         {
                             hook.Instructions.Insert(startIndexes[i], branches[i]); // Add branch
                             hook.Instructions.Insert(startIndexes[i], instructions[i]); // Add comparison
