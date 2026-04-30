@@ -26,11 +26,11 @@ namespace BrawlInstaller.Services
         /// <inheritdoc cref="CodeService.ReplaceTable(string, string, List{AsmTableEntry}, DataSize, int)"/>
         string ReplaceTable(string fileText, string label, List<AsmTableEntry> table, DataSize dataSize, int width = 1, int padding = 2);
 
-        /// <inheritdoc cref="CodeService.ReplaceHook(AsmHook, string)"/>
-        string ReplaceHook(AsmHook hook, string fileText);
+        /// <inheritdoc cref="CodeService.ReplaceHook(AsmHook, string, int)"/>
+        string ReplaceHook(AsmHook hook, string fileText, int tabs = 0);
 
-        /// <inheritdoc cref="CodeService.ReplaceHooks(List{AsmHook}, string)"/>
-        string ReplaceHooks(List<AsmHook> hooks, string fileText);
+        /// <inheritdoc cref="CodeService.ReplaceHooks(List{AsmHook}, string, int)"/>
+        string ReplaceHooks(List<AsmHook> hooks, string fileText, int tabs = 0);
 
         /// <inheritdoc cref="CodeService.CompileCodes()"/>
         void CompileCodes();
@@ -98,11 +98,11 @@ namespace BrawlInstaller.Services
         /// <param name="hooks">List of hooks to replace</param>
         /// <param name="fileText">Text to replace hooks in</param>
         /// <returns>Text with hooks replaced</returns>
-        public string ReplaceHooks(List<AsmHook> hooks, string fileText)
+        public string ReplaceHooks(List<AsmHook> hooks, string fileText, int tabs = 0)
         {
             foreach(var hook in hooks) 
             { 
-                fileText = ReplaceHook(hook, fileText);
+                fileText = ReplaceHook(hook, fileText, tabs);
             }
             return fileText;
         }
@@ -113,12 +113,12 @@ namespace BrawlInstaller.Services
         /// <param name="hook">Hook to write</param>
         /// <param name="fileText">Text to replace hook in</param>
         /// <returns>Text with hook replaced</returns>
-        public string ReplaceHook(AsmHook hook, string fileText)
+        public string ReplaceHook(AsmHook hook, string fileText, int tabs = 0)
         {
             var result = RemoveHook(fileText, hook.Address);
             if (result.Index > -1)
             {
-                fileText = WriteHook(hook, result.FileText, result.Index);
+                fileText = WriteHook(hook, result.FileText, result.Index, tabs);
             }
             return fileText;
         }
@@ -130,10 +130,19 @@ namespace BrawlInstaller.Services
         /// <param name="fileText">Text to write hook to</param>
         /// <param name="index">Location to write hook to</param>
         /// <returns>Text with hook added</returns>
-        private string WriteHook(AsmHook hook, string fileText, int index)
+        private string WriteHook(AsmHook hook, string fileText, int index, int tabs = 0)
         {
             var newLine = "\r\n";
             var hookString = string.Empty;
+            var spacing = "";
+            for (int i = 0; i < tabs; i++)
+            {
+                spacing += "\t";
+            }
+            if (string.IsNullOrEmpty(spacing))
+            {
+                spacing = " ";
+            }
             // Single line code
             if (hook.Instructions.Count == 1 && !hook.IsHook)
             {
@@ -141,11 +150,11 @@ namespace BrawlInstaller.Services
                 // Add comment if there is one
                 if (!string.IsNullOrEmpty(hook.Comment))
                 {
-                    hookString += $" # {hook.Comment}";
+                    hookString += $"{spacing}# {hook.Comment}";
                 }
                 if (!string.IsNullOrEmpty(hook.Instructions.FirstOrDefault()?.Comment))
                 {
-                    hookString += $" # {hook.Instructions.FirstOrDefault()?.Comment}";
+                    hookString += $"{spacing}# {hook.Instructions.FirstOrDefault()?.Comment}";
                 }
                 hookString += newLine;
             }
@@ -156,11 +165,11 @@ namespace BrawlInstaller.Services
                 // Add comment if there is one
                 if (!string.IsNullOrEmpty(hook.Comment))
                 {
-                    hookString += $" # {hook.Comment}";
+                    hookString += $"{spacing}# {hook.Comment}";
                 }
                 // Add instructions
                 hookString += newLine + "{" + newLine;
-                hookString += string.Join(newLine, hook.Instructions.Select(s => $"\t{s.Text.Trim()}" + (!string.IsNullOrEmpty(s.Comment) ? $" # {s.Comment}" : string.Empty)));
+                hookString += string.Join(newLine, hook.Instructions.Select(s => $"\t{s.Text.Trim()}" + (!string.IsNullOrEmpty(s.Comment) ? $"{spacing}# {s.Comment}" : string.Empty)));
                 hookString += newLine + "}" + newLine;
             }
             fileText = fileText.Insert(index, hookString);

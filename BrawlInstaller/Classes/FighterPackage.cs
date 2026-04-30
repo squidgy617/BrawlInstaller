@@ -264,6 +264,7 @@ namespace BrawlInstaller.Classes
         public uint DoorId { get; set; } = 0;
         public int? SSESubCharacterId { get; set; } = 0;
         public int? LLoadCharacterId { get; set; } = 0;
+        public SlipperySettings SlipperySettings { get; set; } = new SlipperySettings();
 
         [JsonProperty("CustomPhysicsModifiers", ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public List<CustomPhysicsModifier> CustomPhysicsModifiers { get; set; } = new List<CustomPhysicsModifier>();
@@ -281,6 +282,18 @@ namespace BrawlInstaller.Classes
             var copy = JsonConvert.DeserializeObject<FighterSettings>(JsonConvert.SerializeObject(this));
             copy.KirbyHatData = KirbyHatData;
             copy.VictoryCameraModifiers = VictoryCameraModifiers.Copy();
+            return copy;
+        }
+    }
+
+    public class SlipperySettings
+    {
+        public bool SlipperyWalkDisabled { get; set; } = false;
+        public bool SlipperyDashDisabled { get; set; } = false;
+
+        public SlipperySettings Copy()
+        {
+            var copy = JsonConvert.DeserializeObject<SlipperySettings>(JsonConvert.SerializeObject(this));
             return copy;
         }
     }
