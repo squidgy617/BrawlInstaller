@@ -1,5 +1,8 @@
-﻿- Added new "STGRESULT Files" configurable file list to settings. This allows you to specify what STGRESULT files in your build contain victory animation scene data.
-- Fighter settings victory camera modifier section now allows you to specify scene data BRRES files to import along with the fighter. They will replace the victory camera scene data BRRES at the specified ID in your STGRESULT files.
-    - A validation warning will appear if this could result in an overwrite.
-    - When a fighter package is exported with "Save as...", the scene data BRRES files will be included only if they have an ID greater than 24 (the last vanilla ID) or have a file attached.
-    - Currently, camera scene datas are not deleted when the fighter is.
+﻿- Added new fighter settings that interact with the code `Slippery Walk Animation Speed Change [DukeItOut]`.
+    - Available in the "Fighter Settings" section of the Files/Settings tab with a fighter loaded.
+    - "Disable slippery walk anims" disables the walk animation changes made by the code for the fighter.
+    - "Disable slippery run anims" disables the run animation changes made by the code for the fighter.
+    - "Disable slippery dash speed" disables the dash speed changes made by the code for the fighter.
+    - Checking the boxes for walk or run anims will automatically disable the TransN movement changes in the code.
+- Added a new "Slippery Walk Code File" setting to build settings. By default, this looks for Source/Project+/Slippery.asm. This supports the above.
+- Added a new checkbox to the franchise icon section of the fighter Costumes/Cosmetics tab. When checked, this box makes it so exporting the fighter as a package will not export their franchise icon. Useful if you know the fighter uses a vanilla icon and don't want it to prompt users when they open the package.
