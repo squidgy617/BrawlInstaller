@@ -4198,6 +4198,11 @@ namespace BrawlInstaller.Services
                             {
                                 slipperySettings.SlipperyDashDisabled = true;
                             }
+                            // Second hook is for run
+                            else if (hooks[i] == "80870D64")
+                            {
+                                slipperySettings.SlipperyRunDisabled = true;
+                            }
                             // Otherwise it's for walk
                             else
                             {
@@ -4223,7 +4228,7 @@ namespace BrawlInstaller.Services
             if (!string.IsNullOrEmpty(code))
             {
                 // Iterate through each hook
-                var hooks = new List<string> { "8086FC80", "80870D64", "808686DC", "80870738" };
+                var hooks = new List<string> { "8086FC80", "80870D64", "808686DC", "80870738" }; // First hook is walk anims, second is run, third is TransN speed, fourth is dash speed
                 var startIndexes = new List<int> { 11, 11, 11, 7 };
                 var stopInstructions = new List<string> { "lwz r12,.*0xD0\\(r31\\).*", "lfs f0,.*0x250\\(r13\\).*", "lwz r3,.*0x7C\\(r29\\).*", "lwz r12,.*0xD0\\(r31\\).*" };
                 var instructionSearches = new List<string>
@@ -4304,8 +4309,9 @@ namespace BrawlInstaller.Services
                             hook.Instructions.RemoveAt(removeIndex); // Remove the branch after the comparison
                         }
                         // Add new instructions
-                        if ((fighterPackage.FighterSettings.SlipperySettings.SlipperyWalkDisabled && hooks[i] != "80870738") 
-                            || fighterPackage.FighterSettings.SlipperySettings.SlipperyDashDisabled && hooks[i] == "80870738")
+                        if ((fighterPackage.FighterSettings.SlipperySettings.SlipperyWalkDisabled && hooks[i] != "80870738" && hooks[i] != "80870D64")
+                            || fighterPackage.FighterSettings.SlipperySettings.SlipperyDashDisabled && hooks[i] == "80870738"
+                            || fighterPackage.FighterSettings.SlipperySettings.SlipperyRunDisabled && (hooks[i] == "80870D64" || hooks[i] == "808686DC")) // TransN speed always changes, even if only running or walking are disabled
                         {
                             hook.Instructions.Insert(startIndexes[i], branches[i]); // Add branch
                             hook.Instructions.Insert(startIndexes[i], instructions[i]); // Add comparison

@@ -289,6 +289,7 @@ namespace BrawlInstaller.Classes
     public class SlipperySettings
     {
         public bool SlipperyWalkDisabled { get; set; } = false;
+        public bool SlipperyRunDisabled { get; set; } = false;
         public bool SlipperyDashDisabled { get; set; } = false;
 
         public SlipperySettings Copy()

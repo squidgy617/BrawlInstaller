@@ -93,8 +93,9 @@
         <Label x:Name="sseSubcharacterIdLabel" Content="SSE Subcharacter ID:" Grid.Row="10" ToolTip="CSS slot ID of character to use as sub-character for SSE mode"/>
         <ComboBox x:Name="ssesubcharacterIdTextBox" IsEditable="True" ItemsSource="{Binding FighterInfoList}" DisplayMemberPath="DisplayName" TextSearch.TextPath="Ids.CSSSlotConfigId" Text="{Binding FighterPackage.FighterSettings.SSESubCharacterId, TargetNullValue='', Converter={StaticResource hexConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Row="10" Grid.Column="1" Width="60"/>
         <StackPanel Orientation="Vertical" Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="3">
-            <CheckBox Content="Disable slippery walk anims" IsChecked="{Binding FighterPackage.FighterSettings.SlipperySettings.SlipperyWalkDisabled}"/>
-            <CheckBox Content="Disable slippery dash speed" IsChecked="{Binding FighterPackage.FighterSettings.SlipperySettings.SlipperyDashDisabled}"/>
+            <CheckBox Content="Disable slippery walk anims" IsChecked="{Binding FighterPackage.FighterSettings.SlipperySettings.SlipperyWalkDisabled}" ToolTip="Disable walk animation modifiers on ice"/>
+            <CheckBox Content="Disable slippery run anims" IsChecked="{Binding FighterPackage.FighterSettings.SlipperySettings.SlipperyRunDisabled}" ToolTip="Disable run animation modifiers on ice"/>
+            <CheckBox Content="Disable slippery dash speed" IsChecked="{Binding FighterPackage.FighterSettings.SlipperySettings.SlipperyDashDisabled}" ToolTip="Disable dash speed modifiers on ice"/>
         </StackPanel>
         <GroupBox Header="Alternate Slots" Grid.Row="12" Grid.ColumnSpan="4" ToolTip="For SlotEx system used for fighters like Pokemon Trainer and the alloys in P+Ex">
             <Grid>
