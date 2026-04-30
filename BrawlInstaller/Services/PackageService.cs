@@ -426,6 +426,26 @@ namespace BrawlInstaller.Services
                         Type = !fighterPackage.Trophies.Any(x => x.Type == TrophyType.AllStar) ? TrophyType.AllStar : TrophyType.Fighter
                     });
                 }
+                // Get scene files
+                var i = 0;
+                foreach(var modifier in fighterPackage.FighterSettings.VictoryCameraModifiers)
+                {
+                    var sceneFolderPath = Path.Combine(path, "SceneFiles", i.ToString("D4"));
+                    if (_fileService.DirectoryExists(sceneFolderPath))
+                    {
+                        var sceneFilePath1 = Path.Combine(sceneFolderPath, "Scene1.brres");
+                        if (_fileService.FileExists(sceneFilePath1))
+                        {
+                            modifier.SceneFilePath1 = sceneFilePath1;
+                        }
+                        var sceneFilePath2 = Path.Combine(sceneFolderPath, "Scene2.brres");
+                        if (_fileService.FileExists(sceneFilePath2))
+                        {
+                            modifier.SceneFilePath2 = sceneFilePath2;
+                        }
+                    }
+                    i++;
+                }
                 // Get install options
                 var installOptionPath = $"{path}\\InstallOptions";
                 if (_fileService.DirectoryExists(installOptionPath))
@@ -588,6 +608,38 @@ namespace BrawlInstaller.Services
             // Export info and settings
             _fileService.SaveTextFile($"{path}\\FighterInfo.json", fighterInfo);
             _fileService.SaveTextFile($"{path}\\FighterSettings.json", fighterSettings);
+            // Export scene files
+            var i = 0;
+            foreach (var modifier in fighterPackage.FighterSettings.VictoryCameraModifiers)
+            {
+                if (modifier.SceneId1 >= 25 || !string.IsNullOrEmpty(modifier.SceneFilePath1))
+                {
+                    // Export scene 1
+                    var scenePath = Path.Combine(path, "SceneFiles", i.ToString("D4"), "Scene1.brres");
+                    if (!string.IsNullOrEmpty(modifier.SceneFilePath1))
+                    {
+                        _fileService.CopyFile(modifier.SceneFilePath1, scenePath);
+                    }
+                    else if (modifier.SceneFile1 != null)
+                    {
+                        _fileService.SaveFileAs(modifier.SceneFile1, scenePath);
+                    }
+                }
+                if (modifier.SceneId2 >= 25 || !string.IsNullOrEmpty(modifier.SceneFilePath2)) 
+                { 
+                    // Export scene 2
+                    var scenePath = Path.Combine(path, "SceneFiles", i.ToString("D4"), "Scene2.brres");
+                    if (!string.IsNullOrEmpty(modifier.SceneFilePath2))
+                    {
+                        _fileService.CopyFile(modifier.SceneFilePath2, scenePath);
+                    }
+                    else if (modifier.SceneFile2 != null)
+                    {
+                        _fileService.SaveFileAs(modifier.SceneFile2, scenePath);
+                    }
+                }
+                i++;
+            }
             // Update info
             fighterPackage.FighterInfo.OriginalSoundbankId = fighterPackage.FighterInfo.SoundbankId;
             fighterPackage.FighterInfo.OriginalKirbySoundbankId = fighterPackage.FighterInfo.KirbySoundbankId;
