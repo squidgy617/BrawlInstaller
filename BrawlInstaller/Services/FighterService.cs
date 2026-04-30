@@ -123,6 +123,9 @@ namespace BrawlInstaller.Services
 
         /// <inheritdoc cref="FighterService.GetCreditsThemeIds()"/>
         List<string> GetCreditsThemeIds();
+
+        /// <inheritdoc cref="FighterService.GetUsedSceneIds()"/>
+        List<short> GetUsedSceneIds();
     }
     [Export(typeof(IFighterService))]
     internal class FighterService : IFighterService
@@ -3699,6 +3702,31 @@ namespace BrawlInstaller.Services
                     _fileService.SaveTextFile(codePath, code);
                 }
             }
+        }
+
+        /// <summary>
+        /// Get all used scene IDs in result file
+        /// </summary>
+        /// <returns>List of used scene IDs</returns>
+        public List<short> GetUsedSceneIds()
+        {
+            var idList = new List<short>();
+            var buildPath = _settingsService.AppSettings.BuildPath;
+            var resultPath = _settingsService.BuildSettings.FilePathSettings.StgResultPaths.FirstOrDefault();
+            if (resultPath != null)
+            {
+                var file = _fileService.OpenFile(_settingsService.GetBuildFilePath(resultPath.FilePath));
+                if (file != null)
+                {
+                    var node = file.FindChild(resultPath.NodePath);
+                    if (node != null)
+                    {
+                        idList = node.Children.Where(x => x.GetType() == typeof(BRRESNode) && ((BRRESNode)x).FileType == ARCFileType.SceneData).Select(x => ((BRRESNode)x).FileIndex).ToList();
+                    }
+                    _fileService.CloseFile(file);
+                }
+            }
+            return idList;
         }
 
         /// <summary>

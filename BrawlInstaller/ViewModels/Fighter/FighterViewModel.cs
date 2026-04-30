@@ -880,6 +880,16 @@ namespace BrawlInstaller.ViewModels
                     messages.Add(new DialogMessage("Trophy Conflicts", "One of the fighter's trophies shares an ID, thumbnail, or BRRES with another trophy in your build.\n\nIf two trophies have the same ID, the fighter will load the FIRST trophy in the build. Change your trophy's ID or change the order of trophies after saving to ensure they are ordered correctly.\n\nIf trophies have the same thumbnail ID or BRRES, the existing thumbnail/BRRES will be overwritten. If this is undesired, change the thumbnail ID or BRRES name."));
                 }
             }
+            var updatedCameraMods = FighterPackage?.FighterSettings?.VictoryCameraModifiers?.Where(x => !string.IsNullOrEmpty(x.SceneFilePath1) || !string.IsNullOrEmpty(x.SceneFilePath2));
+            if (updatedCameraMods.Any())
+            {
+                var usedSceneIds = _fighterService.GetUsedSceneIds();
+                var sceneIdConflict = usedSceneIds.Any(x => updatedCameraMods.Any(y => (!string.IsNullOrEmpty(y.SceneFilePath1) && y.SceneId1 == x) || (!string.IsNullOrEmpty(y.SceneFilePath2) && y.SceneId2 == x)));
+                if (sceneIdConflict)
+                {
+                    messages.Add(new DialogMessage("Victory Camera Conflicts", "One or more of the fighter's custom victory camera modifiers shares a scene ID with another in your build. This could cause the scene to be overwritten.\n\nEither remove the included file or change the scene ID to avoid overwriting."));
+                }
+            }
             if (messages.Count > 0)
             {
                 result = _dialogService.ShowMessages("Validation errors have occurred. Installing fighters with these errors could have unexpected results. It is strongly recommended that you correct these errors before continuing. Continue anyway?", "Validation Errors", messages, MessageBoxButton.YesNo, MessageBoxImage.Warning);
