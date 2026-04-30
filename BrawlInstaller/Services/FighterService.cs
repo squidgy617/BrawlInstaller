@@ -3959,8 +3959,8 @@ namespace BrawlInstaller.Services
                             newCode = newCode.Insert(startIndex, modifier.ToAsmString(fighterPackage.FighterInfo.Ids.FighterConfigId.Value));
                         }
                     }
-                    _fileService.SaveTextFile(path, newCode);
                 }
+                _fileService.SaveTextFile(path, newCode);
             }
         }
 
@@ -4041,8 +4041,8 @@ namespace BrawlInstaller.Services
                         // Replace integer string
                         newCode = newCode.Substring(0, integerStringMatch.Index + labelIndex) + $"\tint {count}\r\n" + newCode.Substring(integerStringMatch.Index + labelIndex + integerStringMatch.Length, newCode.Length - (integerStringMatch.Index + labelIndex + integerStringMatch.Length));
                     }
-                    _fileService.SaveTextFile(path, newCode);
                 }
+                _fileService.SaveTextFile(path, newCode);
             }
             // Update scene files
             var resultPath = _settingsService.BuildSettings.FilePathSettings.StgResultPaths.FirstOrDefault();
