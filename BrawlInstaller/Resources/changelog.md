@@ -1,4 +1,5 @@
-﻿- Fixed an issue introduced in the last update where trophy game icons would not always populate correctly.
-- Fixed an issue where switching between Classic and All-Star trophies for a fighter could sometimes cause their game icons to get set to 0 (blank).
-- Added "Victory Camera Modifiers" to fighters. This allows you to configure a fighter to modify the code `Victory Camera Modifier Engine [DukeItOut]`, enabling custom victory camera behavior.
-    - Fixed an issue with this where comments with numbers in them could break reading the victory camera values.
+﻿- Added new "STGRESULT Files" configurable file list to settings. This allows you to specify what STGRESULT files in your build contain victory animation scene data.
+- Fighter settings victory camera modifier section now allows you to specify scene data BRRES files to import along with the fighter. They will replace the victory camera scene data BRRES at the specified ID in your STGRESULT files.
+    - A validation warning will appear if this could result in an overwrite.
+    - When a fighter package is exported with "Save as...", the scene data BRRES files will be included only if they have an ID greater than 24 (the last vanilla ID) or have a file attached.
+    - Currently, camera scene datas are not deleted when the fighter is.
