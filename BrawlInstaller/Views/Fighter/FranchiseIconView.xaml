@@ -22,6 +22,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label x:Name="franchiseIconLabel" Grid.Column="0" Content="Icon:" ToolTip="Select icon to use for fighter"/>
         <Grid x:Name="franchiseIconIdGrid" Grid.Column="1" IsEnabled="{Binding FranchiseIconSelectorEnabled}">
@@ -95,5 +96,6 @@
             <Button x:Name="imageHDButton" Grid.Row="2" Grid.Column="1" Content="Browse..." Width="60" Margin="8,4,0,0" Command="{Binding ReplaceHDIconCommand}"/>
             <Button x:Name="clearImageHDButton" Grid.Row="3" Grid.Column="1" Content="Clear" Width="60" Margin="8,4,0,0" Command="{Binding ClearHDIconCommand}"/>
         </Grid>
+        <CheckBox Content="Include icon on export" IsChecked="{Binding FighterPackage.FighterInfo.ExportFranchiseIcon}" Grid.Row="2" Grid.Column="1" ToolTip="Export franchise icon when fighter is saved as a package" Grid.ColumnSpan="2"/>
     </Grid>
 </UserControl>

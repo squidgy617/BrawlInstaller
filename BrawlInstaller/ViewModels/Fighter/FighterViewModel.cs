@@ -563,8 +563,11 @@ namespace BrawlInstaller.ViewModels
                 {
                     packageToSave.FighterInfo.EntryName = packageToSave.FighterInfo.DisplayName;
                 }
-                var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
-                packageToSave.Cosmetics.Add(franchiseIcon);
+                if (packageToSave.FighterInfo.ExportFranchiseIcon)
+                {
+                    var franchiseIcon = FranchiseIconViewModel.SelectedFranchiseIcon;
+                    packageToSave.Cosmetics.Add(franchiseIcon);
+                }
                 packageToSave.FighterInfo.Ids.FranchiseId = FranchiseIconViewModel.SelectedFranchiseIcon?.Id ?? FighterPackage.FighterInfo.Ids.FranchiseId;
                 _packageService.ExportFighter(packageToSave, file);
                 // Save successful, so load package

@@ -57,6 +57,7 @@ namespace BrawlInstaller.Classes
         public CosmeticAttributes CosmeticAttributes { get; set; } = null;
         public CSSSlotAttributes CSSSlotAttributes { get; set; } = null;
         [JsonIgnore] public bool IsKirby { get => PartialPacName.ToLower() == "kirby"; }
+        public bool ExportFranchiseIcon { get; set; } = true;
 
         public FighterInfo Copy()
         {
@@ -100,7 +101,8 @@ namespace BrawlInstaller.Classes
                 FighterAttributes = FighterAttributes?.Copy(),
                 SlotAttributes = SlotAttributes?.Copy(),
                 CosmeticAttributes = CosmeticAttributes?.Copy(),
-                CSSSlotAttributes = CSSSlotAttributes?.Copy()
+                CSSSlotAttributes = CSSSlotAttributes?.Copy(),
+                ExportFranchiseIcon = ExportFranchiseIcon
             };
             return newFighterInfo;
         }
