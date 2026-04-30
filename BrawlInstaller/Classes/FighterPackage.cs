@@ -280,6 +280,7 @@ namespace BrawlInstaller.Classes
         {
             var copy = JsonConvert.DeserializeObject<FighterSettings>(JsonConvert.SerializeObject(this));
             copy.KirbyHatData = KirbyHatData;
+            copy.VictoryCameraModifiers = VictoryCameraModifiers.Copy();
             return copy;
         }
     }
@@ -311,6 +312,10 @@ namespace BrawlInstaller.Classes
         public byte SceneId2 { get; set; }
         public string Comment { get; set; } = string.Empty;
         [JsonIgnore] public int Index { get; set; } = -1;
+        [JsonIgnore] public BRRESNode SceneFile1 { get; set; }
+        [JsonIgnore] public BRRESNode SceneFile2 { get; set; }
+        [JsonIgnore] public string SceneFilePath1 { get; set; } = string.Empty;
+        [JsonIgnore] public string SceneFilePath2 { get; set; } = string.Empty;
 
         public string ToAsmString(int fighterId)
         {
@@ -321,6 +326,23 @@ namespace BrawlInstaller.Classes
             }
             modifierString += "\r\n";
             return modifierString;
+        }
+
+        public VictoryCameraModifier Copy()
+        {
+            var copy = new VictoryCameraModifier
+            {
+                WinId = WinId,
+                SceneId1 = SceneId1,
+                SceneId2 = SceneId2,
+                Comment = Comment,
+                Index = Index,
+                SceneFile1 = SceneFile1,
+                SceneFile2 = SceneFile2,
+                SceneFilePath1 = SceneFilePath1,
+                SceneFilePath2 = SceneFilePath2
+            };
+            return copy;
         }
     }
 

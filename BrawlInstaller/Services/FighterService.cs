@@ -1405,7 +1405,10 @@ namespace BrawlInstaller.Services
 
                 // Update physics modifiers
                 UpdateCustomPhysicsModifiers(fighterPackage);
+            }
 
+            if (updateSettings || fighterSettings.VictoryCameraModifiers.Any(x => !string.IsNullOrEmpty(x.SceneFilePath1) || !string.IsNullOrEmpty(x.SceneFilePath2)))
+            {
                 // Update victory camera modifiers
                 UpdateVictoryCameraModifiers(fighterPackage);
             }
@@ -3788,6 +3791,35 @@ namespace BrawlInstaller.Services
                     }
                 }
             }
+            // Get scene files
+            var resultPath = _settingsService.BuildSettings.FilePathSettings.StgResultPaths.FirstOrDefault();
+            if (resultPath != null)
+            {
+                var file = _fileService.OpenFile(_settingsService.GetBuildFilePath(resultPath.FilePath));
+                if (file != null)
+                {
+                    var node = file.FindChild(resultPath.NodePath);
+                    if (node != null)
+                    {
+                        foreach (var modifier in cameraModifiers)
+                        {
+                            var sceneFile1 = node.Children.FirstOrDefault(x => x.GetType() == typeof(BRRESNode) && ((BRRESNode)x).FileType == ARCFileType.SceneData
+                            && ((BRRESNode)x).FileIndex == modifier.SceneId1) as BRRESNode;
+                            var sceneFile2 = node.Children.FirstOrDefault(x => x.GetType() == typeof(BRRESNode) && ((BRRESNode)x).FileType == ARCFileType.SceneData
+                            && ((BRRESNode)x).FileIndex == modifier.SceneId2) as BRRESNode;
+                            if (sceneFile1 != null)
+                            {
+                                modifier.SceneFile1 = _fileService.CopyNode(sceneFile1) as BRRESNode;
+                            }
+                            if (sceneFile2 != null)
+                            {
+                                modifier.SceneFile2 = _fileService.CopyNode(sceneFile2) as BRRESNode;
+                            }
+                        }
+                    }
+                    _fileService.CloseFile(file);
+                }
+            }
             return cameraModifiers;
         }
 
@@ -4012,6 +4044,73 @@ namespace BrawlInstaller.Services
                     _fileService.SaveTextFile(path, newCode);
                 }
             }
+            // Update scene files
+            var resultPath = _settingsService.BuildSettings.FilePathSettings.StgResultPaths.FirstOrDefault();
+            if (resultPath != null && fighterPackage.FighterSettings.VictoryCameraModifiers.Any(x => !string.IsNullOrEmpty(x.SceneFilePath1) || !string.IsNullOrEmpty(x.SceneFilePath2)))
+            {
+                var file = _fileService.OpenFile(_settingsService.GetBuildFilePath(resultPath.FilePath));
+                if (file != null)
+                {
+                    var node = file.FindChild(resultPath.NodePath);
+                    if (node != null)
+                    {
+                        foreach (var modifier in fighterPackage.FighterSettings.VictoryCameraModifiers)
+                        {
+                            var sceneNode1 = UpdateSceneNode(node, modifier.SceneId1, modifier.SceneFilePath1);
+                            if (sceneNode1 != null)
+                            {
+                                modifier.SceneFile1 = sceneNode1;
+                            }
+                            var sceneNode2 = UpdateSceneNode(node, modifier.SceneId2, modifier.SceneFilePath2);
+                            if (sceneNode2 != null)
+                            {
+                                modifier.SceneFile2 = sceneNode2;
+                            }
+                        }
+                        _fileService.SaveFile(file);
+                    }
+                    // Clear file paths
+                    foreach (var modifier in fighterPackage.FighterSettings.VictoryCameraModifiers)
+                    {
+                        modifier.SceneFilePath1 = string.Empty;
+                        modifier.SceneFilePath2 = string.Empty;
+                    }
+                    _fileService.CloseFile(file);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update a single victory camera scene node
+        /// </summary>
+        /// <param name="node">Parent node containing scene nodes</param>
+        /// <param name="sceneId">Scene ID to update</param>
+        /// <param name="sceneFile">Scene file to use for update</param>
+        /// <returns>Updated scene BRRES</returns>
+        private BRRESNode UpdateSceneNode(ResourceNode node, byte sceneId, string sceneFile)
+        {
+            if (!string.IsNullOrEmpty(sceneFile))
+            {
+                // Find existing node
+                var sceneNode = node.Children.FirstOrDefault(x => x.GetType() == typeof(BRRESNode) && ((BRRESNode)x).FileType == ARCFileType.SceneData
+                && ((BRRESNode)x).FileIndex == sceneId) as BRRESNode;
+                // If we didn't find one, create one
+                if (sceneNode == null)
+                {
+                    sceneNode = new BRRESNode();
+                    sceneNode.FileIndex = sceneId;
+                    sceneNode.FileType = ARCFileType.SceneData;
+                    sceneNode.Name = $"Scene Data [{sceneId}]";
+                    // Insert at index
+                    var lastSceneNode = node.Children.LastOrDefault(x => x.GetType() == typeof(BRRESNode) && ((BRRESNode)x).FileType == ARCFileType.SceneData)
+                        as BRRESNode;
+                    node.InsertChild(sceneNode, lastSceneNode != null ? lastSceneNode.Index + 1 : node.Children.Max(x => x.Index));
+                }
+                // Replace node with new file
+                sceneNode.Replace(sceneFile);
+                return _fileService.CopyNode(sceneNode) as BRRESNode;
+            }
+            return null;
         }
 
         #region Fighter-Specific Settings

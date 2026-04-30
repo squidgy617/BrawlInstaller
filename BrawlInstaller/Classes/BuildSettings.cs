@@ -287,6 +287,16 @@ namespace BrawlInstaller.Classes
                 FileExtension = "pac"
             }
         };
+        [JsonProperty("StgResultPaths", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+        public List<InstallLocation> StgResultPaths { get; set; } = new List<InstallLocation>
+        {
+            new InstallLocation
+            {
+                FilePath = "pf\\stage\\melee\\STGRESULT.pac",
+                NodePath = "2",
+                FileExtension = "pac"
+            }
+        };
         [JsonIgnore] public string StageParamPath { get => GetFilePath(FileType.StageParamPath); }
         [JsonIgnore] public string StagePacPath { get => GetFilePath(FileType.StagePacPath); }
         [JsonIgnore] public string TracklistPath { get => GetFilePath(FileType.TracklistPath); }

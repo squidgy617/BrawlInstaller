@@ -39,6 +39,7 @@ namespace BrawlInstaller.ViewModels
         private RosterFile _selectedRosterFile;
         private FilePath _selectedCodeFile;
         private InstallLocation _selectedRandomStageNameLocation;
+        private InstallLocation _selectedStageResultLocation;
 
         // Services
         ISettingsService _settingsService { get; }
@@ -58,7 +59,11 @@ namespace BrawlInstaller.ViewModels
         public ICommand AddRandomStageNameLocationCommand => new RelayCommand(param => AddRandomStageNameLocation());
         public ICommand RemoveRandomStageNameLocationCommand => new RelayCommand(param => RemoveRandomStageNameLocation());
         public ICommand SelectRandomStageNameLocationCommand => new RelayCommand(param => SelectRandomStageNameLocation());
+        public ICommand AddStageResultLocationCommand => new RelayCommand(param => AddStageResultLocation());
+        public ICommand RemoveStageResultLocationCommand => new RelayCommand(param => RemoveStageResultLocation());
         public ICommand ClearRandomStageNameNodeCommand => new RelayCommand(param => ClearRandomStageNameNode());
+        public ICommand SelectStageResultLocationCommand => new RelayCommand(param => SelectStageResultLocation());
+        public ICommand ClearStageResultNodeCommand => new RelayCommand(param => ClearStageResultNode());
         public ICommand SelectNodePathCommand => new RelayCommand(param => SelectNodePath(param));
         public ICommand ClearNodePathCommand => new RelayCommand(param => ClearNodePath(param));
 
@@ -128,6 +133,12 @@ namespace BrawlInstaller.ViewModels
 
         [DependsUpon(nameof(RandomStageNamesLocations))]
         public InstallLocation SelectedRandomStageNameLocation { get => _selectedRandomStageNameLocation; set { _selectedRandomStageNameLocation = value; OnPropertyChanged(nameof(SelectedRandomStageNameLocation)); } }
+
+        [DependsUpon(nameof(BuildSettings))]
+        public ObservableCollection<InstallLocation> StageResultsLocations { get => BuildSettings.FilePathSettings.StgResultPaths != null ? new ObservableCollection<InstallLocation>(BuildSettings.FilePathSettings.StgResultPaths) : new ObservableCollection<InstallLocation>(); }
+        
+        [DependsUpon(nameof(StageResultsLocations))]
+        public InstallLocation SelectedStageResultLocation { get => _selectedStageResultLocation; set { _selectedStageResultLocation = value; OnPropertyChanged(nameof(SelectedStageResultLocation)); } }
 
         public List<string> ExtensionOptions { get => new List<string> { "brres", "pac" }; }
 
@@ -281,6 +292,48 @@ namespace BrawlInstaller.ViewModels
             {
                 SelectedRandomStageNameLocation.NodePath = string.Empty;
                 OnPropertyChanged(nameof(RandomStageNamesLocations));
+            }
+        }
+
+        public void AddStageResultLocation()
+        {
+            var stageResultLocations = BuildSettings.FilePathSettings.StgResultPaths;
+            stageResultLocations.Add(new InstallLocation());
+            OnPropertyChanged(nameof(StageResultsLocations));
+        }
+
+        public void RemoveStageResultLocation()
+        {
+            var stageResultLocations = BuildSettings.FilePathSettings.StgResultPaths;
+            if (stageResultLocations.Count > 0 && SelectedStageResultLocation != null)
+            {
+                stageResultLocations.Remove(SelectedStageResultLocation);
+                OnPropertyChanged(nameof(StageResultsLocations));
+            }
+        }
+
+        public void SelectStageResultLocation()
+        {
+            if (SelectedStageResultLocation != null)
+            {
+                var buildPath = _settingsService.AppSettings.BuildPath;
+                var path = Path.Combine(buildPath, SelectedStageResultLocation.FilePath);
+                var allowedNodes = new List<Type> { typeof(ARCNode) };
+                var result = _dialogService.OpenNodeSelectorDialog(path, "Select Node", "Select node containing scene datas", allowedNodes);
+                if (result.Result)
+                {
+                    SelectedStageResultLocation.NodePath = result.NodePath;
+                    OnPropertyChanged(nameof(StageResultsLocations));
+                }
+            }
+        }
+
+        public void ClearStageResultNode()
+        {
+            if (SelectedStageResultLocation != null)
+            {
+                SelectedStageResultLocation.NodePath = string.Empty;
+                OnPropertyChanged(nameof(StageResultsLocations));
             }
         }
 
