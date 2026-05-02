@@ -1,4 +1,1 @@
-﻿- Added new fields to cosmetic definition settings - "Suffix" and "File Suffix".
-    - These are used to denote cosmetics that are named with a suffix following the ID in the cosmetic name.
-    - Currently, this is only used by Joker in REX.
-- Added new presets for REX 0 1/2 and P+Ex 1.7.
+﻿- Selecting a recent build path will now also update the "Modify HD Textures" setting according to what it was when that path was last used. For any build paths you used before this update, it will be unchecked by default.
