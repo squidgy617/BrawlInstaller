@@ -84,6 +84,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label x:Name="filePathLabel" Content="Install Location:" ToolTip="Location to install cosmetics to. Can be a file or a folder."/>
             <StackPanel Grid.Column="1">
@@ -164,14 +166,18 @@
             <TextBox x:Name="prefixTextBox" Text="{Binding SelectedDefinition.Prefix}" Grid.Row="5" Grid.Column="1" Width="120"/>
             <Label x:Name="filePrefixLabel" Content="File Prefix:" Grid.Row="6" ToolTip="Prefix used for BRRES files storing cosmetics"/>
             <TextBox x:Name="filePrefixTextBox" Text="{Binding SelectedDefinition.FilePrefix}" Grid.Row="6" Grid.Column="1" Width="120"/>
+            <Label x:Name="suffixLabel" Content="Suffix:" Grid.Row="7" ToolTip="Suffix used by textures associated with cosmetic"/>
+            <TextBox x:Name="suffixTextBox" Text="{Binding SelectedDefinition.Suffix}" Grid.Row="7" Grid.Column="1" Width="120"/>
+            <Label x:Name="fileSuffixLabel" Content="File Suffix:" Grid.Row="8" ToolTip="Suffix used for BRRES files storing cosmetics"/>
+            <TextBox x:Name="fileSuffixTextBox" Text="{Binding SelectedDefinition.FileSuffix}" Grid.Row="8" Grid.Column="1" Width="120"/>
             <Label x:Name="idTypeLabel" Content="ID Type:" Grid.Row="0" Grid.Column="2" ToolTip="Type of ID when naming textures and updating frame indexes"/>
             <ComboBox x:Name="idTypeDropDown" ItemsSource="{Binding IdTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.IdType}" Grid.Row="0" Grid.Column="3" Width="120"/>
             <Label x:Name="multiplierLabel" Content="ID Multiplier" Grid.Row="1" Grid.Column="2" ToolTip="How much to multiply ID by when naming cosmetic"/>
             <TextBox x:Name="multiplierTextBox" Text="{Binding SelectedDefinition.Multiplier}" Grid.Row="1" Grid.Column="3" Width="60"/>
             <Label x:Name="offsetLabel" Content="ID Offset:" Grid.Row="2" Grid.Column="2" ToolTip="Offset to add to ID when naming cosmetic. Added after multiplier is applied."/>
             <TextBox x:Name="offsetTextBox" Text="{Binding SelectedDefinition.Offset}" Grid.Row="2" Grid.Column="3" Width="60"/>
-            <Label x:Name="suffixLabel" Content="ID Length:" Grid.Row="3" Grid.Column="2" ToolTip="Minimum length for IDs in texture names. Will be padded with 0s to meet specified length."/>
-            <TextBox x:Name="suffixTextBox" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
+            <Label x:Name="digitsLabel" Content="ID Length:" Grid.Row="3" Grid.Column="2" ToolTip="Minimum length for IDs in texture names. Will be padded with 0s to meet specified length."/>
+            <TextBox x:Name="digitsTextBox" Text="{Binding SelectedDefinition.SuffixDigits}" Grid.Row="3" Grid.Column="3" Width="60"/>
             <Label x:Name="groupMultiplierLabel" Content="Group Multiplier:" Grid.Row="4" Grid.Column="2" ToolTip="ID is divided by this number to determine the ID of BRRES group for grouped cosmetics. Only use when multiple textures belonging to different entities share BRRES files."/>
             <TextBox x:Name="groupMultiplierTextBox" Text="{Binding SelectedDefinition.GroupMultiplier}" Grid.Row="4" Grid.Column="3" Width="60"/>
             <Label x:Name="formatLabel" Content="Format:" Grid.Row="0" Grid.Column="4" ToolTip="Graphics format to use for textures"/>
@@ -186,7 +192,7 @@
             <ComboBox x:Name="fileTypeDropDown" ItemsSource="{Binding FileTypes}" Grid.Row="4" Grid.Column="5" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedDefinition.FileType}" Width="120"/>
             <Label x:Name="paletteCountLabel" Content="Palette Count:" Grid.Row="5" Grid.Column="4" ToolTip="Max palette count to use when importing cosmetics"/>
             <TextBox x:Name="paletteCountTextBox" Text="{Binding SelectedDefinition.PaletteCount}" Grid.Row="5" Grid.Column="5"/>
-            <Grid x:Name="checkboxesGrid" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="5">
+            <Grid x:Name="checkboxesGrid" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -208,7 +214,7 @@
                 <CheckBox x:Name="enabledCheckBox" Content="Enabled" IsChecked="{Binding SelectedDefinition.Enabled}" Grid.Column="3" ToolTip="If unchecked, these cosmetics will not be loaded or saved when editing a fighter, stage, etc"/>
                 <CheckBox x:Name="importTexturesCheckBox" Content="Import Textures" IsChecked="{Binding SelectedDefinition.ImportTextures}" Grid.Row="2" ToolTip="If unchecked, textures will not be imported when cosmetics are installed to this location. Use if you ONLY want to update PAT0 animations."/>
             </Grid>
-            <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="8" Grid.ColumnSpan="6" ToolTip="Settings for texture pattern animations (PAT0)">
+            <GroupBox x:Name="patGroupBox" Header="PAT0 Settings" Grid.Row="10" Grid.ColumnSpan="6" ToolTip="Settings for texture pattern animations (PAT0)">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
