@@ -45,13 +45,15 @@ namespace BrawlInstaller.Classes
     {
         public string BuildPath { get; set; }
         public string HDTextures { get; set; }
+        public bool ModifyHDTextures { get; set; }
 
         public CombinedBuildPath Copy()
         {
             var copy = new CombinedBuildPath
             {
                 BuildPath = BuildPath,
-                HDTextures = HDTextures
+                HDTextures = HDTextures,
+                ModifyHDTextures = ModifyHDTextures
             };
             return copy;
         }

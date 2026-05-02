@@ -118,10 +118,12 @@ namespace BrawlInstaller.ViewModels
                 if (foundPath != null)
                 {
                     AppSettings.HDTextures = foundPath.HDTextures;
+                    AppSettings.ModifyHDTextures = foundPath.ModifyHDTextures;
                 }
                 else
                 {
                     AppSettings.HDTextures = string.Empty;
+                    AppSettings.ModifyHDTextures = false;
                 }
                 AppSettings.ModifyHDTextures = !string.IsNullOrEmpty(AppSettings.HDTextures);
                 OnPropertyChanged(nameof(AppSettings));
@@ -137,8 +139,12 @@ namespace BrawlInstaller.ViewModels
                 if (foundPath != null)
                 {
                     AppSettings.HDTextures = foundPath.HDTextures;
+                    AppSettings.ModifyHDTextures = foundPath.ModifyHDTextures;
                 }
-                AppSettings.ModifyHDTextures = !string.IsNullOrEmpty(AppSettings.HDTextures);
+                else
+                {
+                    AppSettings.ModifyHDTextures = !string.IsNullOrEmpty(AppSettings.HDTextures);
+                }
                 OnPropertyChanged(nameof(AppSettings));
             }
         }

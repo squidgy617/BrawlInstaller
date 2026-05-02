@@ -104,7 +104,7 @@ namespace BrawlInstaller.Services
                 appSettings.BuildPaths.Remove(foundPath);
             }
             // Add build path to list
-            appSettings.BuildPaths.Insert(0, new CombinedBuildPath { BuildPath = appSettings.BuildPath, HDTextures = appSettings.HDTextures });
+            appSettings.BuildPaths.Insert(0, new CombinedBuildPath { BuildPath = appSettings.BuildPath, HDTextures = appSettings.HDTextures, ModifyHDTextures = appSettings.ModifyHDTextures });
             // Truncate list
             appSettings.BuildPaths.RemoveAll(x => appSettings.BuildPaths.IndexOf(x) > 9);
             // Save settings
