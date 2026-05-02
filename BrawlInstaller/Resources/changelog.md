@@ -1,8 +1,4 @@
-﻿- Added new fighter settings that interact with the code `Slippery Walk Animation Speed Change [DukeItOut]`.
-    - Available in the "Fighter Settings" section of the Files/Settings tab with a fighter loaded.
-    - "Disable slippery walk anims" disables the walk animation changes made by the code for the fighter.
-    - "Disable slippery run anims" disables the run animation changes made by the code for the fighter.
-    - "Disable slippery dash speed" disables the dash speed changes made by the code for the fighter.
-    - Checking the boxes for walk or run anims will automatically disable the TransN movement changes in the code.
-- Added a new "Slippery Walk Code File" setting to build settings. By default, this looks for Source/Project+/Slippery.asm. This supports the above.
-- Added a new checkbox to the franchise icon section of the fighter Costumes/Cosmetics tab. When checked, this box makes it so exporting the fighter as a package will not export their franchise icon. Useful if you know the fighter uses a vanilla icon and don't want it to prompt users when they open the package.
+﻿- Added new fields to cosmetic definition settings - "Suffix" and "File Suffix".
+    - These are used to denote cosmetics that are named with a suffix following the ID in the cosmetic name.
+    - Currently, this is only used by Joker in REX.
+- Added new presets for REX 0 1/2 and P+Ex 1.7.
