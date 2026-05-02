@@ -740,7 +740,7 @@ namespace BrawlInstaller.Services
                     foreach (var texture in textures)
                     {
                         // If the texture ends with a number, add it to the list
-                        var result = int.TryParse(texture.Name.Replace(definition.Prefix + ".", "").Replace(definition.Suffix, ""), out int id);
+                        var result = int.TryParse(texture.Name.Replace(definition.Prefix + ".", "").SafeReplace(definition.Suffix, ""), out int id);
                         if (result && !idList.Contains(id))
                         {
                             idList.Add(id);
@@ -787,7 +787,7 @@ namespace BrawlInstaller.Services
                     if (texture != null && !textureDict.ContainsKey(node.Texture))
                     {
                         // If the texture doesn't end with a number, it's a special case and should be skipped
-                        if (!int.TryParse(texture.Name.Replace(definition.Prefix + ".", "").Replace(definition.Suffix, ""), out int result))
+                        if (!int.TryParse(texture.Name.Replace(definition.Prefix + ".", "").SafeReplace(definition.Suffix, ""), out int result))
                         {
                             i++;
                             continue;
@@ -1471,7 +1471,7 @@ namespace BrawlInstaller.Services
         {
             if (!name.StartsWith(prefix))
                 return false;
-            var idString = name.Replace(prefix, "").Replace(".", "").Replace("_TopN", "").Replace(suffix, "");
+            var idString = name.Replace(prefix, "").Replace(".", "").Replace("_TopN", "").SafeReplace(suffix, "");
             if (idString != "" && int.TryParse(idString, out int index))
             {
                 index = Convert.ToInt32(idString);
@@ -1523,9 +1523,9 @@ namespace BrawlInstaller.Services
         {
             string suffix;
             if (definition.SeparateFiles)
-                suffix = node.RootNode.FileName.Replace(definition.Prefix, "").Replace(definition.Suffix, "").Replace("." + definition.InstallLocation.FileExtension, "");
+                suffix = node.RootNode.FileName.Replace(definition.Prefix, "").SafeReplace(definition.Suffix, "").Replace("." + definition.InstallLocation.FileExtension, "");
             else
-                suffix = node.Name.Replace(definition.Prefix, "").Replace(definition.Suffix, "").Replace(".", "");
+                suffix = node.Name.Replace(definition.Prefix, "").SafeReplace(definition.Suffix, "").Replace(".", "");
             var isNumeric = int.TryParse(suffix, out int index);
             if (isNumeric)
             {
@@ -1559,7 +1559,7 @@ namespace BrawlInstaller.Services
         {
             if (name != null && name.StartsWith(definition.Prefix) && name.EndsWith(definition.Suffix))
             {
-                var success = int.TryParse(name.Replace(definition.Prefix, "").Replace(".", "").Replace("_TopN","").Replace(definition.Suffix, ""), System.Globalization.NumberStyles.Integer, null, out int id);
+                var success = int.TryParse(name.Replace(definition.Prefix, "").Replace(".", "").Replace("_TopN","").SafeReplace(definition.Suffix, ""), System.Globalization.NumberStyles.Integer, null, out int id);
                 if (success)
                     return id;
             }

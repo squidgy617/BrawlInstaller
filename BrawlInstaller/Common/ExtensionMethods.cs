@@ -586,6 +586,12 @@ namespace BrawlInstaller.Common
 
             return new string(fullwidthChars);
         }
+
+        public static string SafeReplace(this string input, string oldValue, string newValue)
+        {
+            if (string.IsNullOrEmpty(oldValue)) return input;
+            return input.Replace(oldValue, newValue);
+        }
     }
 
     public static class TyDataListEntryNodeExtensions
