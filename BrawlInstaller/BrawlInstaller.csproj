@@ -469,6 +469,8 @@
     <EmbeddedResource Include="Resources\DefaultSettings\KJPBuild\FighterList.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\REX05\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\REX05\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx17\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx17\BuildSettings.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
