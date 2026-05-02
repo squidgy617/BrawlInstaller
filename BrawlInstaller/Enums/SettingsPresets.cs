@@ -21,8 +21,10 @@ namespace BrawlInstaller.Enums
         ProjectPlusEx155,
         [Description("P+Ex 1.5")]
         ProjectPlusEx15,
-        [Description("REX")]
-        REX,
+        [Description("REX 0")]
+        REX0,
+        [Description("REX 0 1/2")]
+        REX05,
         [Description("PMEX REMIX")]
         REMIX,
         [Description("P+Ex 1.6 (PM CSS)")]
