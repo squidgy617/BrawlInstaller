@@ -1,1 +1,1 @@
-﻿- Selecting a recent build path will now also update the "Modify HD Textures" setting according to what it was when that path was last used. For any build paths you used before this update, it will be unchecked by default.
+﻿- Fixed an issue where deleting a file from a fighter's folder while the fighter was open in the editor would cause an error when saving changes to the fighter. Still always recommended to re-load fighters after making any changes in their folder!
