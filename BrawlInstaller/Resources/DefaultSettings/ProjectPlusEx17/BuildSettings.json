@@ -2370,7 +2370,7 @@
       },
       {
         "FileType": 41,
-        "Path": ""
+        "Path": "Source\\Project+\\Random.asm"
       },
       {
         "FileType": 42,
@@ -2420,7 +2420,7 @@
       {
         "Label": "ExtraFighterData:",
         "FileType": 43,
-        "Path": ""
+        "Path": "Source\\P+Ex\\DLC.asm"
       },
       {
         "Label": "PHYSICS_DATA:",
