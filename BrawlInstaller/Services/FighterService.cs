@@ -810,7 +810,7 @@ namespace BrawlInstaller.Services
                     var file = _fileService.OpenFile(pacFile.FilePath);
                     var name = pacFile.GetPrefix(fighterInfo) + pacFile.Suffix + costume.CostumeId.ToString("D2") + fighterInfo.PacExtension;
                     // Update GFX if they are per-costume
-                    var efNode = file.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
+                    var efNode = file?.Children.FirstOrDefault(x => x.Name.StartsWith("ef_") && x.GetType() == typeof(ARCNode)
                     && ((ARCNode)x).FileType == ARCFileType.EffectData && Regex.Match(x.Name, ".+[X]\\d{2}$").Success);
                     if (efNode != null)
                     {
