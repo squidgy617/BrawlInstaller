@@ -1,1 +1,2 @@
-﻿- Fixed an issue where deleting a file from a fighter's folder while the fighter was open in the editor would cause an error when saving changes to the fighter. Still always recommended to re-load fighters after making any changes in their folder!
+﻿- Updated P+Ex 1.7 preset to add paths that were missing.
+- Updated KJP's vBrawl build preset to remove unused paths.
