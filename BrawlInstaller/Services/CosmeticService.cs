@@ -2035,7 +2035,7 @@ namespace BrawlInstaller.Services
                 if (definition.AlwaysInheritStyle && !cosmeticList.Items.Any(x => x.CosmeticType == definition.CosmeticType && x.Style == definition.Style))
                 {
                     var inheritedStyle = cosmeticList.Items.FirstOrDefault(x => x.CosmeticType == definition.CosmeticType)?.Style;
-                    if (!string.IsNullOrEmpty(inheritedStyle))
+                    if (!string.IsNullOrEmpty(inheritedStyle) && !cosmeticList.InheritedStyles.ContainsKey((definition.CosmeticType, definition.Style)))
                     {
                         cosmeticList.InheritedStyles.Add((definition.CosmeticType, definition.Style), inheritedStyle);
                     }
