@@ -1,2 +1,1 @@
-﻿- Updated P+Ex 1.7 preset to add paths that were missing.
-- Updated KJP's vBrawl build preset to remove unused paths.
+﻿- Fixed an error that could occur when loading a fighter package that uses cosmetics that inherit from others.
