@@ -1,1 +1,1 @@
-﻿- Fixed an error that could occur when loading a fighter package that uses cosmetics that inherit from others.
+﻿- Added an option on fighter delete to toggle whether or not trophy entries in the results trophy code should be deleted.
