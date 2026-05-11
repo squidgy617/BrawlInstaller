@@ -441,6 +441,7 @@ namespace BrawlInstaller.Classes
         public bool DeleteCreditsTheme { get; set; } = true;
         public bool DeleteVictoryEntry { get; set; } = true;
         public bool DeleteCreditsEntry { get; set; } = true;
+        public bool DeleteTrophyEntry { get; set; } = true;
 
         public FighterDeleteOptions Copy()
         {

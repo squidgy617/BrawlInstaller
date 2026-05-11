@@ -1056,6 +1056,7 @@ namespace BrawlInstaller.ViewModels
             {
                 deleteOptions.Add(new CheckListItem("Trophies", "Trophies", "Trophies associated with fighter",
                     true, FighterPackage?.Trophies?.FirstOrDefault()?.Trophy?.Thumbnails?.Items?.FirstOrDefault()?.Image));
+                deleteOptions.Add(new CheckListItem("TrophyEntries", "Trophy Code Entries", "Trophy assignments for fighter; does not delete the actual trophy", true));
             }
             // Open dialog
             if (deleteOptions.Count > 0)
@@ -1103,6 +1104,10 @@ namespace BrawlInstaller.ViewModels
                         deleteTrophy?.Trophy?.Thumbnails?.MarkAllChanged();
                         fighterPackage.Trophies.Add(deleteTrophy);
                     }
+                }
+                if (items.Any(x => (string)x.Item == "TrophyEntries"))
+                {
+                    fighterPackage.FighterDeleteOptions.DeleteTrophyEntry = selectedItems.Any(x => (string)x.Item == "TrophyEntries");
                 }
             }
             return true;
