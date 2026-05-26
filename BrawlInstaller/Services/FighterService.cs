@@ -3273,7 +3273,7 @@ namespace BrawlInstaller.Services
             var settingsFighters = _settingsService.FighterInfoList;
             Parallel.ForEach(_fileService.GetDirectories(_settingsService.GetBuildFilePath(_settingsService.BuildSettings.FilePathSettings.FighterFiles), "*", SearchOption.TopDirectoryOnly), directory =>
             {
-                var file = _fileService.GetFiles(directory, "Fit*.pac").FirstOrDefault();
+                var file = _fileService.GetFiles(directory, "Fit*.pac").FirstOrDefault(x => !Path.GetFileName(x).Contains("$"));
                 var rootNode = _fileService.OpenFile(file);
                 if (rootNode != null)
                 {
