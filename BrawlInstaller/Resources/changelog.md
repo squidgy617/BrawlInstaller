@@ -1,1 +1,1 @@
-﻿- Added an option on fighter delete to toggle whether or not trophy entries in the results trophy code should be deleted.
+﻿- Fixed an issue where fighters with tag costumes would not be considered when checking which Effect.pac IDs are used in the build.
