@@ -1,1 +1,1 @@
-﻿- Fixed an issue where fighters with tag costumes would not be considered when checking which Effect.pac IDs are used in the build.
+﻿- Soundbanks will no longer be deleted when installing a fighter package that doesn't include an actual soundbank file.
