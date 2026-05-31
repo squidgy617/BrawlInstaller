@@ -1222,8 +1222,15 @@ namespace BrawlInstaller.Services
             RemovePacFiles(oldFighter.FighterInfo);
             DeleteModule(oldFighter.FighterInfo.ModuleFileName);
             DeleteExConfigs(oldFighter.FighterInfo);
-            DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
-            DeleteSoundbank(oldFighter.FighterInfo.KirbySoundbankId);
+            // Only delete soundbank if a file actually exists
+            if (!string.IsNullOrEmpty(oldFighter.Soundbank))
+            {
+                DeleteSoundbank(oldFighter.FighterInfo.SoundbankId);
+            }
+            if (!string.IsNullOrEmpty(oldFighter.KirbySoundbank))
+            {
+                DeleteSoundbank(oldFighter.FighterInfo.KirbySoundbankId);
+            }
             DeleteClassicIntro(oldFighter.FighterInfo.Ids.CosmeticId);
             DeleteEndingPacFiles(oldFighter.FighterInfo.EndingId);
             DeleteEndingMovie(oldFighter.FighterInfo.FighterFileName);
