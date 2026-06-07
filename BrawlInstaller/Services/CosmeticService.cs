@@ -945,7 +945,7 @@ namespace BrawlInstaller.Services
                     var frameId = patSetting.GetFrameId(definition, ids);
                     if (node != null)
                     {
-                        CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, frameId, cosmetic, patSetting.Offset ?? definition.Offset), cosmetic?.Texture?.Name ?? "PLACEHOLDER", cosmetic?.Palette?.Name ?? "PLACEHOLDER");
+                        CreatePatEntry(node, patSetting, definition, GetCosmeticId(definition, frameId, cosmetic, patSetting.Offset ?? definition.Offset, patSetting.Multiplier ?? definition.Multiplier), cosmetic?.Texture?.Name ?? "PLACEHOLDER", cosmetic?.Palette?.Name ?? "PLACEHOLDER");
                     }
                 }
             }
@@ -1573,14 +1573,14 @@ namespace BrawlInstaller.Services
         /// <param name="cosmeticId">ID associated with cosmetic</param>
         /// <param name="costumeIndex">Costume index for cosmetic</param>
         /// <returns>Full ID of cosmetic</returns>
-        private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, Cosmetic cosmetic, int offset)
+        private int GetCosmeticId(CosmeticDefinition definition, int cosmeticId, Cosmetic cosmetic, int offset, int multiplier)
         {
             // If the cosmetic is selectable, always use the original ID, not the selected ID
             if (definition.UseIndividualIds && !definition.Selectable)
             {
                 cosmeticId = cosmetic.Id ?? 0;
             }
-            var id = (cosmeticId * definition.Multiplier) + offset + (cosmetic?.CostumeIndex ?? 0);
+            var id = (cosmeticId * multiplier) + offset + (cosmetic?.CostumeIndex ?? 0);
             return id;
         }
 

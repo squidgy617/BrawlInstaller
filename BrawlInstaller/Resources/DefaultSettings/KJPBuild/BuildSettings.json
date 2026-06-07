@@ -2341,6 +2341,438 @@
       "AlwaysCreateArchive": true,
       "PaletteCount": 256,
       "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_boss_battle.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_boss_battle_mg.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_corps.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_corps_mg.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_homerun.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_homerun_mg.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_mg.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_training.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 4,
+      "Style": "vBrawl",
+      "InstallLocation": {
+        "FilePath": "pf\\info2\\info_training_mg.pac",
+        "NodePath": "Misc Data [30]",
+        "FileExtension": "brres"
+      },
+      "HDImageLocation": "",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/InfFace_TopN__0/Character_Name_Mat/Texture0",
+          "FramesPerImage": 50,
+          "IdType": 4,
+          "Multiplier": 50,
+          "Offset": 0,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": false
+        }
+      ],
+      "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": null,
+        "Height": null
+      },
+      "Format": 0,
+      "FirstOnly": false,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": false,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
+      "PaletteCount": 256,
+      "ImportTextures": true
     }
   ],
   "SoundSettings": {
@@ -2474,19 +2906,19 @@
       },
       {
         "FileType": 31,
-        "Path": ""
+        "Path": "pf\\toy\\fig\\ty_fig_name_list.msbin"
       },
       {
         "FileType": 32,
-        "Path": ""
+        "Path": "pf\\toy\\fig\\ty_fig_ext_list.msbin"
       },
       {
         "FileType": 45,
-        "Path": ""
+        "Path": "pf\\toy\\fig\\ty_fig_category.msbin"
       },
       {
         "FileType": 34,
-        "Path": ""
+        "Path": "pf\\toy\\fig\\"
       },
       {
         "FileType": 35,
@@ -2506,7 +2938,7 @@
       },
       {
         "FileType": 48,
-        "Path": ""
+        "Path": "Source\\Project+\\Slippery.asm"
       }
     ],
     "AsmPaths": [
@@ -2570,7 +3002,7 @@
       {
         "NodePath": "AnmTexPat(NW4R)/MenFigureMark_TopN__0/MenFigureM06/Texture0",
         "FileType": 33,
-        "Path": ""
+        "Path": "pf\\menu\\collection\\Figure.brres"
       }
     ],
     "StageListPaths": [
