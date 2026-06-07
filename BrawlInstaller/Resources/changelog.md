@@ -1,1 +1,2 @@
-﻿- Soundbanks will no longer be deleted when installing a fighter package that doesn't include an actual soundbank file.
+﻿- Fixed an issue where configuring PAT0 settings for a cosmetic definition to use a different value from the texture settings would still create PAT0 entries using the texture settings instead.
+- Updated KJP's vBrawl Build preset to add missing info file definitions for BP names.
