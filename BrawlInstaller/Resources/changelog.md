@@ -1,2 +1,2 @@
-﻿- Fixed an issue where configuring PAT0 settings for a cosmetic definition to use a different value from the texture settings would still create PAT0 entries using the texture settings instead.
-- Updated KJP's vBrawl Build preset to add missing info file definitions for BP names.
+﻿- Added max length restrictions to fighter name fields, to prevent making names so long they could cause errors.
+- Updated build backups to use a timestamp string instead of a full GUID, to shorten filepaths.
