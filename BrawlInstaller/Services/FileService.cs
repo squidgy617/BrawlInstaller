@@ -812,7 +812,7 @@ namespace BrawlInstaller.Services
             var backup = new Backup
             {
                 BuildPath = _settingsService.AppSettings.BuildPath,
-                Guid = Guid.NewGuid().ToString()
+                Guid = DateTime.Now.ToString("yyyyMMddHHmmssfff")
             };
             CurrentBackup = backup;
             return backup;

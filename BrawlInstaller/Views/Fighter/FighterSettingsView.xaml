@@ -50,17 +50,17 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="fighterFileNameLabel" Content="Fighter File Name:" ToolTip="Main fighter name to use for fighter files. On update, updates all other name fields automatically. Only enabled if fighter attributes are present."/>
-                <TextBox x:Name="fighterFileNameTextBox" Text="{Binding FighterFileName, UpdateSourceTrigger=LostFocus}" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
+                <TextBox x:Name="fighterFileNameTextBox" MaxLength="16" Text="{Binding FighterFileName, UpdateSourceTrigger=LostFocus}" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
                 <Label x:Name="pacFileNameLabel" Content="Pac File Name:" Grid.Row="1" ToolTip="Name pattern to use for fighter PAC files. Only enabled if fighter attributes are present."/>
-                <TextBox x:Name="pacFileNameTextBox" Text="{Binding FighterPackage.FighterInfo.FullPacFileName}" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
+                <TextBox x:Name="pacFileNameTextBox" MaxLength="46" Text="{Binding FighterPackage.FighterInfo.FullPacFileName}" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
                 <Label x:Name="kirbyPacFileNameLabel" Content="Kirby Pac File Name:" Grid.Row="2" ToolTip="Name pattern to use for Kirby hat PAC files for fighter. Only enabled if fighter attributes are present."/>
-                <TextBox x:Name="kirbyPacFileNameTextBox" Text="{Binding FighterPackage.FighterInfo.FullKirbyPacFileName}" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
+                <TextBox x:Name="kirbyPacFileNameTextBox" MaxLength="46" Text="{Binding FighterPackage.FighterInfo.FullKirbyPacFileName}" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
                 <Label x:Name="moduleNameLabel" Content="Module File Name:" Grid.Row="3" ToolTip="Name to use for fighter module file. Only enabled if fighter attributes are present."/>
-                <TextBox x:Name="moduleNameTextBox" Text="{Binding FighterPackage.FighterInfo.ModuleFileName}" Grid.Row="3" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
+                <TextBox x:Name="moduleNameTextBox" MaxLength="30" Text="{Binding FighterPackage.FighterInfo.ModuleFileName}" Grid.Row="3" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
                 <Label x:Name="internalNameLabel" Content="Internal Name:" Grid.Row="4" ToolTip="Internal name of fighter. Only enabled if fighter attributes are present."/>
-                <TextBox x:Name="internalNameTextBox" Text="{Binding FighterPackage.FighterInfo.InternalName}" Grid.Row="4" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
+                <TextBox x:Name="internalNameTextBox" MaxLength="16" Text="{Binding FighterPackage.FighterInfo.InternalName}" Grid.Row="4" Grid.Column="1" IsEnabled="{Binding InternalNameEnabled}" Width="120"/>
                 <Label x:Name="displayNameLabel" Content="Display Name:" Grid.Row="5" ToolTip="Display name for fighter. Only enabled if cosmetic attributes are present."/>
-                <TextBox x:Name="displayNameTextBox" Text="{Binding FighterPackage.FighterInfo.DisplayName}" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding DisplayNameEnabled}" Width="120"/>
+                <TextBox x:Name="displayNameTextBox" MaxLength="32" Text="{Binding FighterPackage.FighterInfo.DisplayName}" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding DisplayNameEnabled}" Width="120"/>
             </Grid>
         </GroupBox>
         <Label x:Name="oldEffectPacLabel" Content="Current Effect PAC:" Grid.Row="1" ToolTip="Current Effect.pac of fighter"/>
