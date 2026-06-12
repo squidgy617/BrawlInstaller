@@ -23,4 +23,5 @@
     <local:StageHazardsConverter x:Key="stageHazardsConverter"/>
     <local:PacFileNameConverter x:Key="pacFileNameConverter"/>
     <local:EmptyStringBoolConverter x:Key="emptyStringBoolConverter"/>
+    <local:EmptyStringToFallbackConverter x:Key="emptyStringFallbackConverter"/>
 </ResourceDictionary>

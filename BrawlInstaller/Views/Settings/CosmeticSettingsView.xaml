@@ -49,7 +49,13 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <ListBox x:Name="definitionListBox" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" DisplayMemberPath="InstallLocation.FilePath" Width="180" Height="120" Grid.RowSpan="3"/>
+                <ListBox x:Name="definitionListBox" ItemsSource="{Binding DefinitionList}" SelectedValue="{Binding SelectedDefinition, Mode=TwoWay}" Width="180" Height="120" Grid.RowSpan="3">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding InstallLocation.FilePath, Converter={StaticResource emptyStringFallbackConverter}, ConverterParameter='Blank Path'}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
                 <Button x:Name="definitionAddButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddDefinitionCommand}" Grid.Column="1"/>
                 <Button x:Name="definitionRemoveButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemoveDefinitionCommand}" Grid.Column="1" Grid.Row="1"/>
                 <Button x:Name="definitionCopyButton" Content="📋" Style="{StaticResource miniButton}" Command="{Binding CopyDefinitionCommand}" Grid.Column="1" Grid.Row="2"/>
@@ -237,7 +243,13 @@
                         </Grid.ColumnDefinitions>
                         <Label x:Name="patPathsLabel" Content="Paths:" ToolTip="Texture pattern animation locations for cosmetic"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1">
-                            <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" DisplayMemberPath="Path" Width="180" Height="120"/>
+                            <ListBox x:Name="patPathsListBox" ItemsSource="{Binding PatSettings}" SelectedValue="{Binding SelectedPatSettings}" Width="180" Height="120">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path, Converter={StaticResource emptyStringFallbackConverter}, ConverterParameter='Blank Path'}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                             <StackPanel>
                                 <Button x:Name="addPatSettingsButton" Content="+" Style="{StaticResource miniButton}" Command="{Binding AddPatSettingsCommand}"/>
                                 <Button x:Name="removePatSettingsButton" Content="-" Style="{StaticResource miniButton}" Command="{Binding RemovePatSettingsCommand}"/>

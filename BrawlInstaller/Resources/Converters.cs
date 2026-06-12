@@ -547,4 +547,22 @@ namespace BrawlInstaller.Resources
             return bitmask;
         }
     }
+
+    [ValueConversion(typeof(string), typeof(string))]
+    public class EmptyStringToFallbackConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (string.IsNullOrEmpty(value as string))
+            {
+                return parameter;
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
