@@ -1,2 +1,1 @@
-﻿- Added max length restrictions to fighter name fields, to prevent making names so long they could cause errors.
-- Updated build backups to use a timestamp string instead of a full GUID, to shorten filepaths.
+﻿- Updated several listboxes to display placeholder text on new entries when added to them.
