@@ -3320,15 +3320,88 @@ namespace BrawlInstaller.Services
                 if (!string.IsNullOrEmpty(trophyFileText))
                 {
                     // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
+                    // Get aliases
                     var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]");
-                    // Get alias for fighter's slot ID
-                    var slotAlias = aliases.FirstOrDefault(x => x.Name.Contains("Slot") && int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == slotId);
-                    if (slotAlias != null)
+                    // Get hooks
+                    var classicHook = _codeService.ReadHook(trophyFileText, "806E29D0");
+                    var allStarHook = _codeService.ReadHook(trophyFileText, "806E47D8");
+                    // Get all classic trophy instructions
+                    var classicTrophyInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                    foreach (var instruction in classicHook.Instructions)
                     {
-                        // Get classic trophy
-                        classicTrophyId = GetFighterTrophyFromHook(slotAlias, "806E29D0", trophyFileText, aliases);
-                        // Get All-Star trophy
-                        allStarTrophyId = GetFighterTrophyFromHook(slotAlias, "806E47D8", trophyFileText, aliases);
+                        var classicTrophyMatch = Regex.Match(instruction.Text, "li\\s+r29,\\s*([^;]+);\\s*cmpwi\\s+r28,\\s*([^;]+);\\s*beq\\+\\s+GotTrophy");
+                        if (classicTrophyMatch.Success && classicTrophyMatch.Groups.Count > 2)
+                        {
+                            classicTrophyInstructions.Add((instruction, classicTrophyMatch.Groups[1].Value, classicTrophyMatch.Groups[2].Value));
+                        }
+                    }
+                    // Find instruction containing fighter's slot ID
+                    var foundClassicInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                    foreach (var alias in aliases)
+                    {
+                        var result = int.TryParse(alias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int foundSlotId);
+                        if (result)
+                        {
+                            if (foundSlotId == slotId)
+                            {
+                                // Find the actual instruction now that we found an alias match
+                                foundClassicInstructions.AddRange(classicTrophyInstructions.Where(x => x?.SlotAlias == alias.Name).ToList());
+                            }
+                        }
+                    }
+                    // Get all all-star trophy instructions
+                    var allStarTrophyInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                    foreach (var instruction in allStarHook.Instructions)
+                    {
+                        var allStarTrophyMatch = Regex.Match(instruction.Text, "li\\s+r26,\\s*([^;]+);\\s*cmpwi\\s+r4,\\s*([^;]+);\\s*beq\\+\\s+GotTrophy");
+                        if (allStarTrophyMatch.Success && allStarTrophyMatch.Groups.Count > 2)
+                        {
+                            allStarTrophyInstructions.Add((instruction, allStarTrophyMatch.Groups[1].Value, allStarTrophyMatch.Groups[2].Value));
+                        }
+                    }
+                    // Find instruction containing fighter's slot ID
+                    var foundAllStarInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                    foreach (var alias in aliases)
+                    {
+                        var result = int.TryParse(alias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int foundSlotId);
+                        if (result)
+                        {
+                            if (foundSlotId == slotId)
+                            {
+                                // Find the actual instruction now that we found an alias match
+                                foundAllStarInstructions.AddRange(allStarTrophyInstructions.Where(x => x?.SlotAlias == alias.Name).ToList());
+                            }
+                        }
+                    }
+                    // Get trophy IDs
+                    if (foundClassicInstructions.Count > 0)
+                    {
+                        var trophyAlias = foundClassicInstructions.FirstOrDefault()?.TrophyAlias;
+                        if (trophyAlias != null)
+                        {
+                            var foundTrophyAlias = aliases.FirstOrDefault(x => x.Name == trophyAlias);
+                            if (foundTrophyAlias != null)
+                            {
+                                var result = int.TryParse(foundTrophyAlias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int trophyId);
+                                if (result)
+                                {
+                                    classicTrophyId = trophyId;
+                                }
+                            }
+                        }
+                        var allStarAlias = foundAllStarInstructions.FirstOrDefault()?.TrophyAlias;
+                        if (allStarAlias != null)
+                        {
+                            var foundAllStarAlias = aliases.FirstOrDefault(x => x.Name == allStarAlias);
+                            if (foundAllStarAlias != null)
+                            {
+                                var result = int.TryParse(foundAllStarAlias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int trophyId);
+                                if (result)
+                                {
+                                    allStarTrophyId = trophyId;
+                                }
+                            }
+                        }
                     }
                 }
             }
