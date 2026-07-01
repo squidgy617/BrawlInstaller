@@ -3599,54 +3599,6 @@ namespace BrawlInstaller.Services
         }
 
         /// <summary>
-        /// Get trophy ID in a hook by matching with a fighter's slot alias
-        /// </summary>
-        /// <param name="alias">Alias for fighter's slot ID</param>
-        /// <param name="hookAddress">Address of hook to search</param>
-        /// <param name="codeText">Text of code containing hook</param>
-        /// <param name="aliases">List of aliases</param>
-        /// <returns>Trophy ID</returns>
-        private int GetFighterTrophyFromHook(Alias alias, string hookAddress, string codeText, List<Alias> aliases)
-        {
-            var match = GetFighterTrophyAliasFromHook(alias, hookAddress, codeText, aliases);
-            if (match.TrophyAlias != null && int.TryParse(match.TrophyAlias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id))
-            {
-                return id;
-            }
-            return -1;
-        }
-
-        /// <summary>
-        /// Get trophy alias in a hook by matching with a fighter's slot alias
-        /// </summary>
-        /// <param name="alias">Alias for fighter's slot ID</param>
-        /// <param name="hookAddress">Address of hook to search</param>
-        /// <param name="codeText">Text of code containing hook</param>
-        /// <param name="aliases">List of aliases</param>
-        /// <returns>Trophy alias and instruction index where alias is used</returns>
-        private (int InstructionIndex, Alias TrophyAlias) GetFighterTrophyAliasFromHook(Alias alias, string hookAddress, string codeText, List<Alias> aliases)
-        {
-            var hook = _codeService.ReadHook(codeText, hookAddress);
-            foreach (var instruction in hook.Instructions)
-            {
-                // Check if the instruction has our slot alias
-                if (alias != null && instruction.Text.Contains(alias.Name))
-                {
-                    // If it does, search for another alias in the string
-                    var wordList = instruction.Text.Split(new string[] { ";", "\r\n", " " }, StringSplitOptions.None);
-                    wordList = wordList.Select(x => x.Trim()).ToArray();
-                    var match = aliases.FirstOrDefault(x => x.Name != alias.Name && wordList.Contains(x.Name));
-                    // If another alias was found, we can link the trophy to the slot ID
-                    if (match != null)
-                    {
-                        return (hook.Instructions.IndexOf(instruction), match);
-                    }
-                }
-            }
-            return (-1, null);
-        }
-
-        /// <summary>
         /// Save fighter trophies
         /// </summary>
         /// <param name="fighterPackage">Fighter package to save</param>
