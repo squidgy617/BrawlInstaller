@@ -1,1 +1,2 @@
-﻿- Updated several listboxes to display placeholder text on new entries when added to them.
+﻿- Updated fighter trophy logic to better prevent detect and resolve conflicts that could cause compilation errors in the event two fighters shared the same trophy aliases in the trophy code.
+- Fixed an issue where entries added to the code for fighters' All-Star trophies used an incorrect register in their instructions.
