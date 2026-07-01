@@ -3387,23 +3387,89 @@ namespace BrawlInstaller.Services
             {
                 var trophyFileText = _codeService.ReadCode(trophyFile);
                 // TODO: hardcoded code name - might be necessary with the way the codes currently are, but can we get around this?
+                // Get all aliases
                 var aliases = _codeService.GetCodeAliases(trophyFileText, "Clone Classic & All-Star Result Data V1.21 [ds22, Dantarion, DukeItOut]");
-                // Get alias for fighter's slot ID
-                var slotAlias = aliases.FirstOrDefault(x => int.TryParse(x.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int id) && id == oldSlotId && x.Name.Contains("slot", StringComparison.OrdinalIgnoreCase));
-                // Get classic trophy
-                var classicTrophy = GetFighterTrophyAliasFromHook(slotAlias, "806E29D0", trophyFileText, aliases);
-                // Get All-Star trophy
-                var allStarTrophy = GetFighterTrophyAliasFromHook(slotAlias, "806E47D8", trophyFileText, aliases);
-                // Remove aliases from list
-                var startPoint = aliases.FirstOrDefault().Index;
-                aliases.RemoveAll(x => x.Name == classicTrophy.TrophyAlias?.Name || x.Name == allStarTrophy.TrophyAlias?.Name || x.Name == slotAlias?.Name);
-                // Remove code lines using aliases
+                // Get hooks
                 var classicHook = _codeService.ReadHook(trophyFileText, "806E29D0");
                 var allStarHook = _codeService.ReadHook(trophyFileText, "806E47D8");
-                if (classicTrophy.InstructionIndex > -1)
-                    classicHook?.Instructions?.RemoveAt(classicTrophy.InstructionIndex);
-                if (allStarTrophy.InstructionIndex > -1)
-                    allStarHook?.Instructions?.RemoveAt(allStarTrophy.InstructionIndex);
+                // Get all classic trophy instructions
+                var classicTrophyInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                foreach(var instruction in classicHook.Instructions)
+                {
+                    var classicTrophyMatch = Regex.Match(instruction.Text, "li\\s+r29,\\s*([^;]+);\\s*cmpwi\\s+r28,\\s*([^;]+);\\s*beq\\+\\s+GotTrophy");
+                    if (classicTrophyMatch.Success && classicTrophyMatch.Groups.Count > 2)
+                    {
+                        classicTrophyInstructions.Add((instruction, classicTrophyMatch.Groups[1].Value, classicTrophyMatch.Groups[2].Value));
+                    }
+                }
+                // Find instruction containing fighter's slot ID
+                var foundClassicInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                foreach (var alias in aliases)
+                {
+                    var result = int.TryParse(alias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int foundSlotId);
+                    if (result)
+                    {
+                        if (foundSlotId == slotId)
+                        {
+                            // Find the actual instruction now that we found an alias match
+                            foundClassicInstructions.AddRange(classicTrophyInstructions.Where(x => x?.SlotAlias == alias.Name).ToList());
+                        }
+                    }
+                }
+                // Get all all-star trophy instructions
+                var allStarTrophyInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                foreach (var instruction in allStarHook.Instructions)
+                {
+                    var allStarTrophyMatch = Regex.Match(instruction.Text, "li\\s+r26,\\s*([^;]+);\\s*cmpwi\\s+r4,\\s*([^;]+);\\s*beq\\+\\s+GotTrophy");
+                    if (allStarTrophyMatch.Success && allStarTrophyMatch.Groups.Count > 2)
+                    {
+                        allStarTrophyInstructions.Add((instruction, allStarTrophyMatch.Groups[1].Value, allStarTrophyMatch.Groups[2].Value));
+                    }
+                }
+                // Find instruction containing fighter's slot ID
+                var foundAllStarInstructions = new List<(Instruction Instruction, string TrophyAlias, string SlotAlias)?>();
+                foreach (var alias in aliases)
+                {
+                    var result = int.TryParse(alias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int foundSlotId);
+                    if (result)
+                    {
+                        if (foundSlotId == slotId)
+                        {
+                            // Find the actual instruction now that we found an alias match
+                            foundAllStarInstructions.AddRange(allStarTrophyInstructions.Where(x => x?.SlotAlias == alias.Name).ToList());
+                        }
+                    }
+                }
+                // Remove aliases and instructions
+                if (foundClassicInstructions.Count > 0 || foundAllStarInstructions.Count > 0)
+                {
+                    // Remove slot alias
+                    var slotAliases = new List<string>();
+                    slotAliases.AddRange(foundClassicInstructions.Select(x => x?.SlotAlias));
+                    slotAliases.AddRange(foundAllStarInstructions.Select(x => x?.SlotAlias));
+                    aliases.RemoveAll(x => slotAliases.Contains(x.Name));
+                    // Remove trophy aliases ONLY if another fighter isn't using them
+                    var classicAlias = foundClassicInstructions.FirstOrDefault()?.TrophyAlias;
+                    if (!string.IsNullOrEmpty(classicAlias) && !(classicTrophyInstructions.Any(x => x?.TrophyAlias == classicAlias && !slotAliases.Contains(x?.SlotAlias))))
+                    {
+                        aliases.RemoveAll(x => x.Name == classicAlias);
+                    }
+                    var allStarAlias = foundAllStarInstructions.FirstOrDefault()?.TrophyAlias;
+                    if (!string.IsNullOrEmpty(allStarAlias) && !(allStarTrophyInstructions.Any(x => x?.TrophyAlias == allStarAlias && !slotAliases.Contains(x?.SlotAlias))))
+                    {
+                        aliases.RemoveAll(x => x.Name == allStarAlias);
+                    }
+                    // Remove code lines using aliases
+                    foreach(var foundInstruction in foundClassicInstructions)
+                    {
+                        classicHook?.Instructions?.Remove(foundInstruction?.Instruction);
+                    }
+                    foreach (var foundInstruction in foundAllStarInstructions)
+                    {
+                        allStarHook?.Instructions?.Remove(foundInstruction?.Instruction);
+                    }
+                }
+                var startPoint = aliases.FirstOrDefault().Index;
                 // Add aliases and instructions
                 var slotAliasName = string.Empty;
                 if (fighterTrophies.Any(x => x.Trophy != null))
@@ -3417,7 +3483,11 @@ namespace BrawlInstaller.Services
                     var register1 = fighterTrophy.Type == TrophyType.Fighter ? "r29" : "r26";
                     var register2 = fighterTrophy.Type == TrophyType.Fighter ? "r28" : "r4";
                     var trophyAliasName = $"{fighterName.Replace("-", "")}{trophySuffix}";
-                    aliases.Add(new Alias { Name = trophyAliasName, Value = $"0x{fighterTrophy.Trophy.Ids.TrophyId:X2}" });
+                    // Only add trophy alias if it doesn't already exist
+                    if (!aliases.Any(x => x.Name == trophyAliasName))
+                    {
+                        aliases.Add(new Alias { Name = trophyAliasName, Value = $"0x{fighterTrophy.Trophy.Ids.TrophyId:X2}" });
+                    }
                     var instruction = $"li {register1}, {trophyAliasName};cmpwi {register2}, {slotAliasName};beq+ GotTrophy";
                     var comment = $"if it's {fighterName}'s P+Ex slot";
                     if (classicHook?.Instructions != null && fighterTrophy.Type == TrophyType.Fighter)
