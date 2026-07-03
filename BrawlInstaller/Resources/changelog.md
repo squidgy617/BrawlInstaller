@@ -1,2 +1,1 @@
-﻿- Updated fighter trophy logic to better prevent detect and resolve conflicts that could cause compilation errors in the event two fighters shared the same trophy aliases in the trophy code.
-- Fixed an issue where entries added to the code for fighters' All-Star trophies used an incorrect register in their instructions.
+﻿- Fixed an issue where loading certain packages with cosmetics that copy from other styles and using certain build configurations could cause an error.
