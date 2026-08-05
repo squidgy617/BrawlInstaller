@@ -471,6 +471,8 @@
     <EmbeddedResource Include="Resources\DefaultSettings\REX05\FighterList.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx17\FighterList.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx17\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus32\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus32\FighterList.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
