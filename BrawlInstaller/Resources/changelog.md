@@ -1,1 +1,1 @@
-﻿- Fixed an issue where loading certain packages with cosmetics that copy from other styles and using certain build configurations could cause an error.
+﻿- Added Project+ 3.2 preset
