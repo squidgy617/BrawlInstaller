@@ -440,7 +440,7 @@ namespace BrawlInstaller.ViewModels
                 {
                     var image = Stage.Cosmetics.Items.FirstOrDefault(x => x.CosmeticType == cosmeticGroup.Key.CosmeticType && x.Style == cosmeticGroup.Key.Style 
                     && x.Image != null && !x.SelectionOption)?.Image;
-                    deleteCosmetics.Add(new CheckListItem(cosmeticGroup.Key, $"{cosmeticGroup.Key.Style} style {cosmeticGroup.Key.CosmeticType.GetDescription()}",
+                    deleteCosmetics.Add(new CheckListItem((cosmeticGroup.Key.CosmeticType, cosmeticGroup.Key.Style), $"{cosmeticGroup.Key.Style} style {cosmeticGroup.Key.CosmeticType.GetDescription()}",
                         $"Cosmetics of type {cosmeticGroup.Key.CosmeticType.GetDescription()} with style {cosmeticGroup.Key.Style}", false, image));
                 }
                 if (deleteCosmetics.Count > 0)
@@ -451,7 +451,7 @@ namespace BrawlInstaller.ViewModels
                         return;
                     }
                     var selectedItems = response.ChecklistItems.Where(x => x.IsChecked);
-                    selectableCosmeticsToDelete = selectedItems.Select(x => ((CosmeticType, string))x.Item).ToList();
+                    selectableCosmeticsToDelete = selectedItems.Select(x => ((CosmeticType CosmeticType, string Style))x.Item).ToList();
                 }
                 // Mark selectable cosmetics as changed
                 foreach (var cosmetic in Stage.Cosmetics.Items.Where(x => selectableCosmeticsToDelete.Any(y => y.CosmeticType == x.CosmeticType && y.Style == x.Style)))
