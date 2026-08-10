@@ -34,6 +34,10 @@ namespace BrawlInstaller.Enums
         [Description("P+Ex 1.6 (PM CSS)")]
         ProjectPlusEx16PM,
         [Description("KJP's vBrawl Build")]
-        KJPBuild
+        KJPBuild,
+        [Description("Cobalt")]
+        Cobalt,
+        [Description("PussPuss")]
+        PussPuss
     }
 }

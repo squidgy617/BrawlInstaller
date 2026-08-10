@@ -473,6 +473,10 @@
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx17\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus32\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlus32\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\PussPuss\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\PussPuss\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\Cobalt\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\Cobalt\FighterList.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
