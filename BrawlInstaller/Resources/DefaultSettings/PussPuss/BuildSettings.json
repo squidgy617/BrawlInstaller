@@ -13,11 +13,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "MenSelchrFaceB",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 128,
@@ -49,11 +51,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "MenSelchrFaceB",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 128,
@@ -104,11 +108,13 @@
         }
       ],
       "Prefix": "MenSelchrChrNm",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 144,
@@ -140,11 +146,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "InfFace",
+      "Suffix": "",
       "Multiplier": 50,
       "Offset": 0,
       "SuffixDigits": 4,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 48,
@@ -176,11 +184,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "InfStc",
+      "Suffix": "",
       "Multiplier": 50,
       "Offset": 0,
       "SuffixDigits": 4,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -197,52 +207,6 @@
       "Selectable": false,
       "AlwaysCreateArchive": true,
       "PaletteCount": 32,
-      "ImportTextures": true
-    },
-    {
-      "CosmeticType": 0,
-      "Style": "PM",
-      "InstallLocation": {
-        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
-        "NodePath": "Misc Data [70]",
-        "FileExtension": "pac"
-      },
-      "HDImageLocation": "BrawlInstaller\\Character Selection Screen\\Icons\\",
-      "CreateHDTextureFolder": false,
-      "ModelPath": null,
-      "PatSettings": [
-        {
-          "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0",
-          "FramesPerImage": 10,
-          "IdType": null,
-          "Multiplier": null,
-          "Offset": null,
-          "AddTerminatorFrame": false,
-          "NormalizeTextureIds": true
-        }
-      ],
-      "Prefix": "MenSelchrChrFace",
-      "Multiplier": 10,
-      "Offset": 0,
-      "SuffixDigits": 3,
-      "GroupMultiplier": 1,
-      "FilePrefix": "",
-      "IdType": 4,
-      "Size": {
-        "Width": 80,
-        "Height": 56
-      },
-      "Format": 14,
-      "FirstOnly": true,
-      "SeparateFiles": false,
-      "CompressionType": 0,
-      "FileType": 1,
-      "AlwaysInheritStyle": false,
-      "Required": true,
-      "Enabled": true,
-      "Selectable": false,
-      "AlwaysCreateArchive": true,
-      "PaletteCount": 256,
       "ImportTextures": true
     },
     {
@@ -268,11 +232,13 @@
         }
       ],
       "Prefix": "MenSelchrChrFace",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 80,
@@ -314,11 +280,13 @@
         }
       ],
       "Prefix": "MenReplayChr",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 64,
@@ -350,11 +318,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "ChrRollFighter",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 1,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 1,
       "Size": {
         "Width": 128,
@@ -396,11 +366,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 128,
@@ -432,11 +404,13 @@
       "ModelPath": "2/Misc Data [110]",
       "PatSettings": [],
       "Prefix": "InfResultMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 80,
@@ -468,11 +442,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "MenCollDisply01",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 7,
       "Size": {
         "Width": 56,
@@ -504,11 +480,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "MenWifiListIcn",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 8,
       "Size": {
         "Width": 48,
@@ -559,11 +537,13 @@
         }
       ],
       "Prefix": "MenSelmapPrevbase",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 312,
@@ -605,11 +585,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -651,11 +633,13 @@
         }
       ],
       "Prefix": "MenSelmapIcon",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -706,11 +690,13 @@
         }
       ],
       "Prefix": "MenSelmapIcon",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 128,
@@ -761,11 +747,13 @@
         }
       ],
       "Prefix": "MenSelmapIcon",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 128,
@@ -807,11 +795,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -862,11 +852,13 @@
         }
       ],
       "Prefix": "MenSelmapPrevbase",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 312,
@@ -917,11 +909,13 @@
         }
       ],
       "Prefix": "MenSelmapFrontStname",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -972,11 +966,13 @@
         }
       ],
       "Prefix": "MenSelmapFrontStname",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -1018,11 +1014,13 @@
         }
       ],
       "Prefix": "MenSelmapMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 120,
@@ -1073,11 +1071,13 @@
         }
       ],
       "Prefix": "MenSelmapFrontStname",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -1128,11 +1128,13 @@
         }
       ],
       "Prefix": "MenSelmapFrontStname",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 208,
@@ -1174,11 +1176,13 @@
         }
       ],
       "Prefix": "MenSelmapIcon",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 64,
@@ -1210,11 +1214,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "tex_face",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 1,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 80,
@@ -1256,11 +1262,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1302,11 +1310,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1348,11 +1358,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1394,11 +1406,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1440,11 +1454,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1486,11 +1502,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1532,11 +1550,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1568,11 +1588,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "InfStc",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1614,11 +1636,13 @@
         }
       ],
       "Prefix": "MenSelchrMark",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 5,
       "Size": {
         "Width": 48,
@@ -1650,11 +1674,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "MenReplayChr",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 64,
@@ -1705,11 +1731,13 @@
         }
       ],
       "Prefix": "MenReplayChr",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 64,
@@ -1760,11 +1788,13 @@
         }
       ],
       "Prefix": "MenStageSwitch",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 200,
@@ -1815,11 +1845,13 @@
         }
       ],
       "Prefix": "MenStageSwitch",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 200,
@@ -1861,11 +1893,13 @@
         }
       ],
       "Prefix": "MenCollReplaySt",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": 112,
@@ -1907,11 +1941,13 @@
         }
       ],
       "Prefix": "MenSelmapStats",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 2,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 10,
       "Size": {
         "Width": null,
@@ -1943,11 +1979,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "InfStc",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -1979,11 +2017,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "InfStc",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": 32,
@@ -2025,11 +2065,13 @@
         }
       ],
       "Prefix": "MenSelchrChrNmS",
+      "Suffix": "",
       "Multiplier": 10,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 1,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 4,
       "Size": {
         "Width": null,
@@ -2061,11 +2103,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "MenCollDisply01",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 10,
       "FilePrefix": "",
+      "FileSuffix": "",
       "IdType": 7,
       "Size": {
         "Width": null,
@@ -2097,11 +2141,13 @@
       "ModelPath": null,
       "PatSettings": [],
       "Prefix": "MenCollDisply01",
+      "Suffix": "",
       "Multiplier": 1,
       "Offset": 0,
       "SuffixDigits": 3,
       "GroupMultiplier": 10,
       "FilePrefix": "figdisp",
+      "FileSuffix": "",
       "IdType": 7,
       "Size": {
         "Width": null,
@@ -2117,6 +2163,54 @@
       "Enabled": true,
       "Selectable": false,
       "AlwaysCreateArchive": false,
+      "PaletteCount": 256,
+      "ImportTextures": true
+    },
+    {
+      "CosmeticType": 0,
+      "Style": "PussPuss",
+      "InstallLocation": {
+        "FilePath": "pf\\menu2\\sc_selcharacter.pac",
+        "NodePath": "Misc Data [70]",
+        "FileExtension": "pac"
+      },
+      "HDImageLocation": "BrawlInstaller\\Character Selection Screen\\Icons\\",
+      "CreateHDTextureFolder": false,
+      "ModelPath": null,
+      "PatSettings": [
+        {
+          "Path": "Misc Data [30]/AnmTexPat(NW4R)/MenSelchrFaceI_TopN__0/Face02/Texture0",
+          "FramesPerImage": 10,
+          "IdType": null,
+          "Multiplier": null,
+          "Offset": null,
+          "AddTerminatorFrame": false,
+          "NormalizeTextureIds": true
+        }
+      ],
+      "Prefix": "MenSelchrChrFace",
+      "Suffix": "",
+      "Multiplier": 10,
+      "Offset": 0,
+      "SuffixDigits": 3,
+      "GroupMultiplier": 1,
+      "FilePrefix": "",
+      "FileSuffix": "",
+      "IdType": 4,
+      "Size": {
+        "Width": 80,
+        "Height": 56
+      },
+      "Format": 14,
+      "FirstOnly": true,
+      "SeparateFiles": false,
+      "CompressionType": 0,
+      "FileType": 1,
+      "AlwaysInheritStyle": false,
+      "Required": true,
+      "Enabled": true,
+      "Selectable": false,
+      "AlwaysCreateArchive": true,
       "PaletteCount": 256,
       "ImportTextures": true
     }
@@ -2281,6 +2375,10 @@
       {
         "FileType": 42,
         "Path": ""
+      },
+      {
+        "FileType": 48,
+        "Path": "Source\\Project+\\Slippery.asm"
       }
     ],
     "AsmPaths": [
@@ -2328,6 +2426,11 @@
         "Label": "PHYSICS_DATA:",
         "FileType": 46,
         "Path": "Source\\ProjectM\\Modifier\\Physics.asm"
+      },
+      {
+        "Label": "VICTORYTABLE:",
+        "FileType": 47,
+        "Path": "Source\\Project+\\VictoryCamera.asm"
       }
     ],
     "FileNodePaths": [
@@ -2357,6 +2460,13 @@
       {
         "FilePath": "pf\\menu2\\mu_menumain.pac",
         "NodePath": "MenuRule_en/Misc Data [1]",
+        "FileExtension": "pac"
+      }
+    ],
+    "StgResultPaths": [
+      {
+        "FilePath": "pf\\stage\\melee\\STGRESULT.pac",
+        "NodePath": "2",
         "FileExtension": "pac"
       }
     ],
