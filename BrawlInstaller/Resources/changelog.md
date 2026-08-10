@@ -1,1 +1,1 @@
-﻿- Fixed an issue where checking delete options for cosmetic when deleting a stage would result in an error.
+﻿- Added settings presets for PussPuss build and Cobalt.
