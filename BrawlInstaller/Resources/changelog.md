@@ -1,1 +1,1 @@
-﻿- Added settings presets for PussPuss build and Cobalt.
+﻿- Added missing CSP name and CSS icon name settings to PussPuss build preset.
