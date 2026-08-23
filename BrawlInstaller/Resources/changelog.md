@@ -1,1 +1,2 @@
-﻿- Added missing CSP name and CSS icon name settings to PussPuss build preset.
+﻿- Stages now read the preset count for RSS files (usually in Random.asm) correctly regardless of number formatting used.
+- Underscores are now added to trophy aliases generated for fighters with spaces in their file names.
