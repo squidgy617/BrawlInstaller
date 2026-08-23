@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using BrawlInstaller.Classes;
@@ -774,6 +776,26 @@ namespace BrawlInstaller.Common
                 {
                     AddRecursive(match.Children, nextNode, finalNode);
                 }
+            }
+        }
+    }
+
+    public static class ParseExtensions
+    {
+        public static bool TryParseInt(this string value, IFormatProvider provider, out int result)
+        {
+            var success = false;
+            if (value.ToLower().StartsWith("0x"))
+            {
+                success = int.TryParse(value.Replace("0x", ""), NumberStyles.HexNumber, null, out int parseResult);
+                result = parseResult;
+                return success;
+            }
+            else
+            {
+                success = int.TryParse(value, NumberStyles.Number, null, out int parseResult);
+                result = parseResult;
+                return success;
             }
         }
     }

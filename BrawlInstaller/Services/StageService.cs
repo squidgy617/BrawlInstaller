@@ -571,7 +571,7 @@ namespace BrawlInstaller.Services
                     var alias = _codeService.GetCodeAlias(rssText, "NUM_PRESETS");
                     if (alias != null)
                     {
-                        var valid = int.TryParse(alias.Value.Replace("0x", ""), NumberStyles.HexNumber, null, out int count);
+                        var valid = alias.Value.TryParseInt(null, out int count);
                         if (valid)
                         {
                             presetCount = count;

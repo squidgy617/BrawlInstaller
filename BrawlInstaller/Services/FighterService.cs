@@ -3555,7 +3555,7 @@ namespace BrawlInstaller.Services
                     var trophySuffix = fighterTrophy.Type == TrophyType.Fighter ? "_Trophy" : "_Trophy_AllStar";
                     var register1 = fighterTrophy.Type == TrophyType.Fighter ? "r29" : "r26";
                     var register2 = fighterTrophy.Type == TrophyType.Fighter ? "r28" : "r4";
-                    var trophyAliasName = $"{fighterName.Replace("-", "")}{trophySuffix}";
+                    var trophyAliasName = $"{fighterName.Replace("-", "").Replace(" ", "_")}{trophySuffix}";
                     // Only add trophy alias if it doesn't already exist
                     if (!aliases.Any(x => x.Name == trophyAliasName))
                     {
