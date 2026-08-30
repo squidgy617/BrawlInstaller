@@ -1,2 +1,1 @@
-﻿- Stages now read the preset count for RSS files (usually in Random.asm) correctly regardless of number formatting used.
-- Underscores are now added to trophy aliases generated for fighters with spaces in their file names.
+﻿- Updated all settings presets so Pit will use the correct franchise icon.
