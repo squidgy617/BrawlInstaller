@@ -1,1 +1,1 @@
-﻿- Updated all settings presets so Pit will use the correct franchise icon.
+﻿- Fixed an issue where patching files with modified CHR0 nodes would not always update the CHR0 node names properly.
