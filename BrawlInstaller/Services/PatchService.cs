@@ -228,6 +228,7 @@ namespace BrawlInstaller.Services
             {
                 // Add new node
                 var newNode = _fileService.CreateNode(nodeChange.NodeType);
+                newNode.Name = nodeChange.Name;
                 rootNode.InsertChild(newNode, nodeChange.ContainerIndex);
                 if (nodeChange.Node != null && !FilePatches.Folders.Contains(nodeChange.NodeType))
                 {
