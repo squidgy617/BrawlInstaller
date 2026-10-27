@@ -17,6 +17,8 @@ namespace BrawlInstaller.Enums
         ProjectPlus31,
         [Description("Project+ 3.0.2")]
         ProjectPlus30,
+        [Description("P+Ex 1.8")]
+        ProjectPlusEx18,
         [Description("P+Ex 1.7")]
         ProjectPlusEx17,
         [Description("P+Ex 1.6")]

@@ -477,6 +477,8 @@
     <EmbeddedResource Include="Resources\DefaultSettings\PussPuss\FighterList.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\Cobalt\BuildSettings.json" />
     <EmbeddedResource Include="Resources\DefaultSettings\Cobalt\FighterList.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx18\BuildSettings.json" />
+    <EmbeddedResource Include="Resources\DefaultSettings\ProjectPlusEx18\FighterList.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
