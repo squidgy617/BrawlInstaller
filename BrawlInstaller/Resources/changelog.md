@@ -1,1 +1,1 @@
-﻿- Fixed an issue where patching files with modified CHR0 nodes would not always update the CHR0 node names properly.
+﻿- Added P+EX 1.8 preset
